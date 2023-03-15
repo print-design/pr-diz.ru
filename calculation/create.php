@@ -777,7 +777,9 @@ for ($i=1; $i<=$ink_number; $i++) {
     }
 }
 
-$cliche_in_price = filter_input(INPUT_POST, 'cliche_in_price');
+$cliche_in_price = null;
+if(filter_input(INPUT_POST, 'create_calculation_submit') !== null) $cliche_in_price = 0;
+if(filter_input(INPUT_POST, 'cliche_in_price') == 'on') $cliche_in_price = 1;
 if($cliche_in_price === null && isset($row['cliche_in_price'])) {
     $cliche_in_price = $row['cliche_in_price'];
 }
@@ -821,7 +823,9 @@ if(isset($row['extracharge_knife'])) {
     $extracharge_knife = $row['extracharge_knife'];
 }
 
-$customer_pays_for_cliche = filter_input(INPUT_POST, 'customer_pays_for_cliche');
+$customer_pays_for_cliche = null;
+if(filter_input(INPUT_POST, 'create_calculation_submit') !== null) $customer_pays_for_cliche = 0; 
+if(filter_input(INPUT_POST, 'customer_pays_for_cliche') == 'on') $customer_pays_for_cliche = 1;
 if($customer_pays_for_cliche === null && isset($row['customer_pays_for_cliche'])) {
     $customer_pays_for_cliche = $row['customer_pays_for_cliche'];
 }
@@ -836,12 +840,16 @@ if(isset($row['extracharge_knife'])) {
     $extracharge_knife = $row['extracharge_knife'];
 }
 
-$knife_in_price = filter_input(INPUT_POST, 'knife_in_price');
+$knife_in_price = null;
+if(filter_input(INPUT_POST, 'create_calculation_submit') !== null) $knife_in_price = 0;
+if(filter_input(INPUT_POST, 'knife_in_price') == 'on') $knife_in_price = 1;
 if($knife_in_price === null && isset($row['knife_in_price'])) {
     $knife_in_price = $row['knife_in_price'];
 }
 
-$customer_pays_for_knife = filter_input(INPUT_POST, 'customer_pays_for_knife');
+$customer_pays_for_knife = null;
+if(filter_input(INPUT_POST, 'create_calculation_submit') !== null) $customer_pays_for_knife = 0;
+if(filter_input(INPUT_POST, 'customer_pays_for_knife') == 'on') $customer_pays_for_knife = 1;
 if($customer_pays_for_knife === null && isset($row['customer_pays_for_knife'])) {
     $customer_pays_for_knife = $row['customer_pays_for_knife'];
 }
@@ -2383,7 +2391,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <div class="form-check">
                                     <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
                                         <?php
-                                        $checked = $cliche_in_price == 1 || $cliche_in_price === null ? " checked='checked'" : "";
+                                        $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                                         ?>
                                         <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); }" />Включить ПФ в себестоимость
                                     </label>
@@ -2391,7 +2399,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <div class="form-check">
                                     <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                         <?php
-                                        $checked = $customer_pays_for_cliche == 1 || $customer_pays_for_cliche === null ? " checked='checked'" : "";
+                                        $checked = $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
                                         ?>
                                         <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); }" />Заказчик платит за ПФ
                                     </label>
@@ -2428,7 +2436,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <div class="form-check">
                                     <label class="form-check-label text-nowrap" style="line-height: 25px;">
                                         <?php
-                                        $checked = $customer_pays_for_knife == 1 || $customer_pays_for_knife === null ? " checked='checked'" : "";
+                                        $checked = $customer_pays_for_knife == 1 ? " checked='checked'" : "";
                                         ?>
                                         <input type="checkbox" class="form-check-input" id="customer_pays_for_knife" name="customer_pays_for_knife" value="on"<?=$checked ?> onchange="javascript: if(!$(this).is(':checked')) { $('#knife_in_price').prop('checked', false); }" />Заказчик платит за нож
                                     </label>
@@ -2704,6 +2712,20 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 else if($(this).val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
                     $('#ink-col-ink').removeClass('col-12');
                     $('#ink-col-ink').addClass('col-3');
+                }
+                
+                // Устанавливаем флажки
+                // Для плёнки с печатью: вкл. ПФ в себес. 0, польз. пл. за ПФ 1
+                // Для самоклейки: вкл. ПФ в себес. 1, польз. пл. за ПФ 1, вкл. нож в себес. 0, польз. пл. за нож 1
+                if($(this).val() == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                    $('#cliche_in_price').prop('checked', false);
+                    $('#customer_pays_for_cliche').prop('checked', true);
+                }
+                else if($(this).val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                    $('#cliche_in_price').prop('checked', true);
+                    $('#customer_pays_for_cliche').prop('checked', true);
+                    $('#knife_in_price').prop('checked', false);
+                    $('#customer_pays_for_knife').prop('checked', true);
                 }
             });
             
