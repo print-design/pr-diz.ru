@@ -1,17 +1,14 @@
 <select id='user1_id' name='user1_id' style='width:100px;' onchange='javascript: EditUser1($(this))' data-id='<?=(isset($this->shift_data['id']) ? $this->shift_data['id'] : '') ?>' data-date='<?=$this->date->format('Y-m-d') ?>' data-shift='<?=$this->shift ?>' data-machine='<?=$this->timetable->machineId ?>' data-from='<?=$this->timetable->dateFrom->format('Y-m-d') ?>' data-to='<?=$this->timetable->dateTo->format('Y-m-d') ?>'>
-    <optgroup>
-        <option value="">...</option>
-        <?php
-        foreach ($this->timetable->users1 as $value) {
-            $selected = '';
-            if(isset($this->shift_data['u1_id']) && $this->shift_data['u1_id'] == $value['id']) $selected = " selected = 'selected'";
-            echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
-        }
-        ?>
-    </optgroup>
-    <optgroup label='______________'>
-        <option value='+'>(добавить)</option>
-    </optgroup>
+    <option value="">...</option>
+    <?php
+    foreach ($this->timetable->users1 as $value) {
+        $selected = '';
+        if(isset($this->shift_data['u1_id']) && $this->shift_data['u1_id'] == $value['id']) $selected = " selected = 'selected'";
+        echo "<option$selected value='".$value['id']."'>".$value['fio']."</option>";
+    }
+    ?>
+    <option disabled="disabled">______________</option>
+    <option value='+'>(добавить)</option>
 </select>
         
 <div class="input-group d-none">
