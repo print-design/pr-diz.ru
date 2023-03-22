@@ -172,6 +172,22 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
 }
 
+// Удаление технологической карты
+if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $techmap_id = filter_input(INPUT_POST, 'techmap_id');
+    
+    if(!empty($id) && !empty($techmap_id)) {
+        $sql = "delete from techmap where id = $techmap_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            header("Location: details.php?id=$id");
+        }
+    }
+}
+
 // ПОЛУЧЕНИЕ ОБЪЕКТА
 $id = filter_input(INPUT_GET, 'id');
 
@@ -1520,7 +1536,8 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                 <?php if(!empty($techmap_id)): ?>
                 <div style="position: absolute; right: 0px; bottom: 0px;">
                     <form method="post">
-                        <input type="hidden" name="id" value="<?= $techmap_id ?>" />
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <input type="hidden" name="techmap_id" value="<?= $techmap_id ?>" />
                         <input type="hidden"  name="delete_techmap_submit" value="1" />
                         <button type="button" class="btn btn-dark" style="width: 175px;" onclick="javascript: if(confirm('Действительно удалить тех. карту?')) { this.form.submit(); };">Удалить тех. карту</button>
                     </form>

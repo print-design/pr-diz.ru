@@ -278,6 +278,21 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
 if($status_id == DRAFT || $status_id == CALCULATION) {
     $disabled_attr = "";
 }
+
+// Если статус "составлена технологическая карта", а самой карты нет, мменяем статус на "Сделан расчёт"
+if($status_id == TECHMAP && empty($techmap_id)) {
+    $sql = "update calculation set status_id = ".CALCULATION." where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "select status_id from calculation where id = $id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $status_id = $row[0];
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
