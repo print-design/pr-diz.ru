@@ -1332,190 +1332,201 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             <?php endif; ?>
             <a name="form" />
             <div id="cliche_validation" class="text-danger<?= empty($cliche_valid) ? " d-none" : " d-block" ?>">Укажите формы для каждой краски</div>
-            <form class="mt-3" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
-                <input type="hidden" name="scroll" />
-                <input type="hidden" name="id" value="<?= $id ?>" />
-                <input type="hidden" name="work_type_id" value="<?=$work_type_id ?>" />
-                <input type="hidden" name="techmap_id" value="<?=$techmap_id ?>" />
-                <div class="row">
-                    <div class="col-6">
-                        <h2>Информация для резчика</h2>
-                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
-                        <div class="form-group">
-                            <label for="supplier_id">Поставщик мат-ла</label>
-                            <select id="supplier_id" name="supplier_id" class="form-control">
-                                <option value="">Любой</option>
-                                <?php
-                                $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = $film_variation_id)";
-                                $fetcher = new Fetcher($sql);
-                                while($row = $fetcher->Fetch()):
-                                    $checked = $supplier_id == $row['id'] ? " selected='selected'" : "";
-                                ?>
-                                <option value="<?=$row['id'] ?>"<?=$checked ?>><?=$row['name'] ?></option>
-                                <?php endwhile; ?>
-                            </select>
-                        </div>
-                        <?php endif; ?>
-                        <div class="form-group">
-                            <label for="side">Печать</label>
-                            <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
-                                <?php if($lamination == "нет"): ?>
-                                <option value="" hidden="hidden">...</option>
-                                <option value="<?=SIDE_FRONT ?>"<?= $side == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
-                                <?php endif; ?>
-                                <option value="<?=SIDE_BACK ?>"<?= $side == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
-                            </select>
-                            <div class="invalid-feedback">Сторона обязательно</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="winding">Намотка до</label>
-                            <div class="input-group">
-                                <input type="text" 
-                                       id="winding" 
-                                       name="winding" 
-                                       class="form-control int-only<?=$winding_valid ?>" 
-                                       placeholder="Намотка до" 
-                                       value="<?= $winding ?>" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
-                                       onfocusout="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" />
-                                <div class="input-group-append">
-                                    <select id="winding_unit" name="winding_unit" required="required">
-                                        <option value="" hidden="hidden">...</option>
-                                        <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
-                                        <option value="mm"<?= $winding_unit == 'mm' ? " selected='selected'" : "" ?>>мм</option>
-                                        <option value="m"<?= $winding_unit == 'm' ? " selected='selected'" : "" ?>>Метры</option>
-                                        <option value="pc"<?= $winding_unit == 'pc' ? " selected='selected'" : "" ?>>шт</option>
-                                    </select>
+            <div style="position: relative;">
+                <form class="mt-3" method="post"<?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                    <input type="hidden" name="scroll" />
+                    <input type="hidden" name="id" value="<?= $id ?>" />
+                    <input type="hidden" name="work_type_id" value="<?=$work_type_id ?>" />
+                    <input type="hidden" name="techmap_id" value="<?=$techmap_id ?>" />
+                    <div class="row">
+                        <div class="col-6">
+                            <h2>Информация для резчика</h2>
+                            <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                            <div class="form-group">
+                                <label for="supplier_id">Поставщик мат-ла</label>
+                                <select id="supplier_id" name="supplier_id" class="form-control">
+                                    <option value="">Любой</option>
+                                    <?php
+                                    $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = $film_variation_id)";
+                                    $fetcher = new Fetcher($sql);
+                                    while($row = $fetcher->Fetch()):
+                                        $checked = $supplier_id == $row['id'] ? " selected='selected'" : "";
+                                    ?>
+                                    <option value="<?=$row['id'] ?>"<?=$checked ?>><?=$row['name'] ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
+                            <?php endif; ?>
+                            <div class="form-group">
+                                <label for="side">Печать</label>
+                                <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
+                                    <?php if($lamination == "нет"): ?>
+                                    <option value="" hidden="hidden">...</option>
+                                    <option value="<?=SIDE_FRONT ?>"<?= $side == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
+                                    <?php endif; ?>
+                                    <option value="<?=SIDE_BACK ?>"<?= $side == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
+                                </select>
+                                <div class="invalid-feedback">Сторона обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="winding">Намотка до</label>
+                                <div class="input-group">
+                                    <input type="text" 
+                                        id="winding" 
+                                        name="winding" 
+                                        class="form-control int-only<?=$winding_valid ?>" 
+                                        placeholder="Намотка до" 
+                                        value="<?= $winding ?>" 
+                                        required="required" 
+                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                        onmouseup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                        onkeyup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                        onfocusout="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" />
+                                    <div class="input-group-append">
+                                        <select id="winding_unit" name="winding_unit" required="required">
+                                            <option value="" hidden="hidden">...</option>
+                                            <option value="kg"<?= $winding_unit == 'kg' ? " selected='selected'" : "" ?>>Кг</option>
+                                            <option value="mm"<?= $winding_unit == 'mm' ? " selected='selected'" : "" ?>>мм</option>
+                                            <option value="m"<?= $winding_unit == 'm' ? " selected='selected'" : "" ?>>Метры</option>
+                                            <option value="pc"<?= $winding_unit == 'pc' ? " selected='selected'" : "" ?>>шт</option>
+                                        </select>
+                                    </div>
+                                    <div class="invalid-feedback">Намотка обязательно</div>
                                 </div>
-                                <div class="invalid-feedback">Намотка обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="spool">Шпуля</label>
+                                <select id="spool" name="spool" class="form-control<?=$spool_valid ?>" required="required">
+                                    <option value="" hidden="hidden">...</option>
+                                    <option<?= $spool == 40 ? " selected='selected'" : "" ?>>40</option>
+                                    <option<?= $spool == 76 ? " selected='selected'" : "" ?>>76</option>
+                                    <option<?= $spool == 152 ? " selected='selected'" : "" ?>>152</option>
+                                </select>
+                                <div class="invalid-feedback">Шпуля обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="labels">Бирки</label>
+                                <select id="labels" name="labels" class="form-control<?=$labels_valid ?>" required="required">
+                                    <option value="" hidden="hidden">...</option>
+                                    <option value="<?=LABEL_PRINT_DESIGN ?>"<?= $labels == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
+                                    <option value="<?=LABEL_FACELESS ?>"<?= $labels == 2 ? " selected='selected'" : "" ?>>Безликие</option>
+                                </select>
+                                <div class="invalid-feedback">Бирки обязательно</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="package">Упаковка</label>
+                                <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
+                                    <option value="" hidden="hidden">...</option>
+                                    <option value="<?=PACKAGE_PALLETED ?>"<?= $package == PACKAGE_PALLETED ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                    <option value="<?=PACKAGE_BULK ?>"<?= $package == PACKAGE_BULK ? " selected='selected'" : "" ?>>Россыпью</option>
+                                    <option value="<?=PACKAGE_EUROPALLET ?>"<?= $package == PACKAGE_EUROPALLET ? " selected='selected'" : "" ?>>Европаллет</option>
+                                    <option value="<?=PACKAGE_BOXES ?>"<?= $package == PACKAGE_BOXES ? " selected='selected'" : "" ?>>Коробки</option>
+                                </select>
+                                <div class="invalid-feedback">Упаковка обязательно</div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="spool">Шпуля</label>
-                            <select id="spool" name="spool" class="form-control<?=$spool_valid ?>" required="required">
-                                <option value="" hidden="hidden">...</option>
-                                <option<?= $spool == 40 ? " selected='selected'" : "" ?>>40</option>
-                                <option<?= $spool == 76 ? " selected='selected'" : "" ?>>76</option>
-                                <option<?= $spool == 152 ? " selected='selected'" : "" ?>>152</option>
-                            </select>
-                            <div class="invalid-feedback">Шпуля обязательно</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="labels">Бирки</label>
-                            <select id="labels" name="labels" class="form-control<?=$labels_valid ?>" required="required">
-                                <option value="" hidden="hidden">...</option>
-                                <option value="<?=LABEL_PRINT_DESIGN ?>"<?= $labels == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
-                                <option value="<?=LABEL_FACELESS ?>"<?= $labels == 2 ? " selected='selected'" : "" ?>>Безликие</option>
-                            </select>
-                            <div class="invalid-feedback">Бирки обязательно</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="package">Упаковка</label>
-                            <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
-                                <option value="" hidden="hidden">...</option>
-                                <option value="<?=PACKAGE_PALLETED ?>"<?= $package == PACKAGE_PALLETED ? " selected='selected'" : "" ?>>Паллетирование</option>
-                                <option value="<?=PACKAGE_BULK ?>"<?= $package == PACKAGE_BULK ? " selected='selected'" : "" ?>>Россыпью</option>
-                                <option value="<?=PACKAGE_EUROPALLET ?>"<?= $package == PACKAGE_EUROPALLET ? " selected='selected'" : "" ?>>Европаллет</option>
-                                <option value="<?=PACKAGE_BOXES ?>"<?= $package == PACKAGE_BOXES ? " selected='selected'" : "" ?>>Коробки</option>
-                            </select>
-                            <div class="invalid-feedback">Упаковка обязательно</div>
+                        <div class="col-6">
+                            <h3 style="margin-top: 20px;">Выберите фотометку</h3>
+                            <div class="form-group">
+                                <label for="photolabel">Фотометка</label>
+                                <select id="photolabel" name="photolabel" class="form-control<?=$photolabel_valid ?>" required="required">
+                                    <option value="<?=PHOTOLABEL_LEFT ?>"<?=$photolabel == PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
+                                    <option value="<?=PHOTOLABEL_RIGHT ?>"<?=$photolabel == PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
+                                    <option value="<?=PHOTOLABEL_BOTH ?>"<?=$photolabel == PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
+                                    <option value="<?=PHOTOLABEL_NONE ?>"<?=$photolabel == PHOTOLABEL_NONE || (empty($photolabel) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
+                                </select>
+                                <div class="invalid-feedback">Расположение фотометки обязательно</div>
+                            </div>
+                            <div class="form-group roll-selector">
+                                <?php
+                                $roll_folder = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left";
+                                switch ($photolabel) {
+                                    case PHOTOLABEL_LEFT:
+                                        $roll_folder = "roll_left";
+                                        break;
+                                    case PHOTOLABEL_RIGHT:
+                                        $roll_folder = "roll_right";
+                                        break;
+                                    case PHOTOLABEL_BOTH:
+                                        $roll_folder = "roll_both";
+                                        break;
+                                    case PHOTOLABEL_NONE:
+                                        $roll_folder = "roll";
+                                        break;
+                                }
+                                ?>
+                                <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1"<?= $roll_type == 1 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_1_image" src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2"<?= $roll_type == 2 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_2_image" src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3"<?= $roll_type == 3 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_3_image" src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4"<?= $roll_type == 4 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_4_image" src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5"<?= $roll_type == 5 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_5_image" src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6"<?= $roll_type == 6 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_6_image" src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7"<?= $roll_type == 7 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_7_image" src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= $roll_type == 8 ? " checked='checked'" : "" ?> />
+                                <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_8_image" src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                            </div>
+                            <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Выберите сторону печати</div>
+                            <h3>Комментарий</h3>
+                            <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <h3 style="margin-top: 20px;">Выберите фотометку</h3>
-                        <div class="form-group">
-                            <label for="photolabel">Фотометка</label>
-                            <select id="photolabel" name="photolabel" class="form-control<?=$photolabel_valid ?>" required="required">
-                                <option value="<?=PHOTOLABEL_LEFT ?>"<?=$photolabel == PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
-                                <option value="<?=PHOTOLABEL_RIGHT ?>"<?=$photolabel == PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
-                                <option value="<?=PHOTOLABEL_BOTH ?>"<?=$photolabel == PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
-                                <option value="<?=PHOTOLABEL_NONE ?>"<?=$photolabel == PHOTOLABEL_NONE || (empty($photolabel) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
-                            </select>
-                            <div class="invalid-feedback">Расположение фотометки обязательно</div>
-                        </div>
-                        <div class="form-group roll-selector">
-                            <?php
-                            $roll_folder = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left";
-                            switch ($photolabel) {
-                                case PHOTOLABEL_LEFT:
-                                    $roll_folder = "roll_left";
-                                    break;
-                                case PHOTOLABEL_RIGHT:
-                                    $roll_folder = "roll_right";
-                                    break;
-                                case PHOTOLABEL_BOTH:
-                                    $roll_folder = "roll_both";
-                                    break;
-                                case PHOTOLABEL_NONE:
-                                    $roll_folder = "roll";
-                                    break;
-                            }
-                            ?>
-                            <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1"<?= $roll_type == 1 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_1_image" src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2"<?= $roll_type == 2 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_2_image" src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3"<?= $roll_type == 3 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_3_image" src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4"<?= $roll_type == 4 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_4_image" src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5"<?= $roll_type == 5 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_5_image" src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6"<?= $roll_type == 6 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_6_image" src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7"<?= $roll_type == 7 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_7_image" src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                            <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= $roll_type == 8 ? " checked='checked'" : "" ?> />
-                            <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_8_image" src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
-                        </div>
-                        <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Выберите сторону печати</div>
-                        <h3>Комментарий</h3>
-                        <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6 d-flex justify-content-between mt-3">
-                        <div>
-                            <?php
-                            $submit_class = " d-none";
-                            if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
-                                $submit_class = "";
-                            }
-                            ?>
-                            <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
-                        </div>
-                        <div>
-                            <?php
-                            if(!empty($techmap_id)):
+                    <div class="row">
+                        <div class="col-6 d-flex justify-content-between mt-3">
+                            <div>
+                                <?php
+                                $submit_class = " d-none";
+                                if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
+                                    $submit_class = "";
+                                }
+                                ?>
+                                <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
+                            </div>
+                            <div>
+                                <?php
+                                if(!empty($techmap_id)):
                             
-                            $print_class = "d-block";
-                            $no_print_class = "d-none";
+                                $print_class = "d-block";
+                                $no_print_class = "d-none";
                     
-                            if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
-                                $total_cliches_count = count($printings) * $ink_number;
-                                $valid_cliches_count = 0;
+                                if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    $total_cliches_count = count($printings) * $ink_number;
+                                    $valid_cliches_count = 0;
                     
-                                foreach ($cliches as $cliches_row) {
-                                    $valid_cliches_count += count($cliches_row);
-                                }
+                                    foreach ($cliches as $cliches_row) {
+                                        $valid_cliches_count += count($cliches_row);
+                                    }
                         
-                                if($total_cliches_count - $valid_cliches_count > 0) {
-                                    $print_class = "d-none";
-                                    $no_print_class = "d-block";
+                                    if($total_cliches_count - $valid_cliches_count > 0) {
+                                        $print_class = "d-none";
+                                        $no_print_class = "d-block";
+                                    }
                                 }
-                            }
-                            ?>
-                            <a id="no_print_btn" href="javascript: void(0);" target="_self" class="btn btn-outline-dark no_print_btn <?=$no_print_class ?>" style="width: 175px;" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');">Печать</a>
-                            <a id="print_btn" href="print_tm.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark print_btn <?=$print_class ?>" style="width: 175px;">Печать</a>
-                            <?php endif; ?>
+                                ?>
+                                <a id="no_print_btn" href="javascript: void(0);" target="_self" class="btn btn-outline-dark no_print_btn <?=$no_print_class ?>" style="width: 175px;" onclick="javascript: $('#cliche_validation').removeClass('d-none'); $('#cliche_validation').addClass('d-block'); window.location.replace('#cliche_validation');">Печать</a>
+                                <a id="print_btn" href="print_tm.php?id=<?=$id ?>" target="_blank" class="btn btn-outline-dark print_btn <?=$print_class ?>" style="width: 175px;">Печать</a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
+                </form>
+                <?php if(!empty($techmap_id)): ?>
+                <div style="position: absolute; right: 0px; bottom: 0px;">
+                    <form method="post">
+                        <input type="hidden" name="id" value="<?= $techmap_id ?>" />
+                        <input type="hidden"  name="delete_techmap_submit" value="1" />
+                        <button type="button" class="btn btn-dark" style="width: 175px;" onclick="javascript: if(confirm('Действительно удалить тех. карту?')) { this.form.submit(); };">Удалить тех. карту</button>
+                    </form>
                 </div>
-            </form>
+                <?php endif; ?>
+            </div>
         </div>
         <!-- Подгрузка тех. карты из другого заказа -->
         <div class="modal fixed-left fade" id="techmapModal" tabindex="-1" role="dialog">
