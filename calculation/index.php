@@ -179,8 +179,9 @@ else $title = $status_titles[1];
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $customer_where = "where c.status_id <> ".DRAFT;
+                            $customer_where = "where c.status_id <> ".DRAFT." and c.status_id <> ".TRASH;
                             if($status_id == DRAFT) $customer_where = "where c.status_id = ".DRAFT;
+                            elseif($status_id == TRASH) $customer_where = "where c.status_id = ".TRASH;
                             $customer_manager = GetUserId();
                             if(!IsInRole(array('technologist', 'dev', 'manager-senior'))) {
                                 $customer_where .= " and c.manager_id = $customer_manager";
@@ -198,8 +199,9 @@ else $title = $status_titles[1];
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Наименование...</option>
                             <?php
-                            $name_where = "where c.status_id <>".DRAFT;
+                            $name_where = "where c.status_id <> ".DRAFT." and c.status_id <> ".TRASH;
                             if($status_id == DRAFT) $name_where = "where c.status_id = ".DRAFT;
+                            elseif($status_id == TRASH) $name_where = "where c.status_id = ".TRASH;
                             if(!empty($customer)) {
                                 $name_where .= " and c.customer_id = $customer";
                             }
