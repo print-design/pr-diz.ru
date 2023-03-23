@@ -183,6 +183,12 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
+            $sql = "update calculation set status_id = ".CALCULATION." where id = $id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
+        if(empty($error_message)) {
             header("Location: details.php?id=$id");
         }
     }
