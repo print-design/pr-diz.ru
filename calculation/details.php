@@ -375,7 +375,7 @@ if($status_id == TECHMAP && empty($techmap_id)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id") ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : ($status_id == TRASH ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id")) ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
                 <h1><?= htmlentities($name) ?></h1>

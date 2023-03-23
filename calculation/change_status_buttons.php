@@ -1,8 +1,25 @@
 <?php if ($status_id == DRAFT): ?>
+<div class="d-flex justify-content-between">
+    <div>
+        <form method="post">
+            <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+            <input type="hidden" name="status_id" value="<?=CALCULATION ?>" />
+            <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Сохранить</button>
+        </form>
+    </div>
+    <div>
+        <form method="post">
+            <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+            <input type="hidden" name="status_id" value="<?=TRASH ?>" />
+            <button type="submit" name="change-status-submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Удалить</button>
+        </form>
+    </div>
+</div>
+<?php elseif($status_id == TRASH): ?>
 <form method="post">
     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-    <input type="hidden" name="status_id" value="<?=CALCULATION ?>" />
-    <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Сохранить</button>
+    <input type="hidden" name="status_id" value="<?=DRAFT ?>" />
+    <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Восстановить</button>
 </form>
 <?php elseif($status_id == CALCULATION): ?>
 <div class="d-flex justify-content-between">

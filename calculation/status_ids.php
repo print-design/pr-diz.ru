@@ -6,8 +6,9 @@ const WAITING = 3; // Ждём подтверждения
 const CONFIRMED = 4; // Одобрено
 const REJECTED = 5; // Отклонено
 const TECHMAP = 6; // Составлена технологическая карта
+const TRASH = 7; // В корзине
 
-$status_names = array(DRAFT => "Черновик", CALCULATION => "Сделан расчёт", WAITING => "Ждём подтверждения", CONFIRMED => "Одобрено", REJECTED => "Отклонено", TECHMAP => "Составлена тех. карта");
-$status_colors = array(DRAFT => "gray", CALCULATION => "steelblue", WAITING => "goldenrod", CONFIRMED => "mediumseagreen", REJECTED => "indianred", TECHMAP => "saddlebrown");
-$status_icons = array(DRAFT => "fas fa-edit", CALCULATION => "fas fa-check", WAITING => "fas fa-clock", CONFIRMED => "fas fa-check-double", REJECTED => "fas fa-times-circle", TECHMAP => "fas fa-file");
+$status_names = array(DRAFT => "Черновик", CALCULATION => "Сделан расчёт", WAITING => "Ждём подтверждения", CONFIRMED => "Одобрено", REJECTED => "Отклонено", TECHMAP => "Составлена тех. карта", TRASH => "В корзине");
+$status_colors = array(DRAFT => "gray", CALCULATION => "steelblue", WAITING => "goldenrod", CONFIRMED => "mediumseagreen", REJECTED => "indianred", TECHMAP => "saddlebrown", TRASH => "black");
+$status_icons = array(DRAFT => "fas fa-edit", CALCULATION => "fas fa-check", WAITING => "fas fa-clock", CONFIRMED => "fas fa-check-double", REJECTED => "fas fa-times-circle", TECHMAP => "fas fa-file", TRASH => "fas fa-trash-alt");
 ?>

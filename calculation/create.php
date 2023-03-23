@@ -1099,7 +1099,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : ($status_id == CALCULATION ? "" : BuildQuery("status", $status_id)) ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : ($status_id == DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : ($status_id == TRASH ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id"))) ?>">Назад</a>
             <div>
                 <!-- Левая половина -->
                 <div id="left_side">

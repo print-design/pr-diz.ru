@@ -50,9 +50,10 @@ function GetPrintingsWithCases($number) {
 $sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
 $executer = new Executer($sql);
 
-$status_titles = array(1 => "Расчеты", 2 => "Черновики");
+$status_titles = array(1 => "Расчеты", 2 => "Черновики", 3 => "Корзина");
 $status_id = filter_input(INPUT_GET, 'status');
 if($status_id == DRAFT) $title = $status_titles[2];
+elseif($status_id == TRASH) $title = $status_titles[3];
 else $title = $status_titles[1];
 ?>
 <!DOCTYPE html>
@@ -80,7 +81,7 @@ else $title = $status_titles[1];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where c.status_id <> ".DRAFT;
+                    $where = " where c.status_id <> ".DRAFT." and c.status_id <> ".TRASH;
                     
                     if(!empty($status_id)) {
                         $where = " where c.status_id = $status_id";

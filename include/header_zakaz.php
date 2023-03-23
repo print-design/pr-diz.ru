@@ -14,6 +14,7 @@ if($count > 1) {
 
 $draft_status = '';
 $calculation_status = '';
+$trash_status = '';
 $techmap_status = '';
 $schedule_status = '';
 
@@ -24,6 +25,9 @@ if($folder == 'calculation') {
     
     if($status_id == DRAFT) {
         $draft_status = ' disabled';
+    }
+    elseif($status_id == TRASH) {
+        $trash_status = ' disabled';
     }
     else {
         $calculation_status = ' disabled';
@@ -48,6 +52,9 @@ elseif($folder == 'schedule') {
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", DRAFT, "page") ?>">Черновики</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$trash_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", TRASH, "page") ?>">Корзина</a>
             </li>
             <?php endif; ?>
         </ul>
