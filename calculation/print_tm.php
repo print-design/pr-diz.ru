@@ -346,7 +346,6 @@ $current_date_time = date("dmYHis");
             }
             
             .header_title {
-                font-weight: bold;
                 font-size: 18px;
                 vertical-align: middle;
             }
@@ -363,13 +362,12 @@ $current_date_time = date("dmYHis");
             #title {
                 font-weight: bold;
                 font-size: 30px;
-                margin-top: 20px;
+                margin-top: 10px;
             }
             
             #subtitle {
                 font-weight: bold;
                 font-size: 24px;
-                margin-top: 8px;
             }
             
             .topproperty {
@@ -417,15 +415,15 @@ $current_date_time = date("dmYHis");
             }
             
             .photolable {
-                margin-top: 30px;
+                margin-top: 10px;
                 margin-bottom: 10px;
                 font-size: 18px;
             }
             
-            #comment {
+            /*#comment {
                 margin-bottom: 50px;
                 font-size: 18px;
-            }
+            }*/
             
             .border-bottom-2 {
                 border-bottom: solid 2px gray;
@@ -451,7 +449,7 @@ $current_date_time = date("dmYHis");
                 }
                 
                 #placeholder_top {
-                    height: 260px;
+                    height: 210px;
                 }
                 
                 .break_page {
@@ -484,9 +482,19 @@ $current_date_time = date("dmYHis");
                     } while (!file_exists($filename));
                     ?>
                     <div class="d-inline-block header_qr"><img src='<?=$filename ?>' /></div>
-                    <div class="d-inline-block header_title">
+                    <div class="d-inline-block header_title font-weight-bold mr-3">
                         Заказ №<?=$customer_id ?>-<?=$num_for_customer ?><br />
                         от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
+                    </div>
+                    <div class="d-inline-block header_title font-weight-bold mr-2">
+                        Карта составлена:
+                        <br />
+                        Менеджер:
+                    </div>
+                    <div class="d-inline-block header_title">
+                        <?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?>
+                        <br />
+                        <?=$first_name ?> <?=$last_name ?>
                     </div>
                 </div>
                 <div>
@@ -495,14 +503,6 @@ $current_date_time = date("dmYHis");
             </div>
             <div id="title">Заказчик: <?=$customer ?></div>
             <div id="subtitle">Наименование: <?=$calculation ?></div>
-            <div class="row">
-                <div class="col-6 topproperty">
-                    <strong>Карта составлена:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?>
-                </div>
-                <div class="col-6 topproperty">
-                    <strong>Менеджер:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$first_name ?> <?=$last_name ?>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-6 topproperty">
                     <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(intval($quantities_sum), 0)." шт" : CalculationBase::Display(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(floatval($lengths_sum), 0)." м" : CalculationBase::Display(floatval($length_pure_1), 0)." м" ?>
@@ -1012,7 +1012,8 @@ $current_date_time = date("dmYHis");
                     </td>
                 </tr>
             </table>
-            <div id="comment" style="white-space: pre-wrap;"><span class="font-weight-bold">Комментарий:</span><br /><?=$comment ?></div>
+            <div class="font-weight-bold" style="font-size: 18px;">Комментарий:</div>
+            <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
             <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
             <div class="row">
