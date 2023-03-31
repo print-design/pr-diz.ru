@@ -391,6 +391,7 @@ $current_date_time = date("dmYHis");
             tr td:nth-child(2) {
                 text-align: right;
                 padding-left: 10px;
+                font-weight: bold;
             }
             
             tr.left td:nth-child(2) {
@@ -683,263 +684,253 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                     </table>
                 </div>
-                <div class="col-4 border-right">
-                    <table class="w-100">
-                        <tr>
-                            <td colspan="2" class="table-header font-weight-bold"><?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
-                        </tr>
-                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
-                        <tr>
-                            <td>Кол-во ламинаций</td>
-                            <td><?=$lamination ?></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="font-weight-bold">Ламинация 1</td>
-                        </tr>
-                        <tr>
-                            <td>Марка пленки</td>
-                            <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
-                        </tr>
-                        <tr>
-                            <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
-                        </tr>
-                        <tr>
-                            <td>Ширина мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Метраж на тираж</td>
-                            <td><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Всего мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Ламинационный вал</td>
-                            <td><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td>Анилокс</td>
-                            <td>Нет</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
-                        </tr>
-                        <tr>
-                            <td>Марка пленки</td>
-                            <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
-                        </tr>
-                        <tr>
-                            <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
-                        </tr>
-                        <tr>
-                            <td>Ширина мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Метраж на тираж</td>
-                            <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Всего мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
-                        </tr>
-                        <?php endif; ?>
-                    </table>
-                </div>
-                <div class="col-4">
-                    <table class="w-100">
-                        <tr>
-                            <td colspan="2" class="table-header font-weight-bold">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</td>
-                        </tr>
-                        <tr>
-                            <td>Отгрузка в</td>
-                            <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
-                        </tr>
-                        <tr>
-                            <td>Готовая продукция</td>
-                            <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
-                        </tr>
-                        <tr>
-                            <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
-                            <?php
-                            $norm_stream = "";
-                            $sql = "select gap_stream from norm_gap order by date desc limit 1";
-                            $fetcher = new Fetcher($sql);
-                            if($row = $fetcher->Fetch()) {
-                                $norm_stream = CalculationBase::Display($row[0], 2);
-                            }
-                            ?>
-                            <td>
-                                <?php
-                                if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
-                                    if(empty($norm_stream)) {
-                                        echo CalculationBase::Display(intval($stream_width), 0)." мм";
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-6 border-right">
+                            <table class="w-100">
+                                <tr>
+                                    <td colspan="2" class="table-header font-weight-bold"><?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
+                                </tr>
+                                <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                                <tr>
+                                    <td>Кол-во ламинаций</td>
+                                    <td><?=$lamination ?></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="font-weight-bold">Ламинация 1</td>
+                                </tr>
+                                <tr>
+                                    <td>Марка пленки</td>
+                                    <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Толщина</td>
+                                    <td class="text-nowrap"><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Ширина мат-ла</td>
+                                    <td><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
+                                </tr>
+                                <tr>
+                                    <td>Метраж на приладку</td>
+                                    <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
+                                </tr>
+                                <tr>
+                                    <td>Метраж на тираж</td>
+                                    <td><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
+                                </tr>
+                                <tr>
+                                    <td>Всего мат-ла</td>
+                                    <td><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
+                                </tr>
+                                <tr>
+                                    <td>Ламинационный вал</td>
+                                    <td><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
+                                </tr>
+                                <tr>
+                                    <td>Анилокс</td>
+                                    <td>Нет</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
+                                </tr>
+                                <tr>
+                                    <td>Марка пленки</td>
+                                    <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Толщина</td>
+                                    <td class="text-nowrap"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Ширина мат-ла</td>
+                                    <td><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
+                                </tr>
+                                <tr>
+                                    <td>Метраж на приладку</td>
+                                    <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
+                                </tr>
+                                <tr>
+                                    <td>Метраж на тираж</td>
+                                    <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
+                                </tr>
+                                <tr>
+                                    <td>Всего мат-ла</td>
+                                    <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
+                                </tr>
+                                <?php endif; ?>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="w-100">
+                                <tr>
+                                    <td colspan="2" class="table-header font-weight-bold">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</td>
+                                </tr>
+                                <tr>
+                                    <td>Отгрузка в</td>
+                                    <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Готовая продукция</td>
+                                    <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
+                                    <?php
+                                    $norm_stream = "";
+                                    $sql = "select gap_stream from norm_gap order by date desc limit 1";
+                                    $fetcher = new Fetcher($sql);
+                                    if($row = $fetcher->Fetch()) {
+                                        $norm_stream = CalculationBase::Display($row[0], 2);
                                     }
-                                    else {
-                                        echo CalculationBase::Display(floatval($stream_width) + floatval($norm_stream), 2)." / ".CalculationBase::Display(floatval($norm_stream), 2)." мм";
-                                    }
-                                }
-                                else {
-                                    echo CalculationBase::Display(intval($stream_width), 0)." мм";
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Намотка до</td>
-                            <td>
-                                <?php
-                                if(empty($winding)) {
-                                    echo 'Ждем данные';
-                                }
-                                elseif(empty ($winding_unit)) {
-                                    echo 'Нет данных по кг/мм/м/шт';
-                                }
-                                elseif($winding_unit == 'pc') {
-                                    if(empty($length)) {
-                                        echo 'Нет данных по длине этикетки';
-                                    }
-                                    else {
-                                        echo CalculationBase::Display(floatval($winding) * floatval($length) / 1000, 0);
-                                    }
-                                }
-                                else {
-                                    echo CalculationBase::Display(floatval($winding), 0);
-                                }
-                                
-                                switch ($winding_unit) {
-                                    case 'kg':
-                                        echo " кг";
-                                        break;
-                                    case 'mm':
-                                        echo " мм";
-                                        break;
-                                    case 'm':
-                                        echo " м";
-                                        break;
-                                    case 'pc':
-                                        echo " м";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Прим. метраж намотки</td>
-                            <td>
-                                <?php
-                                /* 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))
-                                 * 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))-200
-                                 * 2) Если намотка до = «мм» , то значение = "Нет"
-                                 * 3) Если намотка до = «м», то значение = "Нет"
-                                 * 4) Если намотка до = «шт» , то значение = "Нет" */
-                                if(empty($winding) || empty($winding_unit)) {
-                                    echo 'Ждем данные';
-                                }
-                                elseif(empty ($weight) && empty($individual_density)) {
-                                    echo 'Нет данных по уд. весу пленки';
-                                }
-                                elseif(empty ($width_1)) {
-                                    echo 'Нет данных по ширине мат-ла';
-                                }
-                                elseif($winding_unit == 'kg') {
-                                    $final_density = empty($weight) ? $individual_density : $weight;
-                                    $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
-                                    $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
-                                    echo CalculationBase::Display((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
-                                }
-                                else {
-                                    echo 'Нет';
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Шпуля</td>
-                            <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
-                        </tr>
-                        <tr>
-                            <td>Этикеток в 1 м. пог.</td>
-                            <td><?= empty($length) ? "" : CalculationBase::Display(1 / floatval($length) * 1000, 4) ?></td>
-                        </tr>
-                        <tr>
-                            <td>Бирки</td>
-                            <td>
-                                <?php
-                                switch ($labels) {
-                                    case LABEL_PRINT_DESIGN:
-                                        echo "Принт-Дизайн";
-                                        break;
-                                    case LABEL_FACELESS:
-                                        echo "Безликие";
-                                        break;
-                                    default :
-                                        echo "Ждём данные";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Склейки</td>
-                            <td>Помечать</td>
-                        </tr>
-                        <tr>
-                            <td>Отходы</td>
-                            <td><?=$waste ?></td>
-                        </tr>
-                        <tr>
-                            <td>Упаковка</td>
-                            <td>
-                                <?php
-                                switch ($package) {
-                                    case PACKAGE_PALLETED:
-                                        echo "Паллетирование";
-                                        break;
-                                    case PACKAGE_BULK:
-                                        echo "Россыпью";
-                                        break;
-                                    case PACKAGE_EUROPALLET:
-                                        echo "Европаллет";
-                                        break;
-                                    case PACKAGE_BOXES:
-                                        echo "Коробки";
-                                        break;
-                                    default :
-                                        echo "Ждем данные";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            
-            
-            
-            <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
-            <div class="row">
-                
-                
-            </div>
-            <?php endif; ?>
-            
-            
-            
-            <div class="photolable">
+                                    ?>
+                                    <td>
+                                        <?php
+                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                            if(empty($norm_stream)) {
+                                                echo CalculationBase::Display(intval($stream_width), 0)." мм";
+                                            }
+                                            else {
+                                                echo CalculationBase::Display(floatval($stream_width) + floatval($norm_stream), 2)." / ".CalculationBase::Display(floatval($norm_stream), 2)." мм";
+                                            }
+                                        }
+                                        else {
+                                            echo CalculationBase::Display(intval($stream_width), 0)." мм";
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Намотка до</td>
+                                    <td>
+                                        <?php
+                                        if(empty($winding)) {
+                                            echo 'Ждем данные';
+                                        }
+                                        elseif(empty ($winding_unit)) {
+                                            echo 'Нет данных по кг/мм/м/шт';
+                                        }
+                                        elseif($winding_unit == 'pc') {
+                                            if(empty($length)) {
+                                                echo 'Нет данных по длине этикетки';
+                                            }
+                                            else {
+                                                echo CalculationBase::Display(floatval($winding) * floatval($length) / 1000, 0);
+                                            }
+                                        }
+                                        else {
+                                            echo CalculationBase::Display(floatval($winding), 0);
+                                        }
+                                        
+                                        switch ($winding_unit) {
+                                            case 'kg':
+                                                echo " кг";
+                                                break;
+                                            case 'mm':
+                                                echo " мм";
+                                                break;
+                                            case 'm':
+                                                echo " м";
+                                                break;
+                                            case 'pc':
+                                                echo " м";
+                                                break;
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Прим. метраж намотки</td>
+                                    <td>
+                                        <?php
+                                        /* 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))
+                                        * 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))-200
+                                        * 2) Если намотка до = «мм» , то значение = "Нет"
+                                        * 3) Если намотка до = «м», то значение = "Нет"
+                                        * 4) Если намотка до = «шт» , то значение = "Нет" */
+                                        if(empty($winding) || empty($winding_unit)) {
+                                            echo 'Ждем данные';
+                                        }
+                                        elseif(empty ($weight) && empty($individual_density)) {
+                                            echo 'Нет данных по уд. весу пленки';
+                                        }
+                                        elseif(empty ($width_1)) {
+                                            echo 'Нет данных по ширине мат-ла';
+                                        }
+                                        elseif($winding_unit == 'kg') {
+                                            $final_density = empty($weight) ? $individual_density : $weight;
+                                            $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
+                                            $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
+                                            echo CalculationBase::Display((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
+                                        }
+                                        else {
+                                            echo 'Нет';
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Шпуля</td>
+                                    <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Этикеток в 1 м. пог.</td>
+                                    <td><?= empty($length) ? "" : CalculationBase::Display(1 / floatval($length) * 1000, 4) ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Бирки</td>
+                                    <td>
+                                        <?php
+                                        switch ($labels) {
+                                            case LABEL_PRINT_DESIGN:
+                                                echo "Принт-Дизайн";
+                                                break;
+                                            case LABEL_FACELESS:
+                                                echo "Безликие";
+                                                break;
+                                            default :
+                                                echo "Ждём данные";
+                                                break;
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Склейки</td>
+                                    <td>Помечать</td>
+                                </tr>
+                                <tr>
+                                    <td>Отходы</td>
+                                    <td><?=$waste ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Упаковка</td>
+                                    <td>
+                                        <?php
+                                        switch ($package) {
+                                            case PACKAGE_PALLETED:
+                                                echo "Паллетирование";
+                                                break;
+                                            case PACKAGE_BULK:
+                                                echo "Россыпью";
+                                                break;
+                                            case PACKAGE_EUROPALLET:
+                                                echo "Европаллет";
+                                                break;
+                                            case PACKAGE_BOXES:
+                                                echo "Коробки";
+                                                break;
+                                            default :
+                                                echo "Ждем данные";
+                                                break;
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="photolable">
                 <span class="font-weight-bold">Фотометка:</span>&nbsp;
                 <?php
                 switch ($photolabel) {
@@ -1014,7 +1005,10 @@ $current_date_time = date("dmYHis");
                     </td>
                 </tr>
             </table>
-            <div class="font-weight-bold" style="font-size: 18px;">Комментарий:</div>
+                </div>
+            </div>
+            
+            <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px;">Комментарий:</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
             <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
