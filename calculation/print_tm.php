@@ -382,7 +382,10 @@ $current_date_time = date("dmYHis");
             }
             
             td {
-                line-height: 32px;
+                line-height: 20px;
+                padding-top: 7px;
+                padding-bottom: 7px;
+                /*line-height: 32px;*/
                 border-bottom: solid 1px #cccccc;
             }
             
