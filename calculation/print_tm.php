@@ -423,11 +423,6 @@ $current_date_time = date("dmYHis");
                 font-size: 18px;
             }
             
-            /*#comment {
-                margin-bottom: 50px;
-                font-size: 18px;
-            }*/
-            
             .border-bottom-2 {
                 border-bottom: solid 2px gray;
             }
