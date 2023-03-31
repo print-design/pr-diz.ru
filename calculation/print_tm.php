@@ -518,7 +518,7 @@ $current_date_time = date("dmYHis");
                 <div class="col-4 border-right">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2" class="table-header">Информация для печатника</td>
+                            <td colspan="2" class="table-header font-weight-bold">ИНФОРМАЦИЯ ДЛЯ ПЕЧАТИ</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="font-weight-bold">Печать</td>
@@ -610,7 +610,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Красочность</td>
-                            <td><?=$ink_number ?> цв.</td>
+                            <td><?=$ink_number ?> красок</td>
                         </tr>
                         <tr>
                             <td>Штамп</td>
@@ -622,7 +622,7 @@ $current_date_time = date("dmYHis");
                 <div class="col-4 border-right">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2" class="table-header"><?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?> Информация для ламинации<?php else: echo "<br /> "; endif; ?></td>
+                            <td colspan="2" class="table-header font-weight-bold"><?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
                         </tr>
                         <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
@@ -670,7 +670,7 @@ $current_date_time = date("dmYHis");
                 <div class="col-4">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2" class="table-header">Информация для резчика</td>
+                            <td colspan="2" class="table-header font-weight-bold">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</td>
                         </tr>
                         <tr>
                             <td>Отгрузка в</td>
@@ -841,7 +841,7 @@ $current_date_time = date("dmYHis");
                 <div class="col-4 border-right">
                     <table class="w-100">
                         <tr>
-                            <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> цв.</td>
+                            <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> красок</td>
                         </tr>
                         <?php
                         for($i = 1; $i <= $ink_number; $i++):
