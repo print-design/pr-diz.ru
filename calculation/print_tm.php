@@ -385,7 +385,6 @@ $current_date_time = date("dmYHis");
                 line-height: 20px;
                 padding-top: 7px;
                 padding-bottom: 7px;
-                /*line-height: 32px;*/
                 border-bottom: solid 1px #cccccc;
             }
             
@@ -457,7 +456,7 @@ $current_date_time = date("dmYHis");
                 
                 .break_page {
                     page-break-before: always;
-                    height: 260px;
+                    height: 210px;
                 }
             }
             
