@@ -617,6 +617,68 @@ $current_date_time = date("dmYHis");
                             <td><?= (empty($knife) || $knife == 0) ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
+                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <tr>
+                            <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> красок</td>
+                        </tr>
+                        <?php
+                        for($i = 1; $i <= $ink_number; $i++):
+                        $ink_var = "ink_$i";
+                        $color_var = "color_$i";
+                        $cmyk_var = "cmyk_$i";
+                        $percent_var = "percent_$i";
+                        $cliche_var = "cliche_$i";
+                        ?>
+                        <tr>
+                            <td>
+                                <?php
+                                switch ($$ink_var) {
+                                    case CalculationBase::CMYK:
+                                        switch ($$cmyk_var) {
+                                            case CalculationBase::CYAN:
+                                                echo "Cyan";
+                                                break;
+                                            case CalculationBase::MAGENDA:
+                                                echo "Magenda";
+                                                break;
+                                            case CalculationBase::YELLOW:
+                                                echo "Yellow";
+                                                break;
+                                            case CalculationBase::KONTUR:
+                                                echo "Kontur";
+                                                break;
+                                        }
+                                        break;
+                                    case CalculationBase::PANTON:
+                                        echo "P".$$color_var;
+                                        break;
+                                    case CalculationBase::WHITE;
+                                        echo "Белая";
+                                        break;
+                                    case CalculationBase::LACQUER;
+                                        echo "Лак";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                switch ($$cliche_var) {
+                                    case CalculationBase::OLD:
+                                        echo "Старая";
+                                        break;
+                                    case CalculationBase::FLINT:
+                                        echo "Новая Flint $machine_coeff";
+                                        break;
+                                    case CalculationBase::KODAK:
+                                        echo "Новая Kodak $machine_coeff";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php endfor; ?>
+                        <?php endif; ?>
                     </table>
                 </div>
                 <div class="col-4 border-right">
@@ -663,6 +725,33 @@ $current_date_time = date("dmYHis");
                         <tr>
                             <td>Анилокс</td>
                             <td>Нет</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
+                        </tr>
+                        <tr>
+                            <td>Марка пленки</td>
+                            <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Толщина</td>
+                            <td class="text-nowrap"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                        </tr>
+                        <tr>
+                            <td>Ширина мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на приладку</td>
+                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Метраж на тираж</td>
+                            <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
+                        </tr>
+                        <tr>
+                            <td>Всего мат-ла</td>
+                            <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
                         <?php endif; ?>
                     </table>
@@ -836,107 +925,18 @@ $current_date_time = date("dmYHis");
                     </table>
                 </div>
             </div>
+            
+            
+            
             <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="row">
-                <div class="col-4 border-right">
-                    <table class="w-100">
-                        <tr>
-                            <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> красок</td>
-                        </tr>
-                        <?php
-                        for($i = 1; $i <= $ink_number; $i++):
-                        $ink_var = "ink_$i";
-                        $color_var = "color_$i";
-                        $cmyk_var = "cmyk_$i";
-                        $percent_var = "percent_$i";
-                        $cliche_var = "cliche_$i";
-                        ?>
-                        <tr>
-                            <td>
-                                <?php
-                                switch ($$ink_var) {
-                                    case CalculationBase::CMYK:
-                                        switch ($$cmyk_var) {
-                                            case CalculationBase::CYAN:
-                                                echo "Cyan";
-                                                break;
-                                            case CalculationBase::MAGENDA:
-                                                echo "Magenda";
-                                                break;
-                                            case CalculationBase::YELLOW:
-                                                echo "Yellow";
-                                                break;
-                                            case CalculationBase::KONTUR:
-                                                echo "Kontur";
-                                                break;
-                                        }
-                                        break;
-                                    case CalculationBase::PANTON:
-                                        echo "P".$$color_var;
-                                        break;
-                                    case CalculationBase::WHITE;
-                                        echo "Белая";
-                                        break;
-                                    case CalculationBase::LACQUER;
-                                        echo "Лак";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                switch ($$cliche_var) {
-                                    case CalculationBase::OLD:
-                                        echo "Старая";
-                                        break;
-                                    case CalculationBase::FLINT:
-                                        echo "Новая Flint $machine_coeff";
-                                        break;
-                                    case CalculationBase::KODAK:
-                                        echo "Новая Kodak $machine_coeff";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <?php
-                        endfor;
-                        ?>
-                    </table>
-                </div>
-                <div class="col-4 border-right">
-                    <table class="w-100">
-                        <tr>
-                            <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
-                        </tr>
-                        <tr>
-                            <td>Марка пленки</td>
-                            <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
-                        </tr>
-                        <tr>
-                            <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
-                        </tr>
-                        <tr>
-                            <td>Ширина мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td>Метраж на приладку</td>
-                            <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Метраж на тираж</td>
-                            <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Всего мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
-                        </tr>
-                    </table>
-                </div>
+                
+                
             </div>
             <?php endif; ?>
+            
+            
+            
             <div class="photolable">
                 <span class="font-weight-bold">Фотометка:</span>&nbsp;
                 <?php
