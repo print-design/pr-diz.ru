@@ -38,28 +38,28 @@ if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
     $grafik_machine_id = $grafik_machines[$machine_id];
     $workshift_id = null;
     
-    $sql = "select id from workshift where date = '$date' and shift = '$shift' and machine_id = $grafik_machine_id";
-    $fetcher = new FetcherGrafik($sql);
+    $sql = "select id from grafik_workshift where date = '$date' and shift = '$shift' and machine_id = $grafik_machine_id";
+    $fetcher = new Fetcher($sql);
         
     if($row = $fetcher->Fetch()) {
         $workshift_id = $row['id'];
     }
     else {
-        $sql = "insert into workshift (date, shift, machine_id) values ('$date', '$shift', $grafik_machine_id)";
-        $executer = new ExecuterGrafik($sql);
+        $sql = "insert into grafik_workshift (date, shift, machine_id) values ('$date', '$shift', $grafik_machine_id)";
+        $executer = new Executer($sql);
         $workshift_id = $executer->insert_id;
         $error_message = $executer->error;
     }
     
     // Создание нового тиража
     $position = 1;
-    $sql = "insert into edition (name, organization, workshift_id, position) values ('$name', '$customer', $workshift_id, $position)";
-    $executer = new ExecuterGrafik($sql);
+    $sql = "insert into grafik_edition (name, organization, workshift_id, position) values ('$name', '$customer', $workshift_id, $position)";
+    $executer = new Executer($sql);
     $error_message = $executer->error;
     $insert_id = $executer->insert_id;
     
     // Удаление пустых тиражей в конечной смене
-    $sql = "delete from edition where workshift_id = $workshift_id "
+    $sql = "delete from grafik_edition where workshift_id = $workshift_id "
             . "and (name is null or name = '') "
             . "and (organization is null or organization = '') "
             . "and length is null "
@@ -69,7 +69,7 @@ if(null !== filter_input(INPUT_POST, 'grafik-submit')) {
             . "and roller_id is null "
             . "and manager_id is null "
             . "and (comment is null or comment = '')";
-    $executer = new ExecuterGrafik($sql);
+    $executer = new Executer($sql);
     $error_message = $executer->error;
     
     $sql = "update techmap set grafik_id=$insert_id where id=$id";
@@ -86,29 +86,29 @@ if(null !== filter_input(INPUT_POST, 'remove-from-grafik-submit')) {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "select workshift_id from edition where id = $grafik_id";
-        $fetcher = new FetcherGrafik($sql);
+        $sql = "select workshift_id from grafik_edition where id = $grafik_id";
+        $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $workshift_id = $row[0];
             
-            $sql = "delete from edition where id = $grafik_id";
-            $executer = new ExecuterGrafik($sql);
+            $sql = "delete from grafik_edition where id = $grafik_id";
+            $executer = new Executer($sql);
             $error_message = $executer->error;
             
             if(empty($error_message)) {
-                $count = (new FetcherGrafik("select count(id) from edition where workshift_id = $workshift_id"))->Fetch()[0];
+                $count = (new Fetcher("select count(id) from grafik_edition where workshift_id = $workshift_id"))->Fetch()[0];
                 
                 if($count == 0) {
-                    $row = (new FetcherGrafik("select user1_id, user2_id from workshift where id = $workshift_id"))->Fetch();
+                    $row = (new Fetcher("select user1_id, user2_id from grafik_workshift where id = $workshift_id"))->Fetch();
                     
                     if(empty($row[0]) && empty($row[1])) {
-                        $error_message = (new ExecuterGrafik("delete from workshift where id = $workshift_id"))->error;
+                        $error_message = (new Executer("delete from grafik_workshift where id = $workshift_id"))->error;
                     }
                     else {
                         $position = 1;
-                        $error_message = (new ExecuterGrafik("insert into edition (workshift_id, position) values ($workshift_id, $position)"))->error;
+                        $error_message = (new Executer("insert into grafik_edition (workshift_id, position) values ($workshift_id, $position)"))->error;
                     }
                 }
             }
@@ -154,10 +154,10 @@ GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to')
 $grafik_editions = array();
 array_push($grafik_editions, 0);
 
-$sql = "select e.id from edition e inner join "
-        . "workshift ws on e.workshift_id = ws.id "
+$sql = "select e.id from grafik_edition e inner join "
+        . "grafik_workshift ws on e.workshift_id = ws.id "
         . "where ws.date >= '".$date_from->format('Y-m-d')."' and ws.date <= '".$date_to->format('Y-m-d')."'";
-$fetcher = new FetcherGrafik($sql);
+$fetcher = new Fetcher($sql);
 
 while ($row = $fetcher->Fetch()) {
     array_push($grafik_editions, $row['id']);

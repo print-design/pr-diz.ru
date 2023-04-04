@@ -7,8 +7,8 @@ class GrafikTimetableReadonly {
         $this->dateTo = $to;
         $this->machineId = $machine_id;
         
-        $sql = "select name, user1_name, user2_name, role_id, has_organization, has_edition, has_material, has_thickness, has_width, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from machine where id = $machine_id";
-        $fetcher = new FetcherGrafik($sql);
+        $sql = "select name, user1_name, user2_name, role_id, has_organization, has_edition, has_material, has_thickness, has_width, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from grafik_machine where id = $machine_id";
+        $fetcher = new Fetcher($sql);
         $this->error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -40,12 +40,12 @@ class GrafikTimetableReadonly {
         // Список рабочих смен
         $all = array();
         $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
-                . "(select count(id) from edition where workshift_id=ws.id) editions_count "
-                . "from workshift ws "
-                . "left join user u1 on ws.user1_id = u1.id "
-                . "left join user u2 on ws.user2_id = u2.id "
+                . "(select count(id) from grafik_edition where workshift_id=ws.id) editions_count "
+                . "from grafik_workshift ws "
+                . "left join grafik_user u1 on ws.user1_id = u1.id "
+                . "left join grafik_user u2 on ws.user2_id = u2.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
-        $fetcher = new FetcherGrafik($sql);
+        $fetcher = new Fetcher($sql);
         
         while ($item = $fetcher->Fetch()) {
             $all[$item['date'].$item['shift']] = $item;
@@ -58,15 +58,15 @@ class GrafikTimetableReadonly {
                 . "e.roller_id, r.name roller, "
                 . "e.lamination_id, lam.name lamination, "
                 . "e.manager_id, m.fio manager "
-                . "from edition e "
-                . "left join edition_status s on e.status_id = s.id "
-                . "left join roller r on e.roller_id = r.id "
-                . "left join lamination lam on e.lamination_id = lam.id "
-                . "left join user m on e.manager_id = m.id "
-                . "inner join workshift ws on e.workshift_id = ws.id "
+                . "from grafik_edition e "
+                . "left join grafik_edition_status s on e.status_id = s.id "
+                . "left join grafik_roller r on e.roller_id = r.id "
+                . "left join grafik_lamination lam on e.lamination_id = lam.id "
+                . "left join grafik_user m on e.manager_id = m.id "
+                . "inner join grafik_workshift ws on e.workshift_id = ws.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
         
-        $fetcher = new FetcherGrafik($sql);
+        $fetcher = new Fetcher($sql);
         
         while ($item = $fetcher->Fetch()) {
             if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) {
