@@ -34,6 +34,6 @@
         </form>
     </div>
 </div>
-<?php elseif($status_id == TECHMAP): ?>
+<?php elseif($status_id != DRAFT && $status_id != CALCULATION && $status_id != TRASH): ?>
 <a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
 <?php endif; ?>

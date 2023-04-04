@@ -39,7 +39,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))):
     ?>
     <a href="<?=APPLICATION ?>/roll/" class="left_bar_item<?=$sklad_class ?>" title="Склад" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_sklad.svg" /></a>
-    <a href="<?=APPLICATION ?>/grafik.php?id=1" class="left_bar_item<?=$grafik_class ?>" title="График" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
+    <a href="<?=APPLICATION ?>/grafik.php?id=1" class="left_bar_item<?=$grafik_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
     if(IsInRole(array('technologist', 'dev', 'administrator'))):

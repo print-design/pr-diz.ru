@@ -172,6 +172,21 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
 }
 
+// Постановка в план технологической карты
+if(null !== filter_input(INPUT_POST, 'plan_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    
+    if(!empty($id)) {
+        $sql = "update calculation set status_id = ".WAITING." where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        header('Location: details.php?id='.$id);
+    }
+}
+
 // Удаление технологической карты
 if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -201,7 +216,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
-        . "c.streams_number, c.stream_width, c.length, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, "
+        . "c.streams_number, c.stream_width, c.length, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.status_id, "
         . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
         . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
         . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -289,6 +304,7 @@ $raport = $row['raport'];
 $number_in_raport = $row['number_in_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
+$status_id = $row['status_id'];
 
 for($i=1; $i<=$ink_number; $i++) {
     $ink_var = "ink_$i";
@@ -1505,11 +1521,16 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                             <div>
                                 <?php
                                 $submit_class = " d-none";
+                                $plan_class = " d-none";
                                 if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
                                     $submit_class = "";
                                 }
+                                elseif($status_id == TECHMAP) {
+                                    $plan_class = "";
+                                }
                                 ?>
                                 <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
+                                <button type="submit" name="plan_submit" id="plan_submit" class="btn btn-dark draft<?=$plan_class ?>" style="width: 175px;">Поставить в план</button>
                             </div>
                             <div>
                                 <?php
