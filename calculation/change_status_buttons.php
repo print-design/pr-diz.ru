@@ -34,6 +34,19 @@
         </form>
     </div>
 </div>
-<?php elseif($status_id != DRAFT && $status_id != CALCULATION && $status_id != TRASH): ?>
+<?php elseif ($status_id == WAITING && IsInRole(array("manager-senior", "technologist"))): ?>
+<div class="d-flex justify-content-start">
+    <form method="post">
+        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+        <input type="hidden" name="status_id" value="<?=CONFIRMED ?>" />
+        <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Одобрить</button>
+    </form>
+    <form method="post" class="ml-4">
+        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+        <input type="hidden" name="status_id" value="<?=REJECTED ?>" />
+        <button type="submit" name="change-status-submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Отклонить</button>
+    </form>
+</div>
+<?php else: ?>
 <a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
 <?php endif; ?>
