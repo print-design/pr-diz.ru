@@ -93,15 +93,15 @@ while($row = $fetcher->Fetch()) {
                 </tr>
                 <?php
                 endif;
-                $no_border_top = $show_table_header ? '' : " style='border-top: 0;'";
+                $no_border_top = $show_table_header ? '' : " border-top: 0;";
                 foreach($role['employees'] as $e_key => $employee):
                 ?>
                 <tr>
-                    <td<?=$no_border_top ?> style="width: 25%;"><?=$employee['last_name'] ?></td>
-                    <td<?=$no_border_top ?> style="width: 25%;"><?=$employee['first_name'] ?></td>
-                    <td<?=$no_border_top ?> style="width: 20%;"><?=$employee['email'] ?></td>
-                    <td<?=$no_border_top ?>><?=$employee['phone'] ?></td>
-                    <td<?=$no_border_top ?> class="text-right switch" style="width: 80px;">
+                    <td style="width: 25%;<?=$no_border_top ?>"><?=$employee['last_name'] ?></td>
+                    <td style="width: 25%;<?=$no_border_top ?>"><?=$employee['first_name'] ?></td>
+                    <td style="width: 20%;<?=$no_border_top ?>"><?=$employee['email'] ?></td>
+                    <td style="width: auto;<?=$no_border_top ?>"><?=$employee['phone'] ?></td>
+                    <td class="text-right switch" style="width: 80px;<?=$no_border_top ?>">
                         <input type="checkbox" data-id="<?=$e_key ?>"<?=$employee['active'] ? " checked='checked'" : "" ?> />
                     </td>
                 </tr>
