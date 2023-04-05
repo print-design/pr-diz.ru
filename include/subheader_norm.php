@@ -73,3 +73,4 @@ $glue_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATI
     <a href="<?=APPLICATION ?>/admin/glue.php<?= BuildQuery('laminator_id', $laminator_id) ?>" class="mr-4<?=$glue_class ?>">Цена клея</a>
 </div>
 <?php endif; ?>
+<hr />

@@ -77,9 +77,7 @@ if(empty($error_message)) {
         <div class="container-fluid">
             <?php
             include '../include/subheader_norm.php';
-            ?>
-            <hr />
-            <?php
+            
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }

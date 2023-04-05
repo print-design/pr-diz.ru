@@ -19,6 +19,8 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
         ?>
         <div class="container-fluid">
             <?php
+            include '../include/subheader_grafik.php';
+            
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
