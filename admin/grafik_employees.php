@@ -85,9 +85,9 @@ while($row = $fetcher->Fetch()) {
             <table class="table">
                 <?php if($show_table_header): ?>
                 <tr>
-                    <th style="border-top: 0;">Фамилия</th>
-                    <th style="border-top: 0;">Имя</th>
-                    <th style="border-top: 0;">E-Mail</th>
+                    <th style="border-top: 0; width: 25%;">Фамилия</th>
+                    <th style="border-top: 0; width: 25%;">Имя</th>
+                    <th style="border-top: 0; width: 20%;">E-Mail</th>
                     <th style="border-top: 0;">Телефон</th>
                     <th style="border-top: 0; width: 80px;">Активный</th>
                 </tr>
@@ -97,11 +97,11 @@ while($row = $fetcher->Fetch()) {
                 foreach($role['employees'] as $e_key => $employee):
                 ?>
                 <tr>
-                    <td<?=$no_border_top ?>><?=$employee['last_name'] ?></td>
-                    <td<?=$no_border_top ?>><?=$employee['first_name'] ?></td>
-                    <td<?=$no_border_top ?>><?=$employee['email'] ?></td>
+                    <td<?=$no_border_top ?> style="width: 25%;"><?=$employee['last_name'] ?></td>
+                    <td<?=$no_border_top ?> style="width: 25%;"><?=$employee['first_name'] ?></td>
+                    <td<?=$no_border_top ?> style="width: 20%;"><?=$employee['email'] ?></td>
                     <td<?=$no_border_top ?>><?=$employee['phone'] ?></td>
-                    <td<?=$no_border_top ?> class="text-right switch">
+                    <td<?=$no_border_top ?> class="text-right switch" style="width: 80px;">
                         <input type="checkbox" data-id="<?=$e_key ?>"<?=$employee['active'] ? " checked='checked'" : "" ?> />
                     </td>
                 </tr>
@@ -116,4 +116,16 @@ while($row = $fetcher->Fetch()) {
             ?>
         </div>
     </body>
+    <?php
+    include '../include/footer.php';
+    ?>
+    <script>
+        // Активирование / деактивирование пользователя
+        $(".switch input[type='checkbox']").change(function() {
+            $.ajax({ url: "../ajax/grafik_employee.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
+                    .fail(function() {
+                        alert('Ошибка при установке / снятии флага активности пользователя');
+            });
+        });
+    </script>
 </html>
