@@ -31,7 +31,7 @@ elseif ($file == 'film.php') {
 elseif($file == 'currency.php') {
     $currency_class = ' disabled';
 }
-elseif($file == 'grafik.php') {
+elseif($file == 'grafik_employees.php') {
     $grafik_class = ' disabled';
 }
 elseif($folder == 'admin') {
@@ -60,7 +60,7 @@ elseif($folder == 'admin') {
                 <a class="nav-link<?=$currency_class ?>" href="<?=APPLICATION ?>/admin/currency.php">Курсы валют</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$grafik_class ?>" href="<?=APPLICATION ?>/admin/grafik.php">План</a>
+                <a class="nav-link<?=$grafik_class ?>" href="<?=APPLICATION ?>/admin/grafik_employees.php">План</a>
             </li>
             <?php endif; ?>
         </ul>
