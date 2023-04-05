@@ -111,7 +111,6 @@ while($row = $fetcher->Fetch()) {
         <?php
         include '../include/head.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
         <style>
             h2 {
                 margin-top: 20px;
@@ -233,7 +232,6 @@ while($row = $fetcher->Fetch()) {
                     <th style="border-top: 0;">Цена</th>
                 </tr>
                 <?php
-                
                 endif;
                 $no_border_top = $show_table_header ? '' : " style='border-top: 0;'";
                 foreach($film['film_variations'] as $fv_key => $film_variation):

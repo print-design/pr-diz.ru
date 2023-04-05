@@ -7,20 +7,24 @@ if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
 }
 
 // Валидация формы
-define('ISINVALID', ' is-invalid');
+define('ISINVALID', 'is-invalid');
 $form_valid = true;
 $error_message = '';
 
+$role_id_valid = '';
 $first_name_valid = '';
 $last_name_valid = '';
-$role_id_valid = '';
 $email_valid = '';
 $phone_valid = '';
-$username_valid = '';
-$password_valid = '';
-        
+
 // Обработка отправки формы
-if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
+if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
+    $role_id = filter_input(INPUT_POST, 'role_id');
+    if(empty($role_id)) {
+        $role_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     $first_name = filter_input(INPUT_POST, 'first_name');
     if(empty($first_name)) {
         $first_name_valid = ISINVALID;
@@ -30,12 +34,6 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
     $last_name = filter_input(INPUT_POST, 'last_name');
     if(empty($last_name)) {
         $last_name_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $role_id = filter_input(INPUT_POST, 'role_id');
-    if(empty($role_id)) {
-        $role_id_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -51,42 +49,18 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         $form_valid = false;
     }
     
-    $username = filter_input(INPUT_POST, 'username');
-    if(empty($username)) {
-        $username_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $password = filter_input(INPUT_POST, 'password');
-    if(empty($password)) {
-        $password_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     if($form_valid) {
         $first_name = addslashes($first_name);
         $last_name = addslashes($last_name);
         $email = addslashes($email);
         $phone = addslashes($phone);
-        $username = addslashes($username);
         
-        $sql = "select count(id) from user where username = '$username'";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            if($row[0] != 0) {
-                $error_message = "Такой логин уже имеется в базе";
-            }
-        }
+        $sql = "insert into grafik_employee (first_name, last_name, role_id, email, phone) values ('$first_name', '$last_name', $role_id, '$email', '$phone')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
         
         if(empty($error_message)) {
-            $sql = "insert into user (username, password, first_name, last_name, role_id, email, phone) values ('$username', password('$password'), '$first_name', '$last_name', $role_id, '$email', '$phone')";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-            $id = $executer->insert_id;
-        }
-        
-        if(empty($error_message)) {
-            header('Location: '.APPLICATION."/user/");
+            header('Location: grafik_employees.php');
         }
     }
 }
@@ -104,27 +78,30 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         ?>
         <div class="container-fluid">
             <?php
+            include '../include/subheader_grafik.php';
+            
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>
-            <div style="width:387px;">
+            <a class="btn btn-outline-dark backlink" href="grafik_employees.php">Назад</a>
+            <div style="width: 387px;">
                 <h1 style="font-size: 24px; font-weight: 600;">Добавление сотрудника</h1>
                 <form method="post">
                     <div class="form-group">
                         <select id="role_id" name="role_id" class="form-control" required="required">
                             <option value="" hidden="hidden">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
                             <?php
-                            $roles = (new Grabber('select id, local_name from role order by priority'))->result;
-                            foreach ($roles as $role) {
-                                $id = $role['id'];
-                                $local_name = $role['local_name'];
+                            $sql = "select id, name from grafik_role order by id";
+                            $grabber = new Grabber($sql);
+                            $roles = $grabber->result;
+                            
+                            foreach($roles as $role):
                                 $selected = '';
                                 if(filter_input(INPUT_POST, 'role_id') == $role['id']) $selected = " selected='selected'";
-                                echo "<option value='$id'$selected>$local_name</option>";
-                            }
                             ?>
+                            <option value="<?=$role['id'] ?>"<?=$selected ?>><?=$role['name'] ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="row">
@@ -191,36 +168,14 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                             <div class="invalid-feedback">Телефон обязательно</div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-6 form-group">
-                            <label for="username">Логин</label>
-                            <input type="text" 
-                                   id="username" 
-                                   name="username" 
-                                   class="form-control<?=$username_valid ?>" 
-                                   value="<?= filter_input(INPUT_POST, 'username') ?>" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onmouseup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" 
-                                   onfocusout="javascript: $(this).attr('id', 'username'); $(this).attr('name', 'username');" />
-                            <div class="invalid-feedback">Логин обязательно</div>
-                        </div>
-                        <div class="col-6 form-group">
-                            <label for="password">Пароль</label>
-                            <input type="password" id="password" name="password" class="form-control<?=$password_valid ?>" value="" required="required"/>
-                            <div class="invalid-feedback">Пароль обязательно</div>
-                        </div>
-                    </div>
                     <div class="form-group" style="padding-top: 24px;">
-                        <button type="submit" class="btn btn-dark" id="user_create_submit" name="user_create_submit">Создать</button>
+                        <button type="submit" class="btn btn-dark" id="employee_create_submit" name="employee_create_submit">Создать</button>
                     </div>
                 </form>
             </div>
         </div>
-        <?php
-        include '../include/footer.php';
-        ?>
     </body>
+    <?php
+    include '../include/footer.php';
+    ?>
 </html>

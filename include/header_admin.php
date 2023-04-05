@@ -31,7 +31,7 @@ elseif ($file == 'film.php') {
 elseif($file == 'currency.php') {
     $currency_class = ' disabled';
 }
-elseif($file == 'grafik_employees.php') {
+elseif($file == 'grafik_employees.php' || $file == 'grafik_employees_create.php') {
     $grafik_class = ' disabled';
 }
 elseif($folder == 'admin') {
