@@ -22,7 +22,7 @@ include 'left_bar.php';
             if(IsInRole(array('technologist', 'dev', 'manager', 'storekeeper'))):
             $sql = "select id, name from grafik_machine order by position";
             $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()):
+            while ($row = $fetcher->Fetch() && false):
             $status = filter_input(INPUT_GET, 'id') == $row['id'] ? ' disabled' : '';
             ?>
             <li class="nav-item">

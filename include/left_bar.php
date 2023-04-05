@@ -21,7 +21,7 @@ if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
 elseif($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {
     $sklad_class = " active";
 }
-elseif($file == "grafik.php") {
+elseif($file == "grafik.php" && $folder != 'admin') {
     $grafik_class = " active";
 }
 elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
