@@ -47,6 +47,19 @@
         <button type="submit" name="change-status-submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Отклонить</button>
     </form>
 </div>
+<?php elseif($status_id == CONFIRMED): ?>
+<div class="d-flex justify-content-between">
+    <div>
+        <a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
+    </div>
+    <div>
+        <form method="post">
+            <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+            <input type="hidden" name="status_id" value="<?=TECHMAP ?>" />
+            <button type="submit" name="change-status-submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Отменить запрос</button>
+        </form>
+    </div>
+</div>
 <?php else: ?>
 <a href="techmap.php?id=<?=$id ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>
 <?php endif; ?>
