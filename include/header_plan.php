@@ -37,7 +37,7 @@ elseif ($file == 'cut.php') {
                 <a class="nav-link<?=$queue_class ?>" href="queue.php">Очередь</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$print_class ?>" href="print.php?id=1">Печать</a>
+                <a class="nav-link<?=$print_class ?>" href="print.php?id=4">Печать</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$laminate_class ?>" href="laminate.php">Ламинация</a>
