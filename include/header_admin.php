@@ -54,7 +54,7 @@ elseif($folder == 'admin') {
                 <a class="nav-link<?=$film_class ?>" href="<?=APPLICATION ?>/supplier/film.php">Пленка</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$norm_class ?>" href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', 1) ?>">Нормы</a>
+                <a class="nav-link<?=$norm_class ?>" href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', 4) ?>">Нормы</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$currency_class ?>" href="<?=APPLICATION ?>/admin/currency.php">Курсы валют</a>

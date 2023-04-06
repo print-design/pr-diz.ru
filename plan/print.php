@@ -19,10 +19,13 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
         ?>
         <div class="container-fluid">
             <?php
+            include '../include/subheader_print.php';
+            
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
+            <h1><?=$print_header ?></h1>
         </div>
         <?php
         include '../include/footer.php';
