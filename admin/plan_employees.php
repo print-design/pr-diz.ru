@@ -8,8 +8,8 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 
 // Получение объекта
 $sql = "select r.id role_id, r.plural role, e.id employee_id, e.first_name, e.last_name, e.phone, e.active "
-        . "from grafik_role r "
-        . "left join grafik_employee e on e.role_id = r.id "
+        . "from plan_role r "
+        . "left join plan_employee e on e.role_id = r.id "
         . "order by r.id, e.active desc, e.last_name";
 $fetcher = new Fetcher($sql);
 $roles = array();
@@ -73,7 +73,7 @@ while($row = $fetcher->Fetch()) {
                 </div>
                 <div>
                     <?php if(IsInRole(array('technologist', 'dev', 'administrator'))): ?>
-                    <a href="grafik_employees_create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить сотрудника</a>
+                    <a href="plan_employees_create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить сотрудника</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -120,7 +120,7 @@ while($row = $fetcher->Fetch()) {
     <script>
         // Активирование / деактивирование пользователя
         $(".switch input[type='checkbox']").change(function() {
-            $.ajax({ url: "../ajax/grafik_employee.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
+            $.ajax({ url: "../ajax/plan_employee.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
                     .fail(function() {
                         alert('Ошибка при установке / снятии флага активности пользователя');
             });

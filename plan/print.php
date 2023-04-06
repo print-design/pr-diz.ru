@@ -64,10 +64,13 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             <h1><?=$print_header ?></h1>
             <div class="wrapper">
                 <nav id="sidebar">
-                    <h2>Очередь</h2>
                     <div id="sidebar_toggle_button">
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть<img src="../images/icons/expand.png" style="margin-left: 8px; display: none;" id="expand_arrow" /></button>
                     </div>
+                    <h2>Очередь</h2>
+                    <?php
+                    $sql = "select";
+                    ?>
                 </nav>
                 <div id="content">
                     <h2>План</h2>

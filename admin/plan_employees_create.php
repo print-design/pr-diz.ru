@@ -47,12 +47,12 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
         $last_name = addslashes($last_name);
         $phone = addslashes($phone);
         
-        $sql = "insert into grafik_employee (first_name, last_name, role_id, phone) values ('$first_name', '$last_name', $role_id, '$phone')";
+        $sql = "insert into plan_employee (first_name, last_name, role_id, phone) values ('$first_name', '$last_name', $role_id, '$phone')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header('Location: grafik_employees.php');
+            header('Location: plan_employees.php');
         }
     }
 }
@@ -76,7 +76,7 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="grafik_employees.php">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="plan_employees.php">Назад</a>
             <div style="width: 387px;">
                 <h1 style="font-size: 24px; font-weight: 600;">Добавление сотрудника</h1>
                 <form method="post">
@@ -84,7 +84,7 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                         <select id="role_id" name="role_id" class="form-control" required="required">
                             <option value="" hidden="hidden">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
                             <?php
-                            $sql = "select id, name from grafik_role order by id";
+                            $sql = "select id, name from plan_role order by id";
                             $grabber = new Grabber($sql);
                             $roles = $grabber->result;
                             
