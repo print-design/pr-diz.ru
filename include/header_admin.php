@@ -17,7 +17,7 @@ $supplier_class = '';
 $film_class = '';
 $norm_class = '';
 $currency_class = '';
-$grafik_class = '';
+$plan_class = '';
 
 if($folder == 'user') {
     $user_class = ' disabled';
@@ -31,8 +31,8 @@ elseif ($file == 'film.php') {
 elseif($file == 'currency.php') {
     $currency_class = ' disabled';
 }
-elseif($file == 'grafik_employees.php' || $file == 'grafik_employees_create.php') {
-    $grafik_class = ' disabled';
+elseif($file == 'plan_employees.php' || $file == 'plan_employees_create.php') {
+    $plan_class = ' disabled';
 }
 elseif($folder == 'admin') {
     $norm_class = ' disabled';
@@ -60,7 +60,7 @@ elseif($folder == 'admin') {
                 <a class="nav-link<?=$currency_class ?>" href="<?=APPLICATION ?>/admin/currency.php">Курсы валют</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$grafik_class ?>" href="<?=APPLICATION ?>/admin/grafik_employees.php">План</a>
+                <a class="nav-link<?=$plan_class ?>" href="<?=APPLICATION ?>/admin/plan_employees.php">План</a>
             </li>
             <?php endif; ?>
         </ul>
