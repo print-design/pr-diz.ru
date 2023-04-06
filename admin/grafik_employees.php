@@ -10,7 +10,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 $sql = "select r.id role_id, r.plural role, e.id employee_id, e.first_name, e.last_name, e.phone, e.active "
         . "from grafik_role r "
         . "left join grafik_employee e on e.role_id = r.id "
-        . "order by r.id, e.last_name";
+        . "order by r.id, e.active desc, e.last_name";
 $fetcher = new Fetcher($sql);
 $roles = array();
 while($row = $fetcher->Fetch()) {
