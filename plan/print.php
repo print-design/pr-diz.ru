@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include '../calculation/status_ids.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -69,8 +70,41 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                     </div>
                     <h2>Очередь</h2>
                     <?php
-                    $sql = "select";
+                    $sql = "select c.id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
+                            . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
+                            . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                            . "u.first_name, u.last_name "
+                            . "from calculation c "
+                            . "inner join customer cus on c.customer_id = cus.id "
+                            . "inner join calculation_result cr on cr.calculation_id = c.id "
+                            . "inner join user u on c.manager_id = u.id "
+                            . "where c.status_id = ".CONFIRMED." order by id desc";
+                    $fetcher = new Fetcher($sql);
+                    
+                    while($row = $fetcher->Fetch()):
+                    $laminations_number = 0;
+                    if(!empty($row['lamination2_film_variation_id']) || !empty($row['lamination2_individual_film_name'])) {
+                        $laminations_number = 2;
+                    }
+                    elseif(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
+                        $laminations_number = 1;
+                    }
                     ?>
+                    <div class='queue_item'>
+                        <h3><a href='../calculation/details.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></h3>
+                        <?=$row['customer'] ?>
+                        <hr />
+                        <div class="row">
+                            <div class="col-6"><strong>Метраж:</strong> <?=number_format($row['length_dirty_1'], 0, ",", " "); ?></div>
+                            <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6"><strong>Ламинации:</strong> <?=$laminations_number ?></div>
+                            <div class="col-6"><strong>Вал:</strong> <?=$row['raport'] ?></div>
+                        </div>
+                        <p><strong>Менеджер:</strong> <?=$row['last_name'] ?> <?= mb_substr($row['first_name'], 0, 1)  ?>.</p>
+                    </div>
+                    <?php endwhile; ?>
                 </nav>
                 <div id="content">
                     <h2>План</h2>
