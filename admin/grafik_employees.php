@@ -85,9 +85,8 @@ while($row = $fetcher->Fetch()) {
             <table class="table">
                 <?php if($show_table_header): ?>
                 <tr>
-                    <th style="border-top: 0; width: 25%;">Фамилия</th>
-                    <th style="border-top: 0; width: 25%;">Имя</th>
-                    <th style="border-top: 0; width: 20%;">E-Mail</th>
+                    <th style="border-top: 0; width: 35%;">Фамилия</th>
+                    <th style="border-top: 0; width: 35%;">Имя</th>
                     <th style="border-top: 0;">Телефон</th>
                     <th style="border-top: 0; width: 80px;">Активный</th>
                 </tr>
