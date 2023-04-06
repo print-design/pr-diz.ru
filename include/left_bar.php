@@ -12,7 +12,7 @@ if($count > 1) {
 
 $zakaz_class = '';
 $sklad_class = '';
-$grafik_class = '';
+$plan_class = '';
 $admin_class = '';
 
 if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
@@ -21,8 +21,8 @@ if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
 elseif($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {
     $sklad_class = " active";
 }
-elseif($file == "grafik.php") {
-    $grafik_class = " active";
+elseif($folder == "plan") {
+    $plan_class = " active";
 }
 elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     $admin_class = " active";
@@ -39,7 +39,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))):
     ?>
     <a href="<?=APPLICATION ?>/roll/" class="left_bar_item<?=$sklad_class ?>" title="Склад" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_sklad.svg" /></a>
-    <a href="<?=APPLICATION ?>/grafik.php?id=1" class="left_bar_item<?=$grafik_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
+    <a href="<?=APPLICATION ?>/plan/print.php?id=1" class="left_bar_item<?=$plan_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
     if(IsInRole(array('technologist', 'dev', 'administrator'))):
