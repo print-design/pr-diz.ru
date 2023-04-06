@@ -14,7 +14,6 @@ $error_message = '';
 $role_id_valid = '';
 $first_name_valid = '';
 $last_name_valid = '';
-$email_valid = '';
 $phone_valid = '';
 
 // Обработка отправки формы
@@ -37,12 +36,6 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
         $form_valid = false;
     }
     
-    $email = filter_input(INPUT_POST, 'email');
-    if(!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $email_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
     $phone = filter_input(INPUT_POST, 'phone');
     if(empty($phone)) {
         $phone_valid = ISINVALID;
@@ -52,10 +45,9 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
     if($form_valid) {
         $first_name = addslashes($first_name);
         $last_name = addslashes($last_name);
-        $email = addslashes($email);
         $phone = addslashes($phone);
         
-        $sql = "insert into grafik_employee (first_name, last_name, role_id, email, phone) values ('$first_name', '$last_name', $role_id, '$email', '$phone')";
+        $sql = "insert into grafik_employee (first_name, last_name, role_id, phone) values ('$first_name', '$last_name', $role_id, '$phone')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
@@ -138,20 +130,6 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6 form-group">
-                            <label for="email">E-Mail</label>
-                            <input type="email" 
-                                   id="email" 
-                                   name="email" 
-                                   class="form-control<?=$email_valid ?>" 
-                                   value="<?= filter_input(INPUT_POST, 'email') ?>" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onmouseup="javascript: $(this).attr('id', 'email'); $(this).attr('name', 'email');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'email'); $(this).attr('name', 'email');" 
-                                   onfocusout="javascript: $(this).attr('id', 'email'); $(this).attr('name', 'email');" />
-                            <div class="invalid-feedback">Неправильный формат e-mail</div>
-                        </div>
                         <div class="col-6 form-group">
                             <label for="phone">Телефон</label>
                             <input type="tel" 

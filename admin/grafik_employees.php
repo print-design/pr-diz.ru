@@ -7,7 +7,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 }
 
 // Получение объекта
-$sql = "select r.id role_id, r.plural role, e.id employee_id, e.first_name, e.last_name, e.email, e.phone, e.active "
+$sql = "select r.id role_id, r.plural role, e.id employee_id, e.first_name, e.last_name, e.phone, e.active "
         . "from grafik_role r "
         . "left join grafik_employee e on e.role_id = r.id "
         . "order by r.id, e.last_name";
@@ -21,7 +21,7 @@ while($row = $fetcher->Fetch()) {
     
     $employee_id = $row['employee_id'];
     if(!isset($roles[$role_id]['employees'][$employee_id]) && !empty($row['first_name']) && !empty($row['last_name'])) {
-        $roles[$role_id]['employees'][$employee_id] = array('first_name' => $row['first_name'], 'last_name' => $row['last_name'], 'email' => $row['email'], 'phone' => $row['phone'], 'active' => $row['active']);
+        $roles[$role_id]['employees'][$employee_id] = array('first_name' => $row['first_name'], 'last_name' => $row['last_name'], 'phone' => $row['phone'], 'active' => $row['active']);
     }
 }
 ?>
@@ -97,9 +97,8 @@ while($row = $fetcher->Fetch()) {
                 foreach($role['employees'] as $e_key => $employee):
                 ?>
                 <tr>
-                    <td style="width: 25%;<?=$no_border_top ?>"><?=$employee['last_name'] ?></td>
-                    <td style="width: 25%;<?=$no_border_top ?>"><?=$employee['first_name'] ?></td>
-                    <td style="width: 20%;<?=$no_border_top ?>"><?=$employee['email'] ?></td>
+                    <td style="width: 35%;<?=$no_border_top ?>"><?=$employee['last_name'] ?></td>
+                    <td style="width: 35%;<?=$no_border_top ?>"><?=$employee['first_name'] ?></td>
                     <td style="width: auto;<?=$no_border_top ?>"><?=$employee['phone'] ?></td>
                     <td class="text-right switch" style="width: 80px;<?=$no_border_top ?>">
                         <input type="checkbox" data-id="<?=$e_key ?>"<?=$employee['active'] ? " checked='checked'" : "" ?> />
