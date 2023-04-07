@@ -95,6 +95,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         <div class="d-flex justify-content-end">
                             <form class="form-inline" method="get">
                                 <label for="from" style="font-size: larger;">от&nbsp;</label>
+                                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                                 <input type="date" 
                                        id="from" name="from" 
                                        class="form-control mr-2" 
@@ -104,7 +105,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                 
                             </form>
                             <?php if(!empty(filter_input(INPUT_GET, 'from'))): ?>
-                            <a href="print.php" class="btn btn-light">Сбросить</a>
+                            <a href="<?= BuildQueryRemove('from') ?>" class="btn btn-light">Сбросить</a>
                                 <?php endif; ?>
                             <button type="button" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                         </div>
