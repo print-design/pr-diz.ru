@@ -1,20 +1,96 @@
 <?php
 include 'GrafikDateReadonly.php';
 
+const DATABASE_NAME_GRAFIK = "grafik";
+
+class ExecuterGrafik {
+    public $error = '';
+    public $insert_id = 0;
+            
+    function __construct($sql) {
+        $conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME_GRAFIK);
+
+        if($conn->connect_error) {
+            $this->error = 'Ошибка соединения: '.$conn->connect_error;
+            return;
+        }
+        
+        $conn->query('set names utf8');
+        $conn->query($sql);
+        $this->error = $conn->error;
+        $this->insert_id = $conn->insert_id;
+        
+        $conn->close();
+    }
+}
+
+class GrabberGrafik {
+    public  $error = '';
+    public $result = array();
+            
+    function __construct($sql) {
+        $conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME_GRAFIK);
+        
+        if($conn->connect_error) {
+            $this->error = 'Ошибка соединения: '.$conn->connect_error;
+            return;
+        }
+        
+        $conn->query('set names utf8');
+        $result = $conn->query($sql);
+        
+        if(is_bool($result)) {
+            $this->error = $conn->error;
+        }
+        else {
+            $this->result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        }
+        
+        $conn->close();
+    }
+}
+
+class FetcherGrafik {
+    public $error = '';
+    private $result;
+            
+    function __construct($sql) {
+        $conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME_GRAFIK);
+        
+        if($conn->connect_error) {
+            $this->error = 'Ошибка соединения: '.$conn->connect_error;
+            return;
+        }
+        
+        $conn->query('set names utf8');
+        $this->result = $conn->query($sql);
+        
+        if(is_bool($this->result)) {
+            $this->error = $conn->error;
+        }
+        
+        $conn->close();
+    }
+    
+    function Fetch() {
+        return mysqli_fetch_array($this->result);
+    }
+}
+
 class GrafikTimetableReadonly {
     public function __construct(DateTime $from, DateTime $to, $machine_id) {
         $this->dateFrom = $from;
         $this->dateTo = $to;
         $this->machineId = $machine_id;
         
-        $sql = "select name, employee1_name, employee2_name, role_id, has_organization, has_edition, has_material, has_thickness, has_width, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from grafik_machine where id = $machine_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select name, user1_name, user2_name, role_id, has_organization, has_edition, has_material, has_thickness, has_width, has_length, has_status, has_roller, has_lamination, has_coloring, coloring, has_manager, has_comment, is_cutter from machine where id = $machine_id";
+        $fetcher = new FetcherGrafik($sql);
         $this->error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $this->name = $row['name'];
-            $this->employee1Name = $row['employee1_name'];
-            $this->employee2Name = $row['employee2_name'];
+            $this->user1Name = $row['user1_name'];
+            $this->user2Name = $row['user2_name'];
             $this->userRole = $row['role_id'];
             $this->hasOrganization = $row['has_organization'];
             $this->hasEdition = $row['has_edition'];
@@ -39,13 +115,13 @@ class GrafikTimetableReadonly {
         
         // Список рабочих смен
         $all = array();
-        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.last_name u1_fio, u2.id u2_id, u2.last_name u2_fio, "
-                . "(select count(id) from grafik_edition where workshift_id=ws.id) editions_count "
-                . "from grafik_workshift ws "
-                . "left join grafik_employee u1 on ws.employee1_id = u1.id "
-                . "left join grafik_employee u2 on ws.employee2_id = u2.id "
+        $sql = "select ws.id, ws.date date, date_format(ws.date, '%d.%m.%Y') fdate, ws.shift, ws.machine_id, u1.id u1_id, u1.fio u1_fio, u2.id u2_id, u2.fio u2_fio, "
+                . "(select count(id) from edition where workshift_id=ws.id) editions_count "
+                . "from workshift ws "
+                . "left join user u1 on ws.user1_id = u1.id "
+                . "left join user u2 on ws.user2_id = u2.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId;
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             $all[$item['date'].$item['shift']] = $item;
@@ -57,16 +133,16 @@ class GrafikTimetableReadonly {
                 . "e.status_id, s.name status, "
                 . "e.roller_id, r.name roller, "
                 . "e.lamination_id, lam.name lamination, "
-                . "e.manager_id, m.last_name manager "
-                . "from grafik_edition e "
-                . "left join grafik_edition_status s on e.status_id = s.id "
-                . "left join grafik_roller r on e.roller_id = r.id "
-                . "left join grafik_lamination lam on e.lamination_id = lam.id "
-                . "left join grafik_employee m on e.manager_id = m.id "
-                . "inner join grafik_workshift ws on e.workshift_id = ws.id "
+                . "e.manager_id, m.fio manager "
+                . "from edition e "
+                . "left join edition_status s on e.status_id = s.id "
+                . "left join roller r on e.roller_id = r.id "
+                . "left join lamination lam on e.lamination_id = lam.id "
+                . "left join user m on e.manager_id = m.id "
+                . "inner join workshift ws on e.workshift_id = ws.id "
                 . "where ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."' and ws.machine_id = ". $this->machineId." order by e.position";
         
-        $fetcher = new Fetcher($sql);
+        $fetcher = new FetcherGrafik($sql);
         
         while ($item = $fetcher->Fetch()) {
             if(!array_key_exists($item['date'], $all_editions) || !array_key_exists($item['shift'], $all_editions[$item['date']])) {

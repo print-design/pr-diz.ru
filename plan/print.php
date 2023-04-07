@@ -71,25 +71,30 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             }
             ?>
             <h1><?=$print_header ?></h1>
-            <div class="wrapper" style="position: fixed; top: 170px; bottom: 0px;">
+            <div class="wrapper" style="position: absolute; top: 170px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
                 <nav id="sidebar">
                     <div id="sidebar_toggle_button">
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
                     </div>
                     <h2>Очередь</h2>
-                    <div id="queue" style="height: 90%; overflow: auto;">
+                    <div id="queue" style="overflow: auto; position: absolute; top: 80px; bottom: 0; left: 0; right: 15px;">
                         <?php
                         $queue = new Queue($machine);
                         $queue->Show();
                         ?>
                     </div>
                 </nav>
-                <div id="content">
-                    <div class="d-flex justify-content-start">
-                        <button type="button" id="sidebarExpand" class="btn btn-link" style="display: none; padding-left: 0;">
-                            <img src="../images/icons/expand.png" style="margin-right: 8px;" />
-                        </button>
-                        <h2>План</h2>
+                <div id="content" style="width: 100%;">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-start">
+                            <button type="button" id="sidebarExpand" class="btn btn-link" style="display: none; padding-left: 0;">
+                                <img src="../images/icons/expand.png" style="margin-right: 8px;" />
+                            </button>
+                            <h2>План</h2>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                        </div>
                     </div>
                 </div>
             </div>

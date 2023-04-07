@@ -20,9 +20,9 @@ include 'left_bar.php';
                 $query_string = '?'.http_build_query($period);
             
             if(IsInRole(array('technologist', 'dev', 'manager', 'storekeeper'))):
-            $sql = "select id, name from grafik_machine order by position";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch() && false):
+            $sql = "select id, name from machine order by position";
+            $fetcher = new FetcherGrafik($sql);
+            while ($row = $fetcher->Fetch()):
             $status = filter_input(INPUT_GET, 'id') == $row['id'] ? ' disabled' : '';
             ?>
             <li class="nav-item">
