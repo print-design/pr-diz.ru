@@ -55,7 +55,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 border-radius: 15px;
                 box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
                 padding: 15px;
-                margin-bottom: 10px;
+                margin: 8px;
             }
         </style>
     </head>
