@@ -1,3 +1,6 @@
+<?php
+require_once '../calculation/calculation.php';
+?>
 <div class="text-nowrap nav2">
     <?php
     $sql = "select id, name from machine order by position";

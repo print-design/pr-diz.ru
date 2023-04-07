@@ -61,7 +61,7 @@ while($row = $fetcher->Fetch()) {
         ?>
         <div class="container-fluid">
             <?php
-            include '../include/subheader_grafik.php';
+            include '../include/subheader_plan.php';
             
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
