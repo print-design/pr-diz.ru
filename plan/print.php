@@ -117,8 +117,8 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         $date_to = null;
                         GetDateFromDateTo(filter_input(INPUT_GET, 'from'), null, $date_from, $date_to);
                         
-                        $plan_timetable = new PlanTimetable($date_from, $date_to, filter_input(INPUT_GET, 'id'));
-                        $plan_timetable->Show();
+                        $timetable = new PlanTimetable($date_from, $date_to, filter_input(INPUT_GET, 'id'));
+                        $timetable->Show();
                         ?>
                     </div>
                 </div>
