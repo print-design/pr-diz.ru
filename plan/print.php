@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include '../calculation/status_ids.php';
+include '../calculation/calculation.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -86,7 +87,14 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join calculation_result cr on cr.calculation_id = c.id "
                             . "inner join user u on c.manager_id = u.id "
-                            . "where c.status_id = ".CONFIRMED." order by id desc";
+                            . "where c.status_id = ".CONFIRMED." ";
+                    if($machine == CalculationBase::ATLAS) {
+                        $sql .= "and false ";
+                    }
+                    else {
+                        $sql .= "and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT." ";
+                    }
+                    $sql .= "order by id desc";
                     $fetcher = new Fetcher($sql);
                     
                     while($row = $fetcher->Fetch()):

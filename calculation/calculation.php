@@ -261,6 +261,7 @@ class CalculationBase {
     // Машины
     // Используется в условии: если комифлекс, то растворитель флексоль 32, если нет - этоксипропанол
     const COMIFLEX = 'comiflex';
+    const ATLAS = 'atlas';
     
     // Исходные величины для вычислений
     public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
