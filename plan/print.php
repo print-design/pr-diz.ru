@@ -92,7 +92,20 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             </button>
                             <h2>План</h2>
                         </div>
-                        <div>
+                        <div class="d-flex justify-content-end">
+                            <form class="form-inline" method="get">
+                                <label for="from" style="font-size: larger;">от&nbsp;</label>
+                                <input type="date" 
+                                       id="from" name="from" 
+                                       class="form-control mr-2" 
+                                       value="<?= filter_input(INPUT_GET, 'from') ?>" 
+                                       style="border: 0; width: 8.5rem;" 
+                                       onchange="javascript: this.form.submit();" />
+                                
+                            </form>
+                            <?php if(!empty(filter_input(INPUT_GET, 'from'))): ?>
+                            <a href="print.php" class="btn btn-light">Сбросить</a>
+                                <?php endif; ?>
                             <button type="button" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                         </div>
                     </div>
