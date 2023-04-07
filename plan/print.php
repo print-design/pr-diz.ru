@@ -124,12 +124,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6"><strong>Метраж:</strong> <?=number_format($row['length_dirty_1'], 0, ",", " "); ?></div>
+                                <div class="col-6"><strong>Метраж:</strong> <?= CalculationBase::Display(intval($row['length_dirty_1']), 0) ?></div>
                                 <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
                             </div>
                             <div class="row">
                                 <div class="col-6"><strong>Ламинации:</strong> <?=$laminations_number ?></div>
-                                <div class="col-6"><strong>Вал:</strong> <?=$row['raport'] ?></div>
+                                <div class="col-6"><strong>Вал:</strong> <?= CalculationBase::Display(floatval($row['raport']), 3) ?></div>
                             </div>
                             <div style="margin-top: 10px;"><strong>Менеджер:</strong> <?=$row['last_name'] ?> <?= mb_substr($row['first_name'], 0, 1)  ?>.</div>
                         </div>
