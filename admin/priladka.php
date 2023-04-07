@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include '../calculation/calculation.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -158,7 +159,7 @@ if($row = $fetcher->Fetch()) {
                                    onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
-                        <?php if($machine_id == ATLAS): ?>
+                        <?php if($machine_id == CalculationBase::ATLAS): ?>
                         <div class="form-group">
                             <label for="stamp">Метраж приладки штампа (метры)</label>
                             <input type="text" 

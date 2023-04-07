@@ -1,6 +1,3 @@
-<?php
-const ATLAS = 5;
-?>
 <div class="text-nowrap nav2">
     <?php
     $sql = "select id, name from machine order by position";
@@ -53,7 +50,7 @@ $gap_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATIO
     <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
     <a href="<?=APPLICATION ?>/admin/priladka.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$priladka_class ?>">Приладка</a>
     <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
-    <?php if($machine_id == ATLAS): ?>
+    <?php if($machine_id == CalculationBase::ATLAS): ?>
     <a href="<?=APPLICATION ?>/admin/gap.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$gap_class ?>">Зазор</a>
     <?php endif; ?>
 </div>
