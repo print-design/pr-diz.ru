@@ -55,7 +55,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 border-radius: 15px;
                 box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
                 padding: 15px;
-                margin: 8px;
+                margin: 5px 5px 8px 5px;
             }
         </style>
     </head>
@@ -72,7 +72,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             }
             ?>
             <h1><?=$print_header ?></h1>
-            <div class="wrapper" style="position: absolute; top: 170px; bottom: 0px;">
+            <div class="wrapper" style="position: fixed; top: 170px; bottom: 0px;">
                 <nav id="sidebar">
                     <div id="sidebar_toggle_button">
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
