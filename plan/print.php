@@ -28,7 +28,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             }
             
             #sidebar.active {
-                margin-left: -362px;
+                margin-left: -382px;
             }
             
             #sidebar_toggle_button {
@@ -39,7 +39,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             
             @media (max-width: 768px) {
                 #sidebar {
-                    margin-left: -362px;
+                    margin-left: -382px;
                 }
                 #sidebar.active {
                     margin-left: 0;
@@ -66,7 +66,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             <div class="wrapper">
                 <nav id="sidebar">
                     <div id="sidebar_toggle_button">
-                        <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть<img src="../images/icons/expand.png" style="margin-left: 8px; display: none;" id="expand_arrow" /></button>
+                        <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
                     </div>
                     <h2>Очередь</h2>
                     <?php
@@ -107,7 +107,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                     <?php endwhile; ?>
                 </nav>
                 <div id="content">
-                    <h2>План</h2>
+                    <div class="d-flex justify-content-start">
+                        <button type="button" id="sidebarExpand" class="btn btn-link" style="display: none; padding-left: 0;">
+                            <img src="../images/icons/expand.png" style="margin-right: 8px;" />
+                        </button>
+                        <h2>План</h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -117,8 +122,13 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
         <script>
             $(document).ready(function () {
                 $('#sidebarCollapse').on('click', function () {
-                    $('#sidebar').toggleClass('active');
-                    $('#expand_arrow').toggle();
+                    $('#sidebar').addClass('active');
+                    $('#sidebarExpand').show();
+                });
+                
+                $('#sidebarExpand').on('click', function() {
+                    $('#sidebar').removeClass('active');
+                    $('#sidebarExpand').hide();
                 });
             });
         </script>
