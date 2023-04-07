@@ -1,11 +1,11 @@
 <?php
 class Timetable {
-    public function __construct($param) {
+    public function __construct() {
         //
     }
     
-    public function Show($param) {
-        include './_timetable_view.php';
+    public function Show() {
+        //include './_timetable_view.php';
     }
 }
 ?>

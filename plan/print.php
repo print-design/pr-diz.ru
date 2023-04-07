@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './_queue.php';
+include './_timetable.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -77,7 +78,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
                     </div>
                     <h2>Очередь</h2>
-                    <div id="queue" style="overflow: auto; position: absolute; top: 80px; bottom: 0; left: 0; right: 15px;">
+                    <div id="queue" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 15px;">
                         <?php
                         $queue = new Queue($machine);
                         $queue->Show();
@@ -106,10 +107,16 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             </form>
                             <?php if(!empty(filter_input(INPUT_GET, 'from'))): ?>
                             <a href="<?= BuildQueryRemove('from') ?>" class="btn btn-light">Сбросить</a>
-                                <?php endif; ?>
+                            <?php endif; ?>
                             <button type="button" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                         </div>
+                        <?php
+                        ?>
                     </div>
+                    <?php
+                    $timetable = new Timetable();
+                    $timetable->Show();
+                    ?>
                 </div>
             </div>
         </div>
