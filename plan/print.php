@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './_queue.php';
-include './_timetable.php';
+include './_plan_timetable.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -85,7 +85,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         ?>
                     </div>
                 </nav>
-                <div id="content" style="width: 100%;">
+                <div id="content" style="width: 100%; position: relative;">
                     <div class="d-flex justify-content-between">
                         <div class="d-flex justify-content-start">
                             <button type="button" id="sidebarExpand" class="btn btn-link" style="display: none; padding-left: 0;">
@@ -110,13 +110,17 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             <?php endif; ?>
                             <button type="button" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                         </div>
+                    </div>
+                    <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0;">
                         <?php
+                        $date_from = null;
+                        $date_to = null;
+                        GetDateFromDateTo(filter_input(INPUT_GET, 'from'), null, $date_from, $date_to);
+                        
+                        $plan_timetable = new PlanTimetable($date_from, $date_to, filter_input(INPUT_GET, 'id'));
+                        $plan_timetable->Show();
                         ?>
                     </div>
-                    <?php
-                    $timetable = new Timetable();
-                    $timetable->Show();
-                    ?>
                 </div>
             </div>
         </div>
