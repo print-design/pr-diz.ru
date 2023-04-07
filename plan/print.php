@@ -22,24 +22,25 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             
             #sidebar {
                 position: relative;
-                min-width: 382px;
-                max-width: 382px;
+                min-width: 397px;
+                max-width: 397px;
+                padding-right: 15px;
                 transition: all 0.3s;
             }
             
             #sidebar.active {
-                margin-left: -382px;
+                margin-left: -397px;
             }
             
             #sidebar_toggle_button {
                 position: absolute;
                 top: 0px;
-                right: 0px;
+                right: 3px;
             }
             
             @media (max-width: 768px) {
                 #sidebar {
-                    margin-left: -382px;
+                    margin-left: -397px;
                 }
                 #sidebar.active {
                     margin-left: 0;
@@ -47,6 +48,13 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 #sidebarCollapse span {
                     display: none;
                 }
+            }
+            
+            .queue_item {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                margin-bottom: 10px;
             }
         </style>
     </head>
@@ -91,9 +99,21 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                     }
                     ?>
                     <div class='queue_item'>
-                        <h3><a href='../calculation/details.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></h3>
-                        <?=$row['customer'] ?>
-                        <hr />
+                        <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
+                            <div class="d-flex justify-content-start">
+                                <div style="padding-top: 10px; padding-right: 10px;"><img src="../images/icons/double-vertical-dots.svg" /></div>
+                                <div>
+                                    <div style="font-weight: bold; font-size: large;"><a href='../calculation/details.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
+                                    <?=$row['customer'] ?>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="d-flex justify-content-end" style="padding-top: 10px;">
+                                    <div><img src="../images/icons/vertical-dots1.svg" /></div>
+                                    <div style="padding-left: 10px;"><img src="../images/icons/right-arrow.svg" /></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-6"><strong>Метраж:</strong> <?=number_format($row['length_dirty_1'], 0, ",", " "); ?></div>
                             <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
@@ -102,7 +122,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             <div class="col-6"><strong>Ламинации:</strong> <?=$laminations_number ?></div>
                             <div class="col-6"><strong>Вал:</strong> <?=$row['raport'] ?></div>
                         </div>
-                        <p><strong>Менеджер:</strong> <?=$row['last_name'] ?> <?= mb_substr($row['first_name'], 0, 1)  ?>.</p>
+                        <div style="margin-top: 10px;"><strong>Менеджер:</strong> <?=$row['last_name'] ?> <?= mb_substr($row['first_name'], 0, 1)  ?>.</div>
                     </div>
                     <?php endwhile; ?>
                 </nav>
