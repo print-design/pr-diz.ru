@@ -16,8 +16,13 @@ require_once './_roles.php';
             $sql = "select id, first_name, last_name from plan_employee where active = 1 and role_id = ".ROLE_PRINT;
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
+            $selected = '';
+            $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
+            if(array_key_exists($key, $this->timetable->workshifts1) && $row['id'] == $this->timetable->workshifts1[$key]) {
+                $selected = " selected='selected'";
+            }
             ?>
-            <option id="<?=$row['id'] ?>"><?=$row['last_name'].' '.$row['first_name'] ?></option>
+            <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['last_name'].' '.$row['first_name'] ?></option>
             <?php endwhile; ?>
         </select>
     </td>
@@ -29,8 +34,13 @@ require_once './_roles.php';
             $sql = "select id, first_name, last_name from plan_employee where active = 1 and role_id = ".ROLE_ASSISTANT;
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
+            $selected = '';
+            $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
+            if(array_key_exists($key, $this->timetable->workshifts2) && $row['id'] == $this->timetable->workshifts2[$key]) {
+                $selected = " selected='selected'";
+            }
             ?>
-            <option id="<?=$row['id'] ?>"><?=$row['last_name'].' '.$row['first_name'] ?></option>
+            <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['last_name'].' '.$row['first_name'] ?></option>
             <?php endwhile; ?>
         </select>
     </td>

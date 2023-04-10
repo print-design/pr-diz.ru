@@ -168,9 +168,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                     $('#sidebarExpand').hide();
                 });
                 
-                /*$('.select_employee1').change(function() {
-                    alert('QWE');
-                });*/
+                $('.select_employee1').change(function(e) {
+                    $(e.target).val('');
+                });
             });
         </script>
     </body>
