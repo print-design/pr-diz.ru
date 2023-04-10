@@ -167,6 +167,10 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                     $('#sidebar').removeClass('active');
                     $('#sidebarExpand').hide();
                 });
+                
+                /*$('.select_employee1').change(function() {
+                    alert('QWE');
+                });*/
             });
         </script>
     </body>
