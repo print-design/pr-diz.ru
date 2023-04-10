@@ -57,6 +57,40 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 padding: 15px;
                 margin: 5px 5px 8px 5px;
             }
+            
+            /* Таблица */
+            table.typography {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                margin: 5px 5px 8px 5px;
+                color: #191919;
+            }
+
+            table.typography tr th {
+                color: #68676C;
+                border-top: 0;
+            }
+
+            table.typography tbody tr td {
+                background-color: white;
+            }
+
+            /*table.typography tbody tr td.top {
+                border-top: solid 2px lightgray;
+            }*/
+
+            table.print tr td.top {
+                border-top: solid 2px darkgray;
+            }
+
+            table.typography tbody tr td.night {
+                background-color: #F0F1FA;
+            }
+
+            thead#grafik-thead {
+                background-color: lightcyan;
+            }
         </style>
     </head>
     <body>
@@ -117,7 +151,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         $date_to = null;
                         GetDateFromDateTo(filter_input(INPUT_GET, 'from'), null, $date_from, $date_to);
                         
-                        $timetable = new PlanTimetable($date_from, $date_to, filter_input(INPUT_GET, 'id'));
+                        $timetable = new PlanTimetable(filter_input(INPUT_GET, 'id'), $date_from, $date_to);
                         $timetable->Show();
                         ?>
                     </div>
