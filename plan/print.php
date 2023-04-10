@@ -169,7 +169,33 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 });
                 
                 $('.select_employee1').change(function(e) {
+                    var id = $(e.target).val();
+                    var machine_id = $(e.target).attr('data-machine-id');
+                    var date = $(e.target).attr('data-date');
+                    var shift = $(e.target).attr('data-shift');
                     $(e.target).val('');
+                    $.ajax({ url: "_set_employee1.php?id=" + id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
+                            .done(function(data) {
+                                $(e.target).val(data);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при смене работника');
+                            });
+                });
+                
+                $('.select_employee2').change(function(e) {
+                    var id = $(e.target).val();
+                    var machine_id = $(e.target).attr('data-machine-id');
+                    var date = $(e.target).attr('data-date');
+                    var shift = $(e.target).attr('data-shift');
+                    $(e.target).val('');
+                    $.ajax({ url: "_set_employee2.php?id=" + id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
+                            .done(function(data) {
+                                $(e.target).val(data);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при смене работника');
+                            });
                 });
             });
         </script>

@@ -10,7 +10,7 @@ require_once './_roles.php';
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
     <td class="<?=$top.' '.$this->shift ?>">
-        <select class="form-control small select_employee1">
+        <select class="form-control small select_employee1" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
             <option value="">...</option>
             <?php
             $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
@@ -33,7 +33,7 @@ require_once './_roles.php';
     </td>
     <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
     <td class="<?=$top.' '.$this->shift ?>">
-        <select class="form-control small select_employee2">
+        <select class="form-control small select_employee2" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
             <option value="">...</option>
             <?php
             $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
