@@ -63,7 +63,6 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 border-radius: 15px;
                 box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
                 padding: 15px;
-                margin: 5px 5px 8px 5px;
                 color: #191919;
             }
 
@@ -141,7 +140,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             <button type="button" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                         </div>
                     </div>
-                    <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0;">
+                    <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0; padding: 5px;">
                         <?php
                         $date_from = null;
                         $date_to = null;
