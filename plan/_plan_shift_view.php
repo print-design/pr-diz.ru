@@ -13,11 +13,16 @@ require_once './_roles.php';
         <select class="form-control small select_employee1">
             <option value="">...</option>
             <?php
+            $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
             $sql = "select id, first_name, last_name from plan_employee where active = 1 and role_id = ".ROLE_PRINT;
+            if(array_key_exists($key, $this->timetable->workshifts1)) {
+                $sql .= " union "
+                    . "select id, first_name, last_name from plan_employee where active = 0 and role_id = ".ROLE_PRINT
+                    ." and id = ".$this->timetable->workshifts1[$key];
+            }
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
             $selected = '';
-            $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
             if(array_key_exists($key, $this->timetable->workshifts1) && $row['id'] == $this->timetable->workshifts1[$key]) {
                 $selected = " selected='selected'";
             }
@@ -31,11 +36,16 @@ require_once './_roles.php';
         <select class="form-control small select_employee2">
             <option value="">...</option>
             <?php
+            $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
             $sql = "select id, first_name, last_name from plan_employee where active = 1 and role_id = ".ROLE_ASSISTANT;
+            if(array_key_exists($key, $this->timetable->workshifts2)) {
+                $sql .= " union "
+                        . "select id, first_name, last_name from plan_employee where active = 0 and role_id = ".ROLE_ASSISTANT
+                        ." and id = ".$this->timetable->workshifts2[$key];
+            }
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
             $selected = '';
-            $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
             if(array_key_exists($key, $this->timetable->workshifts2) && $row['id'] == $this->timetable->workshifts2[$key]) {
                 $selected = " selected='selected'";
             }
