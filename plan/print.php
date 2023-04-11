@@ -70,8 +70,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 color: #68676C;
                 border-top: 0;
             }
+            
+            table.typography tr:has(td.target) {
+                border-top: solid 2px darkgray;
+            }
 
-            table.typography tbody tr td {
+            table.typography tr td {
                 background-color: white;
             }
 
@@ -224,14 +228,38 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 ev.dataTransfer.setData("text", ev.target.id);
             }
             
-            function AllowDrop(ev) {
+            function DragOver(ev) {
                 ev.preventDefault();
+                $(ev.target).addClass('target');
+            }
+            
+            function DragLeave(ev) {
+                ev.preventDefault();
+                $(ev.target).removeClass('target');
             }
             
             function Drop(ev) {
                 ev.preventDefault();
                 var data = ev.dataTransfer.getData('text');
-                ev.target.appendChild(document.getElementById(data));
+                
+                $('#waiting').html("<img src='../images/waiting2.gif' />");
+                $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>" + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                        .done(function(timetable_data) {
+                            $('#timetable').html(timetable_data);
+                            $.ajax({ url: "_draw_queue.php?machine=<?=$machine ?>" })
+                                    .done(function(queue_data) {
+                                        $('#waiting').html('');
+                                        $('#queue').html(queue_data);
+                                    })
+                                    .fail(function() {
+                                        $('#waiting').html('');
+                                        alert('Ошибка при перерисовке очереди');
+                                    });
+                        })
+                        .fail(function() {
+                            $('#waiting').html('');
+                            alert('Ошибка при перерисовке страницы');
+                        });
             }
         </script>
     </body>
