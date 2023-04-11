@@ -161,11 +161,15 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
                 $('#sidebarExpand').show();
+                $('th.assistant').hide();
+                $('td.assistant').hide();
             });
                 
             $('#sidebarExpand').on('click', function() {
                 $('#sidebar').removeClass('active');
                 $('#sidebarExpand').hide();
+                $('th.assistant').show();
+                $('td.assistant').show();
             });
             
             function ChangeEmployee1(select) {

@@ -29,7 +29,7 @@ require_once './_roles.php';
         </select>
     </td>
     <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
-    <td class="<?=$top.' '.$this->shift ?>">
+    <td class="<?=$top.' '.$this->shift ?> assistant">
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php

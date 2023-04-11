@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-start">
             <div style="padding-top: 10px; padding-right: 10px;"><img src="../images/icons/double-vertical-dots.svg" /></div>
             <div>
-                <div style="font-weight: bold; font-size: large;"><a href='../calculation/details.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
+                <div style="font-weight: bold; font-size: large;"><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
                 <?=$row['customer'] ?>
             </div>
         </div>
