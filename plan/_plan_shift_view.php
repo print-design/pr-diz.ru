@@ -49,11 +49,11 @@ require_once './_roles.php';
         </select>
     </td>
     <?php endif; ?>
-    <td class="<?=$top.' '.$this->shift ?>"></td>
-    <td class="<?=$top.' '.$this->shift ?>"></td>
-    <td class="<?=$top.' '.$this->shift ?>"></td>
-    <td class="<?=$top.' '.$this->shift ?>"></td>
-    <td class="<?=$top.' '.$this->shift ?>"></td>
-    <td class="<?=$top.' '.$this->shift ?>"></td>
+    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="AllowDrop(event);"></td>
+    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="AllowDrop(event);"></td>
+    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="AllowDrop(event);"></td>
+    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="AllowDrop(event);"></td>
+    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="AllowDrop(event);"></td>
+    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="AllowDrop(event);"></td>
     <td class="<?=$top.' '.$this->shift ?> text-right"><img src="../images/icons/vertical-dots1.svg" /></td>
 </tr>

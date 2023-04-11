@@ -219,6 +219,20 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             alert('Ошибка при смене работника');
                         });
             }
+            
+            function Drag(ev) {
+                ev.dataTransfer.setData("text", ev.target.id);
+            }
+            
+            function AllowDrop(ev) {
+                ev.preventDefault();
+            }
+            
+            function Drop(ev) {
+                ev.preventDefault();
+                var data = ev.dataTransfer.getData('text');
+                ev.target.appendChild(document.getElementById(data));
+            }
         </script>
     </body>
 </html>
