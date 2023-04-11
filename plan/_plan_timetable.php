@@ -32,15 +32,6 @@ class PlanTimetable {
             array_push($this->employees, array("id" => $row['id'], "first_name" => $row['first_name'], "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']));
         }
         
-        // Работники 2
-        /*if($this->machine == CalculationBase::COMIFLEX) {
-            $sql = "select id, first_name, last_name, active from plan_employee where role_id = ".ROLE_ASSISTANT." order by last_name, first_name";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()) {
-                array_push($this->employees2, array("id" => $row['id'], "first_name" => $row['first_name'], "last_name" => $row['last_name'], "active" => $row['active']));
-            }
-        }*/
-        
         // Смены1
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
