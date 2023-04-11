@@ -188,6 +188,11 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                 .done(function(data) {
                                     $('#waiting').html('');
                                     $('#timetable').html(data);
+                                    
+                                    if($('#sidebar').hasClass('active')) {
+                                        $('th.assistant').hide();
+                                        $('td.assistant').hide();
+                                    }
                                 })
                                 .fail(function() {
                                     $('#waiting').html('');
