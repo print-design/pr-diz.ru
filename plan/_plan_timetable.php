@@ -4,12 +4,12 @@ require_once './_plan_date.php';
 require_once '../calculation/calculation.php';
 
 class PlanTimetable {
-    private $dateFrom;
-    private $dateTo;
-    
+    public $dateFrom;
+    public $dateTo;
     public $machineId;
     public $machine;
     public $plan_dates = array();
+    public $employees = array();
     public $workshifts1 = array();
     public $workshifts2 = array();
 
@@ -25,7 +25,23 @@ class PlanTimetable {
             $this->machine = $row['machine'];
         }
         
-        // Работники1
+        // Работники
+        $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
+        $fetcher = new Fetcher($sql);
+        while ($row = $fetcher->Fetch()) {
+            array_push($this->employees, array("id" => $row['id'], "first_name" => $row['first_name'], "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']));
+        }
+        
+        // Работники 2
+        /*if($this->machine == CalculationBase::COMIFLEX) {
+            $sql = "select id, first_name, last_name, active from plan_employee where role_id = ".ROLE_ASSISTANT." order by last_name, first_name";
+            $fetcher = new Fetcher($sql);
+            while ($row = $fetcher->Fetch()) {
+                array_push($this->employees2, array("id" => $row['id'], "first_name" => $row['first_name'], "last_name" => $row['last_name'], "active" => $row['active']));
+            }
+        }*/
+        
+        // Смены1
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
                 . "left join plan_employee e on ws.employee1_id = e.id "
@@ -36,7 +52,7 @@ class PlanTimetable {
             $this->workshifts1[$this->machineId.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
         }
         
-        // Работники2
+        // Смены2
         if($this->machine == CalculationBase::COMIFLEX) {
             $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                     . "from plan_workshift2 ws "

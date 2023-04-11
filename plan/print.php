@@ -92,6 +92,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
         <?php
         include '../include/header_plan.php';
         ?>
+        <div style="position: fixed; top: 0; left: 0; z-index: 1000;" id="waiting"><img src='../images/waiting2.gif' /></div>
         <div class="container-fluid">
             <?php
             include '../include/subheader_print.php';
@@ -157,47 +158,65 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
         include '../include/footer.php';
         ?>
         <script>
-            $(document).ready(function () {
-                $('#sidebarCollapse').on('click', function () {
-                    $('#sidebar').addClass('active');
-                    $('#sidebarExpand').show();
-                });
-                
-                $('#sidebarExpand').on('click', function() {
-                    $('#sidebar').removeClass('active');
-                    $('#sidebarExpand').hide();
-                });
-                
-                $('.select_employee1').change(function(e) {
-                    var id = $(e.target).val();
-                    var machine_id = $(e.target).attr('data-machine-id');
-                    var date = $(e.target).attr('data-date');
-                    var shift = $(e.target).attr('data-shift');
-                    $(e.target).val('');
-                    $.ajax({ url: "_set_employee1.php?id=" + id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
-                            .done(function(data) {
-                                $(e.target).val(data);
-                            })
-                            .fail(function() {
-                                alert('Ошибка при смене работника');
-                            });
-                });
-                
-                $('.select_employee2').change(function(e) {
-                    var id = $(e.target).val();
-                    var machine_id = $(e.target).attr('data-machine-id');
-                    var date = $(e.target).attr('data-date');
-                    var shift = $(e.target).attr('data-shift');
-                    $(e.target).val('');
-                    $.ajax({ url: "_set_employee2.php?id=" + id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
-                            .done(function(data) {
-                                $(e.target).val(data);
-                            })
-                            .fail(function() {
-                                alert('Ошибка при смене работника');
-                            });
-                });
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('#sidebarExpand').show();
             });
+                
+            $('#sidebarExpand').on('click', function() {
+                $('#sidebar').removeClass('active');
+                $('#sidebarExpand').hide();
+            });
+            
+            function ChangeEmployee1(select) {
+                $('#waiting').html("<img src='../images/waiting2.gif' />");
+                var id = select.val();
+                var machine_id = select.attr('data-machine-id');
+                var date = select.attr('data-date');
+                var shift = select.attr('data-shift');
+                $.ajax({ url: "_set_employee1.php?id=" + id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
+                        .done(function() {
+                            $.ajax({ url: "_draw_timetable.php?machine_id=" + select.attr('data-machine-id') + "&from=" + select.attr('data-from') })
+                                .done(function(data) {
+                                    $('#waiting').html('');
+                                    $('#timetable').html(data);
+                                })
+                                .fail(function() {
+                                    $('#waiting').html('');
+                                    alert('Ошибка при перерисовке страницы');
+                                });
+                        })
+                        .fail(function() {
+                            $('#waiting').html('');
+                            alert('Ошибка при смене работника');
+                        });
+            }
+            
+            function ChangeEmployee2(select) {
+                $('#waiting').html("<img src='../images/waiting2.gif' />");
+                var id = select.val();
+                var machine_id = select.attr('data-machine-id');
+                var date = select.attr('data-date');
+                var shift = select.attr('data-shift');
+                $.ajax({ url: "_set_employee2.php?id=" + id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
+                        .done(function() {
+                            $.ajax({ url: "_draw_timetable.php?machine_id=" + select.attr('data-machine-id') + "&from=" + select.attr('data-from') })
+                                .done(function(data) {
+                                    $('#waiting').html('');
+                                    $('#timetable').html(data);
+                                })
+                                .fail(function() {
+                                    $('#waiting').html('');
+                                    alert('Ошибка при перерисовке страницы');
+                                });
+                        })
+                        .fail(function() {
+                            $('#waiting').html('');
+                            alert('Ошибка при смене работника');
+                        });
+            }
+            
+            $('#waiting').html('');
         </script>
     </body>
 </html>

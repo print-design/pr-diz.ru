@@ -10,48 +10,42 @@ require_once './_roles.php';
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
     <td class="<?=$top.' '.$this->shift ?>">
-        <select class="form-control small select_employee1" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
+        <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
             $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
-            $sql = "select id, first_name, last_name from plan_employee where active = 1 and role_id = ".ROLE_PRINT;
-            if(array_key_exists($key, $this->timetable->workshifts1)) {
-                $sql .= " union "
-                    . "select id, first_name, last_name from plan_employee where active = 0 and role_id = ".ROLE_PRINT
-                    ." and id = ".$this->timetable->workshifts1[$key];
-            }
-            $fetcher = new Fetcher($sql);
-            while($row = $fetcher->Fetch()):
-            $selected = '';
-            if(array_key_exists($key, $this->timetable->workshifts1) && $row['id'] == $this->timetable->workshifts1[$key]) {
+            foreach($this->timetable->employees as $employee):
+                $selected = '';
+            if(array_key_exists($key, $this->timetable->workshifts1) && $employee['id'] == $this->timetable->workshifts1[$key]) {
                 $selected = " selected='selected'";
             }
+            if($employee['role_id'] == ROLE_PRINT && ($employee['active'] == 1 || $employee['id'] == $this->timetable->workshifts1[$key])):
             ?>
-            <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['last_name'].' '.$row['first_name'] ?></option>
-            <?php endwhile; ?>
+            <option value="<?=$employee['id'] ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
+            <?php
+            endif;
+            endforeach;
+            ?>
         </select>
     </td>
     <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
     <td class="<?=$top.' '.$this->shift ?>">
-        <select class="form-control small select_employee2" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
+        <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
             $key = $this->timetable->machineId.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
-            $sql = "select id, first_name, last_name from plan_employee where active = 1 and role_id = ".ROLE_ASSISTANT;
-            if(array_key_exists($key, $this->timetable->workshifts2)) {
-                $sql .= " union "
-                        . "select id, first_name, last_name from plan_employee where active = 0 and role_id = ".ROLE_ASSISTANT
-                        ." and id = ".$this->timetable->workshifts2[$key];
-            }
-            $fetcher = new Fetcher($sql);
-            while($row = $fetcher->Fetch()):
-            $selected = '';
-            if(array_key_exists($key, $this->timetable->workshifts2) && $row['id'] == $this->timetable->workshifts2[$key]) {
+            foreach($this->timetable->employees as $employee):
+                $selected = '';
+            if(array_key_exists($key, $this->timetable->workshifts2) && $employee['id'] == $this->timetable->workshifts2[$key]) {
                 $selected = " selected='selected'";
             }
+            if($employee['role_id'] == ROLE_ASSISTANT && ($employee['active'] == 1 || $employee['id'] == $this->timetable->workshifts2[$key])):
             ?>
-            <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['last_name'].' '.$row['first_name'] ?></option>
-            <?php endwhile; ?>
+            <option value="<?=$employee['id'] ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
+            <?php
+            endif;
+            endforeach;
+            ?>
         </select>
     </td>
     <?php endif; ?>
