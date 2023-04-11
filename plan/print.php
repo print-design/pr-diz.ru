@@ -92,7 +92,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
         <?php
         include '../include/header_plan.php';
         ?>
-        <div style="position: fixed; top: 0; left: 0; z-index: 1000;" id="waiting"><img src='../images/waiting2.gif' /></div>
+        <div style="position: fixed; top: 0; left: 0; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid">
             <?php
             include '../include/subheader_print.php';
@@ -215,8 +215,6 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             alert('Ошибка при смене работника');
                         });
             }
-            
-            $('#waiting').html('');
         </script>
     </body>
 </html>
