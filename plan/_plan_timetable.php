@@ -6,7 +6,7 @@ require_once '../calculation/calculation.php';
 class PlanTimetable {
     public $dateFrom;
     public $dateTo;
-    public $machineId;
+    public $machine_id;
     public $machine;
     public $plan_dates = array();
     public $employees = array();
@@ -14,13 +14,13 @@ class PlanTimetable {
     public $workshifts2 = array();
     public $editions = array();
 
-    public function __construct($machineId, $dateFrom, $dateTo) {
-        $this->machineId = $machineId;
+    public function __construct($machine_id, $dateFrom, $dateTo) {
+        $this->machine_id = $machine_id;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
         
         // Машина
-        $sql = "select m.shortname machine from machine m where id = $machineId";
+        $sql = "select m.shortname machine from machine m where id = $machine_id";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
             $this->machine = $row['machine'];
@@ -37,11 +37,11 @@ class PlanTimetable {
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
                 . "left join plan_employee e on ws.employee1_id = e.id "
-                . "where ws.machine_id = ".$this->machineId
+                . "where ws.machine_id = ".$this->machine_id
                 ." and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
-            $this->workshifts1[$this->machineId.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
+            $this->workshifts1[$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
         }
         
         // Работники2
@@ -49,11 +49,11 @@ class PlanTimetable {
             $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                     . "from plan_workshift2 ws "
                     . "left join plan_employee e on ws.employee2_id = e.id "
-                    . "where ws.machine_id = ".$this->machineId
+                    . "where ws.machine_id = ".$this->machine_id
                     ." and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()) {
-                $this->workshifts2[$this->machineId.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
+                $this->workshifts2[$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
             }
         }
         
@@ -67,7 +67,7 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.machine_id = ".$this->machineId." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where c.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "order by e.position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
