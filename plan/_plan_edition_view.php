@@ -2,14 +2,16 @@
 require_once './_roles.php';
 ?>
 <tr>
-    <?php if($this->shift == 'day'): ?>
-    <td class="<?=$top ?> border" rowspan="<?=$this->date_editions_count ?>">
+    <?php if($this->shift == 'day' && $this->edition_key == 0): ?>
+    <td class="<?=$top ?>" rowspan="<?=$this->date_editions_count ?>">
         <?=$GLOBALS['weekdays'][$this->date->format('w')] ?>
         <div style="font-size: 18px; font-weight: bold; margin-top: 10px;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
     </td>
     <?php endif; ?>
-    <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
-    <td class="<?=$top.' '.$this->shift ?>">
+    
+    <?php if($this->edition_key == 0): ?>
+    <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
+    <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
@@ -29,7 +31,7 @@ require_once './_roles.php';
         </select>
     </td>
     <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
-    <td class="<?=$top.' '.$this->shift ?> assistant">
+    <td class="<?=$top.' '.$this->shift ?>" rowspan="<?=$this->shift_editions_count ?> assistant">
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
@@ -49,7 +51,8 @@ require_once './_roles.php';
         </select>
     </td>
     <?php endif; ?>
-    <td class="<?=$top.' '.$this->shift ?> border-left" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <?php endif; ?>
+    <td class="<?=$top.' '.$this->shift ?> border-left" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);">Edition</td>
     <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
     <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
     <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>

@@ -12,6 +12,7 @@ class PlanTimetable {
     public $employees = array();
     public $workshifts1 = array();
     public $workshifts2 = array();
+    public $editions = array();
 
     public function __construct($machineId, $dateFrom, $dateTo) {
         $this->machineId = $machineId;
@@ -32,7 +33,7 @@ class PlanTimetable {
             array_push($this->employees, array("id" => $row['id'], "first_name" => $row['first_name'], "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']));
         }
         
-        // Смены1
+        // Работники1
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
                 . "left join plan_employee e on ws.employee1_id = e.id "
@@ -43,7 +44,7 @@ class PlanTimetable {
             $this->workshifts1[$this->machineId.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
         }
         
-        // Смены2
+        // Работники2
         if($this->machine == CalculationBase::COMIFLEX) {
             $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                     . "from plan_workshift2 ws "
@@ -56,7 +57,25 @@ class PlanTimetable {
             }
         }
         
-        // Список дат и смен
+        // Тиражи
+        $sql = "select e.date, e.shift, e.length, e.position, c.name calculation "
+                . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
+                . "where c.machine_id = ".$this->machineId." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "order by e.position";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            if(!array_key_exists($row['date'], $this->editions)) {
+                $this->editions[$row['date']] = array();
+            }
+            
+            if(!array_key_exists($row['shift'], $this->editions[$row['date']])) {
+                $this->editions[$row['date']][$row['shift']] = array();
+            }
+            
+            array_push($this->editions[$row['date']][$row['shift']], array('length' => $row['length'], 'calculation' => $row['calculation']));
+        }
+        
+        // Даты и смены
         if($this->dateFrom < $this->dateTo) {
             $date_diff = $this->dateFrom->diff($this->dateTo);
             $interval = DateInterval::createFromDateString("1 day");
@@ -70,7 +89,17 @@ class PlanTimetable {
         foreach ($period as $date) {
             $str_date = $date->format('Y-m-d');
             
-            $plan_date = new PlanDate($date, $this);
+            $day_editions = array();
+            if(key_exists($date->format('Y-m-d'), $this->editions) && key_exists('day', $this->editions[$date->format('Y-m-d')])) {
+                $day_editions = $this->editions[$date->format('Y-m-d')]['day'];
+            }
+            
+            $night_editions = array();
+            if(key_exists($date->format('Y-m-d'), $this->editions) && key_exists('night', $this->editions[$date->format('Y-m-d')])) {
+                $night_editions = $this->editions[$date->format('Y-m-d')]['night'];
+            }
+            
+            $plan_date = new PlanDate($date, $this, $day_editions, $night_editions);
             array_push($this->plan_dates, $plan_date);
         }
     }
