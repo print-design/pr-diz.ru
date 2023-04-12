@@ -3,7 +3,7 @@ require_once './_roles.php';
 ?>
 <tr>
     <?php if($this->shift == 'day'): ?>
-    <td class="<?=$top ?> border" rowspan="<?=$this->date_editions_count ?>">
+    <td class="<?=$top ?> border-right" rowspan="<?=$this->date_editions_count ?>">
         <?=$GLOBALS['weekdays'][$this->date->format('w')] ?>
         <div style="font-size: 18px; font-weight: bold; margin-top: 10px;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
     </td>
