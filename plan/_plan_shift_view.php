@@ -3,13 +3,13 @@ require_once './_roles.php';
 ?>
 <tr>
     <?php if($this->shift == 'day'): ?>
-    <td class="<?=$top ?> border-right" rowspan="<?=$this->date_editions_count ?>">
+    <td class="border-right" rowspan="<?=$this->date_editions_count ?>">
         <?=$GLOBALS['weekdays'][$this->date->format('w')] ?>
         <div style="font-size: 18px; font-weight: bold; margin-top: 10px;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
     </td>
     <?php endif; ?>
-    <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
-    <td class="<?=$top.' '.$this->shift ?>">
+    <td class="<?=$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
+    <td class="<?=$this->shift ?>">
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
@@ -29,7 +29,7 @@ require_once './_roles.php';
         </select>
     </td>
     <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
-    <td class="<?=$top.' '.$this->shift ?> assistant">
+    <td class="<?=$this->shift ?> assistant">
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machineId ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
@@ -49,11 +49,11 @@ require_once './_roles.php';
         </select>
     </td>
     <?php endif; ?>
-    <td class="<?=$top.' '.$this->shift ?> border-left" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
-    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
-    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
-    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
-    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
-    <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
-    <td class="<?=$top.' '.$this->shift ?> text-right"><img src="../images/icons/vertical-dots1.svg" /></td>
+    <td class="<?=$this->shift ?> border-left" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?> text-right"><img src="../images/icons/vertical-dots1.svg" /></td>
 </tr>

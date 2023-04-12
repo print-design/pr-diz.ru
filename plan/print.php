@@ -79,10 +79,6 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 background-color: white;
             }
 
-            table.print tr td.top {
-                border-top: solid 2px darkgray;
-            }
-
             table.typography tbody tr td.night {
                 background-color: #F0F1FA;
             }

@@ -21,11 +21,6 @@ class PlanShift {
     
     function Show() {
         if(count($this->editions) == 0) {
-            $top = 'nottop';
-            if($this->shift == 'day') {
-                $top = 'top';
-            }
-            
             include './_plan_shift_view.php';
         }
         else {

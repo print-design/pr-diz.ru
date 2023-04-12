@@ -19,11 +19,6 @@ class PlanEdition {
     }
     
     function Show() {
-        $top = 'nottop';
-        if($this->shift == 'day' && $this->edition_key == 0) {
-            $top = 'top';
-        }
-        
         $from = $this->timetable->dateFrom->format('Y-m-d');
         $to = $this->timetable->dateTo->format('Y-m-d');
         
