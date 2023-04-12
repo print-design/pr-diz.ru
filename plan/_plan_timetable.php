@@ -59,7 +59,7 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select e.date, e.shift, e.length, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, "
+        $sql = "select e.date, e.shift, e.timespan, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, "
                 . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -88,7 +88,7 @@ class PlanTimetable {
                 $laminations = '1';
             }
             
-            array_push($this->editions[$row['date']][$row['shift']], array('length' => $row['length'], 
+            array_push($this->editions[$row['date']][$row['shift']], array('timespan' => $row['timespan'], 
                 'calculation_id' => $row['calculation_id'], 
                 'calculation' => $row['calculation'], 
                 'raport' => rtrim(rtrim(CalculationBase::Display(floatval($row['raport']), 3), "0"), ","), 
