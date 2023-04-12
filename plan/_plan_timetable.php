@@ -68,7 +68,8 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where c.machine_id = ".$this->machine_id." "
+                . "and c.id in (select calculation_id from plan_edition where date >= '".$this->dateFrom->format('Y-m-d')."' and date <= '".$this->dateTo->format('Y-m-d')."') "
                 . "order by e.position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
@@ -86,6 +87,13 @@ class PlanTimetable {
             }
             elseif(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
                 $laminations = '1';
+            }
+            
+            // Добавляем в список расчётов те из них, которые начаты ранее начальной даты
+            // чтобы нельзя было вставить новую техкарту между тиражами по одной техкарте
+            $current_date = DateTime::createFromFormat('Y-m-d', $row['date']);
+            if($current_date < $this->dateFrom) {
+                array_push($this->calculation_ids, $row['calculation_id']);
             }
             
             array_push($this->editions[$row['date']][$row['shift']], array('timespan' => $row['timespan'], 
