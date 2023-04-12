@@ -13,6 +13,7 @@ class PlanTimetable {
     public $workshifts1 = array();
     public $workshifts2 = array();
     public $editions = array();
+    public $calculation_ids = array();
 
     public function __construct($machine_id, $dateFrom, $dateTo) {
         $this->machine_id = $machine_id;
