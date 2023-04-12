@@ -51,7 +51,7 @@ require_once './_roles.php';
     </td>
     <?php endif; ?>
     <?php endif; ?>
-    <td class="<?=$top.' '.$this->shift ?> border-left" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"><?=$this->edition['calculation'] ?></td>
+    <td class="<?=$top.' '.$this->shift ?> border-left" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"><strong><?=$this->edition['calculation'] ?></strong><br /><?=$this->edition['customer'] ?></td>
     <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"><?=$this->edition['length_dirty_1'] ?></td>
     <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"><?=$this->edition['raport'] ?></td>
     <td class="<?=$top.' '.$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"><?=$this->edition['laminations'] ?></td>

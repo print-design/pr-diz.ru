@@ -59,12 +59,13 @@ class PlanTimetable {
         
         // Тиражи
         $sql = "select e.date, e.shift, e.length, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, "
-                . "cr.length_dirty_1, u.first_name, u.last_name, "
+                . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
                 . "from plan_edition e "
                 . "inner join calculation c on e.calculation_id = c.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
+                . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.machine_id = ".$this->machineId." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "order by e.position";
@@ -92,6 +93,7 @@ class PlanTimetable {
                 'raport' => rtrim(rtrim(CalculationBase::Display(floatval($row['raport']), 3), "0"), ","), 
                 'ink_number' => $row['ink_number'], 
                 'length_dirty_1' => CalculationBase::Display(floatval($row['length_dirty_1']), 0), 
+                'customer' => $row['customer'], 
                 'laminations' => $laminations, 
                 'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
         }
