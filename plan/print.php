@@ -72,7 +72,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             }
             
             table.typography tr:has(td.target) {
-                border-top: solid 2px darkgray;
+                border-top: solid 3px darkgray;
             }
 
             table.typography tr td {
