@@ -93,7 +93,8 @@ class PlanTimetable {
             // Добавляем в список расчётов те из них, которые начаты ранее начальной даты
             // чтобы нельзя было вставить новую техкарту между тиражами по одной техкарте
             $current_date = DateTime::createFromFormat('Y-m-d', $row['date']);
-            if($current_date < $this->dateFrom) {
+            $diff = $current_date->diff($this->dateFrom);
+            if ($diff->days > 0 && $diff->invert == 0) {
                 array_push($this->calculation_ids, $row['calculation_id']);
             }
             

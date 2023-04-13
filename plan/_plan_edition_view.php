@@ -63,6 +63,6 @@ require_once './_roles.php';
     <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['raport'] ?></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['laminations'] ?></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['ink_number'] ?></td>
-    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?><?=$this->edition['manager'] ?></td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['manager'] ?></td>
     <td class="<?=$this->shift ?> text-right"><a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"><img src="../images/icons/vertical-dots1.svg" /></a></td>
 </tr>

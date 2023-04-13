@@ -24,10 +24,18 @@ class PlanShift {
             include './_plan_shift_view.php';
         }
         else {
+            //$timespan = 0;
+            
             foreach($this->editions as $key => $value) {
                 $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count);
                 $edition->Show();
+                
+                //$timespan += $value['timespan'];
             }
+            
+            //if(round($timespan, 2) < 12) {
+                //include './_plan_remainder_vew.php';
+            //}
         }
     }
 }

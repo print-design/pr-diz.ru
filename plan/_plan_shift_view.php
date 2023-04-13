@@ -55,5 +55,5 @@ require_once './_roles.php';
     <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
-    <td class="<?=$this->shift ?> text-right"><img src="../images/icons/vertical-dots1.svg" /></td>
+    <td class="<?=$this->shift ?> text-right"></td>
 </tr>
