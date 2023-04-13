@@ -2,6 +2,7 @@
 require_once '../include/topscripts.php';
 require_once './_plan_date.php';
 require_once '../calculation/calculation.php';
+require_once '../calculation/status_ids.php';
 
 class PlanTimetable {
     public $dateFrom;
@@ -59,7 +60,7 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select e.date, e.shift, e.timespan, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, "
+        $sql = "select e.date, e.shift, e.timespan, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
                 . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -105,6 +106,13 @@ class PlanTimetable {
                 'customer' => $row['customer'], 
                 'laminations' => $laminations, 
                 'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
+            
+            // Если расчёт в плане, но статус его не "в плане", меняем статус на "в плане"
+            if($row['status_id'] != PLAN) {
+                $sql = "update calculation set status_id = ".PLAN." where id = ".$row['calculation_id'];
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
         }
         
         // Даты и смены
