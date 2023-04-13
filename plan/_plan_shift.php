@@ -24,18 +24,32 @@ class PlanShift {
             include './_plan_shift_view.php';
         }
         else {
-            //$timespan = 0;
+            $timespan = 0;
             
-            foreach($this->editions as $key => $value) {
-                $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count);
-                $edition->Show();
-                
-                //$timespan += $value['timespan'];
+            foreach($this->editions as $edition) {
+                $timespan += $edition['timespan'];
             }
             
-            //if(round($timespan, 2) < 12) {
-                //include './_plan_remainder_vew.php';
-            //}
+            $timespan = round($timespan, 2);
+            
+            $date_editions_count = $this->date_editions_count;
+            if($timespan < 12) {
+                $date_editions_count += 1;
+            }
+            
+            $shift_editions_count = $this->shift_editions_count;
+            if($timespan < 12) {
+                $shift_editions_count += 1;
+            }
+            
+            foreach($this->editions as $key => $value) {
+                $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $date_editions_count, $shift_editions_count);
+                $edition->Show();
+            }
+            
+            if(round($timespan, 2) < 12) {
+                include './_plan_remainder_view.php';
+            }
         }
     }
 }
