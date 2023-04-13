@@ -1,7 +1,7 @@
 <?php
 require_once './_roles.php';
 ?>
-<tr>
+<tr data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-id="">
     <?php if($this->shift == 'day'): ?>
     <td class="border-right" rowspan="<?=$this->date_editions_count ?>">
         <?=$GLOBALS['weekdays'][$this->date->format('w')] ?>

@@ -1,4 +1,4 @@
-<div class='queue_item' id="techmap_<?=$row['id'] ?>" draggable="true" ondragstart="Drag(event);">
+<div class='queue_item' id="<?=$row['id'] ?>" draggable="true" ondragstart="Drag(event);">
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
         <div class="d-flex justify-content-start">
             <div style="padding-top: 10px; padding-right: 10px;"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>

@@ -226,7 +226,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             }
             
             function Drag(ev) {
-                ev.dataTransfer.setData("text", ev.target.id);
+                ev.dataTransfer.setData("calculation_id", ev.target.id);
             }
             
             function DragOver(ev) {
@@ -241,25 +241,41 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             
             function Drop(ev) {
                 ev.preventDefault();
-                var data = ev.dataTransfer.getData('text');
+                var calculation_id = ev.dataTransfer.getData('calculation_id');
+                var date = $(ev.target).parent('tr').attr('data-date');
+                var shift = $(ev.target).parent('tr').attr('data-shift');
+                var before = $(ev.target).parent('tr').attr('data-id');
                 
                 $('#waiting').html("<img src='../images/waiting2.gif' />");
-                $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>" + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
-                        .done(function(timetable_data) {
-                            $('#timetable').html(timetable_data);
-                            $.ajax({ url: "_draw_queue.php?machine=<?=$machine ?>" })
-                                    .done(function(queue_data) {
-                                        $('#waiting').html('');
-                                        $('#queue').html(queue_data);
+                $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>" + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                        .done(function(add_data) {
+                            if(add_data.error == '') {
+                                $.ajax({ url: "_draw_timetable.php?machine_id=" + add_data.machine_id + "&from=" + add_data.from })
+                                    .done(function(timetable_data) {
+                                        $('#timetable').html(timetable_data);
+                                        $.ajax({ url: "_draw_queue.php?machine=<?=$machine ?>" })
+                                                .done(function(queue_data) {
+                                                    $('#waiting').html('');
+                                                    $('#queue').html(queue_data);
+                                                })
+                                                .fail(function() {
+                                                    $('#waiting').html('');
+                                                    alert('Ошибка при перерисовке очереди');
+                                                });
                                     })
                                     .fail(function() {
                                         $('#waiting').html('');
-                                        alert('Ошибка при перерисовке очереди');
+                                        alert('Ошибка при перерисовке страницы');
                                     });
+                            }
+                            else {
+                                $('#waiting').html('');
+                                $('#timetable').html(add_data.error);
+                            }
                         })
                         .fail(function() {
                             $('#waiting').html('');
-                            alert('Ошибка при перерисовке страницы');
+                            alert('Ошибка при добавлении в план');
                         });
             }
         </script>
