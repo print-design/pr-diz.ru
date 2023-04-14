@@ -4,9 +4,11 @@ require_once '../calculation/status_ids.php';
 require_once '../calculation/calculation.php';
 
 class Queue {
+    private $machine_id = null;
     private $machine = '';
     
-    public function __construct($machine) {
+    public function __construct($machine_id, $machine) {
+        $this->machine_id = $machine_id;
         $this->machine = $machine;
     }
     
@@ -24,7 +26,7 @@ class Queue {
             $sql .= "and false ";
         }
         else {
-            $sql .= "and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT." ";
+            $sql .= "and c.machine_id = $this->machine_id and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT." ";
         }
         $sql .= "order by id desc";
         $fetcher = new Fetcher($sql);

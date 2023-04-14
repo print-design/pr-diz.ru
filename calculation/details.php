@@ -133,7 +133,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, extra_expense, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
         . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer,"
-        . "(select gap from calculation_result where calculation_id = rc.id) gap, tm.id techmap_id "
+        . "(select gap from calculation_result where calculation_id = rc.id) gap, tm.id techmap_id, pe.id plan_edition_id "
         . "from calculation rc "
         . "left join film_variation fv on rc.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
@@ -146,6 +146,7 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "left join work_type wt on rc.work_type_id = wt.id "
         . "left join customer cus on rc.customer_id = cus.id "
         . "left join techmap tm on tm.calculation_id = rc.id "
+        . "left join plan_edition pe on pe.calculation_id = rc.id "
         . "where rc.id=$id";
 $row = (new Fetcher($sql))->Fetch();
 
@@ -267,6 +268,7 @@ $num_for_customer = $row['num_for_customer'];
 $gap = $row['gap'];
 
 $techmap_id = $row['techmap_id'];
+$plan_edition_id = $row['plan_edition_id'];
 
 // Если есть ламинация, а ламинатор пустой, то присваиваем ему значение "Сольвент".
 // (В старых расчётах ламинатор может быть не указан, поскольку тогда бессольвента не было.)
@@ -277,6 +279,21 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
 // Если статус - "Черновик" или "Сделан  расчёт", то все чекбосы и поля наценки активны
 if($status_id == DRAFT || $status_id == CALCULATION) {
     $disabled_attr = "";
+}
+
+// Если статус "в плане", но в плане его нет, меняем статус на "составлена технологическая карта"
+if($status_id == PLAN && empty($plan_edition_id)) {
+    $sql = "update calculation set status_id = ".TECHMAP." where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "select status_id from calculation where id = $id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $status_id = $row[0];
+        }
+    }
 }
 
 // Если статус "составлена технологическая карта", а самой карты нет, мменяем статус на "Сделан расчёт"

@@ -110,7 +110,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                     <h2>Очередь</h2>
                     <div id="queue" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 15px;">
                         <?php
-                        $queue = new Queue($machine);
+                        $queue = new Queue(filter_input(INPUT_GET, 'id'), $machine);
                         $queue->Show();
                         ?>
                     </div>
@@ -253,7 +253,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                 $.ajax({ url: "_draw_timetable.php?machine_id=" + add_data.machine_id + "&from=" + add_data.from })
                                     .done(function(timetable_data) {
                                         $('#timetable').html(timetable_data);
-                                        $.ajax({ url: "_draw_queue.php?machine=<?=$machine ?>" })
+                                        $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })
                                                 .done(function(queue_data) {
                                                     $('#waiting').html('');
                                                     $('#queue').html(queue_data);

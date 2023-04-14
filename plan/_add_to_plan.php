@@ -1,5 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
+require_once '../calculation/status_ids.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $date = filter_input(INPUT_GET, 'date');
@@ -16,6 +17,32 @@ class Edition {
     public $Shift;
 }
 
+class DateShift {
+    public $Date;
+    public $Shift;
+    
+    public function __construct($date, $shift) {
+        $this->Date = $date;
+        $this->Shift = $shift;
+    }
+}
+
+function GetNextDateShift(DateShift $dateshift) {
+    switch ($dateshift->Shift) {
+        case 'day':
+            return new DateShift($dateshift->Date, 'night');
+        
+        case 'night':
+            $old_date = DateTime::createFromFormat('Y-m-d', $dateshift->Date);
+            $interval = new DateInterval('P1D');
+            $new_date = $old_date->add($interval);
+            return new DateShift($new_date->format('Y-m-d'), 'day');
+        
+        default :
+            return new DateShift(null, null);
+    }    
+}
+
 $editions = array();
 
 // Определяем размер расчёта
@@ -27,8 +54,8 @@ $sql = "select cr.work_time_1 "
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $work_time_1 = round($row['work_time_1'], 2);
-    echo $calculation_id."<br />";
-    echo $work_time_1."<br />";
+    //echo $calculation_id."<br />";
+    //echo $work_time_1."<br />";
 }
 
 // Если не указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов данной смены
@@ -60,21 +87,42 @@ if($row = $fetcher->Fetch()) {
     else {
         $edition->Position = $row['position'] + 1;
     }
-    $edition->Timespan = 12 - round($row['timespan1'], 2);
+    $edition->Timespan = min(12 - round($row['timespan1'], 2), $work_time_1);
+    $edition->Date = $date;
+    $edition->Shift = $shift;
     array_push($editions, $edition);
 }
 
 // Определяем следующие смены
 $sum_timespans = $editions[0]->Timespan;
+$old_dateshift = new DateShift($editions[0]->Date, $editions[0]->Shift);
 while ($sum_timespans < $work_time_1) {
     $edition = new Edition();
     $edition->Timespan = min(12, $work_time_1 - $sum_timespans);
     $edition->Position = 1;
-    $sum_timespans += $edition->Timespan;
+    $new_dateshift = GetNextDateShift($old_dateshift);
+    $edition->Date = $new_dateshift->Date;
+    $edition->Shift = $new_dateshift->Shift;
     array_push($editions, $edition);
+    
+    $old_dateshift = $new_dateshift;
+    $sum_timespans += $edition->Timespan;
 }
 
-print_r($editions); echo "<br />";
+foreach($editions as $edition) {
+    $sql = "insert into plan_edition (calculation_id, date, shift, timespan, position) "
+            . "values ($calculation_id, '".$edition->Date."', '".$edition->Shift."', ".$edition->Timespan.", ".$edition->Position.")";
+    $executer = new Executer($sql);
+    $error = $executer->error;
+    
+    if(empty($error)) {
+        $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
+        $executer = new Executer($sql);
+        $error = $executer->error;
+    }
+}
+
+//print_r($editions); echo "<br />";
 
 echo json_encode(array('machine_id' => $machine_id, 'from' => $from, 'error' => $error));
 ?>
