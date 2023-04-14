@@ -60,7 +60,7 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select e.date, e.shift, e.timespan, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
+        $sql = "select e.date, e.shift, e.timespan, e.timestamp, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
                 . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -71,7 +71,7 @@ class PlanTimetable {
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.machine_id = ".$this->machine_id." "
                 . "and c.id in (select calculation_id from plan_edition where date >= '".$this->dateFrom->format('Y-m-d')."' and date <= '".$this->dateTo->format('Y-m-d')."') "
-                . "order by e.position";
+                . "order by e.timestamp";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
             if(!array_key_exists($row['date'], $this->editions)) {

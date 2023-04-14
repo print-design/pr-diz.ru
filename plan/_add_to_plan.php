@@ -12,7 +12,6 @@ $error = '';
 
 class Edition {
     public $Timespan;
-    public $Position;
     public $Date;
     public $Shift;
 }
@@ -54,39 +53,30 @@ $sql = "select cr.work_time_1 "
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $work_time_1 = round($row['work_time_1'], 2);
-    //echo $calculation_id."<br />";
-    //echo $work_time_1."<br />";
 }
 
 // Если не указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов данной смены
-// Если указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов смены, кроме тех, у кого position меньше, чем position следующего расчёта
+// Если указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов смены, кроме тех, у кого timestamp меньше, чем timestamp следующего расчёта
 $sql = "";
 if(empty($before)) {
-    $sql = "select sum(e.timespan) timespan1, max(position) position "
+    $sql = "select sum(e.timespan) timespan1 "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
 }
 else {
-    $sql = "select sum(e.timespan) timespan1, max(position) position "
+    $sql = "select sum(e.timespan) timespan1 "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
-            . "and e.position < "
-            . "(select min(position) "
+            . "and e.timestamp < "
+            . "(select min(timestamp) "
             . "from plan_edition "
             . "where calculation_id = $before and machine_id = $machine_id and date='$date' and shift = '$shift')";
 }
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $position = $row['position'];
     $edition = new Edition();
-    if(empty($row['position'])) {
-        $edition->Position = 1;
-    }
-    else {
-        $edition->Position = $row['position'] + 1;
-    }
     $edition->Timespan = min(12 - round($row['timespan1'], 2), $work_time_1);
     $edition->Date = $date;
     $edition->Shift = $shift;
@@ -99,7 +89,6 @@ $old_dateshift = new DateShift($editions[0]->Date, $editions[0]->Shift);
 while ($sum_timespans < $work_time_1) {
     $edition = new Edition();
     $edition->Timespan = min(12, $work_time_1 - $sum_timespans);
-    $edition->Position = 1;
     $new_dateshift = GetNextDateShift($old_dateshift);
     $edition->Date = $new_dateshift->Date;
     $edition->Shift = $new_dateshift->Shift;
@@ -110,8 +99,8 @@ while ($sum_timespans < $work_time_1) {
 }
 
 foreach($editions as $edition) {
-    $sql = "insert into plan_edition (calculation_id, date, shift, timespan, position) "
-            . "values ($calculation_id, '".$edition->Date."', '".$edition->Shift."', ".$edition->Timespan.", ".$edition->Position.")";
+    $sql = "insert into plan_edition (calculation_id, date, shift, timespan) "
+            . "values ($calculation_id, '".$edition->Date."', '".$edition->Shift."', ".$edition->Timespan.")";
     $executer = new Executer($sql);
     $error = $executer->error;
     
