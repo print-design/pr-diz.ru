@@ -58,7 +58,10 @@ require_once './_roles.php';
         $drag = " ondragover='DragOver(event);' ondragleave='DragLeave(event);'";
     }
     ?>
-    <td class="<?=$this->shift ?> border-left" ondrop="Drop(event);"<?=$drag ?>><strong><?=$this->edition['calculation'] ?></strong><br /><?=$this->edition['customer'] ?></td>
+    <td class="<?=$this->shift ?> border-left fordrag" ondrop="Drop(event);"<?=$drag ?>>
+        <div draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+    </td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><strong><?=$this->edition['calculation'] ?></strong><br /><?=$this->edition['customer'] ?></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['length_dirty_1'] ?></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['raport'] ?></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['laminations'] ?></td>

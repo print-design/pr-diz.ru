@@ -79,12 +79,17 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 background-color: white;
             }
 
-            table.typography tbody tr td.night {
+            table.typography tr td.night {
                 background-color: #F0F1FA;
             }
 
             thead#grafik-thead {
                 background-color: lightcyan;
+            }
+            
+            table.typography tr th.fordrag, table.typography tr td.fordrag {
+                padding-left: 3px;
+                padding-right: 3px;
             }
         </style>
     </head>
@@ -225,8 +230,14 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         });
             }
             
-            function Drag(ev) {
+            function DragCalculation(ev) {
                 ev.dataTransfer.setData("calculation_id", ev.target.id);
+                ev.dataTransfer.setData("type", "calculation");
+            }
+            
+            function DragEdition(ev) {
+                ev.dataTransfer.setData("calculation_id", ev.target.id);
+                ev.dataTransfer.setData("type", "edition");
             }
             
             function DragOver(ev) {
@@ -242,12 +253,22 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             function Drop(ev) {
                 ev.preventDefault();
                 var calculation_id = ev.dataTransfer.getData('calculation_id');
+                var type = ev.dataTransfer.getData('type');
                 var date = $(ev.target).parent('tr').attr('data-date');
                 var shift = $(ev.target).parent('tr').attr('data-shift');
                 var before = $(ev.target).parent('tr').attr('data-id');
                 
+                var address = '';
+                
+                if(type == 'calculation') {
+                    address = "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>" + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
+                }
+                else {
+                    return;
+                }
+                
                 $('#waiting').html("<img src='../images/waiting2.gif' />");
-                $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>" + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                $.ajax({ dataType: 'JSON', url: address })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 $.ajax({ url: "_draw_timetable.php?machine_id=" + add_data.machine_id + "&from=" + add_data.from })

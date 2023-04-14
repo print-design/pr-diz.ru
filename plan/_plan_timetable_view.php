@@ -6,6 +6,7 @@
         <?php if($this->machine == CalculationBase::COMIFLEX): ?>
         <th class="assistant">Помощник</th>
         <?php endif; ?>
+        <th class="fordrag"></th>
         <th>Заказ</th>
         <th>Метраж</th>
         <th>Вал</th>

@@ -49,7 +49,8 @@ require_once './_roles.php';
         </select>
     </td>
     <?php endif; ?>
-    <td class="<?=$this->shift ?> border-left" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?> border-left fordrag" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
+    <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
     <td class="<?=$this->shift ?>" ondrop="Drop(event);" ondragover="DragOver(event);" ondragleave="DragLeave(event);"></td>
