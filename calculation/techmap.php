@@ -164,8 +164,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
-        if(empty($techmap_id) && empty($error_message)) {
-            $sql = "update calculation set status_id = ".TECHMAP." where id = $id";
+        if(empty($error_message)) {
+            $sql = "update calculation set status_id = ".TECHMAP." where id = $id and status_id = ".CALCULATION;
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
