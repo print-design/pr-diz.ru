@@ -5,7 +5,6 @@ require_once '../calculation/status_ids.php';
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
 $from = filter_input(INPUT_GET, 'from');
 $before = filter_input(INPUT_GET, 'before');
 $error = '';
@@ -44,14 +43,17 @@ function GetNextDateShift(DateShift $dateshift) {
 
 $editions = array();
 
-// Определяем размер расчёта
+// Определяем размер расчёта и машину
+$machine_id = null;
 $work_time_1 = '';
 
-$sql = "select cr.work_time_1 "
-        . "from calculation_result cr "
-        . "where cr.calculation_id = $calculation_id";
+$sql = "select c.machine_id, cr.work_time_1 "
+        . "from calculation c "
+        . "inner join calculation_result cr on cr.calculation_id = c.id "
+        . "where c.id = $calculation_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
+    $machine_id = $row['machine_id'];
     $work_time_1 = round($row['work_time_1'], 2);
 }
 

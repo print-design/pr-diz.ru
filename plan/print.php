@@ -232,7 +232,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             
             function DragQueue(ev) {
                 ev.dataTransfer.setData("calculation_id", ev.target.id);
-                ev.dataTransfer.setData("type", "calculation");
+                ev.dataTransfer.setData("type", "queue");
             }
             
             function DragTimetable(ev) {
@@ -260,8 +260,11 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 
                 var address = '';
                 
-                if(type == 'calculation') {
-                    address = "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>" + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
+                if(type == 'queue') {
+                    address = "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
+                }
+                else if(type == 'timetable') {
+                    address = "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
                 }
                 else {
                     return;
@@ -270,7 +273,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 $('#waiting').html("<img src='../images/waiting2.gif' />");
                 $.ajax({ dataType: 'JSON', url: address })
                         .done(function(add_data) {
-                            if(add_data.error == '') {
+                            if(add_data.error == '') {``
                                 $.ajax({ url: "_draw_timetable.php?machine_id=" + add_data.machine_id + "&from=" + add_data.from })
                                     .done(function(timetable_data) {
                                         $('#timetable').html(timetable_data);
