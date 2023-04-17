@@ -238,12 +238,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             
             function DragQueue(ev) {
                 dragqueue = true;
-                ev.dataTransfer.setData("calculation_id", ev.target.id);
+                ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
                 ev.dataTransfer.setData("type", "queue");
             }
             
             function DragTimetable(ev) {
-                ev.dataTransfer.setData("calculation_id", ev.target.id);
+                ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
                 ev.dataTransfer.setData("type", "timetable");
             }
             
@@ -275,10 +275,41 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             function DropQueue(ev) {
                 ev.preventDefault();
                 dragqueue = false;
+                var calculation_id = ev.dataTransfer.getData('calculation_id');
                 var type = ev.dataTransfer.getData('type');
                 
                 if(type == 'timetable') {
-                    alert(type);
+                    $('#waiting').html("<img src='../images/waiting2.gif' />");
+                    $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                            .done(function(remove_data) {
+                                if(remove_data.error == '') {
+                                    $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                                    .done(function(timetable_data) {
+                                        $('#timetable').html(timetable_data);
+                                        $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })
+                                                .done(function(queue_data) {
+                                                    $('#waiting').html('');
+                                                    $('#queue').html(queue_data);
+                                                })
+                                                .fail(function() {
+                                                    $('#waiting').html('');
+                                                    alert('Ошибка при перерисовке очереди');
+                                                });
+                                    })
+                                    .fail(function() {
+                                        $('#waiting').html('');
+                                        alert('Ошибка при перерисовке страницы');
+                                    });
+                                }
+                                else {
+                                    $('#waiting').html('');
+                                    $('#timetable').html(add_data.error);
+                                }
+                            })
+                            .fail(function() {
+                                $('#waiting').html('');
+                                alert('Ошибка при удалении из плана');
+                            });
                 }
         
                 $('#queue').removeClass('droppable');
@@ -297,9 +328,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 if(type == 'queue') {
                     address = "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
                 }
-                else if(type == 'timetable') {
+                /*else if(type == 'timetable') {
                     address = "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
-                }
+                }*/
                 else {
                     return;
                 }
@@ -307,7 +338,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 $('#waiting').html("<img src='../images/waiting2.gif' />");
                 $.ajax({ dataType: 'JSON', url: address })
                         .done(function(add_data) {
-                            if(add_data.error == '') {``
+                            if(add_data.error == '') {
                                 $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                                     .done(function(timetable_data) {
                                         $('#timetable').html(timetable_data);

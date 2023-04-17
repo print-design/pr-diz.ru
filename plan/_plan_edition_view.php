@@ -59,7 +59,7 @@ require_once './_roles.php';
     }
     ?>
     <td class="<?=$this->shift ?> border-left fordrag" ondrop="DropTimetable(event);"<?=$drag ?>>
-        <div draggable="true" ondragstart="DragTimetable(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+        <div draggable="true" ondragstart="DragTimetable(event);" data-id="<?=$this->edition['calculation_id'] ?>"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
     </td>
     <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><strong><?=$this->edition['calculation'] ?></strong><br /><?=$this->edition['customer'] ?></td>
     <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['length_dirty_1'] ?></td>
