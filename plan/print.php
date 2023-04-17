@@ -248,7 +248,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             }
             
             function DragOverQueue(ev) {
-                if(!dragqueue && !$('#queue').hasClass('droppable')) {
+                if(!dragqueue) {
                     ev.preventDefault(); 
                     $('#queue').addClass('droppable');
                 }
@@ -274,12 +274,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             
             function DropQueue(ev) {
                 ev.preventDefault();
-                /*dragqueue = false;
+                dragqueue = false;
                 var type = ev.dataTransfer.getData('type');
                 
                 if(type == 'timetable') {
                     alert(type);
-                }*/
+                }
         
                 $('#queue').removeClass('droppable');
             }
