@@ -323,20 +323,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 var shift = $(ev.target).parent('tr').attr('data-shift');
                 var before = $(ev.target).parent('tr').attr('data-id');
                 
-                var address = '';
-                
                 if(type == 'queue') {
-                    address = "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
-                }
-                /*else if(type == 'timetable') {
-                    address = "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>";
-                }*/
-                else {
-                    return;
-                }
-                
-                $('#waiting').html("<img src='../images/waiting2.gif' />");
-                $.ajax({ dataType: 'JSON', url: address })
+                    $('#waiting').html("<img src='../images/waiting2.gif' />");
+                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
@@ -364,8 +353,59 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         })
                         .fail(function() {
                             $('#waiting').html('');
-                            alert('Ошибка при добавлении в план');
+                            alert('Ошибка при добавлении в план' + error);
                         });
+                }
+                else if(type == 'timetable') {
+                    $('#waiting').html("<img src='../images/waiting2.gif' />");
+                    $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                            .done(function(remove_data) {
+                                if(remove_data.error == '') {
+                                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                                        .done(function(add_data) {
+                                            if(add_data.error == '') {
+                                                $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                                                    .done(function(timetable_data) {
+                                                        $('#timetable').html(timetable_data);
+                                                        $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })
+                                                            .done(function(queue_data) {
+                                                                $('#waiting').html('');
+                                                                $('#queue').html(queue_data);
+                                                            })
+                                                            .fail(function() {
+                                                                $('#waiting').html('');
+                                                                alert('Ошибка при перерисовке очереди');
+                                                            });
+                                                    })
+                                                    .fail(function() {
+                                                        $('#waiting').html('');
+                                                        alert('Ошибка при перерисовке страницы');
+                                                    });
+                                            }
+                                            else {
+                                                $('#waiting').html('');
+                                                $('#timetable').html(add_data.error);
+                                            }
+                                        })
+                                        .fail(function() {
+                                            $('#waiting').html('');
+                                            alert('Ошибка при добавлении в план');
+                                        });
+                                }
+                                else {
+                                    $('#waiting').html('');
+                                    $('#timetable').html(add_data.error);
+                                }
+                            })
+                            .fail(function() {
+                                $('#waiting').html('');
+                                alert('Ошибка при удалении из плана');
+                            });
+                }
+                else {
+                    $('#waiting').html('');
+                    return;
+                }
             }
         </script>
     </body>
