@@ -55,17 +55,17 @@ require_once './_roles.php';
     $drag = '';
     if(!in_array($this->edition['calculation_id'], $this->timetable->calculation_ids)) {
         array_push($this->timetable->calculation_ids, $this->edition['calculation_id']);
-        $drag = " ondragover='DragOver(event);' ondragleave='DragLeave(event);'";
+        $drag = " ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";
     }
     ?>
-    <td class="<?=$this->shift ?> border-left fordrag" ondrop="Drop(event);"<?=$drag ?>>
-        <div draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+    <td class="<?=$this->shift ?> border-left fordrag" ondrop="DropTimetable(event);"<?=$drag ?>>
+        <div draggable="true" ondragstart="DragTimetable(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
     </td>
-    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><strong><?=$this->edition['calculation'] ?></strong><br /><?=$this->edition['customer'] ?></td>
-    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['length_dirty_1'] ?></td>
-    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['raport'] ?></td>
-    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['laminations'] ?></td>
-    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['ink_number'] ?></td>
-    <td class="<?=$this->shift ?>" ondrop="Drop(event);"<?=$drag ?>><?=$this->edition['manager'] ?></td>
+    <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><strong><?=$this->edition['calculation'] ?></strong><br /><?=$this->edition['customer'] ?></td>
+    <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['length_dirty_1'] ?></td>
+    <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['raport'] ?></td>
+    <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['laminations'] ?></td>
+    <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['ink_number'] ?></td>
+    <td class="<?=$this->shift ?>" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['manager'] ?></td>
     <td class="<?=$this->shift ?> text-right"><a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"><img src="../images/icons/vertical-dots1.svg" /></a></td>
 </tr>

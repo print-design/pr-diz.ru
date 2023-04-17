@@ -230,27 +230,27 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         });
             }
             
-            function DragCalculation(ev) {
+            function DragQueue(ev) {
                 ev.dataTransfer.setData("calculation_id", ev.target.id);
                 ev.dataTransfer.setData("type", "calculation");
             }
             
-            function DragEdition(ev) {
+            function DragTimetable(ev) {
                 ev.dataTransfer.setData("calculation_id", ev.target.id);
                 ev.dataTransfer.setData("type", "edition");
             }
             
-            function DragOver(ev) {
+            function DragOverTimetable(ev) {
                 ev.preventDefault();
                 $(ev.target).addClass('target');
             }
             
-            function DragLeave(ev) {
+            function DragLeaveTimetable(ev) {
                 ev.preventDefault();
                 $(ev.target).removeClass('target');
             }
             
-            function Drop(ev) {
+            function DropTimetable(ev) {
                 ev.preventDefault();
                 var calculation_id = ev.dataTransfer.getData('calculation_id');
                 var type = ev.dataTransfer.getData('type');
