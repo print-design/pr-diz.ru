@@ -58,6 +58,10 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 margin: 5px 5px 8px 5px;
             }
             
+            #queue.droppable {
+                border: solid 3px lightgray;
+            }
+            
             /* Таблица */
             table.typography {
                 border-radius: 15px;
@@ -113,7 +117,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
                     </div>
                     <h2>Очередь</h2>
-                    <div id="queue" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 15px;">
+                    <div id="queue" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 15px;" ondragover="DragOverQueue(event);" ondragleave="DragLeaveQueue(event);" ondrop="DropQueue(event);">
                         <?php
                         $queue = new Queue(filter_input(INPUT_GET, 'id'), $machine);
                         $queue->Show();
@@ -230,14 +234,24 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         });
             }
             
+            var dragqueue = false;
+            
             function DragQueue(ev) {
+                dragqueue = true;
                 ev.dataTransfer.setData("calculation_id", ev.target.id);
                 ev.dataTransfer.setData("type", "queue");
             }
             
             function DragTimetable(ev) {
                 ev.dataTransfer.setData("calculation_id", ev.target.id);
-                ev.dataTransfer.setData("type", "edition");
+                ev.dataTransfer.setData("type", "timetable");
+            }
+            
+            function DragOverQueue(ev) {
+                if(!dragqueue && !$('#queue').hasClass('droppable')) {
+                    ev.preventDefault(); 
+                    $('#queue').addClass('droppable');
+                }
             }
             
             function DragOverTimetable(ev) {
@@ -245,9 +259,29 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 $(ev.target).addClass('target');
             }
             
+            function DragLeaveQueue(ev) {
+                if($(ev.target).parents('#queue').length == 0) {
+                    ev.preventDefault();
+                    dragqueue = false;
+                    $('#queue').removeClass('droppable');
+                }
+            }
+            
             function DragLeaveTimetable(ev) {
                 ev.preventDefault();
                 $(ev.target).removeClass('target');
+            }
+            
+            function DropQueue(ev) {
+                ev.preventDefault();
+                /*dragqueue = false;
+                var type = ev.dataTransfer.getData('type');
+                
+                if(type == 'timetable') {
+                    alert(type);
+                }*/
+        
+                $('#queue').removeClass('droppable');
             }
             
             function DropTimetable(ev) {
@@ -274,7 +308,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 $.ajax({ dataType: 'JSON', url: address })
                         .done(function(add_data) {
                             if(add_data.error == '') {``
-                                $.ajax({ url: "_draw_timetable.php?machine_id=" + add_data.machine_id + "&from=" + add_data.from })
+                                $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                                     .done(function(timetable_data) {
                                         $('#timetable').html(timetable_data);
                                         $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })

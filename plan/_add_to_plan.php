@@ -113,7 +113,5 @@ foreach($editions as $edition) {
     }
 }
 
-//print_r($editions); echo "<br />";
-
-echo json_encode(array('machine_id' => $machine_id, 'from' => $from, 'error' => $error));
+echo json_encode(array('error' => $error));
 ?>
