@@ -13,6 +13,7 @@ class Edition {
     public $Timespan;
     public $Date;
     public $Shift;
+    public $Position;
 }
 
 class DateShift {
@@ -57,31 +58,47 @@ if($row = $fetcher->Fetch()) {
     $work_time_1 = round($row['work_time_1'], 2);
 }
 
-// Если не указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов данной смены
-// Если указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов смены, кроме тех, у кого timestamp меньше, чем timestamp следующего расчёта
+// Если не указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов данной смены,
+// Position - на 1 больше, чем максимальный position данной смены.
+// Если указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов смены, кроме тех, у кого position меньше, чем position следующего расчёта,
+// увеличиваем Position на 1 у следующего расчёта и всех следу.щих за ним
+// и устанавливаем Position текущего расчёта - на 1 больше, чем максимальный position смены, кроме тех, у кого position меньше, чем position следующего расчёта.
 $sql = "";
 if(empty($before)) {
-    $sql = "select sum(e.timespan) timespan1 "
+    $sql = "select sum(e.timespan) timespan1, max(e.position) position1 "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
 }
 else {
-    $sql = "select sum(e.timespan) timespan1 "
+    $update_sql = "update plan_edition e "
+            . "inner join calculation c on e.calculation_id = c.id "
+            . "set e.position = e.position + 1 "
+            . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
+            . "and e.position >= "
+            . "(select min(position) "
+            . "from plan_edition "
+            . "where calculation_id = $before and machine_id = $machine_id and date = '$date' and shift = '$shift')";
+    $executer = new Executer($update_sql);
+    $error = $executer->error;
+    
+    $sql = "select sum(e.timespan) timespan1, max(e.position) position1 "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
-            . "and e.timestamp < "
-            . "(select min(timestamp) "
+            . "and e.position < "
+            . "(select min(position) "
             . "from plan_edition "
-            . "where calculation_id = $before and machine_id = $machine_id and date='$date' and shift = '$shift')";
+            . "where calculation_id = $before and machine_id = $machine_id and date = '$date' and shift = '$shift')";
 }
+
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $edition = new Edition();
     $edition->Timespan = min(12 - round($row['timespan1'], 2), $work_time_1);
     $edition->Date = $date;
     $edition->Shift = $shift;
+    $edition->Position = $row['position1'] + 1;
     array_push($editions, $edition);
 }
 
@@ -94,6 +111,18 @@ while ($sum_timespans < $work_time_1) {
     $new_dateshift = GetNextDateShift($old_dateshift);
     $edition->Date = $new_dateshift->Date;
     $edition->Shift = $new_dateshift->Shift;
+    $edition->Position = 0;
+    
+    // Устанавливаем position - на 1 меньше, чем минимальный position данной смены
+    $update_sql = "select min(e.position) position1 "
+            . "from plan_edition e "
+            . "inner join calculation c on e.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and e.date = '".$edition->Date."' and e.shift = '".$edition->Shift."'";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $edition->Position = $row['position1'] - 1;
+    }
+    
     array_push($editions, $edition);
     
     $old_dateshift = $new_dateshift;
@@ -101,8 +130,8 @@ while ($sum_timespans < $work_time_1) {
 }
 
 foreach($editions as $edition) {
-    $sql = "insert into plan_edition (calculation_id, date, shift, timespan) "
-            . "values ($calculation_id, '".$edition->Date."', '".$edition->Shift."', ".$edition->Timespan.")";
+    $sql = "insert into plan_edition (calculation_id, date, shift, timespan, position) "
+            . "values ($calculation_id, '".$edition->Date."', '".$edition->Shift."', ".$edition->Timespan.", ".$edition->Position.")";
     $executer = new Executer($sql);
     $error = $executer->error;
     
