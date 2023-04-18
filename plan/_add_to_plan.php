@@ -111,7 +111,6 @@ else {
     $executer = new Executer($sql);
     $error = $executer->error;
     if(!empty($error)) {
-        $error = "Ошибка при изменении позиций";
         echo json_encode(array('error' => $error));
         exit();
     }
