@@ -313,7 +313,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                 }
                                 else {
                                     //$('#waiting').html('');
-                                    $('#timetable').html(add_data.error);
+                                    alert(add_data.error);
+                                    $('td').removeClass('target');
+                                    $('#queue').removeClass('droppable');
                                 }
                             })
                             .fail(function() {
@@ -363,7 +365,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             }
                             else {
                                 //$('#waiting').html('');
-                                $('#timetable').html(add_data.error);
+                                alert(add_data.error);
+                                $('td').removeClass('target');
+                                $('#queue').removeClass('droppable');
                             }
                         })
                         .fail(function() {
@@ -404,7 +408,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                             }
                                             else {
                                                 //$('#waiting').html('');
-                                                $('#timetable').html(add_data.error);
+                                                alert(add_data.error);
+                                                $('td').removeClass('target');
+                                                $('#queue').removeClass('droppable');
                                             }
                                         })
                                         .fail(function() {
@@ -414,7 +420,9 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                 }
                                 else {
                                     //$('#waiting').html('');
-                                    $('#timetable').html(add_data.error);
+                                    alert(add_data.error);
+                                    $('td').removeClass('target');
+                                    $('#queue').removeClass('droppable');
                                 }
                             })
                             .fail(function() {

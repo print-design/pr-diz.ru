@@ -58,20 +58,49 @@ if($row = $fetcher->Fetch()) {
     $work_time_1 = round($row['work_time_1'], 2);
 }
 
-// Если не указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов данной смены,
-// Position - на 1 больше, чем максимальный position данной смены.
-// Если указываем следующий расчёт, то размер смены равен 12 минус сумма всех расчётов смены, кроме тех, у кого position меньше, чем position следующего расчёта,
+// Размер смены равен 12 минус сумма всех расчётов данной смены.
+// Если не указываем следующий расчёт, то position - на 1 больше, чем максимальный position данной смены.
+// Если указываем следующий расчёт, то 
 // увеличиваем Position на 1 у следующего расчёта и всех следу.щих за ним
 // и устанавливаем Position текущего расчёта - на 1 больше, чем максимальный position смены, кроме тех, у кого position меньше, чем position следующего расчёта.
-$sql = "";
+$edition = new Edition();
+$edition->Date = $date;
+$edition->Shift = $shift;
+
+$sql = "select sum(e.timespan) timespan1 "
+        . "from plan_edition e "
+        . "inner join calculation c on e.calculation_id = c.id "
+        . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
+$fetcher = new Fetcher($sql);
+$row = $fetcher->Fetch();
+if(!$row) {
+    $error = "Ошибка при получении рабочего времени";
+    echo json_encode(array('error' => $error));
+    exit();
+}
+if(round($row['timespan1'], 2) >= 12) {
+    $error = "В этой смене места нет";
+    echo json_encode(array('error' => $error));
+    exit();
+}
+$edition->Timespan = min(12 - round($row['timespan1'], 2), $work_time_1);
+
 if(empty($before)) {
-    $sql = "select sum(e.timespan) timespan1, max(e.position) position1 "
+    $sql = "select max(e.position) position1 "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при определении позиции";
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    $edition->Position = $row['position1'] + 1;
 }
 else {
-    $update_sql = "update plan_edition e "
+    $sql = "update plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "set e.position = e.position + 1 "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
@@ -79,10 +108,15 @@ else {
             . "(select min(position) "
             . "from plan_edition "
             . "where calculation_id = $before and machine_id = $machine_id and date = '$date' and shift = '$shift')";
-    $executer = new Executer($update_sql);
+    $executer = new Executer($sql);
     $error = $executer->error;
+    if(!empty($error)) {
+        $error = "Ошибка при изменении позиций";
+        echo json_encode(array('error' => $error));
+        exit();
+    }
     
-    $sql = "select sum(e.timespan) timespan1, max(e.position) position1 "
+    $sql = "select max(e.position) position1 "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
@@ -90,17 +124,15 @@ else {
             . "(select min(position) "
             . "from plan_edition "
             . "where calculation_id = $before and machine_id = $machine_id and date = '$date' and shift = '$shift')";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при получении позиции";
+    }
+    $edition->Position = $row['position1'] + 1;
 }
 
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $edition = new Edition();
-    $edition->Timespan = min(12 - round($row['timespan1'], 2), $work_time_1);
-    $edition->Date = $date;
-    $edition->Shift = $shift;
-    $edition->Position = $row['position1'] + 1;
-    array_push($editions, $edition);
-}
+array_push($editions, $edition);
 
 // Определяем следующие смены
 $sum_timespans = $editions[0]->Timespan;
