@@ -182,7 +182,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             });
             
             function ChangeEmployee1(select) {
-                $('#waiting').html("<img src='../images/waiting2.gif' />");
+                //$('#waiting').html("<img src='../images/waiting2.gif' />");
                 var id = select.val();
                 var machine_id = select.attr('data-machine-id');
                 var date = select.attr('data-date');
@@ -191,7 +191,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         .done(function() {
                             $.ajax({ url: "_draw_timetable.php?machine_id=" + select.attr('data-machine-id') + "&from=" + select.attr('data-from') })
                                 .done(function(data) {
-                                    $('#waiting').html('');
+                                    //$('#waiting').html('');
                                     $('#timetable').html(data);
                                     
                                     if($('#sidebar').hasClass('active')) {
@@ -200,18 +200,18 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                     }
                                 })
                                 .fail(function() {
-                                    $('#waiting').html('');
+                                    //$('#waiting').html('');
                                     alert('Ошибка при перерисовке страницы');
                                 });
                         })
                         .fail(function() {
-                            $('#waiting').html('');
+                            //$('#waiting').html('');
                             alert('Ошибка при смене работника');
                         });
             }
             
             function ChangeEmployee2(select) {
-                $('#waiting').html("<img src='../images/waiting2.gif' />");
+                //$('#waiting').html("<img src='../images/waiting2.gif' />");
                 var id = select.val();
                 var machine_id = select.attr('data-machine-id');
                 var date = select.attr('data-date');
@@ -220,7 +220,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                         .done(function() {
                             $.ajax({ url: "_draw_timetable.php?machine_id=" + select.attr('data-machine-id') + "&from=" + select.attr('data-from') })
                                 .done(function(data) {
-                                    $('#waiting').html('');
+                                    //$('#waiting').html('');
                                     $('#timetable').html(data);
                                     
                                     if($('#sidebar').hasClass('active')) {
@@ -229,12 +229,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                     }
                                 })
                                 .fail(function() {
-                                    $('#waiting').html('');
+                                    //$('#waiting').html('');
                                     alert('Ошибка при перерисовке страницы');
                                 });
                         })
                         .fail(function() {
-                            $('#waiting').html('');
+                            //$('#waiting').html('');
                             alert('Ошибка при смене работника');
                         });
             }
@@ -284,35 +284,40 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 var type = ev.dataTransfer.getData('type');
                 
                 if(type == 'timetable') {
-                    $('#waiting').html("<img src='../images/waiting2.gif' />");
+                    //$('#waiting').html("<img src='../images/waiting2.gif' />");
                     $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
                                     $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                                     .done(function(timetable_data) {
                                         $('#timetable').html(timetable_data);
+                                
+                                        if($('#sidebar').hasClass('active')) {
+                                            $('th.assistant').show();
+                                            $('td.assistant').show();
+                                        }
                                         $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })
                                                 .done(function(queue_data) {
-                                                    $('#waiting').html('');
+                                                    //$('#waiting').html('');
                                                     $('#queue').html(queue_data);
                                                 })
                                                 .fail(function() {
-                                                    $('#waiting').html('');
+                                                    //$('#waiting').html('');
                                                     alert('Ошибка при перерисовке очереди');
                                                 });
                                     })
                                     .fail(function() {
-                                        $('#waiting').html('');
+                                        //$('#waiting').html('');
                                         alert('Ошибка при перерисовке страницы');
                                     });
                                 }
                                 else {
-                                    $('#waiting').html('');
+                                    //$('#waiting').html('');
                                     $('#timetable').html(add_data.error);
                                 }
                             })
                             .fail(function() {
-                                $('#waiting').html('');
+                                //$('#waiting').html('');
                                 alert('Ошибка при удалении из плана');
                             });
                 }
@@ -329,40 +334,45 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 var before = $(ev.target).parent('tr').attr('data-id');
                 
                 if(type == 'queue') {
-                    $('#waiting').html("<img src='../images/waiting2.gif' />");
+                    //$('#waiting').html("<img src='../images/waiting2.gif' />");
                     $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                                     .done(function(timetable_data) {
                                         $('#timetable').html(timetable_data);
+                                
+                                        if($('#sidebar').hasClass('active')) {
+                                            $('th.assistant').show();
+                                            $('td.assistant').show();
+                                        }
                                         $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })
                                                 .done(function(queue_data) {
-                                                    $('#waiting').html('');
+                                                    //$('#waiting').html('');
                                                     $('#queue').html(queue_data);
                                                 })
                                                 .fail(function() {
-                                                    $('#waiting').html('');
+                                                    //$('#waiting').html('');
                                                     alert('Ошибка при перерисовке очереди');
                                                 });
                                     })
                                     .fail(function() {
-                                        $('#waiting').html('');
+                                        //$('#waiting').html('');
                                         alert('Ошибка при перерисовке страницы');
                                     });
                             }
                             else {
-                                $('#waiting').html('');
+                                //$('#waiting').html('');
                                 $('#timetable').html(add_data.error);
                             }
                         })
                         .fail(function() {
-                            $('#waiting').html('');
+                            //$('#waiting').html('');
                             alert('Ошибка при добавлении в план' + error);
                         });
                 }
                 else if(type == 'timetable') {
-                    $('#waiting').html("<img src='../images/waiting2.gif' />");
+                    //$('#waiting').html("<img src='../images/waiting2.gif' />");
                     $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
@@ -372,43 +382,48 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                                 $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
                                                     .done(function(timetable_data) {
                                                         $('#timetable').html(timetable_data);
+                                                
+                                                        if($('#sidebar').hasClass('active')) {
+                                                            $('th.assistant').show();
+                                                            $('td.assistant').show();
+                                                        }
                                                         $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })
                                                             .done(function(queue_data) {
-                                                                $('#waiting').html('');
+                                                                //$('#waiting').html('');
                                                                 $('#queue').html(queue_data);
                                                             })
                                                             .fail(function() {
-                                                                $('#waiting').html('');
+                                                                //$('#waiting').html('');
                                                                 alert('Ошибка при перерисовке очереди');
                                                             });
                                                     })
                                                     .fail(function() {
-                                                        $('#waiting').html('');
+                                                        //$('#waiting').html('');
                                                         alert('Ошибка при перерисовке страницы');
                                                     });
                                             }
                                             else {
-                                                $('#waiting').html('');
+                                                //$('#waiting').html('');
                                                 $('#timetable').html(add_data.error);
                                             }
                                         })
                                         .fail(function() {
-                                            $('#waiting').html('');
+                                            //$('#waiting').html('');
                                             alert('Ошибка при добавлении в план');
                                         });
                                 }
                                 else {
-                                    $('#waiting').html('');
+                                    //$('#waiting').html('');
                                     $('#timetable').html(add_data.error);
                                 }
                             })
                             .fail(function() {
-                                $('#waiting').html('');
+                                //$('#waiting').html('');
                                 alert('Ошибка при удалении из плана');
                             });
                 }
                 else {
-                    $('#waiting').html('');
+                    //$('#waiting').html('');
                     return;
                 }
             }
