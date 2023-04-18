@@ -25,6 +25,10 @@ if($row = $fetcher->Fetch()) {
         DeleteNext();
     });
     
+    $('#restore').click(function() {
+        RestoreNext();
+    });
+    
     function DeleteNext() {
         $.ajax({ url: "_revision.php" })
                 .done(function(data) {
@@ -33,6 +37,17 @@ if($row = $fetcher->Fetch()) {
                 })
                 .fail(function() {
                     $('#deleted').text('Fail');
+                });
+    }
+    
+    function RestoreNext() {
+        $.ajax({ url: "_revision1.php" })
+                .done(function(data) {
+                    $('#restored').text(data);
+                    RestoreNext();
+                })
+                .fail(function() {
+                    $('#restored').text('Fail');
                 });
     }
 </script>
