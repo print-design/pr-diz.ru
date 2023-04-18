@@ -4,7 +4,7 @@
         <th>Смена</th>
         <th>Печатник</th>
         <?php if($this->machine == CalculationBase::COMIFLEX): ?>
-        <th class="assistant">Помощник</th>
+        <th class="assistant" style="display: none;">Помощник</th>
         <?php endif; ?>
         <th class="fordrag"></th>
         <th>Заказ</th>

@@ -170,15 +170,15 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
                 $('#sidebarExpand').show();
-                $('th.assistant').hide();
-                $('td.assistant').hide();
+                $('th.assistant').show();
+                $('td.assistant').show();
             });
                 
             $('#sidebarExpand').on('click', function() {
                 $('#sidebar').removeClass('active');
                 $('#sidebarExpand').hide();
-                $('th.assistant').show();
-                $('td.assistant').show();
+                $('th.assistant').hide();
+                $('td.assistant').hide();
             });
             
             function ChangeEmployee1(select) {
@@ -195,8 +195,8 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                     $('#timetable').html(data);
                                     
                                     if($('#sidebar').hasClass('active')) {
-                                        $('th.assistant').hide();
-                                        $('td.assistant').hide();
+                                        $('th.assistant').show();
+                                        $('td.assistant').show();
                                     }
                                 })
                                 .fail(function() {
@@ -222,6 +222,11 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                                 .done(function(data) {
                                     $('#waiting').html('');
                                     $('#timetable').html(data);
+                                    
+                                    if($('#sidebar').hasClass('active')) {
+                                        $('th.assistant').show();
+                                        $('td.assistant').show();
+                                    }
                                 })
                                 .fail(function() {
                                     $('#waiting').html('');
