@@ -100,14 +100,12 @@ if(empty($before)) {
     $edition->Position = $row['position1'] + 1;
 }
 else {
-    $sql = "update plan_edition e "
-            . "inner join calculation c on e.calculation_id = c.id "
-            . "set e.position = e.position + 1 "
-            . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
-            . "and e.position >= "
+    $sql = "update plan_edition set position = position + 1 "
+            . "where date = '$date' and shift = '$shift' and calculation_id in (select id from calculation where machine_id = $machine_id) "
+            . "and position >= "
             . "(select min(position) "
             . "from plan_edition "
-            . "where calculation_id = $before and machine_id = $machine_id and date = '$date' and shift = '$shift')";
+            . "where calculation_id = $before)";
     $executer = new Executer($sql);
     $error = $executer->error;
     if(!empty($error)) {
@@ -126,7 +124,9 @@ else {
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
-        $error = "Ошибка при получении позиции";
+        $error = $fetcher->error;
+        echo json_encode(array('error' => $error));
+        exit();
     }
     $edition->Position = $row['position1'] + 1;
 }
