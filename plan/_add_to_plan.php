@@ -67,7 +67,7 @@ $edition = new Edition();
 $edition->Date = $date;
 $edition->Shift = $shift;
 
-$sql = "select sum(e.timespan) timespan1 "
+$sql = "select sum(e.timespan) "
         . "from plan_edition e "
         . "inner join calculation c on e.calculation_id = c.id "
         . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
@@ -78,15 +78,15 @@ if(!$row) {
     echo json_encode(array('error' => $error));
     exit();
 }
-if(round($row['timespan1'], 2) >= 12) {
+if(round($row[0], 2) >= 12) {
     $error = "В этой смене места нет";
     echo json_encode(array('error' => $error));
     exit();
 }
-$edition->Timespan = min(12 - round($row['timespan1'], 2), $work_time_1);
+$edition->Timespan = min(12 - round($row[0], 2), $work_time_1);
 
 if(empty($before)) {
-    $sql = "select max(e.position) position1 "
+    $sql = "select max(e.position) "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
@@ -97,15 +97,21 @@ if(empty($before)) {
         echo json_encode(array('error' => $error));
         exit();
     }
-    $edition->Position = $row['position1'] + 1;
+    $edition->Position = $row[0] + 1;
 }
 else {
+    $min_position = 0;
+    $sql = "select min(position) "
+            . "from plan_edition "
+            . "where calculation_id = $before";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $min_position = $row[0];
+    }
+    
     $sql = "update plan_edition set position = position + 1 "
             . "where date = '$date' and shift = '$shift' and calculation_id in (select id from calculation where machine_id = $machine_id) "
-            . "and position >= "
-            . "(select min(position) "
-            . "from plan_edition "
-            . "where calculation_id = $before)";
+            . "and position >= $min_position";
     $executer = new Executer($sql);
     $error = $executer->error;
     if(!empty($error)) {
@@ -113,7 +119,7 @@ else {
         exit();
     }
     
-    $sql = "select max(e.position) position1 "
+    $sql = "select max(e.position) "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
@@ -128,7 +134,7 @@ else {
         echo json_encode(array('error' => $error));
         exit();
     }
-    $edition->Position = $row['position1'] + 1;
+    $edition->Position = $row[0] + 1;
 }
 
 array_push($editions, $edition);
@@ -145,13 +151,13 @@ while ($sum_timespans < $work_time_1) {
     $edition->Position = 0;
     
     // Устанавливаем position - на 1 меньше, чем минимальный position данной смены
-    $update_sql = "select min(e.position) position1 "
+    $update_sql = "select min(e.position) "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '".$edition->Date."' and e.shift = '".$edition->Shift."'";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $edition->Position = $row['position1'] - 1;
+        $edition->Position = $row[0] - 1;
     }
     
     array_push($editions, $edition);
