@@ -9,6 +9,10 @@ $from = filter_input(INPUT_GET, 'from');
 $before = filter_input(INPUT_GET, 'before');
 $error = '';
 
+if($before == $calculation_id) {
+    $before = null;
+}
+
 class Edition {
     public $Timespan;
     public $Date;
@@ -103,7 +107,7 @@ else {
     $min_position = 0;
     $sql = "select min(position) "
             . "from plan_edition "
-            . "where calculation_id = $before";
+            . "where calculation_id = $before"; 
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $min_position = $row[0];
