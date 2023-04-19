@@ -24,8 +24,14 @@ class PlanShift {
             include './_plan_shift_view.php';
         }
         else {
+            $shift_worktime = 0;
+            
+            foreach ($this->editions as $edition) {
+                $shift_worktime += $edition['worktime'];
+            }
+            
             foreach($this->editions as $key => $value) {
-                $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count);
+                $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count, $shift_worktime);
                 $edition->Show();
             }
             

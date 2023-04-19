@@ -7,9 +7,9 @@ class PlanEdition {
     private $edition;
     private $date_editions_count;
     private $shift_editions_count;
+    private $shift_worktime;
 
-
-    public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count) {
+    public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count, $shift_worktime) {
         $this->date = $date;
         $this->shift = $shift;
         $this->timetable = $timetable;
@@ -17,6 +17,7 @@ class PlanEdition {
         $this->edition = $edition;
         $this->date_editions_count = $date_editions_count;
         $this->shift_editions_count = $shift_editions_count;
+        $this->shift_worktime = $shift_worktime;
     }
     
     function Show() {

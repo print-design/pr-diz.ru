@@ -9,7 +9,7 @@ require_once './_roles.php';
     </td>
     <?php endif; ?>
     <?php if($this->edition_key == 0): ?>
-    <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
+    <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic"><?=$this->shift_worktime ?> ч.</div></td>
     <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>

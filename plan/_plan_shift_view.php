@@ -8,7 +8,9 @@ require_once './_roles.php';
         <div style="font-size: 18px; font-weight: bold; margin-top: 10px;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
     </td>
     <?php endif; ?>
-    <td class="<?=$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
+    <td class="<?=$this->shift ?>">
+        <?=($this->shift == 'day' ? 'День' : 'Ночь') ?>
+    </td>
     <td class="<?=$this->shift ?>">
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
