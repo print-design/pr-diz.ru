@@ -75,7 +75,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 border-top: 0;
             }
             
-            table.typography tr:has(td.target) {
+            table.typography tr:has(td.target) td.showdropline {
                 border-top: solid 3px darkgray;
             }
 
