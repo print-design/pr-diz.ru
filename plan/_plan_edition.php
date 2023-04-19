@@ -7,7 +7,8 @@ class PlanEdition {
     private $edition;
     private $date_editions_count;
     private $shift_editions_count;
-    
+
+
     public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count) {
         $this->date = $date;
         $this->shift = $shift;

@@ -14,7 +14,6 @@ class PlanTimetable {
     public $workshifts1 = array();
     public $workshifts2 = array();
     public $editions = array();
-    public $calculation_ids = array();
 
     public function __construct($machine_id, $dateFrom, $dateTo) {
         $this->machine_id = $machine_id;
@@ -32,7 +31,7 @@ class PlanTimetable {
         $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
         $fetcher = new Fetcher($sql);
         while ($row = $fetcher->Fetch()) {
-            array_push($this->employees, array("id" => $row['id'], "first_name" => $row['first_name'], "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']));
+            array_push($this->employees, array("id" => $row['id'], "first_name" => mb_substr($row['first_name'], 0, 1).'.', "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']));
         }
         
         // Работники1
@@ -60,8 +59,8 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select e.date, e.shift, e.timespan, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
-                . "cr.length_dirty_1, cr.work_time_1, cus.name customer, u.first_name, u.last_name, "
+        $sql = "select e.date, e.shift, e.worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
+                . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
                 . "from plan_edition e "
@@ -90,21 +89,12 @@ class PlanTimetable {
                 $laminations = '1';
             }
             
-            // Добавляем в список расчётов те из них, которые начаты ранее начальной даты
-            // чтобы нельзя было вставить новую техкарту между тиражами по одной техкарте
-            $current_date = DateTime::createFromFormat('Y-m-d', $row['date']);
-            $diff = $current_date->diff($this->dateFrom);
-            if ($diff->days > 0 && $diff->invert == 0) {
-                array_push($this->calculation_ids, $row['calculation_id']);
-            }
-            
-            array_push($this->editions[$row['date']][$row['shift']], array('timespan' => $row['timespan'], 
+            array_push($this->editions[$row['date']][$row['shift']], array('worktime' => $row['worktime'], 
                 'calculation_id' => $row['calculation_id'], 
                 'calculation' => $row['calculation'], 
-                'raport' => rtrim(rtrim(CalculationBase::Display(floatval($row['raport']), 3), "0"), ","), 
+                'raport' => $row['raport'], 
                 'ink_number' => $row['ink_number'], 
-                'length_dirty_1' => CalculationBase::Display(floatval($row['length_dirty_1']), 0), 
-                'work_time_1' => CalculationBase::Display(floatval($row['work_time_1']), 2), 
+                'length_dirty_1' => $row['length_dirty_1'], 
                 'customer' => $row['customer'], 
                 'laminations' => $laminations, 
                 'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
