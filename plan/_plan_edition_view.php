@@ -64,6 +64,7 @@ require_once './_roles.php';
     </td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><div style="font-weight: bold; display: inline;"<?=$drag ?>><?=$this->edition['calculation'] ?></div><br /><?=$this->edition['customer'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['length_dirty_1'] ?></td>
+    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['work_time_1'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['raport'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['laminations'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['ink_number'] ?></td>

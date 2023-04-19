@@ -61,7 +61,7 @@ class PlanTimetable {
         
         // Тиражи
         $sql = "select e.date, e.shift, e.timespan, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
-                . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
+                . "cr.length_dirty_1, cr.work_time_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
                 . "from plan_edition e "
@@ -104,6 +104,7 @@ class PlanTimetable {
                 'raport' => rtrim(rtrim(CalculationBase::Display(floatval($row['raport']), 3), "0"), ","), 
                 'ink_number' => $row['ink_number'], 
                 'length_dirty_1' => CalculationBase::Display(floatval($row['length_dirty_1']), 0), 
+                'work_time_1' => CalculationBase::Display(floatval($row['work_time_1']), 2), 
                 'customer' => $row['customer'], 
                 'laminations' => $laminations, 
                 'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
