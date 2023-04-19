@@ -262,6 +262,11 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             function DragOverTimetable(ev) {
                 ev.preventDefault();
                 $(ev.target).addClass('target');
+                
+                if($(ev.target).parents('td').length > 0) { 
+                    td = $(ev.target).parents('td')[0];
+                    $(td).addClass('target');
+                }
             }
             
             function DragLeaveQueue(ev) {
@@ -331,9 +336,10 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 ev.preventDefault();
                 var calculation_id = ev.dataTransfer.getData('calculation_id');
                 var type = ev.dataTransfer.getData('type');
-                var date = $(ev.target).parent('tr').attr('data-date');
-                var shift = $(ev.target).parent('tr').attr('data-shift');
-                var before = $(ev.target).parent('tr').attr('data-id');
+                tr = $(ev.target).parents('tr')[0];
+                var date = $(tr).attr('data-date');
+                var shift = $(tr).attr('data-shift');
+                var before = $(tr).attr('data-id');
                 
                 if(type == 'queue') {
                     //$('#waiting').html("<img src='../images/waiting2.gif' />");

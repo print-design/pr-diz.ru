@@ -59,16 +59,16 @@ require_once './_roles.php';
     ?>
     <td class="<?=$this->shift ?> showdropline border-left fordrag" ondrop="DropTimetable(event);"<?=$drag ?>>
         <?php if(!in_array($this->edition['calculation_id'], $this->timetable->calculation_ids)): ?>
-        <div draggable="true" ondragstart="DragTimetable(event);" data-id="<?=$this->edition['calculation_id'] ?>"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+        <div draggable="true" ondragstart="DragTimetable(event);" data-id="<?=$this->edition['calculation_id'] ?>"<?=$drag ?>><img src="../images/icons/double-vertical-dots.svg" draggable="false"<?=$drag ?> /></div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><strong><?=$this->edition['calculation'] ?></strong><br /><?=$this->edition['customer'] ?></td>
+    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><div style="font-weight: bold; display: inline;"<?=$drag ?>><?=$this->edition['calculation'] ?></div><br /><?=$this->edition['customer'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['length_dirty_1'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['raport'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['laminations'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['ink_number'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);"<?=$drag ?>><?=$this->edition['manager'] ?></td>
-    <td class="<?=$this->shift ?> showdropline text-right"><a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"><img src="../images/icons/vertical-dots1.svg" /></a></td>
+    <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);"<?=$drag ?>><a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drag ?>><img src="../images/icons/vertical-dots1.svg"<?=$drag ?> /></a></td>
 </tr>
 <?php
 if(!in_array($this->edition['calculation_id'], $this->timetable->calculation_ids)) {
