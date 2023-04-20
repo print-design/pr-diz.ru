@@ -454,6 +454,24 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                                 alert('Ошибка при удалении из плана');
                             });
                 }
+                else if(type == 'timetableevent') {
+                    var event_id = ev.dataTransfer.getData('event_id');
+                    
+                    $.ajax({ dataType: 'JSON', url: "_add_event.php?event_id=" + event_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                        .done(function(add_data) {
+                            if(add_data.error == '') {
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                            }
+                            else {
+                                alert(add_data.error);
+                                $('td').removeClass('target');
+                                $('#queue').removeClass('droppable');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при добавлении события в план');
+                        });
+                }
                 else {
                     return;
                 }
