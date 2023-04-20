@@ -21,7 +21,7 @@ if(null !== filter_input(INPUT_POST, 'add_event_submit')) {
 // Удаление события
 if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    $sql = "delete from plan_event where id = $id"; echo $sql;
+    $sql = "delete from plan_event where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
