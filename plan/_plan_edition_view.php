@@ -65,7 +65,7 @@ require_once './_roles.php';
     </td>
     <?php if($this->edition['is_event']): ?>
     <td colspan="8" class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
-        <div style="font-weight: bold; display: inline;" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
+        <?= $this->edition['calculation'] ?>
     </td>
     <?php else: ?>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
