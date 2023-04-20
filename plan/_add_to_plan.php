@@ -5,7 +5,6 @@ require_once '../calculation/status_ids.php';
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
-$from = filter_input(INPUT_GET, 'from');
 $before = filter_input(INPUT_GET, 'before');
 $error = '';
 
@@ -106,7 +105,6 @@ else {
         echo json_encode(array('error' => $error));
         exit();
     }
-    
     $max_edition = $row[0];
     
     $sql = "select max(position) "
@@ -120,7 +118,6 @@ else {
         echo json_encode(array('error' => $error));
         exit();
     }
-    
     $max_event = $row[0];
     
     $edition->Position = max($max_edition, $max_event) + 1;

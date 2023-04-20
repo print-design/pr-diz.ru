@@ -432,7 +432,6 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
             
             function DropTimetable(ev) {
                 ev.preventDefault();
-                var calculation_id = ev.dataTransfer.getData('calculation_id');
                 var type = ev.dataTransfer.getData('type');
                 tr = $(ev.target).parents('tr')[0];
                 var date = $(tr).attr('data-date');
@@ -440,8 +439,52 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 var before = $(tr).attr('data-position');
                 
                 if(type == 'queue') {
+                    var calculation_id = ev.dataTransfer.getData('calculation_id');
+                    
                     //$('#waiting').html("<img src='../images/waiting2.gif' />");
-                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                        .done(function(add_data) {
+                            if(add_data.error == '') {
+                                $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                                    .done(function(timetable_data) {
+                                        $('#timetable').html(timetable_data);
+                                
+                                        if($('#sidebar').hasClass('active')) {
+                                            $('th.assistant').show();
+                                            $('td.assistant').show();
+                                        }
+                                        $.ajax({ url: "_draw_queue.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&machine=<?=$machine ?>" })
+                                                .done(function(queue_data) {
+                                                    //$('#waiting').html('');
+                                                    $('#queue').html(queue_data);
+                                                })
+                                                .fail(function() {
+                                                    //$('#waiting').html('');
+                                                    alert('Ошибка при перерисовке очереди');
+                                                });
+                                    })
+                                    .fail(function() {
+                                        //$('#waiting').html('');
+                                        alert('Ошибка при перерисовке страницы');
+                                    });
+                            }
+                            else {
+                                //$('#waiting').html('');
+                                alert(add_data.error);
+                                $('td').removeClass('target');
+                                $('#queue').removeClass('droppable');
+                            }
+                        })
+                        .fail(function() {
+                            //$('#waiting').html('');
+                            alert('Ошибка при добавлении в план' + error);
+                        });
+                }
+                else if(type == 'event') {
+                    var event_id = ev.dataTransfer.getData('event_id');
+                    
+                    //$('#waiting').html("<img src='../images/waiting2.gif' />");
+                    $.ajax({ dataType: 'JSON', url: "_add_event.php?event_id=" + event_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
@@ -480,11 +523,13 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                         });
                 }
                 else if(type == 'timetable') {
+                    var calculation_id = ev.dataTransfer.getData('calculation_id');
+                
                     //$('#waiting').html("<img src='../images/waiting2.gif' />");
-                    $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                    $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
-                                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before + "&from=<?= filter_input(INPUT_GET, 'from') ?>" })
+                                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
                                         .done(function(add_data) {
                                             if(add_data.error == '') {
                                                 $.ajax({ url: "_draw_timetable.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" })
