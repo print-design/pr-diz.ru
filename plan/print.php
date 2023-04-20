@@ -98,6 +98,25 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
         </style>
     </head>
     <body>
+        <div id="add_event" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <p class="font-weight-bold" style="font-size: x-large;">Добавить событие</p>
+                            <button type="button" class="close add_event_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea rows="7" name="text" class="form-control" required="required"></textarea>
+                        </div>
+                        <div class="modal-footer" style="justify-content: flex-end;">
+                            <button type="submit" class="btn btn-dark" name="add_event_submit">Добавить</button>
+                            <button type="button" class="btn btn-light add_event_dismiss" data-dismiss="modal">Отменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <?php
         include '../include/header_plan.php';
         ?>
@@ -147,7 +166,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                             <?php if(!empty(filter_input(INPUT_GET, 'from'))): ?>
                             <a href="<?= BuildQueryRemove('from') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
-                            <button type="button" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                         </div>
                     </div>
                     <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0; padding: 5px;">
@@ -179,6 +198,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                 $('#sidebarExpand').hide();
                 $('th.assistant').hide();
                 $('td.assistant').hide();
+            });
+            
+            // При показе формы добавления плёнки,
+            // устанавливаем фокус на текстовом поле.
+            $('#add_event').on('shown.bs.modal', function() {
+                $('textarea:visible:first').focus();
             });
             
             function ChangeEmployee1(select) {
