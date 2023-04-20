@@ -1,7 +1,7 @@
 <div class="queue_item">
     <div class="d-flex justify-content-between">
         <div class="d-flex justify-content-start">
-            <div style="padding-top: 10px; padding-bottom: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragQueue(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+            <div style="padding-top: 10px; padding-bottom: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragEvent(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
             <div style="font-weight: bold; font-size: large; line-height: 1.4rem; padding-top: 10px;"><?=$row['calculation'] ?></div>
         </div>
         <form method="post" onsubmit="javascript: if(!confirm('Действительно удалить событие?')) { submit_clicked = false; return false; } else { return true; }">

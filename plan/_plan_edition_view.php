@@ -1,7 +1,7 @@
 <?php
 require_once './_roles.php';
 ?>
-<tr data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-id="<?=$this->edition['calculation_id'] ?>">
+<tr data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-id="<?=$this->edition['calculation_id'] ?>" data-position="<?=$this->edition['position'] ?>">
     <?php if($this->shift == 'day' && $this->edition_key == 0): ?>
     <td class="border-right" rowspan="<?=$this->date_editions_count ?>">
         <?=$GLOBALS['weekdays'][$this->date->format('w')] ?>
@@ -9,7 +9,7 @@ require_once './_roles.php';
     </td>
     <?php endif; ?>
     <?php if($this->edition_key == 0): ?>
-    <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic"><?=$this->shift_worktime ?> ч.</div></td>
+    <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic"><?= CalculationBase::Display($this->shift_worktime, 2) ?> ч.</div></td>
     <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
@@ -56,6 +56,11 @@ require_once './_roles.php';
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
     </td>
+    <?php if($this->edition['is_event']): ?>
+    <td colspan="8" class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+        <div style="font-weight: bold; display: inline;" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
+    </td>
+    <?php else: ?>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
         <div style="font-weight: bold; display: inline;" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
     </td>
@@ -70,4 +75,5 @@ require_once './_roles.php';
             <img src="../images/icons/vertical-dots1.svg" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </a>
     </td>
+    <?php endif; ?>
 </tr>

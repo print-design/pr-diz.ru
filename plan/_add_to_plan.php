@@ -9,10 +9,6 @@ $from = filter_input(INPUT_GET, 'from');
 $before = filter_input(INPUT_GET, 'before');
 $error = '';
 
-if($before == $calculation_id) {
-    $before = null;
-}
-
 class Edition {
     public $Date;
     public $Shift;
@@ -34,16 +30,19 @@ if($row = $fetcher->Fetch()) {
     $work_time_1 = round($row['work_time_1'], 2);
 }
 
-// Если не указываем следующий расчёт, то position - на 1 больше, чем максимальный position данной смены.
-// Если указываем следующий расчёт, то 
-// увеличиваем Position на 1 у следующего расчёта и всех следующих за ним
-// и устанавливаем Position текущего расчёта - на 1 больше, чем максимальный position смены, кроме тех, у кого position меньше, чем position следующего расчёта.
+// Если не указываем следующую позицию, то position - на 1 больше, чем максимальная позиция данной смены.
+// Если указываем следующую позицию, то 
+// увеличиваем позицию на 1 у следующего тиража или события и всех следующих за ним
+// и устанавливаем текущую позицию на 1 больше, чем максимальная позиция смены из тех, что меньше следующей позиции.
 $edition = new Edition();
 $edition->Date = $date;
 $edition->Shift = $shift;
 $edition->WorkTime = $work_time_1;
 
 if(empty($before)) {
+    $max_edition = 0;
+    $max_event = 0;
+    
     $sql = "select max(e.position) "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
@@ -51,28 +50,30 @@ if(empty($before)) {
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
-        $error = "Ошибка при определении позиции";
+        $error = "Ошибка при определении позиции тиража";
         echo json_encode(array('error' => $error));
         exit();
     }
-    $edition->Position = $row[0] + 1;
-}
-else {
-    $sql = "select min(position) "
-            . "from plan_edition "
-            . "where calculation_id = $before"; 
+    $max_edition = $row[0];
+    
+    $sql = "select max(position) "
+            . "from plan_event "
+            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
-        $error = "Ошибка при определении позиции последующего тиража";
+        $error = "Ошибка при определении позиции события";
         echo json_encode(array('error' => $error));
         exit();
     }
-    $min_position = $row[0];
+    $max_event = $row[0];
     
+    $edition->Position = max($max_edition, $max_event) + 1;
+}
+else {
     $sql = "update plan_edition set position = position + 1 "
             . "where date = '$date' and shift = '$shift' and calculation_id in (select id from calculation where machine_id = $machine_id) "
-            . "and position >= $min_position";
+            . "and position >= $before";
     $executer = new Executer($sql);
     $error = $executer->error;
     if(!empty($error)) {
@@ -80,14 +81,24 @@ else {
         exit();
     }
     
+    $sql = "update plan_event set position = position + 1 "
+            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "and position >= $before";
+    $executer = new Executer($sql);
+    $error = $executer->error;
+    if(!empty($error)) {
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    
+    $max_edition = 0;
+    $max_event = 0;
+    
     $sql = "select max(e.position) "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
-            . "and e.position < "
-            . "(select min(position) "
-            . "from plan_edition "
-            . "where calculation_id = $before and machine_id = $machine_id and date = '$date' and shift = '$shift')";
+            . "and e.position < $before";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
@@ -95,7 +106,24 @@ else {
         echo json_encode(array('error' => $error));
         exit();
     }
-    $edition->Position = $row[0] + 1;
+    
+    $max_edition = $row[0];
+    
+    $sql = "select max(position) "
+            . "from plan_event "
+            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "and position < $before";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = $fetcher->error;
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    
+    $max_event = $row[0];
+    
+    $edition->Position = max($max_edition, $max_event) + 1;
 }
 
 $sql = "insert into plan_edition (calculation_id, date, shift, worktime, position) "

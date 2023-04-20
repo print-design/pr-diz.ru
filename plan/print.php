@@ -291,6 +291,12 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 ev.dataTransfer.setData("type", "queue");
             }
             
+            function DragEvent(ev) {
+                dragqueue = true;
+                ev.dataTransfer.setData("event_id", $(ev.target).attr("data-id"));
+                ev.dataTransfer.setData("type", "event");
+            }
+            
             function DragTimetable(ev) {
                 ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
                 ev.dataTransfer.setData("type", "timetable");
@@ -383,7 +389,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 tr = $(ev.target).parents('tr')[0];
                 var date = $(tr).attr('data-date');
                 var shift = $(tr).attr('data-shift');
-                var before = $(tr).attr('data-id');
+                var before = $(tr).attr('data-position');
                 
                 if(type == 'queue') {
                     //$('#waiting').html("<img src='../images/waiting2.gif' />");
