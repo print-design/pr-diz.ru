@@ -3,7 +3,6 @@ require_once '../include/topscripts.php';
 require_once '../calculation/status_ids.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
-$from = filter_input(INPUT_GET, 'from');
 $error = '';
 
 $sql = "delete from plan_edition where calculation_id = $calculation_id";

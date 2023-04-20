@@ -59,7 +59,7 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select ev.date, ev.shift, 1 as is_event, 0 worktime, ev.position, 0 calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
+        $sql = "select ev.date, ev.shift, 1 as is_event, 0 worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
                 . "0 as length_dirty_1, '' as customer, '' as first_name, '' as last_name, "
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
                 . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name "

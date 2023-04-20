@@ -51,8 +51,15 @@ require_once './_roles.php';
     </td>
     <?php endif; ?>
     <?php endif; ?>
+    <?php
+    $ondragstart = "DragTimetable(event);";
+    
+    if($this->edition['is_event']) {
+        $ondragstart = "DragTimetableEvent(event);";
+    }
+    ?>
     <td class="<?=$this->shift ?> showdropline border-left fordrag" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
-        <div draggable="true" ondragstart="DragTimetable(event);" data-id="<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+        <div draggable="true" ondragstart="<?=$ondragstart ?>" data-id="<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
     </td>
