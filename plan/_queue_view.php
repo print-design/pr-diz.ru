@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-start">
             <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragQueue(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
             <div>
-                <div style="font-weight: bold; font-size: large; line-height: 20px; margin-bottom: 8px;"><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
+                <div style="font-weight: bold; font-size: large; line-height: 1.4rem; margin-bottom: 0.5rem;"><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
                 <?=$row['customer'] ?>
             </div>
         </div>
