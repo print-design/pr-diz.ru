@@ -7,6 +7,24 @@ include './_plan_timetable.php';
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Добавление события
+if(null !== filter_input(INPUT_POST, 'add_event_submit')) {
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $text = addslashes(filter_input(INPUT_POST, 'text'));
+    
+    $sql = "insert into plan_event (machine_id, text) values ($machine_id, '$text')";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
+
+// Удаление события
+if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $sql = "delete from plan_event where id = $id"; echo $sql;
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,6 +120,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
+                        <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Добавить событие</p>
                             <button type="button" class="close add_event_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A"></i></button>

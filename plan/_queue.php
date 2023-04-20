@@ -13,7 +13,13 @@ class Queue {
     }
     
     public function Show() {
-        $sql = "select c.id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
+        $sql = "select 1 is_event, id, text calculation, '' customer, 0 length_dirty_1, 0 ink_number, 0.0 raport, "
+                . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
+                . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
+                . "'' first_name, '' last_name "
+                . "from plan_event where in_plan = 0 and machine_id = ".$this->machine_id
+                . " union "
+                . "select 0 is_event, c.id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "u.first_name, u.last_name "
@@ -28,7 +34,7 @@ class Queue {
         else {
             $sql .= "and c.machine_id = $this->machine_id and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT." ";
         }
-        $sql .= "order by id desc";
+        $sql .= "order by is_event desc, id desc";
         $fetcher = new Fetcher($sql);
                     
         while($row = $fetcher->Fetch()) {
@@ -39,8 +45,13 @@ class Queue {
             elseif(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
                 $laminations_number = 1;
             }
-                        
-            require './_queue_view.php';
+            
+            if($row['is_event']) {
+                require './_event_view.php';
+            }
+            else {
+                require './_queue_view.php';
+            }
         }
     }
 }
