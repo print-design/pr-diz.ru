@@ -177,6 +177,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                     <form method="post">
                         <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" name="in_plan" value="1" />
+                        <input type="hidden" name="scroll" />
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Добавить событие</p>
                             <button type="button" class="close add_event_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A"></i></button>
@@ -600,6 +601,14 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                     return;
                 }
             }
+            
+            $('#timetable').on('scroll', function() {
+                $('input[name="scroll"]').val($('#timetable').scrollTop());
+            });
+            
+            <?php if(!empty($_REQUEST['scroll'])): ?>
+                $('#timetable').scrollTop(<?= intval($_REQUEST['scroll']) ?>);
+            <?php endif; ?>
         </script>
     </body>
 </html>
