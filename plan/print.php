@@ -266,7 +266,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
             // При показе формы добавления плёнки,
             // устанавливаем фокус на текстовом поле.
             $('#add_event').on('shown.bs.modal', function() {
-                $('textarea:visible:first').focus();
+                $('input:text:visible:first').focus();
             });
             
             function DeleteEvent(event_id) {
