@@ -12,8 +12,42 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 if(null !== filter_input(INPUT_POST, 'add_event_submit')) {
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     $text = addslashes(filter_input(INPUT_POST, 'text'));
+    $date = filter_input(INPUT_POST, 'date');
+    $shift = filter_input(INPUT_POST, 'shift');
+    $worktime = filter_input(INPUT_POST, 'worktime');
+    $in_plan = filter_input(INPUT_POST, 'in_plan');
     
-    $sql = "insert into plan_event (machine_id, text) values ($machine_id, '$text')";
+    $max_edition = 0;
+    $max_event = 0;
+    
+    $sql = "select max(e.position) "
+            . "from plan_edition e "
+            . "inner join calculation c on e.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при определении позиции тиража";
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    $max_edition = $row[0];
+    
+    $sql = "select max(position) "
+            . "from plan_event "
+            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при определении позиции события";
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    $max_event = $row[0];
+    
+    $position = max($max_edition, $max_event) + 1;
+    
+    $sql = "insert into plan_event (machine_id, text, date, shift, position, worktime, in_plan) values ($machine_id, '$text', '$date', '$shift', $position, $worktime, $in_plan)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
@@ -113,6 +147,27 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 padding-left: 3px;
                 padding-right: 3px;
             }
+            
+            /* Выпадающее меню в таблице */
+            .timetable_menu {
+                position: absolute;
+                top: 80%;
+                right: 0;
+                border: solid 1px #A1A4B1;
+                padding-left: 13px;
+                padding-right: 13px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                background-color: white;
+                z-index: 2;
+                display: none;
+                border-radius: 15px;
+            }
+            
+            .film_menu .command {
+                padding-top: 3px;
+                padding-bottom: 3px;
+            }
         </style>
     </head>
     <body>
@@ -121,14 +176,52 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 <div class="modal-content">
                     <form method="post">
                         <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" name="in_plan" value="1" />
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Добавить событие</p>
                             <button type="button" class="close add_event_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A"></i></button>
                         </div>
                         <div class="modal-body">
-                            <textarea rows="7" name="text" class="form-control" required="required"></textarea>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="date">Дата</label>
+                                        <input type="date" name="date" class="form-control" required="required" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="worktime">Кол-во часов</label>
+                                        <input type="text" 
+                                               name="worktime" 
+                                               class="form-control float-only" 
+                                               required="required" 
+                                               autocomplete="off"
+                                               onmousedown="javascript: $(this).removeAttr('name');" 
+                                               onfocus="javascript: $(this).removeAttr('name');" 
+                                               onmouseup="javascript: $(this).attr('name', 'worktime');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); }" 
+                                               onkeyup="javascript: $(this).attr('name', 'worktime');" 
+                                               onfocusout="javascript: $(this).attr('name', 'worktime');" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="shift">Начало события</label>
+                                        <select name="shift" class="form-control" required="required">
+                                            <option hidden="hidden" value="">...</option>
+                                            <option value="day">День</option>
+                                            <option value="night">Ночь</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="text">Событие</label>
+                                <textarea name="text" class="form-control" required="required"></textarea>
+                            </div>
                         </div>
-                        <div class="modal-footer" style="justify-content: flex-end;">
+                        <div class="modal-footer" style="justify-content: flex-start;">
                             <button type="submit" class="btn btn-dark" name="add_event_submit">Добавить</button>
                             <button type="button" class="btn btn-light add_event_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
@@ -225,6 +318,21 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 $('textarea:visible:first').focus();
             });
             
+            function EnableMenu() {
+                $('.timetable_menu_trigger').click(function() {
+                    var menu = $(this).next('.timetable_menu');
+                    $('.timetable_menu').not(menu).hide();
+                    menu.slideToggle();
+                });
+                
+                $(document).click(function(e) {
+                    if($(e.target).closest($('.timetable_menu')).length || $(e.target).closest($('.timetable_menu_trigger')).length) return;
+                    $('.timetable_menu').slideUp();
+                });
+            }
+            
+            EnableMenu();
+            
             function DrawQueue(machine_id, machine) {
                 $.ajax({ url: "_draw_queue.php?machine_id=" + machine_id + "&machine=" + machine })
                         .done(function(queue_data) {
@@ -246,6 +354,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                             }
                             
                             DrawQueue(machine_id, machine);
+                            EnableMenu();
                         })
                         .fail(function() {
                             alert('Ошибка при перерисовке страницы');

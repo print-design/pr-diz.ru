@@ -6,6 +6,7 @@
         </div>
         <form method="post" onsubmit="javascript: if(!confirm('Действительно удалить событие?')) { submit_clicked = false; return false; } else { return true; }">
             <input type="hidden" name="id" value="<?=$row['id'] ?>" />
+            <input type="hidden" name="scroll" />
             <button type="submit" name="delete_event_submit" class="btn btn-link" style="margin-top: 5px;"><i class="fas fa-times" style="color: #EC3A7A"></i></button>
         </form>
     </div>

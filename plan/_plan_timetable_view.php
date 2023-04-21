@@ -9,10 +9,10 @@
         <th class="fordrag"></th>
         <th>Заказ</th>
         <th>Метраж</th>
-        <th>Время</th>
         <th>Вал</th>
         <th>Ламинация</th>
         <th>Краски</th>
+        <th>Время</th>
         <th>Менеджер</th>
         <th></th>
     </tr>

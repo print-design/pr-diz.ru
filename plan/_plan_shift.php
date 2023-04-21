@@ -27,9 +27,7 @@ class PlanShift {
             $shift_worktime = 0;
             
             foreach ($this->editions as $edition) {
-                if(!$edition['is_event']) {
-                    $shift_worktime += $edition['worktime'];
-                }
+                $shift_worktime += $edition['worktime'];
             }
             
             foreach($this->editions as $key => $value) {

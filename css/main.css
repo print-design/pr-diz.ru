@@ -401,6 +401,7 @@ select.form-control {
     z-index: 2;
     width: 170px;
     display: none;
+    border-radius: 15px;
 }
 
 .film_menu .command {

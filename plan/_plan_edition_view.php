@@ -64,18 +64,32 @@ require_once './_roles.php';
         </div>
     </td>
     <?php if($this->edition['is_event']): ?>
-    <td colspan="8" class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+    <td colspan="5" class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
         <?= $this->edition['calculation'] ?>
+    </td>
+    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
+    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' style="position: relative;">
+        <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' /></a>
+        <div class="timetable_menu text-left">
+            <div class="command">
+                <form method="post">
+                    <input type="hidden" name="id" value="<?=$this->edition['calculation_id'] ?>" />
+                    <input type="hidden" name="scroll" />
+                    <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" name="delete_event_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
+                </form>
+            </div>
+        </div>
     </td>
     <?php else: ?>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
         <div style="font-weight: bold; display: inline;" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
     </td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></td>
-    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?=$this->edition['laminations'] ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?=$this->edition['ink_number'] ?></td>
+    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?=$this->edition['manager'] ?></td>
     <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
         <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
