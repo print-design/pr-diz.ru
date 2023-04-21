@@ -318,6 +318,21 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 $('textarea:visible:first').focus();
             });
             
+            function DeleteEvent(event_id) {
+                $.ajax({ dataType: 'JSON', url: "_delete_event.php?event_id=" + event_id })
+                        .done(function(data) {
+                            if(data.error == '') {
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                            }
+                            else {
+                                alert(data.error);
+                            }
+                        })
+                        .fail(function() {
+                            alert("Ошибка при удалении события");
+                        });
+            }
+            
             function EnableMenu() {
                 $('.timetable_menu_trigger').click(function() {
                     var menu = $(this).next('.timetable_menu');

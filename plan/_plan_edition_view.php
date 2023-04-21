@@ -73,11 +73,7 @@ require_once './_roles.php';
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' /></a>
         <div class="timetable_menu text-left">
             <div class="command">
-                <form method="post">
-                    <input type="hidden" name="id" value="<?=$this->edition['calculation_id'] ?>" />
-                    <input type="hidden" name="scroll" />
-                    <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" name="delete_event_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
-                </form>
+                <button type="button" class="btn btn-link p-0 m-0 h-25 confirmable" style="font-size: 14px;" onclick="javascript: DeleteEvent(<?=$this->edition['calculation_id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
             </div>
         </div>
     </td>
