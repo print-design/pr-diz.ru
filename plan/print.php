@@ -358,13 +358,13 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
             function MoveDown(ev) {
                 var date = $(ev.target).attr('data-date');
                 var shift = $(ev.target).attr('data-shift');
-                $.ajax({ url: "_move_down.php?date=" + date + "&shift=" + shift })
+                $.ajax({ dataType: 'JSON', url: "_move_down.php?date=" + date + "&shift=" + shift })
                         .done(function(data) {
-                            if(data == null) {
+                            if(data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
                             }
                             else {
-                                alert(data);
+                                alert(data.error);
                             }
                         })
                         .fail(function() {
