@@ -358,7 +358,24 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
             function MoveDown(ev) {
                 var date = $(ev.target).attr('data-date');
                 var shift = $(ev.target).attr('data-shift');
-                $.ajax({ dataType: 'JSON', url: "_move_down.php?date=" + date + "&shift=" + shift })
+                $.ajax({ dataType: 'JSON', url: "_move_down.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&date=" + date + "&shift=" + shift })
+                        .done(function(data) {
+                            if(data.error == '') {
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                            }
+                            else {
+                                alert(data.error);
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при смещении смен');
+                        });
+            }
+            
+            function MoveUp(ev) {
+                var date = $(ev.target).attr('data-date');
+                var shift = $(ev.target).attr('data-shift');
+                $.ajax({ dataType: 'JSON', url: "_move_up.php?machine_id=<?= filter_input(INPUT_GET, 'id') ?>&date=" + date + "&shift=" + shift })
                         .done(function(data) {
                             if(data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');

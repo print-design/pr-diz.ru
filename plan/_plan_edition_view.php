@@ -11,7 +11,9 @@ require_once './_roles.php';
     <?php if($this->edition_key == 0): ?>
     <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <div style="display: block;">
-            <img src="../images/icons/up_arrow.png" />
+            <a href="javascript: void(0);" onclick="javascript: MoveUp(event);" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
+                <img src="../images/icons/up_arrow.png" />
+            </a>
         </div>
         <div style="display: block;">
             <?=($this->shift == 'day' ? 'День' : 'Ночь') ?><br /><span class="font-italic"><?= CalculationBase::Display($this->shift_worktime, 2) ?> ч.</span>

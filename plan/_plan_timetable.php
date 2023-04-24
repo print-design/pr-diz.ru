@@ -78,6 +78,7 @@ class PlanTimetable {
                 . "and c.id in (select calculation_id from plan_edition where date >= '".$this->dateFrom->format('Y-m-d')."' and date <= '".$this->dateTo->format('Y-m-d')."') "
                 . "order by position";
         $fetcher = new Fetcher($sql);
+        $previous_position = 0;
         while($row = $fetcher->Fetch()) {
             if(!array_key_exists($row['date'], $this->editions)) {
                 $this->editions[$row['date']] = array();
@@ -113,6 +114,24 @@ class PlanTimetable {
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
             }
+            
+            $position = $row['position'];
+        
+            // Если по какой-то причине позиция не больше предыдущей, увеличиваем её на 1
+            if($position == $previous_position) {
+                if($row['is_event']) {
+                    $sql = "update plan_event set position = position + 1 where id = ".$row['calculation_id'];
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                }
+                else {
+                    $sql = "update plan_edition set position = position + 1 where id = ".$row['calculation_id'];
+                    $executer = new Executer($sql);
+                    $error_message = $executer->error;
+                }
+            }
+            
+            $previous_position = $position;
         }
         
         // Даты и смены

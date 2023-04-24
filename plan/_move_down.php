@@ -1,19 +1,29 @@
 <?php
 require_once '../include/topscripts.php';
 
+$machine_id = filter_input(INPUT_GET, 'machine_id');
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
-$error = $date. ' '.$shift;
+$error = '';
 
 $sql = "";
 
 if($shift == 'day') {
-    $sql = "select id, date, shift from plan_edition where date >= '$date'";
+    $sql = "select pe.id, pe.date, pe.shift "
+            . "from plan_edition pe "
+            . "inner join calculation c on pe.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pe.date >= '$date'";
 }
 elseif($shift == 'night') {
-    $sql = "select id, date, shift from plan_edition where date = '$date' and shift = 'night' "
+    $sql = "select pe.id, pe.date, pe.shift "
+            . "from plan_edition pe "
+            . "inner join calculation c on pe.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pe.date = '$date' and pe.shift = 'night' "
             . "union "
-            . "select id, date, shift from plan_edition where date > '$date'";
+            . "select pe.id, pe.date, pe.shift "
+            . "from plan_edition pe "
+            . "inner join calculation c on pe.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pe.date > '$date'";
 }
 
 $grabber = new Grabber($sql);
@@ -39,12 +49,12 @@ foreach($rows as $row) {
 $sql = "";
 
 if($shift == 'day') {
-    $sql = "select id, date, shift from plan_event where date >= '$date'";
+    $sql = "select id, date, shift from plan_event where machine_id = $machine_id and date >= '$date'";
 }
 elseif($shift == 'night') {
-    $sql = "select id, date, shift from plan_event where date = '$date' and shift = 'night' "
+    $sql = "select id, date, shift from plan_event where machine_id = $machine_id and date = '$date' and shift = 'night' "
             . "union "
-            . "select id, date, shift from plan_event where date > '$date'";
+            . "select id, date, shift from plan_event where machine_id = $machine_id and date > '$date'";
 }
 
 $grabber = new Grabber($sql);
