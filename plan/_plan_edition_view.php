@@ -5,11 +5,23 @@ require_once './_roles.php';
     <?php if($this->shift == 'day' && $this->edition_key == 0): ?>
     <td class="border-right" rowspan="<?=$this->date_editions_count ?>">
         <?=$GLOBALS['weekdays'][$this->date->format('w')] ?>
-        <div style="font-size: 18px; font-weight: bold; margin-top: 10px;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
+        <div style="font-size: 18px; font-weight: bold;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
     </td>
     <?php endif; ?>
     <?php if($this->edition_key == 0): ?>
-    <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic"><?= CalculationBase::Display($this->shift_worktime, 2) ?> ч.</div></td>
+    <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
+        <div style="display: block;">
+            <img src="../images/icons/up_arrow.png" />
+        </div>
+        <div style="display: block;">
+            <?=($this->shift == 'day' ? 'День' : 'Ночь') ?><br /><span class="font-italic"><?= CalculationBase::Display($this->shift_worktime, 2) ?> ч.</span>
+        </div>
+        <div style="display: block; margin-top: 2px;">
+            <a href="javascript: void(0);" onclick="javascript: MoveDown(event);" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
+                <img src="../images/icons/down_arrow.png" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" />
+            </a>
+        </div>
+    </td>
     <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
