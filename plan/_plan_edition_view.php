@@ -18,7 +18,7 @@ require_once './_roles.php';
         <div style="display: block;">
             <?=($this->shift == 'day' ? 'День' : 'Ночь') ?><br /><span class="font-italic"><?= CalculationBase::Display($this->shift_worktime, 2) ?> ч.</span>
         </div>
-        <div style="display: block; margin-top: 2px;">
+        <div style="display: block; margin-top: 6px;">
             <a href="javascript: void(0);" onclick="javascript: MoveDown(event);" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
                 <img src="../images/icons/down_arrow.png" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" />
             </a>
