@@ -70,7 +70,7 @@ foreach($rows as $row) {
         $sql = "update plan_event set shift = 'night' where id = $id";
     }
     elseif($shift == 'night') {
-        $sql = "update plan_event set shift = 'day', date = date_add(date, interval 1 day)";
+        $sql = "update plan_event set shift = 'day', date = date_add(date, interval 1 day) where id = $id";
     }
     
     $executer = new Executer($sql);

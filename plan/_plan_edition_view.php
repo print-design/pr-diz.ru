@@ -12,7 +12,7 @@ require_once './_roles.php';
     <td class="<?=$this->shift ?>" rowspan="<?=$this->shift_editions_count ?>">
         <div style="display: block;">
             <a href="javascript: void(0);" onclick="javascript: MoveUp(event);" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>">
-                <img src="../images/icons/up_arrow.png" />
+                <img src="../images/icons/up_arrow.png" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" />
             </a>
         </div>
         <div style="display: block;">
