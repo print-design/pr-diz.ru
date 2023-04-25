@@ -104,7 +104,7 @@ require_once './_roles.php';
     <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
         <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/vertical-dots1.svg" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
-        </a> <?=$this->edition['position'] ?>
+        </a>
     </td>
     <?php endif; ?>
 </tr>

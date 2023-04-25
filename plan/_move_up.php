@@ -7,35 +7,59 @@ $shift = filter_input(INPUT_GET, 'shift');
 $error = '';
 
 if($shift == 'day') {
-    $sql = "update plan_edition pe set pe.position = ifnull(pe.position, 0) + greatest("
-            . "ifnull((select max(position) from plan_edition where shift = 'night' and date = date_add('$date', interval -1 day)), 0), "
-            . "ifnull((select max(position) from plan_event where shift = 'night' and date = date_add('$date', interval -1 day)), 0)"
-            . ") where pe.date = '$date' and shift = '$shift'";
+    $max_value = 0;
+    
+    $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'night' and date = date_add('$date', interval -1 day)), 0), "
+            . "ifnull((select max(position) from plan_event where shift = 'night' and date = date_add('$date', interval -1 day)), 0))";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $max_value = $row[0];
+    }
+    
+    $sql = "update plan_edition pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and shift = '$shift'";
     $executer = new Executer($sql);
     $error = $executer->error;
     
     if(empty($error)) {
-        $sql = "update plan_event pe set pe.position = ifnull(pe.position, 0) + greatest("
-                . "ifnull((select max(position) from plan_edition where shift = 'night' and date = date_add('$date', interval -1 day)), 0), "
-                . "ifnull((select max(position) from plan_event where shift = 'night' and date = date_add('$date', interval -1 day)), 0)"
-                . ") where pe.date = '$date' and shift = '$shift'";
+        $max_value = 0;
+        
+        $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'night' and date = date_add('$date', interval -1 day)), 0), "
+                . "ifnull((select max(position) from plan_event where shift = 'night' and date = date_add('$date', interval -1 day)), 0))";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $max_value = $row[0];
+        }
+        
+        $sql = "update plan_event pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and shift = '$shift'";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
 }
 elseif($shift == 'night') {
-    $sql = "update plan_edition pe set pe.position = ifnull(pe.position, 0) + greatest("
-            . "ifnull((select max(position) from plan_edition where shift = 'day' and date = '$date'), 0), "
-            . "ifnull((select max(position) from plan_event where shift = 'day' and date = '$date'), 0)"
-            . ") where pe.date = '$date' and pe.shift = '$shift'";
+    $max_value = 0;
+    
+    $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'day' and date = '$date'), 0), "
+            . "ifnull((select max(position) from plan_event where shift = 'day' and date = '$date'), 0))";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $max_value = $row[0];
+    }
+    
+    $sql = "update plan_edition pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and pe.shift = '$shift'";
     $executer = new Executer($sql);
     $error = $executer->error;
     
     if(empty($error)) {
-        $sql = "update plan_event pe set pe.position = ifnull(pe.position, 0) + greatest("
-                . "ifnull((select max(position) from plan_edition where shift = 'day' and date = '$date'), 0), "
-                . "ifnull((select max(position) from plan_event where shift = 'day' and date = '$date'), 0)"
-                . ") where pe.date = '$date' and pe.shift = '$shift'";
+        $max_value = 0;
+        
+        $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'day' and date = '$date'), 0), "
+                . "ifnull((select max(position) from plan_event where shift = 'day' and date = '$date'), 0))";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $max_value = $row[0];
+        }
+        
+        $sql = "update plan_event pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and pe.shift = '$shift'";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
