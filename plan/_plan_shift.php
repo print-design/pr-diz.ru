@@ -24,17 +24,60 @@ class PlanShift {
             include './_plan_shift_view.php';
         }
         else {
+            // Определяем общее рабочее время
             $shift_worktime = 0;
             
             foreach ($this->editions as $edition) {
                 $shift_worktime += $edition['worktime'];
             }
             
+            // Проверяем, чтобы position увеличивались от одного тиража/события к другому (не было повторяющихся position)
+            $previous_position = 0;
+            
+            foreach($this->editions as $key => $value)  {
+                if($previous_position == $value['position']) {
+                    if($value['is_event']) { echo "EV ";
+                        $sql = "update plan_event set position = ifnull(position, 0) + 1 where id = ".$value['calculation_id'];
+                        $executer = new Executer($sql);
+                        $error = $executer->error;
+                        
+                        if(empty($error)) {
+                            $sql = "select position from plan_event where id = ".$value['calculation_id'];
+                            $fetcher = new Fetcher($sql);
+                            if($row = $fetcher->Fetch()) {
+                                $edition = $value;
+                                $edition['position'] = $row['position'];
+                                $this->editions[$key] = $edition;
+                            }
+                        }
+                    }
+                    else { echo "ED ";
+                        $sql = "update plan_edition set position = ifnull(position, 0) + 1 where calculation_id = ".$value['calculation_id'];
+                        $executer = new Executer($sql);
+                        $error = $executer->error;
+                        
+                        if(empty($error)) {
+                            $sql = "select position from plan_edition where calculation_id = ".$value['calculation_id'];
+                            $fetcher = new Fetcher($sql);
+                            if($row = $fetcher->Fetch()) {
+                                $edition = $value;
+                                $edition['position'] = $row['position'];
+                                $this->editions[$key] = $edition;
+                            }
+                        }
+                    }
+                }
+                
+                $previous_position = $this->editions[$key]['position'];
+            }
+            
+            // Отображаем тиражи и события
             foreach($this->editions as $key => $value) {
                 $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count, $shift_worktime);
                 $edition->Show();
             }
             
+            // Отображаем дополнительную строку (чтобы вставлять в неё новый тираж)
             $extra_count = $this->shift_editions_count - count($this->editions);
             
             for($i = 0; $i < $extra_count; $i++) {

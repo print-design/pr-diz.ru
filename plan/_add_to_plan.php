@@ -38,11 +38,11 @@ $edition->Date = $date;
 $edition->Shift = $shift;
 $edition->WorkTime = $work_time_1;
 
-if(empty($before)) {
+if(empty($before) && $before !== 0 && $before !== '0') {
     $max_edition = 0;
     $max_event = 0;
     
-    $sql = "select max(e.position) "
+    $sql = "select max(ifnull(e.position, 0)) "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift'";
@@ -55,7 +55,7 @@ if(empty($before)) {
     }
     $max_edition = $row[0];
     
-    $sql = "select max(position) "
+    $sql = "select max(ifnull(position, 0)) "
             . "from plan_event "
             . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift'";
     $fetcher = new Fetcher($sql);
@@ -70,7 +70,7 @@ if(empty($before)) {
     $edition->Position = max($max_edition, $max_event) + 1;
 }
 else {
-    $sql = "update plan_edition set position = position + 1 "
+    $sql = "update plan_edition set position = ifnull(position, 0) + 1 "
             . "where date = '$date' and shift = '$shift' and calculation_id in (select id from calculation where machine_id = $machine_id) "
             . "and position >= $before";
     $executer = new Executer($sql);
@@ -80,7 +80,7 @@ else {
         exit();
     }
     
-    $sql = "update plan_event set position = position + 1 "
+    $sql = "update plan_event set position = ifnull(position, 0) + 1 "
             . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position >= $before";
     $executer = new Executer($sql);
@@ -93,7 +93,7 @@ else {
     $max_edition = 0;
     $max_event = 0;
     
-    $sql = "select max(e.position) "
+    $sql = "select max(ifnull(e.position, 0)) "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "where c.machine_id = $machine_id and e.date = '$date' and e.shift = '$shift' "
@@ -107,7 +107,7 @@ else {
     }
     $max_edition = $row[0];
     
-    $sql = "select max(position) "
+    $sql = "select max(ifnull(position, 0)) "
             . "from plan_event "
             . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position < $before";

@@ -113,8 +113,6 @@ class PlanTimetable {
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
             }
-            
-            $position = $row['position'];
         }
         
         // Даты и смены
