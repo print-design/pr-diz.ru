@@ -110,9 +110,35 @@ class PlanTimetable {
             
             // Если расчёт в плане, но статус его не "в плане", меняем статус на "в плане"
             if($row['status_id'] != PLAN) {
-                $sql = "update calculation set status_id = ".PLAN." where id = ".$row['calculation_id'];
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
+                $sql_ = "update calculation set status_id = ".PLAN." where id = ".$row['calculation_id'];
+                $executer_ = new Executer($sql_);
+                $error_message = $executer_->error;
+            }
+            
+            // Если случайно в каком-то расчёте shift не day и не night, автоматически устанавливаем его в day
+            if($row['shift'] != 'day' && $row['shift'] != 'night') {
+                if($row['is_event']) {
+                    $sql_ = "update plan_event set shift = 'day' where id = ".$row['id'];
+                    $executer_ = new Executer($sql_);
+                    $error_message = $executer_->error;
+                }
+                else {
+                    $sql_ = "update plan_edition set shift = 'day' where id = ".$row['id'];
+                    $executer_ = new Executer($sql_);
+                    $error_message = $executer_->error;
+                }
+                
+                if(empty($error_message)) {
+                    if(!array_key_exists($row['date'], $this->editions)) {
+                        $this->editions[$row['date']] = array();
+                    }
+                    
+                    if(!array_key_exists('day', $this->editions[$row['date']])) {
+                        $this->editions[$row['date']]['day'] = array();
+                    }
+                    
+                    array_push($this->editions[$row['date']]['day'], $this->editions[$row['date']][$row['shift']]);
+                }
             }
         }
         
