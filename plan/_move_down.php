@@ -31,15 +31,13 @@ $rows = $grabber->result;
 $error = $grabber->error;
 
 foreach($rows as $row) {
-    $id = $row['id'];
-    $shift = $row['shift'];
     $sql = "";
     
-    if($shift == 'day') {
-        $sql = "update plan_edition set shift = 'night' where id = $id";
+    if($row['shift'] == 'day') {
+        $sql = "update plan_edition set shift = 'night' where id = ".$row['id'];
     }
-    elseif ($shift == 'night') {
-        $sql = "update plan_edition set shift = 'day', date = date_add(date, interval 1 day) where id = $id";
+    elseif ($row['shift'] == 'night') {
+        $sql = "update plan_edition set shift = 'day', date = date_add(date, interval 1 day) where id = ".$row['id'];
     }
     
     $executer = new Executer($sql);
@@ -62,15 +60,13 @@ $rows = $grabber->result;
 $error = $grabber->error;
 
 foreach($rows as $row) {
-    $id = $row['id'];
-    $shift = $row['shift'];
     $sql = "";
     
-    if($shift == 'day') {
-        $sql = "update plan_event set shift = 'night' where id = $id";
+    if($row['shift'] == 'day') {
+        $sql = "update plan_event set shift = 'night' where id = ".$row['id'];
     }
-    elseif($shift == 'night') {
-        $sql = "update plan_event set shift = 'day', date = date_add(date, interval 1 day) where id = $id";
+    elseif($row['shift'] == 'night') {
+        $sql = "update plan_event set shift = 'day', date = date_add(date, interval 1 day) where id = ".$row['id'];
     }
     
     $executer = new Executer($sql);
