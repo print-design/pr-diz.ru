@@ -9,8 +9,8 @@ $error = '';
 if($shift == 'day') {
     $max_value = 0;
     
-    $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'night' and date = date_add('$date', interval -1 day)), 0), "
-            . "ifnull((select max(position) from plan_event where shift = 'night' and date = date_add('$date', interval -1 day)), 0))";
+    $sql = "select greatest(ifnull((select max(pe.position) from plan_edition pe inner join calculation c on pe.calculation_id = c.id where c.machine_id = $machine_id and pe.shift = 'night' and pe.date = date_add('$date', interval -1 day)), 0), "
+            . "ifnull((select max(position) from plan_event where machine_id = $machine_id and shift = 'night' and date = date_add('$date', interval -1 day)), 0))";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $max_value = $row[0];
@@ -23,8 +23,8 @@ if($shift == 'day') {
     if(empty($error)) {
         $max_value = 0;
         
-        $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'night' and date = date_add('$date', interval -1 day)), 0), "
-                . "ifnull((select max(position) from plan_event where shift = 'night' and date = date_add('$date', interval -1 day)), 0))";
+        $sql = "select greatest(ifnull((select max(pe.position) from plan_edition pe inner join calculation c on calculation_id = c.id where c.machine_id = $machine_id and pe.shift = 'night' and pe.date = date_add('$date', interval -1 day)), 0), "
+                . "ifnull((select max(position) from plan_event where machine_id = $machine_id and shift = 'night' and date = date_add('$date', interval -1 day)), 0))";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $max_value = $row[0];
@@ -38,8 +38,8 @@ if($shift == 'day') {
 elseif($shift == 'night') {
     $max_value = 0;
     
-    $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'day' and date = '$date'), 0), "
-            . "ifnull((select max(position) from plan_event where shift = 'day' and date = '$date'), 0))";
+    $sql = "select greatest(ifnull((select max(pe.position) from plan_edition pe inner join calculation c on pe.calculation_id = c.id where c.machine_id = $machine_id and pe.shift = 'day' and pe.date = '$date'), 0), "
+            . "ifnull((select max(position) from plan_event where machine_id = $machine_id and shift = 'day' and date = '$date'), 0))";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $max_value = $row[0];
@@ -52,8 +52,8 @@ elseif($shift == 'night') {
     if(empty($error)) {
         $max_value = 0;
         
-        $sql = "select greatest(ifnull((select max(position) from plan_edition where shift = 'day' and date = '$date'), 0), "
-                . "ifnull((select max(position) from plan_event where shift = 'day' and date = '$date'), 0))";
+        $sql = "select greatest(ifnull((select max(pe.position) from plan_edition pe inner join calculation c on pe.calculation_id = c.id where c.machine_id = $machine_id and pe.shift = 'day' and pe.date = '$date'), 0), "
+                . "ifnull((select max(position) from plan_event where machine_id = $machine_id and shift = 'day' and date = '$date'), 0))";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $max_value = $row[0];
