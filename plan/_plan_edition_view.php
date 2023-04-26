@@ -97,7 +97,7 @@ require_once './_roles.php';
     </td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?>
         <?php if($this->shift_worktime > 12): ?>
-        <i class="fas fa-chevron-down"></i>
+        <button type="button" class="btn btn-light"><i class="fas fa-chevron-down"></i></button>
         <?php endif; ?>
     </td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?></td>
