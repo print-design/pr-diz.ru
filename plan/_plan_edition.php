@@ -8,8 +8,9 @@ class PlanEdition {
     private $date_editions_count;
     private $shift_editions_count;
     private $shift_worktime;
+    private $is_last;
 
-    public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count, $shift_worktime) {
+    public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count, $shift_worktime, $is_last) {
         $this->date = $date;
         $this->shift = $shift;
         $this->timetable = $timetable;
@@ -18,6 +19,7 @@ class PlanEdition {
         $this->date_editions_count = $date_editions_count;
         $this->shift_editions_count = $shift_editions_count;
         $this->shift_worktime = $shift_worktime;
+        $this->is_last = $is_last;
     }
     
     function Show() {

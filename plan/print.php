@@ -140,6 +140,16 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 padding-top: 3px;
                 padding-bottom: 3px;
             }
+            
+            /* Кнопка "Продолжать" */
+            .btn.btn-edition-continue {
+                height: 25px;
+                width: 25px;
+                padding: 0;
+                color: #212529;
+                border-radius: 0;
+                background-color: rgba(0,0,0,0);
+            }
         </style>
     </head>
     <body>

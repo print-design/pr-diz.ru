@@ -72,8 +72,16 @@ class PlanShift {
             }
             
             // Отображаем тиражи и события
+            $counter = 0;
+            
             foreach($this->editions as $key => $value) {
-                $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count, $shift_worktime);
+                $is_last = false;
+                $counter++;
+                if($counter == count($this->editions)) {
+                    $is_last = true;
+                }
+                
+                $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count, $shift_worktime, $is_last);
                 $edition->Show();
             }
             

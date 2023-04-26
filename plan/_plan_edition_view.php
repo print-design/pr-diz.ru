@@ -15,7 +15,7 @@ require_once './_roles.php';
                 <img src="../images/icons/up_arrow.png" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" />
             </a>
         </div>
-        <div style="display: block;">
+        <div style="display: block; white-space: nowrap;">
             <?=($this->shift == 'day' ? 'День' : 'Ночь') ?><br /><span class="font-italic"><?= CalculationBase::Display($this->shift_worktime, 2) ?> ч.</span>
         </div>
         <div style="display: block; margin-top: 6px;">
@@ -95,9 +95,13 @@ require_once './_roles.php';
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
         <div style="font-weight: bold; display: inline;" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
     </td>
-    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?>
-        <?php if($this->shift_worktime > 12): ?>
-        <button type="button" class="btn btn-light"><i class="fas fa-chevron-down"></i></button>
+    <td class="<?=$this->shift ?> showdropline text-nowrap" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?>
+        <?php if($this->shift_worktime > 12 && $this->is_last): ?>
+        <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+            <label class="btn btn-light btn-edition-continue">
+                <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off"><i class="fas fa-chevron-down"></i>
+            </label>
+        </div>
         <?php endif; ?>
     </td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'><?= rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?></td>
