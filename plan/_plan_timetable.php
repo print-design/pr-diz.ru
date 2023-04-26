@@ -59,13 +59,13 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select ev.date, ev.shift, 1 as is_event, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
+        $sql = "select ev.id id, ev.date, ev.shift, 1 as is_event, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
                 . "0 as length_dirty_1, '' as customer, '' as first_name, '' as last_name, "
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
                 . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name "
                 . "from plan_event ev where in_plan = 1 and machine_id = ".$this->machine_id
                 . " union "
-                . "select e.date, e.shift, 0 as is_event, e.worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
+                . "select e.id id, e.date, e.shift, 0 as is_event, e.worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
                 . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -95,7 +95,8 @@ class PlanTimetable {
                 $laminations = '1';
             }
             
-            array_push($this->editions[$row['date']][$row['shift']], array('is_event' => $row['is_event'], 
+            array_push($this->editions[$row['date']][$row['shift']], array('id' => $row['id'], 
+                'is_event' => $row['is_event'], 
                 'worktime' => $row['worktime'], 
                 'position' => $row['position'],
                 'calculation_id' => $row['calculation_id'], 

@@ -36,13 +36,13 @@ class PlanShift {
             
             foreach($this->editions as $key => $value)  {
                 if($previous_position == $value['position']) {
-                    if($value['is_event']) { echo "EV ";
-                        $sql = "update plan_event set position = ifnull(position, 0) + 1 where id = ".$value['calculation_id'];
+                    if($value['is_event']) {
+                        $sql = "update plan_event set position = ifnull(position, 0) + 1 where id = ".$value['id'];
                         $executer = new Executer($sql);
                         $error = $executer->error;
                         
                         if(empty($error)) {
-                            $sql = "select position from plan_event where id = ".$value['calculation_id'];
+                            $sql = "select position from plan_event where id = ".$value['id'];
                             $fetcher = new Fetcher($sql);
                             if($row = $fetcher->Fetch()) {
                                 $edition = $value;
@@ -51,13 +51,13 @@ class PlanShift {
                             }
                         }
                     }
-                    else { echo "ED ";
-                        $sql = "update plan_edition set position = ifnull(position, 0) + 1 where calculation_id = ".$value['calculation_id'];
+                    else {
+                        $sql = "update plan_edition set position = ifnull(position, 0) + 1 where id = ".$value['id'];
                         $executer = new Executer($sql);
                         $error = $executer->error;
                         
                         if(empty($error)) {
-                            $sql = "select position from plan_edition where calculation_id = ".$value['calculation_id'];
+                            $sql = "select position from plan_edition where id = ".$value['id'];
                             $fetcher = new Fetcher($sql);
                             if($row = $fetcher->Fetch()) {
                                 $edition = $value;
