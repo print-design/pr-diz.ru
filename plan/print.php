@@ -59,6 +59,10 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 right: 3px;
             }
             
+            .modal-content {
+                border-radius: 20px;
+            }
+            
             @media (max-width: 768px) {
                 #sidebar {
                     margin-left: -397px;
