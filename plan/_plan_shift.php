@@ -3,12 +3,21 @@ require_once './_plan_timetable.php';
 require_once './_plan_edition.php';
 
 class PlanShift {
-    private $date;
-    private $shift;
-    private $timetable;
-    private $editions;
-    private $date_editions_count;
-    private $shift_editions_count;
+    public $date;
+    public $shift;
+    public $timetable;
+    public $editions;
+    public $date_editions_count;
+    public $shift_editions_count;
+    
+    // Общее рабочее время
+    public $shift_worktime = 0;
+    
+    // Последний ли это тираж в смене
+    public $is_last = false;
+    
+    // Присутствует ли в этой смене допечатка
+    public $has_continuation;
 
     public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $editions, $date_editions_count, $shift_editions_count) {
         $this->date = $date;
@@ -24,11 +33,12 @@ class PlanShift {
             include './_plan_shift_view.php';
         }
         else {
-            // Определяем общее рабочее время
-            $shift_worktime = 0;
-            
             foreach ($this->editions as $edition) {
-                $shift_worktime += $edition['worktime'];
+                $this->shift_worktime += $edition['worktime'];
+                
+                if($edition['is_continuation']) {
+                    $this->has_continuation = true;
+                }
             }
             
             // Проверяем, чтобы position увеличивались от одного тиража/события к другому (не было повторяющихся position)
@@ -81,7 +91,7 @@ class PlanShift {
                     $is_last = true;
                 }
                 
-                $edition = new PlanEdition($this->date, $this->shift, $this->timetable, $key, $value, $this->date_editions_count, $this->shift_editions_count, $shift_worktime, $is_last);
+                $edition = new PlanEdition($this, $key, $value);
                 $edition->Show();
             }
             

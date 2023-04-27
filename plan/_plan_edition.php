@@ -1,30 +1,18 @@
 <?php
 class PlanEdition {
-    private $date;
-    private $shift;
-    private $timetable;
+    private $plan_shift;
     private $edition_key;
     private $edition;
-    private $date_editions_count;
-    private $shift_editions_count;
-    private $shift_worktime;
-    private $is_last;
 
-    public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $edition_key, $edition, $date_editions_count, $shift_editions_count, $shift_worktime, $is_last) {
-        $this->date = $date;
-        $this->shift = $shift;
-        $this->timetable = $timetable;
+    public function __construct(PlanShift $plan_shift, $edition_key, $edition) {
+        $this->plan_shift = $plan_shift;
         $this->edition_key = $edition_key;
         $this->edition = $edition;
-        $this->date_editions_count = $date_editions_count;
-        $this->shift_editions_count = $shift_editions_count;
-        $this->shift_worktime = $shift_worktime;
-        $this->is_last = $is_last;
     }
     
     function Show() {
-        $from = $this->timetable->dateFrom->format('Y-m-d');
-        $to = $this->timetable->dateTo->format('Y-m-d');
+        $from = $this->plan_shift->timetable->dateFrom->format('Y-m-d');
+        $to = $this->plan_shift->timetable->dateTo->format('Y-m-d');
         
         include './_plan_edition_view.php';
     }
