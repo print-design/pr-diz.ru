@@ -112,14 +112,14 @@ require_once './_roles.php';
         <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && !$this->edition['is_continuation'] && !$this->edition['has_continuation']): ?>
         <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
             <label class="btn btn-light btn-edition-continue">
-                <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off"><i class="fas fa-chevron-down"></i>
+                <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
             </label>
         </div>
         <?php endif; ?>
         <?php if($this->edition['has_continuation']): ?>
         <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
             <label class="btn btn-light btn-edition-continue active">
-                <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off"><i class="fas fa-chevron-down"></i>
+                <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
             </label>
         </div>
         <?php endif; ?>

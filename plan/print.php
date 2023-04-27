@@ -403,6 +403,36 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                         });
             }
             
+            function AddContinuation(id) {
+                $.ajax({ dataType: 'JSON', url: "_add_continuation.php?id=" + id })
+                        .done(function(data) {
+                            if(data.error == '') {
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                            }
+                            else {
+                                alert(data.error);
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при создании продолжения');
+                        });
+            }
+            
+            function RemoveContinuation(id) {
+                $.ajax({ dataType: 'JSON', url: "_remove_continuation.php?id=" + id })
+                        .done(function(data) {
+                            if(data.error == '') {
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                            }
+                            else {
+                                alert(data.error);
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при удалении продолжения');
+                        });
+            }
+            
             var dragqueue = false;
             
             function DragQueue(ev) {
