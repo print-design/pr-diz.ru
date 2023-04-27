@@ -85,10 +85,10 @@ class PlanShift {
             $counter = 0;
             
             foreach($this->editions as $key => $value) {
-                $is_last = false;
+                $this->is_last = false;
                 $counter++;
                 if($counter == count($this->editions)) {
-                    $is_last = true;
+                    $this->is_last = true;
                 }
                 
                 $edition = new PlanEdition($this, $key, $value);
