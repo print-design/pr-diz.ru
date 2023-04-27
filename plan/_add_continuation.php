@@ -71,19 +71,53 @@ if($row = $fetcher->Fetch()) {
 }
 
 // Вычисляем, сколько времени остаётся в текущей смене
-$start_time = 0;
+$sum_edition = 0;
 
-$sql = "select 12 - sum(pe.worktime) "
+$sql = "select sum(pe.worktime) "
         . "from plan_edition pe "
         . "inner join calculation c on pe.calculation_id = c.id "
         . "where pe.id <> $id and pe.date = '$date' and pe.shift = '$shift' and c.machine_id = $machine_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $start_time = $row[0];
+    $sum_edition = $row[0];
     
-    if(empty($start_time) || $start_time < 0) {
-        $start_time = 0;
+    if(empty($sum_edition)) {
+        $sum_edition = 0;
     }
+}
+
+$sum_continuation = 0;
+
+$sql = "select sum(pc.worktime) "
+        . "from plan_continuation pc "
+        . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
+        . "inner join calculation c on pe.calculation_id = c.id "
+        . "where pc.date = '$date' and pc.shift = '$shift' and c.machine_id = $machine_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $sum_continuation = $row[0];
+    
+    if(empty($sum_continuation)) {
+        $sum_continuation = 0;
+    }
+}
+
+$sum_event = 0;
+
+$sql = "select sum(worktime) from plan_event where date = '$date' and shift = '$shift' and machine_id = $machine_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $sum_event = $row[0];
+    
+    if(empty($sum_event)) {
+        $sum_event = 0;
+    }
+}
+
+$start_time = 12 - $sum_edition - $sum_continuation - $sum_event;
+
+if($start_time < 0) {
+    $start_time = 0;
 }
 
 // Указываем оставшееся в текущей смене время для этого тиража
