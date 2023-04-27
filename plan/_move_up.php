@@ -14,6 +14,10 @@ if($shift == 'day') {
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $max_value = $row[0];
+        
+        if($max_value == 0) {
+            $max_value = 1; // А вдруг там только допечатка. А её позиция всегда 1.
+        }
     }
     
     $sql = "update plan_edition pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and shift = '$shift'";
@@ -28,6 +32,10 @@ if($shift == 'day') {
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $max_value = $row[0];
+            
+            if($max_value == 0) {
+                $max_value = 1;
+            }
         }
         
         $sql = "update plan_event pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and shift = '$shift'";
@@ -43,6 +51,10 @@ elseif($shift == 'night') {
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $max_value = $row[0];
+        
+        if($max_value == 0) {
+            $max_value = 1;
+        }
     }
     
     $sql = "update plan_edition pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and pe.shift = '$shift'";
@@ -57,6 +69,10 @@ elseif($shift == 'night') {
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $max_value = $row[0];
+            
+            if($max_value == 0) {
+                $max_value = 1;
+            }
         }
         
         $sql = "update plan_event pe set pe.position = ifnull(pe.position, 0) + $max_value where pe.date = '$date' and pe.shift = '$shift'";
@@ -97,6 +113,47 @@ foreach($rows as $row) {
     }
     elseif($row['shift'] == 'night') {
         $sql = "update plan_edition set shift = 'day' where id = ".$row['id'];
+    }
+    
+    $executer = new Executer($sql);
+    $error = $executer->error;
+}
+
+$sql = "";
+
+if($shift == 'day') {
+    $sql = "select pc.id, pc.date, pc.shift "
+            . "from plan_continuation pc "
+            . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
+            . "inner join calculation c on pe.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pc.date >= '$date'";
+}
+elseif($shift == 'night') {
+    $sql = "select pc.id, pc.date, pc.shift "
+            . "from plan_continuation pc "
+            . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
+            . "inner join calculation c on pe.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pc.date = '$date' and pc.shift = 'night' "
+            . "union "
+            . "select pc.id, pc.date, pc.shift "
+            . "from plan_continuation pc "
+            . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
+            . "inner join calculation c on pe.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pc.date > '$date'";
+}
+
+$grabber = new Grabber($sql);
+$rows = $grabber->result;
+$error = $grabber->error;
+
+foreach($rows as $row) {
+    $sql = "";
+    
+    if($row['shift'] == 'day') {
+        $sql = "update plan_continuation set shift = 'night', date = date_add(date, interval -1 day) where id = ".$row['id'];
+    }
+    elseif($row['shift'] == 'night') {
+        $sql = "update plan_continuation set shift = 'day' where id = ".$row['id'];
     }
     
     $executer = new Executer($sql);
