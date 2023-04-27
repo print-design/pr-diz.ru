@@ -132,7 +132,7 @@ require_once './_roles.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right"<?=$drop ?>>
         <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
-        </a><?=$this->edition['position'] ?>
+        </a>
     </td>
     <?php endif; ?>
 </tr>
