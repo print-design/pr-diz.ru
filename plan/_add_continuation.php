@@ -130,9 +130,11 @@ $continuation_time = $worktime - $start_time;
 
 while($continuation_time > 0) {
     $next_date_shift = GetNextDateShift($date, $shift);
+    $date = $next_date_shift->date; // Переменные data и shift нужны, чтобы каждая следующая допечатка
+    $shift = $next_date_shift->shift; // переносилась на следующую смену.
     $next_worktime = min(12, $continuation_time);
     $has_continuation = $continuation_time > $next_worktime ? 1 : 0;
-    $plan_continuation = new PlanContinuation($next_date_shift->date, $next_date_shift->shift, $id, $next_worktime, $has_continuation);
+    $plan_continuation = new PlanContinuation($date, $shift, $id, $next_worktime, $has_continuation);
     
     // Увеличиваем position у всех тиражей данной смены
     $sql = "update plan_edition pe inner join calculation c on pe.calculation_id = c.id "

@@ -116,7 +116,7 @@ require_once './_roles.php';
             </label>
         </div>
         <?php endif; ?>
-        <?php if($this->edition['has_continuation']): ?>
+        <?php if($this->edition['has_continuation'] && !$this->edition['is_continuation']): ?>
         <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
             <label class="btn btn-light btn-edition-continue active">
                 <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
