@@ -9,7 +9,17 @@
         </div>
         <div>
             <div class="d-flex justify-content-end" style="padding-top: 10px;">
-                <div><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><img src="../images/icons/vertical-dots1.svg" /></a></div>
+                <div style="position: relative;">
+                    <a class="black queue_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" /></a>
+                    <div class="queue_menu text-left">
+                        <div class="command">
+                            <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
+                        </div>
+                        <div class="command">
+                            <button type="button" class="btn btn-link h-25" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
+                        </div>
+                    </div>
+                </div>
                 <div style="padding-left: 10px;"><img src="../images/icons/right-arrow.svg" /></div>
             </div>
         </div>

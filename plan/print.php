@@ -121,7 +121,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
             }
             
             /* Выпадающее меню в таблице */
-            .timetable_menu {
+            .timetable_menu, .queue_menu {
                 position: absolute;
                 top: 80%;
                 right: 0;
@@ -305,9 +305,18 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                     menu.slideToggle();
                 });
                 
+                $('.queue_menu_trigger').click(function() {
+                    var menu = $(this).next('.queue_menu');
+                    $('.queue_menu').not(menu).hide();
+                    menu.slideToggle();
+                });
+                
                 $(document).click(function(e) {
                     if($(e.target).closest($('.timetable_menu')).length || $(e.target).closest($('.timetable_menu_trigger')).length) return;
                     $('.timetable_menu').slideUp();
+                    
+                    if($(e.target).closest($('.queue_menu')).length || $(e.target).closest($('.queue_menu_trigger')).length) return;
+                    $('.queue_menu').slideUp();
                 });
             }
             
