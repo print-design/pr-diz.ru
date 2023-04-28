@@ -107,6 +107,7 @@ else {
     
     $max_edition = 0;
     $max_event = 0;
+    $count_continuation = 0;
     
     $sql = "select max(ifnull(e.position, 0)) "
             . "from plan_edition e "
@@ -135,7 +136,21 @@ else {
     }
     $max_event = $row[0];
     
-    $edition->Position = max($max_edition, $max_event) + 1;
+    $sql = "select count(pc.id) "
+            . "from plan_continuation pc "
+            . "inner join plan_edition e on pc.plan_edition_id = e.id "
+            . "inner join calculation c on e.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при определении позиции тиража";
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    $count_continuation = $row[0];
+    
+    $edition->Position = max($max_edition, $max_event, $count_continuation) + 1;
 }
 
 $sql = "insert into plan_edition (calculation_id, date, shift, worktime, position) "
