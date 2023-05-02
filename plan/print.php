@@ -27,6 +27,64 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
+
+// Разделение заказа
+if(null !== filter_input(INPUT_POST, 'divide_submit')) {
+    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    $length1 = filter_input(INPUT_POST, 'length');
+    
+    $length_total = 0;
+    $worktime_total = 0;
+    
+    // Проверяем, что этот заказ ещё не разделён
+    $sql = "select count(id) from plan_part where calculation_id = $calculation_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        if($row[0] != 0) {
+            $error_message = "Этот заказ уже разделён";
+        }
+    }
+    
+    // Получаем общие метраж и время по нужному расчёту
+    if(empty($error_message)) {
+        $sql = "select cr.length_dirty_1, cr.work_time_1 "
+                . "from calculation_result cr "
+                . "inner join calculation c on cr.calculation_id = c.id "
+                . "where c.id = $calculation_id";
+        $fetcher = new Fetcher($sql);
+        $error_message = $fetcher->error;
+        if($row = $fetcher->Fetch()) {
+            $length_total = $row['length_dirty_1'];
+            $worktime_total = $row['work_time_1'];
+        }
+    
+        if($length_total < $length1) {
+            $error_message = "Целое должно быть больше, чем половинка";
+        }
+    }
+    
+    // Вычисляем размеры половинок после разделения
+    $length2 = $length_total - $length1;
+    
+    // Помещаем данные в базу
+    if(empty($error_message)) {
+        $worktime1 = $worktime_total * $length1 / $length_total;
+        
+        $sql = "insert into plan_part (calculation_id, length, in_plan, worktime) "
+                . "values ($calculation_id, $length1, 0, $worktime1)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $worktime2 = $worktime_total * $length2 / $length_total;
+        
+        $sql = "insert into plan_part (calculation_id, length, in_plan, worktime) "
+                . "values ($calculation_id, $length2, 0, $worktime2)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>

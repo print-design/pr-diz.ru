@@ -1,3 +1,6 @@
+<?php
+require_once './_types.php';
+?>
 <div class='queue_item'>
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
         <div class="d-flex justify-content-start">
@@ -16,7 +19,14 @@
                             <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
                         </div>
                         <div class="command">
+                            <?php if($row['type'] == TYPE_EDITION): ?>
                             <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
+                            <?php elseif($row['type'] == TYPE_PART): ?>
+                            <form method="post">
+                                <input type="hidden" name="calculation_id" value="<?=$row['id'] ?>" />
+                                <button type="submit" class="btn btn-link h-25" name="undivide_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Отменить разделение</button>
+                            </form>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
