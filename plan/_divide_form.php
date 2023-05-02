@@ -16,6 +16,7 @@ if($row = $fetcher->Fetch()) {
 }
 ?>
 <input type="hidden" name="id" value="<?=$id ?>" />
+<input type="hidden" id="divide_total" value="<?=$length_dirty_1 ?>" />
 <p><strong>Метраж исходного тиража:</strong></p>
 <div class="form-group">
     <label for="length">Метраж первого тиража: <?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</label>
@@ -31,4 +32,4 @@ if($row = $fetcher->Fetch()) {
            onkeyup="javascript: $(this).attr('name', 'length');" 
            onfocusout="javascript: $(this).attr('name', 'length');" />
 </div>
-<p><strong>Остаток тиража:</strong> <span id="rest_length">0</span> м</p>
+<p><strong>Остаток тиража:</strong> <span id="divide_rest" class="text-danger"></span></p>

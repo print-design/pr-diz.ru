@@ -320,6 +320,24 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 $('.timetable_menu').slideUp();
             }
             
+            function CountDividedSize(divide_first) {
+                if(divide_first == '') {
+                    $('#divide_rest').text('');
+                }
+                else {
+                    divide_total = $('#divide_total').val();
+                    divide_rest = divide_total - divide_first;
+                    $('#divide_rest').text(Intl.NumberFormat('ru-RU').format(Math.round(divide_rest)) + ' м');
+                   
+                    if(divide_rest > 0) {
+                        $('#divide_rest').removeClass('text-danger');
+                    }
+                    else {
+                        $('#divide_rest').addClass('text-danger');
+                    }
+                }
+            }
+            
             function EnableMenu() {
                 $('.timetable_menu_trigger').click(function() {
                     var menu = $(this).next('.timetable_menu');
@@ -360,6 +378,52 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 // устанавливаем фокус на текстовом поле.
                 $('#divide').on('shown.bs.modal', function() {
                     $('input:text:visible:first').focus();
+                    
+                    $('input:text:visible:first').keypress(function(e) {
+                        if(/\D/.test(e.key)) {
+                            return false;
+                        }
+                    });
+                
+                    $('input:text:visible:first').keyup(function() {
+                        var val = $(this).val();
+                        val = val.replaceAll(/\D/g, '');
+                    
+                        if(val === '') {
+                            $(this).val('');
+                        }
+                        else {
+                            val = parseInt(val);
+                        
+                            if($(this).hasClass('int-format')) {
+                                val = Intl.NumberFormat('ru-RU').format(val);
+                            }
+                        
+                            $(this).val(val);
+                        }
+                        
+                        CountDividedSize($(this).val());
+                    });
+                
+                    $('input:text:visible:first').change(function(e) {
+                        var val = $(this).val();
+                        val = val.replace(/[^\d]/g, '');
+                    
+                        if(val === '') {
+                            $(this).val('');
+                        }
+                        else {
+                            val = parseInt(val);
+                        
+                            if($(this).hasClass('int-format')) {
+                                val = Intl.NumberFormat('ru-RU').format(val);
+                            }
+                        
+                            $(this).val(val);
+                        }
+                        
+                        CountDividedSize($(this).val());
+                    });
                 });
             }
             
@@ -373,6 +437,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                         })
                         .fail(function() {
                             alert('Ошибка при перерисовке очереди');
+                            EnableMenu();
                         });
             }
             
