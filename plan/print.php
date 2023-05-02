@@ -301,27 +301,6 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 $('input:text:visible:first').focus();
             });
             
-            // Открытие формы разделения заказа
-            $('.btn_divide').click(function() {
-                $('.queue_menu').slideUp();
-                id = $(this).attr('data-id');
-                
-                $.ajax({ url: "_divide_form.php?id=" + id })
-                        .done(function(data) {
-                            $('#divide_modal_form').html(data);
-                            $('#divide').modal('show');
-                        })
-                        .fail(function() {
-                            alert('Ошибка при открытии формы разделения заказа');
-                        });
-            });
-            
-            // При показе формы разделения заказа,
-            // устанавливаем фокус на текстовом поле.
-            $('#divide').on('shown.bs.modal', function() {
-                $('input:text:visible:first').focus();
-            });
-            
             function DeleteEvent(event_id) {
                 $.ajax({ dataType: 'JSON', url: "_delete_event.php?event_id=" + event_id })
                         .done(function(data) {
@@ -357,6 +336,27 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                     if($(e.target).closest($('.queue_menu')).length || $(e.target).closest($('.queue_menu_trigger')).length) return;
                     $('.queue_menu').slideUp();
                 });
+                
+                // Открытие формы разделения заказа
+                $('.btn_divide').click(function() {
+                    $('.queue_menu').slideUp();
+                    id = $(this).attr('data-id');
+                
+                    $.ajax({ url: "_divide_form.php?id=" + id })
+                            .done(function(data) {
+                                $('#divide_modal_form').html(data);
+                                $('#divide').modal('show');
+                            })
+                            .fail(function() {
+                                alert('Ошибка при открытии формы разделения заказа');
+                            });
+                });
+            
+                // При показе формы разделения заказа,
+                // устанавливаем фокус на текстовом поле.
+                $('#divide').on('shown.bs.modal', function() {
+                    $('input:text:visible:first').focus();
+                });
             }
             
             EnableMenu();
@@ -365,6 +365,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                 $.ajax({ url: "_draw_queue.php?machine_id=" + machine_id + "&machine=" + machine })
                         .done(function(queue_data) {
                             $('#queue').html(queue_data);
+                            EnableMenu();
                         })
                         .fail(function() {
                             alert('Ошибка при перерисовке очереди');
@@ -382,7 +383,6 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                             }
                             
                             DrawQueue(machine_id, machine);
-                            EnableMenu();
                         })
                         .fail(function() {
                             alert('Ошибка при перерисовке страницы');
