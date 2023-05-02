@@ -16,7 +16,7 @@
                             <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
                         </div>
                         <div class="command">
-                            <button type="button" class="btn btn-link h-25" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
+                            <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
                         </div>
                     </div>
                 </div>

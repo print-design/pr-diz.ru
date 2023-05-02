@@ -161,7 +161,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                         <input type="hidden" name="in_plan" value="0" />
                         <input type="hidden" name="scroll" />
                         <div class="modal-header">
-                            <p class="font-weight-bold" style="font-size: x-large;">Добавить событие</p>
+                            <div class="font-weight-bold" style="font-size: x-large;">Добавить событие</div>
                             <button type="button" class="close add_event_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A"></i></button>
                         </div>
                         <div class="modal-body">
@@ -188,6 +188,24 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
                             <button type="submit" class="btn btn-dark" name="add_event_submit">Добавить</button>
+                            <button type="button" class="btn btn-light add_event_dismiss" data-dismiss="modal">Отменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="divide" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post">
+                        <div class="modal-header">
+                            <div class="font-weight-bold" style="font-size: x-large;">Разделение заказа</div>
+                            <button type="button" class="close add_event_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A"></i></button>
+                        </div>
+                        <div class="modal-body" id="divide_modal_form">
+                        </div>
+                        <div class="modal-footer" style="justify-content: flex-start;">
+                            <button type="submit" class="btn btn-dark" name="divide_submit">Разделить</button>
                             <button type="button" class="btn btn-light add_event_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
@@ -280,6 +298,27 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
             // При показе формы добавления плёнки,
             // устанавливаем фокус на текстовом поле.
             $('#add_event').on('shown.bs.modal', function() {
+                $('input:text:visible:first').focus();
+            });
+            
+            // Открытие формы разделения заказа
+            $('.btn_divide').click(function() {
+                $('.queue_menu').slideUp();
+                id = $(this).attr('data-id');
+                
+                $.ajax({ url: "_divide_form.php?id=" + id })
+                        .done(function(data) {
+                            $('#divide_modal_form').html(data);
+                            $('#divide').modal('show');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при открытии формы разделения заказа');
+                        });
+            });
+            
+            // При показе формы разделения заказа,
+            // устанавливаем фокус на текстовом поле.
+            $('#divide').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();
             });
             
