@@ -1,6 +1,7 @@
 <?php
 require_once './_plan_timetable.php';
 require_once './_plan_edition.php';
+require_once './_types.php';
 
 class PlanShift {
     public $date;
@@ -36,7 +37,7 @@ class PlanShift {
             foreach ($this->editions as $edition) {
                 $this->shift_worktime += $edition['worktime'];
                 
-                if($edition['is_continuation']) {
+                if($edition['type'] == TYPE_CONTINUATION) {
                     $this->has_continuation = true;
                 }
             }
@@ -46,7 +47,7 @@ class PlanShift {
             
             foreach($this->editions as $key => $value)  {
                 if($previous_position == $value['position']) {
-                    if($value['is_event']) {
+                    if($value['type'] == TYPE_EVENT) {
                         $sql = "update plan_event set position = ifnull(position, 0) + 1 where id = ".$value['id'];
                         $executer = new Executer($sql);
                         $error = $executer->error;

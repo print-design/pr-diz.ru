@@ -1,6 +1,7 @@
 <?php
 require_once '../include/topscripts.php';
 require_once './_plan_date.php';
+require_once './_types.php';
 require_once '../calculation/calculation.php';
 require_once '../calculation/status_ids.php';
 
@@ -59,14 +60,14 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select ev.id id, ev.date, ev.shift, 1 as is_event, 0 as is_continuation, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
+        $sql = "select ev.id id, ev.date, ev.shift, ".TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
                 . "0 as length_dirty_1, '' as customer, '' as first_name, '' as last_name, "
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
                 . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name "
                 . "from plan_event ev where in_plan = 1 and machine_id = ".$this->machine_id
                 . " and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
-                . "select e.id id, e.date, e.shift, 0 as is_event, 0 as is_continuation, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
+                . "select e.id id, e.date, e.shift, ".TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
                 . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -78,7 +79,7 @@ class PlanTimetable {
                 . "where c.machine_id = ".$this->machine_id
                 . " and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
-                . "select pc.id, pc.date, pc.shift, 0 as is_event, 1 as is_continuation, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
+                . "select pc.id, pc.date, pc.shift, ".TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
                 . "0 as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -110,8 +111,7 @@ class PlanTimetable {
             }
             
             array_push($this->editions[$row['date']][$row['shift']], array('id' => $row['id'], 
-                'is_event' => $row['is_event'], 
-                'is_continuation' => $row['is_continuation'], 
+                'type' => $row['type'], 
                 'has_continuation' => $row['has_continuation'], 
                 'worktime' => $row['worktime'], 
                 'position' => $row['position'],
@@ -125,7 +125,7 @@ class PlanTimetable {
                 'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
             
             // Если расчёт в плане, но статус его не "в плане", меняем статус на "в плане"
-            if(!$row['is_event'] && !$row['is_continuation'] && $row['status_id'] != PLAN) {
+            if($row['type'] == TYPE_EDITION && $row['status_id'] != PLAN) {
                 $sql_ = "update calculation set status_id = ".PLAN." where id = ".$row['calculation_id'];
                 $executer_ = new Executer($sql_);
                 $error_message = $executer_->error;
@@ -133,15 +133,18 @@ class PlanTimetable {
             
             // Если случайно в каком-то расчёте shift не day и не night, автоматически устанавливаем его в day
             if($row['shift'] != 'day' && $row['shift'] != 'night') {
-                if($row['is_event']) {
+                if($row['type'] == TYPE_EVENT) {
                     $sql_ = "update plan_event set shift = 'day' where id = ".$row['id'];
                     $executer_ = new Executer($sql_);
                     $error_message = $executer_->error;
                 }
-                else {
+                elseif($row['type'] == TYPE_EDITION) {
                     $sql_ = "update plan_edition set shift = 'day' where id = ".$row['id'];
                     $executer_ = new Executer($sql_);
                     $error_message = $executer_->error;
+                }
+                elseif($row['type'] == TYPE_CONTINUATION) {
+                    $sql_ = "update plan_continuation set shift = 'day' where id = ".$row['id'];
                 }
                 
                 if(empty($error_message)) {

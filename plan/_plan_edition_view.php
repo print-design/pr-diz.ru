@@ -1,5 +1,6 @@
 <?php
 require_once './_roles.php';
+require_once './_types.php';
 ?>
 <tr data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-id="<?=$this->edition['calculation_id'] ?>" data-position="<?=$this->edition['position'] ?>">
     <?php if($this->plan_shift->shift == 'day' && $this->edition_key == 0): ?>
@@ -72,24 +73,24 @@ require_once './_roles.php';
     <?php
     $ondragstart = "DragTimetable(event);";
     
-    if($this->edition['is_event']) {
+    if($this->edition['type'] == TYPE_EVENT) {
         $ondragstart = "DragTimetableEvent(event);";
     }
     
     $drop = " ondrop='DropTimetable(event);' ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";
     
-    if($this->edition['is_continuation']) {
+    if($this->edition['type'] == TYPE_CONTINUATION) {
         $drop = "";
     }
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline border-left fordrag"<?=$drop ?>>
-        <?php if(!$this->edition['is_continuation'] && !$this->edition['has_continuation']): ?>
+        <?php if($this->edition['type'] != TYPE_CONTINUATION && !$this->edition['has_continuation']): ?>
         <div draggable="true" ondragstart="<?=$ondragstart ?>" data-id="<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
     </td>
-    <?php if($this->edition['is_event']): ?>
+    <?php if($this->edition['type'] == TYPE_EVENT): ?>
     <td colspan="5" class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= $this->edition['calculation'] ?>
     </td>
@@ -110,31 +111,31 @@ require_once './_roles.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <div class="d-flex justify-content-between">
         <div>
-            <?= $this->edition['is_continuation'] ? 'Допечатка' : CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?>
+            <?= $this->edition['type'] == TYPE_CONTINUATION ? 'Допечатка' : CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?>
         </div>
         <div>
-            <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && !$this->edition['is_continuation'] && !$this->edition['has_continuation']): ?>
+            <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] != TYPE_CONTINUATION && !$this->edition['has_continuation']): ?>
             <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
                 <label class="btn btn-light btn-edition-continue">
                     <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                 </label>
             </div>
             <?php endif; ?>
-            <?php if(!$this->edition['is_continuation'] && $this->edition['has_continuation']): ?>
+            <?php if($this->edition['type'] != TYPE_CONTINUATION && $this->edition['has_continuation']): ?>
             <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
                 <label class="btn btn-light btn-edition-continue active">
                     <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                 </label>
             </div>
             <?php endif; ?>
-            <?php if($this->edition['is_continuation'] && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
+            <?php if($this->edition['type'] == TYPE_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
             <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
                 <label class="btn btn-light btn-edition-continue">
                     <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                 </label>
             </div>
             <?php endif; ?>
-            <?php if($this->edition['is_continuation'] && $this->edition['has_continuation']): ?>
+            <?php if($this->edition['type'] == TYPE_CONTINUATION && $this->edition['has_continuation']): ?>
             <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
                 <label class="btn btn-light btn-edition-continue active">
                     <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
