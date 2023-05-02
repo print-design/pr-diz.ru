@@ -17,9 +17,9 @@ if($row = $fetcher->Fetch()) {
 ?>
 <input type="hidden" name="id" value="<?=$id ?>" />
 <input type="hidden" id="divide_total" value="<?=$length_dirty_1 ?>" />
-<p><strong>Метраж исходного тиража:</strong></p>
+<p><strong>Метраж исходного тиража:</strong> <?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</p>
 <div class="form-group">
-    <label for="length">Метраж первого тиража: <?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</label>
+    <label for="length">Метраж первого тиража</label>
     <input type="text" 
            name="length" 
            class="form-control int-only" 
