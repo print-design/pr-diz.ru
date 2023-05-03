@@ -91,6 +91,17 @@ class PlanTimetable {
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.machine_id = ".$this->machine_id
                 . " and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "union select pp.id, pp.date, pp.shift, ".TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
+                . "cr.length_dirty_1, cus.name customer, u.first_name, u.last_name, "
+                . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
+                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+                . "from plan_part pp "
+                . "inner join calculation c on pp.calculation_id = c.id "
+                . "inner join calculation_result cr on cr.calculation_id = c.id "
+                . "inner join customer cus on c.customer_id = cus.id "
+                . "inner join user u on c.manager_id = u.id "
+                . "where pp.in_plan = 1 and c.machine_id = ".$this->machine_id
+                . " and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "order by position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
