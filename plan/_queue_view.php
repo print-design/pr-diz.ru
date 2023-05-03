@@ -4,7 +4,11 @@ require_once './_types.php';
 <div class='queue_item'>
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
         <div class="d-flex justify-content-start">
-            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragQueue(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+            <?php if($row['type'] == TYPE_EDITION): ?>
+            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+            <?php elseif ($row['type'] == TYPE_PART): ?>
+            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragPart(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+            <?php endif; ?>
             <div>
                 <div style="font-weight: bold; font-size: large; line-height: 1.4rem; margin-bottom: 0.5rem;"><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
                 <?=$row['customer'] ?>

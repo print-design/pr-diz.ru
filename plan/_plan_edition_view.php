@@ -71,10 +71,13 @@ require_once './_types.php';
     <?php endif; ?>
     <?php endif; ?>
     <?php
-    $ondragstart = "DragTimetable(event);";
+    $ondragstart = "DragTimetableEdition(event);";
     
     if($this->edition['type'] == TYPE_EVENT) {
         $ondragstart = "DragTimetableEvent(event);";
+    }
+    elseif($this->edition['type'] == TYPE_PART) {
+        $ondragstart = "DragTimetablePart(event);";
     }
     
     $drop = " ondrop='DropTimetable(event);' ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";

@@ -124,13 +124,6 @@ class PlanTimetable {
                 'laminations' => $laminations, 
                 'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
             
-            // Если расчёт в плане, но статус его не "в плане", меняем статус на "в плане"
-            if($row['type'] == TYPE_EDITION && $row['status_id'] != PLAN) {
-                $sql_ = "update calculation set status_id = ".PLAN." where id = ".$row['calculation_id'];
-                $executer_ = new Executer($sql_);
-                $error_message = $executer_->error;
-            }
-            
             // Если случайно в каком-то расчёте shift не day и не night, автоматически устанавливаем его в day
             if($row['shift'] != 'day' && $row['shift'] != 'night') {
                 if($row['type'] == TYPE_EVENT) {

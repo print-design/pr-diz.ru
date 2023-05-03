@@ -14,13 +14,13 @@ class Queue {
     }
     
     public function Show() {
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as part_id, text calculation, '' customer, 0 length_dirty_1, 0 ink_number, 0.0 raport, "
+        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length_dirty_1, 0 ink_number, 0.0 raport, "
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
                 . "'' first_name, '' last_name "
                 . "from plan_event where in_plan = 0 and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, 0 as part_id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
+                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "u.first_name, u.last_name "
@@ -36,7 +36,7 @@ class Queue {
             $sql .= " and c.machine_id = $this->machine_id and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT;
         }
         $sql .= " union "
-                . "select ".TYPE_PART." as type, 2 as position, c.id as id, pp.id as part_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, "
+                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "u.first_name, u.last_name "
