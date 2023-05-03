@@ -30,6 +30,8 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_edition = 0;
     $max_continuation = 0;
     $max_event = 0;
+    $max_part = 0;
+    $max_part_continuation = 0;
     
     $sql = "select max(ifnull(e.position, 0)) "
             . "from plan_edition e "
@@ -70,7 +72,20 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     }
     $max_event = $row[0];
     
-    $event->Position = max($max_edition, $max_continuation, $max_event) + 1;
+    $sql = "select max(ifnull(pp.position, 0)) "
+            . "from plan_part pp "
+            . "inner join calculation c on pp.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pp.date = '$date' and pp.shift = '$shift'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при определении позиции разделённого тиража";
+        echo json_encode(array("error" => $error));
+        exit();
+    }
+    $max_part = $row[0];
+    
+    $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }
 else {
     $sql = "update plan_edition set position = ifnull(position, 0) + 1 "
@@ -96,6 +111,8 @@ else {
     $max_edition = 0;
     $max_continuation = 0;
     $max_event = 0;
+    $max_part = 0;
+    $max_part_continuation = 0;
     
     $sql = "select max(ifnull(e.position, 0)) "
             . "from plan_edition e "
@@ -138,7 +155,21 @@ else {
     }
     $max_event = $row[0];
     
-    $event->Position = max($max_edition, $max_continuation, $max_event) + 1;
+    $sql = "select max(ifnull(pp.position, 0)) "
+            . "from plan_part pp "
+            . "inner join calculation c on pp.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and pp.date = '$date' and pp.shift = '$shift' "
+            . "and pp.position < $before";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = $fetcher->error;
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    $max_part = $row[0];
+    
+    $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }
 
 $sql = "update plan_event set in_plan = 1, date = '".$event->Date."', shift = '".$event->Shift."', position = ".$event->Position." where id = $event_id";
