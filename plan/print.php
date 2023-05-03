@@ -85,6 +85,15 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
         $error_message = $executer->error;
     }
 }
+
+// Отмена разделения заказа
+if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
+    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    
+    $sql = "delete from plan_part where calculation_id = $calculation_id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
 ?>
 <!DOCTYPE html>
 <html>
