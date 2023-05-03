@@ -31,7 +31,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
 // Разделение заказа
 if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id');
-    $length1 = filter_input(INPUT_POST, 'length');
+    $length1 = filter_input(INPUT_POST, 'length1');
     
     $length_total = 0;
     $worktime_total = 0;
@@ -59,7 +59,7 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
         }
     
         if($length_total < $length1) {
-            $error_message = "Целое должно быть больше, чем половинка";
+            $error_message = "Остаток тиража должен быть больше нуля";
         }
     }
     
@@ -272,7 +272,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                         <div class="modal-body" id="divide_modal_form">
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
-                            <button type="submit" class="btn btn-dark" name="divide_submit">Разделить</button>
+                            <button type="submit" class="btn btn-dark" name="divide_submit" onclick="javascript: if(form.elements.divide_total.value - form.elements.length1.value <= 0) { alert('Остаток тиража должен быть больше нуля'); return false; }">Разделить</button>
                             <button type="button" class="btn btn-light add_event_dismiss" data-dismiss="modal">Отменить</button>
                         </div>
                     </form>
@@ -318,7 +318,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                 <label for="from" style="font-size: larger;">от&nbsp;</label>
                                 <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                                 <input type="date" 
-                                       id="from" name="from" 
+                                       id="from" 
+                                       name="from" 
                                        class="form-control mr-2" 
                                        value="<?= filter_input(INPUT_GET, 'from') ?>" 
                                        style="border: 0; width: 8.5rem;" 
@@ -443,6 +444,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             
                 // При показе формы разделения заказа,
                 // устанавливаем фокус на текстовом поле.
+                // Допускается ввод только чисел.
                 $('#divide').on('shown.bs.modal', function() {
                     $('input:text:visible:first').focus();
                     
