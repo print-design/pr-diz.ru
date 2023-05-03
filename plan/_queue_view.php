@@ -27,7 +27,7 @@ require_once './_types.php';
                             <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
                             <?php elseif($row['type'] == TYPE_PART): ?>
                             <form method="post">
-                                <input type="hidden" name="calculation_id" value="<?=$row['id'] ?>" />
+                                <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
                                 <button type="submit" class="btn btn-link h-25" name="undivide_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Отменить разделение</button>
                             </form>
                             <?php endif; ?>
