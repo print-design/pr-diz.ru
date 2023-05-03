@@ -18,7 +18,8 @@ class Queue {
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
                 . "'' first_name, '' last_name "
-                . "from plan_event where in_plan = 0 and machine_id = ".$this->machine_id
+                . "from plan_event "
+                . "where in_plan = 0 and machine_id = ".$this->machine_id
                 . " union "
                 . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
@@ -45,7 +46,7 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.status_id = ".CONFIRMED;
+                . "where pp.in_plan = 0 and c.status_id = ".CONFIRMED;
         if($this->machine == CalculationBase::ATLAS) {
             $sql .= " and false";
         }

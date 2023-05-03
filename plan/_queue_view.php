@@ -20,7 +20,7 @@ require_once './_types.php';
                     <a class="black queue_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" /></a>
                     <div class="queue_menu text-left">
                         <div class="command">
-                            <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
+                            <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$row['calculation_id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
                         </div>
                         <div class="command">
                             <?php if($row['type'] == TYPE_EDITION): ?>

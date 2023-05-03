@@ -13,16 +13,18 @@ class Part {
     public $Position;
 }
 
-// Определяем машину
+// Определяем расчёт и машину
+$calculation_id = null;
 $machine_id = null;
 
-$sql = "select c.machine_id "
+$sql = "select c.id, c.machine_id "
         . "from calculation c "
         . "inner join plan_part pp on pp.calculation_id = c.id "
         . "where pp.id = $part_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $machine_id = $row[0];
+    $calculation_id = $row['id'];
+    $machine_id = $row['machine_id'];
 }
 
 $part = new Part();
@@ -77,7 +79,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     
     $sql = "select max(ifnull(pp.position, 0)) "
             . "from plan_part pp "
-            . "inner join calculacion c on pp.calculation_id = c.id "
+            . "inner join calculation c on pp.calculation_id = c.id "
             . "where pp.in_plan = 1 and c.machine_id = $machine_id and pp.date = '$date' and pp.shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
@@ -112,7 +114,7 @@ else {
     }
     
     $sql = "update plan_part set position = ifnull(position, 0) + 1 "
-            . "where in_plan = 1 and date = '$date' and shift = '$shift' and calculation_id in (select if from calculation where machine_id = $machine_id) "
+            . "where in_plan = 1 and date = '$date' and shift = '$shift' and calculation_id in (select id from calculation where machine_id = $machine_id) "
             . "and position >= $before";
     $executer = new Executer($sql);
     $error = $executer->error;
@@ -187,6 +189,36 @@ else {
 $sql = "update plan_part set in_plan = 1, date = '".$part->Date."', shift = '".$part->Shift."', position = ".$part->Position." where id = $part_id";
 $executer = new Executer($sql);
 $error = $executer->error;
+
+if(empty($error)) {
+    $parts_in_plan = 0;
+    $parts_not_in_plan = 0;
+
+    if($calculation_id > 0) {
+        $sql = "select count(id) from plan_part where in_plan = 1 and calculation_id = $calculation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $parts_in_plan = $row[0];
+        }
+    
+        $sql = "select count(id) from plan_part where in_plan = 0 and calculation_id = $calculation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $parts_not_in_plan = $row[0];
+        }
+    }
+
+    if($parts_in_plan > 0 && $parts_not_in_plan == 0) {
+        $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
+        $executer = new Executer($sql);
+        $error = $executer->error;
+    }
+    else {
+        $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
+        $executer = new Executer($sql);
+        $error = $executer->error;
+    }
+}
 
 echo json_encode(array('error' => $error));
 ?>

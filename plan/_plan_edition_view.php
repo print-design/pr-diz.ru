@@ -71,24 +71,25 @@ require_once './_types.php';
     <?php endif; ?>
     <?php endif; ?>
     <?php
-    $ondragstart = "DragTimetableEdition(event);";
-    
-    if($this->edition['type'] == TYPE_EVENT) {
-        $ondragstart = "DragTimetableEvent(event);";
-    }
-    elseif($this->edition['type'] == TYPE_PART) {
-        $ondragstart = "DragTimetablePart(event);";
-    }
-    
     $drop = " ondrop='DropTimetable(event);' ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";
     
-    if($this->edition['type'] == TYPE_CONTINUATION) {
+    if($this->edition['type'] == TYPE_CONTINUATION || $this->edition['type'] == TYPE_PART_CONTINUATION) {
         $drop = "";
     }
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline border-left fordrag"<?=$drop ?>>
-        <?php if($this->edition['type'] != TYPE_CONTINUATION && !$this->edition['has_continuation']): ?>
-        <div draggable="true" ondragstart="<?=$ondragstart ?>" data-id="<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+        <?php if($this->edition['type'] == TYPE_EDITION && !$this->edition['has_continuation']): ?>
+        <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+            <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
+        </div>
+        <?php endif; ?>
+        <?php if($this->edition['type'] == TYPE_PART && !$this->edition['has_continuation']): ?>
+        <div draggable="true" ondragstart="DragTimetablePart(event);" data-id="<?=$this->edition['id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+            <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
+        </div>
+        <?php endif; ?>
+        <?php if($this->edition['type'] == TYPE_EVENT): ?>
+        <div draggable="true" ondragstart="DragTimetableEvent(event);" data-id="<?=$this->edition['id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
