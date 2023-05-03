@@ -184,8 +184,23 @@ else {
     $edition->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }
 
-$sql = "insert into plan_edition (calculation_id, date, shift, worktime, position) "
-        . "values ($calculation_id, '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
+$plan_edition_id = 0;
+
+$sql = "select id from plan_edition where calculation_id = $calculation_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $plan_edition_id = $row[0];
+}
+
+if($plan_edition_id > 0) {
+    $sql = "update plan_edition set date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
+            ." where id = $plan_edition_id";
+    $executer = new Executer($sql);
+    $error = $executer->error;
+}
+else {
+    $sql = "insert into plan_edition (calculation_id, date, shift, worktime, position) "
+            . "values ($calculation_id, '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
     $executer = new Executer($sql);
     $error = $executer->error;
     
@@ -194,6 +209,7 @@ $sql = "insert into plan_edition (calculation_id, date, shift, worktime, positio
         $executer = new Executer($sql);
         $error = $executer->error;
     }
+}
 
 echo json_encode(array('error' => $error));
 ?>

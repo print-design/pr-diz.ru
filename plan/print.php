@@ -842,33 +842,20 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 else if(type == 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id })
-                            .done(function(remove_data) {
-                                if(remove_data.error == '') {
-                                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
-                                        .done(function(add_data) {
-                                            if(add_data.error == '') {
-                                                DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
-                                            }
-                                            else {
-                                                alert(add_data.error);
-                                                $('td').removeClass('target');
-                                                $('#queue').removeClass('droppable');
-                                            }
-                                        })
-                                        .fail(function() {
-                                            alert('Ошибка при добавлении в план');
-                                        });
-                                }
-                                else {
-                                    alert(remove_data.error);
-                                    $('td').removeClass('target');
-                                    $('#queue').removeClass('droppable');
-                                }
-                            })
-                            .fail(function() {
-                                alert('Ошибка при удалении из плана');
-                            });
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                        .done(function(add_data) {
+                            if(add_data.error == '') {
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                            }
+                            else {
+                                alert(add_data.error);
+                                $('td').removeClass('target');
+                                $('#queue').removeClass('droppable');
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при добавлении тиража в план');
+                        });
                 }
                 else if(type == 'timetableevent') {
                     var event_id = ev.dataTransfer.getData('event_id');
