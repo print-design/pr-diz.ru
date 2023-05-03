@@ -700,7 +700,7 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
                 if(type == 'timetable') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id })
+                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
                                     DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -748,7 +748,7 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
                 if(type == 'queue') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -784,10 +784,10 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
                 else if(type == 'timetable') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_remove_from_plan.php?calculation_id=" + calculation_id })
+                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
-                                    $.ajax({ dataType: 'JSON', url: "_add_to_plan.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
                                         .done(function(add_data) {
                                             if(add_data.error == '') {
                                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
