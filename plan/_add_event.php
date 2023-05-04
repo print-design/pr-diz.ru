@@ -85,6 +85,20 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     }
     $max_part = $row[0];
     
+    $sql = "select count(ppc.id) "
+            . "from plan_part_continuation ppc "
+            . "inner join plan_part pp on ppc.plan_part_id = pp.id "
+            . "inner join calculation c on pp.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при определении позиции разделённого тиража";
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    $max_part_continuation = $row[0];
+    
     $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }
 else {
@@ -168,6 +182,20 @@ else {
         exit();
     }
     $max_part = $row[0];
+    
+    $sql = "select count(ppc.id) "
+            . "from plan_part_continuation ppc "
+            . "inner join plan_part pp on ppc.plan_part_id = pp.id "
+            . "inner join calculation c on pp.calculation_id = c.id "
+            . "where c.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if(!$row) {
+        $error = "Ошибка при определении позиции разделённого тиража";
+        echo json_encode(array('error' => $error));
+        exit();
+    }
+    $max_part_continuation = $row[0];
     
     $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }

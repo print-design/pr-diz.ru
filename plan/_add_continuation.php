@@ -70,6 +70,10 @@ if($row = $fetcher->Fetch()) {
 
 // Вычисляем, сколько времени остаётся в текущей смене
 $sum_edition = 0;
+$sum_continuation = 0;
+$sum_event = 0;
+$sum_part = 0;
+$sum_part_continuation = 0;
 
 $sql = "select sum(pe.worktime) "
         . "from plan_edition pe "
@@ -83,8 +87,6 @@ if($row = $fetcher->Fetch()) {
         $sum_edition = 0;
     }
 }
-
-$sum_continuation = 0;
 
 $sql = "select sum(pc.worktime) "
         . "from plan_continuation pc "
@@ -100,8 +102,6 @@ if($row = $fetcher->Fetch()) {
     }
 }
 
-$sum_event = 0;
-
 $sql = "select sum(worktime) from plan_event where date = '$date' and shift = '$shift' and machine_id = $machine_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
@@ -112,7 +112,34 @@ if($row = $fetcher->Fetch()) {
     }
 }
 
-$start_time = 12 - $sum_edition - $sum_continuation - $sum_event;
+$sql = "select sum(pp.worktime) "
+        . "from plan_part pp "
+        . "inner join calculation c on pp.calculation_id = c.id "
+        . "where pp.date = '$date' and pp.shift = '$shift' and c.machine_id = $machine_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $sum_part = $row[0];
+    
+    if(empty($sum_part)) {
+        $sum_part = 0;
+    }
+}
+
+$sql = "select sum(ppc.worktime) "
+        . "from plan_part_continuation ppc "
+        . "inner join plan_part pp on ppc.plan_part_id = pp.id "
+        . "inner join calculation c on pp.calculation_id = c.id "
+        . "where ppc.date = '$date' and ppc.shift = '$shift' and c.machine_id = $machine_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $sum_part_continuation = $row[0];
+    
+    if(empty($sum_part_continuation)) {
+        $sum_part_continuation = 0;
+    }
+}
+
+$start_time = 12 - $sum_edition - $sum_continuation - $sum_event - $sum_part - $sum_part_continuation;
 
 if($start_time < 0) {
     $start_time = 0;
