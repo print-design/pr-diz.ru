@@ -201,7 +201,7 @@ else {
             . "inner join calculation c on pp.calculation_id = c.id "
             . "where c.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
     $fetcher = new Fetcher($sql);
-    if($row) {
+    if(!$row) {
         $error = "Ошибка при определении позиции разделённого тиража";
         echo json_encode(array("error" => $error));
         exit();
