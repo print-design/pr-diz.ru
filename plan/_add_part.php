@@ -1,5 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
+require_once '../calculation/status_ids.php';
 
 $part_id = filter_input(INPUT_GET, 'part_id');
 $date = filter_input(INPUT_GET, 'date');
