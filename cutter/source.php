@@ -57,9 +57,10 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     if(mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") {
         $roll_id = mb_substr($source_id, 1);
         $sql = "select r.id "
-                . "from roll r "
-                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                . "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
+                . "from roll r where r.id = '$roll_id' limit 1";
+                //. "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                //. "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
+                // Временно убираем проверку по статусу
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = 0;
@@ -77,9 +78,11 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $ordinal = $substrings[1];
             $sql = "select pr.id "
                     . "from pallet_roll pr "
-                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                    . "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal "
-                    . "and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+                    . "where pr.pallet_id = $pallet_id and pr.ordinal = $ordinal";
+                    //. "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                    //. "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal "
+                    //. "and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+                    // Временно убираем проверку по статусу
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $is_from_pallet = 1;
@@ -92,13 +95,16 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     if(empty($roll_id)) {
         $sql = "select r.id, 0 is_from_pallet "
                 . "from roll r "
-                . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                . "where r.id_from_supplier='$source_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") "
+                . "where r.id_from_supplier = '$source_id' "
+                //. "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                //. "where r.id_from_supplier='$source_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") "
                 . "union "
                 . "select pr.id, 1 is_from_pallet "
                 . "from pallet_roll pr "
-                . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                . "where pr.id_from_supplier='$source_id' and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+                . "where pr.id_from_supplier = '$source_id'";
+                //. "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                //. "where pr.id_from_supplier='$source_id' and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+                // Временно убираем проверку по статусу
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = $row['is_from_pallet'];
