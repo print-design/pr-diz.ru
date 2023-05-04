@@ -57,7 +57,7 @@ $worktime = 0;
 $plan_part_id = 0;
 $machine_id = 0;
 
-$sql = "select ppc.date, ppc.shift, ppc.worktime, ppc.plan_edition_id, c.machine_id "
+$sql = "select ppc.date, ppc.shift, ppc.worktime, ppc.plan_part_id, c.machine_id "
         . "from plan_part_continuation ppc "
         . "inner join plan_part pp on ppc.plan_part_id = pp.id "
         . "inner join calculation c on pp.calculation_id = c.id "

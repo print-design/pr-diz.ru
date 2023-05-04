@@ -115,7 +115,7 @@ if($row = $fetcher->Fetch()) {
 $sql = "select sum(pp.worktime) "
         . "from plan_part pp "
         . "inner join calculation c on pp.calculation_id = c.id "
-        . "where pp.date = '$date' and pp.shift = '$shift' and c.machine_id = $machine_id";
+        . "where pp.id <> $id and pp.date = '$date' and pp.shift = '$shift' and c.machine_id = $machine_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $sum_part = $row[0];
