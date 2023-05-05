@@ -18,7 +18,7 @@ class PlanShift {
     public $is_last = false;
     
     // Присутствует ли в этой смене допечатка
-    public $has_continuation;
+    public $includes_continuation = false;
 
     public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $editions, $date_editions_count, $shift_editions_count) {
         $this->date = $date;
@@ -37,8 +37,8 @@ class PlanShift {
             foreach ($this->editions as $edition) {
                 $this->shift_worktime += $edition['worktime'];
                 
-                if($edition['type'] == TYPE_CONTINUATION) {
-                    $this->has_continuation = true;
+                if($edition['type'] == TYPE_CONTINUATION || $edition['type'] == TYPE_PART_CONTINUATION) {
+                    $this->includes_continuation = true;
                 }
             }
             

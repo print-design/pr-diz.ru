@@ -11,7 +11,7 @@ require_once './_types.php';
     <?php endif; ?>
     <?php if($this->edition_key == 0): ?>
     <td class="<?=$this->plan_shift->shift ?>" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
-        <?php if(!$this->plan_shift->has_continuation): ?>
+        <?php if(!$this->plan_shift->includes_continuation): ?>
         <div style="display: block;">
             <a href="javascript: void(0);" onclick="javascript: MoveUp(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
                 <img src="../images/icons/up_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
@@ -21,7 +21,7 @@ require_once './_types.php';
         <div style="display: block; white-space: nowrap;">
             <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><br /><span class="font-italic"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</span>
         </div>
-        <?php if(!$this->plan_shift->has_continuation): ?>
+        <?php if(!$this->plan_shift->includes_continuation): ?>
         <div style="display: block; margin-top: 6px;">
             <a href="javascript: void(0);" onclick="javascript: MoveDown(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
                 <img src="../images/icons/down_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
