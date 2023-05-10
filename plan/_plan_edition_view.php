@@ -47,10 +47,8 @@ require_once './_types.php';
             endforeach;
             ?>
         </select>
-    </td>
-    <?php if($this->plan_shift->timetable->machine == CalculationBase::COMIFLEX): ?>
-    <td class="<?=$this->plan_shift->shift ?> assistant" style="display: none;" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
-        <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
+        <?php if($this->plan_shift->timetable->machine == CalculationBase::COMIFLEX): ?>
+        <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
             $key = $this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
@@ -67,8 +65,8 @@ require_once './_types.php';
             endforeach;
             ?>
         </select>
+        <?php endif; ?>
     </td>
-    <?php endif; ?>
     <?php endif; ?>
     <?php
     $drop = " ondrop='DropTimetable(event);' ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";

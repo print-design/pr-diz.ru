@@ -27,10 +27,8 @@ require_once './_roles.php';
             endforeach;
             ?>
         </select>
-    </td>
-    <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
-    <td class="<?=$this->shift ?> assistant" style="display: none;">
-        <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
+        <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
+        <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
             $key = $this->timetable->machine_id.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
@@ -47,8 +45,8 @@ require_once './_roles.php';
             endforeach;
             ?>
         </select>
+        <?php endif; ?>
     </td>
-    <?php endif; ?>
     <td class="<?=$this->shift ?> showdropline border-left fordrag" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>

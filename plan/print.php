@@ -352,15 +352,11 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
                 $('#sidebarExpand').show();
-                $('th.assistant').show();
-                $('td.assistant').show();
             });
                 
             $('#sidebarExpand').on('click', function() {
                 $('#sidebar').removeClass('active');
                 $('#sidebarExpand').hide();
-                $('th.assistant').hide();
-                $('td.assistant').hide();
             });
             
             // При показе формы добавления плёнки,
@@ -514,11 +510,6 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ url: "_draw_timetable.php?machine_id=" + machine_id + "&from=" + from })
                         .done(function(data) {
                             $('#timetable').html(data);
-                    
-                            if($('#sidebar').hasClass('active')) {
-                                $('th.assistant').show();
-                                $('td.assistant').show();
-                            }
                             
                             DrawQueue(machine_id, machine);
                         })
