@@ -115,7 +115,7 @@ require_once './_types.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <div class="d-flex justify-content-between">
         <div>
-            <?= $this->edition['type'] == TYPE_CONTINUATION ? 'Допечатка' : CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?>
+            <?= "<div class='text-nowrap'>".CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0)."</div>".($this->edition['type'] == TYPE_CONTINUATION || $this->edition['type'] == TYPE_PART_CONTINUATION ? ' Допечатка' : '') ?>
         </div>
         <div>
             <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == TYPE_EDITION && !$this->edition['has_continuation']): ?>
