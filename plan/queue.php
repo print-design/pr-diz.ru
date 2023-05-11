@@ -15,7 +15,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     </head>
     <body>
         <?php
-        include './header_plan.php';
+        include '../include/header_plan.php';
         ?>
         <div class="container-fluid">
             <?php

@@ -2,15 +2,14 @@
 require_once '../include/topscripts.php';
 require_once '../calculation/status_ids.php';
 require_once '../calculation/calculation.php';
+require_once '../include/machines.php';
 require_once './_types.php';
 
 class Queue {
     private $machine_id = null;
-    private $machine = '';
     
-    public function __construct($machine_id, $machine) {
+    public function __construct($machine_id) {
         $this->machine_id = $machine_id;
-        $this->machine = $machine;
     }
     
     public function Show() {
@@ -30,7 +29,7 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.status_id = ".CONFIRMED." and c.id not in (select calculation_id from plan_part)";
-        if($this->machine == CalculationBase::ATLAS) {
+        if($this->machine_id == PRINTER_ATLAS) {
             $sql .= " and false";
         }
         else {
@@ -47,7 +46,7 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0 and c.status_id = ".CONFIRMED;
-        if($this->machine == CalculationBase::ATLAS) {
+        if($this->machine_id == PRINTER_ATLAS) {
             $sql .= " and false";
         }
         else {
