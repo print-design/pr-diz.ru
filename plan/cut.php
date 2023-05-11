@@ -15,10 +15,12 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     </head>
     <body>
         <?php
-        include '../include/header_plan.php';
+        include './header_plan.php';
         ?>
         <div class="container-fluid">
             <?php
+            include './subheader_cut.php';
+            
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }

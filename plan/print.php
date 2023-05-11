@@ -280,12 +280,12 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             </div>
         </div>
         <?php
-        include '../include/header_plan.php';
+        include './header_plan.php';
         ?>
         <div style="position: fixed; top: 0; left: 0; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid">
             <?php
-            include '../include/subheader_print.php';
+            include './subheader_print.php';
             
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
