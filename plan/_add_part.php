@@ -202,7 +202,7 @@ else {
     $part->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }
 
-$sql = "update plan_part set in_plan = 1, machine_id = $machine_id, date = '".$part->Date."', shift = '".$part->Shift."', position = ".$part->Position." where id = $part_id";
+$sql = "update plan_part set in_plan = 1, machine_id = ".$part->MachineId.", date = '".$part->Date."', shift = '".$part->Shift."', position = ".$part->Position." where id = $part_id";
 $executer = new Executer($sql);
 $error = $executer->error;
 
