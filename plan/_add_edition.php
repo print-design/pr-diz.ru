@@ -217,7 +217,7 @@ if($row = $fetcher->Fetch()) {
 }
 
 if($plan_edition_id > 0) {
-    $sql = "update plan_edition set machine_id = ".$edition->MachineId." date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
+    $sql = "update plan_edition set machine_id = ".$edition->MachineId.", date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
             ." where id = $plan_edition_id";
     $executer = new Executer($sql);
     $error = $executer->error;
