@@ -13,6 +13,21 @@ class Queue {
     }
     
     public function Show() {
+        $str_raports = '';
+        
+        // Если эта машина ZBS1, ZBS2, ZBS3, получаем список валов
+        if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
+            $sql = "select value from raport where machine_id = ".$this->machine_id;
+            $grabber = new Grabber($sql);
+            $result = $grabber->result;
+            $raports = array();
+            foreach($result as $item) {
+                array_push($raports, $item['value']);
+            }
+            
+            $str_raports = implode(', ', $raports);
+        }
+        
         $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length_dirty_1, 0 ink_number, 0.0 raport, "
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
@@ -52,6 +67,16 @@ class Queue {
         else {
             $sql .= " and c.machine_id = $this->machine_id and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT;
         }
+        
+        // Если эта машина ZBS1, ZBS2, ZBS3, 
+        // то добавляем сюда расчёты для других машин (из списка ZBS1, ZBS2, ZBS2),
+        // у которых вал присутствует в списке валов для этой машины
+        
+        if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
+            $sql .= " union "
+                    . "select";
+        }
+        
         $sql .= " order by position, id desc";
         $fetcher = new Fetcher($sql);
                     
