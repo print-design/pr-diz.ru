@@ -1,6 +1,6 @@
 <?php
 include '../include/left_bar.php';
-require_once './_cutters.php';
+require_once '../include/machines.php';
 
 $php_self = $_SERVER['PHP_SELF'];
 $substrings = mb_split("/", $php_self);
