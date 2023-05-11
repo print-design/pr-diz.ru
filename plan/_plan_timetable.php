@@ -60,14 +60,7 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select ev.id id, ev.date, ev.shift, ".TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
-                . "0 as length_dirty_1, '' as customer, '' as first_name, '' as last_name, "
-                . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
-                . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name "
-                . "from plan_event ev where in_plan = 1 and machine_id = ".$this->machine_id
-                . " and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and date <= '".$this->dateTo->format('Y-m-d')."' "
-                . "union "
-                . "select e.id id, e.date, e.shift, ".TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
+        $sql = "select e.id id, e.date, e.shift, ".TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
                 . "if(isnull(e.worktime_continued), round(cr.length_dirty_1), round(cr.length_dirty_1) / e.worktime * e.worktime_continued) as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -76,8 +69,13 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.machine_id = ".$this->machine_id
-                . " and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "union "
+                . "select ev.id, ev.date, ev.shift, ".TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
+                . "0 as length_dirty_1, '' as customer, '' as first_name, '' as last_name, "
+                . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
+                . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name "
+                . "from plan_event ev where in_plan = 1 and machine_id = ".$this->machine_id." and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and ev.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pc.id, pc.date, pc.shift, ".TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
                 . "round(cr.length_dirty_1) / round(cr.work_time_1, 2) * pc.worktime as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
@@ -89,9 +87,9 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.machine_id = ".$this->machine_id
-                . " and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
-                . "union select pp.id, pp.date, pp.shift, ".TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
+                . "where e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "union "
+                . "select pp.id, pp.date, pp.shift, ".TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
                 . "if(isnull(pp.worktime_continued), round(cr.length_dirty_1, 2), round(cr.length_dirty_1) / pp.worktime * pp.worktime_continued) as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -100,9 +98,9 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where pp.in_plan = 1 and c.machine_id = ".$this->machine_id
-                . " and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
-                . "union select ppc.id, ppc.date, ppc.shift, ".TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
+                . "where pp.in_plan = 1 and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "union "
+                . "select ppc.id, ppc.date, ppc.shift, ".TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
                 . "round(cr.length_dirty_1) / pp.worktime * ppc.worktime as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
@@ -112,8 +110,7 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.machine_id = ".$this->machine_id
-                . " and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "order by position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
@@ -146,35 +143,6 @@ class PlanTimetable {
                 'customer' => $row['customer'], 
                 'laminations' => $laminations, 
                 'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
-            
-            // Если случайно в каком-то расчёте shift не day и не night, автоматически устанавливаем его в day
-            if($row['shift'] != 'day' && $row['shift'] != 'night') {
-                if($row['type'] == TYPE_EVENT) {
-                    $sql_ = "update plan_event set shift = 'day' where id = ".$row['id'];
-                    $executer_ = new Executer($sql_);
-                    $error_message = $executer_->error;
-                }
-                elseif($row['type'] == TYPE_EDITION) {
-                    $sql_ = "update plan_edition set shift = 'day' where id = ".$row['id'];
-                    $executer_ = new Executer($sql_);
-                    $error_message = $executer_->error;
-                }
-                elseif($row['type'] == TYPE_CONTINUATION) {
-                    $sql_ = "update plan_continuation set shift = 'day' where id = ".$row['id'];
-                }
-                
-                if(empty($error_message)) {
-                    if(!array_key_exists($row['date'], $this->editions)) {
-                        $this->editions[$row['date']] = array();
-                    }
-                    
-                    if(!array_key_exists('day', $this->editions[$row['date']])) {
-                        $this->editions[$row['date']]['day'] = array();
-                    }
-                    
-                    array_push($this->editions[$row['date']]['day'], $this->editions[$row['date']][$row['shift']]);
-                }
-            }
         }
         
         // Даты и смены

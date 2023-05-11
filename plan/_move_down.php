@@ -9,21 +9,12 @@ $error = '';
 $sql = "";
 
 if($shift == 'day') {
-    $sql = "select pe.id, pe.date, pe.shift "
-            . "from plan_edition pe "
-            . "inner join calculation c on pe.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pe.date >= '$date'";
+    $sql = "select id, date, shift from plan_edition where machine_id = $machine_id and date >= '$date'";
 }
 elseif($shift == 'night') {
-    $sql = "select pe.id, pe.date, pe.shift "
-            . "from plan_edition pe "
-            . "inner join calculation c on pe.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pe.date = '$date' and pe.shift = 'night' "
+    $sql = "select id, date, shift from plan_edition where machine_id = $machine_id and date = '$date' and shift = 'night' "
             . "union "
-            . "select pe.id, pe.date, pe.shift "
-            . "from plan_edition pe "
-            . "inner join calculation c on pe.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pe.date > '$date'";
+            . "select id, date, shift from plan_edition where machine_id = $machine_id and date > '$date'";
 }
 
 $grabber = new Grabber($sql);
@@ -50,21 +41,18 @@ if($shift == 'day') {
     $sql = "select pc.id, pc.date, pc.shift "
             . "from plan_continuation pc "
             . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
-            . "inner join calculation c on pe.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pc.date >= '$date'";
+            . "where pe.machine_id = $machine_id and pc.date >= '$date'";
 }
 elseif($shift == 'night') {
     $sql = "select pc.id, pc.date, pc.shift "
             . "from plan_continuation pc "
             . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
-            . "inner join calculation c on pe.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pc.date = '$date' and pc.shift = 'night' "
+            . "where pe.machine_id = $machine_id and pc.date = '$date' and pc.shift = 'night' "
             . "union "
             . "select pc.id, pc.date, pc.shift "
             . "from plan_continuation pc "
             . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
-            . "inner join calculation c on pe.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pc.date > '$date'";
+            . "where pe.machine_id = $machine_id and pc.date > '$date'";
 }
 
 $grabber = new Grabber($sql);
@@ -88,12 +76,12 @@ foreach($rows as $row) {
 $sql = "";
 
 if($shift == 'day') {
-    $sql = "select id, date, shift from plan_event where machine_id = $machine_id and date >= '$date'";
+    $sql = "select id, date, shift from plan_event where in_plan = 1 and machine_id = $machine_id and date >= '$date'";
 }
 elseif($shift == 'night') {
-    $sql = "select id, date, shift from plan_event where machine_id = $machine_id and date = '$date' and shift = 'night' "
+    $sql = "select id, date, shift from plan_event where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = 'night' "
             . "union "
-            . "select id, date, shift from plan_event where machine_id = $machine_id and date > '$date'";
+            . "select id, date, shift from plan_event where in_plan = 1 and machine_id = $machine_id and date > '$date'";
 }
 
 $grabber = new Grabber($sql);
@@ -117,21 +105,12 @@ foreach($rows as $row) {
 $sql = "";
 
 if($shift == 'day') {
-    $sql = "select pp.id, pp.date, pp.shift "
-            . "from plan_part pp "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pp.date >= '$date'";
+    $sql = "select id, date, shift from plan_part where in_plan = 1 and machine_id = $machine_id and date >= '$date'";
 }
 elseif($shift == 'night') {
-    $sql = "select pp.id, pp.date, pp.shift "
-            . "from plan_part pp "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pp.date = '$date' and pp.shift = 'night' "
+    $sql = "select id, date, shift from plan_part where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = 'night' "
             . "union "
-            . "select pp.id, pp.date, pp.shift "
-            . "from plan_part pp "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and pp.date > '$date'";
+            . "select id, date, shift from plan_part where in_plan = 1 and machine_id = $machine_id and date > '$date'";
 }
 
 $grabber = new Grabber($sql);
@@ -158,21 +137,18 @@ if($shift == 'day') {
     $sql = "select ppc.id, ppc.date, ppc.shift "
             . "from plan_part_continuation ppc "
             . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and ppc.date >= '$date'";
+            . "where pp.machine_id = $machine_id and ppc.date >= '$date'";
 }
 elseif($shift == 'night') {
     $sql = "select ppc.id, ppc.date, ppc.shift "
             . "from plan_part_continuation ppc "
             . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = 'night' "
+            . "where pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = 'night' "
             . "union "
             . "select ppc.id, ppc.date, ppc.shift "
             . "from plan_part_continuation ppc "
             . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "where c.machine_id = $machine_id and ppc.date > '$date'";
+            . "where pp.machine_id = $machine_id and ppc.date > '$date'";
 }
 
 $grabber = new Grabber($sql);

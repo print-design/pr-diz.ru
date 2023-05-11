@@ -839,7 +839,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 if(type == 'edition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -875,7 +875,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 else if(type == 'part') {
                     var part_id = ev.dataTransfer.getData('part_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -893,7 +893,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 else if(type == 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -929,7 +929,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 else if(type == 'timetablepart') {
                     var part_id = ev.dataTransfer.getData('part_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&machine_id=<?= filter_input(INPUT_GET, 'id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'id') ?>', '<?=$machine ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
