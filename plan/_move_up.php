@@ -41,7 +41,7 @@ elseif($shift == 'night') {
     $sql = "select greatest(ifnull((select max(position) from plan_edition where machine_id = $machine_id and shift = 'day' and date = '$date'), 0), "
             . "ifnull((select count(pc.id) from plan_continuation pc inner join plan_edition pe on pc.plan_edition_id = pe.id where pe.machine_id = $machine_id and pc.shift = 'day' and pc.date = '$date'), 0), "
             . "ifnull((select max(position) from plan_event where in_plan = 1 and machine_id = $machine_id and shift = 'day' and date = '$date'), 0), "
-            . "ifnull((select max(position) from plan_part where in_plan = 1 and machine_id = $machine_id and shift = 'day' ahd date = '$date'), 0), "
+            . "ifnull((select max(position) from plan_part where in_plan = 1 and machine_id = $machine_id and shift = 'day' and date = '$date'), 0), "
             . "ifnull((select count(ppc.id) from plan_part_continuation ppc inner join plan_part pp on ppc.plan_part_id = pp.id where pp.machine_id = $machine_id and ppc.shift = 'day' and ppc.date = '$date'), 0))";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
