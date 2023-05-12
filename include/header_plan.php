@@ -13,15 +13,11 @@ if($count > 1) {
     $file = $substrings[$count - 1];
 }
 
-$queue_class = '';
 $print_class = '';
 $laminate_class = '';
 $cut_class = '';
 
-if($file == 'queue.php') {
-    $queue_class = ' disabled';
-}
-elseif ($file == 'print.php') {
+if ($file == 'print.php') {
     $print_class = ' disabled';
 }
 elseif ($file == 'laminate.php') {
@@ -34,9 +30,6 @@ elseif ($file == 'cut.php') {
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link<?=$queue_class ?>" href="queue.php">Очередь</a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link<?=$print_class ?>" href="print.php?id=<?=PRINTER_COMIFLEX ?>">Печать</a>
             </li>
