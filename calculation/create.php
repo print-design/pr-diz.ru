@@ -3877,7 +3877,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             }
                         });
                         
-                        laminator_width = -1;
+                        // Старая версия (на всякий случай)
+                        /*laminator_width = -1;
                         
                         if(laminator_widths.length > 0) {
                             laminator_width = Math.min.apply(null, laminator_widths);
@@ -3888,7 +3889,16 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         
                         if(laminator_width == -1) {
                             $('#lamination_roller_width').val(material_width);
+                        }*/
+
+
+                        laminator_width = 0;
+                        
+                        if(laminator_widths.length > 0) {
+                            laminator_width = Math.min.apply(null, laminator_widths);
                         }
+                        
+                        $('#lamination_roller_width').val(laminator_width);
                     }
                 }
             }
