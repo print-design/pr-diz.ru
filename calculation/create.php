@@ -3854,7 +3854,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Автоматический выбор ламинирующего вала по следующему алгоритму:
             // Кол-во ручьев * ширину ручья +5, затем должен выбираться наиболее близкий из списка вал , но в большую сторону.
-            // Если в большую сторону вала нет , то включается режим ручного ввода.
             function SelectLaminatorRoller() {
                 if(!$('#lamination_roller_width').hasClass('d-none')) {
                     var streams_number = $('#streams_number').val();
@@ -3876,21 +3875,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                return option.value;
                             }
                         });
-                        
-                        // Старая версия (на всякий случай)
-                        /*laminator_width = -1;
-                        
-                        if(laminator_widths.length > 0) {
-                            laminator_width = Math.min.apply(null, laminator_widths);
-                        }
-                        
-                        $('#lamination_roller_width').val(laminator_width);
-                        $('#lamination_roller_width').change();
-                        
-                        if(laminator_width == -1) {
-                            $('#lamination_roller_width').val(material_width);
-                        }*/
-
 
                         laminator_width = 0;
                         
