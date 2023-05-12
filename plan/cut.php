@@ -25,6 +25,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
+            <h1><?=$cut_header ?></h1>
         </div>
         <?php
         include '../include/footer.php';

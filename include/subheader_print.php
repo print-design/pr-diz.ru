@@ -1,7 +1,7 @@
 <div class="text-nowrap nav2">
     <?php
-    $print_header = '';
     $printer_id = filter_input(INPUT_GET, 'id');
+    $print_header = $printer_names[$printer_id];
     
     foreach($printers as $printer):
         $printer_class = $printer_id == $printer ? ' active' : '';

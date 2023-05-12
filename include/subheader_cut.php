@@ -1,7 +1,14 @@
 <div class="text-nowrap nav2">
     <?php
-    $cut_header = '';
     $cutter_id = filter_input(INPUT_GET, 'id');
+    $cut_header = '';
+    if(array_key_exists($cutter_id, $cutter_names)) {
+        $cut_header = "Резка &laquo;".$cutter_names[$cutter_id]."&raquo;";
+    }
+    else {
+        $cut_header = "Резка $cutter_id";
+    }
+    
     $cutter_name = '';
     
     foreach ($cutters as $cutter):
