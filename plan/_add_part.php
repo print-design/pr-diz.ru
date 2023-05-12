@@ -176,7 +176,8 @@ else {
     $max_event = $row[0];
     
     $sql = "select max(ifnull(position, 0)) from plan_part "
-            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift'";
+            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "and position < $before";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
