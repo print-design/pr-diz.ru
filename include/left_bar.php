@@ -28,7 +28,6 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     $admin_class = " active";
 }
 
-require_once '../include/machines.php';
 ?>
 <div id="left_bar">
     <a href="<?=APPLICATION ?>/" class="left_bar_item logo" title="На главную" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/logo.svg" /></a>
@@ -41,7 +40,7 @@ require_once '../include/machines.php';
     if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))):
     ?>
     <a href="<?=APPLICATION ?>/roll/" class="left_bar_item<?=$sklad_class ?>" title="Склад" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_sklad.svg" /></a>
-    <a href="<?=APPLICATION ?>/plan/print.php?id=<?=PRINTER_COMIFLEX ?>" class="left_bar_item<?=$plan_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
+    <a href="<?=APPLICATION ?>/plan/print.php?id=4" class="left_bar_item<?=$plan_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
     if(IsInRole(array('technologist', 'dev', 'administrator'))):
