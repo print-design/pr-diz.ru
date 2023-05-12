@@ -14,8 +14,9 @@ class Queue {
     
     public function Show() {
         $str_raports = '';
+        $colorfulness = 0;
         
-        // Если эта машина ZBS1, ZBS2, ZBS3, получаем список валов
+        // Если эта машина ZBS1, ZBS2, ZBS3, получаем список валов и красочность
         if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
             $sql = "select value from raport where active = 1 and machine_id = ".$this->machine_id;
             $grabber = new Grabber($sql);
@@ -26,6 +27,12 @@ class Queue {
             }
             
             $str_raports = implode(', ', $raports);
+            
+            $sql = "select colorfulness from machine where id = ".$this->machine_id;
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $colorfulness = $row[0];
+            }
         }
         
         // Если эта машина ZBS1, ZBS2, ZBS3, 
@@ -46,13 +53,10 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.status_id = ".CONFIRMED." and c.id not in (select calculation_id from plan_part) and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT;
+                . "where c.status_id = ".CONFIRMED." and c.id not in (select calculation_id from plan_part) and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT;
         if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
-            $sql .= " and c.machine_id in ($zbs_machines) and c.raport in ($str_raports)";
-        }
-        elseif($this->machine_id == PRINTER_ATLAS) {
-            $sql .= " and false";
+            $sql .= " and c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness";
         }
         else {
             $sql .= " and c.machine_id = ".$this->machine_id;
@@ -67,10 +71,10 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.status_id = ".CONFIRMED." and pp.in_plan = 0 and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT;
+                . "where c.status_id = ".CONFIRMED." and pp.in_plan = 0 and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT;
         if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
-            $sql .= " and c.machine_id in ($zbs_machines) and c.raport in ($str_raports)";
+            $sql .= " and c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness";
         }
         elseif($this->machine_id == PRINTER_ATLAS) {
             $sql .= " and false";
