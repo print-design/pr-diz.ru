@@ -1,12 +1,22 @@
 <?php
 include '../include/topscripts.php';
+include '../include/works.php';
+include '../include/machines.php';
 include './_queue.php';
 include './_plan_timetable.php';
+
+// Если не указаны work_id или machine_id, перенаправляем на печать/Comiflex
+if(empty(filter_input(INPUT_GET, 'work_id')) || empty(filter_input(INPUT_GET, 'machine_id'))) {
+    header('Location: ?work_id='.WORK_PRINTING.'&machine_id='.PRINTER_COMIFLEX);
+}
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+$work_id = filter_input(INPUT_GET, 'work_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id');
 
 // Добавление события
 if(null !== filter_input(INPUT_POST, 'add_event_submit')) {
@@ -285,13 +295,67 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
         <div style="position: fixed; top: 0; left: 0; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid">
             <?php
-            include '../include/subheader_print.php';
-            
+            $header = '';
+
+            ?>
+            <?php if($work_id == WORK_PRINTING): ?>
+            <div class="text-nowrap nav2">
+                <?php
+                $printer_id = filter_input(INPUT_GET, 'machine_id');
+                $header = $printer_names[$printer_id];
+    
+                foreach($printers as $printer):
+                    $printer_class = $printer_id == $printer ? ' active' : '';
+                ?>
+                <a href="<?= BuildQuery('machine_id', $printer) ?>" class="mr-4<?=$printer_class ?>"><?=$printer_names[$printer] ?></a>
+                <?php endforeach; ?>
+            </div>
+            <?php elseif ($work_id == WORK_LAMINATION): ?>
+            <div class="text-nowrap nav2">
+                <?php
+                $laminator_id = filter_input(INPUT_GET, 'machine_id');
+                $header = $laminator_names[$laminator_id];
+    
+                foreach($laminators as $laminator):
+                    $laminator_class = $laminator_id == $laminator ? ' active' : '';
+                ?>
+                <a href="<?= BuildQuery('machine_id', $laminator) ?>" class="mr-4<?=$laminator_class ?>"><?=$laminator_names[$laminator] ?></a>
+                <?php endforeach; ?>
+            </div>
+            <?php elseif($work_id == WORK_CUTTING): ?>
+            <div class="text-nowrap nav2">
+            <?php
+                $cutter_id = filter_input(INPUT_GET, 'machine_id');
+                if(array_key_exists($cutter_id, $cutter_names)) {
+                    $_header = "Резка &laquo;".$cutter_names[$cutter_id]."&raquo;";
+                }
+                else {
+                    $header = "Резка $cutter_id";
+                }
+    
+                $cutter_name = '';
+    
+                foreach ($cutters as $cutter):
+                if(array_key_exists($cutter, $cutter_names)) {
+                    $cutter_name = "Резка &laquo;".$cutter_names[$cutter]."&raquo;";
+                }
+                else {
+                    $cutter_name = "Резка $cutter";
+                }
+    
+                $cutter_class = $cutter_id == $cutter ? ' active' : '';
+                ?>
+                <a href="<?= BuildQuery('machine_id', $cutter) ?>" class="mr-4<?=$cutter_class ?>"><?=$cutter_name ?></a>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+            <hr />
+            <?php
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1><?=$print_header ?></h1>
+            <h1><?=$header ?></h1>
             <div class="wrapper" style="position: absolute; top: 170px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
                 <nav id="sidebar">
                     <div id="sidebar_toggle_button">
