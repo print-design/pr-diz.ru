@@ -6,9 +6,11 @@ require_once '../include/machines.php';
 require_once './_types.php';
 
 class Queue {
+    private $work_id = null;
     private $machine_id = null;
     
-    public function __construct($machine_id) {
+    public function __construct($work_id, $machine_id) {
+        $this->work_id = $work_id;
         $this->machine_id = $machine_id;
     }
     
@@ -17,7 +19,7 @@ class Queue {
         $colorfulness = 0;
         
         // Если эта машина ZBS1, ZBS2, ZBS3, получаем список валов и красочность
-        if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
+        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
             $sql = "select value from raport where active = 1 and machine_id = ".$this->machine_id;
             $grabber = new Grabber($sql);
             $result = $grabber->result;
@@ -43,7 +45,7 @@ class Queue {
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
                 . "'' first_name, '' last_name "
                 . "from plan_event "
-                . "where in_plan = 0 and machine_id = ".$this->machine_id
+                . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
                 . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
@@ -53,8 +55,8 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where c.status_id = ".CONFIRMED." and c.id not in (select calculation_id from plan_part) and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT;
-        if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
+                . "where c.status_id = ".CONFIRMED." and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id.") and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT;
+        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
             $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
         }
@@ -72,7 +74,7 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.status_id = ".CONFIRMED." and pp.in_plan = 0 and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT;
-        if($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3) {
+        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
             $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
         }

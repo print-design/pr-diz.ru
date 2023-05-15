@@ -3,6 +3,7 @@ require_once '../include/topscripts.php';
 require_once '../calculation/status_ids.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
+$work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
@@ -10,6 +11,7 @@ $before = filter_input(INPUT_GET, 'before');
 $error = '';
 
 class Edition {
+    public $WorkId;
     public $MachineId;
     public $Date;
     public $Shift;
@@ -34,6 +36,7 @@ if($row = $fetcher->Fetch()) {
 // увеличиваем позицию на 1 у следующего тиража или события и всех следующих за ним
 // и устанавливаем текущую позицию на 1 больше, чем максимальная позиция смены из тех, что меньше следующей позиции.
 $edition = new Edition();
+$edition->WorkId = $work_id;
 $edition->MachineId = $machine_id;
 $edition->Date = $date;
 $edition->Shift = $shift;
@@ -47,7 +50,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_part_continuation = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
-            . "where machine_id = $machine_id and date = '$date' and shift = '$shift'";
+            . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
@@ -60,7 +63,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $sql = "select count(pc.id) "
             . "from plan_continuation pc "
             . "inner join plan_edition e on pc.plan_edition_id = e.id "
-            . "where e.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
+            . "where e.work_id = $work_id and e.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
@@ -71,7 +74,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_continuation = $row[0];
     
     $sql = "select max(ifnull(position, 0)) from plan_event "
-            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift'";
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
@@ -82,7 +85,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_event = $row[0];
     
     $sql = "select max(ifnull(position, 0)) from plan_part "
-            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift'";
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
@@ -95,7 +98,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $sql = "select count(ppc.id) "
             . "from plan_part_continuation ppc "
             . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "where pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
+            . "where pp.work_id = $work_id and pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
@@ -109,7 +112,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
 }
 else {
     $sql = "update plan_edition set position = ifnull(position, 0) + 1 "
-            . "where machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position >= $before";
     $executer = new Executer($sql);
     $error = $executer->error;
@@ -119,7 +122,7 @@ else {
     }
     
     $sql = "update plan_event set position = ifnull(position, 0) + 1 "
-            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position >= $before";
     $executer = new Executer($sql);
     $error = $executer->error;
@@ -129,7 +132,7 @@ else {
     }
     
     $sql = "update plan_part set position = ifnull(position, 0) + 1 "
-            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position >= $before";
     $executer = new Executer($sql);
     $error = $executer->error;
@@ -145,7 +148,7 @@ else {
     $max_part_continuation = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
-            . "where machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position < $before";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
@@ -159,7 +162,7 @@ else {
     $sql = "select count(pc.id) "
             . "from plan_continuation pc "
             . "inner join plan_edition e on pc.plan_edition_id = e.id "
-            . "where e.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
+            . "where e.work_id = $work_id and e.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if(!$row) {
@@ -171,7 +174,7 @@ else {
     
     $sql = "select max(ifnull(position, 0)) "
             . "from plan_event "
-            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position < $before";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
@@ -183,7 +186,7 @@ else {
     $max_event = $row[0];
     
     $sql = "select max(ifnull(position, 0)) from plan_part "
-            . "where in_plan = 1 and machine_id = $machine_id and date = '$date' and shift = '$shift' "
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position < $before";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
@@ -197,7 +200,7 @@ else {
     $sql = "select count(ppc.id) "
             . "from plan_part_continuation ppc "
             . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "where pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
+            . "where pp.work_id = $work_id and pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
     $fetcher = new Fetcher($sql);
     if(!$row) {
         $error = "Ошибка при определении позиции разделённого тиража";
@@ -217,14 +220,14 @@ if($row = $fetcher->Fetch()) {
 }
 
 if($plan_edition_id > 0) {
-    $sql = "update plan_edition set machine_id = ".$edition->MachineId.", date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
+    $sql = "update plan_edition set work_id = ".$edition->WorkId." and machine_id = ".$edition->MachineId.", date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
             ." where id = $plan_edition_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 else {
-    $sql = "insert into plan_edition (calculation_id, machine_id, date, shift, worktime, position) "
-            . "values ($calculation_id, ".$edition->MachineId.", '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
+    $sql = "insert into plan_edition (calculation_id, work_id, machine_id, date, shift, worktime, position) "
+            . "values ($calculation_id, ".$edition->WorkId.", ".$edition->MachineId.", '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
     $executer = new Executer($sql);
     $error = $executer->error;
     

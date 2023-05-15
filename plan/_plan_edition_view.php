@@ -30,10 +30,10 @@ require_once './_types.php';
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?>" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
-        <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
+        <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
-            $key = $this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
+            $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
             foreach($this->plan_shift->timetable->employees as $employee):
                 $selected = '';
             if(array_key_exists($key, $this->plan_shift->timetable->workshifts1) && $employee['id'] == $this->plan_shift->timetable->workshifts1[$key]) {
@@ -48,10 +48,10 @@ require_once './_types.php';
             ?>
         </select>
         <?php if($this->plan_shift->timetable->machine == CalculationBase::COMIFLEX): ?>
-        <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
+        <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
-            $key = $this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
+            $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
             foreach($this->plan_shift->timetable->employees as $employee):
                 $selected = '';
             if(array_key_exists($key, $this->plan_shift->timetable->workshifts2) && $employee['id'] == $this->plan_shift->timetable->workshifts2[$key]) {

@@ -55,9 +55,10 @@ $date = '';
 $shift = '';
 $worktime = 0;
 $plan_edition_id = 0;
+$work_id = 0;
 $machine_id = 0;
 
-$sql = "select pc.date, pc.shift, pc.worktime, pc.plan_edition_id, pe.machine_id "
+$sql = "select pc.date, pc.shift, pc.worktime, pc.plan_edition_id, pe.work_id, pe.machine_id "
         . "from plan_continuation pc "
         . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
         . "where pc.id = $id";
@@ -67,6 +68,7 @@ if($row = $fetcher->Fetch()) {
     $shift = $row['shift'];
     $worktime = $row['worktime'];
     $plan_edition_id = $row['plan_edition_id'];
+    $work_id = $row['work_id'];
     $machine_id = $row['machine_id'];
 }
 
@@ -85,19 +87,19 @@ if($continuation_time > 0) {
     
     // Увеличиваем position у всех тиражей данной смены
     $sql = "update plan_edition set position = ifnull(position, 1) + 1 "
-            . "where date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."' and machine_id = $machine_id";
+            . "where work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
     $executer = new Executer($sql);
     $error = $executer->error;
     
     // Увеличиваем position у всех событий данной смены
     $sql = "update plan_event set position = ifnull(position, 1) + 1 "
-            . "where in_plan = 1 and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."' and machine_id = $machine_id";
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
     $executer = new Executer($sql);
     $error = $executer->error;
     
     // Увеличиваем position у всех разделённых тиражей данной смены
     $sql = "update plan_part set position = ifnull(position, 1) + 1 "
-            . "where in_plan = 1 and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."' and machine_id = $machine_id";
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
     $executer = new Executer($sql);
     $error = $executer->error;
     

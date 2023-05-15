@@ -1,32 +1,20 @@
 <?php
 include '../include/left_bar.php';
-
-$print_class = '';
-$laminate_class = '';
-$cut_class = '';
-
-if ($work_id == WORK_PRINTING) {
-    $print_class = ' disabled';
-}
-elseif ($work_id == WORK_LAMINATION) {
-    $laminate_class = ' disabled';
-}
-elseif ($work_id == WORK_CUTTING) {
-    $cut_class = ' disabled';
-}
 ?>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
+            <?php
+            foreach($works as $work):
+                $work_class = '';
+                if($work_id == $work) {
+                    $work_class = ' disabled';
+                }
+            ?>
             <li class="nav-item">
-                <a class="nav-link<?=$print_class ?>" href="?work_id=<?=WORK_PRINTING ?>&machine_id=<?=PRINTER_COMIFLEX ?>">Печать</a>
+                <a class="nav-link<?=$work_class ?>" href="?work_id=<?=$work ?>"><?=$work_names[$work] ?></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$laminate_class ?>" href="?work_id=<?=WORK_LAMINATION ?>&machine_id=<?=LAMINATOR_SOLVENT ?>">Ламинация</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$cut_class ?>" href="?work_id=<?=WORK_CUTTING ?>&machine_id=<?=CUTTER_ATLAS ?>">Резка</a>
-            </li>
+            <?php endforeach; ?>
         </ul>
         <div class="ml-auto"></div>
         <?php

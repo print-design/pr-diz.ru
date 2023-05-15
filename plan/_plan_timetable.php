@@ -1,5 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
+require_once '../include/machines.php';
 require_once './_plan_date.php';
 require_once './_types.php';
 require_once '../calculation/calculation.php';
@@ -8,25 +9,19 @@ require_once '../calculation/status_ids.php';
 class PlanTimetable {
     public $dateFrom;
     public $dateTo;
+    public $work_id;
     public $machine_id;
-    public $machine;
     public $plan_dates = array();
     public $employees = array();
     public $workshifts1 = array();
     public $workshifts2 = array();
     public $editions = array();
 
-    public function __construct($machine_id, $dateFrom, $dateTo) {
+    public function __construct($work_id, $machine_id, $dateFrom, $dateTo) {
+        $this->work_id = $work_id;
         $this->machine_id = $machine_id;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
-        
-        // Машина
-        $sql = "select m.shortname machine from machine m where id = $machine_id";
-        $fetcher = new Fetcher($sql);
-        while($row = $fetcher->Fetch()) {
-            $this->machine = $row['machine'];
-        }
         
         // Работники
         $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
@@ -39,23 +34,23 @@ class PlanTimetable {
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
                 . "left join plan_employee e on ws.employee1_id = e.id "
-                . "where ws.machine_id = ".$this->machine_id
+                . "where ws.work_id = ".$this->work_id." and ws.machine_id = ".$this->machine_id
                 ." and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
-            $this->workshifts1[$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
+            $this->workshifts1[$this->work_id.'_'.$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
         }
         
         // Работники2
-        if($this->machine == CalculationBase::COMIFLEX) {
+        if($this->work_id == WORK_PRINTING && $this->machine_id == PRINTER_COMIFLEX) {
             $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                     . "from plan_workshift2 ws "
                     . "left join plan_employee e on ws.employee2_id = e.id "
-                    . "where ws.machine_id = ".$this->machine_id
+                    . "where ws.work_id = ".$this->work_id." and ws.machine_id = ".$this->machine_id
                     ." and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()) {
-                $this->workshifts2[$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
+                $this->workshifts2[$this->work_id.'_'.$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
             }
         }
         
@@ -69,13 +64,13 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select ev.id, ev.date, ev.shift, ".TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
                 . "0 as length_dirty_1, '' as customer, '' as first_name, '' as last_name, "
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
                 . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name "
-                . "from plan_event ev where in_plan = 1 and machine_id = ".$this->machine_id." and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and ev.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "from plan_event ev where ev.in_plan = 1 and ev.work_id = ".$this->work_id." and ev.machine_id = ".$this->machine_id." and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and ev.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pc.id, pc.date, pc.shift, ".TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
                 . "round(cr.length_dirty_1) / round(cr.work_time_1, 2) * pc.worktime as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
@@ -87,7 +82,7 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pp.id, pp.date, pp.shift, ".TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
                 . "if(isnull(pp.worktime_continued), round(cr.length_dirty_1, 2), round(cr.length_dirty_1) / pp.worktime * pp.worktime_continued) as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
@@ -98,7 +93,7 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where pp.in_plan = 1 and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where pp.in_plan = 1 and pp.work_id = ".$this->work_id." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select ppc.id, ppc.date, ppc.shift, ".TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
                 . "round(cr.length_dirty_1) / pp.worktime * ppc.worktime as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
@@ -110,7 +105,7 @@ class PlanTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where pp.work_id = ".$this->work_id." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "order by position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {

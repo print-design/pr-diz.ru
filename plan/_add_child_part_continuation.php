@@ -55,9 +55,10 @@ $date = '';
 $shift = '';
 $worktime = 0;
 $plan_part_id = 0;
+$work_id = 0;
 $machine_id = 0;
 
-$sql = "select ppc.date, ppc.shift, ppc.worktime, ppc.plan_part_id, pp.machine_id "
+$sql = "select ppc.date, ppc.shift, ppc.worktime, ppc.plan_part_id, pp.work_id, pp.machine_id "
         . "from plan_part_continuation ppc "
         . "inner join plan_part pp on ppc.plan_part_id = pp.id "
         . "where ppc.id = $id";
@@ -67,6 +68,7 @@ if($row = $fetcher->Fetch()) {
     $shift = $row['shift'];
     $worktime = $row['worktime'];
     $plan_part_id = $row['plan_part_id'];
+    $work_id = $row['work_id'];
     $machine_id = $row['machine_id'];
 }
 
@@ -85,19 +87,19 @@ if($continuation_time > 0) {
     
     // Увеличиваем position у всех тиражей данной смены
     $sql = "update plan_edition set position = ifnull(position, 1) + 1 "
-            . "where date = '".$plan_part_continuation->date."' and shift = '".$plan_part_continuation->shift."' and machine_id = $machine_id";
+            . "where work_id = $work_id and machine_id = $machine_id and date = '".$plan_part_continuation->date."' and shift = '".$plan_part_continuation->shift."'";
     $executer = new Executer($sql);
     $error = $executer->error;
     
     // Увеличиваем position у всех событий данной смены
     $sql = "update plan_event set position = ifnull(position, 1) + 1 "
-            . "where in_plan = 1 and date = '".$plan_part_continuation->date."' and shift = '".$plan_part_continuation->shift."' and machine_id = $machine_id";
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_part_continuation->date."' and shift = '".$plan_part_continuation->shift."'";
     $executer = new Executer($sql);
     $error = $executer->error;
     
     // Увеличиваем position у всех разделённых тиражей данной смены
     $sql = "update plan_part set position = ifnull(position, 1) + 1 "
-            . "where in_plan = 1 and date = '".$plan_part_continuation->date."' and shift = '".$plan_part_continuation->shift."' and machine_id = $machine_id";
+            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_part_continuation->date."' and shift = '".$plan_part_continuation->shift."'";
     $executer = new Executer($sql);
     $error = $executer->error;
     

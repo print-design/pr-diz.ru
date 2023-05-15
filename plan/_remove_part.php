@@ -5,7 +5,7 @@ require_once '../calculation/status_ids.php';
 $part_id = filter_input(INPUT_GET, 'part_id');
 $error = '';
 
-$sql = "update plan_part set in_plan = 0, machine_id = null, date = null, shift = null, position = null where id = $part_id";
+$sql = "update plan_part set in_plan = 0, work_id = null, machine_id = null, date = null, shift = null, position = null where id = $part_id";
 $executer = new Executer($sql);
 $error = $executer->error;
 
