@@ -327,7 +327,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             <?php
                 $cutter_id = filter_input(INPUT_GET, 'machine_id');
                 if(array_key_exists($cutter_id, $cutter_names)) {
-                    $_header = "Резка &laquo;".$cutter_names[$cutter_id]."&raquo;";
+                    $header = "Резка &laquo;".$cutter_names[$cutter_id]."&raquo;";
                 }
                 else {
                     $header = "Резка $cutter_id";
