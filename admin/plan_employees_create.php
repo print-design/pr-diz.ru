@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include '../plan/roles.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator'))) {
@@ -84,15 +85,11 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                         <select id="role_id" name="role_id" class="form-control" required="required">
                             <option value="" hidden="hidden">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
                             <?php
-                            $sql = "select id, name from plan_role order by id";
-                            $grabber = new Grabber($sql);
-                            $roles = $grabber->result;
-                            
                             foreach($roles as $role):
                                 $selected = '';
-                                if(filter_input(INPUT_POST, 'role_id') == $role['id']) $selected = " selected='selected'";
+                                if(filter_input(INPUT_POST, 'role_id') == $role) $selected = " selected='selected'";
                             ?>
-                            <option value="<?=$role['id'] ?>"<?=$selected ?>><?=$role['name'] ?></option>
+                            <option value="<?=$role ?>"<?=$selected ?>><?=$role_names[$role] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

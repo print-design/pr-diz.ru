@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include '../plan/roles.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -7,22 +8,17 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 }
 
 // Получение объекта
-$sql = "select r.id role_id, r.plural role, e.id employee_id, e.first_name, e.last_name, e.phone, e.active "
-        . "from plan_role r "
-        . "left join plan_employee e on e.role_id = r.id "
-        . "order by r.id, e.active desc, e.last_name";
+$employees = array();
+foreach($roles as $role) {
+    $employees[$role] = array();
+}
+
+$sql = "select id, first_name, last_name, role_id, phone, active "
+        . "from plan_employee "
+        . "order by active desc, last_name, first_name";
 $fetcher = new Fetcher($sql);
-$roles = array();
 while($row = $fetcher->Fetch()) {
-    $role_id = $row['role_id'];
-    if(!isset($roles[$role_id])) {
-        $roles[$role_id] = array('name' => $row['role'], 'employees' => array());
-    }
-    
-    $employee_id = $row['employee_id'];
-    if(!isset($roles[$role_id]['employees'][$employee_id]) && !empty($row['first_name']) && !empty($row['last_name'])) {
-        $roles[$role_id]['employees'][$employee_id] = array('first_name' => $row['first_name'], 'last_name' => $row['last_name'], 'phone' => $row['phone'], 'active' => $row['active']);
-    }
+    array_push($employees[$row['role_id']], $row);
 }
 ?>
 <!DOCTYPE html>
@@ -79,9 +75,9 @@ while($row = $fetcher->Fetch()) {
             </div>
             <?php
             $show_table_header = true;
-            foreach($roles as $r_key => $role):
+            foreach($roles as $role):
             ?>
-            <h2 id="r_<?=$r_key ?>"><?=$role['name'] ?></h2>
+            <h2 id="r_<?=$role ?>"><?=$role_plurals[$role] ?></h2>
             <table class="table">
                 <?php if($show_table_header): ?>
                 <tr>
@@ -93,14 +89,14 @@ while($row = $fetcher->Fetch()) {
                 <?php
                 endif;
                 $no_border_top = $show_table_header ? '' : " border-top: 0;";
-                foreach($role['employees'] as $e_key => $employee):
+                foreach($employees[$role] as $employee):
                 ?>
                 <tr>
                     <td style="width: 35%;<?=$no_border_top ?>"><?=$employee['last_name'] ?></td>
                     <td style="width: 35%;<?=$no_border_top ?>"><?=$employee['first_name'] ?></td>
                     <td style="width: auto;<?=$no_border_top ?>"><?=$employee['phone'] ?></td>
                     <td class="text-right switch" style="width: 80px;<?=$no_border_top ?>">
-                        <input type="checkbox" data-id="<?=$e_key ?>"<?=$employee['active'] ? " checked='checked'" : "" ?> />
+                        <input type="checkbox" data-id="<?=$employee['id'] ?>"<?=$employee['active'] ? " checked='checked'" : "" ?> />
                     </td>
                 </tr>
                 <?php
