@@ -77,15 +77,25 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     
     // Получаем общие метраж и время по нужному расчёту
     if(empty($error_message)) {
-        $sql = "select cr.length_dirty_1, cr.work_time_1 "
+        $sql = "select cr.length_dirty_1, cr.work_time_1, cr.length_dirty_2, cr.work_time_2, cr.length_dirty_3, cr.work_time_3 "
                 . "from calculation_result cr "
                 . "inner join calculation c on cr.calculation_id = c.id "
-                . "where c.id = $calculation_id and lamination = $lamination";
+                . "where c.id = $calculation_id";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         if($row = $fetcher->Fetch()) {
-            $length_total = $row['length_dirty_1'];
-            $worktime_total = $row['work_time_1'];
+            if($work_id == WORK_LAMINATION && $lamination == 1) {
+                $length_total = $row['length_dirty_2'];
+                $worktime_total = $row['work_time_2'];
+            }
+            elseif($work_id == WORK_LAMINATION && $lamination == 2) {
+                $length_total = $row['length_dirty_3'];
+                $worktime_total = $row['work_time_3'];
+            }
+            else {
+                $length_total = $row['length_dirty_1'];
+                $worktime_total = $row['work_time_1'];
+            }
         }
     
         if($length_total < $length1) {
@@ -514,7 +524,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $('.btn_divide').click(function() {
                     $('.queue_menu').slideUp();
                     var id = $(this).attr('data-id');
-                    var lamination = $(this).attr('lamination');
+                    var lamination = $(this).attr('data-lamination');
                 
                     $.ajax({ url: "_divide_form.php?id=" + id + "&lamination=" + lamination })
                             .done(function(data) {

@@ -1,25 +1,35 @@
 <?php
 require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
+include '../include/works.php';
 
 $calculation_id = filter_input(INPUT_GET, 'id');
 $lamination = filter_input(INPUT_GET, 'lamination');
+$work_id = filter_input(INPUT_GET, 'work_id');
 
-$length_dirty_1 = 0;
+$length_dirty = 0;
 
-$sql = "select c.id, cr.length_dirty_1 "
+$sql = "select c.id, cr.length_dirty_1, cr.length_dirty_2, cr.length_dirty_3 "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $length_dirty_1 = $row['length_dirty_1'];
+    if($work_id == WORK_LAMINATION && $lamination == 1) {
+        $length_dirty = $row['length_dirty_2'];
+    }
+    elseif($work_id == WORK_LAMINATION && $lamination == 2) {
+        $length_dirty = $row['length_dirty_3'];
+    }
+    else {
+        $length_dirty = $row['length_dirty_1'];
+    }
 }
 ?>
 <input type="hidden" name="calculation_id" value="<?=$calculation_id ?>" />
 <input type="hidden" name="lamination" value="<?=$lamination ?>" />
-<input type="hidden" id="divide_total" value="<?=$length_dirty_1 ?>" />
-<p><strong>Метраж исходного тиража:</strong> <?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</p>
+<input type="hidden" id="divide_total" value="<?=$length_dirty ?>" />
+<p><strong>Метраж исходного тиража:</strong> <?= CalculationBase::Display(floatval($length_dirty), 0) ?> м</p>
 <div class="form-group">
     <label for="length1">Метраж первого тиража</label>
     <input type="text" 
