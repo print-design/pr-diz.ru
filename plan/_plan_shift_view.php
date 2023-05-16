@@ -1,5 +1,5 @@
 <?php
-require_once './_roles.php';
+require_once './roles.php';
 ?>
 <tr data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-id="" data-position="">
     <?php if($this->shift == 'day'): ?>
@@ -27,7 +27,7 @@ require_once './_roles.php';
             endforeach;
             ?>
         </select>
-        <?php if($this->timetable->machine == CalculationBase::COMIFLEX): ?>
+        <?php if($this->timetable->work_id == WORK_PRINTING && $this->timetable->machine_id == PRINTER_COMIFLEX): ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-work-id="<?=$this->timetable->work_id ?>" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
