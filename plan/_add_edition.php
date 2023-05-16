@@ -213,7 +213,7 @@ else {
 
 $plan_edition_id = 0;
 
-$sql = "select id from plan_edition where calculation_id = $calculation_id";
+$sql = "select id from plan_edition where calculation_id = $calculation_id and work_id = $work_id" ;
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $plan_edition_id = $row[0];
