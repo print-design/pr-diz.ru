@@ -1,7 +1,7 @@
 <?php
 require_once './_plan_timetable.php';
 require_once './_plan_edition.php';
-require_once './_types.php';
+require_once './types.php';
 
 class PlanShift {
     public $date;

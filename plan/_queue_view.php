@@ -1,5 +1,5 @@
 <?php
-require_once './_types.php';
+require_once './types.php';
 ?>
 <div class='queue_item'>
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">

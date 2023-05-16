@@ -596,7 +596,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                         .done(function(data) {
                             $('#timetable').html(data);
                             
-                            DrawQueue(machine_id);
+                            DrawQueue(work_id, machine_id);
                         })
                         .fail(function() {
                             alert('Ошибка при перерисовке страницы');

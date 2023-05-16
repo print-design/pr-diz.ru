@@ -1,6 +1,7 @@
 <?php
-require_once './_roles.php';
-require_once './_types.php';
+require_once '../calculation/calculation.php';
+require_once './roles.php';
+require_once './types.php';
 ?>
 <tr data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-id="<?=$this->edition['calculation_id'] ?>" data-position="<?=$this->edition['position'] ?>">
     <?php if($this->plan_shift->shift == 'day' && $this->edition_key == 0): ?>
@@ -47,7 +48,7 @@ require_once './_types.php';
             endforeach;
             ?>
         </select>
-        <?php if($this->plan_shift->timetable->machine == CalculationBase::COMIFLEX): ?>
+        <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING && $this->plan_shift->timetable->machine_id == PRINTER_COMIFLEX): ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php

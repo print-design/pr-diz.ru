@@ -2,9 +2,8 @@
 require_once '../include/topscripts.php';
 require_once '../include/machines.php';
 require_once './_plan_date.php';
-require_once './_types.php';
-require_once '../calculation/calculation.php';
-require_once '../calculation/status_ids.php';
+require_once '../include/works.php';
+require_once './types.php';
 
 class PlanTimetable {
     public $dateFrom;

@@ -2,8 +2,9 @@
 require_once '../include/topscripts.php';
 require_once '../calculation/status_ids.php';
 require_once '../calculation/calculation.php';
+require_once '../include/works.php';
 require_once '../include/machines.php';
-require_once './_types.php';
+require_once './types.php';
 
 class Queue {
     private $work_id = null;
@@ -15,6 +16,20 @@ class Queue {
     }
     
     public function Show() {
+        switch($this->work_id) {
+            case WORK_PRINTING:
+                $this->ShowPrint();
+                break;
+            case WORK_LAMINATION:
+                $this->ShowLaminate();
+                break;
+            case WORK_CUTTING:
+                $this->ShowCut();
+                break;
+        }
+    }
+    
+    private function ShowPrint() {
         $str_raports = '';
         $colorfulness = 0;
         
@@ -101,6 +116,14 @@ class Queue {
                 require './_queue_view.php';
             }
         }
+    }
+    
+    private function ShowLaminate() {
+        //
+    }
+    
+    private function ShowCut() {
+        //
     }
 }
 ?>
