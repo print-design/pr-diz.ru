@@ -213,14 +213,14 @@ else {
 
 $plan_edition_id = 0;
 
-$sql = "select id from plan_edition where calculation_id = $calculation_id and work_id = $work_id" ;
+$sql = "select id from plan_edition where calculation_id = $calculation_id and work_id = $work_id and machine_id = $machine_id" ;
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $plan_edition_id = $row[0];
 }
 
 if($plan_edition_id > 0) {
-    $sql = "update plan_edition set work_id = ".$edition->WorkId." and machine_id = ".$edition->MachineId.", date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
+    $sql = "update plan_edition set work_id = ".$edition->WorkId.", machine_id = ".$edition->MachineId.", date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
             ." where id = $plan_edition_id";
     $executer = new Executer($sql);
     $error = $executer->error;
