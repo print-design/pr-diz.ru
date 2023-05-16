@@ -1,8 +1,10 @@
 <?php
 require_once '../include/topscripts.php';
 require_once '../calculation/status_ids.php';
+require_once '../include/works.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
+$lamination = filter_input(INPUT_GET, 'lamination');
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 $date = filter_input(INPUT_GET, 'date');
@@ -21,14 +23,18 @@ class Edition {
 
 // Определяем размер расчёта
 $work_time_1 = '';
+$work_time_2 = '';
+$work_time_3 = '';
 
-$sql = "select cr.work_time_1 "
+$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3 "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $work_time_1 = round($row['work_time_1'], 2);
+    $work_time_2 = round($row['work_time_2'], 2);
+    $work_time_3 = round($row['work_time_3'], 2);
 }
 
 // Если не указываем следующую позицию, то position - на 1 больше, чем максимальная позиция данной смены.
@@ -40,7 +46,16 @@ $edition->WorkId = $work_id;
 $edition->MachineId = $machine_id;
 $edition->Date = $date;
 $edition->Shift = $shift;
-$edition->WorkTime = $work_time_1;
+
+if($work_id == WORK_PRINTING) {
+    $edition->WorkTime = $work_time_1;
+}
+elseif($work_id == WORK_LAMINATION && $lamination == 1) {
+    $edition->WorkTime = $work_time_2;
+}
+elseif($work_id == WORK_LAMINATION && $lamination == 2) {
+    $edition->WorkTime = $work_time_3;
+}
 
 if(empty($before) && $before !== 0 && $before !== '0') {
     $max_edition = 0;
@@ -213,7 +228,7 @@ else {
 
 $plan_edition_id = 0;
 
-$sql = "select id from plan_edition where calculation_id = $calculation_id and work_id = $work_id and machine_id = $machine_id" ;
+$sql = "select id from plan_edition where calculation_id = $calculation_id and lamination = $lamination and work_id = $work_id and machine_id = $machine_id" ;
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $plan_edition_id = $row[0];
@@ -226,12 +241,12 @@ if($plan_edition_id > 0) {
     $error = $executer->error;
 }
 else {
-    $sql = "insert into plan_edition (calculation_id, work_id, machine_id, date, shift, worktime, position) "
-            . "values ($calculation_id, ".$edition->WorkId.", ".$edition->MachineId.", '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
+    $sql = "insert into plan_edition (calculation_id, lamination, work_id, machine_id, date, shift, worktime, position) "
+            . "values ($calculation_id, $lamination, ".$edition->WorkId.", ".$edition->MachineId.", '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    if(empty($error)) {
+    if(empty($error) && $work_id = WORK_PRINTING) {
         $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;

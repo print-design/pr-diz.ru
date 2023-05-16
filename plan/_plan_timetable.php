@@ -55,9 +55,13 @@ class PlanTimetable {
         
         // Тиражи
         $sql = "select e.id id, e.date, e.shift, ".TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
-                . "if(isnull(e.worktime_continued), round(cr.length_dirty_1), round(cr.length_dirty_1) / e.worktime * e.worktime_continued) as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
+                . "if(isnull(e.worktime_continued), round(cr.length_dirty_1), round(cr.length_dirty_1) / e.worktime * e.worktime_continued) as length_dirty_1, "
+                . "if(isnull(e.worktime_continued), round(cr.length_dirty_2), round(cr.length_dirty_2) / e.worktime * e.worktime_continued) as length_dirty_2, "
+                . "if(isnull(e.worktime_continued), round(cr.length_dirty_3), round(cr.length_dirty_3) / e.worktime * e.worktime_continued) as length_dirty_3, "
+                . "cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
-                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "e.lamination "
                 . "from plan_edition e "
                 . "inner join calculation c on e.calculation_id = c.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -66,15 +70,23 @@ class PlanTimetable {
                 . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select ev.id, ev.date, ev.shift, ".TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as ink_number, 0 as status_id, "
-                . "0 as length_dirty_1, '' as customer, '' as first_name, '' as last_name, "
+                . "0 as length_dirty_1, "
+                . "0 as length_dirty_2, "
+                . "0 as length_dirty_3, "
+                . "'' as customer, '' as first_name, '' as last_name, "
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
-                . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name "
+                . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name, "
+                . "0 as lamination "
                 . "from plan_event ev where ev.in_plan = 1 and ev.work_id = ".$this->work_id." and ev.machine_id = ".$this->machine_id." and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and ev.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pc.id, pc.date, pc.shift, ".TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
-                . "round(cr.length_dirty_1) / round(cr.work_time_1, 2) * pc.worktime as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
+                . "round(cr.length_dirty_1) / round(cr.work_time_1, 2) * pc.worktime as length_dirty_1, "
+                . "round(cr.length_dirty_2) / round(cr.work_time_2, 2) * pc.worktime as length_dirty_2, "
+                . "round(cr.length_dirty_3) / round(cr.work_time_3, 2) * pc.worktime as length_dirty_3, "
+                . "cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
-                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "e.lamination "
                 . "from plan_continuation pc "
                 . "inner join plan_edition e on pc.plan_edition_id = e.id "
                 . "inner join calculation c on e.calculation_id = c.id "
@@ -84,9 +96,13 @@ class PlanTimetable {
                 . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pp.id, pp.date, pp.shift, ".TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
-                . "if(isnull(pp.worktime_continued), round(cr.length_dirty_1, 2), round(cr.length_dirty_1) / pp.worktime * pp.worktime_continued) as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
+                . "if(isnull(pp.worktime_continued), round(cr.length_dirty_1, 2), round(cr.length_dirty_1) / pp.worktime * pp.worktime_continued) as length_dirty_1, "
+                . "if(isnull(pp.worktime_continued), round(cr.length_dirty_2, 2), round(cr.length_dirty_2) / pp.worktime * pp.worktime_continued) as length_dirty_2, "
+                . "if(isnull(pp.worktime_continued), round(cr.length_dirty_3, 2), round(cr.length_dirty_3) / pp.worktime * pp.worktime_continued) as length_dirty_3, "
+                . "cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
-                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "pp.lamination "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -95,9 +111,13 @@ class PlanTimetable {
                 . "where pp.in_plan = 1 and pp.work_id = ".$this->work_id." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select ppc.id, ppc.date, ppc.shift, ".TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, 0 as status_id, "
-                . "round(cr.length_dirty_1) / pp.worktime * ppc.worktime as length_dirty_1, cus.name customer, u.first_name, u.last_name, "
+                . "round(cr.length_dirty_1) / pp.worktime * ppc.worktime as length_dirty_1, "
+                . "round(cr.length_dirty_2) / pp.worktime * ppc.worktime as length_dirty_2, "
+                . "round(cr.length_dirty_3) / pp.worktime * ppc.worktime as length_dirty_3, "
+                . "cus.name customer, u.first_name, u.last_name, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
-                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "pp.lamination "
                 . "from plan_part_continuation ppc "
                 . "inner join plan_part pp on ppc.plan_part_id = pp.id "
                 . "inner join calculation c on pp.calculation_id = c.id "
@@ -124,19 +144,10 @@ class PlanTimetable {
                 $laminations = '1';
             }
             
-            array_push($this->editions[$row['date']][$row['shift']], array('id' => $row['id'], 
-                'type' => $row['type'], 
-                'has_continuation' => $row['has_continuation'], 
-                'worktime' => $row['worktime'], 
-                'position' => $row['position'],
-                'calculation_id' => $row['calculation_id'], 
-                'calculation' => $row['calculation'], 
-                'raport' => $row['raport'], 
-                'ink_number' => $row['ink_number'], 
-                'length_dirty_1' => $row['length_dirty_1'], 
-                'customer' => $row['customer'], 
-                'laminations' => $laminations, 
-                'manager' => $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.'));
+            $row['laminations'] = $laminations;
+            $row['manager'] = $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.';
+            
+            array_push($this->editions[$row['date']][$row['shift']], $row);
         }
         
         // Даты и смены

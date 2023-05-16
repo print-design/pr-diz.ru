@@ -5,9 +5,9 @@ require_once './types.php';
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
         <div class="d-flex justify-content-start">
             <?php if($row['type'] == TYPE_EDITION): ?>
-            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
             <?php elseif ($row['type'] == TYPE_PART): ?>
-            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" draggable="true" ondragstart="DragPart(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" draggable="true" ondragstart="DragPart(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
             <?php endif; ?>
             <div>
                 <div style="font-weight: bold; font-size: large; line-height: 1.4rem; margin-bottom: 0.5rem;"><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
@@ -24,10 +24,11 @@ require_once './types.php';
                         </div>
                         <div class="command">
                             <?php if($row['type'] == TYPE_EDITION): ?>
-                            <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
+                            <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
                             <?php elseif($row['type'] == TYPE_PART): ?>
                             <form method="post">
                                 <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
+                                <input type="hidden" name="lamination" value="<?=$row['lamination'] ?>" />
                                 <button type="submit" class="btn btn-link h-25" name="undivide_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Отменить разделение</button>
                             </form>
                             <?php endif; ?>
@@ -39,7 +40,7 @@ require_once './types.php';
         </div>
     </div>
     <div class="row">
-        <div class="col-6"><strong>Метраж:</strong> <?= CalculationBase::Display(intval($row['length_dirty_1']), 0) ?></div>
+        <div class="col-6"><strong>Метраж:</strong> <?= CalculationBase::Display(intval($row['length']), 0) ?></div>
         <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
     </div>
     <div class="row">

@@ -60,13 +60,14 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
 // Разделение заказа
 if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    $lamination = filter_input(INPUT_POST, 'lamination');
     $length1 = filter_input(INPUT_POST, 'length1');
     
     $length_total = 0;
     $worktime_total = 0;
     
     // Проверяем, что этот заказ ещё не разделён
-    $sql = "select count(id) from plan_part where calculation_id = $calculation_id";
+    $sql = "select count(id) from plan_part where calculation_id = $calculation_id and lamination = $lamination";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
@@ -79,7 +80,7 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
         $sql = "select cr.length_dirty_1, cr.work_time_1 "
                 . "from calculation_result cr "
                 . "inner join calculation c on cr.calculation_id = c.id "
-                . "where c.id = $calculation_id";
+                . "where c.id = $calculation_id and lamination = $lamination";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         if($row = $fetcher->Fetch()) {
@@ -99,8 +100,8 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     if(empty($error_message)) {
         $worktime1 = $worktime_total * $length1 / $length_total;
         
-        $sql = "insert into plan_part (calculation_id, length, in_plan, worktime) "
-                . "values ($calculation_id, $length1, 0, $worktime1)";
+        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, worktime) "
+                . "values ($calculation_id, $lamination, $length1, 0, $worktime1)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -108,8 +109,8 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     if(empty($error_message)) {
         $worktime2 = $worktime_total * $length2 / $length_total;
         
-        $sql = "insert into plan_part (calculation_id, length, in_plan, worktime) "
-                . "values ($calculation_id, $length2, 0, $worktime2)";
+        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, worktime) "
+                . "values ($calculation_id, $lamination, $length2, 0, $worktime2)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -118,8 +119,9 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
 // Отмена разделения заказа
 if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    $lamination = filter_input(INPUT_POST, 'lamination');
     
-    $sql = "delete from plan_part where calculation_id = $calculation_id";
+    $sql = "delete from plan_part where calculation_id = $calculation_id and lamination = $lamination";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
@@ -511,9 +513,10 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 // Открытие формы разделения заказа
                 $('.btn_divide').click(function() {
                     $('.queue_menu').slideUp();
-                    id = $(this).attr('data-id');
+                    var id = $(this).attr('data-id');
+                    var lamination = $(this).attr('lamination');
                 
-                    $.ajax({ url: "_divide_form.php?id=" + id })
+                    $.ajax({ url: "_divide_form.php?id=" + id + "&lamination=" + lamination })
                             .done(function(data) {
                                 $('#divide_modal_form').html(data);
                                 $('#divide').modal('show');
@@ -792,6 +795,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             function DragEdition(ev) {
                 dragqueue = true;
                 ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
+                ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
                 ev.dataTransfer.setData("type", "edition");
             }
             
@@ -804,11 +808,13 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             function DragPart(ev) {
                 dragqueue = true;
                 ev.dataTransfer.setData("part_id", $(ev.target).attr("data-id"));
+                ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
                 ev.dataTransfer.setData("type", "part");
             }
             
             function DragTimetableEdition(ev) {
                 ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
+                ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
                 ev.dataTransfer.setData("type", "timetableedition");
             }
             
@@ -819,6 +825,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             
             function DragTimetablePart(ev) {
                 ev.dataTransfer.setData("part_id", $(ev.target).attr("data-id"));
+                ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
                 ev.dataTransfer.setData("type", "timetablepart");
             }
             
@@ -859,8 +866,9 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 
                 if(type == 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
+                    var lamination = ev.dataTransfer.getData('lamination');
                     
-                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
+                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
                                     DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -896,7 +904,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 else if(type == 'timetablepart') {
                     var part_id = ev.dataTransfer.getData('part_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_remove_part.php?part_id=" + part_id })
+                    $.ajax({ dataType: 'JSON', url: "_remove_part.php?part_id=" + part_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
                         .done(function(remove_data) {
                             if(remove_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -925,8 +933,9 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 
                 if(type == 'edition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
+                    var lamination = ev.dataTransfer.getData('lamination');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
@@ -979,8 +988,9 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 }
                 else if(type == 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
+                    var lamination = ev.dataTransfer.getData('lamination');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');

@@ -55,18 +55,20 @@ class Queue {
         // Если эта машина ZBS1, ZBS2, ZBS3, 
         // то добавляем сюда расчёты для других машин (из списка ZBS1, ZBS2, ZBS2),
         // у которых вал присутствует в списке валов для этой машины
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length_dirty_1, 0 ink_number, 0.0 raport, "
+        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length, 0 ink_number, 0.0 raport, "
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
+                . "0 as lamination, "
                 . "'' first_name, '' last_name "
                 . "from plan_event "
                 . "where in_plan = 0"
                 . " and work_id = ".$this->work_id
                 . " and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1, c.ink_number, c.raport, "
+                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1 as length, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "0 as lamination, "
                 . "u.first_name, u.last_name "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
@@ -87,15 +89,14 @@ class Queue {
                 . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "0 as lamination, "
                 . "u.first_name, u.last_name "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where pp.in_plan = 0"
-                . " and c.status_id = ".CONFIRMED
-                . " and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT;
+                . "where pp.in_plan = 0";
         if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
             $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
@@ -126,16 +127,18 @@ class Queue {
     }
     
     private function ShowLaminate() {
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length_dirty_1, 0 ink_number, 0.0 raport, "
+        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length, 0 ink_number, 0.0 raport, "
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
-                . "'' first_name, '' last_name "
+                . "0 as lamination, "
+                . "'' as first_name, '' as last_name "
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name as customer, cr.length_dirty_1, c.ink_number, c.raport, "
+                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "1 as lamination, "
                 . "u.first_name, u.last_name "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
@@ -143,13 +146,29 @@ class Queue {
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.status_id = ".PLAN
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
-                . " and c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id.")"
-                . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id.")"
-                . " and work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                . " and c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 1)"
+                . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id." and lamination = 1)"
+                . " and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                . " union "
+                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, "
+                . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
+                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "2 as lamination, "
+                . "u.first_name, u.last_name "
+                . "from calculation c "
+                . "inner join customer cus on c.customer_id = cus.id "
+                . "inner join calculation_result cr on cr.calculation_id = c.id "
+                . "inner join user u on c.manager_id = u.id "
+                . "where c.status_id = ".PLAN
+                . " and (c.lamination2_film_variation_id is not null or (c.lamination2_individual_film_name is not null and c.lamination2_individual_film_name <> ''))"
+                . " and c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 2)"
+                . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id." and lamination = 2)"
+                . " and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
                 . " union "
                 . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, cus.name as customer, pp.length, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "pp.lamination, "
                 . "u.first_name, u.last_name "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
@@ -157,9 +176,6 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0"
-                . " and c.status_id = ".PLAN
-                . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
-                . " and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
                 . " order by position, id desc";
         $fetcher = new Fetcher($sql);
         

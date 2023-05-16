@@ -78,12 +78,12 @@ require_once './types.php';
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline border-left fordrag"<?=$drop ?>>
         <?php if($this->edition['type'] == TYPE_EDITION && !$this->edition['has_continuation']): ?>
-        <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+        <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
         <?php if($this->edition['type'] == TYPE_PART && !$this->edition['has_continuation']): ?>
-        <div draggable="true" ondragstart="DragTimetablePart(event);" data-id="<?=$this->edition['id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+        <div draggable="true" ondragstart="DragTimetablePart(event);" data-id="<?=$this->edition['id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
@@ -114,7 +114,14 @@ require_once './types.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <div class="d-flex justify-content-between">
         <div>
-            <?= "<div class='text-nowrap'>". CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0)."</div>".($this->edition['type'] == TYPE_CONTINUATION || $this->edition['type'] == TYPE_PART_CONTINUATION ? ' Допечатка' : '') ?>
+            <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING): ?>
+            <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></div>
+            <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
+            <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_2']), 0) ?></div>
+            <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
+            <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_3']), 0) ?></div>
+            <?php endif; ?>
+            <?= $this->edition['type'] == TYPE_CONTINUATION || $this->edition['type'] == TYPE_PART_CONTINUATION ? ' Допечатка' : '' ?>
         </div>
         <div>
             <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == TYPE_EDITION && !$this->edition['has_continuation']): ?>
