@@ -860,7 +860,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 if(type == 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     
-                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id })
+                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
                                     DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
