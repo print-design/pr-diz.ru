@@ -94,10 +94,14 @@ require_once './types.php';
         <?php endif; ?>
     </td>
     <?php if($this->edition['type'] == TYPE_EVENT): ?>
-    <td colspan="5" class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= $this->edition['calculation'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>></td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right" style="position: relative;"<?=$drop ?>>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
