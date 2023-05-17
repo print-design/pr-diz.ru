@@ -258,6 +258,16 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 border-radius: 0;
                 background-color: rgba(0,0,0,0);
             }
+            
+            <?php if($work_id == WORK_CUTTING): ?>
+            .cutting_hidden {
+                display: none;
+            }
+            <?php elseif($work_id == WORK_LAMINATION): ?>
+            .lamination_hidden {
+                display: none;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>

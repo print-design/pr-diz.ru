@@ -20,7 +20,7 @@ require_once './types.php';
         </div>
         <?php endif; ?>
         <div style="display: block; white-space: nowrap;">
-            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><br /><span class="font-italic"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</span>
+            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: <?=$this->plan_shift->timetable->work_id == WORK_CUTTING ? 'none' : 'block' ?>;"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</div>
         </div>
         <?php if(!$this->plan_shift->includes_continuation): ?>
         <div style="display: block; margin-top: 6px;">
@@ -111,7 +111,7 @@ require_once './types.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <div style="font-weight: bold; display: inline;"<?=$drop ?>><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden"<?=$drop ?>>
         <div class="d-flex justify-content-between">
         <div>
             <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING): ?>
@@ -183,16 +183,10 @@ require_once './types.php';
         </div>
             </div>
     </td>
-    <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING): ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?= rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?></td>
-    <?php endif; ?>
-    <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_LAMINATION): ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?=$this->edition['laminations'] ?></td>
-    <?php endif; ?>
-    <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING): ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?=$this->edition['ink_number'] ?></td>
-    <?php endif; ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>><?= rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>><?=$this->edition['laminations'] ?></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>><?=$this->edition['ink_number'] ?></td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?=$this->edition['manager'] ?></td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right"<?=$drop ?>>
         <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drop ?>>

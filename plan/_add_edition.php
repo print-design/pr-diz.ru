@@ -51,7 +51,7 @@ if($work_id == WORK_PRINTING) {
     $edition->WorkTime = $work_time_1;
 }
 elseif($work_id == WORK_CUTTING) {
-    $edition->WorkTime = $work_time_1;
+    $edition->WorkTime = 0;
 }
 elseif($work_id == WORK_LAMINATION && $lamination == 1) {
     $edition->WorkTime = $work_time_2;
