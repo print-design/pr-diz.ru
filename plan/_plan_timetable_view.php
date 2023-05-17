@@ -12,7 +12,9 @@ require_once './roles.php';
         <?php if($this->work_id == WORK_PRINTING): ?>
         <th>Вал</th>
         <?php endif; ?>
+        <?php if($this->work_id == WORK_PRINTING || $this->work_id == WORK_LAMINATION): ?>
         <th>Лам-я</th>
+        <?php endif; ?>
         <?php if($this->work_id == WORK_PRINTING): ?>
         <th>Краски</th>
         <?php endif; ?>

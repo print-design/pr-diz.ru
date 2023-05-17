@@ -186,7 +186,9 @@ require_once './types.php';
     <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING): ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?= rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?></td>
     <?php endif; ?>
+    <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_LAMINATION): ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?=$this->edition['laminations'] ?></td>
+    <?php endif; ?>
     <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING): ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?=$this->edition['ink_number'] ?></td>
     <?php endif; ?>
