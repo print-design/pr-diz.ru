@@ -60,6 +60,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
 // Разделение заказа
 if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    $work_id = filter_input(INPUT_POST, 'work_id');
     $lamination = filter_input(INPUT_POST, 'lamination');
     $length1 = filter_input(INPUT_POST, 'length1');
     
@@ -67,7 +68,7 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     $worktime_total = 0;
     
     // Проверяем, что этот заказ ещё не разделён
-    $sql = "select count(id) from plan_part where calculation_id = $calculation_id and lamination = $lamination";
+    $sql = "select count(id) from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
@@ -110,8 +111,8 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     if(empty($error_message)) {
         $worktime1 = $worktime_total * $length1 / $length_total;
         
-        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, worktime) "
-                . "values ($calculation_id, $lamination, $length1, 0, $worktime1)";
+        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, work_id, worktime) "
+                . "values ($calculation_id, $lamination, $length1, 0, $work_id, $worktime1)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -119,8 +120,8 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     if(empty($error_message)) {
         $worktime2 = $worktime_total * $length2 / $length_total;
         
-        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, worktime) "
-                . "values ($calculation_id, $lamination, $length2, 0, $worktime2)";
+        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, work_id, worktime) "
+                . "values ($calculation_id, $lamination, $length2, 0, $work_id, $worktime2)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -129,9 +130,10 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
 // Отмена разделения заказа
 if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    $work_id = filter_input(INPUT_POST, 'work_id');
     $lamination = filter_input(INPUT_POST, 'lamination');
     
-    $sql = "delete from plan_part where calculation_id = $calculation_id and lamination = $lamination";
+    $sql = "delete from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
@@ -536,7 +538,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     var id = $(this).attr('data-id');
                     var lamination = $(this).attr('data-lamination');
                 
-                    $.ajax({ url: "_divide_form.php?id=" + id + "&lamination=" + lamination })
+                    $.ajax({ url: "_divide_form.php?id=" + id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&lamination=" + lamination })
                             .done(function(data) {
                                 $('#divide_modal_form').html(data);
                                 $('#divide').modal('show');

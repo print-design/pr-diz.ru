@@ -4,6 +4,7 @@ require_once '../calculation/calculation.php';
 include '../include/works.php';
 
 $calculation_id = filter_input(INPUT_GET, 'id');
+$work_id = filter_input(INPUT_GET, 'work_id');
 $lamination = filter_input(INPUT_GET, 'lamination');
 $work_id = filter_input(INPUT_GET, 'work_id');
 
@@ -27,6 +28,7 @@ if($row = $fetcher->Fetch()) {
 }
 ?>
 <input type="hidden" name="calculation_id" value="<?=$calculation_id ?>" />
+<input type="hidden" name="work_id" value="<?=$work_id ?>" />
 <input type="hidden" name="lamination" value="<?=$lamination ?>" />
 <input type="hidden" id="divide_total" value="<?=$length_dirty ?>" />
 <p><strong>Метраж исходного тиража:</strong> <?= CalculationBase::Display(floatval($length_dirty), 0) ?> м</p>

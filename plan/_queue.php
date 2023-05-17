@@ -96,7 +96,8 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where pp.in_plan = 0";
+                . "where pp.in_plan = 0 "
+                . "and pp.work_id = ".$this->work_id;
         if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
             $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
@@ -176,7 +177,7 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0 "
-                . "and work_id = ".$this->work_id
+                . "and pp.work_id = ".$this->work_id
                 . " order by position, id desc";
         $fetcher = new Fetcher($sql);
         
@@ -237,7 +238,7 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0 "
-                . "and work_id = ".$this->work_id
+                . "and pp.work_id = ".$this->work_id
                 . " order by position, id desc";
         $fetcher = new Fetcher($sql);
         
