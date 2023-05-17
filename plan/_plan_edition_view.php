@@ -111,10 +111,10 @@ require_once './types.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <div style="font-weight: bold; display: inline;"<?=$drop ?>><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <div class="d-flex justify-content-between">
         <div>
-            <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING): ?>
+            <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING): ?>
             <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></div>
             <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
             <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_2']), 0) ?></div>

@@ -8,7 +8,7 @@ require_once './roles.php';
         <th><?= ROLE_NAMES[WORK_ROLES[$this->work_id]] ?></th>
         <th class="fordrag"></th>
         <th>Заказ</th>
-        <th class="cutting_hidden">Метраж</th>
+        <th>Метраж</th>
         <th class="cutting_hidden lamination_hidden">Вал</th>
         <th class="cutting_hidden">Лам-я</th>
         <th class="cutting_hidden lamination_hidden">Краски</th>
