@@ -238,8 +238,14 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0 "
-                . "and pp.work_id = ".$this->work_id
-                . " order by position, id desc";
+                . "and pp.work_id = ".$this->work_id;
+        if($this->machine_id == CUTTER_ATLAS) {
+            $sql .= " and c.work_type_id = ".CalculationBase::WORK_TYPE_SELF_ADHESIVE;
+        }
+        else {
+            $sql .= " and c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT;
+        }
+        $sql .= " order by position, id desc";
         $fetcher = new Fetcher($sql);
         
         while($row = $fetcher->Fetch()) {
