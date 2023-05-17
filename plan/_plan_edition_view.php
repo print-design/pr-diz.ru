@@ -40,7 +40,7 @@ require_once './types.php';
             if(array_key_exists($key, $this->plan_shift->timetable->workshifts1) && $employee['id'] == $this->plan_shift->timetable->workshifts1[$key]) {
                 $selected = " selected='selected'";
             }
-            if($employee['role_id'] == ROLE_PRINT && ($employee['active'] == 1 || $employee['id'] == $this->plan_shift->timetable->workshifts1[$key])):
+            if($employee['role_id'] == WORK_ROLES[$this->plan_shift->timetable->work_id] && ($employee['active'] == 1 || $employee['id'] == $this->plan_shift->timetable->workshifts1[$key])):
             ?>
             <option value="<?=$employee['id'] ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
             <?php

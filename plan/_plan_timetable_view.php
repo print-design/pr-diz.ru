@@ -5,7 +5,7 @@ require_once './roles.php';
     <tr>
         <th>Дата</th>
         <th>Смена</th>
-        <th><?= $role_names[$work_roles[$this->work_id]] ?></th>
+        <th><?= ROLE_NAMES[WORK_ROLES[$this->work_id]] ?></th>
         <th class="fordrag"></th>
         <th>Заказ</th>
         <th>Метраж</th>

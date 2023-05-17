@@ -5,14 +5,14 @@ include '../include/left_bar.php';
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            foreach($works as $work):
+            foreach(WORKS as $work):
                 $work_class = '';
                 if($work_id == $work) {
                     $work_class = ' disabled';
                 }
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$work_class ?>" href="?work_id=<?=$work ?>"><?=$work_names[$work] ?></a>
+                <a class="nav-link<?=$work_class ?>" href="?work_id=<?=$work ?>"><?=WORK_NAMES[$work] ?></a>
             </li>
             <?php endforeach; ?>
         </ul>

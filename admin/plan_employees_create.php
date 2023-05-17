@@ -85,11 +85,11 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                         <select id="role_id" name="role_id" class="form-control" required="required">
                             <option value="" hidden="hidden">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>
                             <?php
-                            foreach($roles as $role):
+                            foreach(ROLES as $role):
                                 $selected = '';
                                 if(filter_input(INPUT_POST, 'role_id') == $role) $selected = " selected='selected'";
                             ?>
-                            <option value="<?=$role ?>"<?=$selected ?>><?=$role_names[$role] ?></option>
+                            <option value="<?=$role ?>"<?=$selected ?>><?=ROLE_NAMES[$role] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

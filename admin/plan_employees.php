@@ -9,7 +9,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 
 // Получение объекта
 $employees = array();
-foreach($roles as $role) {
+foreach(ROLES as $role) {
     $employees[$role] = array();
 }
 
@@ -75,9 +75,9 @@ while($row = $fetcher->Fetch()) {
             </div>
             <?php
             $show_table_header = true;
-            foreach($roles as $role):
+            foreach(ROLES as $role):
             ?>
-            <h2 id="r_<?=$role ?>"><?=$role_plurals[$role] ?></h2>
+            <h2 id="r_<?=$role ?>"><?=ROLE_PLURALS[$role] ?></h2>
             <table class="table">
                 <?php if($show_table_header): ?>
                 <tr>
