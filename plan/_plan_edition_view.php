@@ -93,109 +93,114 @@ require_once './types.php';
         </div>
         <?php endif; ?>
     </td>
-    <?php if($this->edition['type'] == TYPE_EVENT): ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
+        <?php if($this->edition['type'] == TYPE_EVENT): ?>
         <?= $this->edition['calculation'] ?>
+        <?php else: ?>
+        <div style="font-weight: bold; display: inline;"<?=$drop ?>><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
+        <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-right" style="position: relative;"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
+        <?php if($this->edition['type'] != TYPE_EVENT): ?>
+        <div class="d-flex justify-content-between">
+            <div>
+                <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING): ?>
+                <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></div>
+                <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
+                <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_2']), 0) ?></div>
+                <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
+                <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_3']), 0) ?></div>
+                <?php endif; ?>
+                <?= $this->edition['type'] == TYPE_CONTINUATION || $this->edition['type'] == TYPE_PART_CONTINUATION ? ' Допечатка' : '' ?>
+            </div>
+            <div>
+                <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == TYPE_EDITION && !$this->edition['has_continuation']): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+                <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == TYPE_PART && !$this->edition['has_continuation']): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+                <?php if($this->edition['type'] == TYPE_EDITION && $this->edition['has_continuation']): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+                <?php if($this->edition['type'] == TYPE_PART && $this->edition['has_continuation']): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemovePartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+                <?php if($this->edition['type'] == TYPE_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+                <?php if($this->edition['type'] == TYPE_PART_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+                <?php if($this->edition['type'] == TYPE_CONTINUATION && $this->edition['has_continuation']): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+                <?php if($this->edition['type'] == TYPE_PART_CONTINUATION && $this->edition['has_continuation']): ?>
+                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active">
+                        <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
+                    </label>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>>
+        <?= $this->edition['type'] == TYPE_EVENT ? "" : rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>>
+        <?= $this->edition['type'] == TYPE_EVENT ? "" : $this->edition['laminations'] ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>>
+        <?= $this->edition['type'] == TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>>
+        <?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
+        <?= $this->edition['type'] == TYPE_EVENT ? "" : $this->edition['manager'] ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-right"<?=$drop ?>>
+        <?php if($this->edition['type'] == TYPE_EVENT): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
         <div class="timetable_menu text-left">
             <div class="command">
                 <button type="button" class="btn btn-link h-25" style="font-size: 14px;" onclick="javascript: DeleteEvent(<?=$this->edition['calculation_id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
             </div>
         </div>
-    </td>
-    <?php else: ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
-        <div style="font-weight: bold; display: inline;"<?=$drop ?>><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
-    </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
-        <div class="d-flex justify-content-between">
-        <div>
-            <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING): ?>
-            <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></div>
-            <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
-            <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_2']), 0) ?></div>
-            <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
-            <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_3']), 0) ?></div>
-            <?php endif; ?>
-            <?= $this->edition['type'] == TYPE_CONTINUATION || $this->edition['type'] == TYPE_PART_CONTINUATION ? ' Допечатка' : '' ?>
-        </div>
-        <div>
-            <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == TYPE_EDITION && !$this->edition['has_continuation']): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-            <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == TYPE_PART && !$this->edition['has_continuation']): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-            <?php if($this->edition['type'] == TYPE_EDITION && $this->edition['has_continuation']): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue active">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-            <?php if($this->edition['type'] == TYPE_PART && $this->edition['has_continuation']): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue active">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemovePartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-            <?php if($this->edition['type'] == TYPE_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-            <?php if($this->edition['type'] == TYPE_PART_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-            <?php if($this->edition['type'] == TYPE_CONTINUATION && $this->edition['has_continuation']): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue active">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-            <?php if($this->edition['type'] == TYPE_PART_CONTINUATION && $this->edition['has_continuation']): ?>
-            <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                <label class="btn btn-light btn-edition-continue active">
-                    <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
-                </label>
-            </div>
-            <?php endif; ?>
-        </div>
-            </div>
-    </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>><?= rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>><?=$this->edition['laminations'] ?></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>><?=$this->edition['ink_number'] ?></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>><?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?=$this->edition['manager'] ?></td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-right"<?=$drop ?>>
+        <?php else: ?>
         <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
+        <?php endif; ?>
     </td>
-    <?php endif; ?>
 </tr>
