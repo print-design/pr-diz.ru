@@ -31,15 +31,15 @@ $sql = "update plan_part set in_plan = 0, machine_id = null, date = null, shift 
 $executer = new Executer($sql);
 $error = $executer->error;
 
-// Статус устанавливаем "в плане", если есть части заказа в плане И нет частей заказа не в плане
-// Статус устанавливаем "ожидание постановки в план", если нет частей заказа в плане ИЛИ есть части заказа не в плане
+// Статус устанавливаем "в плане", если есть части заказа в плане И нет частей заказа не в плане.
+// Статус устанавливаем "ожидание постановки в план", если нет частей заказа в плане ИЛИ есть части заказа не в плане.
 // Должны выполняться следующие условия:
 // 1. тип работы "печать", а тип заказа "плёнка с печатью",
 // 2. тип работы "ламинация", а тип заказа "плёнка без печати, но с ламинацией",
 // 3. тип работы "резка", а тип заказа "плёнка без печати и без ламинации"
 if((empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_PRINT) 
         || (empty($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && $has_lamination) 
-        || (empty($error) && $work_type_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && !$has_lamination)) {
+        || (empty($error) && $work_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && !$has_lamination)) {
     $parts_in_plan = 0;
     $parts_not_in_plan = 0;
 

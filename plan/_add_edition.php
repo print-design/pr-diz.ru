@@ -1,5 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
+require_once '../calculation/calculation.php';
 require_once '../calculation/status_ids.php';
 require_once '../include/works.php';
 
@@ -21,12 +22,16 @@ class Edition {
     public $Position;
 }
 
-// Определяем размер расчёта
+// Получаем данные расчёта
 $work_time_1 = '';
 $work_time_2 = '';
 $work_time_3 = '';
 
-$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3 "
+$work_type_id = 0;
+$has_lamination = false;
+$two_laminations = false;
+
+$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3, c.work_type_id, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
@@ -35,6 +40,16 @@ if($row = $fetcher->Fetch()) {
     $work_time_1 = round($row['work_time_1'], 2);
     $work_time_2 = round($row['work_time_2'], 2);
     $work_time_3 = round($row['work_time_3'], 2);
+    
+    $work_type_id = $row['work_type_id'];
+    
+    if(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
+        $has_lamination = true;
+    }
+    
+    if(!empty($row['lamination2_film_variation_id']) || !empty($row['lamination2_individual_film_name'])) {
+        $two_laminations = true;
+    }
 }
 
 // Если не указываем следующую позицию, то position - на 1 больше, чем максимальная позиция данной смены.
@@ -249,10 +264,33 @@ else {
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    if(empty($error)) {
-        $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
-        $executer = new Executer($sql);
-        $error = $executer->error;
+    // Статус устанавливаем "в плане", если при наличии 2 ламинаций - 2 тиража, в других случаях - 1 тираж.
+    // Статус устанавливаем "ожидание постановки в план", если нет ни одного тиража по этому заказу, если там две ламинации - если менее двух тиражей.
+    // Должны выполняться следующие условия:
+    // 1. тип работы "печать", а тип заказа "плёнка с печатью",
+    // 2. тип работы "ламинация", а тип заказа "плёнка без печати, но с ламинацией",
+    // 3. тип работы "резка", а тип заказа "плёнка без печати и без ламинации"
+    if((empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_PRINT) 
+            || (empty($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && $has_lamination) 
+            || (empty($error) && $work_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && !$has_lamination)) {
+        $editions_count = 0;
+        
+        $sql = "select count(id) from plan_edition where calculation_id = $calculation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $editions_count = $row['0'];
+        }
+        
+        if(($two_laminations && $editions_count == 2) || (!$two_laminations && $editions_count == 1)) {
+            $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
+            $executer = new Executer($sql);
+            $error = $executer->error;
+        }
+        else {
+            $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
+            $executer = new Executer($sql);
+            $error = $executer->error;
+        }
     }
 }
 
