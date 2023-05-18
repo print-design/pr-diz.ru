@@ -249,7 +249,7 @@ else {
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    if(empty($error) && $work_id = WORK_PRINTING) {
+    if(empty($error)) {
         $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
