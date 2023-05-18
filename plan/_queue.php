@@ -89,7 +89,7 @@ class Queue {
                 . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
-                . "0 as lamination, "
+                . "pp.lamination, "
                 . "u.first_name, u.last_name "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
@@ -153,6 +153,9 @@ class Queue {
                 . ") or ("
                 . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
                 . " and c.status_id = ".CONFIRMED
+                . ") or ("
+                . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                . " and c.status_id = ".PLAN
                 . "))"
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " union "
@@ -174,6 +177,9 @@ class Queue {
                 . ") or ("
                 . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
                 . " and c.status_id = ".CONFIRMED
+                . ") or ("
+                . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                . " and c.status_id = ".PLAN
                 . "))"
                 . " union "
                 . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, cus.name as customer, pp.length, c.ink_number, c.raport, "
