@@ -268,9 +268,11 @@ else {
     // Статус устанавливаем "ожидание постановки в план", если нет ни одного тиража по этому заказу, если там две ламинации - если менее двух тиражей.
     // Должны выполняться следующие условия:
     // 1. тип работы "печать", а тип заказа "плёнка с печатью",
-    // 2. тип работы "ламинация", а тип заказа "плёнка без печати, но с ламинацией",
-    // 3. тип работы "резка", а тип заказа "плёнка без печати и без ламинации"
+    // 2. тип работы "печать", а тип заказа "самоклеящиеся материалы",
+    // 3. тип работы "ламинация", а тип заказа "плёнка без печати, но с ламинацией",
+    // 4. тип работы "резка", а тип заказа "плёнка без печати и без ламинации"
     if((empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_PRINT) 
+            || (empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) 
             || (empty($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && $has_lamination) 
             || (empty($error) && $work_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && !$has_lamination)) {
         $editions_count = 0;
