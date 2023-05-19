@@ -275,7 +275,7 @@ else {
             || (empty($error) && $work_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && !$has_lamination)) {
         $editions_count = 0;
         
-        $sql = "select count(id) from plan_edition where calculation_id = $calculation_id";
+        $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $editions_count = $row['0'];
