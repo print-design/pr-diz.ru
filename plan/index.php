@@ -28,7 +28,7 @@ if(empty($work_id) || empty($machine_id)) {
                 $machine_id = LAMINATOR_SOLVENT;
                 break;
             case WORK_CUTTING:
-                $machine_id = CUTTER_ATLAS;
+                $machine_id = CUTTER_1;
                 break;
         }
     }
