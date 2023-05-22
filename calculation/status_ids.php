@@ -12,6 +12,6 @@ const PLAN_LAMINATE = 9; // В плане ламинации
 const PLAN_CUT = 10; // В плане резки
 
 $status_names = array(DRAFT => "Черновик", CALCULATION => "Сделан расчёт", WAITING => "Ждём подтверждения", CONFIRMED => "Ждём постановки в план", REJECTED => "Отклонено", TECHMAP => "Составлена тех. карта", TRASH => "В корзине", PLAN_PRINT => "В плане печати", PLAN_LAMINATE => "В плане ламинации", PLAN_CUT => "В плане резки");
-$status_colors = array(DRAFT => "gray", CALCULATION => "steelblue", WAITING => "goldenrod", CONFIRMED => "mediumseagreen", REJECTED => "crimson", TECHMAP => "saddlebrown", TRASH => "black", PLAN_PRINT => "#9933ff", PLAN_LAMINATE => "red", PLAN_CUT => "brown");
-$status_icons = array(DRAFT => "fas fa-edit", CALCULATION => "fas fa-check", WAITING => "fas fa-clock", CONFIRMED => "fas fa-check-double", REJECTED => "fas fa-times-circle", TECHMAP => "fas fa-file", TRASH => "fas fa-trash-alt", PLAN_PRINT => "fas fa-list-ol", PLAN_LAMINATE => "fas fa-list-ol", PLAN_CUT => "fas fa-list-ol");
+$status_colors = array(DRAFT => "gray", CALCULATION => "steelblue", WAITING => "goldenrod", CONFIRMED => "mediumseagreen", REJECTED => "crimson", TECHMAP => "saddlebrown", TRASH => "black", PLAN_PRINT => "#9933ff", PLAN_LAMINATE => "#4d009a", PLAN_CUT => "#27004e");
+$status_icons = array(DRAFT => "fas fa-edit", CALCULATION => "fas fa-check", WAITING => "fas fa-clock", CONFIRMED => "fas fa-check-double", REJECTED => "fas fa-times-circle", TECHMAP => "fas fa-file", TRASH => "fas fa-trash-alt", PLAN_PRINT => "fas fa-print", PLAN_LAMINATE => "fas fa-layer-group", PLAN_CUT => "fas fa-cut");
 ?>

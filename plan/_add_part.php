@@ -261,11 +261,11 @@ elseif(empty ($error) && $parts_in_plan > 0 && $parts_not_in_plan == 0 && $work_
     $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $editions_count = $row['0'];
+        $editions_count = $row[0];
     }
         
     if($editions_count == 2) {
-        $sql = "update calculation set status_is = ".PLAN_LAMINATE." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
@@ -274,6 +274,8 @@ elseif(empty ($error) && $parts_in_plan > 0 && $parts_not_in_plan == 0 && $work_
     // 4. Тип работы "резка".
     // Статус устанавливаем "в плане резки".
     $sql = "update calculation set status_id = ".PLAN_CUT." where id = $calculation_id";
+    $executer = new Executer($sql);
+    $error = $executer->error;
 }
 
 echo json_encode(array('error' => $error));
