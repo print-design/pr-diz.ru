@@ -24,8 +24,9 @@ class Part {
 $calculation_id = null;
 $work_type_id = 0;
 $has_lamination = false;
+$two_laminations = false;
 
-$sql = "select c.id, c.work_type_id, c.lamination1_film_variation_id, c.lamination1_individual_film_name "
+$sql = "select c.id, c.work_type_id, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
         . "from calculation c "
         . "inner join plan_part pp on pp.calculation_id = c.id "
         . "where pp.id = $part_id";
@@ -35,6 +36,9 @@ if($row = $fetcher->Fetch()) {
     $work_type_id = $row['work_type_id'];
     if(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
         $has_lamination = true;
+    }
+    if(!empty($row['lamination2_film_variation_id']) || !empty($row['lamination2_individual_film_name'])) {
+        $two_laminations = true;
     }
 }
 
@@ -218,44 +222,58 @@ $sql = "update plan_part set in_plan = 1, work_id = ".$part->WorkId.", machine_i
 $executer = new Executer($sql);
 $error = $executer->error;
 
-// Статус устанавливаем "в плане", если есть части заказа в плане И нет частей заказа не в плане
-// Статус устанавливаем "ожидание постановки в план", если нет частей заказа в плане ИЛИ есть части заказа не в плане
-// Должны выполняться следующие условия:
-// 1. тип работы "печать", а тип заказа "плёнка с печатью",
-// 2. тип работы "печать", а тип заказа "самоклеящиеся материалы",
-// 3. тип работы "ламинация", а тип заказа "плёнка без печати, но с ламинацией",
-// 4. тип работы "резка", а тип заказа "плёнка без печати и без ламинации"
-if((empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_PRINT) 
-        || (empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) 
-        || (empty($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && $has_lamination) 
-        || (empty($error) && $work_type_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && !$has_lamination)) {
-    $parts_in_plan = 0;
-    $parts_not_in_plan = 0;
+$parts_in_plan = 0;
+$parts_not_in_plan = 0;
 
-    if($calculation_id > 0) {
-        $sql = "select count(id) from plan_part where in_plan = 1 and calculation_id = $calculation_id and work_id = $work_id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $parts_in_plan = $row[0];
-        }
+if($calculation_id > 0) {
+    $sql = "select count(id) from plan_part where in_plan = 1 and calculation_id = $calculation_id and work_id = $work_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $parts_in_plan = $row[0];
+    }
     
-        $sql = "select count(id) from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id = $work_id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $parts_not_in_plan = $row[0];
-        }
+    $sql = "select count(id) from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id = $work_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $parts_not_in_plan = $row[0];
     }
+}
 
-    if($parts_in_plan > 0 && $parts_not_in_plan == 0) {
-        $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+if(empty($error) && $parts_in_plan > 0 && $parts_not_in_plan == 0 && $work_id == WORK_PRINTING) {
+    // 1. Тип работы "печать".
+    // Статус устанавливаем "в плане печати".
+    $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+    $executer = new Executer($sql);
+    $error = $executer->error;
+}
+elseif(empty ($error) && $parts_in_plan > 0 && $parts_not_in_plan == 0 && $work_id == WORK_LAMINATION && !$two_laminations) {
+    // 2. Тип работы "ламинация", ламинация одна.
+    // Статус устанавливаем "в плане ламинации".
+    $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
+    $executer = new Executer($sql);
+    $error = $executer->error;
+}
+elseif(empty ($error) && $parts_in_plan > 0 && $parts_not_in_plan == 0 && $work_id == WORK_LAMINATION && $two_laminations) {
+    // 3. Тип работы "ламинация", ламинации две.
+    // Статус устанавливаем "в плане ламинации", если тиражей два.
+    $editions_count = 0;
+        
+    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $editions_count = $row['0'];
+    }
+        
+    if($editions_count == 2) {
+        $sql = "update calculation set status_is = ".PLAN_LAMINATE." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
-    else {
-        $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
-        $executer = new Executer($sql);
-        $error = $executer->error;
-    }
+}
+elseif(empty ($error) && $parts_in_plan > 0 && $parts_not_in_plan == 0 && $work_id == WORK_CUTTING) {
+    // 4. Тип работы "резка".
+    // Статус устанавливаем "в плане резки".
+    $sql = "update calculation set status_id = ".PLAN_CUT." where id = $calculation_id";
 }
 
 echo json_encode(array('error' => $error));
