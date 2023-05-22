@@ -39,53 +39,19 @@ if(empty($error) && $work_id == WORK_PRINTING) {
     $executer = new Executer($sql);
     $error = $executer->error;
 }
-elseif(empty ($error) && $work_id == WORK_LAMINATION && !$two_laminations && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT) {
+elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT) {
     // 2. Тип работы "ламинация", ламинация одна, тип заказа "плёнка без печати".
     // Статус устанавливаем "ожидание постановки в план".
     $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
-elseif(empty ($error) && $work_id == WORK_LAMINATION && !$two_laminations && $work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_PRINT) {
     // 3. Тип работы "ламинация", ламинация одна, тип заказа "плёнка с печатью".
     // Статус устанавливаем "в плане печати".
     $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
-}
-elseif(empty ($error) && $work_id == WORK_LAMINATION && $two_laminations && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT) {
-    // 4. Тип работы "ламинация", ламинаций две, тип заказа "плёнка без печати".
-    // Статус устанавливаем "ожидание постановки в план", если не осталось ни одного тиража.
-    $editions_count = 0;
-    
-    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $editions_count = $row[0];
-    }
-    
-    if($editions_count == 0) {
-        $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
-        $executer = new Executer($sql);
-        $error = $executer->error;
-    }
-}
-elseif(empty ($error) && $work_id == WORK_LAMINATION && $two_laminations && $work_type_id == CalculationBase::WORK_TYPE_PRINT) {
-    // 5. Типа работы "ламинация", ламинаций две, тип заказа "плёнка с печатью".
-    // Статус устанавливаем "в плане печати", если не осталось ни одного тиража.
-    $editions_count = 0;
-    
-    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $editions_count = $row[0];
-    }
-    
-    if($editions_count == 0) {
-        $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
-        $executer = new Executer($sql);
-        $error = $executer->error;
-    }
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT) {
     // 6. Тип работы "резка", ламинации нет, тип заказа "плёнка без печати".
