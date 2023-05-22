@@ -247,7 +247,7 @@ if((empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBa
     }
 
     if($parts_in_plan > 0 && $parts_not_in_plan == 0) {
-        $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }

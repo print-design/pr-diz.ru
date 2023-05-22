@@ -264,17 +264,23 @@ else {
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    // Статус устанавливаем "в плане", если при наличии 2 ламинаций - 2 тиража, в других случаях - 1 тираж.
-    // Статус устанавливаем "ожидание постановки в план", если нет ни одного тиража по этому заказу, если там две ламинации - если менее двух тиражей.
-    // Должны выполняться следующие условия:
-    // 1. тип работы "печать", а тип заказа "плёнка с печатью",
-    // 2. тип работы "печать", а тип заказа "самоклеящиеся материалы",
-    // 3. тип работы "ламинация", а тип заказа "плёнка без печати, но с ламинацией",
-    // 4. тип работы "резка", а тип заказа "плёнка без печати и без ламинации"
-    if((empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_PRINT) 
-            || (empty($error) && $work_id == WORK_PRINTING && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) 
-            || (empty($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && $has_lamination) 
-            || (empty($error) && $work_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT && !$has_lamination)) {
+    if(empty($error) && $work_id == WORK_PRINTING) {
+        // 1. Тип работы "печать".
+        // Статус устанавливаем "в плане печати".
+        $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+        $executer = new Executer($sql);
+        $error = $executer->error;
+    }
+    elseif(empty ($error) && $work_id == WORK_LAMINATION && !$two_laminations) {
+        // 2. Тип работы "ламинация", ламинация одна.
+        // Статус устанавливаем "в плане ламинации".
+        $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
+        $executer = new Executer($sql);
+        $error = $executer->error;
+    }
+    elseif(empty ($error) && $work_id == WORK_LAMINATION && $two_laminations) {
+        // 3. Тип работы "ламинация", ламинации две.
+        // Статус устанавливаем "в плане ламинации", если тиражей два.
         $editions_count = 0;
         
         $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
@@ -283,16 +289,16 @@ else {
             $editions_count = $row['0'];
         }
         
-        if(($two_laminations && $editions_count == 2) || (!$two_laminations && $editions_count == 1)) {
-            $sql = "update calculation set status_id = ".PLAN." where id = $calculation_id";
+        if($editions_count == 2) {
+            $sql = "update calculation set status_is = ".PLAN_LAMINATE." where id = $calculation_id";
             $executer = new Executer($sql);
             $error = $executer->error;
         }
-        else {
-            $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
-            $executer = new Executer($sql);
-            $error = $executer->error;
-        }
+    }
+    elseif(empty ($error) && $work_id == WORK_CUTTING) {
+        // 4. Тип работы "резка".
+        // Статус устанавливаем "в плане резки".
+        $sql = "update calculation set status_id = ".PLAN_CUT." where id = $calculation_id";
     }
 }
 
