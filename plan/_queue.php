@@ -243,13 +243,18 @@ class Queue {
             $sql .= " and "
                     . "((c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
                     . " and c.status_id = ".PLAN_PRINT
+                    . " and c.lamination1_film_variation_id is null and (c.lamination1_individual_film_name is null or c.lamination1_individual_film_name = '')"
+                    . ") or ("
+                    . "c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                    . " and c.status_id = ".PLAN_LAMINATE
+                    . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                     . ") or ("
                     . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
                     . " and c.status_id = ".CONFIRMED
                     . " and c.lamination1_film_variation_id is null and (c.lamination1_individual_film_name is null or c.lamination1_individual_film_name = '')"
                     . ") or ("
                     . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
-                    . " and c.status_id = ".PLAN_PRINT
+                    . " and c.status_id = ".PLAN_LAMINATE
                     . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                     . "))";
         }
