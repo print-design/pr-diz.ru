@@ -37,9 +37,9 @@ $error = $executer->error;
 
 if(empty($error) && $work_id == WORK_PRINTING) {
     // 1. Тип работы "печать".
-    // Удаляем все половинки этого заказа во всех разделах (ВРЕМЕННО - только вне плана).
+    // Удаляем все половинки этого заказа в разделах "ламинация" и "резка" (ВРЕМЕННО - только вне плана).
     // Статус устанавливаем "ожидание постановки в план".
-    $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id";
+    $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id in (".WORK_LAMINATION.", ".WORK_CUTTING.")";
     $executer = new Executer($sql);
     $error = $executer->error;
     
