@@ -37,21 +37,36 @@ $error = $executer->error;
 
 if(empty($error) && $work_id == WORK_PRINTING) {
     // 1. Тип работы "печать".
+    // Удаляем все половинки этого заказа во всех разделах (ВРЕМЕННО - только вне плана).
     // Статус устанавливаем "ожидание постановки в план".
+    $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id";
+    $executer = new Executer($sql);
+    $error = $executer->error;
+    
     $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT) {
     // 2. Тип работы "ламинация", ламинация одна, тип заказа "плёнка без печати".
+    // Удаляем все половинки этого заказа в разделе "резка" (ВРЕМЕННО - только вне плана)
     // Статус устанавливаем "ожидание постановки в план".
+    $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
+    $executer = new Executer($sql);
+    $error = $executer->error;
+    
     $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_PRINT) {
     // 3. Тип работы "ламинация", ламинация одна, тип заказа "плёнка с печатью".
+    // Удаляем все половинки этого заказа в разделе "резка" (ВРЕМЕННО - только вне плана)
     // Статус устанавливаем "в плане печати".
+    $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
+    $executer = new Executer($sql);
+    $error = $executer->error;
+    
     $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
