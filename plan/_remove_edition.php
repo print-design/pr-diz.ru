@@ -70,7 +70,7 @@ if(empty($error) && $work_id == WORK_PRINTING) {
         $error = "Этот заказ стоит в плане в ламинации и в резке.";
     }
 }
-elseif (empty ($error) & $work_id == WORK_LAMINATION) {
+elseif (empty ($error) && $work_id == WORK_LAMINATION) {
     $in_cutting = 0;
     $parts_in_cutting = 0;
     

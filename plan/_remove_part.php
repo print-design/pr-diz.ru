@@ -30,14 +30,80 @@ if($row = $fetcher->Fetch()) {
     }
 }
 
-// Устанавливаем признак "не в плане"
-$sql = "update plan_part set in_plan = 0, machine_id = null, date = null, shift = null, position = null where id = $part_id";
-$executer = new Executer($sql);
-$error = $executer->error;
+// Если этот же заказ стоит в плане в последующих разделах,
+// запрещаем удалять его из плана.
+if(empty($error) && $work_id == WORK_PRINTING) {
+    $in_lamination = 0;
+    $in_cutting = 0;
+    $parts_in_lamination = 0;
+    $parts_in_cutting = 0;
+    
+    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_LAMINATION;
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $in_lamination = $row[0];
+    }
+    
+    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $in_cutting = $row[0];
+    }
+    
+    $sql = "select count(id) from plan_part where in_plan = 1 and calculation_id = $calculation_id and work_id = ".WORK_LAMINATION;
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $parts_in_lamination = $row[0];
+    }
+    
+    $sql = "select count(id) from plan_part where in_plan = 1 and calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $parts_in_cutting = $row[0];
+    }
+    
+    if(($in_lamination > 0 || $parts_in_lamination > 0) && $in_cutting == 0 && $parts_in_cutting == 0) {
+        $error = "Этот заказ стоит в плане в ламинации.";
+    }
+    elseif(($in_cutting > 0 || $parts_in_cutting > 0) && $in_lamination == 0 && $parts_in_lamination == 0) {
+        $error = "Этот заказ стоит в плане в резке.";
+    }
+    elseif(($in_lamination > 0 || $parts_in_lamination > 0) || ($in_cutting > 0 || $parts_in_cutting > 0)) {
+        $error = "Этот заказ стоит в плане в ламинации и в резке.";
+    }
+}
+elseif(empty ($error) && $work_id == WORK_LAMINATION) {
+    $in_cutting = 0;
+    $parts_in_cutting = 0;
+    
+    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $in_cutting = $row[0];
+    }
+    
+    $sql = "select count(id) from plan_part where in_plan = 1 and calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $parts_in_cutting = $row[0];
+    }
+    
+    if($in_cutting > 0 || $parts_in_cutting > 0) {
+        $error = "Этот заказ стоит в плане в резке.";
+    }
+}
 
+// Устанавливаем признак "не в плане"
+if(empty($error)) {
+    $sql = "update plan_part set in_plan = 0, machine_id = null, date = null, shift = null, position = null where id = $part_id";
+    $executer = new Executer($sql);
+    $error = $executer->error;
+}
+
+// Меняем статусы
 if(empty($error) && $work_id == WORK_PRINTING) {
     // 1. Тип работы "печать".
-    // Удаляем все половинки этого заказа в разделах "ламинация" и "резка" (ВРЕМЕННО - только вне плана).
+    // Если половинки этого заказа есть вне плана в разделах "ламинация" и "резка", удаляем их.
     // Статус устанавливаем "ожидание постановки в план".
     $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id in (".WORK_LAMINATION.", ".WORK_CUTTING.")";
     $executer = new Executer($sql);
@@ -49,7 +115,7 @@ if(empty($error) && $work_id == WORK_PRINTING) {
 }
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT) {
     // 2. Тип работы "ламинация", ламинация одна, тип заказа "плёнка без печати".
-    // Удаляем все половинки этого заказа в разделе "резка" (ВРЕМЕННО - только вне плана)
+    // Если половинки этого заказа есть вне плана в разделе "резка", удаляем их.
     // Статус устанавливаем "ожидание постановки в план".
     $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
     $executer = new Executer($sql);
@@ -61,7 +127,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == Calcula
 }
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == CalculationBase::WORK_TYPE_PRINT) {
     // 3. Тип работы "ламинация", ламинация одна, тип заказа "плёнка с печатью".
-    // Удаляем все половинки этого заказа в разделе "резка" (ВРЕМЕННО - только вне плана)
+    // Если половинки этого заказа есть вне плана в разделе "резка", удаляем их.
     // Статус устанавливаем "в плане печати".
     $sql = "delete from plan_part where in_plan = 0 and calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
     $executer = new Executer($sql);
