@@ -65,6 +65,26 @@ class Queue {
                 . " and work_id = ".$this->work_id
                 . " and machine_id = ".$this->machine_id
                 . " union "
+                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, c.status_date, "
+                . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
+                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                . "pp.lamination, "
+                . "u.first_name, u.last_name "
+                . "from plan_part pp "
+                . "inner join calculation c on pp.calculation_id = c.id "
+                . "inner join customer cus on c.customer_id = cus.id "
+                . "inner join calculation_result cr on cr.calculation_id = c.id "
+                . "inner join user u on c.manager_id = u.id "
+                . "where pp.in_plan = 0 "
+                . "and pp.work_id = ".$this->work_id;
+        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
+            $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
+            $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
+        }
+        else {
+            $sql .= " and c.machine_id = ".$this->machine_id;
+        }
+        $sql .= " union "
                 . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
@@ -78,26 +98,6 @@ class Queue {
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id.")"
                 . " and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT
                 . " and c.status_id = ".CONFIRMED;
-        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
-            $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
-            $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
-        }
-        else {
-            $sql .= " and c.machine_id = ".$this->machine_id;
-        }
-        $sql .= " union "
-                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, c.status_date, "
-                . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
-                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
-                . "pp.lamination, "
-                . "u.first_name, u.last_name "
-                . "from plan_part pp "
-                . "inner join calculation c on pp.calculation_id = c.id "
-                . "inner join customer cus on c.customer_id = cus.id "
-                . "inner join calculation_result cr on cr.calculation_id = c.id "
-                . "inner join user u on c.manager_id = u.id "
-                . "where pp.in_plan = 0 "
-                . "and pp.work_id = ".$this->work_id;
         if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
             $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
@@ -196,7 +196,7 @@ class Queue {
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0 "
                 . "and pp.work_id = ".$this->work_id
-                . " order by position, work_type_id, status_date, edition_date, edition_shift, edition_position";
+                . " order by position, work_type_id, edition_date, edition_shift, edition_position, status_date";
         $fetcher = new Fetcher($sql);
         
         while($row = $fetcher->Fetch()) {
