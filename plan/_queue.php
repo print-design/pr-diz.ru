@@ -128,23 +128,24 @@ class Queue {
     }
     
     private function ShowLaminate() {
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
+        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, 0 as work_type_id, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
                 . "0 as lamination, "
-                . "'' as first_name, '' as last_name "
+                . "'' as first_name, '' as last_name, null as edition_date, '' as edition_shift, 0 as edition_position "
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "1 as lamination, "
-                . "u.first_name, u.last_name "
+                . "u.first_name, u.last_name, ifnull(pe.date, now()) as edition_date, pe.shift as edition_shift, pe.position as edition_position "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
+                . "left join plan_edition pe on pe.calculation_id = c.id "
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 1)"
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id." and lamination = 1)"
                 . " and (("
@@ -159,15 +160,16 @@ class Queue {
                 . "))"
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "2 as lamination, "
-                . "u.first_name, u.last_name "
+                . "u.first_name, u.last_name, ifnull(pe.date, now()) as edition_date, pe.shift as edition_shift, pe.position as edition_position "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
+                . "left join plan_edition pe on pe.calculation_id = c.id "
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 2)"
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id." and lamination = 2)"
                 . " and (c.lamination2_film_variation_id is not null or (c.lamination2_individual_film_name is not null and c.lamination2_individual_film_name <> ''))"
@@ -182,11 +184,11 @@ class Queue {
                 . " and c.status_id = ".PLAN_PRINT
                 . "))"
                 . " union "
-                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
+                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "pp.lamination, "
-                . "u.first_name, u.last_name "
+                . "u.first_name, u.last_name, null as edition_date, '' as edition_shift, 0 as edition_position "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
@@ -194,7 +196,7 @@ class Queue {
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0 "
                 . "and pp.work_id = ".$this->work_id
-                . " order by position, status_date";
+                . " order by position, work_type_id, status_date, edition_date, edition_shift, edition_position";
         $fetcher = new Fetcher($sql);
         
         while($row = $fetcher->Fetch()) {
@@ -216,7 +218,7 @@ class Queue {
     }
     
     private function ShowCut() {
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text as calculation, '' as customer, 0 as length, 0 as ink_number, 0.0 as raport, now() as status_date, "
+        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text as calculation, 0 as work_type_id, '' as customer, 0 as length, 0 as ink_number, 0.0 as raport, now() as status_date, "
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
                 . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name, "
                 . "0 as lamination, "
@@ -224,7 +226,7 @@ class Queue {
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name as calculation, cus.name as customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "0 as lamination, "
@@ -259,7 +261,7 @@ class Queue {
                     . "))";
         }
         $sql .= " union "
-                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
+                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "pp.lamination, "
@@ -281,7 +283,7 @@ class Queue {
                     . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
                     . ")";
         }
-        $sql .= " order by position, status_date";
+        $sql .= " order by position, work_type_id, status_date";
         $fetcher = new Fetcher($sql);
         
         while($row = $fetcher->Fetch()) {
