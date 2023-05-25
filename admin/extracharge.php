@@ -1,20 +1,10 @@
 <?php
 include '../include/topscripts.php';
+require_once '../include/extracharge_types.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
-}
-
-// Список типов наценки
-$sql = "select id, name from extracharge_type";
-$grabber = new Grabber($sql);
-$error_message = $grabber->error;
-
-$extracharge_types = array();
-
-foreach ($grabber->result as $row) {
-    $extracharge_types[$row['id']] = $row['name'];
 }
 
 // Добавление наценки
@@ -84,7 +74,7 @@ if(empty($error_message)) {
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <?php foreach ($extracharge_types as $extracharge_type_id => $extracharge_name): ?>
+                    <?php foreach ($extracharge_type_names as $extracharge_type_id => $extracharge_name): ?>
                     <h2><?=$extracharge_name ?></h2>
                     <table class="table table-hover">
                         <tr>
