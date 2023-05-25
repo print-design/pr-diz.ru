@@ -1,5 +1,6 @@
 <?php
 require_once '../calculation/calculation.php';
+require_once '../include/machines.php';
 ?>
 <div class="text-nowrap nav2">
     <?php
@@ -22,21 +23,16 @@ require_once '../calculation/calculation.php';
     $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
     $cliche_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php' ? " active" : "";
     
-    $sql = "select id, name from laminator order by position";
-    $fetcher = new Fetcher($sql);
-    
-    while($row = $fetcher->Fetch()):
-    $laminator_id_class = (!empty($laminator_id) && $row['id'] == $laminator_id) ? " active" : "";
+    foreach($laminator_names as $key => $value):
+    $laminator_id_class = (!empty($laminator_id) && $key == $laminator_id) ? " active" : "";
     
     $file_name = "";
     if(empty($laminator_id)) {
         $file_name = "laminator.php";
     }
     ?>
-    <a href="<?=$file_name. BuildQueryAddRemove('laminator_id', $row['id'], 'machine_id') ?>" class="mr-4<?=$laminator_id_class ?>"><?=$row['name'] ?></a>
-    <?php
-    endwhile;
-    ?>
+    <a href="<?=$file_name. BuildQueryAddRemove('laminator_id', $key, 'machine_id') ?>" class="mr-4<?=$laminator_id_class ?>"><?=$value ?></a>
+    <?php endforeach; ?>
     <a href="extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
     <a href="ink.php" class="mr-4<?=$ink_class ?>">Цена краски</a>
     <a href="cliche.php" class="mr-4<?=$cliche_class ?>">Цена форм</a>

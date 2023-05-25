@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './calculation.php';
+require_once '../include/machines.php';
 
 $id = filter_input(INPUT_GET, 'id');
 
@@ -24,7 +25,7 @@ if($id !== null) {
     }
         
     if(!empty($laminator_id)) {
-        array_push($file_data, array("Ламинатор", $calculation->laminator, "", ""));
+        array_push($file_data, array("Ламинатор", $laminator_names[$laminator_id], "", ""));
     }
         
     array_push($file_data, array("Размер тиража", $calculation->quantity.' '. $calculation->GetUnitName($calculation->unit), "", ""));
