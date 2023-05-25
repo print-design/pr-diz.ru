@@ -1560,7 +1560,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </div>
                     </div>
                 </form>
-                <?php if(!empty($techmap_id)): ?>
+                <?php if(!empty($techmap_id) && $status_id == TECHMAP): ?>
                 <div style="position: absolute; right: 0px; bottom: 0px;">
                     <form method="post">
                         <input type="hidden" name="id" value="<?=$id ?>" />
