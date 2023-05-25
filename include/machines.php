@@ -24,4 +24,5 @@ const CUTTER_SOMA = 102;
 
 $cutters = array(CUTTER_1, CUTTER_2, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS);
 $cutter_names = array(CUTTER_ATLAS => "Атлас", CUTTER_SOMA => "Сома");
+$cutter_speeds = array(CUTTER_1 => 70, CUTTER_2 => 70, CUTTER_3 => 70, CUTTER_4 => 120, CUTTER_ATLAS => 70, CUTTER_SOMA => 120);
 ?>

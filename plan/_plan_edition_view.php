@@ -20,7 +20,7 @@ require_once './types.php';
         </div>
         <?php endif; ?>
         <div style="display: block; white-space: nowrap;">
-            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: <?=$this->plan_shift->timetable->work_id == WORK_CUTTING ? 'none' : 'block' ?>;"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</div>
+            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: block;"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</div>
         </div>
         <?php if(!$this->plan_shift->includes_continuation): ?>
         <div style="display: block; margin-top: 6px;">
@@ -183,7 +183,7 @@ require_once './types.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>

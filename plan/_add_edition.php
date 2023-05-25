@@ -3,6 +3,7 @@ require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
 require_once '../calculation/status_ids.php';
 require_once '../include/works.php';
+require_once '../include/machines.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $lamination = filter_input(INPUT_GET, 'lamination');
@@ -28,10 +29,11 @@ $work_time_2 = '';
 $work_time_3 = '';
 
 $work_type_id = 0;
+$length_dirty_1 = 0;
 $has_lamination = false;
 $two_laminations = false;
 
-$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3, c.work_type_id, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3, c.work_type_id, cr.length_dirty_1, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
@@ -42,6 +44,7 @@ if($row = $fetcher->Fetch()) {
     $work_time_3 = round($row['work_time_3'], 2);
     
     $work_type_id = $row['work_type_id'];
+    $length_dirty_1 = $row['length_dirty_1'];
     
     if(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
         $has_lamination = true;
@@ -66,7 +69,7 @@ if($work_id == WORK_PRINTING) {
     $edition->WorkTime = $work_time_1;
 }
 elseif($work_id == WORK_CUTTING) {
-    $edition->WorkTime = 0;
+    $edition->WorkTime = $length_dirty_1 / $cutter_speeds[$edition->MachineId] / 60;
 }
 elseif($work_id == WORK_LAMINATION && $lamination == 1) {
     $edition->WorkTime = $work_time_2;

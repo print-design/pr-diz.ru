@@ -12,7 +12,7 @@ require_once './roles.php';
         <th class="cutting_hidden lamination_hidden">Вал</th>
         <th class="cutting_hidden">Лам-я</th>
         <th class="cutting_hidden lamination_hidden">Краски</th>
-        <th class="cutting_hidden">Время</th>
+        <th>Время</th>
         <th>Менеджер</th>
         <th></th>
     </tr>
