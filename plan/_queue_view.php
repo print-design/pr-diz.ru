@@ -45,7 +45,7 @@ require_once './types.php';
         <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
     </div>
     <div class="row">
-        <div class="col-6"><strong>Ламинации:</strong> <?=$laminations_number ?></div>
+        <div class="col-6"><strong>Ламинации:</strong> <?= ($this->work_id == WORK_LAMINATION ? ($laminations_number == 2 ? $row['lamination']." прогон" : $laminations_number) : $laminations_number) ?></div>
         <div class="col-6">
             <?php if($this->work_id == WORK_LAMINATION): ?>
             <strong>Тип работы:</strong> <span class="text-nowrap"><?= $row['work_type'] ?></span>
