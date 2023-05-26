@@ -18,7 +18,7 @@ function GetSkiNameExt($param, $param_width) {
                 <?php if(!empty($last_name) || !empty($first_name)): ?>
             <tr><th>Менеджер</th><td><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
                 <?php endif; ?>
-            <tr><th>Тип работы</th><td><?=$work_type ?></td></tr>
+            <tr><th>Тип работы</th><td><?=$work_type_names[$work_type_id] ?></td></tr>
                 <?php if(!empty($quantity) && !empty($unit)): ?>
             <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
                 <?php endif; ?>

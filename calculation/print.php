@@ -2,6 +2,7 @@
 include '../include/topscripts.php';
 include './status_ids.php';
 include './calculation.php';
+require_once '../include/constants.php';
 
 // Атрибут "поле неактивно"
 $disabled_attr = " disabled='disabled'";
@@ -9,7 +10,7 @@ $disabled_attr = " disabled='disabled'";
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, wt.name work_type, "
+$sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
         . "rc.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, rc.width_ski, "
         . "rc.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_thickness, rc.lamination1_individual_density, rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
         . "rc.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
@@ -34,7 +35,6 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "left join film lam2f on lam2fv.film_id = lam2f.id "
         . "left join machine m on rc.machine_id = m.id "
         . "left join user u on rc.manager_id = u.id "
-        . "left join work_type wt on rc.work_type_id = wt.id "
         . "left join customer cus on rc.customer_id = cus.id "
         . "where rc.id=$id";
 $row = (new Fetcher($sql))->Fetch();
@@ -45,7 +45,6 @@ $name = $row['name'];
 $unit = $row['unit'];
 $quantity = $row['quantity'];
 $work_type_id = $row['work_type_id'];
-$work_type = $row['work_type'];
 
 $film_variation_id = $row['film_variation_id'];
 $film_name = $row['film_name'];
