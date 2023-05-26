@@ -2,7 +2,7 @@
 include '../include/constants.php';
 
 $work_type_id = filter_input(INPUT_GET, 'work_type_id');
-$machines = $work_type_printers[$work_type_id];
+$machines = WORK_TYPE_PRINTERS[$work_type_id];
 
 if(count($machines) > 1):
 ?>

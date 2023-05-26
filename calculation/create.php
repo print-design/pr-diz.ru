@@ -1166,13 +1166,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <select id="work_type_id" name="work_type_id" class="form-control" required="required">
                                 <option value="" hidden="hidden" selected="selected">Тип работы...</option>
                                 <?php
-                                foreach($work_types as $item):
+                                foreach(WORK_TYPES as $item):
                                     $selected = '';
                                     if($item == $work_type_id) {
                                         $selected = " selected='selected'";
                                     }
                                 ?>
-                                <option value ="<?=$item ?>"<?=$selected ?>><?=$work_type_names[$item] ?></option>
+                                <option value ="<?=$item ?>"<?=$selected ?>><?=WORK_TYPE_NAMES[$item] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -1201,7 +1201,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                     <?php
                                     if(!empty($work_type_id)):
-                                    foreach($work_type_printers[$work_type_id] as $item):
+                                    foreach(WORK_TYPE_PRINTERS[$work_type_id] as $item):
                                         $selected = '';
                                     if($item == $machine_id) {
                                         $selected = " selected='selected'";

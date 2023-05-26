@@ -126,7 +126,7 @@ class Queue {
     }
     
     private function ShowLaminate() {
-        $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, 0 as work_type_id, '' as work_type, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
+        $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, 0 as work_type_id, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
                 . "'' film_name, 0 thickness, '' individual_film_name, 0 individual_thickness, "
                 . "0 lamination1_film_variation_id, '' lamination1_film_name, 0 lamination1_thickness, '' lamination1_individual_film_name, 0 lamination1_individual_thickness, "
                 . "0 lamination2_film_variation_id, '' lamination2_film_name, 0 lamination2_thickness, '' lamination2_individual_film_name, 0 lamination2_individual_thickness, "
@@ -135,7 +135,7 @@ class Queue {
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".PLAN_TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, wt.name as work_type, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
@@ -146,7 +146,6 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "inner join work_type wt on c.work_type_id = wt.id "
                 . "left join film_variation fv on c.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
                 . "left join film_variation fv1 on c.lamination1_film_variation_id = fv1.id "
@@ -156,7 +155,7 @@ class Queue {
                 . "where pp.in_plan = 0 "
                 . "and pp.work_id = ".$this->work_id
                 . " union "
-                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, wt.name as work_type, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.status_date, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
@@ -167,7 +166,6 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "inner join work_type wt on c.work_type_id = wt.id "
                 . "left join film_variation fv on c.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
                 . "left join film_variation fv1 on c.lamination1_film_variation_id = fv1.id "
@@ -190,7 +188,7 @@ class Queue {
                 . "))"
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " union "
-                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, wt.name as work_type, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_date, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
@@ -201,7 +199,6 @@ class Queue {
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "inner join work_type wt on c.work_type_id = wt.id "
                 . "left join film_variation fv on c.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
                 . "left join film_variation fv1 on c.lamination1_film_variation_id = fv1.id "

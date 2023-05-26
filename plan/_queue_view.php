@@ -85,7 +85,7 @@ require_once '../include/constants.php';
         <div class="col-6"><strong>Ламинации:</strong> <?= ($this->work_id == WORK_LAMINATION ? ($laminations_number == 2 ? $row['lamination']." прогон" : $laminations_number) : $laminations_number) ?></div>
         <div class="col-6">
             <?php if($this->work_id == WORK_LAMINATION): ?>
-            <strong>Тип работы:</strong> <span class="text-nowrap"><?= $row['work_type'] ?></span>
+            <strong>Тип работы:</strong> <span class="text-nowrap"><?= WORK_TYPE_NAMES[$row['work_type_id']] ?></span>
             <?php else: ?>
             <strong>Вал:</strong> <?= CalculationBase::Display(floatval($row['raport']), 3) ?>
             <?php endif; ?>

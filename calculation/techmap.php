@@ -815,7 +815,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <th>Тип работы</th>
-                            <td class="text-left"><?=$work_type_names[$work_type_id] ?></td>
+                            <td class="text-left"><?=WORK_TYPE_NAMES[$work_type_id] ?></td>
                         </tr>
                     </table>
                 </div>

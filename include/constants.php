@@ -35,9 +35,9 @@ const WORK_TYPE_NOPRINT = 1;
 const WORK_TYPE_PRINT = 2;
 const WORK_TYPE_SELF_ADHESIVE = 3;
 
-$work_types = array(WORK_TYPE_NOPRINT, WORK_TYPE_PRINT, WORK_TYPE_SELF_ADHESIVE);
-$work_type_names = array(WORK_TYPE_NOPRINT => "Пленка без печати", WORK_TYPE_PRINT => "Пленка с печатью", WORK_TYPE_SELF_ADHESIVE => "Самоклеящиеся мат-лы");
-$work_type_printers = array(WORK_TYPE_PRINT => array(PRINTER_COMIFLEX, PRINTER_ZBS_1, PRINTER_ZBS_2, PRINTER_ZBS_3), WORK_TYPE_SELF_ADHESIVE => array(PRINTER_ATLAS));
+const WORK_TYPES = array(WORK_TYPE_NOPRINT, WORK_TYPE_PRINT, WORK_TYPE_SELF_ADHESIVE);
+const WORK_TYPE_NAMES = array(WORK_TYPE_NOPRINT => "Пленка без печати", WORK_TYPE_PRINT => "Пленка с печатью", WORK_TYPE_SELF_ADHESIVE => "Самоклеящиеся мат-лы");
+const WORK_TYPE_PRINTERS = array(WORK_TYPE_PRINT => array(PRINTER_COMIFLEX, PRINTER_ZBS_1, PRINTER_ZBS_2, PRINTER_ZBS_3), WORK_TYPE_SELF_ADHESIVE => array(PRINTER_ATLAS));
 
 // Разделы плана
 const WORK_PRINTING = 1;
