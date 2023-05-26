@@ -11,7 +11,7 @@ if($id !== null) {
     
     // Расчёт
     $calculation = CalculationBase::Create($id);
-        
+    
     // Данные CSV-файла
     $file_data = array();
         
@@ -20,12 +20,12 @@ if($id !== null) {
     if($calculation->work_type_id == Calculation::WORK_TYPE_PRINT) array_push ($file_data, array("Тип работы", "Плёнка с печатью", "", ""));
     elseif($calculation->work_type_id == Calculation::WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
         
-    if(!empty($machine_id)) {
-        array_push($file_data, array("Машина", $calculation->machine, "", ""));
+    if(!empty($calculation->machine_id)) {
+        array_push($file_data, array("Машина", $printer_names[$calculation->machine_id], "", ""));
     }
         
-    if(!empty($laminator_id)) {
-        array_push($file_data, array("Ламинатор", $laminator_names[$laminator_id], "", ""));
+    if(!empty($calculation->laminator_id)) {
+        array_push($file_data, array("Ламинатор", $laminator_names[$calculation->laminator_id], "", ""));
     }
         
     array_push($file_data, array("Размер тиража", $calculation->quantity.' '. $calculation->GetUnitName($calculation->unit), "", ""));

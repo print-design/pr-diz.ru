@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './calculation.php';
+require_once '../include/machines.php';
 
 $id = filter_input(INPUT_GET, 'id');
 
@@ -16,7 +17,7 @@ if($id !== null) {
     
     array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($calculation->usd, 5), "", ""));
     array_push($file_data, array("Курс евро, руб", CalculationBase::Display($calculation->euro, 5), "", ""));
-    array_push($file_data, array("Машина", $calculation->machine, "", ""));
+    array_push($file_data, array("Машина", $printer_names[$calculation->machine_id], "", ""));
     array_push($file_data, array("Количество тиражей", count($calculation->quantities), "", ""));
         
     $i = 1;
