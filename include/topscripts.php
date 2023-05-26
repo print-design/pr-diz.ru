@@ -438,21 +438,5 @@ if(LoggedIn()) {
     if($row[0] == 0) {
         Logout();
     }
-    
-    //---------------------------------------------------
-    // ВРЕМЕННЫЙ КОД. ПОТОМ УДАЛИТЬ ЕГО.
-    // Если в куках нет русского названия роли, берём его из базы и помещаем в куки
-    $role = filter_input(INPUT_COOKIE, ROLE);
-    $role_local = filter_input(INPUT_COOKIE, ROLE_LOCAL);
-    
-    if(empty($role_local) && !empty($role)) {
-        $sql = "select local_name from role where name = '$role'";
-        $fetcher = new Fetcher($sql);
-        
-        if($row = $fetcher->Fetch()) {
-            setcookie(ROLE_LOCAL, $row[0], time() + 60 * 60 * 24 * 100000, '/');
-        }
-    }
-    //---------------------------------------------------
 }
 ?>
