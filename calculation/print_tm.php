@@ -2,6 +2,7 @@
 include '../include/topscripts.php';
 include './status_ids.php';
 include './calculation.php';
+require_once '../include/constants.php';
 
 // Печать: лицевая, оборотная
 const SIDE_FRONT = 1;
@@ -52,7 +53,6 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.knife, "
         . "cus.name customer, sup.name supplier, "
         . "u.last_name, u.first_name, "
-        . "wt.name work_type, "
         . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "tm.id techmap_id, tm.date techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
@@ -66,7 +66,6 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "left join film lam2f on lam2fv.film_id = lam2f.id "
         . "inner join customer cus on c.customer_id = cus.id "
         . "inner join user u on c.manager_id = u.id "
-        . "inner join work_type wt on c.work_type_id = wt.id "
         . "left join calculation_result cr on cr.calculation_id = c.id "
         . "left join supplier sup on tm.supplier_id = sup.id "
         . "where c.id = $id";
@@ -154,7 +153,6 @@ $customer = $row['customer'];
 $supplier = $row['supplier'];
 $last_name = $row['last_name'];
 $first_name = $row['first_name'];
-$work_type = $row['work_type'];
 
 $width_1 = $row['width_1'];
 $length_pure_1 = $row['length_pure_1'];
@@ -506,7 +504,7 @@ $current_date_time = date("dmYHis");
                     <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(intval($quantities_sum), 0)." шт" : CalculationBase::Display(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(floatval($lengths_sum), 0)." м" : CalculationBase::Display(floatval($length_pure_1), 0)." м" ?>
                 </div>
                 <div class="col-6 topproperty">
-                    <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$work_type ?>
+                    <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$work_type_names[$work_type_id] ?>
                 </div>
             </div>
         </div>
