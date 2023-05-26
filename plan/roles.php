@@ -1,5 +1,5 @@
 <?php
-require_once '../include/works.php';
+require_once '../include/constants.php';
 
 const ROLE_PRINT = 1;
 const ROLE_ASSISTANT = 2;

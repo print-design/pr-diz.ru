@@ -2,7 +2,7 @@
 require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
 require_once '../calculation/status_ids.php';
-require_once '../include/works.php';
+require_once '../include/constants.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $lamination = filter_input(INPUT_GET, 'lamination');

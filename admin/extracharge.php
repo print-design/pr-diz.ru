@@ -1,6 +1,6 @@
 <?php
 include '../include/topscripts.php';
-require_once '../include/extracharge_types.php';
+require_once '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {

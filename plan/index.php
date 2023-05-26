@@ -1,7 +1,6 @@
 <?php
 include '../include/topscripts.php';
-include '../include/works.php';
-include '../include/machines.php';
+include '../include/constants.php';
 include './_queue.php';
 include './_plan_timetable.php';
 

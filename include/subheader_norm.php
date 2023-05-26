@@ -1,6 +1,6 @@
 <?php
 require_once '../calculation/calculation.php';
-require_once '../include/machines.php';
+require_once '../include/constants.php';
 ?>
 <div class="text-nowrap nav2">
     <?php

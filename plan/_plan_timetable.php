@@ -1,8 +1,7 @@
 <?php
 require_once '../include/topscripts.php';
-require_once '../include/machines.php';
 require_once './_plan_date.php';
-require_once '../include/works.php';
+require_once '../include/constants.php';
 require_once './types.php';
 
 class PlanTimetable {

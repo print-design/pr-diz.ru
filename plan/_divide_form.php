@@ -1,7 +1,7 @@
 <?php
 require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
-include '../include/works.php';
+include '../include/constants.php';
 
 $calculation_id = filter_input(INPUT_GET, 'id');
 $work_id = filter_input(INPUT_GET, 'work_id');
