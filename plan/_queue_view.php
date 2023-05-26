@@ -40,6 +40,43 @@ require_once './types.php';
             </div>
         </div>
     </div>
+    <?php
+    if($this->work_id == WORK_LAMINATION):
+        $films_string = '';
+    
+    if($row['lamination'] == 1) {
+        $film_name = $row['film_name'];
+        $thickness = $row['thickness'];
+        
+        if(empty($film_name)) {
+            $film_name = $row['individual_film_name'];
+            $thickness = $row['individual_thickness'];
+        }
+        
+        $lamination1_film_name = $row['lamination1_film_name'];
+        $lamination1_thickness = $row['lamination1_thickness'];
+        
+        if(empty($lamination1_film_name)) {
+            $lamination1_film_name = $row['lamination1_individual_film_name'];
+            $lamination1_thickness = $row['lamination1_individual_thickness'];
+        }
+        
+        $films_string = $film_name.' '.$thickness.' + '.$lamination1_film_name.' '.$lamination1_thickness;
+    }
+    elseif($row['lamination'] == 2) {
+        $lamination2_film_name = $row['lamination2_film_name'];
+        $lamination2_thickness = $row['lamination2_thickness'];
+        
+        if(empty($lamination2_film_name)) {
+            $lamination2_film_name = $row['lamination2_individual_film_name'];
+            $lamination2_thickness = $row['lamination2_individual_thickness'];
+        }
+        
+        $films_string = "1 прогон + $lamination2_film_name $lamination2_thickness";
+    }
+    ?>
+    <div class="mb-2"><?=$films_string ?></div>
+    <?php endif; ?>
     <div class="row">
         <div class="col-6"><strong>Метраж:</strong> <?= CalculationBase::Display(intval($row['length']), 0) ?></div>
         <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
