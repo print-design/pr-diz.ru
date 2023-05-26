@@ -457,14 +457,17 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
         include '../include/footer.php';
         ?>
         <script>
+            // Скрытие/показ левой панели.
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
                 $('#sidebarExpand').show();
+                $('.comment_cell').show();
             });
                 
             $('#sidebarExpand').on('click', function() {
                 $('#sidebar').removeClass('active');
                 $('#sidebarExpand').hide();
+                $('.comment_cell').hide();
             });
             
             // При показе формы добавления плёнки,
@@ -472,6 +475,18 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             $('#add_event').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();
             });
+            
+            function SaveComment(ev, plan_type, id) {
+                text = $(ev.target).val();
+                $(ev.target).val('');
+                $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + text })
+                        .done(function(data) {
+                            $(ev.target).val(data);
+                        })
+                        .fail(function() {
+                            alert('Ошибка при добавлении комментария');
+                        });
+            }
             
             function DeleteEvent(event_id) {
                 if(confirm("Действительно удалить?")) {

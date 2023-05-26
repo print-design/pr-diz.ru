@@ -14,6 +14,7 @@ require_once '../include/constants.php';
         <th class="cutting_hidden lamination_hidden">Краски</th>
         <th>Время</th>
         <th>Менеджер</th>
+        <th style="display: none;" class="comment_cell">Комментарий</th>
         <th></th>
     </tr>
     <?php

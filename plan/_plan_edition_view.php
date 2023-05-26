@@ -188,6 +188,9 @@ require_once '../include/constants.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
+    <td style="display: none;" onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);" class="<?=$this->plan_shift->shift ?> showdropline comment_cell"<?=$drop ?>>
+        <input type="text" class="form-control comment_cell_<?=$this->edition['type'] ?>" value="<?=$this->edition['comment'] ?>"></td>
+    </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
