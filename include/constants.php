@@ -9,6 +9,7 @@ const PRINTER_ATLAS = 5;
 $printers = array(PRINTER_COMIFLEX, PRINTER_ZBS_1, PRINTER_ZBS_2, PRINTER_ZBS_3, PRINTER_ATLAS);
 $printer_names = array(PRINTER_COMIFLEX => 'Comiflex', PRINTER_ZBS_1 => 'ZBS-1', PRINTER_ZBS_2 => 'ZBS-2', PRINTER_ZBS_3 => 'ZBS-3', PRINTER_ATLAS => 'Atlas');
 $printer_shortnames = array(PRINTER_COMIFLEX => 'comiflex', PRINTER_ZBS_1 => 'zbs1', PRINTER_ZBS_2 => 'zbs2', PRINTER_ZBS_3 => 'zbs3', PRINTER_ATLAS => 'atlas');
+$printer_colorfulnesses = array(PRINTER_COMIFLEX => 8, PRINTER_ZBS_1 => 6, PRINTER_ZBS_2 => 6, PRINTER_ZBS_3 => 8, PRINTER_ATLAS => 6);
 
 // Ламинаторы
 const LAMINATOR_SOLVENT = 1;
@@ -28,6 +29,15 @@ const CUTTER_SOMA = 102;
 $cutters = array(CUTTER_1, CUTTER_2, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS);
 $cutter_names = array(CUTTER_ATLAS => "Атлас", CUTTER_SOMA => "Сома");
 $cutter_speeds = array(CUTTER_1 => 70, CUTTER_2 => 70, CUTTER_3 => 70, CUTTER_4 => 120, CUTTER_ATLAS => 70, CUTTER_SOMA => 120);
+
+// Типы работы
+const WORK_TYPE_NOPRINT = 1;
+const WORK_TYPE_PRINT = 2;
+const WORK_TYPE_SELF_ADHESIVE = 3;
+
+$work_types = array(WORK_TYPE_NOPRINT, WORK_TYPE_PRINT, WORK_TYPE_SELF_ADHESIVE);
+$work_type_names = array(WORK_TYPE_NOPRINT => "Пленка без печати", WORK_TYPE_PRINT => "Пленка с печатью", WORK_TYPE_SELF_ADHESIVE => "Самоклеящиеся мат-лы");
+$work_type_printers = array(WORK_TYPE_PRINT => array(PRINTER_COMIFLEX, PRINTER_ZBS_1, PRINTER_ZBS_2, PRINTER_ZBS_3), WORK_TYPE_SELF_ADHESIVE => array(PRINTER_ATLAS));
 
 // Разделы плана
 const WORK_PRINTING = 1;

@@ -1,12 +1,8 @@
 <?php
-include '../include/topscripts.php';
+include '../include/constants.php';
 
 $work_type_id = filter_input(INPUT_GET, 'work_type_id');
-
-if(!empty($work_type_id)):
-$sql = "select m.id, m.name, m.colorfulness from machine m inner join machine_work_type mwt on mwt.machine_id = m.id where mwt.work_type_id = $work_type_id order by m.position";
-$grabber = new Grabber($sql);
-$machines = $grabber->result;
+$machines = $work_type_printers[$work_type_id];
 
 if(count($machines) > 1):
 ?>
@@ -16,8 +12,7 @@ endif;
 
 foreach($machines as $machine):
 ?>
-<option value="<?=$machine['id'] ?>"><?=$machine['name'] ?> (<?=$machine['colorfulness'] ?> красок)</option>
+<option value="<?=$machine ?>"><?=$printer_names[$machine] ?> (<?=$printer_colorfulnesses[$machine] ?> красок)</option>
 <?php
 endforeach;
-endif;
 ?>

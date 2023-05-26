@@ -2,6 +2,7 @@
 include '../include/topscripts.php';
 include './status_ids.php';
 include './calculation.php';
+require_once '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
@@ -1165,19 +1166,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <select id="work_type_id" name="work_type_id" class="form-control" required="required">
                                 <option value="" hidden="hidden" selected="selected">Тип работы...</option>
                                 <?php
-                                $sql = "select id, name from work_type";
-                                $fetcher = new Fetcher($sql);
-                                
-                                while ($row = $fetcher->Fetch()):
-                                $selected = '';
-                                if($row['id'] == $work_type_id) {
-                                    $selected = " selected='selected'";
-                                }
+                                foreach($work_types as $item):
+                                    $selected = '';
+                                    if($item == $work_type_id) {
+                                        $selected = " selected='selected'";
+                                    }
                                 ?>
-                                <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'] ?></option>
-                                <?php
-                                endwhile;
-                                ?>
+                                <option value ="<?=$item ?>"<?=$selected ?>><?=$work_type_names[$item] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <!-- Единица заказа -->
@@ -1205,18 +1201,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
                                     <?php
                                     if(!empty($work_type_id)):
-                                    $sql = "select m.id, m.name, m.colorfulness from machine m inner join machine_work_type mwt on mwt.machine_id = m.id where mwt.work_type_id = $work_type_id order by m.position";
-                                    $fetcher = new Fetcher($sql);
-                                
-                                    while ($row = $fetcher->Fetch()):
-                                    $selected = '';
-                                    if($row['id'] == $machine_id) {
+                                    foreach($work_type_printers[$work_type_id] as $item):
+                                        $selected = '';
+                                    if($item == $machine_id) {
                                         $selected = " selected='selected'";
                                     }
                                     ?>
-                                    <option value="<?=$row['id'] ?>"<?=$selected ?>><?=$row['name'].' ('.$row['colorfulness'].' красок)' ?></option>
+                                    <option value="<?=$item ?>"<?=$selected ?>><?=$printer_names[$item].' ('.$printer_colorfulnesses[$item].' красок)' ?></option>
                                     <?php
-                                    endwhile;
+                                    endforeach;
                                     endif;
                                     ?>
                                 </select>
