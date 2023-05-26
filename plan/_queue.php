@@ -3,7 +3,6 @@ require_once '../include/topscripts.php';
 require_once '../calculation/status_ids.php';
 require_once '../calculation/calculation.php';
 require_once '../include/constants.php';
-require_once './types.php';
 
 class Queue {
     private $work_id = null;
@@ -54,7 +53,7 @@ class Queue {
         // Если эта машина ZBS1, ZBS2, ZBS3, 
         // то добавляем сюда расчёты для других машин (из списка ZBS1, ZBS2, ZBS2),
         // у которых вал присутствует в списке валов для этой машины
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
+        $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
                 . "0 as lamination, "
@@ -64,7 +63,7 @@ class Queue {
                 . " and work_id = ".$this->work_id
                 . " and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name calculation, cus.name customer, pp.length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "pp.lamination, "
@@ -84,7 +83,7 @@ class Queue {
             $sql .= " and c.machine_id = ".$this->machine_id;
         }
         $sql .= " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "0 as lamination, "
@@ -117,17 +116,17 @@ class Queue {
                 $laminations_number = 1;
             }
             
-            if($row['type'] == TYPE_EVENT) {
+            if($row['type'] == PLAN_TYPE_EVENT) {
                 require './_event_view.php';
             }
-            elseif($row['type'] == TYPE_EDITION || $row['type'] == TYPE_PART) {
+            elseif($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
                 require './_queue_view.php';
             }
         }
     }
     
     private function ShowLaminate() {
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, 0 as work_type_id, '' as work_type, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
+        $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, 0 as work_type_id, '' as work_type, '' customer, 0 length, 0 ink_number, 0.0 raport, now() as status_date, "
                 . "'' film_name, 0 thickness, '' individual_film_name, 0 individual_thickness, "
                 . "0 lamination1_film_variation_id, '' lamination1_film_name, 0 lamination1_thickness, '' lamination1_individual_film_name, 0 lamination1_individual_thickness, "
                 . "0 lamination2_film_variation_id, '' lamination2_film_name, 0 lamination2_thickness, '' lamination2_individual_film_name, 0 lamination2_individual_thickness, "
@@ -136,7 +135,7 @@ class Queue {
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, wt.name as work_type, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, wt.name as work_type, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
@@ -157,7 +156,7 @@ class Queue {
                 . "where pp.in_plan = 0 "
                 . "and pp.work_id = ".$this->work_id
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, wt.name as work_type, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, wt.name as work_type, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.status_date, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
@@ -191,7 +190,7 @@ class Queue {
                 . "))"
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, wt.name as work_type, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, wt.name as work_type, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_date, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
@@ -236,17 +235,17 @@ class Queue {
                 $laminations_number = 1;
             }
             
-            if($row['type'] == TYPE_EVENT) {
+            if($row['type'] == PLAN_TYPE_EVENT) {
                 require './_event_view.php';
             }
-            elseif($row['type'] == TYPE_EDITION || $row['type'] == TYPE_PART) {
+            elseif($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
                 require './_queue_view.php';
             }
         }
     }
     
     private function ShowCut() {
-        $sql = "select ".TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text as calculation, 0 as work_type_id, '' as customer, 0 as length, 0 as ink_number, 0.0 as raport, now() as status_date, "
+        $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text as calculation, 0 as work_type_id, '' as customer, 0 as length, 0 as ink_number, 0.0 as raport, now() as status_date, "
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
                 . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name, "
                 . "0 as lamination, "
@@ -254,7 +253,7 @@ class Queue {
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "pp.lamination, "
@@ -277,7 +276,7 @@ class Queue {
                     . ")";
         }
         $sql .= " union "
-                . "select ".TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_date, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "0 as lamination, "
@@ -329,10 +328,10 @@ class Queue {
                 $laminations_number = 1;
             }
             
-            if($row['type'] == TYPE_EVENT) {
+            if($row['type'] == PLAN_TYPE_EVENT) {
                 require './_event_view.php';
             }
-            elseif($row['type'] == TYPE_EDITION || $row['type'] == TYPE_PART) {
+            elseif($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
                 require './_queue_view.php';
             }
         }

@@ -1,5 +1,5 @@
 <?php
-require_once './roles.php';
+require_once '../include/constants.php';
 ?>
 <tr data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-id="" data-position="">
     <?php if($this->shift == 'day'): ?>
@@ -19,7 +19,7 @@ require_once './roles.php';
             if(array_key_exists($key, $this->timetable->workshifts1) && $employee['id'] == $this->timetable->workshifts1[$key]) {
                 $selected = " selected='selected'";
             }
-            if($employee['role_id'] == WORK_ROLES[$this->timetable->work_id] && ($employee['active'] == 1 || $employee['id'] == $this->timetable->workshifts1[$key])):
+            if($employee['role_id'] == WORK_PLAN_ROLES[$this->timetable->work_id] && ($employee['active'] == 1 || $employee['id'] == $this->timetable->workshifts1[$key])):
             ?>
             <option value="<?=$employee['id'] ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
             <?php
@@ -37,7 +37,7 @@ require_once './roles.php';
             if(array_key_exists($key, $this->timetable->workshifts2) && $employee['id'] == $this->timetable->workshifts2[$key]) {
                 $selected = " selected='selected'";
             }
-            if($employee['role_id'] == ROLE_ASSISTANT && ($employee['active'] == 1 || $employee['id'] == $this->timetable->workshifts2[$key])):
+            if($employee['role_id'] == PLAN_ROLE_ASSISTANT && ($employee['active'] == 1 || $employee['id'] == $this->timetable->workshifts2[$key])):
             ?>
             <option value="<?=$employee['id'] ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
             <?php

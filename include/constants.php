@@ -37,6 +37,24 @@ const WORK_CUTTING = 3;
 const WORKS = array(WORK_PRINTING, WORK_LAMINATION, WORK_CUTTING);
 const WORK_NAMES = array(WORK_PRINTING => "Печать", WORK_LAMINATION => "Ламинация", WORK_CUTTING => "Резка");
 
+// Роли плана
+const PLAN_ROLE_PRINT = 1;
+const PLAN_ROLE_ASSISTANT = 2;
+const PLAN_ROLE_LAMINATE = 3;
+const PLAN_ROLE_CUT = 4;
+
+const PLAN_ROLES = array(PLAN_ROLE_PRINT, PLAN_ROLE_ASSISTANT, PLAN_ROLE_LAMINATE, PLAN_ROLE_CUT);
+const PLAN_ROLE_NAMES = array(PLAN_ROLE_PRINT => "Печатник", PLAN_ROLE_ASSISTANT => "Помощник", PLAN_ROLE_LAMINATE => "Ламинаторщик", PLAN_ROLE_CUT => "Резчик");
+const PLAN_ROLE_PLURALS = array(PLAN_ROLE_PRINT => "Печатники", PLAN_ROLE_ASSISTANT => "Помощники", PLAN_ROLE_LAMINATE => "Ламинаторщики", PLAN_ROLE_CUT => "Резчики");
+const WORK_PLAN_ROLES = array(WORK_PRINTING => PLAN_ROLE_PRINT, WORK_LAMINATION => PLAN_ROLE_LAMINATE, WORK_CUTTING => PLAN_ROLE_CUT);
+
+// Типы объектов плана
+const PLAN_TYPE_EDITION = 1;
+const PLAN_TYPE_EVENT = 2;
+const PLAN_TYPE_CONTINUATION = 3;
+const PLAN_TYPE_PART = 4;
+const PLAN_TYPE_PART_CONTINUATION = 5;
+
 // Типы наценки
 const ET_NOPRINT = 1;
 const ET_PRINT_NO_LAMINATION = 2;

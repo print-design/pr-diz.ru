@@ -1,6 +1,6 @@
 <?php
 include '../include/topscripts.php';
-include '../plan/roles.php';
+include '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -9,7 +9,7 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 
 // Получение объекта
 $employees = array();
-foreach(ROLES as $role) {
+foreach(PLAN_ROLES as $role) {
     $employees[$role] = array();
 }
 
@@ -75,9 +75,9 @@ while($row = $fetcher->Fetch()) {
             </div>
             <?php
             $show_table_header = true;
-            foreach(ROLES as $role):
+            foreach(PLAN_ROLES as $role):
             ?>
-            <h2 id="r_<?=$role ?>"><?=ROLE_PLURALS[$role] ?></h2>
+            <h2 id="r_<?=$role ?>"><?=PLAN_ROLE_PLURALS[$role] ?></h2>
             <table class="table">
                 <?php if($show_table_header): ?>
                 <tr>

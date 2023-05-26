@@ -1,7 +1,7 @@
 <?php
 require_once './_plan_timetable.php';
 require_once './_plan_edition.php';
-require_once './types.php';
+require_once '../include/constants.php';
 
 class PlanShift {
     public $date;
@@ -37,7 +37,7 @@ class PlanShift {
             foreach ($this->editions as $edition) {
                 $this->shift_worktime += $edition['worktime'];
                 
-                if($edition['type'] == TYPE_CONTINUATION || $edition['type'] == TYPE_PART_CONTINUATION) {
+                if($edition['type'] == PLAN_TYPE_CONTINUATION || $edition['type'] == PLAN_TYPE_PART_CONTINUATION) {
                     $this->includes_continuation = true;
                 }
             }
@@ -47,7 +47,7 @@ class PlanShift {
             
             foreach($this->editions as $key => $value)  {
                 if($previous_position == $value['position']) {
-                    if($value['type'] == TYPE_EVENT) {
+                    if($value['type'] == PLAN_TYPE_EVENT) {
                         $sql = "update plan_event set position = ifnull(position, 0) + 1 where id = ".$value['id'];
                         $executer = new Executer($sql);
                         $error = $executer->error;
@@ -62,7 +62,7 @@ class PlanShift {
                             }
                         }
                     }
-                    elseif($value['type'] == TYPE_EDITION) {
+                    elseif($value['type'] == PLAN_TYPE_EDITION) {
                         $sql = "update plan_edition set position = ifnull(position, 0) + 1 where id = ".$value['id'];
                         $executer = new Executer($sql);
                         $error = $executer->error;
@@ -77,7 +77,7 @@ class PlanShift {
                             }
                         }
                     }
-                    elseif ($value['type'] == TYPE_PART) {
+                    elseif ($value['type'] == PLAN_TYPE_PART) {
                         $sql = "update plan_part set position = ifnull(position, 0) + 1 where id = ".$value['id'];
                         $executer = new Executer($sql);
                         $error = $executer->error;

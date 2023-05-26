@@ -1,12 +1,12 @@
 <?php
-require_once './types.php';
+require_once '../include/constants.php';
 ?>
 <div class='queue_item'>
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
         <div class="d-flex justify-content-start">
-            <?php if($row['type'] == TYPE_EDITION): ?>
+            <?php if($row['type'] == PLAN_TYPE_EDITION): ?>
             <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
-            <?php elseif ($row['type'] == TYPE_PART): ?>
+            <?php elseif ($row['type'] == PLAN_TYPE_PART): ?>
             <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" draggable="true" ondragstart="DragPart(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
             <?php endif; ?>
             <div>
@@ -23,9 +23,9 @@ require_once './types.php';
                             <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$row['calculation_id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
                         </div>
                         <div class="command">
-                            <?php if($row['type'] == TYPE_EDITION): ?>
+                            <?php if($row['type'] == PLAN_TYPE_EDITION): ?>
                             <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
-                            <?php elseif($row['type'] == TYPE_PART): ?>
+                            <?php elseif($row['type'] == PLAN_TYPE_PART): ?>
                             <form method="post">
                                 <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
                                 <input type="hidden" name="work_id" value="<?=$this->work_id ?>" />

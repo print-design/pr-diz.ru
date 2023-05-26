@@ -1,11 +1,11 @@
 <?php
-require_once './roles.php';
+require_once '../include/constants.php';
 ?>
 <table class="table typography">
     <tr>
         <th>Дата</th>
         <th>Смена</th>
-        <th><?= ROLE_NAMES[WORK_ROLES[$this->work_id]] ?></th>
+        <th><?= PLAN_ROLE_NAMES[WORK_PLAN_ROLES[$this->work_id]] ?></th>
         <th class="fordrag"></th>
         <th>Заказ</th>
         <th>Метраж</th>
