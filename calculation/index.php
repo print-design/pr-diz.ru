@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './status_ids.php';
+require_once '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'manager'))) {
@@ -150,16 +151,9 @@ else $title = $status_titles[1];
                         </select>
                         <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Тип работы...</option>
-                            <?php
-                            $sql = "select distinct wt.id, wt.name from calculation c inner join work_type wt on c.work_type_id = wt.id order by wt.name";
-                            $fetcher = new Fetcher($sql);
-                            
-                            while ($row = $fetcher->Fetch()):
-                            ?>
-                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
-                            <?php
-                            endwhile;
-                            ?>
+                            <?php foreach(WORK_TYPES as $item): ?>
+                            <option value="<?=$item ?>"<?=($item == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=WORK_TYPE_NAMES[$item] ?></option>
+                            <?php endforeach; ?>
                         </select>
                         <?php if(IsInRole(array('technologist', 'dev', 'manager-senior'))): ?>
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
@@ -276,12 +270,11 @@ else $title = $status_titles[1];
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
                             . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities, "
-                            . "c.unit, wt.name work_type, u.last_name, u.first_name, c.status_id, "
+                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.status_id, "
                             . "(select id from techmap where calculation_id = c.id order by id desc limit 1) techmap_id, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
                             . "left join customer cus on c.customer_id = cus.id "
-                            . "left join work_type wt on c.work_type_id = wt.id "
                             . "left join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
@@ -297,7 +290,7 @@ else $title = $status_titles[1];
                         <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
                         <td><?= htmlentities($row['name']) ?></td>
                         <td class="text-right"><?=$quantity ?></td>
-                        <td><?=$row['work_type'] ?></td>
+                        <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
                         <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$status_colors[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=$status_names[$row['status_id']] ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
