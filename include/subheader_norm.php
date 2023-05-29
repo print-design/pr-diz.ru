@@ -23,7 +23,7 @@ require_once '../include/constants.php';
     $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
     $cliche_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php' ? " active" : "";
     
-    foreach($laminator_names as $key => $value):
+    foreach(LAMINATOR_NAMES as $key => $value):
     $laminator_id_class = (!empty($laminator_id) && $key == $laminator_id) ? " active" : "";
     
     $file_name = "";

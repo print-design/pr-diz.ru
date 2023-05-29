@@ -345,32 +345,32 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             <div class="text-nowrap nav2">
                 <?php
                 $printer_id = filter_input(INPUT_GET, 'machine_id');
-                $header = $printer_names[$printer_id];
+                $header = PRINTER_NAMES[$printer_id];
     
-                foreach($printers as $printer):
+                foreach(PRINTERS as $printer):
                     $printer_class = $printer_id == $printer ? ' active' : '';
                 ?>
-                <a href="<?= BuildQuery('machine_id', $printer) ?>" class="mr-4<?=$printer_class ?>"><?=$printer_names[$printer] ?></a>
+                <a href="<?= BuildQuery('machine_id', $printer) ?>" class="mr-4<?=$printer_class ?>"><?=PRINTER_NAMES[$printer] ?></a>
                 <?php endforeach; ?>
             </div>
             <?php elseif ($work_id == WORK_LAMINATION): ?>
             <div class="text-nowrap nav2">
                 <?php
                 $laminator_id = filter_input(INPUT_GET, 'machine_id');
-                $header = $laminator_names[$laminator_id];
+                $header = LAMINATOR_NAMES[$laminator_id];
     
-                foreach($laminators as $laminator):
+                foreach(LAMINATORS as $laminator):
                     $laminator_class = $laminator_id == $laminator ? ' active' : '';
                 ?>
-                <a href="<?= BuildQuery('machine_id', $laminator) ?>" class="mr-4<?=$laminator_class ?>"><?=$laminator_names[$laminator] ?></a>
+                <a href="<?= BuildQuery('machine_id', $laminator) ?>" class="mr-4<?=$laminator_class ?>"><?=LAMINATOR_NAMES[$laminator] ?></a>
                 <?php endforeach; ?>
             </div>
             <?php elseif($work_id == WORK_CUTTING): ?>
             <div class="text-nowrap nav2">
             <?php
                 $cutter_id = filter_input(INPUT_GET, 'machine_id');
-                if(array_key_exists($cutter_id, $cutter_names)) {
-                    $header = "Резка &laquo;".$cutter_names[$cutter_id]."&raquo;";
+                if(array_key_exists($cutter_id, CUTTER_NAMES)) {
+                    $header = "Резка &laquo;".CUTTER_NAMES[$cutter_id]."&raquo;";
                 }
                 else {
                     $header = "Резка $cutter_id";
@@ -378,9 +378,9 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
     
                 $cutter_name = '';
     
-                foreach ($cutters as $cutter):
-                if(array_key_exists($cutter, $cutter_names)) {
-                    $cutter_name = "Резка &laquo;".$cutter_names[$cutter]."&raquo;";
+                foreach (CUTTERS as $cutter):
+                if(array_key_exists($cutter, CUTTER_NAMES)) {
+                    $cutter_name = "Резка &laquo;".CUTTER_NAMES[$cutter]."&raquo;";
                 }
                 else {
                     $cutter_name = "Резка $cutter";

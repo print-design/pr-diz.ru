@@ -68,7 +68,7 @@ if($work_id == WORK_PRINTING) {
     $edition->WorkTime = $work_time_1;
 }
 elseif($work_id == WORK_CUTTING) {
-    $edition->WorkTime = $length_dirty_1 / $cutter_speeds[$edition->MachineId] / 60;
+    $edition->WorkTime = $length_dirty_1 / CUTTER_SPEEDS[$edition->MachineId] / 60;
 }
 elseif($work_id == WORK_LAMINATION && $lamination == 1) {
     $edition->WorkTime = $work_time_2;

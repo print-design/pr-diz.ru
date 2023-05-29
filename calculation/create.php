@@ -1207,7 +1207,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         $selected = " selected='selected'";
                                     }
                                     ?>
-                                    <option value="<?=$item ?>"<?=$selected ?>><?=$printer_names[$item].' ('.$printer_colorfulnesses[$item].' красок)' ?></option>
+                                    <option value="<?=$item ?>"<?=$selected ?>><?=PRINTER_NAMES[$item].' ('.PRINTER_COLORFULLNESSES[$item].' красок)' ?></option>
                                     <?php
                                     endforeach;
                                     endif;

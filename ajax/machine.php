@@ -12,7 +12,7 @@ endif;
 
 foreach($machines as $machine):
 ?>
-<option value="<?=$machine ?>"><?=$printer_names[$machine] ?> (<?=$printer_colorfulnesses[$machine] ?> красок)</option>
+<option value="<?=$machine ?>"><?=PRINTER_NAMES[$machine] ?> (<?=PRINTER_COLORFULLNESSES[$machine] ?> красок)</option>
 <?php
 endforeach;
 ?>

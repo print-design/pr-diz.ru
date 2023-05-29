@@ -74,7 +74,7 @@ if(empty($error_message)) {
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <?php foreach ($extracharge_type_names as $extracharge_type_id => $extracharge_name): ?>
+                    <?php foreach (EXTRACHARGE_TYPE_NAMES as $extracharge_type_id => $extracharge_name): ?>
                     <h2><?=$extracharge_name ?></h2>
                     <table class="table table-hover">
                         <tr>

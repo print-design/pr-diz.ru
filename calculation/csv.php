@@ -21,11 +21,11 @@ if($id !== null) {
     elseif($calculation->work_type_id == Calculation::WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
         
     if(!empty($calculation->machine_id)) {
-        array_push($file_data, array("Машина", $printer_names[$calculation->machine_id], "", ""));
+        array_push($file_data, array("Машина", PRINTER_NAMES[$calculation->machine_id], "", ""));
     }
         
     if(!empty($calculation->laminator_id)) {
-        array_push($file_data, array("Ламинатор", $laminator_names[$calculation->laminator_id], "", ""));
+        array_push($file_data, array("Ламинатор", LAMINATOR_NAMES[$calculation->laminator_id], "", ""));
     }
         
     array_push($file_data, array("Размер тиража", $calculation->quantity.' '. $calculation->GetUnitName($calculation->unit), "", ""));
