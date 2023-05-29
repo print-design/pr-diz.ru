@@ -476,12 +476,29 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $('input:text:visible:first').focus();
             });
             
+            function EditComment(ev) {
+                $(ev.target).parents('td').children('.comment_pen').removeClass('d-inline');
+                $(ev.target).parents('td').children('.comment_pen').addClass('d-none');
+                $(ev.target).parents('td').children('.comment_text').removeClass('d-inline');
+                $(ev.target).parents('td').children('.comment_text').addClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').removeClass('d-block');
+                $(ev.target).parents('td').children('.comment_input').children('input').focus();
+            }
+            
             function SaveComment(ev, plan_type, id) {
                 text = $(ev.target).val();
                 $(ev.target).val('');
                 $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + text })
                         .done(function(data) {
                             $(ev.target).val(data);
+                            $(ev.target).parents('.comment_input').removeClass('d-block');
+                            $(ev.target).parents('.comment_input').addClass('d-none');
+                            $(ev.target).parents('td').children('.comment_text').html(data);
+                            $(ev.target).parents('td').children('.comment_pen').removeClass('d-none');
+                            $(ev.target).parents('td').children('.comment_pen').addClass('d-inline');
+                            $(ev.target).parents('td').children('.comment_text').removeClass('d-none');
+                            $(ev.target).parents('td').children('.comment_text').addClass('d-inline');
                         })
                         .fail(function() {
                             alert('Ошибка при добавлении комментария');

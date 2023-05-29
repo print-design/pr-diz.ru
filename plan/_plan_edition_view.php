@@ -188,8 +188,14 @@ require_once '../include/constants.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
-    <td style="display: none;" onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);" class="<?=$this->plan_shift->shift ?> showdropline comment_cell"<?=$drop ?>>
-        <input type="text" class="form-control comment_cell_<?=$this->edition['type'] ?>" value="<?=$this->edition['comment'] ?>"></td>
+    <td style="display: none;" class="<?=$this->plan_shift->shift ?> showdropline comment_cell"<?=$drop ?>>
+        <div class="d-inline pr-2 comment_pen">
+            <a href="javascript: void(0);" onclick="EditComment(event);">
+                <image src="../images/icons/edit1.svg" title="Редактировать" />
+            </a>
+        </div>
+        <div class="d-inline comment_text"><?=$this->edition['comment'] ?></div>
+        <div class="d-none comment_input"><input type="text" class="form-control comment_cell_<?=$this->edition['type'] ?>" value="<?=$this->edition['comment'] ?>" onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);"></td></div>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
