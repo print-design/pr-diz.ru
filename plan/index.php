@@ -398,7 +398,14 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1><?=$header ?></h1>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h1><?=$header ?></h1>
+                </div>
+                <div>
+                    <a href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" target="_blank" class="font-weight-bold">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
+                </div>
+            </div>
             <div class="wrapper" style="position: absolute; top: 170px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
                 <nav id="sidebar">
                     <div id="sidebar_toggle_button">

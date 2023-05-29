@@ -119,5 +119,39 @@ class PlanShift {
             }
         }
     }
+    
+    function Print() {
+        if(count($this->editions) == 0) {
+            $top = 'nottop';
+            if($this->shift == 'day') {
+                $top = 'top';
+            }
+            
+            include './_plan_shift_print.php';
+        }
+        else {
+            foreach($this->editions as $edition) {
+                $this->shift_worktime += $edition['worktime'];
+                
+                if($edition['type'] == PLAN_TYPE_CONTINUATION || $edition['type'] == PLAN_TYPE_PART_CONTINUATION) {
+                    $this->includes_continuation = true;
+                }
+            }
+            
+            // Отображаем тиражи и события
+            $counter = 0;
+            
+            foreach($this->editions as $key => $value) {
+                $this->is_last = false;
+                $counter++;
+                if($counter == count($this->editions)) {
+                    $this->is_last = true;
+                }
+                
+                $edition = new PlanEdition($this, $key, $value);
+                $edition->Print();
+            }
+        }
+    }
 }
 ?>

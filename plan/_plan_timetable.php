@@ -180,5 +180,9 @@ class PlanTimetable {
     public function Show() {
         include './_plan_timetable_view.php';
     }
+    
+    public function Print() {
+        include './_plan_timetable_print.php';
+    }
 }
 ?>

@@ -16,5 +16,17 @@ class PlanEdition {
         
         include './_plan_edition_view.php';
     }
+    
+    function Print() {
+        $from = $this->plan_shift->timetable->dateFrom->format('Y-m-d');
+        $to = $this->plan_shift->timetable->dateTo->format('Y-m-d');
+        
+        $top = 'nottop';
+        if($this->plan_shift->shift == 'day' && $this->edition_key == 0) {
+            $top = 'top';
+        }
+        
+        include './_plan_edition_print.php';
+    }
 }
 ?>
