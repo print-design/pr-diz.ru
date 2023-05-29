@@ -46,8 +46,8 @@ const PHOTOLABEL_NONE = "none";
 const FROM_OTHER_TECHMAP = "from_other_techmap";
 
 // Получение коэффициента машины
-function GetMachineCoeff($machine) {
-    return $machine == CalculationBase::COMIFLEX ? "1.14" : "1.7";
+function GetMachineCoeff($printer) {
+    return $printer == PRINTER_COMIFLEX ? "1.14" : "1.7";
 }
 
 // Валидация формы
@@ -213,7 +213,7 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
 // ПОЛУЧЕНИЕ ОБЪЕКТА
 $id = filter_input(INPUT_GET, 'id');
 
-$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, (select shortname from machine where id = c.machine_id) machine, laminator_id, "
+$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, laminator_id, "
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
         . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
         . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
@@ -254,7 +254,6 @@ $quantity = $row['quantity'];
 $unit = $row['unit'];
 $work_type_id = $row['work_type_id'];
 $machine_id = $row['machine_id'];
-$machine = $row['machine'];
 $laminator_id = $row['laminator_id'];
 
 $film_variation_id = $row['film_variation_id'];
@@ -471,7 +470,7 @@ $waste = $waste1;
 if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
 if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
-$machine_coeff = GetMachineCoeff($machine);
+$machine_coeff = GetMachineCoeff(PRINTER_SHORTNAMES[$machine_id]);
 
 // Тиражи и формы
 $printings = array();
@@ -840,7 +839,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     <table>
                         <tr>
                             <td style="padding-top: 5px;">Машина</td>
-                            <td style="padding-top: 5px;"><?= mb_stristr($machine, "zbs") ? "ZBS" : ucfirst($machine) ?></td>
+                            <td style="padding-top: 5px;"><?= mb_stristr(PRINTER_SHORTNAMES[$machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$machine_id]) ?></td>
                         </tr>
                         <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>

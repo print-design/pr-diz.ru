@@ -85,7 +85,7 @@ function GetSkiNameExt($param, $param_width) {
         <table class="calculation-table">
             <tr><td colspan="2"><h2>Характеристики</h2></td></tr>
                 <?php if($work_type_id != CalculationBase::WORK_TYPE_NOPRINT): ?>
-            <tr><th>Печатная машина</th><td><?=$machine ?></td></tr>
+            <tr><th>Печатная машина</th><td><?=PRINTER_NAMES[$machine_id] ?></td></tr>
                 <?php
                 function GetInkWithCases($param) {
                     if($param < 1) {

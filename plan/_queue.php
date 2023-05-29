@@ -42,12 +42,7 @@ class Queue {
             }
             
             $str_raports = implode(', ', $raports);
-            
-            $sql = "select colorfulness from machine where id = ".$this->machine_id;
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $colorfulness = $row[0];
-            }
+            $colorfulness = PRINTER_COLORFULLNESSES[$this->machine_id];
         }
         
         // Если эта машина ZBS1, ZBS2, ZBS3, 

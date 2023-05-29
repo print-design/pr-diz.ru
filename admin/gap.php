@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+require_once '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
@@ -9,10 +10,8 @@ if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
 // Машина
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 
-$atlas = 5;
-
 // Если машина - не атлас, перекидываем на machine.php
-if($machine_id != $atlas) {
+if($machine_id != PRINTER_ATLAS) {
     header('Location: machine.php?machine_id='.$machine_id);
 }
 

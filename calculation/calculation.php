@@ -269,7 +269,7 @@ class CalculationBase {
             $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1,
             $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2,
             $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3,
-            $machine, $machine_id, $machine_shortname, $laminator_id, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number,
+            $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number,
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
             $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
@@ -327,9 +327,7 @@ class CalculationBase {
             $ski_3, // Ламинация 2, лыжи
             $width_ski_3,  // Ламинация 2, ширина пленки, мм
         
-            $machine, // Полное наименование машины
             $machine_id, // ID машина
-            $machine_shortname, // Короткое наименование машины
             $laminator_id, // ID ламинатора
             $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
@@ -403,9 +401,7 @@ class CalculationBase {
         $this->ski_3 = $ski_3; // Ламинация 2, лыжи
         $this->width_ski_3 = $width_ski_3;  // Ламинация 2, ширина пленки, мм
         
-        $this->machine = $machine; // Полное наименование машины
         $this->machine_id = $machine_id; // ID машины
-        $this->machine_shortname = $machine_shortname; // Короткое наименование машины
         $this->laminator_id = $laminator_id; // ID ламинатора
         $this->length = $length; // Длина этикетки, мм
         $this->stream_width = $stream_width; // Ширина ручья, мм
@@ -647,8 +643,6 @@ class CalculationBase {
         $ski_3 = null; // Ламинация 2, лыжи
         $width_ski_3 = null;  // Ламинация 2, ширина пленки, мм
         
-        $machine = null;
-        $machine_shortname = null;
         $machine_id = null;
         $laminator_id = null;
         $length = null; // Длина этикетки, мм
@@ -675,7 +669,7 @@ class CalculationBase {
                 . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
                 . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
                 . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-                . "m.name machine, m.shortname machine_shortname, rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
+                . "rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.lamination_roller_width, rc.ink_number, "
                 . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
                 . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
                 . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -685,7 +679,6 @@ class CalculationBase {
                 . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
                 . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense "
                 . "from calculation rc "
-                . "left join machine m on rc.machine_id = m.id "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
                 . "left join film_variation lamination1_fv on rc.lamination1_film_variation_id = lamination1_fv.id "
@@ -751,8 +744,6 @@ class CalculationBase {
             $ski_3 = $row['lamination2_ski']; // Ламинация 2, лыжи
             $width_ski_3 = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
             
-            $machine = $row['machine'];
-            $machine_shortname = $row['machine_shortname'];
             $machine_id = $row['machine_id'];
             $laminator_id = $row['laminator_id'];
             $length = $row['length']; // Длина этикетки, мм
@@ -970,9 +961,7 @@ class CalculationBase {
                     $ski_3, // Ламинация 2, лыжи
                     $width_ski_3,  // Ламинация 2, ширина пленки, мм
                     
-                    $machine, // Полное наименование машины
                     $machine_id, // ID машины
-                    $machine_shortname, // Короткое наименование машины
                     $laminator_id, // ID ламинатора
                     $length, // Длина этикетки, мм
                     $stream_width, // Ширина ручья, мм
@@ -1047,9 +1036,7 @@ class CalculationBase {
                     $ski_3, // Ламинация 2, лыжи
                     $width_ski_3,  // Ламинация 2, ширина пленки, мм
                     
-                    $machine, // Полное наименование машины
                     $machine_id, // ID машина
-                    $machine_shortname, // Короткое наименование машины
                     $laminator_id, // ID ламинатора
                     $length, // Длина этикетки, мм
                     $stream_width, // Ширина ручья, мм
@@ -1211,9 +1198,7 @@ class Calculation extends CalculationBase {
             $ski_3, // Ламинация 2, лыжи
             $width_ski_3,  // Ламинация 2, ширина пленки, мм
         
-            $machine, // Полное наименование машины
             $machine_id, // ID машины
-            $machine_shortname, // Короткое наименование машины
             $laminator_id, // ID ламинатора
             $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
@@ -1247,7 +1232,7 @@ class Calculation extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine, $machine_id, $machine_shortname, $laminator_id, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number, 
+                $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
@@ -2035,9 +2020,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $ski_3, // Ламинация 2, лыжи
             $width_ski_3,  // Ламинация 2, ширина пленки, мм
         
-            $machine, // Полное наименование машины
             $machine_id, // ID машины
-            $machine_shortname, // Короткое наименование машины
             $laminator_id, // ID ламинатора
             $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
@@ -2071,7 +2054,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine, $machine_id, $machine_shortname, $laminator_id, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number, 
+                $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $lamination_roller_width, $ink_number, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 

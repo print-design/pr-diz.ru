@@ -910,15 +910,6 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
     $create_calculation_submit_class = "";
 }
 
-// Список красочностей каждой машины
-$colorfulnesses = array();
-// Заполняем список красочностей, чтобы при выборе машины установить нужное количество элементов списка
-$sql = "select id, colorfulness from machine";
-$fetcher = new Fetcher($sql);
-while ($row = $fetcher->Fetch()) {
-    $colorfulnesses[$row['id']] = $row['colorfulness'];
-}
-
 // Если есть ламинация, а ламинатор пустой, то присваиваем ему значение "Сольвент".
 // (В старых расчётах ламинатор может быть не указан, поскольку тогда бессольвента не было.)
 if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) && empty($laminator_id)) {
@@ -2128,7 +2119,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <?php
                                         endif;
                                         if(!empty($ink_number) || !empty($machine_id)):
-                                        for($i = 1; $i <= $colorfulnesses[$machine_id]; $i++):
+                                        for($i = 1; $i <= PRINTER_COLORFULLNESSES[$machine_id]; $i++):
                                         $selected = "";
                                         if($ink_number == $i) {
                                             $selected = " selected='selected'";
@@ -3520,8 +3511,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Заполняем список красочностей
             var colorfulnesses = {};
-            <?php foreach (array_keys($colorfulnesses) as $key): ?>
-                colorfulnesses[<?=$key ?>] = <?=$colorfulnesses[$key] ?>;
+            <?php foreach (array_keys(PRINTER_COLORFULLNESSES) as $key): ?>
+                colorfulnesses[<?=$key ?>] = <?=PRINTER_COLORFULLNESSES[$key] ?>;
             <?php endforeach; ?>
             
             // Обработка выбора количества красок

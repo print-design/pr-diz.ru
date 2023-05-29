@@ -2,17 +2,16 @@
 include '../include/constants.php';
 
 $work_type_id = filter_input(INPUT_GET, 'work_type_id');
-$machines = WORK_TYPE_PRINTERS[$work_type_id];
 
-if(count($machines) > 1):
+if(count(WORK_TYPE_PRINTERS[$work_type_id]) > 1):
 ?>
 <option value="" hidden="hidden" selected="selected">Печатная машина...</option>
 <?php
 endif;
 
-foreach($machines as $machine):
+foreach(WORK_TYPE_PRINTERS[$work_type_id] as $printer):
 ?>
-<option value="<?=$machine ?>"><?=PRINTER_NAMES[$machine] ?> (<?=PRINTER_COLORFULLNESSES[$machine] ?> красок)</option>
+<option value="<?=$printer ?>"><?=PRINTER_NAMES[$printer] ?> (<?=PRINTER_COLORFULLNESSES[$printer] ?> красок)</option>
 <?php
 endforeach;
 ?>

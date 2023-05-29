@@ -4,20 +4,17 @@ require_once '../include/constants.php';
 ?>
 <div class="text-nowrap nav2">
     <?php
-    $sql = "select id, name from machine order by position";
-    $fetcher = new Fetcher($sql);
-            
-    while ($row = $fetcher->Fetch()):
-    $machine_id_class = (!empty($machine_id) && $row['id'] == $machine_id) ? " active" : "";
+    foreach (PRINTERS as $printer):
+    $machine_id_class = (!empty($machine_id) && $printer == $machine_id) ? " active" : "";
             
     $file_name = "";
     if(empty($machine_id)) {
         $file_name = "machine.php";
     }
     ?>
-    <a href="<?= $file_name. BuildQueryAddRemove('machine_id', $row['id'], 'laminator_id') ?>" class="mr-4<?=$machine_id_class ?>"><?=$row['name'] ?></a>
+    <a href="<?= $file_name. BuildQueryAddRemove('machine_id', $printer, 'laminator_id') ?>" class="mr-4<?=$machine_id_class ?>"><?=PRINTER_NAMES[$printer] ?></a>
     <?php
-    endwhile;
+    endforeach;
     
     $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
     $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
@@ -49,7 +46,7 @@ $gap_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATIO
     <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$machine_class ?>">Нормы работы оборудования</a>
     <a href="<?=APPLICATION ?>/admin/priladka.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$priladka_class ?>">Приладка</a>
     <a href="<?=APPLICATION ?>/admin/raport.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$raport_class ?>">Рапорт</a>
-    <?php if($machine_id == CalculationBase::ATLAS): ?>
+    <?php if($machine_id == PRINTER_ATLAS): ?>
     <a href="<?=APPLICATION ?>/admin/gap.php<?= BuildQuery('machine_id', $machine_id) ?>" class="mr-4<?=$gap_class ?>">Зазор</a>
     <?php endif; ?>
 </div>
