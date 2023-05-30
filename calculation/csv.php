@@ -459,7 +459,7 @@ if($id !== null) {
     $ink_solvent_kg_price = 0;
     $ink_solvent_currency = 1;
             
-    if($calculation->machine_shortname == Calculation::COMIFLEX) {
+    if($calculation->machine_id == PRINTER_COMIFLEX) {
         $ink_solvent_kg_price = $calculation->ink_flexol82_kg_price;
         $ink_solvent_currency = $calculation->GetCurrencyRate($calculation->data_ink->solvent_flexol82_currency, $calculation->usd, $calculation->euro);
     }

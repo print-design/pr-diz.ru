@@ -45,7 +45,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <?php
     endif;
     // План
-    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER]))):
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER]))):
     ?>
     <a href="<?=APPLICATION ?>/plan/" class="left_bar_item<?=$plan_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
