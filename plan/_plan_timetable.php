@@ -1,7 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
 require_once './_plan_date.php';
-require_once '../include/constants.php';
 
 class PlanTimetable {
     public $dateFrom;

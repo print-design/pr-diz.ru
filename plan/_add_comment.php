@@ -1,6 +1,5 @@
 <?php
 require_once '../include/topscripts.php';
-require_once '../include/constants.php';
 
 $planType = filter_input(INPUT_GET, 'plan_type');
 $id = filter_input(INPUT_GET, 'id');

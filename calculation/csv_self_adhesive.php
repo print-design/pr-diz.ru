@@ -1,7 +1,6 @@
 <?php
 include '../include/topscripts.php';
 include './calculation.php';
-require_once '../include/constants.php';
 
 $id = filter_input(INPUT_GET, 'id');
 

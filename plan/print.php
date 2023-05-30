@@ -1,7 +1,11 @@
 <?php
 include '../include/topscripts.php';
-include '../include/constants.php';
 include './_plan_timetable.php';
+
+// Авторизация
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER]))) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');

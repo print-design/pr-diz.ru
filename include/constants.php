@@ -1,4 +1,20 @@
 <?php
+// Роли
+const ROLE_TECHNOLOGIST = 3;
+const ROLE_MANAGER = 4;
+const ROLE_STOREKEEPER = 6;
+const ROLE_ELECTROCARIST = 7;
+const ROLE_CUTTER = 8;
+const ROLE_MARKER = 9;
+const ROLE_AUDITOR = 10;
+const ROLE_MANAGER_SENIOR = 11;
+const ROLE_SCHEDULER = 12;
+
+const ROLES = array(ROLE_ELECTROCARIST, ROLE_STOREKEEPER, ROLE_MARKER, ROLE_MANAGER, ROLE_SCHEDULER, ROLE_AUDITOR, ROLE_CUTTER, ROLE_MANAGER_SENIOR, ROLE_TECHNOLOGIST);
+const ROLE_NAMES = array(ROLE_TECHNOLOGIST => "technologist", ROLE_MANAGER => "manager", ROLE_STOREKEEPER => "storekeeper", ROLE_ELECTROCARIST => "electrocarist", ROLE_CUTTER => "cutter", ROLE_MARKER => "marker", ROLE_AUDITOR => "auditor", ROLE_MANAGER_SENIOR => "manager-senior", ROLE_SCHEDULER => "scheduler");
+const ROLE_LOCAL_NAMES = array(ROLE_ELECTROCARIST => "Карщик", ROLE_STOREKEEPER => "Кладовщик", ROLE_MARKER => "Маркировщик", ROLE_MANAGER => "Менеджер", ROLE_SCHEDULER => "Планировщик", ROLE_AUDITOR => "Ревизор", ROLE_CUTTER => "Резчик раскрой", ROLE_MANAGER_SENIOR => "Старший менеджер", ROLE_TECHNOLOGIST => "Технолог");
+const ROLE_TWOFACTOR = array(ROLE_ELECTROCARIST => 0, ROLE_STOREKEEPER => 0, ROLE_MARKER => 0, ROLE_MANAGER => 0, ROLE_SCHEDULER => 0, ROLE_AUDITOR => 0, ROLE_CUTTER => 0, ROLE_MANAGER_SENIOR => 0, ROLE_TECHNOLOGIST => 0);
+
 // Печатные машины
 const PRINTER_ZBS_1 = 1;
 const PRINTER_ZBS_2 = 2;

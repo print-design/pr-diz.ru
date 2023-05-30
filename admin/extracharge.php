@@ -1,9 +1,8 @@
 <?php
 include '../include/topscripts.php';
-require_once '../include/constants.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 

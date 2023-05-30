@@ -41,7 +41,7 @@ elseif($folder == 'admin') {
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
-            <?php if(IsInRole(array('technologist', 'dev', 'administrator'))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST]))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$user_class ?>" href="<?=APPLICATION ?>/user/">Сотрудники</a>
             </li>
@@ -49,7 +49,7 @@ elseif($folder == 'admin') {
                 <a class="nav-link<?=$supplier_class ?>" href="<?=APPLICATION ?>/supplier/">Поставщики</a>
             </li>
             <?php endif; ?>
-            <?php if(IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$film_class ?>" href="<?=APPLICATION ?>/supplier/film.php">Пленка</a>
             </li>
@@ -59,6 +59,8 @@ elseif($folder == 'admin') {
             <li class="nav-item">
                 <a class="nav-link<?=$currency_class ?>" href="<?=APPLICATION ?>/admin/currency.php">Курсы валют</a>
             </li>
+            <?php endif; ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$plan_class ?>" href="<?=APPLICATION ?>/admin/plan_employees.php">План</a>
             </li>

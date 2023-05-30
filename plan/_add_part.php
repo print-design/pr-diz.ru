@@ -2,7 +2,6 @@
 require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
 require_once '../calculation/status_ids.php';
-require_once '../include/constants.php';
 
 $part_id = filter_input(INPUT_GET, 'part_id');
 $work_id = filter_input(INPUT_GET, 'work_id');

@@ -1,6 +1,5 @@
 <?php
 require_once '../calculation/calculation.php';
-require_once '../include/constants.php';
 ?>
 <tr data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-id="<?=$this->edition['calculation_id'] ?>" data-position="<?=$this->edition['position'] ?>">
     <?php if($this->plan_shift->shift == 'day' && $this->edition_key == 0): ?>
@@ -206,7 +205,7 @@ require_once '../include/constants.php';
             </div>
         </div>
         <?php else: ?>
-        <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drop ?>>
+        <a href="../calculation/<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? "print_tm" : "techmap" ?>.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
         <?php endif; ?>

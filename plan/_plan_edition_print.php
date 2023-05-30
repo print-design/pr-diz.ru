@@ -1,6 +1,5 @@
 <?php
 require_once '../calculation/calculation.php';
-require_once '../include/constants.php';
 ?>
 <tr>
     <?php if($this->plan_shift->shift == 'day' && $this->edition_key == 0): ?>

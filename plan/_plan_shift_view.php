@@ -1,6 +1,3 @@
-<?php
-require_once '../include/constants.php';
-?>
 <tr data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-id="" data-position="">
     <?php if($this->shift == 'day'): ?>
     <td class="border-right" rowspan="<?=$this->date_editions_count ?>">

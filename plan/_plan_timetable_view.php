@@ -1,6 +1,3 @@
-<?php
-require_once '../include/constants.php';
-?>
 <table class="table typography">
     <tr>
         <th>Дата</th>

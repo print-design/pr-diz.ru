@@ -1,6 +1,3 @@
-<?php
-require_once '../include/constants.php';
-?>
 <div class='queue_item'>
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
         <div class="d-flex justify-content-start">
@@ -20,7 +17,7 @@ require_once '../include/constants.php';
                     <a class="black queue_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" /></a>
                     <div class="queue_menu text-left">
                         <div class="command">
-                            <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$row['calculation_id'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
+                            <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? "print_tm" : "techmap" ?>.php?id=<?=$row['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?>><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
                         </div>
                         <div class="command">
                             <?php if($row['type'] == PLAN_TYPE_EDITION): ?>

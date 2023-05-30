@@ -1,5 +1,6 @@
 <?php
 include 'define.php';
+include 'constants.php';
 
 global $weekdays;
 

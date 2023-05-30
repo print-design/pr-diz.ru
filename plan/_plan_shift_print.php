@@ -1,6 +1,3 @@
-<?php
-require_once '../include/constants.php';
-?>
 <tr>
     <?php if($this->shift == 'day'): ?>
     <td class="<?=$top.' '.$this->shift ?> border-right" rowspan="<?=$this->date_editions_count ?>">

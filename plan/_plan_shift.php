@@ -1,7 +1,6 @@
 <?php
 require_once './_plan_timetable.php';
 require_once './_plan_edition.php';
-require_once '../include/constants.php';
 
 class PlanShift {
     public $date;

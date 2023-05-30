@@ -2,7 +2,6 @@
 require_once '../include/topscripts.php';
 require_once '../calculation/status_ids.php';
 require_once '../calculation/calculation.php';
-require_once '../include/constants.php';
 
 class Queue {
     private $work_id = null;

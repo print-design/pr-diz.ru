@@ -1,11 +1,10 @@
 <?php
 include '../include/topscripts.php';
-include '../include/constants.php';
 include './_queue.php';
 include './_plan_timetable.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 

@@ -2,7 +2,6 @@
 include '../include/topscripts.php';
 include './status_ids.php';
 include './calculation.php';
-require_once '../include/constants.php';
 
 // Печать: лицевая, оборотная
 const SIDE_FRONT = 1;
