@@ -11,7 +11,7 @@ require_once '../calculation/calculation.php';
     <?php if($this->edition_key == 0): ?>
     <td class="<?=$this->plan_shift->shift ?>" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
         <?php if(!$this->plan_shift->includes_continuation): ?>
-        <div style="display: block;">
+        <div class="foredit">
             <a href="javascript: void(0);" onclick="javascript: MoveUp(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
                 <img src="../images/icons/up_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
             </a>
@@ -21,18 +21,23 @@ require_once '../calculation/calculation.php';
             <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: block;"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</div>
         </div>
         <?php if(!$this->plan_shift->includes_continuation): ?>
-        <div style="display: block; margin-top: 6px;">
+        <div class="foredit" style="margin-top: 6px;">
             <a href="javascript: void(0);" onclick="javascript: MoveDown(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
                 <img src="../images/icons/down_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
             </a>
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?>" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
+    <td class="<?=$this->plan_shift->shift ?> border-right" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
+        <?php
+        $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
+        
+        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))):
+        ?>
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
-            $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
+            
             foreach($this->plan_shift->timetable->employees as $emp_key => $employee):
                 $selected = '';
             if(array_key_exists($key, $this->plan_shift->timetable->workshifts1) && $emp_key == $this->plan_shift->timetable->workshifts1[$key]) {
@@ -46,7 +51,15 @@ require_once '../calculation/calculation.php';
             endforeach;
             ?>
         </select>
-        <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING && $this->plan_shift->timetable->machine_id == PRINTER_COMIFLEX): ?>
+        <?php
+        elseif(array_key_exists($key, $this->plan_shift->timetable->workshifts1)):
+            $employee = $this->plan_shift->timetable->employees[$this->plan_shift->timetable->workshifts1[$key]];
+            echo $employee['last_name'].' '.$employee['first_name'];
+        endif;
+        
+        if($this->plan_shift->timetable->work_id == WORK_PRINTING && $this->plan_shift->timetable->machine_id == PRINTER_COMIFLEX):
+        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))):
+        ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
@@ -64,17 +77,28 @@ require_once '../calculation/calculation.php';
             endforeach;
             ?>
         </select>
-        <?php endif; ?>
+        <?php
+        elseif(array_key_exists($key, $this->plan_shift->timetable->workshifts2)):
+            echo '<br />';
+            $employee = $this->plan_shift->timetable->employees[$this->plan_shift->timetable->workshifts2[$key]];
+            echo $employee['last_name'].' '.$employee['first_name'];
+        endif;
+        endif;
+        ?>
     </td>
     <?php endif; ?>
     <?php
-    $drop = " ondrop='DropTimetable(event);' ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";
+    $drop = "";
     
-    if($this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION) {
-        $drop = "";
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))) {
+        $drop = " ondrop='DropTimetable(event);' ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";
+        
+        if($this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION) {
+            $drop = "";
+        }
     }
     ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline border-left fordrag"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline fordrag"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation']): ?>
         <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
@@ -187,8 +211,8 @@ require_once '../calculation/calculation.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
-    <td style="display: none;" class="<?=$this->plan_shift->shift ?> showdropline comment_cell"<?=$drop ?>>
-        <div class="d-inline pr-2 comment_pen">
+    <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell d-none"<?=$drop ?>>
+        <div class="d-inline pr-2 comment_pen foredit">
             <a href="javascript: void(0);" onclick="EditComment(event);">
                 <image src="../images/icons/edit1.svg" title="Редактировать" />
             </a>
@@ -196,16 +220,20 @@ require_once '../calculation/calculation.php';
         <div class="d-inline comment_text"><?=$this->edition['comment'] ?></div>
         <div class="d-none comment_input"><input type="text" class="form-control comment_cell_<?=$this->edition['type'] ?>" value="<?=$this->edition['comment'] ?>" onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);"></td></div>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-right"<?=$drop ?>>
-        <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-right" style="position:relative;"<?=$drop ?>>
+        <?php if($this->edition['type'] == PLAN_TYPE_EVENT && IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
         <div class="timetable_menu text-left">
             <div class="command">
                 <button type="button" class="btn btn-link h-25" style="font-size: 14px;" onclick="javascript: DeleteEvent(<?=$this->edition['calculation_id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
             </div>
         </div>
-        <?php else: ?>
-        <a href="../calculation/<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? "print_tm" : "techmap" ?>.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
+        <?php elseif(IsInRole(ROLE_NAMES[ROLE_SCHEDULER])): ?>
+        <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
+            <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
+        </a>
+        <?php elseif(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST]) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId())): ?>
+        <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
         <?php endif; ?>

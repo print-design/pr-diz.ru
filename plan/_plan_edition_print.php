@@ -14,7 +14,7 @@ require_once '../calculation/calculation.php';
             <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: block;"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</div>
         </div>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?>" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> border-right" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
         <?php
         $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
         if(array_key_exists($key, $this->plan_shift->timetable->workshifts1)) {
@@ -32,7 +32,7 @@ require_once '../calculation/calculation.php';
         ?>
     </td>
     <?php endif; ?>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> border-left">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
         <?=$this->edition['calculation'] ?>
         <?php else: ?>

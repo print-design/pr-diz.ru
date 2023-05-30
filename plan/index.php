@@ -268,6 +268,20 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 display: none;
             }
             <?php endif; ?>
+            
+            <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            th.fordrag, td.fordrag {
+                display: none;
+            }
+            
+            .foredit, .foredit.d-inline {
+                display: none!important;
+            }
+            
+            th.comment_cell.d-none, td.comment_cell.d-none {
+                display: table-cell!important;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>
@@ -406,7 +420,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 </div>
             </div>
             <div class="wrapper" style="position: absolute; top: 170px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
-                <nav id="sidebar">
+                <nav id="sidebar" class="foredit">
                     <div id="sidebar_toggle_button">
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
                     </div>
@@ -443,7 +457,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                             <?php if(!empty(filter_input(INPUT_GET, 'from'))): ?>
                             <a href="<?= BuildQueryRemove('from') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
-                            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                            <button type="button" class="btn btn-light foredit" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                         </div>
                     </div>
                     <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0; padding: 5px;">
@@ -462,21 +476,22 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
         <?php
         include '../include/footer.php';
         ?>
+        <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
         <script>
             // Скрытие/показ левой панели.
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
                 $('#sidebarExpand').show();
-                $('.comment_cell').show();
+                $('.comment_cell').removeClass('d-none');
             });
                 
             $('#sidebarExpand').on('click', function() {
                 $('#sidebar').removeClass('active');
                 $('#sidebarExpand').hide();
-                $('.comment_cell').hide();
+                $('.comment_cell').addClass('d-none');
             });
-            
-            // При показе формы добавления плёнки,
+                
+            // При показе формы добавления события,
             // устанавливаем фокус на текстовом поле.
             $('#add_event').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();
@@ -1105,5 +1120,6 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 }
             }
         </script>
+        <?php endif; ?>
     </body>
 </html>

@@ -16,8 +16,14 @@ class PlanDate {
     }
     
     function Show() {
-        $day_editions_count = (count($this->day_editions) > 0 && end($this->day_editions)['has_continuation']) ? count($this->day_editions) : count($this->day_editions) + 1;
-        $night_editions_count = (count($this->night_editions) > 0 && end($this->night_editions)['has_continuation']) ? count($this->night_editions) : count($this->night_editions) + 1;
+        $day_editions_count = (count($this->day_editions) > 0 ? count($this->day_editions) : 1);
+        $night_editions_count = (count($this->night_editions) > 0 ? count($this->night_editions) : 1);
+        
+        if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) {
+            $day_editions_count = (count($this->day_editions) > 0 && end($this->day_editions)['has_continuation']) ? count($this->day_editions) : count($this->day_editions) + 1;
+            $night_editions_count = (count($this->night_editions) > 0 && end($this->night_editions)['has_continuation']) ? count($this->night_editions) : count($this->night_editions) + 1;            
+        }
+        
         $date_editions_count = ($day_editions_count == 0 ? 1 : $day_editions_count) + ($night_editions_count == 0 ? 1 : $night_editions_count);
         
         $day_shift = new PlanShift($this->date, 'day', $this->timetable, $this->day_editions, $date_editions_count, $day_editions_count);

@@ -11,7 +11,7 @@
         <th class="cutting_hidden lamination_hidden">Краски</th>
         <th>Время</th>
         <th>Менеджер</th>
-        <th style="display: none;" class="comment_cell">Комментарий</th>
+        <th class="comment_cell d-none">Комментарий</th>
         <th></th>
     </tr>
     <?php

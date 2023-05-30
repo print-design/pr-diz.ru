@@ -6,11 +6,16 @@
     </td>
     <?php endif; ?>
     <td class="<?=$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
-    <td class="<?=$this->shift ?>">
+    <td class="<?=$this->shift ?> border-right">
+        <?php
+        $key = $this->timetable->work_id.'_'.$this->timetable->machine_id.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
+        
+        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))):    
+        ?>
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-work-id="<?=$this->timetable->work_id ?>" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
-            $key = $this->timetable->work_id.'_'.$this->timetable->machine_id.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
+            
             foreach($this->timetable->employees as $emp_key => $employee):
                 $selected = '';
             if(array_key_exists($key, $this->timetable->workshifts1) && $emp_key == $this->timetable->workshifts1[$key]) {
@@ -24,7 +29,15 @@
             endforeach;
             ?>
         </select>
-        <?php if($this->timetable->work_id == WORK_PRINTING && $this->timetable->machine_id == PRINTER_COMIFLEX): ?>
+        <?php
+        elseif(array_key_exists($key, $this->timetable->workshifts1)):
+            $employee = $this->timetable->employees[$this->timetable->workshifts1[$key]];
+            echo $employee['last_name'].' '.$employee['first_name'];
+        endif;
+        
+        if($this->timetable->work_id == WORK_PRINTING && $this->timetable->machine_id == PRINTER_COMIFLEX):
+        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))):
+        ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-work-id="<?=$this->timetable->work_id ?>" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
@@ -42,9 +55,16 @@
             endforeach;
             ?>
         </select>
-        <?php endif; ?>
+        <?php
+        elseif(array_key_exists($key, $this->timetable->workshifts2)):
+            echo '<br />';
+            $employee = $this->timetable->employees[$this->timetable->workshifts2[$key]];
+            echo $employee['last_name'].' '.$employee['first_name'];
+        endif;
+        endif;
+        ?>
     </td>
-    <td class="<?=$this->shift ?> showdropline border-left fordrag" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
+    <td class="<?=$this->shift ?> showdropline fordrag" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline cutting_hidden lamination_hidden" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
@@ -52,6 +72,6 @@
     <td class="<?=$this->shift ?> showdropline cutting_hidden lamination_hidden" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
-    <td style="display: none;" class="<?=$this->shift ?> showdropline comment_cell" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
+    <td class="<?=$this->shift ?> showdropline comment_cell d-none" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
 </tr>
