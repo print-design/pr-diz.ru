@@ -3,13 +3,13 @@ include 'include/topscripts.php';
 include 'include/GrafikTimetableReadonly.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'storekeeper', 'dev', 'manager', 'administrator'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не указан параметр id, переводим на начальную страницу
+// Если не указан параметр id, переводим на страницу с id=1
 if(empty(filter_input(INPUT_GET, 'id'))) {
-    header('Location: '.APPLICATION);
+    header('Location: ?id=1');
 }
 
 $date_from = null;
@@ -25,6 +25,29 @@ $error_message = $grafik_machine->error_message;
         <?php
         include 'include/head.php';;
         ?>
+        <style>
+            table.typography {
+    font-size: smaller;
+}
+
+table.typography tbody tr td {
+    background-color: white;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+table.typography tbody tr td.top {
+    border-top: solid 2px darkgray;
+}
+
+table.print tr td.top {
+    border-top: solid 2px darkgray;
+}
+
+table.typography tbody tr td.night {
+    background-color: #F2F2F2;
+}
+        </style>
     </head>
     <body>
         <?php
