@@ -34,14 +34,14 @@ require_once '../include/constants.php';
             <option value="">...</option>
             <?php
             $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
-            foreach($this->plan_shift->timetable->employees as $employee):
+            foreach($this->plan_shift->timetable->employees as $emp_key => $employee):
                 $selected = '';
-            if(array_key_exists($key, $this->plan_shift->timetable->workshifts1) && $employee['id'] == $this->plan_shift->timetable->workshifts1[$key]) {
+            if(array_key_exists($key, $this->plan_shift->timetable->workshifts1) && $emp_key == $this->plan_shift->timetable->workshifts1[$key]) {
                 $selected = " selected='selected'";
             }
-            if($employee['role_id'] == WORK_PLAN_ROLES[$this->plan_shift->timetable->work_id] && ($employee['active'] == 1 || $employee['id'] == $this->plan_shift->timetable->workshifts1[$key])):
+            if($employee['role_id'] == WORK_PLAN_ROLES[$this->plan_shift->timetable->work_id] && ($employee['active'] == 1 || $emp_key == $this->plan_shift->timetable->workshifts1[$key])):
             ?>
-            <option value="<?=$employee['id'] ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
+            <option value="<?=$emp_key ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
             <?php
             endif;
             endforeach;
@@ -52,14 +52,14 @@ require_once '../include/constants.php';
             <option value="">...</option>
             <?php
             $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
-            foreach($this->plan_shift->timetable->employees as $employee):
+            foreach($this->plan_shift->timetable->employees as $emp_key => $employee):
                 $selected = '';
-            if(array_key_exists($key, $this->plan_shift->timetable->workshifts2) && $employee['id'] == $this->plan_shift->timetable->workshifts2[$key]) {
+            if(array_key_exists($key, $this->plan_shift->timetable->workshifts2) && $emp_key == $this->plan_shift->timetable->workshifts2[$key]) {
                 $selected = " selected='selected'";
             }
-            if($employee['role_id'] == PLAN_ROLE_ASSISTANT && ($employee['active'] == 1 || $employee['id'] == $this->plan_shift->timetable->workshifts2[$key])):
+            if($employee['role_id'] == PLAN_ROLE_ASSISTANT && ($employee['active'] == 1 || $emp_key == $this->plan_shift->timetable->workshifts2[$key])):
             ?>
-            <option value="<?=$employee['id'] ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
+            <option value="<?=$emp_key ?>"<?=$selected ?>><?=$employee['last_name'].' '.$employee['first_name'] ?></option>
             <?php
             endif;
             endforeach;

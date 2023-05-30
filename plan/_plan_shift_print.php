@@ -13,12 +13,15 @@ require_once '../include/constants.php';
         <?php
         $key = $this->timetable->work_id.'_'.$this->timetable->machine_id.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
         if(array_key_exists($key, $this->timetable->workshifts1)) {
-            echo $this->timetable->workshifts1[$key];
+            $employee = $this->timetable->employees[$this->timetable->workshifts1[$key]];
+            echo $employee['last_name'].' '.$employee['first_name'];
         }
         
         if($this->timetable->work_id == WORK_PRINTING && $this->timetable->machine_id == PRINTER_COMIFLEX) {
             if(array_key_exists($key, $this->timetable->workshifts2)) {
-                echo $this->timetable->workshifts2[$key];
+                echo '<br />';
+                $employee = $this->timetable->employees[$this->timetable->workshifts2[$key]];
+                echo $employee['last_name'].' '.$employee['first_name'];
             }
         }
         ?>

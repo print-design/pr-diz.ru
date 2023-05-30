@@ -24,7 +24,7 @@ class PlanTimetable {
         $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
         $fetcher = new Fetcher($sql);
         while ($row = $fetcher->Fetch()) {
-            array_push($this->employees, array("id" => $row['id'], "first_name" => mb_substr($row['first_name'], 0, 1).'.', "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']));
+            $this->employees[$row['id']] = array("first_name" => mb_substr($row['first_name'], 0, 1).'.', "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']);
         }
         
         // Работники1
