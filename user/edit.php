@@ -145,12 +145,11 @@ if(empty($role_id)) {
                             <select id="role_id" name="role_id" class="form-control" required="required">
                                 <option value="">...</option>
                                 <?php
-                                $roles = (new Grabber('select id, local_name from role order by priority'))->result;
-                                foreach ($roles as $role) {
-                                    $id = $role['id'];
-                                    $local_name = $role['local_name'];
+                                foreach (ROLES as $role) {
+                                    $id = $role;
+                                    $local_name = ROLE_LOCAL_NAMES[$role];
                                     $selected = '';
-                                    if($role_id == $role['id']) $selected = " selected='selected'";
+                                    if($role_id == $role) $selected = " selected='selected'";
                                     echo "<option value='$id'$selected>$local_name</option>";
                                 }
                                 ?>

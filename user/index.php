@@ -155,9 +155,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select u.id, u.first_name, u.last_name, r.local_name role, u.username, u.email, u.phone, u.active "
-                            . "from user u inner join role r on u.role_id = r.id "
-                            . "order by u.first_name asc";
+                    $sql = "select id, role_id, first_name, last_name, username, email, phone, active from user order by first_name asc";
                     $fetcher = new Fetcher($sql);
                     $error_message = $fetcher->error;
                     
@@ -165,7 +163,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                     ?>
                     <tr>
                         <td><?=$row['first_name'].' '.$row['last_name'] ?></td>
-                        <td><?=$row['role'] ?></td>
+                        <td><?=ROLE_LOCAL_NAMES[$row['role_id']] ?></td>
                         <td><?=$row['username'] ?></td>
                         <td><?=$row['email'] ?></td>
                         <td><?=$row['phone'] ?></td>
