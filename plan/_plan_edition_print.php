@@ -39,7 +39,7 @@ require_once '../calculation/calculation.php';
         <div style="font-weight: bold; display: inline;"><?=$this->edition['calculation'] ?></div><br /><?=$this->edition['customer'] ?>
         <?php endif; ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap storekeeper_hidden">
         <?php if($this->edition['type'] != PLAN_TYPE_EVENT): ?>
         <div class="d-flex justify-content-between">
             <div>
@@ -60,16 +60,16 @@ require_once '../calculation/calculation.php';
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden storekeeper_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden storekeeper_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden storekeeper_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?>">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> storekeeper_hidden">
         <?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">

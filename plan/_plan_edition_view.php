@@ -122,7 +122,7 @@ require_once '../calculation/calculation.php';
         <div style="font-weight: bold; display: inline;"<?=$drop ?>><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap storekeeper_hidden"<?=$drop ?>>
         <?php if($this->edition['type'] != PLAN_TYPE_EVENT): ?>
         <div class="d-flex justify-content-between">
             <div>
@@ -200,16 +200,16 @@ require_once '../calculation/calculation.php';
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline storekeeper_hidden"<?=$drop ?>>
         <?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>

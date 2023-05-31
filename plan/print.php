@@ -71,6 +71,32 @@ if(empty($work_id) || empty($machine_id)) {
                 display: none;
             }
             <?php endif; ?>
+            
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            .comment_invisible {
+                display: none;
+            }
+            .notforedit {
+                display: none;
+            }
+            <?php else: ?>
+            th.fordrag, td.fordrag {
+                display: none;
+            }
+            .foredit {
+                display: none;
+            }
+            <?php endif; ?>
+            
+            <?php if(IsInRole(ROLE_NAMES[ROLE_STOREKEEPER])): ?>
+            .storekeeper_hidden {
+                display: none;
+            }
+            <?php else: ?>
+            .not_storekeeper_hidden {
+                display: none;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>

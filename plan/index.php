@@ -284,6 +284,16 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 display: none;
             }
             <?php endif; ?>
+            
+            <?php if(IsInRole(ROLE_NAMES[ROLE_STOREKEEPER])): ?>
+            .storekeeper_hidden {
+                display: none;
+            }
+            <?php else: ?>
+            .not_storekeeper_hidden {
+                display: none;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>
