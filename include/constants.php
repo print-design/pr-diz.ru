@@ -43,7 +43,7 @@ const CUTTER_ATLAS = 101;
 const CUTTER_SOMA = 102;
 
 const CUTTERS = array(CUTTER_1, CUTTER_2, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS);
-const CUTTER_NAMES = array(CUTTER_ATLAS => "Атлас", CUTTER_SOMA => "Сома");
+const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_2 => "Резка 2", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;");
 const CUTTER_SPEEDS = array(CUTTER_1 => 70, CUTTER_2 => 70, CUTTER_3 => 70, CUTTER_4 => 120, CUTTER_ATLAS => 70, CUTTER_SOMA => 120);
 
 // Типы работы

@@ -7,6 +7,6 @@
     <td class="<?=$this->shift ?> showdropline cutting_hidden lamination_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
-    <td class="<?=$this->shift ?> showdropline comment_cell d-none" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <td class="<?=$this->shift ?> showdropline comment_cell comment_invisible" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
 </tr>

@@ -62,10 +62,6 @@ if(empty($work_id) || empty($machine_id)) {
                 border-top: solid 2px darkgray;
             }
             
-            /*table.typography tbody tr td.night {
-                background-color: #F2F2F2;
-            }*/
-            
             <?php if($work_id == WORK_CUTTING): ?>
             .cutting_hidden {
                 display: none;

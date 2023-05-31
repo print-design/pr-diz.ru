@@ -269,17 +269,16 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             }
             <?php endif; ?>
             
-            <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            .comment_invisible {
+                display: none;
+            }
+            <?php else: ?>
             th.fordrag, td.fordrag {
                 display: none;
             }
-            
-            .foredit, .foredit.d-inline {
-                display: none!important;
-            }
-            
-            th.comment_cell.d-none, td.comment_cell.d-none {
-                display: table-cell!important;
+            .foredit {
+                display: none;
             }
             <?php endif; ?>
         </style>
@@ -382,26 +381,12 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             <div class="text-nowrap nav2">
             <?php
                 $cutter_id = filter_input(INPUT_GET, 'machine_id');
-                if(array_key_exists($cutter_id, CUTTER_NAMES)) {
-                    $header = "Резка &laquo;".CUTTER_NAMES[$cutter_id]."&raquo;";
-                }
-                else {
-                    $header = "Резка $cutter_id";
-                }
-    
-                $cutter_name = '';
+                $header = CUTTER_NAMES[$cutter_id];
     
                 foreach (CUTTERS as $cutter):
-                if(array_key_exists($cutter, CUTTER_NAMES)) {
-                    $cutter_name = "Резка &laquo;".CUTTER_NAMES[$cutter]."&raquo;";
-                }
-                else {
-                    $cutter_name = "Резка $cutter";
-                }
-    
-                $cutter_class = $cutter_id == $cutter ? ' active' : '';
+                    $cutter_class = $cutter_id == $cutter ? ' active' : '';
                 ?>
-                <a href="<?= BuildQuery('machine_id', $cutter) ?>" class="mr-4<?=$cutter_class ?>"><?=$cutter_name ?></a>
+                <a href="<?= BuildQuery('machine_id', $cutter) ?>" class="mr-4<?=$cutter_class ?>"><?=CUTTER_NAMES[$cutter] ?></a>
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>
@@ -482,13 +467,13 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
                 $('#sidebarExpand').show();
-                $('.comment_cell').removeClass('d-none');
+                $('.comment_cell').removeClass('comment_invisible');
             });
                 
             $('#sidebarExpand').on('click', function() {
                 $('#sidebar').removeClass('active');
                 $('#sidebarExpand').hide();
-                $('.comment_cell').addClass('d-none');
+                $('.comment_cell').addClass('comment_invisible');
             });
                 
             // При показе формы добавления события,
@@ -498,12 +483,12 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             });
             
             function EditComment(ev) {
-                $(ev.target).parents('td').children('.comment_pen').removeClass('d-inline');
-                $(ev.target).parents('td').children('.comment_pen').addClass('d-none');
-                $(ev.target).parents('td').children('.comment_text').removeClass('d-inline');
-                $(ev.target).parents('td').children('.comment_text').addClass('d-none');
+                //$(ev.target).parents('td').children('.comment_pen').removeClass('d-inline');
+                $(ev.target).parents('td').children('.d-flex').children('.comment_pen').addClass('d-none');
+                //$(ev.target).parents('td').children('.comment_text').removeClass('d-inline');
+                $(ev.target).parents('td').children('.d-flex').children('.comment_text').addClass('d-none');
                 $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
-                $(ev.target).parents('td').children('.comment_input').removeClass('d-block');
+                //$(ev.target).parents('td').children('.comment_input').removeClass('d-block');
                 $(ev.target).parents('td').children('.comment_input').children('input').focus();
             }
             
@@ -513,13 +498,13 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + text })
                         .done(function(data) {
                             $(ev.target).val(data);
-                            $(ev.target).parents('.comment_input').removeClass('d-block');
+                            //$(ev.target).parents('.comment_input').removeClass('d-block');
                             $(ev.target).parents('.comment_input').addClass('d-none');
-                            $(ev.target).parents('td').children('.comment_text').html(data);
-                            $(ev.target).parents('td').children('.comment_pen').removeClass('d-none');
-                            $(ev.target).parents('td').children('.comment_pen').addClass('d-inline');
-                            $(ev.target).parents('td').children('.comment_text').removeClass('d-none');
-                            $(ev.target).parents('td').children('.comment_text').addClass('d-inline');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
+                            //$(ev.target).parents('td').children('.comment_pen').addClass('d-inline');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
+                            //$(ev.target).parents('td').children('.comment_text').addClass('d-inline');
                         })
                         .fail(function() {
                             alert('Ошибка при добавлении комментария');
