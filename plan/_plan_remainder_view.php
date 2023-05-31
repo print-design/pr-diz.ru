@@ -6,7 +6,9 @@
     <td class="<?=$this->shift ?> showdropline cutting_hidden storekeeper_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline storekeeper_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <td class="<?=$this->shift ?> showdropline not_storekeeper_hidden"></td>
+    <td class="<?=$this->shift ?> showdropline not_storekeeper_hidden"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline comment_cell comment_invisible" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
-    <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <td class="<?=$this->shift ?> showdropline text-right storekeeper_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
 </tr>

@@ -212,6 +212,18 @@ require_once '../calculation/calculation.php';
     <td class="<?=$this->plan_shift->shift ?> showdropline storekeeper_hidden"<?=$drop ?>>
         <?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?>
     </td>
+    <td class="<?=$this->plan_shift->shift ?> not_storekeeper_hidden">
+        <?php if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)): ?>
+        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></div>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
+        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_2']), 0) ?></div>
+        <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
+        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_3']), 0) ?></div>
+        <?php endif; ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> not_storekeeper_hidden">
+        brand
+    </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
@@ -226,7 +238,7 @@ require_once '../calculation/calculation.php';
         </div>
         <div class="d-none comment_input"><input type="text" class="form-control comment_cell_<?=$this->edition['type'] ?>" value="<?=$this->edition['comment'] ?>" onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);"></td></div>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-right" style="position:relative;"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-right storekeeper_hidden" style="position:relative;"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT && IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
         <div class="timetable_menu text-left">
