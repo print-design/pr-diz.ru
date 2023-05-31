@@ -38,14 +38,14 @@ $user_id = GetUserId();
             $last_name = "";
             $first_name = "";
             
-            $sql = "select u.last_name, u.first_name, r.local_name from user u inner join role r on u.role_id = r.id where u.id=". GetUserId();
+            $sql = "select last_name, first_name, role_id from user u where id=". GetUserId();
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];
-            $local_name = $row['local_name'];
+            $role_id = $row['role_id'];
             ?>
-            <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;"><?=$local_name ?>:</p>
+            <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;"><?=ROLE_LOCAL_NAMES[$role_id] ?>:</p>
             <p class="mt-2 mb-5" style="font-size: 24px; line-height: 32px; font-weight: 600;"><?=$last_name.' '.$first_name ?></p>
             <?php
             endif;

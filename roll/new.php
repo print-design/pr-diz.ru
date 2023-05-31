@@ -324,7 +324,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <select id="manager_id" name="manager_id" class="form-control" disabled="disabled">
                             <option value="">Выберите менеджера</option>
                             <?php
-                            $managers = (new Grabber("select u.id, u.first_name, u.last_name from user u inner join role r on u.role_id = r.id where r.name in ('manager', 'seniormanager') order by u.last_name"))->result;
+                            $managers = (new Grabber("select id, first_name, last_name from user where role_id in (".ROLE_MANAGER.", ".ROLE_MANAGER_SENIOR.") order by last_name"))->result;
                             foreach ($managers as $manager) {
                                 $id = $manager['id'];
                                 $first_name = $manager['first_name'];

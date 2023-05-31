@@ -44,11 +44,11 @@ function GetUserId() {
 
 function IsInRole($role) {
     // Роль 'manager-senior' имеет все права роли 'manager'
-    if(is_array($role) && in_array('manager', $role)) {
-        array_push($role, 'manager-senior');
+    if(is_array($role) && in_array(ROLE_NAMES[ROLE_MANAGER], $role)) {
+        array_push($role, ROLE_NAMES[ROLE_MANAGER_SENIOR]);
     }
-    elseif($role == 'manager') {
-        $role = array('manager', 'manager-senior');
+    elseif($role == ROLE_NAMES[ROLE_MANAGER]) {
+        $role = array(ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]);
     }
     
     $cookie = filter_input(INPUT_COOKIE, ROLE);
@@ -318,10 +318,8 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         $role_local = '';
         $twofactor = 0;
         
-        $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, r.name role, r.local_name role_local, r.twofactor "
-                . "from user u "
-                . "inner join role r on u.role_id=r.id "
-                . "where u.username='$login_username' and u.password=password('$login_password') and u.active=true";
+        $sql = "select id, username, password, last_name, first_name, email, role_id "
+                . "from user where username='$login_username' and password=password('$login_password') and active=true";
         
         $users_result = (new Grabber($sql))->result;
         
@@ -335,10 +333,10 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
             }
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];
-            $role = $row['role'];
-            $role_local = $row['role_local'];
+            $role = ROLE_NAMES[$row['role_id']];
+            $role_local = ROLE_LOCAL_NAMES[$row['role_id']];
             $email = $row['email'];
-            $twofactor = $row['twofactor'];
+            $twofactor = ROLE_TWOFACTOR[$row['role_id']];
         }
         
         if(empty($user_id) || empty($username)) {
@@ -369,9 +367,8 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
 // Обработка формы отправки кода безопасности
 if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    $sql = "select u.id, u.username, u.password, u.last_name, u.first_name, u.email, u.code, r.name role, r.local_name role_local "
-            . "from user u inner join role r on u.role_id = r.id "
-            . "where u.id=$id";
+    $sql = "select id, username, password, last_name, first_name, email, code, role_id "
+            . "from user where id = $id";
     $result = (new Grabber($sql))->result;
     
     foreach ($result as $row) {
@@ -383,8 +380,8 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
         }
         $last_name = $row['last_name'];
         $first_name = $row['first_name'];
-        $role = $row['role'];
-        $role_local = $row['role_local'];
+        $role = ROLE_NAMES[$row['role_id']];
+        $role_local = ROLE_LOCAL_NAMES[$row['role_id']];
         $email = $row['email'];
         $code = $row['code'];
         

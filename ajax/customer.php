@@ -75,9 +75,9 @@ if($row = $fetcher->Fetch()):
                 <div>
                     <select class="form-control" id="customer_card_manager_select">
                         <?php
-                        $u_sql = "select u.id, u.last_name, u.first_name from user u inner join role r on u.role_id = r.id where r.name = 'manager' "
+                        $u_sql = "select id, last_name, first_name from user where role_id = ".ROLE_MANAGER
                                 . "union "
-                                . "select u.id, u.last_name, u.first_name from user u where u.id = ".$row['user_id']." "
+                                . "select id, last_name, first_name from user where id = ".$row['user_id']." "
                                 . "order by last_name, first_name";
                         $u_fetcher = new Fetcher($u_sql);
                         while ($u_row = $u_fetcher->Fetch()):
