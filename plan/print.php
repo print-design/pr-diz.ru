@@ -52,6 +52,7 @@ if(empty($work_id) || empty($machine_id)) {
                 background-color: white;
                 padding-top: 15px;
                 padding-bottom: 15px;
+                font-size: 16px;
             }
             
             table.typography tbody tr td.top {

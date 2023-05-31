@@ -115,6 +115,13 @@ require_once '../calculation/calculation.php';
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
+        <?php
+        if(!empty($this->edition['customer_id']) && !empty($this->edition['num_for_customer'])) {
+            echo $this->edition['customer_id'].'-'.$this->edition['num_for_customer'];
+        }
+        ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
         <?= $this->edition['calculation'] ?>
         <?php else: ?>
@@ -273,7 +280,7 @@ require_once '../calculation/calculation.php';
         </div>
         <div class="d-none comment_input"><input type="text" class="form-control comment_cell_<?=$this->edition['type'] ?>" value="<?=$this->edition['comment'] ?>" onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);"></td></div>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-right storekeeper_hidden" style="position:relative;"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-right" style="position:relative;"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT && IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
         <div class="timetable_menu text-left">
@@ -281,12 +288,12 @@ require_once '../calculation/calculation.php';
                 <button type="button" class="btn btn-link h-25" style="font-size: 14px;" onclick="javascript: DeleteEvent(<?=$this->edition['calculation_id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
             </div>
         </div>
-        <?php elseif(IsInRole(ROLE_NAMES[ROLE_SCHEDULER])): ?>
-        <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
+        <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>" target="_blank"<?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
-        <?php elseif(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER])) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId())): ?>
-        <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && (IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST]) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId()))): ?>
+        <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
         <?php endif; ?>

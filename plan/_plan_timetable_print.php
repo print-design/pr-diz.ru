@@ -3,6 +3,7 @@
         <th>Дата</th>
         <th>Смена</th>
         <th><?=PLAN_ROLE_NAMES[WORK_PLAN_ROLES[$this->work_id]] ?></th>
+        <th>№</th>
         <th>Заказ</th>
         <th class="storekeeper_hidden">Метраж</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden">Вал</th>

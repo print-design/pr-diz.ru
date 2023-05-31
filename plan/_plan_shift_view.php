@@ -15,7 +15,6 @@
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-work-id="<?=$this->timetable->work_id ?>" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>">
             <option value="">...</option>
             <?php
-            
             foreach($this->timetable->employees as $emp_key => $employee):
                 $selected = '';
             if(array_key_exists($key, $this->timetable->workshifts1) && $emp_key == $this->timetable->workshifts1[$key]) {
@@ -66,6 +65,7 @@
     </td>
     <td class="<?=$this->shift ?> showdropline fordrag" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
+    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline storekeeper_hidden" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline cutting_hidden storekeeper_hidden" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
@@ -75,5 +75,5 @@
     <td class="<?=$this->shift ?> not_storekeeper_hidden"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
     <td class="<?=$this->shift ?> showdropline comment_cell comment_invisible" ondrop="DropTimetable(event);" ondragover="DragOverTimetable(event);" ondragleave="DragLeaveTimetable(event);"></td>
-    <td class="<?=$this->shift ?> showdropline text-right storekeeper_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
 </tr>

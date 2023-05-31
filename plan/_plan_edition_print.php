@@ -33,6 +33,13 @@ require_once '../calculation/calculation.php';
     </td>
     <?php endif; ?>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
+        <?php
+        if(!empty($this->edition['customer_id']) && !empty($this->edition['num_for_customer'])) {
+            echo $this->edition['customer_id'].'-'.$this->edition['num_for_customer'];
+        }
+        ?>
+    </td>
+    <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
         <?=$this->edition['calculation'] ?>
         <?php else: ?>
