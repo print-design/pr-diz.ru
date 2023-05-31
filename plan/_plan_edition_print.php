@@ -82,7 +82,43 @@ require_once '../calculation/calculation.php';
         <?php endif; ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> not_storekeeper_hidden">
-        brand
+        <div class="text-nowrap">
+        <?php
+        if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)) {
+            $film_name = $this->edition['film_name'];
+            $thickness = $this->edition['thickness'];
+        
+            if(empty($film_name)) {
+                $film_name = $this->edition['individual_film_name'];
+                $thickness = $this->edition['individual_thickness'];
+            }
+            
+            echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness;
+        }
+        elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1) {
+            $lamination1_film_name = $this->edition['lamination1_film_name'];
+            $lamination1_thickness = $this->edition['lamination1_thickness'];
+        
+            if(empty($lamination1_film_name)) {
+                $lamination1_film_name = $this->edition['lamination1_individual_film_name'];
+                $lamination1_thickness = $this->edition['lamination1_individual_thickness'];
+            }
+            
+            echo $lamination1_film_name."&nbsp;&nbsp;&nbsp;".$lamination1_thickness;
+        }
+        elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2) {
+            $lamination2_film_name = $this->edition['lamination2_film_name'];
+            $lamination2_thickness = $this->edition['lamination2_thickness'];
+        
+            if(empty($lamination2_film_name)) {
+                $lamination2_film_name = $this->edition['lamination2_individual_film_name'];
+                $lamination2_thickness = $this->edition['lamination2_individual_thickness'];
+            }
+            
+            echo $lamination2_film_name."&nbsp;&nbsp;&nbsp;".$lamination2_thickness;
+        }
+        ?>
+        </div>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
