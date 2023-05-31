@@ -137,59 +137,63 @@ require_once '../calculation/calculation.php';
             </div>
             <div>
                 <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation']): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
                 </div>
                 <?php endif; ?>
                 <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation']): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_EDITION && $this->edition['has_continuation']): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <i class="fas fa-chevron-down notforedit"></i>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_PART && $this->edition['has_continuation']): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemovePartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <i class="fas fa-chevron-down notforedit"></i>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_PART_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_CONTINUATION && $this->edition['has_continuation']): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <i class="fas fa-chevron-down notforedit"></i>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_PART_CONTINUATION && $this->edition['has_continuation']): ?>
-                <div class="btn-group-toggle ml-1" style="display: inline;" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active">
+                <div class="btn-group-toggle ml-1" data-toggle="buttons">
+                    <label class="btn btn-light btn-edition-continue active foredit">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <i class="fas fa-chevron-down notforedit"></i>
                 </div>
                 <?php endif; ?>
             </div>
@@ -234,7 +238,7 @@ require_once '../calculation/calculation.php';
         <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
-        <?php elseif(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST]) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId())): ?>
+        <?php elseif(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER])) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId())): ?>
         <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?><?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
