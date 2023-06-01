@@ -266,6 +266,15 @@ require_once '../calculation/calculation.php';
         ?>
         </div>
     </td>
+    <td class="<?=$this->plan_shift->shift ?> not_storekeeper_hidden cutting_hidden">
+        <?php if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)): ?>
+        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['width_1']), 0) ?></div>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
+        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['width_2']), 0) ?></div>
+        <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
+        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['width_3']), 0) ?></div>
+        <?php endif; ?>
+    </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>

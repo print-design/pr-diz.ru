@@ -12,6 +12,7 @@
         <th class="storekeeper_hidden">Время</th>
         <th class="not_storekeeper_hidden">Нужно подготовить</th>
         <th class="not_storekeeper_hidden">Марка мат-ла</th>
+        <th class="not_storekeeper_hidden cutting_hidden">Ширина мат-ла</th>
         <th>Менеджер</th>
         <th>Комментарий</th>
     </tr>
