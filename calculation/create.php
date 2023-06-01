@@ -1391,6 +1391,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            placeholder="Удельный вес" 
                                            value="<?= empty($individual_density) ? '' : floatval($individual_density) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
@@ -1409,11 +1410,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                placeholder="Цена" 
                                                value="<?= empty($price) ? "" : round($price, 2) ?>"
                                                required="required" 
-                                               onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                               onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
+                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                               onmouseup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                               onkeyup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
+                                               onfocusout="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
                                         <div class="input-group-append">
                                             <select id="currency" name="currency" class="film-currency">
                                                 <option value="" hidden="">...</option>
@@ -1597,11 +1599,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                    class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
                                                    placeholder="Цена" 
                                                    value="<?= empty($lamination1_price) ? "" : round($lamination1_price, 2) ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
-                                                   onfocusout="javascript: $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" />
+                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                   onmouseup="javascript: $(this).attr('id', 'lamination1_price'); $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
+                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                   onkeyup="javascript: $(this).attr('id', 'lamination1_price'); $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
+                                                   onfocusout="javascript: $(this).attr('id', 'lamination1_price'); $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" />
                                             <div class="input-group-append">
                                                 <select id="lamination1_currency" name="lamination1_currency" class="film-currency">
                                                     <option value="" hidden="">...</option>
@@ -1797,11 +1800,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                        class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
                                                        placeholder="Цена" 
                                                        value="<?= empty($lamination2_price) ? "" : round($lamination2_price, 2) ?>" 
-                                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                       onmouseup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
-                                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                       onkeyup="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
-                                                       onfocusout="javascript: $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" />
+                                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                       onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                                       onmouseup="javascript: $(this).attr('id', 'lamination2_price'); $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
+                                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                                       onkeyup="javascript: $(this).attr('id', 'lamination2_price'); $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
+                                                       onfocusout="javascript: $(this).attr('id', 'lamination2_price'); $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" />
                                                 <div class="input-group-append">
                                                     <select id="lamination2_currency" name="lamination2_currency" class="film-currency">
                                                         <option value="" hidden="">...</option>
