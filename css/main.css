@@ -138,8 +138,8 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
 }
 
 #user-dropdown {
-    right: 0;
-    left: auto;
+    left: 0;
+    right: auto;
 }
 
 li#nav-user a.dropdown-toggle::after {
