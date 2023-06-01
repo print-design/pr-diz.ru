@@ -469,7 +469,10 @@ $waste = $waste1;
 if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
 if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
-$machine_coeff = GetMachineCoeff(PRINTER_SHORTNAMES[$machine_id]);
+$machine_coeff = null;
+if(!empty($machine_id)) {
+    $machine_coeff = GetMachineCoeff(PRINTER_SHORTNAMES[$machine_id]);
+}
 
 // Тиражи и формы
 $printings = array();
@@ -838,7 +841,13 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                     <table>
                         <tr>
                             <td style="padding-top: 5px;">Машина</td>
-                            <td style="padding-top: 5px;"><?= mb_stristr(PRINTER_SHORTNAMES[$machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$machine_id]) ?></td>
+                            <td style="padding-top: 5px;">
+                                <?php
+                                if(!empty($machine_id)) {
+                                    echo mb_stristr(PRINTER_SHORTNAMES[$machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$machine_id]);
+                                }
+                                ?>
+                            </td>
                         </tr>
                         <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
