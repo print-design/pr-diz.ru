@@ -1422,11 +1422,12 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                         placeholder="Намотка до" 
                                         value="<?= $winding ?>" 
                                         required="required" 
-                                        onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                        onmouseup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
-                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                        onkeyup="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
-                                        onfocusout="javascript: $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" />
+                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                        onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                        onmouseup="javascript: $(this).attr('id', 'winding'); $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                        onkeyup="javascript: $(this).attr('id', 'winding'); $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
+                                        onfocusout="javascript: $(this).attr('id', 'winding'); $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" />
                                     <div class="input-group-append">
                                         <select id="winding_unit" name="winding_unit" required="required">
                                             <option value="" hidden="hidden">...</option>
