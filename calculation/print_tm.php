@@ -890,7 +890,7 @@ $current_date_time = date("dmYHis");
                                             echo CalculationBase::Display(1 / floatval($length) * 1000, 4);
                                         }
                                         ?>
-                            </td>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Бирки</td>
