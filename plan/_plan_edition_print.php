@@ -136,7 +136,7 @@ require_once '../calculation/calculation.php';
         <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['width_3']), 0) ?></div>
         <?php endif; ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?>">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
