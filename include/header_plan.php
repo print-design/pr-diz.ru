@@ -12,7 +12,7 @@ include '../include/left_bar.php';
                 }
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$work_class ?>" href="?work_id=<?=$work ?>"><?=WORK_NAMES[$work] ?></a>
+                <a class="nav-link<?=$work_class ?>" href="<?= BuildQueryAddRemove('work_id', $work, 'machine_id') ?>"><?=WORK_NAMES[$work] ?></a>
             </li>
             <?php endforeach; ?>
         </ul>
