@@ -9,6 +9,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE
 
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
+$from = filter_input(INPUT_GET, 'from');
 
 // Если не указаны work_id или machine_id, перенаправляем на печать/Comiflex
 if(empty($work_id) || empty($machine_id)) {
@@ -30,7 +31,7 @@ if(empty($work_id) || empty($machine_id)) {
         }
     }
     
-    header("Location: ?work_id=$work_id&machine_id=$machine_id");
+    header("Location: ?work_id=$work_id&machine_id=$machine_id".(empty($from) ? "" : "&from=$from"));
 }
 ?>
 <!DOCTYPE html>
