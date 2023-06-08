@@ -204,7 +204,7 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
         }
         
         if(empty($error_message)) {
-            header("Location: details.php?id=$id");
+            header("Location: details.php". BuildQuery('id', $id));
         }
     }
 }
