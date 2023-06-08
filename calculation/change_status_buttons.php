@@ -34,7 +34,7 @@
         </form>
     </div>
 </div>
-<?php elseif ($status_id == WAITING && IsInRole(array(ROLE_MANAGER_SENIOR, ROLE_TECHNOLOGIST))): ?>
+<?php elseif ($status_id == WAITING && IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST]))): ?>
 <div class="d-flex justify-content-start">
     <form method="post" action="details.php<?= BuildQuery('id', filter_input(INPUT_GET, 'id')) ?>">
         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
