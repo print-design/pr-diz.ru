@@ -16,7 +16,7 @@
     </div>
 </div>
 <?php elseif($status_id == TRASH): ?>
-<form method="post" action="details.php<?= filter_input(INPUT_GET, 'id') ?>">
+<form method="post" action="details.php?id=<?= filter_input(INPUT_GET, 'id') ?>">
     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
     <input type="hidden" name="status_id" value="<?=DRAFT ?>" />
     <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Восстановить</button>
