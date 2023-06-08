@@ -2,6 +2,7 @@
 include '../include/topscripts.php';
 include './status_ids.php';
 include './calculation.php';
+require_once '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
@@ -37,18 +38,6 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
             $new_customer_id = $executer->insert_id;
         }
     }
-}
-
-// Смена статуса
-if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $status_id = filter_input(INPUT_POST, 'status_id');
-    
-    $sql = "update calculation set status_id = $status_id, status_date = now() where id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    header("Location: details.php?id=$id");
 }
 
 // Получение норм

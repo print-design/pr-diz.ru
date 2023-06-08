@@ -183,7 +183,7 @@ if(null !== filter_input(INPUT_POST, 'plan_submit')) {
     }
     
     if(empty($error_message)) {
-        header('Location: details.php?id='.$id);
+        header('Location: details.php'. BuildQuery('id', $id));
     }
 }
 
@@ -756,7 +756,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
             }
             ?>
             <div class="d-flex justify-content-between">
-                <div><a class="btn btn-outline-dark backlink" href="details.php?id=<?= $id ?>">К расчету</a></div>
+                <div><a class="btn btn-outline-dark backlink" href="details.php<?= BuildQuery('id', $id) ?>">К расчету</a></div>
                 <div>
                     <?php
                     if(!empty($techmap_id)):     
