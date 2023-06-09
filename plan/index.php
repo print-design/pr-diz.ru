@@ -132,9 +132,15 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
     $work_id = filter_input(INPUT_POST, 'work_id');
     $lamination = filter_input(INPUT_POST, 'lamination');
     
-    $sql = "delete from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination";
+    $sql = "delete from plan_part_continuation where plan_part_id in (select id from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "delete from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 ?>
 <!DOCTYPE html>
