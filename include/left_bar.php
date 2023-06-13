@@ -51,7 +51,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <?php
     endif;
     // Админка
-    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST]))):
     ?>
     <a href="<?=APPLICATION ?>/user/" class="left_bar_item<?=$admin_class ?>" title="Админка" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
     <?php
