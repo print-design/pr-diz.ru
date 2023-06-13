@@ -356,10 +356,10 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
             
             $backlink_get = '';
             
-            if($status_id == ORDER_STATUS_CONFIRMED || $status_id == ORDER_STATUS_REJECTED || $status_id == ORDER_STATUS_PLAN_PRINT || $status_id == ORDER_STATUS_PLAN_LAMINATE || $status_id == ORDER_STATUS_PLAN_CUT) {
+            if(in_array($status_id, array(ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_REJECTED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT))) {
                 $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_PLAN, 'id');
             }
-            elseif($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_TRASH) {
+            elseif(in_array ($status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH))) {
                 $backlink_get = BuildQueryAddRemove('status', $status_id, 'id');
             }
             else {

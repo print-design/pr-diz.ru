@@ -18,22 +18,19 @@ $draft_status = '';
 $trash_status = '';
 
 if($folder == 'calculation') {
-    $status = filter_input(INPUT_GET, 'status');
-    
-    if($status == ORDER_STATUS_TRASH) {
+    if($status_id == ORDER_STATUS_TRASH) {
         $trash_status = ' disabled';
     }
-    elseif($status == ORDER_STATUS_DRAFT) {
+    elseif($status_id == ORDER_STATUS_DRAFT) {
         $draft_status = ' disabled';
     }
-    elseif($status == ORDER_STATUS_PLAN) {
+    elseif(in_array ($status_id, array(ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_TECHMAP, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, ORDER_STATUS_PLAN))) {
         $plan_status = ' disabled';
     }
     else {
         $calculation_status = ' disabled';
     }
 }
-            
 ?>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
@@ -42,10 +39,10 @@ if($folder == 'calculation') {
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemoveArray(array("status", "page")) ?>">В работе</a>
+                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemoveArray(array("status", "page")) ?>">Расчеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$plan_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_PLAN, "page") ?>">Расчеты</a>
+                <a class="nav-link<?=$plan_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_PLAN, "page") ?>">В работе</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_DRAFT, "page") ?>">Черновики</a>

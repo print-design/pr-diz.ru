@@ -49,7 +49,7 @@ function GetPrintingsWithCases($number) {
 $sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
 $executer = new Executer($sql);
 
-$status_titles = array(1 => "В работе", 2 => "Расчеты", 3 => "Черновики", 4 => "Корзина");
+$status_titles = array(1 => "Расчеты", 2 => "В работе", 3 => "Черновики", 4 => "Корзина");
 $status_id = filter_input(INPUT_GET, 'status');
 $ready = filter_input(INPUT_GET, 'ready');
 if($status_id == ORDER_STATUS_TRASH) $title = $status_titles[4];
@@ -82,10 +82,10 @@ else $title = $status_titles[1];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where (c.status_id = ".ORDER_STATUS_CALCULATION." or c.status_id = ".ORDER_STATUS_TECHMAP." or c.status_id = ".ORDER_STATUS_WAITING.")";
+                    $where = " where (c.status_id = ".ORDER_STATUS_CALCULATION." or c.status_id = ".ORDER_STATUS_TECHMAP.")";
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_PLAN) {
-                        $where = " where (c.status_id = ".ORDER_STATUS_CONFIRMED." or c.status_id = ".ORDER_STATUS_REJECTED." or c.status_id = ".ORDER_STATUS_PLAN_PRINT." or c.status_id = ".ORDER_STATUS_PLAN_LAMINATE." or c.status_id = ".ORDER_STATUS_PLAN_CUT.")";
+                        $where = " where (c.status_id = ".ORDER_STATUS_WAITING." or c.status_id = ".ORDER_STATUS_CONFIRMED." or c.status_id = ".ORDER_STATUS_REJECTED." or c.status_id = ".ORDER_STATUS_PLAN_PRINT." or c.status_id = ".ORDER_STATUS_PLAN_LAMINATE." or c.status_id = ".ORDER_STATUS_PLAN_CUT.")";
                     }
                     elseif(!empty($status_id)) {
                         $where = " where c.status_id = $status_id";
@@ -233,7 +233,7 @@ else $title = $status_titles[1];
                 <tbody>
                     <?php
                     // Сортировка
-                    $orderby = "order by c.id desc";
+                    $orderby = "order by c.status_id asc, c.id desc";
                     
                     if(array_key_exists('order', $_REQUEST)) {
                         switch ($_REQUEST['order']) {
