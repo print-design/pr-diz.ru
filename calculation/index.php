@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include './status_ids.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
@@ -50,10 +49,12 @@ function GetPrintingsWithCases($number) {
 $sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
 $executer = new Executer($sql);
 
-$status_titles = array(1 => "Расчеты", 2 => "Черновики", 3 => "Корзина");
+$status_titles = array(1 => "В работе", 2 => "Расчеты", 3 => "Черновики", 4 => "Корзина");
 $status_id = filter_input(INPUT_GET, 'status');
-if($status_id == DRAFT) $title = $status_titles[2];
-elseif($status_id == TRASH) $title = $status_titles[3];
+$ready = filter_input(INPUT_GET, 'ready');
+if($status_id == ORDER_STATUS_TRASH) $title = $status_titles[4];
+elseif($status_id == ORDER_STATUS_DRAFT) $title = $status_titles[3];
+elseif($status_id == ORDER_STATUS_PLAN) $title = $status_titles[2];
 else $title = $status_titles[1];
 ?>
 <!DOCTYPE html>
@@ -81,9 +82,12 @@ else $title = $status_titles[1];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where c.status_id <> ".DRAFT." and c.status_id <> ".TRASH;
+                    $where = " where (c.status_id = ".ORDER_STATUS_CALCULATION." or c.status_id = ".ORDER_STATUS_TECHMAP." or c.status_id = ".ORDER_STATUS_WAITING.")";
                     
-                    if(!empty($status_id)) {
+                    if(!empty($status_id) && $status_id == ORDER_STATUS_PLAN) {
+                        $where = " where (c.status_id = ".ORDER_STATUS_CONFIRMED." or c.status_id = ".ORDER_STATUS_REJECTED." or c.status_id = ".ORDER_STATUS_PLAN_PRINT." or c.status_id = ".ORDER_STATUS_PLAN_LAMINATE." or c.status_id = ".ORDER_STATUS_PLAN_CUT.")";
+                    }
+                    elseif(!empty($status_id)) {
                         $where = " where c.status_id = $status_id";
                     }
                     
@@ -172,9 +176,9 @@ else $title = $status_titles[1];
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $customer_where = "where c.status_id <> ".DRAFT." and c.status_id <> ".TRASH;
-                            if($status_id == DRAFT) $customer_where = "where c.status_id = ".DRAFT;
-                            elseif($status_id == TRASH) $customer_where = "where c.status_id = ".TRASH;
+                            $customer_where = "where c.status_id <> ".ORDER_STATUS_DRAFT." and c.status_id <> ".ORDER_STATUS_TRASH;
+                            if($status_id == ORDER_STATUS_DRAFT) $customer_where = "where c.status_id = ".ORDER_STATUS_DRAFT;
+                            elseif($status_id == ORDER_STATUS_TRASH) $customer_where = "where c.status_id = ".ORDER_STATUS_TRASH;
                             $customer_manager = GetUserId();
                             if(!IsInRole(array('technologist', 'dev', 'manager-senior'))) {
                                 $customer_where .= " and c.manager_id = $customer_manager";
@@ -192,9 +196,9 @@ else $title = $status_titles[1];
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Наименование...</option>
                             <?php
-                            $name_where = "where c.status_id <> ".DRAFT." and c.status_id <> ".TRASH;
-                            if($status_id == DRAFT) $name_where = "where c.status_id = ".DRAFT;
-                            elseif($status_id == TRASH) $name_where = "where c.status_id = ".TRASH;
+                            $name_where = "where c.status_id <> ".ORDER_STATUS_DRAFT." and c.status_id <> ".ORDER_STATUS_TRASH;
+                            if($status_id == ORDER_STATUS_DRAFT) $name_where = "where c.status_id = ".ORDER_STATUS_DRAFT;
+                            elseif($status_id == ORDER_STATUS_TRASH) $name_where = "where c.status_id = ".ORDER_STATUS_TRASH;
                             if(!empty($customer)) {
                                 $name_where .= " and c.customer_id = $customer";
                             }
@@ -216,7 +220,7 @@ else $title = $status_titles[1];
                 <thead>
                     <tr>
                         <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                        <th>Дата&nbsp;&nbsp;<?= OrderLink('date') ?></th>
+                        <th>Дата расчета&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                         <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                         <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
                         <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
@@ -291,7 +295,7 @@ else $title = $status_titles[1];
                         <td class="text-right"><?=$quantity ?></td>
                         <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=$status_colors[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=$status_names[$row['status_id']] ?></td>
+                        <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$row['status_id']] ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php

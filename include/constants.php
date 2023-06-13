@@ -56,6 +56,24 @@ const WORK_TYPES = array(WORK_TYPE_NOPRINT, WORK_TYPE_PRINT, WORK_TYPE_SELF_ADHE
 const WORK_TYPE_NAMES = array(WORK_TYPE_NOPRINT => "Пленка без печати", WORK_TYPE_PRINT => "Пленка с печатью", WORK_TYPE_SELF_ADHESIVE => "Самоклеящиеся мат-лы");
 const WORK_TYPE_PRINTERS = array(WORK_TYPE_PRINT => array(PRINTER_COMIFLEX, PRINTER_ZBS_1, PRINTER_ZBS_2, PRINTER_ZBS_3), WORK_TYPE_SELF_ADHESIVE => array(PRINTER_ATLAS));
 
+// Статусы заказа
+const ORDER_STATUS_DRAFT = 1; // Черновик
+const ORDER_STATUS_CALCULATION = 2; // Сделан расчёт
+const ORDER_STATUS_WAITING = 3; // Ждём подтверждения
+const ORDER_STATUS_CONFIRMED = 4; // Ждём постановки в план
+const ORDER_STATUS_REJECTED = 5; // Отклонено
+const ORDER_STATUS_TECHMAP = 6; // Составлена технологическая карта
+const ORDER_STATUS_TRASH = 7; // В корзине
+const ORDER_STATUS_PLAN_PRINT = 8; // В плане печати
+const ORDER_STATUS_PLAN_LAMINATE = 9; // В плане ламинации
+const ORDER_STATUS_PLAN_CUT = 10; // В плане резки
+
+const ORDER_STATUS_PLAN = 100; // Ждём постановки в план, отклонено или в плане
+
+const ORDER_STATUS_NAMES = array(ORDER_STATUS_DRAFT => "Черновик", ORDER_STATUS_CALCULATION => "Сделан расчёт", ORDER_STATUS_WAITING => "Ждём подтверждения", ORDER_STATUS_CONFIRMED => "Ждём постановки в план", ORDER_STATUS_REJECTED => "Отклонено", ORDER_STATUS_TECHMAP => "Составлена тех. карта", ORDER_STATUS_TRASH => "В корзине", ORDER_STATUS_PLAN_PRINT => "В плане печати", ORDER_STATUS_PLAN_LAMINATE => "В плане ламинации", ORDER_STATUS_PLAN_CUT => "В плане резки");
+const ORDER_STATUS_COLORS = array(ORDER_STATUS_DRAFT => "gray", ORDER_STATUS_CALCULATION => "steelblue", ORDER_STATUS_WAITING => "goldenrod", ORDER_STATUS_CONFIRMED => "mediumseagreen", ORDER_STATUS_REJECTED => "crimson", ORDER_STATUS_TECHMAP => "saddlebrown", ORDER_STATUS_TRASH => "black", ORDER_STATUS_PLAN_PRINT => "#9933ff", ORDER_STATUS_PLAN_LAMINATE => "#4d009a", ORDER_STATUS_PLAN_CUT => "#27004e");
+const ORDER_STATUS_ICONS = array(ORDER_STATUS_DRAFT => "fas fa-edit", ORDER_STATUS_CALCULATION => "fas fa-check", ORDER_STATUS_WAITING => "fas fa-clock", ORDER_STATUS_CONFIRMED => "fas fa-check-double", ORDER_STATUS_REJECTED => "fas fa-times-circle", ORDER_STATUS_TECHMAP => "fas fa-file", ORDER_STATUS_TRASH => "fas fa-trash-alt", ORDER_STATUS_PLAN_PRINT => "fas fa-print", ORDER_STATUS_PLAN_LAMINATE => "fas fa-layer-group", ORDER_STATUS_PLAN_CUT => "fas fa-cut");
+
 // Разделы плана
 const WORK_PRINTING = 1;
 const WORK_LAMINATION = 2;

@@ -1,7 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
-require_once '../calculation/status_ids.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $lamination = filter_input(INPUT_GET, 'lamination');
@@ -268,14 +267,14 @@ else {
     if(empty($error) && $work_id == WORK_PRINTING) {
         // 1. Тип работы "печать".
         // Статус устанавливаем "в плане печати".
-        $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
     elseif(empty ($error) && $work_id == WORK_LAMINATION && !$two_laminations) {
         // 2. Тип работы "ламинация", ламинация одна.
         // Статус устанавливаем "в плане ламинации".
-        $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
@@ -308,7 +307,7 @@ else {
         
         if($editions_count == 2 
                 || ($editions_count == 1 && $parts_in_plan > 0 && $parts_not_in_plan == 0)) {
-            $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
+            $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = $calculation_id";
             $executer = new Executer($sql);
             $error = $executer->error;
         }
@@ -316,7 +315,7 @@ else {
     elseif(empty ($error) && $work_id == WORK_CUTTING) {
         // 4. Тип работы "резка".
         // Статус устанавливаем "в плане резки".
-        $sql = "update calculation set status_id = ".PLAN_CUT." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_CUT." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }

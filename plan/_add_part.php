@@ -1,7 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
-require_once '../calculation/status_ids.php';
 
 $part_id = filter_input(INPUT_GET, 'part_id');
 $work_id = filter_input(INPUT_GET, 'work_id');
@@ -243,7 +242,7 @@ if(empty($error) && $work_id == WORK_PRINTING) {
     // Статус устанавливаем "в плане печати":
     // - есть половинки в плане и нет половинок не в плане.
     if($parts_in_plan > 0 && $parts_not_in_plan == 0) {
-        $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
@@ -253,7 +252,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && !$two_laminations) {
     // Статус устанавливаем "в плане ламинации":
     // - есть половинки в плане и нет половинок не в плане.
     if($parts_in_plan > 0 && $parts_not_in_plan == 0) {
-        $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
@@ -315,7 +314,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $two_laminations) {
         
     if(($editions_count == 1 && $parts_in_plan > 0 && $parts_not_in_plan == 0) 
             || ($editions_count == 0 && $parts_in_plan_lam1 > 0 && $parts_not_in_plan_lam1 == 0 && $parts_in_plan_lam2 > 0 && $parts_not_in_plan_lam2 == 0)) {
-        $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
@@ -325,7 +324,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING) {
     // Статус устанавливаем "в плане резки":
     // - есть половинки в плане и нет половинок не в плане.
     if($parts_in_plan > 0 && $parts_not_in_plan == 0) {
-        $sql = "update calculation set status_id = ".PLAN_CUT." where id = $calculation_id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_CUT." where id = $calculation_id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }

@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include './status_ids.php';
 include './calculation.php';
 
 // Атрибут "поле неактивно"
@@ -221,7 +220,7 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
             <h1><?= htmlentities($name) ?></h1>
             <h2>№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
             <div id="status">
-                <i class="<?=$status_icons[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$status_names[$status_id] ?>
+                <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
             </div>
             <?php include './left_panel.php'; ?>
         </div>

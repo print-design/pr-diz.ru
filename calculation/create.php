@@ -1,8 +1,6 @@
 <?php
 include '../include/topscripts.php';
-include './status_ids.php';
 include './calculation.php';
-require_once '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
@@ -340,7 +338,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
         
         $manager_id = GetUserId();
-        $status_id = DRAFT; // Статус "Черновик"
+        $status_id = ORDER_STATUS_DRAFT; // Статус "Черновик"
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -1079,7 +1077,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : ($status_id == DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : ($status_id == TRASH ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id"))) ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= filter_input(INPUT_GET, "mode") == "recalc" ? "details.php".BuildQueryRemove("mode") : ($status_id == ORDER_STATUS_DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : ($status_id == ORDER_STATUS_TRASH ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id"))) ?>">Назад</a>
             <div>
                 <!-- Левая половина -->
                 <div id="left_side">

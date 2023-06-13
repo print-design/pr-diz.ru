@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include './status_ids.php';
 include './calculation.php';
 
 // Печать: лицевая, оборотная

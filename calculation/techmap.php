@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include 'status_ids.php';
 include 'calculation.php';
 
 // Авторизация
@@ -165,7 +164,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            $sql = "update calculation set status_id = ".TECHMAP." where id = $id and status_id = ".CALCULATION;
+            $sql = "update calculation set status_id = ".ORDER_STATUS_TECHMAP." where id = $id and status_id = ".ORDER_STATUS_CALCULATION;
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -177,7 +176,7 @@ if(null !== filter_input(INPUT_POST, 'plan_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
     if(!empty($id)) {
-        $sql = "update calculation set status_id = ".WAITING." where id = $id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_WAITING." where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -198,7 +197,7 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            $sql = "update calculation set status_id = ".CALCULATION." where id = $id";
+            $sql = "update calculation set status_id = ".ORDER_STATUS_CALCULATION." where id = $id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -1532,7 +1531,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                                 if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
                                     $submit_class = "";
                                 }
-                                elseif($status_id == TECHMAP) {
+                                elseif($status_id == ORDER_STATUS_TECHMAP) {
                                     $plan_class = "";
                                 }
                                 ?>
@@ -1567,7 +1566,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
                         </div>
                     </div>
                 </form>
-                <?php if(!empty($techmap_id) && $status_id == TECHMAP): ?>
+                <?php if(!empty($techmap_id) && $status_id == ORDER_STATUS_TECHMAP): ?>
                 <div style="position: absolute; right: 0px; bottom: 0px;">
                     <form method="post">
                         <input type="hidden" name="id" value="<?=$id ?>" />

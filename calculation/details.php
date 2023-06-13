@@ -1,8 +1,6 @@
 <?php
 include '../include/topscripts.php';
-include './status_ids.php';
 include './calculation.php';
-require_once '../include/constants.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
@@ -271,7 +269,7 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
 }
 
 // Если статус - "Черновик" или "Сделан  расчёт", то все чекбосы и поля наценки активны
-if($status_id == DRAFT || $status_id == CALCULATION) {
+if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
     $disabled_attr = "";
 }
 ?>
@@ -356,13 +354,13 @@ if($status_id == DRAFT || $status_id == CALCULATION) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : ($status_id == TRASH ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id")) ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == ORDER_STATUS_DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : ($status_id == ORDER_STATUS_TRASH ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id")) ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
                 <h1><?= htmlentities($name) ?></h1>
                 <h2>№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                <div id="status" style="border: solid 2px <?=$status_colors[$status_id] ?>; color: <?=$status_colors[$status_id] ?>;">
-                    <i class="<?=$status_icons[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$status_names[$status_id] ?>
+                <div id="status" style="border: solid 2px <?=ORDER_STATUS_COLORS[$status_id] ?>; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">
+                    <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
                 </div>
                 <?php include './left_panel.php'; ?>
                 <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2 form_button">Пересчитать</a>

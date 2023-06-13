@@ -1,7 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
 require_once '../calculation/calculation.php';
-require_once '../calculation/status_ids.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $lamination = filter_input(INPUT_GET, 'lamination');
@@ -106,7 +105,7 @@ if(empty($error) && $work_id == WORK_PRINTING) {
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
@@ -118,7 +117,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == Calcula
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
@@ -130,35 +129,35 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == Calcula
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == CalculationBase::WORK_TYPE_NOPRINT) {
     // 6. Тип работы "резка", ламинации нет, тип заказа "плёнка без печати".
     // Статус устанавливаем "ожидание постановки в план".
-    $sql = "update calculation set status_id = ".CONFIRMED." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == CalculationBase::WORK_TYPE_PRINT) {
     // 7. Тип работы "резка", ламинации нет, тип заказа "плёнка с печатью".
     // Статус устанавливаем "в плане печати".
-    $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && $has_lamination) {
     // 8. Тип работы "резка", ламинация есть.
     // Статус устанавливаем "в плане ламинации".
-    $sql = "update calculation set status_id = ".PLAN_LAMINATE." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
     // 9. Тип работы "резка", тип заказа "самоклеящиеся материалы".
     // Статус устанавливаем "в плане печати".
-    $sql = "update calculation set status_id = ".PLAN_PRINT." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
