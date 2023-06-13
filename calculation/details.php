@@ -353,8 +353,20 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
+            
+            $backlink_get = '';
+            
+            if($status_id == ORDER_STATUS_CONFIRMED || $status_id == ORDER_STATUS_REJECTED || $status_id == ORDER_STATUS_PLAN_PRINT || $status_id == ORDER_STATUS_PLAN_LAMINATE || $status_id == ORDER_STATUS_PLAN_CUT) {
+                $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_PLAN, 'id');
+            }
+            elseif($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_TRASH) {
+                $backlink_get = BuildQueryAddRemove('status', $status_id, 'id');
+            }
+            else {
+                $backlink_get = BuildQueryRemove('id');
+            }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $status_id == ORDER_STATUS_DRAFT ? BuildQueryAddRemove('status', $status_id, 'id') : ($status_id == ORDER_STATUS_TRASH ? BuildQueryAddRemove('status', $status_id, 'id') : BuildQueryRemove("id")) ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
                 <h1><?= htmlentities($name) ?></h1>

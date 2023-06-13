@@ -18,17 +18,15 @@ $draft_status = '';
 $trash_status = '';
 
 if($folder == 'calculation') {
-    if(!isset($status_id)) {
-        $status_id = filter_input(INPUT_GET, 'status');
-    }
+    $status = filter_input(INPUT_GET, 'status');
     
-    if($status_id == ORDER_STATUS_TRASH) {
+    if($status == ORDER_STATUS_TRASH) {
         $trash_status = ' disabled';
     }
-    elseif($status_id == ORDER_STATUS_DRAFT) {
+    elseif($status == ORDER_STATUS_DRAFT) {
         $draft_status = ' disabled';
     }
-    elseif($status_id == ORDER_STATUS_PLAN) {
+    elseif($status == ORDER_STATUS_PLAN) {
         $plan_status = ' disabled';
     }
     else {
