@@ -13,7 +13,7 @@ if($count > 1) {
 }
 
 $calculation_status = '';
-$plan_status = '';
+$not_in_work_status = '';
 $draft_status = '';
 $trash_status = '';
 
@@ -24,8 +24,8 @@ if($folder == 'calculation') {
     elseif($status_id == ORDER_STATUS_DRAFT) {
         $draft_status = ' disabled';
     }
-    elseif(in_array ($status_id, array(ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, ORDER_STATUS_PLAN))) {
-        $plan_status = ' disabled';
+    elseif(in_array ($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
+        $not_in_work_status = ' disabled';
     }
     else {
         $calculation_status = ' disabled';
@@ -39,10 +39,10 @@ if($folder == 'calculation') {
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$plan_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_PLAN, "page") ?>">В работе</a>
+                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?=  BuildQueryRemoveArray(array("status", "page")) ?>">В работе</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemoveArray(array("status", "page")) ?>">Расчеты</a>
+                <a class="nav-link<?=$not_in_work_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_NOT_IN_WORK, "page") ?>">Расчеты</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_DRAFT, "page") ?>">Черновики</a>
