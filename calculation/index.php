@@ -233,7 +233,7 @@ else $title = $status_titles[1];
                 <tbody>
                     <?php
                     // Сортировка
-                    $orderby = "order by c.status_id asc, c.id desc";
+                    $orderby = "order by c.id desc";
                     
                     if(array_key_exists('order', $_REQUEST)) {
                         switch ($_REQUEST['order']) {
