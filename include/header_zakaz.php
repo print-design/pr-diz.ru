@@ -24,7 +24,7 @@ if($folder == 'calculation') {
     elseif($status_id == ORDER_STATUS_DRAFT) {
         $draft_status = ' disabled';
     }
-    elseif(in_array ($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
+    elseif(in_array ($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP, ORDER_STATUS_NOT_IN_WORK))) {
         $not_in_work_status = ' disabled';
     }
     else {

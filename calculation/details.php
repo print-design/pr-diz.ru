@@ -110,6 +110,13 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $sql = "update calculation set status_id = $status_id, status_date = now() where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    // Если статус - "ждём подтверждения", то фиксируем дату первого попадания заказа в раздел "В работе"
+    if($status_id == ORDER_STATUS_WAITING) {
+        $sql = "update calculation set to_work_date = now() where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 
 // Получение объекта
