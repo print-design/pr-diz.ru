@@ -110,13 +110,6 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $sql = "update calculation set status_id = $status_id, status_date = now() where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
-    
-    // Если статус - "ждём подтверждения", то фиксируем дату первого попадания заказа в раздел "В работе"
-    if($status_id == ORDER_STATUS_WAITING) {
-        $sql = "update calculation set to_work_date = now() where id = $id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
 }
 
 // Получение объекта
@@ -370,7 +363,7 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
                 $backlink_get = BuildQueryAddRemove('status', $status_id, 'id');
             }
             else {
-                $backlink_get = BuildQueryRemove('id');
+                $backlink_get = BuildQueryRemoveArray(array('status', 'id'));
             }
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">Назад</a>

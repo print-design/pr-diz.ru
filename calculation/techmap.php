@@ -176,7 +176,7 @@ if(null !== filter_input(INPUT_POST, 'plan_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
     if(!empty($id)) {
-        $sql = "update calculation set status_id = ".ORDER_STATUS_WAITING." where id = $id";
+        $sql = "update calculation set status_id = ".ORDER_STATUS_WAITING.", status_date = now(), to_work_date = now() where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
