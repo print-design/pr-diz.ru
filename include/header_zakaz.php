@@ -39,7 +39,7 @@ if($folder == 'calculation') {
             if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?>" href="<?=APPLICATION ?>/calculation/<?=  BuildQueryRemoveArray(array("status", "page")) ?>">В работе</a>
+                <a class="nav-link<?=$calculation_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?=  BuildQueryRemoveArray(array("status", "page")) ?>">В работе</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$not_in_work_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_NOT_IN_WORK, "page") ?>">Расчеты</a>
