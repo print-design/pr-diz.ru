@@ -51,11 +51,11 @@ require_once '../calculation/calculation.php';
         <div class="d-flex justify-content-between">
             <div>
                 <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING): ?>
-                <div class="text-nowrap"><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></div>
+                <div class="text-nowrap"><?= CalculationBase::Display(floatval($this->edition['length_pure_1']), 0) ?></div>
                 <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
-                <div class="text-nowrap"><?= CalculationBase::Display(floatval($this->edition['length_dirty_2']), 0) ?></div>
+                <div class="text-nowrap"><?= CalculationBase::Display(floatval($this->edition['length_pure_2']), 0) ?></div>
                 <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
-                <div class="text-nowrap"><?= CalculationBase::Display(floatval($this->edition['length_dirty_3']), 0) ?></div>
+                <div class="text-nowrap"><?= CalculationBase::Display(floatval($this->edition['length_pure_3']), 0) ?></div>
                 <?php endif; ?>
                 <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION ? ' Допечатка' : '' ?>
             </div>
