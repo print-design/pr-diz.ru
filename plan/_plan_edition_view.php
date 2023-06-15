@@ -301,7 +301,7 @@ require_once '../calculation/calculation.php';
         <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>" target="_blank"<?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
-        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && (IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST]) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId()))): ?>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && (IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR])) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId()))): ?>
         <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drop ?>>
             <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
         </a>
