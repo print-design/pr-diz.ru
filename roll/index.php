@@ -45,7 +45,7 @@ if(!empty($width_to)) {
     $where .= " and r.width <= $width_to";
 }
     
-$find = filter_input(INPUT_GET, 'find');
+$find = trim(filter_input(INPUT_GET, 'find'));
 $findtrim = $find;
 if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);

@@ -119,7 +119,7 @@ else $title = $status_titles[1];
                         $where .= " and trim(c.name)='$name'";
                     }
                     
-                    $find = filter_input(INPUT_GET, 'find');
+                    $find = trim(filter_input(INPUT_GET, 'find'));
                     if(!empty($find)) {
                         $find_substrings = explode('-', $find);
                         if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
