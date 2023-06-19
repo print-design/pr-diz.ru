@@ -38,49 +38,7 @@ $length_invalid_message = '';
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-    if(empty($supplier_id)) {
-        $supplier_id_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    
-    $film_id = filter_input(INPUT_POST, 'film_id');
-    if(empty($film_id)) {
-        $film_id_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $width = filter_input(INPUT_POST, 'width');
-    if(empty($width)) {
-        $width_valid = ISINVALID;
-        $form_valid = false;
-    }
-        
-    if(intval($width) < 50 || intval($width) > 1600) {
-        $width_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
-    if(empty($film_variation_id)) {
-        $film_variation_id_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $length = filter_input(INPUT_POST, 'length');
-    if(empty($length)) {
-        $length_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $net_weight = filter_input(INPUT_POST, 'net_weight');
-    if(empty($net_weight)) {
-        $net_weight_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
+
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
     $sql = "select p.film_variation_id, p.width, "

@@ -129,13 +129,12 @@ while ($row = $fetcher->Fetch()) {
             <table class="table table-hover" id="content_table">
                 <thead>
                     <tr style="border-top: 1px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <th class="d-none" style="padding-left: 5px; padding-right: 6px; width: 20%;"></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 8%;">Дата<br />прихода</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Ширина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Вес</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Толщина</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Плотность</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Ширина</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Вес</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID паллета</th>
@@ -143,8 +142,8 @@ while ($row = $fetcher->Fetch()) {
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Кто заказал</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 15%;">Комментарий</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 2%;"></th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 3%;"></th>
                     </tr>
                 </thead>
                 <tbody>

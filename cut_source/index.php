@@ -174,20 +174,19 @@ foreach ($roll_statuses as $status) {
             <table class="table table-hover" id="content_table">
                 <thead>
                     <tr style="border-top: 1px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <th style="padding-left: 5px; padding-right: 5px;" class="d-none"></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 8%;">Дата<br />раскроя</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Толщина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Плотность</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Ширина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Вес</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Толщина</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Плотность</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Ширина</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Вес</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID пленки</th>
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 15%;">Комментарий</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 2%;"></th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 3%;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -256,7 +255,6 @@ foreach ($roll_statuses as $status) {
                     }
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" class="form-check chkFilm" /></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['film'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['thickness'] ?> мкм</td>
