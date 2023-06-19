@@ -56,11 +56,10 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     // Если первый символ р или Р, ищем среди рулонов
     if(mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") {
         $roll_id = mb_substr($source_id, 1);
-        $sql = "select r.id "
-                . "from roll r where r.id = '$roll_id' limit 1";
+        $sql = "select r.id from roll r where r.id = '$roll_id' limit 1";
                 //. "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                 //. "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
-                // Временно убираем проверку по статусу
+                // Временно убираем проверку по статусу.
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = 0;
@@ -88,27 +87,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 $is_from_pallet = 1;
                 $roll_id = $row['id'];
             }
-        }
-    }
-    
-    // Если ролик не найден, ищем среди ID от поставщика
-    if(empty($roll_id)) {
-        $sql = "select r.id, 0 is_from_pallet "
-                . "from roll r "
-                . "where r.id_from_supplier = '$source_id' "
-                //. "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                //. "where r.id_from_supplier='$source_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") "
-                . "union "
-                . "select pr.id, 1 is_from_pallet "
-                . "from pallet_roll pr "
-                . "where pr.id_from_supplier = '$source_id'";
-                //. "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                //. "where pr.id_from_supplier='$source_id' and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
-                // Временно убираем проверку по статусу
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $is_from_pallet = $row['is_from_pallet'];
-            $roll_id = $row['id'];
         }
     }
     
@@ -309,18 +287,18 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                     <form method="post">
                         <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
-                            <label for="source_id">ID рулона (внутренний или поставщика)</label>
-                            <div class="input-group find-group">
+                            <label for="source_id">ID рулона</label>
+                            <!--div class="input-group find-group"-->
                                 <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
                                 <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
-                                <div class='input-group-append'>
-                                    <?php if(empty($source_id)): ?>
+                                <!--div class='input-group-append'>
+                                    <?php /*if(empty($source_id)): ?>
                                     <button type='button' class='btn find-btn'><i class='fas fa-camera'></i></button>
                                     <?php else: ?>
                                     <button type="button" class="btn clear-btn"><i class="fas fa-times"></i></button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                                    <?php endif;*/ ?>
+                                </div-->
+                            <!--/div-->
                         </div>
                         <div class="form-group d-none d-lg-block">
                             <div class="form-group">

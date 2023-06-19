@@ -12,7 +12,6 @@ $form_valid = true;
 $error_message = '';
 
 $supplier_id_valid = '';
-$id_from_supplier_valid = '';
 $film_id_valid = '';
 $film_variation_id_valid = '';
 $width_valid = '';
@@ -31,12 +30,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
     if(empty($supplier_id)) {
         $supplier_id_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
-    if(empty($id_from_supplier)) {
-        $id_from_supplier_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -150,8 +143,8 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;
@@ -211,11 +204,6 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                             ?>
                         </select>
                         <div class="invalid-feedback">Поставщик обязательно</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_from_supplier">ID рулона от поставщика</label>
-                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= filter_input(INPUT_POST, 'id_from_supplier') ?>" class="form-control" placeholder="Введите ID" required="required" autocomplete="off" />
-                        <div class="invalid-feedback">ID рулона от поставщика обязательно</div>
                     </div>
                     <div class="form-group">
                         <label for="film_id">Марка пленки</label>

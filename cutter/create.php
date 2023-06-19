@@ -76,7 +76,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
-    $id_from_supplier = rand(1000000, 9999999);
     $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
     $width = filter_input(INPUT_POST, 'width');
     $cell = 'Цех';
@@ -85,8 +84,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     
     if($form_valid) {
         // Создаём новый рулон
-        $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;

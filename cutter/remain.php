@@ -148,12 +148,11 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $net_weight = filter_input(INPUT_POST, 'net_weight');
     $length = filter_input(INPUT_POST, 'length');
     $spool = filter_input(INPUT_POST, 'spool');
-    $id_from_supplier = "Из раскроя";
     $cell = "Цех";
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
             
-    $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
-            . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id')";
+    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
+            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id')";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $roll_id = $executer->insert_id;

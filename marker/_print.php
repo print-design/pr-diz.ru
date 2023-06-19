@@ -31,7 +31,7 @@ $current_date_time = date("dmYHis");
     <body class="print">
         <?php
         // Получение данных
-        $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, r.id_from_supplier, "
+        $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, "
                 . "r.film_variation_id, f.name film, r.width, fv.thickness, fv.weight, r.length, "
                 . "r.net_weight, r.cell, "
                 . "(select rs.name status from roll_status_history rsh left join roll_status rs on rsh.status_id = rs.id where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status, "
@@ -52,7 +52,6 @@ $current_date_time = date("dmYHis");
         $storekeeper = $row['last_name'].' '.$row['first_name'];
         $supplier_id = $row['supplier_id'];
         $supplier = $row['supplier'];
-        $id_from_supplier = $row['id_from_supplier'];
         $film_variation_id = $row['film_variation_id'];
         $film = $row['film'];
         $width = $row['width'];
@@ -177,7 +176,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                        <td class="text-nowrap pb-5"></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
@@ -229,7 +228,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">ID от поставщика<br /><span class="text-nowrap font-weight-bold"><?=$id_from_supplier ?></span></td>
+                        <td class="text-nowrap pb-5"></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>

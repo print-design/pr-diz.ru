@@ -51,7 +51,7 @@ if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);
 }
 if(!empty($find)) {
-    $where .= " and (r.id='$find' or r.id='$findtrim' or r.id_from_supplier='$find' or r.cell='$find' or r.comment like '%$find%')";
+    $where .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
 }
     
 // Получение общей массы рулонов
@@ -143,7 +143,6 @@ while ($row = $fetcher->Fetch()) {
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Вес</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 6%;">ID от поставщика</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID рулона</th>
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Менеджер</th>
@@ -173,7 +172,7 @@ while ($row = $fetcher->Fetch()) {
                     }
                     
                     $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, f.name film, fv.thickness, fv.weight density, r.width, r.net_weight, r.length, "
-                            . "s.name supplier, r.id_from_supplier, r.cell, u.first_name, u.last_name, "
+                            . "s.name supplier, r.cell, u.first_name, u.last_name, "
                             . "rsh.status_id status_id, r.comment "
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
@@ -210,7 +209,6 @@ while ($row = $fetcher->Fetch()) {
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['length'] ?> м</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['id_from_supplier'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= "Р".$row['id'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><?= $row['last_name'].' '.$row['first_name'] ?></td>

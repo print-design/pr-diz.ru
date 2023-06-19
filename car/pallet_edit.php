@@ -113,7 +113,7 @@ const AUDITOR = 'auditor';
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.id_from_supplier, p.width, fv.thickness, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, p.cell, p.comment, "
                     . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
                     . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
                     . ") length, "
@@ -134,7 +134,6 @@ const AUDITOR = 'auditor';
             if($row && $row['rolls_number']):
             $date = $row['date'];
             $supplier = $row['supplier'];
-            $id_from_supplier = $row['id_from_supplier'];
             $film = $row['film'];
             $width = $row['width'];
             $thickness = $row['thickness'];
@@ -150,7 +149,6 @@ const AUDITOR = 'auditor';
                         <h1>Паллет №П<?= filter_input(INPUT_GET, 'id') ?></h1>
                         <p>от <?= $date ?></p>
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
-                        <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
                         <p><strong>Марка пленки:</strong> <?=$film ?></p>
                         <p><strong>Ширина:</strong> <?=$width ?> мм</p>
@@ -193,7 +191,7 @@ const AUDITOR = 'auditor';
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_mobile.php';
+        //include '../include/footer_mobile.php';
         ?>
     </body>
 </html>

@@ -12,7 +12,6 @@ $form_valid = true;
 $error_message = '';
 
 $supplier_id_valid = '';
-$id_from_supplier_valid = '';
 $film_variation_id_valid = '';
 $width_valid = '';
 $length_valid = '';
@@ -29,12 +28,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
     if(empty($supplier_id)) {
         $supplier_id_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
-    if(empty($id_from_supplier)) {
-        $id_from_supplier_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -105,20 +98,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $rolls_valid_data = array();
     $roll_number = 1;
     $rolls_weight = 0;
-    while (filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") !== null && filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
+    while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null) {
         $roll_valid_data = array();
-        $roll_valid_data['id_from_supplier_valid'] = '';
-        $roll_valid_data['id_from_supplier_message'] = 'ID от поставщика обязательно';
         $roll_valid_data['length_valid'] = '';
         $roll_valid_data['length_message'] = 'Длина обязательно';
         $roll_valid_data['weight_valid'] = '';
         $roll_valid_data['weight_message'] = 'Масса нетто обязательно';
-        
-        $roll_id_from_supplier = filter_input(INPUT_POST, "id_from_supplier_roll$roll_number");
-        if(empty($roll_id_from_supplier)) {
-            $roll_valid_data['id_from_supplier_valid'] = ISINVALID;
-            $form_valid = false;
-        }
         
         $roll_length = filter_input(INPUT_POST, "length_roll$roll_number");
         if(empty($roll_length)) {
@@ -174,8 +159,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        $sql = "insert into pallet (supplier_id, id_from_supplier, film_variation_id, width, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into pallet (supplier_id, film_variation_id, width, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, $film_variation_id, $width, '$cell', '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $pallet_id = $executer->insert_id;
@@ -185,12 +170,11 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             // Заполнение роликов этого паллета
             $roll_number = 1;
             
-            while (filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") !== null && filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
-                $id_from_supplier = addslashes(filter_input(INPUT_POST, "id_from_supplier_roll$roll_number"));
+            while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
                 $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
                 $length = filter_input(INPUT_POST, "length_roll$roll_number");
                 $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
-                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal, id_from_supplier) values ($pallet_id, $weight, $length, $ordinal, '$id_from_supplier')";
+                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values ($pallet_id, $weight, $length, $ordinal)";
                 $executer = new Executer($sql);
                 $error_message = $executer->error;
                 $roll_number++;
@@ -245,11 +229,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             ?>
                         </select>
                         <div class="invalid-feedback">Поставщик обязательно</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_from_supplier">ID паллета от поставщика</label>
-                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= filter_input(INPUT_POST, 'id_from_supplier') ?>" class="form-control" placeholder="Введите ID" required="required" autocomplete="off" />
-                        <div class="invalid-feedback">ID паллета от поставщика обязательно</div>
                     </div>
                     <div class="form-group">
                         <label for="film_id">Марка пленки</label>
@@ -355,13 +334,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         ?>
                         <div class='mt-1'><?=$roll_number ?> рулон</div>
                         <input type='hidden' id='ordinal_roll<?=$roll_number ?>' name='ordinal_roll<?=$roll_number ?>' value='<?=$roll_number ?>' />
-                        <div class="row">
-                            <div class="col-12 form-group">
-                                <label for="id_from_supplier_roll<?=$roll_number ?>">ID от поставщика</label>
-                                <input type="text" id="id_from_supplier_roll<?=$roll_number ?>" name="id_from_supplier_roll<?=$roll_number ?>" class="form-control<?=$rolls_valid_data[$roll_number]['id_from_supplier_valid'] ?>" placeholder="ID от поставщика" value="<?= filter_input(INPUT_POST, "id_from_supplier_roll$roll_number") ?>" required="required" autocomplete="off" />
-                                <div class="invalid-feedback"><?=$roll_valid_data[$roll_number]['id_from_supplier_message'] ?></div>
-                            </div>
-                        </div>
                         <div class='row'>
                             <div class='col-6 form-group'>
                                 <label for='weight_roll<?=$roll_number ?>'>Масса нетто, кг</label>
@@ -442,12 +414,6 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     for(var i=1; i<=num_val; i++) {
                         var form_row = "<div class='mt-1'>" + i + " рулон</div>";
                         form_row += "<input type='hidden' id='ordinal_roll" + i + "' name='ordinal_roll" + i + "' value='" + i + "' />";
-                        form_row += "<div class='row'>";
-                        form_row += "<div class='col-12 form-group'>";
-                        form_row += "<label for='id_from_supplier_roll" + i + "'>ID от поставщика</label>";
-                        form_row += "<input type='text' id='id_from_supplier_roll" + i + "' name='id_from_supplier_roll" + i + "' class='form-control' placeholder='ID от поставщика' required='required' autocomplete='off' />";
-                        form_row += "</div>";
-                        form_row += "</div>";
                         form_row += "<div class='row'>";
                         form_row += "<div class='col-6 form-group'>";
                         form_row += "<label for='weight_roll" + i + "'>Масса нетто, кг</label>";

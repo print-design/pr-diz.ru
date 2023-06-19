@@ -95,7 +95,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.film_variation_id, p.width, pr.length, "
         . "(select film_id from film_variation where id = p.film_variation_id) film_id, "
-        . "pr.weight, pr.pallet_id, pr.ordinal, pr.id_from_supplier, p.cell, "
+        . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
         . "prsh.status_id status_id, DATE_FORMAT(prsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(prsh.date, '%H.%i') status_time, "
         . "p.comment "
         . "from pallet p "
@@ -133,9 +133,6 @@ if(null === $pallet_id) $pallet_id = $row['pallet_id'];
 
 $ordinal = filter_input(INPUT_POST, 'ordinal');
 if(null === $ordinal) $ordinal = $row['ordinal'];
-
-$id_from_supplier = filter_input(INPUT_POST, 'id_from_supplier');
-if(null === $id_from_supplier) $id_from_supplier = $row['id_from_supplier'];
 
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];
@@ -183,7 +180,6 @@ if(null === $comment) $comment = $row['comment'];
             <?php if(!empty($time) && $time != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
             <?php endif; ?>
-            <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">ID <?=$id_from_supplier ?></h2>
             <form method="post">
                 <div style="width: 423px;">
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
@@ -214,14 +210,6 @@ if(null === $comment) $comment = $row['comment'];
                             ?>
                         </select>
                         <div class="invalid-feedback">Поставщик обязательно</div>
-                    </div>
-                    <div class="form-group">
-                        <?php
-                        $id_from_supplier_disabled = " disabled='disabled'";
-                        ?>
-                        <label for="id_from_supplier">ID рулона от поставщика</label>
-                        <input type="text" id="id_from_supplier" name="id_from_supplier" value="<?= $id_from_supplier ?>" class="form-control" placeholder="Введите ID"<?=$id_from_supplier_disabled ?> />
-                        <div class="invalid-feedback">ID паллета от поставщика обязательно</div>
                     </div>
                     <div class="form-group">
                         <?php

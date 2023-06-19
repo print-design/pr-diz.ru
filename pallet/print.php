@@ -22,7 +22,7 @@ while ($row = $fetcher->Fetch()) {
 $free_status_id = 1;
 
 // Получение данных
-$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, p.id_from_supplier, "
+$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
         . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, "
         . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) length, "
         . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) net_weight, "
@@ -42,7 +42,6 @@ $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 $supplier_id = $row['supplier_id'];
 $supplier = $row['supplier'];
-$id_from_supplier = $row['id_from_supplier'];
 $film_variation_id = $row['film_variation_id'];
 $film = $row['film'];
 $width = $row['width'];
@@ -118,7 +117,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="pb-5"><span class="text-nowrap">ID от поставщика</span><br /><span class="font-weight-bold" style="word-break: break-all;"><?=$id_from_supplier ?></span></td>
+                        <td class="pb-5"></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top:2px;">2</sup></span></td>
                     </tr>
                     <tr>
@@ -171,7 +170,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="pb-5"><span class="text-nowrap">ID от поставщика</span><br /><span class="font-weight-bold" style="word-break: break-all;"><?=$id_from_supplier ?></span></td>
+                        <td class="pb-5"></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top:2px;">2</sup></span></td>
                     </tr>
                     <tr>
@@ -194,7 +193,7 @@ $current_date_time = date("dmYHis");
         </div>
         
         <?php
-        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, pr.id_from_supplier pr_id_from_supplier, ifnull(prsh.status_id, $free_status_id) status_id, "
+        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, $free_status_id) status_id, "
                 . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status "
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                 . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id = $free_status_id)";
@@ -206,7 +205,6 @@ $current_date_time = date("dmYHis");
         $weight = $pallet_roll['weight'];
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
-        $pr_id_from_supplier = $pallet_roll['pr_id_from_supplier'];
         $status_id = $pallet_roll['status_id'];
         $status = $pallet_roll['status'];
         
@@ -284,7 +282,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="pb-5"><span class="text-nowrap">ID от поставщика</span><br /><span class="font-weight-bold" style="word-break: break-all;"><?=$pr_id_from_supplier ?></span></td>
+                        <td class="pb-5"></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>

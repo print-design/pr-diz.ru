@@ -66,7 +66,6 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
         $form_valid = false;
     }
     
-    $id_from_supplier = rand(1000000, 9999999);
     $comment = '';
     $storekeeper_id = $user_id;
     $status_id = FREE_ROLL_STATUS_ID;
@@ -89,8 +88,8 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     }
     
     if($form_valid) {    
-        $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
+                . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;

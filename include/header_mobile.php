@@ -26,11 +26,11 @@
     </nav>
     <nav class="navbar navbar-expand-sm justify-content-between d-flex d-lg-none pr-0">
         <ul class="navbar-nav">
-            <?php if(IsInRole(array('electrocarist', 'auditor'))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_ELECTROCARIST], ROLE_NAMES[ROLE_AUDITOR]))): ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?=APPLICATION ?>/car/">Склад</a>
             </li>
-            <?php elseif(IsInRole(array('cutter'))): ?>
+            <?php elseif(IsInRole(array(ROLE_NAMES[ROLE_AUDITOR]))): ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?=APPLICATION ?>/cutter/">Склад</a>
             </li>
@@ -38,17 +38,17 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Меню</a>
                 <div class="dropdown-menu" style="position: absolute;">
-                    <?php if(IsInRole(array('technologist', 'dev'))): ?>
+                    <?php if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])): ?>
                     <a class="btn btn-link dropdown-item" href="<?=APPLICATION ?>/calculation/">Заказы</a>
                     <?php
                     endif;
-                    if(IsInRole(array('technologist', 'storekeeper', 'dev', 'manager'))):
+                    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER]))):
                     ?>
                     <a class="btn btn-link dropdown-item" href="<?=APPLICATION ?>/pallet/">Склад</a>
                     <a class="btn btn-link dropdown-item" href="<?=APPLICATION ?>/grafik/comiflex.php">График</a>
                     <?php
                     endif;
-                    if(IsInRole(array('technologist', 'dev'))): ?>
+                    if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])): ?>
                     <a class="btn btn-link dropdown-item" href="<?=APPLICATION ?>/user/">Админка</a>
                     <?php endif; ?>
                 </div>

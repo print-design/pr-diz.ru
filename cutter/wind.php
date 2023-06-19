@@ -139,8 +139,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
         
         // Создание рулона на каждый ручей
-        $id_from_supplier = "Из раскроя";
-        
         if(empty($error_message)) {
             for($i=1; $i<=19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
@@ -148,37 +146,11 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
-                    $sql = "insert into roll (supplier_id, id_from_supplier, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id, cutting_wind_id) "
-                            . "values ($supplier_id, '$id_from_supplier', $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
+                    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id, cutting_wind_id) "
+                            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
                     $insert_id = $executer->insert_id;
-    
-                    // Получение ID от поставщика
-                    $source_id_from_supplier = '';
-                    
-                    if(empty($error_message)) {
-                        $sql = "select id_from_supplier "
-                                . "from pallet_roll "
-                                . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=1) "
-                                . "union "
-                                . "select id_from_supplier "
-                                . "from roll "
-                                . "where id in (select roll_id from cutting_source where id=$last_source and is_from_pallet=0)";
-                        $fetcher = new Fetcher($sql);
-                        if($row = $fetcher->Fetch()) {
-                            $source_id_from_supplier = $row[0];
-                        }
-                        $error_message = $fetcher->error;
-                    }
-                    
-                    // Присвоение полю "ID от поставщика" значения "ID от поставщика исходного ролика + "Р" + наш ID текущего ролика"
-                    if(empty($error_message)) {
-                        $id_from_supplier = $source_id_from_supplier.'Р'.$insert_id;
-                        $sql = "update roll set id_from_supplier='$id_from_supplier' where id=$insert_id";
-                        $executer = new Executer($sql);
-                        $error_message = $executer->error;
-                    }
                     
                     // Заполнение истории статусов
                     if(empty($error_message)) {

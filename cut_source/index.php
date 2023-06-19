@@ -74,18 +74,10 @@ $findtrim = $find;
 if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);
 }
-$findpallet = '';
-$findroll = '';
-$findtrimsubstrings = mb_split("\D", $findtrim);
-
-if(count($findtrimsubstrings) == 2 && mb_strlen($findtrimsubstrings[0]) > 0 && mb_strlen($findtrimsubstrings[1]) > 0) {
-    $findpallet = $findtrimsubstrings[0];
-    $findroll = $findtrimsubstrings[1];
-}
 
 if(!empty($find)) {
-    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or pr.id_from_supplier='$find' or p.cell='$find' or p.comment like '%$find%' or (p.id='$findpallet' and pr.ordinal='$findroll'))";
-    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.id_from_supplier='$find' or r.cell='$find' or r.comment like '%$find%')";
+    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%')";
+    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
 }
 
 if(!empty($wherefindpallet)) {
@@ -191,7 +183,6 @@ foreach ($roll_statuses as $status) {
                         <th style="padding-left: 5px; padding-right: 5px; width: 4%;">Вес</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 6%;">ID от поставщика</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID пленки</th>
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
@@ -225,7 +216,7 @@ foreach ($roll_statuses as $status) {
                     
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
                             . "p.width width, fv.thickness thickness, fv.weight density, p.cell cell, pr.weight net_weight, pr.length length, "
-                            . "s.name supplier, pr.id_from_supplier id_from_supplier, "
+                            . "s.name supplier, "
                             . "prsh.status_id status_id, p.comment comment "
                             . "from pallet_roll pr "
                             . "inner join pallet p on pr.pallet_id = p.id "
@@ -237,7 +228,7 @@ foreach ($roll_statuses as $status) {
                             . "union "
                             . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
                             . "r.width width, fv.thickness thickness, fv.weight density, r.cell cell, r.net_weight net_weight, r.length length, "
-                            . "s.name supplier, r.id_from_supplier id_from_supplier, "
+                            . "s.name supplier, "
                             . "rsh.status_id status_id, r.comment comment "
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
@@ -274,7 +265,6 @@ foreach ($roll_statuses as $status) {
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['length'] ?> м</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?=$row['id_from_supplier'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'].'Р'.$row['ordinal'] : 'Р'.$row['id']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>

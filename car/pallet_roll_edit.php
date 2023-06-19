@@ -115,7 +115,7 @@ const AUDITOR = 'auditor';
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.id_from_supplier, p.width, fv.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, pr.weight, pr.length, p.cell, p.comment, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "
@@ -129,7 +129,6 @@ const AUDITOR = 'auditor';
             if($row = $fetcher->Fetch()):
             $date = $row['date'];
             $supplier = $row['supplier'];
-            $id_from_supplier = $row['id_from_supplier'];
             $film = $row['film'];
             $width = $row['width'];
             $thickness = $row['thickness'];
@@ -146,7 +145,6 @@ const AUDITOR = 'auditor';
                         <h1>Рулон №П<?=$pallet_id ?>Р<?=$ordinal ?></h1>
                         <p>от <?= $date ?></p>
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
-                        <p><strong>ID поставщика:</strong> <?=$id_from_supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>
                         <p><strong>Марка пленки:</strong> <?=$film ?></p>
                         <p><strong>Ширина:</strong> <?=$width ?> мм</p>
@@ -190,7 +188,7 @@ const AUDITOR = 'auditor';
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_mobile.php';
+        //include '../include/footer_mobile.php';
         ?>
     </body>
 </html>

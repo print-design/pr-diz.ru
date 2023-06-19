@@ -14,7 +14,7 @@ if(empty($id)) {
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
         . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, p.cell, "
         . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status, "
-        . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal, pr.id_from_supplier "
+        . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
         . "from pallet p "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
@@ -43,7 +43,6 @@ $weight = $row['pallet_roll_weight'];
 $pallet_id = $row['pallet_roll_pallet_id'];
 $length = $row['pallet_roll_length'];
 $ordinal = $row['pallet_roll_ordinal'];
-$id_from_supplier = $row['id_from_supplier'];
 
 // Вертикальное положение бирки
 $sticker_top = 0;
@@ -102,7 +101,7 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="pb-5"><span class="text-nowrap">ID от поставщика</span><br /><span class="font-weight-bold" style="word-break: break-all;"><?=$id_from_supplier ?></span></td>
+                        <td class="pb-5"></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
