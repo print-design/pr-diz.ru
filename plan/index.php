@@ -1124,6 +1124,17 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     return;
                 }
             }
+            
+            $('#timetable').on('scroll', function() {
+                $('input[name="scroll"]').val($(this).scrollTop());
+            });
+            
+            <?php
+            $scroll = filter_input(INPUT_POST, 'scroll');
+            if(!empty($scroll)):
+            ?>
+            $('#timetable').animate({ scrollTop: <?=$scroll ?> }, 0);
+            <?php endif; ?>
         </script>
         <?php endif; ?>
     </body>
