@@ -469,7 +469,7 @@ $current_date_time = date("dmYHis");
             <div class="d-flex justify-content-between">
                 <div>
                     <?php
-                    include '../qr/qrlib.php';
+                    include_once '../qr/qrlib.php';
                     $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
                     $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/calculation/details.php?id='.$id;
                     $filename = "../temp/$current_date_time.png";

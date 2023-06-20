@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include '../qr/qrlib.php';
 
 // Если не задано значение cutting_wind_id, перенаправляем на список
 $cutting_wind_id = filter_input(INPUT_GET, 'cutting_wind_id');
@@ -170,6 +169,7 @@ if($row = $fetcher->Fetch()) {
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
                         <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
                             <?php
+                            include_once '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
                             $filename = "../temp/".$current_roll."_".$current_date_time.".png";

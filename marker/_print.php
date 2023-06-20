@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include '../qr/qrlib.php';
 
 // Если не задано значение roll_id, перенаправляем на список
 $roll_id = filter_input(INPUT_GET, 'roll_id');
@@ -162,6 +161,7 @@ $current_date_time = date("dmYHis");
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
                         <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
                             <?php
+                            include_once '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
                             $filename = "../temp/".$current_roll."_".$current_date_time.".png";

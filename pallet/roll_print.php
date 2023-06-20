@@ -82,7 +82,7 @@ $current_date_time = date("dmYHis");
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
                         <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
                             <?php
-                            include '../qr/qrlib.php';
+                            include_once '../qr/qrlib.php';
                             $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/pallet/roll.php?id='.$pallet_roll_id;
                             $filename = "../temp/$current_date_time.png";
