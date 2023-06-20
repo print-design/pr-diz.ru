@@ -184,7 +184,7 @@ if($row = $fetcher->Fetch()) {
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
