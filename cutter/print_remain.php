@@ -27,7 +27,7 @@ if($row = $fetcher->Fetch()) {
 $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, "
         . "r.film_variation_id, f.name film, r.width, fv.thickness, fv.weight, r.length, "
         . "r.net_weight, r.cell, "
-        . "(select rs.name status from roll_status_history rsh left join roll_status rs on rsh.status_id = rs.id where rsh.roll_id = r.id order by rsh.id desc limit 0, 1) status, "
+        . "(select status_id from roll_status_history where roll_id = r.id order by id desc limit 0, 1) status_id, "
         . "r.comment "
         . "from roll r "
         . "left join user u on r.storekeeper_id = u.id "
@@ -50,7 +50,7 @@ $ud_ves = $row['weight'];
 $length = $row['length'];
 $net_weight = $row['net_weight'];
 $cell = $row['cell'];
-$status = $row['status'];
+$status = ROLL_STATUS_NAMES[$row['status_id']];
 $comment = $row['comment'];
 ?>
 <!DOCTYPE html>

@@ -60,7 +60,7 @@ const AUDITOR = 'auditor';
                 $pallet_id = $row['pallet_id'];
                 $ordinal = $row['ordinal'];
                 
-                $title = "П".$pallet_id."Р".$ordinal;
+                $title = "П".$pallet_id;
                 include '../include/find_mobile.php';
             ?>
             <div class="row">
@@ -92,7 +92,7 @@ const AUDITOR = 'auditor';
             </div>
             <?php
             else:
-            $title = "П".$pallet_id."Р".$ordinal;
+            $title = "П".$pallet_id;
             include '../include/find_mobile.php';
             ?>
             <div class='alert alert-danger'>Объект не найден</div>

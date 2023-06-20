@@ -7,26 +7,12 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
 
-// Получение всех статусов
-$fetcher = (new Fetcher("select id, name, colour from roll_status"));
-$statuses = array();
-
-while ($row = $fetcher->Fetch()) {
-    $status = array();
-    $status['name'] = $row['name'];
-    $status['colour'] = $row['colour'];
-    $statuses[$row['id']] = $status;
-}
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
         . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, "
-        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) length, "
-        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) net_weight, "
-        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) rolls_number, "
+        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) length, "
+        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) net_weight, "
+        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number, "
         . "p.cell, "
         . "p.comment "
         . "from pallet p "
@@ -52,13 +38,7 @@ $net_weight = $row['net_weight'];
 $rolls_number = $row['rolls_number'];
 $cell = $row['cell'];
 $comment = $row['comment'];
-$status_id = $free_status_id;
-
-$status = '';
-
-if(!empty($statuses[$status_id]['name'])) {
-    $status = $statuses[$status_id]['name'];
-}
+$status_id = ROLL_STATUS_FREE;
 
 // Вертикальное положение бирки
 $sticker_top = 0;
@@ -182,7 +162,7 @@ $current_date_time = date("dmYHis");
                         <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
-                        <td>Статус<br /><strong><?=$status ?></strong></td>
+                        <td>Статус<br /><strong><?=ROLL_STATUS_NAMES[$status_id] ?></strong></td>
                         <td>Количество рулонов<br /><strong><?=$rolls_number ?></strong></td>
                     </tr>
                     <tr>
@@ -193,10 +173,9 @@ $current_date_time = date("dmYHis");
         </div>
         
         <?php
-        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, $free_status_id) status_id, "
-                . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status "
+        $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, ".ROLL_STATUS_FREE.") status_id "
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id = $free_status_id)";
+                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
         $pallet_rolls = (new Grabber($sql))->result;
         $current_roll = 0;
         
@@ -206,7 +185,7 @@ $current_date_time = date("dmYHis");
         $length = $pallet_roll['length'];
         $ordinal = $pallet_roll['ordinal'];
         $status_id = $pallet_roll['status_id'];
-        $status = $pallet_roll['status'];
+        $status = ROLL_STATUS_NAMES[$status_id];
         
         $current_roll++;
         
@@ -260,7 +239,7 @@ $current_date_time = date("dmYHis");
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -278,7 +257,7 @@ $current_date_time = date("dmYHis");
                             ?>
                             <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id."Р".$ordinal ?></span> от <?=$date ?></div>
+                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$id ?></span> от <?=$date ?></div>
                         </td>
                     </tr>
                     <tr>

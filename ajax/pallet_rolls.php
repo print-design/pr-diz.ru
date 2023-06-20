@@ -1,9 +1,6 @@
 <?php
 include '../include/topscripts.php';
 
-// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
-$free_status_id = 1;
-
 $pallet_id = filter_input(INPUT_GET, 'id');
 $getstring = filter_input(INPUT_GET, 'getstring');
 $decoded = rawurldecode($getstring);
@@ -23,29 +20,18 @@ if(!empty($pallet_id)) {
         $thickness = $row['thickness'];
     }
     
-    // Получение всех статусов
-    $fetcher = (new Fetcher("select id, name, colour from roll_status"));
-    $statuses = array();
-    
-    while ($row = $fetcher->Fetch()) {
-        $status = array();
-        $status['name'] = $row['name'];
-        $status['colour'] = $row['colour'];
-        $statuses[$row['id']] = $status;
-    }
-
     // Получение объекта
-    $sql = "select 0 utilized,  p.width, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
+    $sql = "select 0 utilized,  p.width, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, ".ROLL_STATUS_FREE.") status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id = $free_status_id) "
+            . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.") "
             . "union "
-            . "select 1 utilized,  p.width, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, $free_status_id) status_id "
+            . "select 1 utilized,  p.width, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, ".ROLL_STATUS_FREE.") status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where pr.pallet_id = $pallet_id and prsh.status_id is not null and prsh.status_id <> $free_status_id "
+            . "where pr.pallet_id = $pallet_id and prsh.status_id is not null and prsh.status_id <> ".ROLL_STATUS_FREE." "
             . "order by utilized, ordinal";
     $fetcher = new Fetcher($sql);
     
@@ -63,24 +49,13 @@ if(!empty($pallet_id)) {
         $inutilized = false;
         $utilized_style = " background-color: #EEEEEE; border-top: solid 4px #FFFFFF;";
     }
-
-    $status = '';
-    if(!empty($statuses[$row['status_id']]['name'])) {
-        $status = $statuses[$row['status_id']]['name'];
-    }
-    
-    $colour_style = '';
-    if(!empty($statuses[$row['status_id']]['colour'])) {
-        $colour = $statuses[$row['status_id']]['colour'];
-        $colour_style = "color: $colour";
-    }
     ?>
 <div style="padding: 10px;<?=$utilized_style ?>">
     <table style="margin-top: 25px; margin-bottom: 25px; font-size: 14px;">
         <tbody>
             <tr>
-                <td style="text-align: right; padding-bottom: 10px; padding-right: 10px; width: 20%;"><input type="checkbox" /></td>
-                <td style="padding-bottom: 10px; width: 30%;">Рулон <?=$row['ordinal'] ?></td>
+                <td style="padding-bottom: 10px; padding-right: 10px; width: 30%;">Статус</td>
+                <td style="padding-bottom: 10px; font-size: 10px; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?=mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
                 <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php<?=$previous_params_string ?>id=<?=$row['id'] ?>"><i class="fas fa-ellipsis-h"></i></a></td>
                 <td style="padding-bottom: 10px;"></td>
             </tr>
@@ -99,12 +74,6 @@ if(!empty($pallet_id)) {
                 <td style="padding-bottom: 10px;"><?=$row['weight'] ?> кг</td>
                 <td style="padding-bottom: 10px;">Длина</td>
                 <td style="padding-bottom: 10px;"><?=$row['length'] ?> м</td>
-            </tr>
-            <tr>
-                <td style="padding-bottom: 10px;">ID</td>
-                <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
-                <td style="padding-bottom: 10px;">Статус</td>
-                <td style="padding-bottom: 10px; font-size: 10px;<?=$colour_style ?>"><?=mb_strtoupper($status) ?></td>
             </tr>
             <tr>
                 <td style="padding-bottom: 10px; padding-right: 10px;">Комментарий</td>

@@ -37,16 +37,10 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
     }
 }
 
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ ПАЛЛЕТА
-$utilized_status_pallet_id = 2;
-
-// СТАТУС "СРАБОТАННЫЙ" ДЛЯ РУЛОНА
-$utilized_status_roll_id = 2;
-
 // Фильтр для данных
-$wherefindpallet = "prsh.status_id = $utilized_status_roll_id";
+$wherefindpallet = "prsh.status_id = ".ROLL_STATUS_UTILIZED;
 
-$wherefindroll = "rsh.status_id = $utilized_status_roll_id";
+$wherefindroll = "rsh.status_id = ".ROLL_STATUS_UTILIZED;
 
 $film_id = filter_input(INPUT_GET, 'film_id');
 if(!empty($film_id)) {
@@ -111,17 +105,6 @@ $sql = "select ifnull((select sum(pr.weight) total_weight "
 
 $row = (new Fetcher($sql))->Fetch();
 $total_weight = $row[0];
-
-// Получение всех статусов
-$sql = "select distinct id, name, colour from roll_status";
-$grabber = (new Grabber($sql));
-$error_message = $grabber->error;
-$roll_statuses = $grabber->result;
-   
-$roll_statuses1 = array();
-foreach ($roll_statuses as $status) {
-    $roll_statuses1[$status['id']] = $status;
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -243,19 +226,7 @@ foreach ($roll_statuses as $status) {
                     $fetcher = new Fetcher($sql);
                     
                     while ($row = $fetcher->Fetch()):
-                        
                     $rowcounter++;
-                    $status = '';
-                    $colour_style = '';
-                    
-                    if(!empty($roll_statuses1[$row['status_id']]['name'])) {
-                        $status = $roll_statuses1[$row['status_id']]['name'];
-                    }
-                    
-                    if(!empty($roll_statuses1[$row['status_id']]['colour'])) {
-                        $colour = $roll_statuses1[$row['status_id']]['colour'];
-                        $colour_style = " color: $colour";
-                    }
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
@@ -266,9 +237,9 @@ foreach ($roll_statuses as $status) {
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['length'] ?> м</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'].'Р'.$row['ordinal'] : 'Р'.$row['id']) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'] : 'Р'.$row['id']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?= mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap"><?= $row['comment'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>

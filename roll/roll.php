@@ -17,15 +17,6 @@ if(empty($id)) {
     header('Location: '.APPLICATION.'/roll/');
 }
 
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// СТАТУС "СРАБОТАННЫЙ"
-$utilized_status_id = 2;
-
-// СТАТУС "РАСКРОИЛИ"
-$cut_status_id = 3;
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -132,10 +123,10 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
-            if($row['status_id'] == $utilized_status_id) {
+            if($row['status_id'] == ROLL_STATUS_UTILIZED) {
                 header('Location: '.APPLICATION.'/utilized/'. BuildQueryRemove('id'));
             }
-            elseif($row['status_id'] == $cut_status_id) {
+            elseif($row['status_id'] == ROLL_STATUS_CUT) {
                 header('Location: '.APPLICATION.'/cut_source/'. BuildQueryRemove('id'));
             }
             else {
@@ -216,10 +207,10 @@ $cutting_wind_id = $row['cutting_wind_id'];
             
             // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
             // иначе - в раздел "Рулоны".
-            if(isset($status_id) && $status_id == $utilized_status_id):
+            if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED):
             ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php elseif(isset($status_id) && $status_id == $cut_status_id): ?>
+            <?php elseif(isset($status_id) && $status_id == ROLL_STATUS_CUT): ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php else: ?>
             <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
@@ -367,25 +358,22 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <label for="status_id">Статус</label>
                         <select id="status_id" name="status_id" class="form-control<?=$status_id_valid ?>" required="required"<?=$status_id_disabled ?>>
                             <?php
-                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.ordinal"))->result;
-                            foreach ($statuses as $status) {
-                                if(!(empty($status_id) && $status['id'] == $utilized_status_id)) { // Если статуса нет, то нельзя сразу поставить "Сработанный"
-                                    $id = $status['id'];
-                                    $name = $status['name'];
+                            foreach(ROLL_STATUSES as $status):
+                                if(!(empty($status_id) && $status == ROLL_STATUS_UTILIZED)) { // Если статуса нет, то нельзя сразу поставить "Сработанный".
                                     $selected = '';
-                                    if(empty($status_id)) $status_id = $free_status_id; // По умолчанию ставим статус "Свободный"
-                                    if($status_id == $status['id']) $selected = " selected='selected'";
-                                    echo "<option value='$id'$selected>$name</option>";
+                                    if(empty($status_id)) $status_id = ROLL_STATUS_FREE; // По умолчанию ставим статус "Свободный".
+                                    if($status_id == $status) $selected = " selected = 'selected'";
                                 }
-                            }
-                            ?>
+                                ?>
+                            <option value="<?=$status ?>"<?=$selected ?>><?=ROLL_STATUS_NAMES[$status] ?></option>
+                            <?php endforeach; ?>
                         </select>
                         <div class="invalid-feedback">Статус обязательно</div>
                     </div>
                     <!-- Отображаем, в каких нарезках данный ролик участвовал -->
                     <?php
                     // Если этот рулон был раскроен
-                    if($status_id == $cut_status_id):
+                    if($status_id == ROLL_STATUS_CUT):
                     ?>
                     <div class="form-group">
                         <label>Как резали:</label>

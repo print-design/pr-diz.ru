@@ -34,23 +34,17 @@ elseif($folder == 'rational_cut') {
     $rational_cut_status = ' disabled';
 }
             
-// СТАТУС "СРАБОТАННЫЙ"
-$utilized_status_id = 2;
-            
-// СТАТУС "РАСКРОИЛИ"
-$cut_sources_status_id = 3;
-            
 // На странице рулона:
 // Если он сработан, то выделяем пункт меню "Сработанная плёнка",
 // Если он раскроен, то выделяем пункт меню "Раскроили"
 // Иначе выделяем пункт меню "Рулоны"
 if($folder == 'roll' && $file == 'roll.php') {
-    if(isset($status_id) && $status_id == $utilized_status_id) {
+    if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED) {
         $rolls_status = '';
         $cut_sources_status = '';
         $utilized_status = ' disabled';
     }
-    elseif(isset ($status_id) && $status_id == $cut_sources_status) {
+    elseif(isset ($status_id) && $status_id == ROLL_STATUS_CUT) {
         $rolls_status = '';
         $cut_sources_status = ' disabled';
         $utilized_status = '';
@@ -62,12 +56,12 @@ if($folder == 'roll' && $file == 'roll.php') {
 // Если он раскроен, то выделяем пункт меню "Раскроили"
 // Иначе выделяем пункт меню "Паллеты".
 if($folder == 'pallet' && $file == 'roll.php') {
-    if(isset($status_id) && $status_id == $utilized_status_id) {
+    if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED) {
         $pallets_status = '';
         $cut_sources_status = '';
         $utilized_status = ' disabled';
     }
-    elseif(isset ($status_id) && $status_id == $cut_sources_status_id) {
+    elseif(isset ($status_id) && $status_id == ROLL_STATUS_CUT) {
         $pallets_status = '';
         $cut_sources_status = ' disabled';
         $utilized_status = '';

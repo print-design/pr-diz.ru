@@ -142,7 +142,7 @@ const AUDITOR = 'auditor';
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="object-card">
-                        <h1>Рулон №П<?=$pallet_id ?>Р<?=$ordinal ?></h1>
+                        <h1>Рулон паллета №П<?=$pallet_id ?></h1>
                         <p>от <?= $date ?></p>
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>

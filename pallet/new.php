@@ -18,7 +18,6 @@ $length_valid = '';
 $net_weight_valid = '';
 $rolls_number_valid = '';
 $cell_valid = '';
-$status_id_valid = '';
 
 $length_invalid_message = '';
 $net_weight_invalid_message = '';

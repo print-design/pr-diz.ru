@@ -8,7 +8,7 @@ if(!empty($id)) {
     $fetcher = new Fetcher($sql);
     
     if($row = $fetcher->Fetch()) {
-        echo "П".$row['pallet_id']."Р".$row['ordinal'];
+        echo "П".$row['pallet_id'];
         exit();
     }
     else {

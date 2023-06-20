@@ -1,9 +1,6 @@
 <?php
 include '../include/topscripts.php';
 
-// СТАТУС "СВОБОДНЫЙ" ДЛЯ РУЛОНА
-$free_status_id = 1;
-
 // Если не задано значение id, перенаправляем на список
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
@@ -12,8 +9,7 @@ if(empty($id)) {
 
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
-        . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, p.cell, "
-        . "(select name from roll_status where id = ifnull(prsh.status_id, $free_status_id)) status, "
+        . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, p.cell, ifnull(prsh.status_id, ".ROLL_STATUS_FREE.") status_id, "
         . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
         . "from pallet p "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
@@ -36,7 +32,7 @@ $width = $row['width'];
 $thickness = $row['thickness'];
 $ud_ves = $row['weight'];
 $cell = $row['cell'];
-$status = $row['status'];
+$status = ROLL_STATUS_NAMES[$row['status_id']];
 $comment = $row['comment'];
 $pallet_roll_id = $row['pallet_roll_id'];
 $weight = $row['pallet_roll_weight'];
@@ -79,7 +75,7 @@ $current_date_time = date("dmYHis");
                 <tbody>
                     <tr>
                         <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=$date ?></td>
+                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id ?></span> от <?=$date ?></td>
                     </tr>
                     <tr>
                         <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
@@ -97,7 +93,7 @@ $current_date_time = date("dmYHis");
                             ?>
                             <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
                             <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id."Р".$ordinal ?></span> от <?=$date ?></div>
+                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="П".$pallet_id ?></span> от <?=$date ?></div>
                         </td>
                     </tr>
                     <tr>

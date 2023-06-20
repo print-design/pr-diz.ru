@@ -67,7 +67,7 @@ if(null !== $cutting_id) {
                             . "inner join roll r on cs.roll_id = r.id "
                             . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 0 "
                             . "union "
-                            . "select cs.id, cs.roll_id, cs.is_from_pallet, concat('П', p.id, 'Р', pr.ordinal) name, pr.length "
+                            . "select cs.id, cs.roll_id, cs.is_from_pallet, concat('П', p.id) name, pr.length "
                             . "from cutting_source cs "
                             . "inner join pallet_roll pr on cs.roll_id = pr.id "
                             . "inner join pallet p on pr.pallet_id = p.id "

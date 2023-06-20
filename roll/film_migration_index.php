@@ -16,14 +16,8 @@ if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
     }
 }
 
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// СТАТУС "СРАБОТАННЫЙ"
-$utilized_status_id = 2;
-
 // Фильтр для данных
-$where = "(rsh.status_id is null or rsh.status_id = $free_status_id)";
+$where = "(rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")";
     
 $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
 if(!empty($film_brand_name)) {
@@ -67,17 +61,6 @@ $sql = "select sum(r.net_weight) total_weight "
         . "where $where";
 $row = (new Fetcher($sql))->Fetch();
 $total_weight = $row['total_weight'];
-
-// Получение всех статусов
-$fetcher = (new Fetcher("select id, name, colour from roll_status"));
-$statuses = array();
-
-while ($row = $fetcher->Fetch()) {
-    $status = array();
-    $status['name'] = $row['name'];
-    $status['colour'] = $row['colour'];
-    $statuses[$row['id']] = $status;
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -193,19 +176,7 @@ while ($row = $fetcher->Fetch()) {
                     $fetcher = new Fetcher($sql);
                     
                     while ($row = $fetcher->Fetch()):
-                        
                     $rowcounter++;
-                    $status = '';
-                    $colour_style = '';
-                    
-                    if(!empty($statuses[$row['status_id']]['name'])) {
-                        $status = $statuses[$row['status_id']]['name'];
-                    }
-                    
-                    if(!empty($statuses[$row['status_id']]['colour'])) {
-                        $colour = $statuses[$row['status_id']]['colour'];
-                        $colour_style = " color: $colour";
-                    }
                     ?>
                     <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
                         <td class="d-none" style="padding-left: 5px; padding-right: 5px;"><input type="checkbox" id="chk<?=$row['id'] ?>" name="chk<?=$row['id'] ?>" data-id="<?=$row['id'] ?>" class="form-check chkRoll" /></td>
@@ -223,7 +194,7 @@ while ($row = $fetcher->Fetch()) {
                         <td style="padding-left: 5px; padding-right: 5px;"><?= "Р".$row['id'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><?= $row['last_name'].' '.$row['first_name'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600;<?=$colour_style ?>"><?= mb_strtoupper($status) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?= mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;"><?= htmlentities($row['comment']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>

@@ -325,23 +325,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         </select>
                         <div class="invalid-feedback">Менеджер обязательно</div>
                     </div>
-                    <input type="hidden" id="status_id" name="status_id" value="1" />
-                    <div class="form-group d-none">
-                        <label for="status_id_">Статус</label>
-                        <select id="status_id_" name="status_id_" class="form-control" disabled="disabled">
-                            <?php
-                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.name"))->result;
-                            foreach ($statuses as $status) {
-                                $id = $status['id'];
-                                $name = $status['name'];
-                                $selected = '';
-                                if($status['id'] == 1) $selected = " selected='selected'";
-                                echo "<option value='$id'$selected>$name</option>";
-                            }
-                            ?>
-                        </select>
-                        <div class="invalid-feedback">Статус обязательно</div>
-                    </div>
+                    <input type="hidden" id="status_id" name="status_id" value="<?=ROLL_STATUS_FREE ?>" />
                     <div class="form-group">
                         <label for="comment">Комментарий</label>
                         <textarea id="comment" name="comment" rows="4" class="form-control"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>

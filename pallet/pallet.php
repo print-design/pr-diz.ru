@@ -30,7 +30,6 @@ $length_valid = '';
 $net_weight_valid = '';
 $rolls_number_valid = '';
 $cell_valid = '';
-$status_id_valid = '';
 
 $invalid_message = '';
 $length_invalid_message = '';
@@ -101,16 +100,6 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('dev'))) {
-        $status_id = filter_input(INPUT_POST, 'status_id');
-        if(empty($status_id)) {
-            if(empty($cell)) {
-                $status_id_valid = ISINVALID;
-                $form_valid = false;
-            }
-        }
-    }
-    
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
@@ -136,21 +125,12 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
 }
 
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// СТАТУС "СРАБОТАННЫЙ"
-$utilized_status_id = 2;
-
-// СТАТУС "РАСКРОИЛИ"
-$cut_status_id = 3;
-
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.film_variation_id, p.width, "
-        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) length, "
+        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) length, "
         . "(select film_id from film_variation where id = p.film_variation_id) film_id, "
-        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) net_weight, "
-        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = $free_status_id)) rolls_number, "
+        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) net_weight, "
+        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number, "
         . "p.cell, "
         . "p.comment "
         . "from pallet p inner join user u on p.storekeeper_id = u.id "
@@ -189,8 +169,8 @@ if(null === $rolls_number) $rolls_number = 0;
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];
 
-$status_id = $free_status_id;
-if($rolls_number == 0) $status_id = $utilized_status_id;
+$status_id = ROLL_STATUS_FREE;
+if($rolls_number == 0) $status_id = ROLL_STATUS_UTILIZED;
 
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
@@ -352,24 +332,18 @@ if(null === $comment) $comment = $row['comment'];
                         </div>
                     </div>
                     <div class="form-group">
-                        <?php
-                        $status_id_disabled = " disabled='disabled'";
-                        ?>
                         <label for="status_id">Статус</label>
-                        <select id="status_id" name="status_id" class="form-control<?=$status_id_valid ?>" required="required"<?=$status_id_disabled ?>>
+                        <select id="status_id" name="status_id" class="form-control" required="required" disabled='disabled'>
                             <?php
-                            $statuses = (new Grabber("select s.id, s.name from roll_status s order by s.ordinal"))->result;
-                            foreach ($statuses as $status) {
-                                if(!(empty($status_id) && $status['id'] == $utilized_status_id)) { // Если статуса нет, то нельзя сразу поставить "Сработанный"
-                                    $id = $status['id'];
-                                    $name = $status['name'];
+                            foreach(ROLL_STATUSES as $status):
+                                if(!(empty($status_id) && $status == ROLL_STATUS_UTILIZED)) { // Если статуса нет, то нельзя сразу поставить "Сработанный".
                                     $selected = '';
-                                    if(empty($status_id)) $status_id = $free_status_id; // По умолчанию ставим статус "Свободный"
-                                    if($status_id == $status['id']) $selected = " selected='selected'";
-                                    echo "<option value='$id'$selected>$name</option>";
+                                    if(empty($status_id)) $status_id = ROLL_STATUS_FREE; // По умолчанию ставим статус "Свободный".
+                                    if($status_id == $status) $selected = " selected = 'selected'";
                                 }
-                            }
                             ?>
+                            <option value="<?=$status ?>"<?=$selected ?>><?=ROLL_STATUS_NAMES[$status] ?></option>
+                            <?php endforeach; ?>
                         </select>
                         <div class="invalid-feedback">Статус обязательно</div>
                     </div>

@@ -97,7 +97,7 @@ const AUDITOR = 'auditor';
                                 echo "Рулон №Р$id";
                                 break;
                             case 'pallet_roll':
-                                echo "Рулон №П{$pallet_id}Р$ordinal";
+                                echo "Рулон паллета №П{$pallet_id}";
                                 break;
                         }
                         ?>
