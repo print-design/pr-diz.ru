@@ -94,20 +94,16 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="pb-5"></td>
+                        <td class="text-nowrap pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
-                        <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                        <td>Длина<br /><strong><?=$length ?> м</strong></td>
+                        <td class="text-nowrap pb-5">Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
+                        <td class="text-nowrap pb-5">Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td class="text-nowrap pb-5">Статус<br /><strong><?=$status ?></strong></td>
                         <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Статус<br /><strong><?=$status ?></strong></td>
-                        <td></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
@@ -147,20 +143,16 @@ $current_date_time = date("dmYHis");
                         </td>
                     </tr>
                     <tr>
-                        <td class="pb-5"></td>
+                        <td class="text-nowrap pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
                         <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
-                        <td>Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                        <td>Длина<br /><strong><?=$length ?> м</strong></td>
+                        <td class="text-nowrap pb-5">Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
+                        <td class="text-nowrap pb-5">Длина<br /><strong><?=$length ?> м</strong></td>
                     </tr>
                     <tr>
-                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
+                        <td class="text-nowrap pb-5">Статус<br /><strong><?=$status ?></strong></td>
                         <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Статус<br /><strong><?=$status ?></strong></td>
-                        <td></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
