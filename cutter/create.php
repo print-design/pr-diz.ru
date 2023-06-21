@@ -9,12 +9,6 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// Статус "РАСКРОИЛИ"
-$cut_status_id = 3;
-
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
@@ -93,14 +87,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         
         // Устанавливаем ему статус "Свободный"
         if(empty($error_message)) {
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, ".ROLL_STATUS_FREE.", $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
         
         // Устанавливаем ему статус "Раскроили"
         if(empty($error_message)) {
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $cut_status_id, $user_id)";
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, ".ROLL_STATUS_CUT.", $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -124,8 +118,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         $fetcher = new Fetcher($sql);
                         $row = $fetcher->Fetch();
                 
-                        if(!$row || $row['status_id'] != $cut_status_id) {
-                            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                        if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
+                            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
                             $executer = new Executer($sql);
                             $error_message = $executer->error;
                         }
@@ -135,8 +129,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         $fetcher = new Fetcher($sql);
                         $row = $fetcher->Fetch();
                 
-                        if(!$row || $row['status_id'] != $cut_status_id) {
-                            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                        if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
+                            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
                             $executer = new Executer($sql);
                             $error_message = $executer->error;
                         }

@@ -9,12 +9,6 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-// СТАТУС "СВОБОДНЫЙ"
-const  FREE_ROLL_STATUS_ID = 1;
-
-// Статус "РАСКРОИЛИ"
-$cut_status_id = 3;
-
 include '_check_rolls.php';
 $opened_roll = CheckOpenedRolls($user_id);
 $cutting_id = $opened_roll['id'];
@@ -58,7 +52,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $roll_id = mb_substr($source_id, 1);
         $sql = "select r.id from roll r where r.id = '$roll_id' limit 1";
                 //. "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                //. "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
+                //. "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.") limit 1";
                 // Временно убираем проверку по статусу.
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
@@ -80,7 +74,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     . "where pr.pallet_id = $pallet_id and pr.ordinal = $ordinal";
                     //. "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                     //. "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal "
-                    //. "and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+                    //. "and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
                     // Временно убираем проверку по статусу
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
@@ -185,8 +179,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         $fetcher = new Fetcher($sql);
                         $row = $fetcher->Fetch();
                 
-                        if(!$row || $row['status_id'] != $cut_status_id) {
-                            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                        if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
+                            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
                             $executer = new Executer($sql);
                             $error_message = $executer->error;
                         }
@@ -196,8 +190,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                         $fetcher = new Fetcher($sql);
                         $row = $fetcher->Fetch();
                 
-                        if(!$row || $row['status_id'] != $cut_status_id) {
-                            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                        if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
+                            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
                             $executer = new Executer($sql);
                             $error_message = $executer->error;
                         }

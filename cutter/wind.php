@@ -6,12 +6,6 @@ if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// Статус "РАСКРОИЛИ"
-$cut_status_id = 3;
-
 // Текущий пользователь
 $user_id = GetUserId();
 
@@ -154,7 +148,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     
                     // Заполнение истории статусов
                     if(empty($error_message)) {
-                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($insert_id, $free_status_id, $user_id)";
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($insert_id, ".ROLL_STATUS_FREE.", $user_id)";
                         $executer = new Executer($sql);
                         $error_message = $executer->error;
                     }
@@ -191,7 +185,7 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
             $last_source_status_id = $row['status_id'];
         }
                 
-        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
             $sql = "delete from roll_status_history where id = $last_source_history_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
@@ -205,7 +199,7 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
             $last_source_status_id = $row['status_id'];
         }
                 
-        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+        if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
             $sql = "delete from pallet_roll_status_history where id = $last_source_history_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;

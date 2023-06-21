@@ -20,12 +20,6 @@ if(empty($cutting_id)) {
     header("Location: ".APPLICATION.'/cutter/');
 }
 
-// Статус "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// Статус "РАСКРОИЛИ"
-$cut_status_id = 3;
-
 // Валидация формы
 define('ISINVALID', ' is-invalid');
 $form_valid = true;
@@ -33,7 +27,7 @@ $error_message = '';
 
 $radius_valid = '';
 
-function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $user_id) {
+function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
     // Закрываем нарезку
     $sql = "update cutting set date=now() where id=$cutting_id";
     $fetcher = new Fetcher($sql);
@@ -64,7 +58,7 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $us
                     $last_source_status_id = $row['status_id'];
                 }
                 
-                if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+                if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
                     $sql = "delete from roll_status_history where id = $last_source_history_id";
                     $executer = new Executer($sql);
                     $error = $executer->error;
@@ -78,7 +72,7 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $us
                     $last_source_status_id = $row['status_id'];
                 }
                 
-                if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == $cut_status_id) {
+                if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
                     $sql = "delete from pallet_roll_status_history where id = $last_source_history_id";
                     $executer = new Executer($sql);
                     $error = $executer->error;
@@ -114,8 +108,8 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $us
                 $fetcher = new Fetcher($sql);
                 $row = $fetcher->Fetch();
                 
-                if(!$row || $row['status_id'] != $cut_status_id) {
-                    $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
+                    $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
                     $executer = new Executer($sql);
                     $error = $executer->error;
                 }
@@ -125,8 +119,8 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $us
                 $fetcher = new Fetcher($sql);
                 $row = $fetcher->Fetch();
                 
-                if(!$row || $row['status_id'] != $cut_status_id) {
-                    $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, $cut_status_id, $user_id)";
+                if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
+                    $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
                     $executer = new Executer($sql);
                     $error = $executer->error;
                 }
@@ -159,7 +153,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
             
     // Устанавливаем этому ролику статус "Свободный"
     if(empty($error_message)) {
-        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $free_status_id, $user_id)";
+        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, ".ROLL_STATUS_FREE.", $user_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -173,7 +167,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     
     // Закрываем нарезку
     if(empty($error_message)) {
-        $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $user_id);
+        $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $user_id);
     }
     
     if(empty($error_message)) {
@@ -183,7 +177,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
-    $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $cut_status_id, $user_id);
+    $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $user_id);
     
     if(empty($error_message)) {
         header("Location: finish.php?id=$cutting_id");
