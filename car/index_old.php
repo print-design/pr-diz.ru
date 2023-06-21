@@ -2,12 +2,9 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
-
-// СТАТУС "СВОБОДНЫЙ"
-const  FREE_ROLL_STATUS_ID = 1;
 
 // Обработка отправки формы
 function FindByCell($id) {
@@ -15,12 +12,12 @@ function FindByCell($id) {
             . "from pallet p "
             . "where p.cell='$id' "
             . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id "
-            . "and (prsh1.status_id is null or prsh1.status_id = ".FREE_ROLL_STATUS_ID."))) "
+            . "and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE."))) "
             . "+ "
             . "(select count(r.id) "
             . "from roll r "
             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-            . "where r.cell='$id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID."))";
+            . "where r.cell='$id' and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE."))";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
@@ -46,7 +43,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         $sql = "select r.id "
                 . "from roll r "
                 . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                . "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID.") limit 1";
+                . "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.") limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             header('Location: '.APPLICATION.'/car/roll.php?id='.$row[0]);
@@ -68,7 +65,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
                     . "from pallet_roll pr "
                     . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                     . "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal "
-                    . "and (prsh.status_id is null or prsh.status_id = ".FREE_ROLL_STATUS_ID.")";
+                    . "and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
             
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
@@ -83,7 +80,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
             $sql = "select p.id "
                     . "from pallet p "
                     . "where p.id=$pallet_id "
-                    . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".FREE_ROLL_STATUS_ID."))";
+                    . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE."))";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
@@ -102,12 +99,12 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
             . "from pallet p "
             . "where p.id='$id' "
             . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id "
-            . "and (prsh1.status_id is null or prsh1.status_id = ".FREE_ROLL_STATUS_ID."))) "
+            . "and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE."))) "
             . "+ "
             . "(select count(r.id) "
             . "from roll r "
             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-            . "where r.id='$id' and (rsh.status_id is null or rsh.status_id = ".FREE_ROLL_STATUS_ID."))";
+            . "where r.id='$id' and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE."))";
         $fetcher = new Fetcher($sql);
         $row = $fetcher->Fetch();
         if($row[0] != 0) {

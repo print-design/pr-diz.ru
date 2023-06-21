@@ -72,7 +72,7 @@ if($folder == 'pallet' && $file == 'roll.php') {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            if(IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))):
+            if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
             ?>
             <li class='nav-item'>
                 <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Рулоны</a>
@@ -89,7 +89,7 @@ if($folder == 'pallet' && $file == 'roll.php') {
             <?php
             endif;
             
-            if(IsInRole(array('technologist', 'dev', 'manager'))):
+            if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))):
             ?>
             <li class="nav-item d-none">
                 <a class="nav-link<?=$rational_cut_status ?> text-nowrap" href="<?=APPLICATION ?>/rational_cut">Рациональный раскрой</a>

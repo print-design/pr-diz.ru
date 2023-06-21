@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST], ROLE_NAMES[ROLE_AUDITOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -11,12 +11,6 @@ $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// РОЛЬ "РЕВИЗОР"
-const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,7 +39,7 @@ const AUDITOR = 'auditor';
                     . "inner join film f on fv.film_id = f.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                     . "where r.id=$id"
-                    . (IsInRole(AUDITOR) ? '' : " and (rsh.status_id is null or rsh.status_id = $free_status_id)");
+                    . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")");
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
                 $date = $row['date'];
@@ -74,9 +68,9 @@ const AUDITOR = 'auditor';
                         <div style="white-space: pre-wrap;"><?=$comment ?></div>
                         <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
                         <a href="roll_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">
-                            <?php if(IsInRole(array('electrocarist'))): ?>
+                            <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
                             Сменить ячейку
-                            <?php elseif (IsInRole(array('auditor'))): ?>
+                            <?php elseif (IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
                             Оставить комментарий
                             <?php else: ?>
                             Редактировать

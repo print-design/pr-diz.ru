@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_AUDITOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -74,12 +74,6 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
         }
     }
 }
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_roll_status_id = 1;
-
-// РОЛЬ "РЕВИЗОР"
-const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -115,13 +109,13 @@ const AUDITOR = 'auditor';
             
             $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, p.cell, p.comment, "
                     . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                    . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                     . ") length, "
                     . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                    . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                     . ") weight, "
                     . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                    . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                     . ") rolls_number "
                     . "from pallet p "
                     . "inner join supplier s on p.supplier_id=s.id "
@@ -158,7 +152,7 @@ const AUDITOR = 'auditor';
                         <p><strong>Количество рулонов:</strong> <?=$rolls_number ?></p>
                         <p><strong>Комментарий:</strong></p>
                         <div style="white-space: pre-wrap;"><?=$comment ?></div>
-                        <?php if(IsInRole(array('electrocarist'))): ?>
+                        <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <div class="form-group">
@@ -169,7 +163,7 @@ const AUDITOR = 'auditor';
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>
                             </div>
                         </form>
-                        <?php elseif(IsInRole(array('auditor'))): ?>
+                        <?php elseif(IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <input type="hidden" id="old_comment" name="old_comment" value="<?=$comment ?>" />

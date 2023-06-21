@@ -51,11 +51,11 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <?php
     endif;
     // Админка
-    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST]))):
+    if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])):
     ?>
     <a href="<?=APPLICATION ?>/user/" class="left_bar_item<?=$admin_class ?>" title="Админка" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
     <?php
-    elseif(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER]))):
+    elseif(IsInRole(ROLE_NAMES[ROLE_SCHEDULER])):
     ?>
     <a href="<?=APPLICATION ?>/admin/plan_employees.php" class="left_bar_item<?=$admin_class ?>" title="Админка" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
     <?php

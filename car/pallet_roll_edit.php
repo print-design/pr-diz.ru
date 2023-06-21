@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST], ROLE_NAMES[ROLE_AUDITOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -76,12 +76,6 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
         }
     }
 }
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_status_id = 1;
-
-// РОЛЬ "РЕВИЗОР"
-const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -124,7 +118,7 @@ const AUDITOR = 'auditor';
                     . "inner join film f on fv.film_id=f.id "
                     . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
                     . "where pr.id=$id"
-                    . (IsInRole(AUDITOR) ? '' : " and (prsh.status_id is null or prsh.status_id = $free_status_id)");
+                    . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")");
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             $date = $row['date'];
@@ -153,7 +147,7 @@ const AUDITOR = 'auditor';
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <p><strong>Комментарий:</strong></p>
                         <div style="white-space: pre-wrap;"><?=$comment ?></div>
-                        <?php if(IsInRole(array('electrocarist'))): ?>
+                        <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />
@@ -165,7 +159,7 @@ const AUDITOR = 'auditor';
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>
                             </div>
                         </form>
-                        <?php elseif(IsInRole(array('auditor'))): ?>
+                        <?php elseif(IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
                         <form method="post" class="mt-2">
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />

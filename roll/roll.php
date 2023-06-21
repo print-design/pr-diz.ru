@@ -2,12 +2,12 @@
 include '../include/topscripts.php';
 
 // Пекренаправление на страницу карщика или резчика при чтении QR-кода
-if(IsInRole(array('electrocarist'))) {
+if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
     header('Location: '.APPLICATION.'/car/roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
 // Авторизация
-elseif(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))) {
+elseif(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -73,7 +73,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $length_invalid_message = "Неверное значение";
     }
     
-    if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+    if(IsInRole(array(ROLE_TECHNOLOGIST, ROLE_NAMES[ROLE_STOREKEEPER]))) {
         $cell = filter_input(INPUT_POST, 'cell');
         if(empty($cell)) {
             $cell_valid = ISINVALID;
@@ -81,7 +81,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array('dev', 'technologist', 'storekeeper'))) {
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
         $status_id = filter_input(INPUT_POST, 'status_id');
         if(empty($status_id)) {
             if(empty($cell)) {
@@ -303,25 +303,13 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
-                            <?php
-                            $net_weight_disabled = '';
-                            if(!IsInRole(array('dev'))) {
-                                $net_weight_disabled = " disabled='disabled'";
-                            }
-                            ?>
                             <label for="net_weight">Масса нетто, кг</label>
-                            <input type="text" id="net_weight" name="net_weight" value="<?= $net_weight ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто"<?=$net_weight_disabled ?> />
+                            <input type="text" id="net_weight" name="net_weight" value="<?= $net_weight ?>" class="form-control int-only<?=$net_weight_valid ?>" placeholder="Введите массу нетто" />
                             <div class="invalid-feedback"><?= empty($invalid_message) ? "Масса нетто обязательно" : $invalid_message ?></div>
                         </div>
                         <div class="col-6 form-group">
-                            <?php
-                            $length_disabled = "";
-                            if(!IsInRole(array('dev'))) {
-                                $length_disabled = " disabled='disabled'";
-                            }
-                            ?>
                             <label for="length">Длина, м</label>
-                            <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину"<?=$length_disabled ?>" />
+                            <input type="text" id="length" name="length" value="<?= $length ?>" class="form-control int-only<?=$length_valid ?>" placeholder="Введите длину" />
                             <div class="invalid-feedback"><?= empty($length_invalid_message) ? "Длина обязательно" : $length_invalid_message ?></div>
                         </div>
                     </div>
@@ -329,7 +317,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <div class="col-6 form-group">
                             <?php
                             $cell_disabled = "";
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
+                            if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
                                 $cell_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -351,7 +339,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     <div class="form-group">
                         <?php
                         $status_id_disabled = "";
-                        if(!IsInRole(array('technologist', 'storekeeper'))) {
+                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
                             $status_id_disabled = " disabled='disabled'";
                         }
                         ?>
@@ -526,17 +514,17 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     <div class="form-group">
                         <?php
                         $comment_disabled = "";
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER]))) {
                             $comment_disabled = " disabled='disabled'";
                         }
                         
                         $comment_value = htmlentities($comment);
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
+                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
                             $comment_value = "";
                         }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                        <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
                         <p><?= htmlentities($comment) ?></p>
                         <?php endif; ?>
                         <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
@@ -547,7 +535,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                             <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="width: 175px;">Сохранить</button>
                         </div>
                         <div class="p-0">
-                            <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
                             <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
                             <?php endif; ?>
                         </div>

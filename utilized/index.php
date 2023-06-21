@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -246,7 +246,7 @@ $total_weight = $row[0];
                             <div class="film_menu">
                                 <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/pallet/roll.php'. BuildQuery('id', $row['id']) : APPLICATION.'/roll/roll.php'. BuildQuery('id', $row['id'])) ?>">Просмотреть детали</a></div>
                                 <?php
-                                if(IsInRole(array('technologist', 'dev'))):
+                                if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])):
                                 ?>
                                 <div class="command">
                                     <form method="post">

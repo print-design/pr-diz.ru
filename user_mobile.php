@@ -2,7 +2,7 @@
 include 'include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter', 'marker', 'auditor'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST], ROLE_NAMES[ROLE_CUTTER], ROLE_NAMES[ROLE_MARKER], ROLE_NAMES[ROLE_AUDITOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 ?>
@@ -35,13 +35,13 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter', 'marker', '
             }
             
             $position = "Работник";
-            if(IsInRole('electrocarist')) {
+            if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
                 $position = "Водитель погрузчика";
             }
-            elseif(IsInRole('cutter')) {
+            elseif(IsInRole(ROLE_NAMES[ROLE_CUTTER])) {
                 $position = "Резчик раскрой";
             }
-            elseif(IsInRole('auditor')) {
+            elseif(IsInRole(ROLE_NAMES[ROLE_AUDITOR])) {
                 $position = "Ревизор";
             }
             ?>

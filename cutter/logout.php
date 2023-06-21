@@ -35,10 +35,10 @@ $user_id = GetUserId();
             }
             
             $position = "Работник";
-            if(IsInRole('electrocarist')) {
+            if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
                 $position = "Водитель погрузчика";
             }
-            elseif(IsInRole('cutter')) {
+            elseif(IsInRole(ROLE_NAMES[ROLE_CUTTER])) {
                 $position = "Резчик раскрой";
             }
             ?>

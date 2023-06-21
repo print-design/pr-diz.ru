@@ -2,12 +2,12 @@
 include '../include/topscripts.php';
 
 // Пекренаправление на страницу карщика при чтении QR-кода
-if(IsInRole(array('electrocarist'))) {
+if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
     header('Location: '.APPLICATION.'/car/pallet_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
 // Авторизация
-elseif(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))) {
+elseif(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -84,15 +84,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $length_invalid_message = "Неверное значение";
     }
     
-    if(IsInRole(array('dev'))) {
-        $rolls_number = filter_input(INPUT_POST, 'rolls_number');
-        if(empty($rolls_number)) {
-            $rolls_number_valid = ISINVALID;
-            $form_valid = false;
-        }
-    }
-    
-    if(IsInRole(array('technologist', 'storekeeper'))) {
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
         $cell = filter_input(INPUT_POST, 'cell');
         if(empty($cell)) {
             $cell_valid = ISINVALID;
@@ -302,7 +294,7 @@ if(null === $comment) $comment = $row['comment'];
                         <div class="col-6 form-group">
                             <?php
                             $cell_disabled = "";
-                            if(!IsInRole(array('technologist', 'storekeeper'))) {
+                            if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
                                 $cell_disabled = " disabled='disabled'";
                             }
                             ?>
@@ -350,17 +342,17 @@ if(null === $comment) $comment = $row['comment'];
                     <div class="form-group">
                         <?php
                         $comment_disabled = "";
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager'))) {
+                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER]))) {
                             $comment_disabled = " disabled='disabled'";
                         }
                         
                         $comment_value = htmlentities($comment);
-                        if(!IsInRole(array('technologist', 'dev', 'storekeeper'))) {
+                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
                             $comment_value = "";
                         }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                        <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
                         <p><?= htmlentities($comment) ?></p>
                         <?php endif; ?>
                         <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
@@ -371,7 +363,7 @@ if(null === $comment) $comment = $row['comment'];
                             <button type="submit" id="change-status-submit" name="change-status-submit" class="btn btn-dark" style="width: 175px;">Сохранить</button>
                         </div>
                         <div class="p-0">
-                            <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
                             <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
                             <?php endif; ?>
                         </div>

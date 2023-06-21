@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'auditor'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST], ROLE_NAMES[ROLE_AUDITOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -11,12 +11,6 @@ $cell = filter_input(INPUT_GET, 'cell');
 if(empty($cell)) {
     header('Location: '.APPLICATION.'/car/');
 }
-
-// СТАТУС "СВОБОДНЫЙ"
-$free_roll_status_id = 1;
-
-// РОЛЬ "РЕВИЗОР"
-const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,13 +36,13 @@ const AUDITOR = 'auditor';
                     <?php
                     $sql = "select 'pallet' type, DATE_FORMAT(p.date, '%d.%m.%Y') date, p.id, s.name supplier, f.name film, p.width, fv.thickness, p.cell, p.comment, "
                             . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                             . ") length, "
                             . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                             . ") weight, "
                             . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                            . (IsInRole(AUDITOR) ? '' : " and (prsh1.status_id is null or prsh1.status_id = $free_roll_status_id)")
+                            . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                             . ") rolls_number "
                             . "from pallet p "
                             . "inner join supplier s on p.supplier_id=s.id "
@@ -66,7 +60,7 @@ const AUDITOR = 'auditor';
                             . "inner join film_variation fv on r.film_variation_id=fv.id "
                             . "inner join film f on fv.film_id = f.id "
                             . "where r.cell='$cell' "
-                            . (IsInRole(AUDITOR) ? '' : "and (rsh.status_id is null or rsh.status_id = $free_roll_status_id) ")
+                            . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : "and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.") ")
                             . "order by id desc";
                     $fetcher = new Fetcher($sql);
                     while ($row = $fetcher->Fetch()):
@@ -101,9 +95,9 @@ const AUDITOR = 'auditor';
                         <div style="white-space: pre-wrap;"><?=$comment ?></div>
                         <p style="font-size: 32px; line-height: 48px;">Ячейка&nbsp;&nbsp;&nbsp;&nbsp;<?=$cell ?></p>
                         <a href="<?=$type ?>_edit.php?id=<?=$id ?>&link=<?= urlencode($_SERVER['REQUEST_URI']) ?>" class="btn btn-outline-dark w-100 mt-4">
-                            <?php if(IsInRole(array('electrocarist'))): ?>
+                            <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
                             Сменить ячейку
-                            <?php elseif (IsInRole(array('auditor'))): ?>
+                            <?php elseif (IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
                             Оставить комментарий
                             <?php else: ?>
                             Редактировать

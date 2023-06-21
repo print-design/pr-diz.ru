@@ -36,7 +36,7 @@ if($folder == 'calculation') {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <?php
-            if(IsInRole(array('technologist', 'dev', 'manager', 'administrator', 'designer'))):
+            if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$calculation_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?=  BuildQueryRemoveArray(array("status", "page")) ?>">В работе</a>

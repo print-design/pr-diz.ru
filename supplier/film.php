@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'administrator', 'manager-senior'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -211,7 +211,7 @@ while($row = $fetcher->Fetch()) {
                     <h1>Пленка</h1>
                 </div>
                 <div class="pt-1">
-                    <?php if(IsInRole(array('technologist', 'dev', 'administrator'))): ?>
+                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
                     <button class="btn btn-dark" data-toggle="modal" data-target="#create_film_variation">
                         <i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить тип пленки
                     </button>

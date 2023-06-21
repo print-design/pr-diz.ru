@@ -102,7 +102,7 @@ else $title = $status_titles[1];
                     }
                     
                     $manager = filter_input(INPUT_GET, 'manager');
-                    if(empty($manager) && !IsInRole(array('technologist', 'dev', 'manager-senior'))) {
+                    if(empty($manager) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
                         $manager = GetUserId();
                     }
                     if(!empty($manager)) {
@@ -158,7 +158,7 @@ else $title = $status_titles[1];
                             <option value="<?=$item ?>"<?=($item == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?=WORK_TYPE_NAMES[$item] ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <?php if(IsInRole(array('technologist', 'dev', 'manager-senior'))): ?>
+                        <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
@@ -180,7 +180,7 @@ else $title = $status_titles[1];
                             if($status_id == ORDER_STATUS_DRAFT) $customer_where = "where c.status_id = ".ORDER_STATUS_DRAFT;
                             elseif($status_id == ORDER_STATUS_TRASH) $customer_where = "where c.status_id = ".ORDER_STATUS_TRASH;
                             $customer_manager = GetUserId();
-                            if(!IsInRole(array('technologist', 'dev', 'manager-senior'))) {
+                            if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
                                 $customer_where .= " and c.manager_id = $customer_manager";
                             }
                             $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id $customer_where order by cus.name";

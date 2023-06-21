@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -91,7 +91,7 @@ $total_weight = $row['total_weight'];
                     </table>
                 </div>
                 <div class="pt-1">
-                    <?php if(IsInRole(array('technologist', 'dev', 'storekeeper'))): ?>
+                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
                     <a href="new.php" class="btn btn-outline-dark"><i class="fas fa-plus"></i>&nbsp;Новый ролик</a>
                     <?php endif; ?>
                     <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
@@ -188,7 +188,7 @@ $total_weight = $row['total_weight'];
                             <div class="film_menu">
                                 <div class="command"><a href="<?=APPLICATION ?>/roll/roll.php<?= BuildQuery('id', $row['id']) ?>">Просмотреть детали</a></div>
                                 <?php
-                                if(IsInRole(array('technologist', 'dev'))):
+                                if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])):
                                 ?>
                                 <div class="command">
                                     <form method="post">

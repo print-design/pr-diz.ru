@@ -2,17 +2,17 @@
 include 'include/topscripts.php';
 
 // Карщика и ревизора перенаправляем в раздел car
-if(IsInRole(array('electrocarist', 'auditor'))) {
+if(IsInRole(array(ROLE_NAMES[ROLE_ELECTROCARIST], ROLE_NAMES[ROLE_AUDITOR]))) {
     header('Location: '.APPLICATION.'/car/');
 }
 
 // Резчика по раскрою перенаправляем в раздел cut
-if(IsInRole(array('cutter'))) {
+if(IsInRole(ROLE_NAMES[ROLE_CUTTER])) {
     header('Location: '.APPLICATION.'/cutter/');
 }
 
 // Маркиратора перенаправляем в раздел marker
-if(IsInRole(array('marker'))) {
+if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
     header('Location: '.APPLICATION.'/marker/');
 }
 ?>
