@@ -2,15 +2,12 @@
 include_once '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array('technologist', 'dev', 'marker'))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MARKER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
 // Текущий пользователь
 $user_id = GetUserId();
-
-// СТАТУС "СВОБОДНЫЙ"
-const FREE_ROLL_STATUS_ID = 1;
 
 // Валидация формы
 define('ISINVALID', ' is-invalid');
@@ -68,7 +65,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     
     $comment = '';
     $storekeeper_id = $user_id;
-    $status_id = FREE_ROLL_STATUS_ID;
+    $status_id = ROLL_STATUS_FREE;
     
     // Выбираем рандомного поставщика для данного типа плёнки
     $supplier_id = null;
