@@ -47,40 +47,30 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $is_from_pallet = null;
     $roll_id = null;
     
-    // Если первый символ р или Р, ищем среди рулонов
-    if(mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") {
-        $roll_id = mb_substr($source_id, 1);
-        $sql = "select r.id from roll r where r.id = '$roll_id' limit 1";
-                //. "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                //. "where r.id='$roll_id' and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.") limit 1";
-                // Временно убираем проверку по статусу.
+    // Если первый символ р или Р, ищем среди рулонов (временно убираем проверку по статусу).
+    if((mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") && is_numeric(mb_substr($source_id, 1))) {
+        $source_roll_id = mb_substr($source_id, 1);
+        $sql = "select r.id from roll r where r.id = '$source_roll_id' limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = 0;
             $roll_id = $row['id'];
         }
     }
-    // Если первый символ п или П
-    elseif(mb_substr($source_id, 0, 1) == "п" || mb_substr ($source_id, 0, 1) == "П") {
-        $pallet_trim = mb_substr($source_id, 1);
-        $substrings = mb_split("[Рр]", $pallet_trim);
-        
-        // Если внутри имеется буква, ищем среди рулонов, которые в паллетах
-        if(count($substrings) == 2 && mb_strlen($substrings[0]) > 0 && mb_strlen($substrings[1]) > 0) {
-            $pallet_id = $substrings[0];
-            $ordinal = $substrings[1];
-            $sql = "select pr.id "
-                    . "from pallet_roll pr "
-                    . "where pr.pallet_id = $pallet_id and pr.ordinal = $ordinal";
-                    //. "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                    //. "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal "
-                    //. "and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
-                    // Временно убираем проверку по статусу
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $is_from_pallet = 1;
-                $roll_id = $row['id'];
-            }
+    // Если первый символ п или П, ищем сначала среди свободных роликов в паллете,
+    // если свободных нет, берём, какие есть.
+    elseif((mb_substr($source_id, 0, 1) == "п" || mb_substr($source_id, 0, 1) == "П") && is_numeric(mb_substr($source_id, 1))) {
+        $pallet_id = mb_substr($source_id, 1);
+        $sql = "select pr.id id, ifnull(prsh.status_id, 0) status_id "
+                . "from pallet_roll pr "
+                . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                . "where pr.pallet_id = '$pallet_id' "
+                . "order by status_id "
+                . "limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $is_from_pallet = 1;
+            $roll_id = $row['id'];
         }
     }
     
@@ -282,17 +272,8 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                         <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
                             <label for="source_id">ID рулона</label>
-                            <!--div class="input-group find-group"-->
-                                <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
-                                <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
-                                <!--div class='input-group-append'>
-                                    <?php /*if(empty($source_id)): ?>
-                                    <button type='button' class='btn find-btn'><i class='fas fa-camera'></i></button>
-                                    <?php else: ?>
-                                    <button type="button" class="btn clear-btn"><i class="fas fa-times"></i></button>
-                                    <?php endif;*/ ?>
-                                </div-->
-                            <!--/div-->
+                            <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
+                            <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
                         </div>
                         <div class="form-group d-none d-lg-block">
                             <div class="form-group">
