@@ -22,8 +22,11 @@ elseif(!empty (filter_input(INPUT_GET, 'id'))) {
                 <div class="input-group">
                     <input type="text" id="id" name="id" class="form-control" required="required" value="<?=$find_value ?>" autocomplete="off" />
                     <div class='input-group-append'>
-                        <button type="submit" class="btn btn-primary" id="find-submit" name="find-submit">Найти</button>
+                        <button type="submit" class="btn btn-primary" style="width: 5rem;" id="find-submit" name="find-submit">Найти</button>
                     </div>
+                </div>
+                <div style='position: absolute; top: 2.3rem; right: 6.2rem; z-index: 2000;'>
+                    <button type='button' id="clear" class="d-none" style='background-color: white; border: 0;'><i class='fas fa-times'></i></button>
                 </div>
             </div>
             <p id="id-valid" class="text-danger d-none">ID обязательно</p>

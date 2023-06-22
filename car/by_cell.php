@@ -110,7 +110,7 @@ if(empty($cell)) {
         </div>
         <?php
         include '../include/footer.php';
-        //include '../include/footer_mobile.php';
+        include '../include/footer_mobile.php';
         ?>
     </body>
 </html>

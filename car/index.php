@@ -147,7 +147,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         </div>
         <?php
         include '../include/footer.php';
-        //include '../include/footer_mobile.php';
+        include '../include/footer_mobile.php';
         ?>
     </body>
 </html>
