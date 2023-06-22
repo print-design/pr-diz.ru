@@ -380,7 +380,6 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_find.php';
         ?>
         <script>
             // Показ расходов

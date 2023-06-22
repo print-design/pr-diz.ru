@@ -233,22 +233,6 @@ $source_id = filter_input(INPUT_POST, 'source_id');
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
-            <div id="codeReaderWrapper" class="modal fade show">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            ID рулона (внутренний или поставщика)
-                            <button type="button" class="close" data-dismiss="modal" id="close_video"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="waiting2" style="position: absolute; top: 20px; left: 20px;">
-                                <img src="<?=APPLICATION ?>/images/waiting2.gif" />
-                            </div>
-                            <video id="video" class="w-100"></video>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <?php
             include '_info.php';
             if(!empty($error_message)) {
@@ -274,6 +258,9 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                             <label for="source_id">ID рулона</label>
                             <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
+                            <div style='position: absolute; top: 2.1rem; right: 1.2rem; z-index: 2000;'>
+                                <button type='button' id="clear" class="d-none" style='background-color: white; border: 0;'><i class='fas fa-times'></i></button>
+                            </div>
                         </div>
                         <div class="form-group d-none d-lg-block">
                             <div class="form-group">
@@ -299,49 +286,25 @@ $source_id = filter_input(INPUT_POST, 'source_id');
         include '_footer.php';
         ?>
         <script>
-            source_input_id = '';
-            
             // Очищаем поле по нажатию крестика
-            function AddFindClearListener() {
-                $('button.clear-btn').click(function() {
-                    source_input_id = $(this).parent('.input-group-append').prev().prev('input').attr('id');
-                    $("input#" + source_input_id).val('');
-                    $("input#" + source_input_id).change();
-                    $("input#" + source_input_id).focus();
+            function AddClearListener() {
+                $('button#clear').click(function() {
+                    $("input#source_id").val('');
+                    $("input#source_id").change();
+                    $("input#source_id").focus();
                 });
             }
             
-            // Открываем форму чтения штрих коду по нажатию кнопки с камерой
-            function AddFindCameraListener() {
-                $('button.find-btn').click(function() {
-                    source_input_id = $(this).parent('.input-group-append').prev().prev('input').attr('id');
-                    $('#codeReaderWrapper').modal('show');
-                });
-            }
-            
-            // Показываем либо кнопку открытия сканера либо кнопку очистки поля
-            // ... прибавление 16.02.2022 ...
+            // Показываем кнопку очистки поля
             // а также либо кнопку "Далее" либо кнопку "Добавить в базу"
-            function SetFindClearVisibility(obj) {
-                obj.removeClass('is-invalid');
-                
-                if(obj.val() == '' && obj.parent().children('.input-group-append').children('.find-btn').length == 0) {
-                    obj.parent().children('.input-group-append').html('');
-                    var btn = $("<button type='button' class='btn find-btn'><i class='fas fa-camera'></i></button>");
-                    obj.parent().children('.input-group-append').append(btn);
-                    AddFindCameraListener();
-                    
-                    // ... прибавление 16.02.2022 ...
+            function SetClearVisibility(obj) {
+                if(obj.val() == '') {
+                    $('button#clear').addClass('d-none');
                     $('.next-submit').addClass('disabled');
                     $('.create-submit').removeClass('disabled');
                 }
-                else if(obj.val() != '' && obj.parent().children('.input-group-append').children('.clear-btn').length == 0) {
-                    obj.parent().children('.input-group-append').html('');
-                    var btn = $("<button type='button' class='btn clear-btn'><i class='fas fa-times'></i></button>");
-                    obj.parent().children('.input-group-append').append(btn);
-                    AddFindClearListener();
-                    
-                    // ... прибавление 16.02.2022 ...
+                else {
+                    $('button#clear').removeClass('d-none');
                     $('.next-submit').removeClass('disabled');
                     $('.create-submit').addClass('disabled');
                 }
@@ -362,97 +325,24 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             }
             
             $(document).ready(function() {
-                // Открываем форму чтения штрих коду по нажатию кнопки с камерой
-                AddFindCameraListener();
-                
-                // Очищаем поле по нажатию крестика
-                AddFindClearListener();
-                
-                // При показе формы посылаем сигнал "Сканируй"
-                $('#codeReaderWrapper').on('shown.bs.modal', function() {
-                    document.dispatchEvent(new Event('scan'));
-                });
-                
-                // При скрытии формы делаем видимыми песочные часы (чтобы при следующем открытии они были видны)
-                $('#codeReaderWrapper').on('hidden.bs.modal', function() {
-                    $('#waiting2').removeClass('d-none');
-                });
-                
-                // При вводе текста, отображаем крестик "стереть". Если поле пустое, отображаем кнопку с камерой.
-                $('input#source_id').keyup(function(e) {
-                    SetFindClearVisibility($(e.target));
-                });
-    
-                $('input#source_id').keypress(function(e) {
-                    SetFindClearVisibility($(e.target));
-                });
-    
-                $('input#source_id').change(function(e) {
-                    SetFindClearVisibility($(e.target));
-                });
-                
+                SetClearVisibility($('input#source_id'));
+                AddClearListener();
                 AdjustButtons();
             });
             
             $(window).on('resize', AdjustButtons);
             
-            $(document).on("play", function() {
-                // При появлении картинки делаем невидимыми песочные часы
-                $('#waiting2').addClass('d-none');
-        
-                // При закрытии формы посылаем сигнал "Останови поток видео"
-                $('#close_video').click(function() {
-                    document.dispatchEvent(new Event('stop'));
-                });
+            $('input#source_id').keyup(function(e) {
+                SetClearVisibility($(e.target));
             });
             
-            $(document).on("decode", function(e) {
-                if(e.detail.type == 'ZBAR_QRCODE') {
-                    substrings = e.detail.value.split("?id=");
-                    
-                    if(substrings.length != 2 && isNaN(substrings[1])) {
-                        $('input#' + source_input_id).val("Неправильный код");
-                        $('input#' + source_input_id).change();
-                        $('#close_video').click();
-                    }
-                    else if(e.detail.value.includes('pallet/pallet.php?id=')) {
-                        $('input#' + source_input_id).val("П" + substrings[1]);
-                        $('input#' + source_input_id).change();
-                        $('#close_video').click();
-                    }
-                    else if(e.detail.value.includes('roll/roll.php?id=')) {
-                        $('input#' + source_input_id).val("Р" + substrings[1]);
-                        $('input#' + source_input_id).change();
-                        $('#close_video').click();
-                    }
-                    else if(e.detail.value.includes('pallet/roll.php?id=')) {
-                        $.ajax({ url: "../ajax/roll_id_to_number.php?id=" + substrings[1] })
-                                .done(function(data) {
-                                    $('input#' + source_input_id).val(data);
-                                    $('input#' + source_input_id).change();
-                                    $('#close_video').click();
-                                })
-                                .fail(function() {
-                                    $('input#' + source_input_id).val("Ошибка");
-                                    $('input#' + source_input_id).change();
-                                    $('#close_video').click();
-                                });
-                    }
-                    else {
-                        $('input#' + source_input_id).val("Неправильный код");
-                        $('input#' + source_input_id).change();
-                        $('#close_video').click();
-                    }
-                }
-                else {
-                    $('input#' + source_input_id).val(e.detail.value);
-                    $('input#' + source_input_id).change();
-                    $('#close_video').click();
-                }
+            $('input#source_id').keypress(function(e) {
+                SetClearVisibility($(e.target));
             });
+            
+            $('input#source_id').change(function(e) {
+                SetClearVisibility($(e.target));
+            });    
         </script>
-        <script>!function(e){function r(r){for(var n,l,f=r[0],i=r[1],a=r[2],p=0,s=[];p<f.length;p++)l=f[p],Object.prototype.hasOwnProperty.call(o,l)&&o[l]&&s.push(o[l][0]),o[l]=0;for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(e[n]=i[n]);for(c&&c(r);s.length;)s.shift()();return u.push.apply(u,a||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,f=1;f<t.length;f++){var i=t[f];0!==o[i]&&(n=!1)}n&&(u.splice(r--,1),e=l(l.s=t[0]))}return e}var n={},o={1:0},u=[];function l(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,l),t.l=!0,t.exports}l.m=e,l.c=n,l.d=function(e,r,t){l.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},l.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},l.t=function(e,r){if(1&r&&(e=l(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(l.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)l.d(t,n,function(r){return e[r]}.bind(null,n));return t},l.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return l.d(r,"a",r),r},l.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},l.p="<?=APPLICATION ?>/zbar/";var f=this.webpackJsonpsrc=this.webpackJsonpsrc||[],i=f.push.bind(f);f.push=r,f=f.slice();for(var a=0;a<f.length;a++)r(f[a]);var c=i;t()}([])</script>
-        <script src="<?=APPLICATION ?>/zbar/js/2.8358c4d7.chunk.js"></script>
-        <script src="<?=APPLICATION ?>/zbar/js/main.73d75875.chunk.js"></script>
     </body>
 </html>

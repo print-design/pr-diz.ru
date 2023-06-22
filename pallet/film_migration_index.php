@@ -82,8 +82,6 @@ $total_weight = $row[0];
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
-            
-            include '../include/find_camera.php';
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1">
@@ -321,7 +319,6 @@ $total_weight = $row[0];
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_find.php';
         ?>
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');

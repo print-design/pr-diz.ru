@@ -1658,7 +1658,6 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_find.php';
         ?>
         <script>
             // Скрываем сообщение о невалидном значении стороны печати

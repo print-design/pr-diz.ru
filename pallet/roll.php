@@ -154,8 +154,6 @@ if(null === $comment) $comment = $row['comment'];
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
             
-            include '../include/find_camera.php';
-            
             // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
             // если плёнка раскроенная, то кнопка "Назад" переводит нас в раздел "Раскроили"
             // иначе - в раздел "Паллеты".
@@ -385,7 +383,6 @@ if(null === $comment) $comment = $row['comment'];
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/footer_find.php';
         ?>
         <script>
             if($('.is-invalid').first() != null) {
