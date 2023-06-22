@@ -333,14 +333,17 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             $(window).on('resize', AdjustButtons);
             
             $('input#source_id').keyup(function(e) {
+                $(e.target).removeClass('is-invalid');
                 SetClearVisibility($(e.target));
             });
             
             $('input#source_id').keypress(function(e) {
+                $(e.target).removeClass('is-invalid');
                 SetClearVisibility($(e.target));
             });
             
             $('input#source_id').change(function(e) {
+                $(e.target).removeClass('is-invalid');
                 SetClearVisibility($(e.target));
             });    
         </script>
