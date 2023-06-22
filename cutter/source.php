@@ -258,7 +258,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
                             <label for="source_id">ID рулона</label>
                             <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
-                            <div style='position: absolute; top: 2.1rem; right: 1.2rem; z-index: 2000;'>
+                            <div style='position: absolute; top: 2.1rem; right: 1.2rem;'>
                                 <button type='button' id="clear" class="d-none" style='background-color: white; border: 0;'><i class='fas fa-times'></i></button>
                             </div>
                         </div>
