@@ -81,6 +81,7 @@ const WORK_CUTTING = 3;
 
 const WORKS = array(WORK_PRINTING, WORK_LAMINATION, WORK_CUTTING);
 const WORK_NAMES = array(WORK_PRINTING => "Печать", WORK_LAMINATION => "Ламинация", WORK_CUTTING => "Резка");
+const WORK_CONTINUATIONS = array(WORK_PRINTING => "Допечатка", WORK_LAMINATION => "Доламинирование", WORK_CUTTING => "Дорезка");
 
 // Роли плана
 const PLAN_ROLE_PRINT = 1;

@@ -57,7 +57,7 @@ require_once '../calculation/calculation.php';
                 <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
                 <div class="text-nowrap"><?= CalculationBase::Display(floatval($this->edition['length_pure_3']), 0) ?></div>
                 <?php endif; ?>
-                <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION ? ' Допечатка' : '' ?>
+                <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION ? ' '.WORK_CONTINUATIONS[$this->plan_shift->timetable->work_id] : '' ?>
             </div>
             <div>
                 <?php if($this->edition['has_continuation']): ?>
