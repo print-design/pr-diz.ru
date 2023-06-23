@@ -40,12 +40,24 @@ if(!empty($width_to)) {
 }
     
 $find = trim(filter_input(INPUT_GET, 'find'));
-$findtrim = $find;
+$findhead = '';
+$findtrim = '';
+
+if(mb_strlen($find) > 0) {
+    $findhead = mb_substr($find, 0, 1);
+}
+
 if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);
 }
+
 if(!empty($find)) {
-    $where .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+    if($findhead == 'р' || $findhead == 'Р') {
+        $where .= " and r.id='$findtrim'";
+    }
+    else {
+        $where .= " and false";
+    }
 }
     
 // Получение общей массы рулонов

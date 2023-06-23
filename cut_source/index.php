@@ -67,14 +67,30 @@ if(!empty($width_to)) {
 }
 
 $find = trim(filter_input(INPUT_GET, 'find'));
-$findtrim = $find;
+$findhead = '';
+$findtrim = '';
+
+if(mb_strlen($find) > 0) {
+    $findhead = mb_substr($find, 0, 1);
+}
+
 if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);
 }
 
 if(!empty($find)) {
-    $wherefindpallet .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%')";
-    $wherefindroll .= " and (r.id='$find' or r.id='$findtrim' or r.cell='$find' or r.comment like '%$find%')";
+    if($findhead == 'п' || $findhead == 'П') {
+        $wherefindpallet .= " and p.id='$findtrim'";
+        $wherefindroll .= " and false";
+    }
+    elseif($findhead == 'р' || $findhead == 'Р') {
+        $wherefindpallet .= " and false";
+        $wherefindroll .= " and r.id='$findtrim'";
+    }
+    else {
+        $wherefindpallet .= " and false";
+        $wherefindroll .= " and false";
+    }
 }
 
 if(!empty($wherefindpallet)) {

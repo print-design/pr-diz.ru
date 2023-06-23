@@ -36,12 +36,24 @@ if(!empty($width_to)) {
 }
     
 $find = trim(filter_input(INPUT_GET, 'find'));
-$findtrim = $find;
+$findhead = '';
+$findtrim = '';
+
+if(mb_strlen($find) > 0) {
+    $findhead = mb_substr($find, 0, 1);
+}
+
 if(mb_strlen($find) > 1) {
     $findtrim = mb_substr($find, 1);
 }
+
 if(!empty($find)) {
-    $where .= " and (p.id='$find' or p.id='$findtrim' or p.cell='$find' or p.comment like '%$find%')";
+    if($findhead == 'п' || $findhead == 'П') {
+        $where .= " and p.id='$findtrim'";
+    }
+    else {
+        $where .= " and false";
+    }
 }
 
 // Получение общей массы паллетов

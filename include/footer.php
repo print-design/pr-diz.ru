@@ -7,6 +7,14 @@
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
 <script src="<?=APPLICATION ?>/js/calculation.js?version=100"></script>
 
+<?php
+// Если в этом разделе есть find.php, то (помимо включения его в header.php)
+// включаем также сюда footer_find.php
+if(file_exists('find.php')) {
+    include '../include/footer_find.php';
+}
+?>
+
 <script>
     // Отправка формы по нажатию Enter
     $('input').keypress(function(e) {
