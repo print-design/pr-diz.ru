@@ -52,7 +52,7 @@ if(mb_strlen($find) > 1) {
 }
 
 if(!empty($find)) {
-    if($findhead == 'р' || $findhead == 'Р') {
+    if(($findhead == 'р' || $findhead == 'Р') && is_numeric($findtrim)) {
         $where .= " and r.id='$findtrim'";
     }
     else {

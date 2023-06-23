@@ -48,7 +48,7 @@ if(mb_strlen($find) > 1) {
 }
 
 if(!empty($find)) {
-    if($findhead == 'п' || $findhead == 'П') {
+    if(($findhead == 'п' || $findhead == 'П') && is_numeric($findtrim)) {
         $where .= " and p.id='$findtrim'";
     }
     else {
