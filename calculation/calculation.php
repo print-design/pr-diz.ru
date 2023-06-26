@@ -217,10 +217,6 @@ class CalculationBase {
     const NO_SKI = 1;
     const STANDARD_SKI = 2;
     const NONSTANDARD_SKI = 3;
-
-    // Валюты
-    const USD = "usd";
-    const EURO = "euro";
     
     // Краски
     const CMYK = "cmyk";
@@ -415,10 +411,10 @@ class CalculationBase {
     // Получения курса валюты (get - функция получения)
     public static function GetCurrencyRate($currency, $usd, $euro) {
         switch($currency) {
-            case self::USD:
+            case CURRENCY_USD:
                 return $usd;
             
-            case self::EURO:
+            case CURRENCY_EURO:
                 return $euro;
             
             default :
@@ -565,9 +561,9 @@ class CalculationBase {
     // Получение названия валюты
     function GetCurrencyName($currency) {
         switch ($currency) {
-            case Calculation::USD:
+            case CURRENCY_USD:
                 return "USD";
-            case Calculation::EURO:
+            case CURRENCY_EURO:
                 return "евро";
             default :
                 return "руб";

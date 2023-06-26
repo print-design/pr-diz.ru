@@ -32,7 +32,7 @@ if($id !== null) {
     array_push($file_data, array("Лыжи", $calculation->GetSkiName($calculation->ski_1), "", ""));
     if($calculation->ski_1 == CalculationBase::NONSTANDARD_SKI) array_push ($file_data, array("Ширина материала, мм", CalculationBase::Display ($calculation->width_ski_1, 5), "", ""));
     if($calculation->customers_material_1 == true) array_push ($file_data, array("Материал заказчика", "", "", ""));
-    else array_push ($file_data, array("Цена", CalculationBase::Display ($calculation->price_1, 5)." ".$calculation->GetCurrencyName ($calculation->currency_1).($calculation->currency_1 == CalculationBase::USD ? " (".CalculationBase::Display ($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CalculationBase::EURO ? " (".CalculationBase::Display ($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
+    else array_push ($file_data, array("Цена", CalculationBase::Display ($calculation->price_1, 5)." ".$calculation->GetCurrencyName ($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (".CalculationBase::Display ($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CalculationBase::EURO ? " (".CalculationBase::Display ($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
         
     array_push($file_data, array("Ширина ручья, мм", $calculation->stream_width, "", ""));
     array_push($file_data, array("Количество ручьёв", $calculation->streams_number, "", ""));
