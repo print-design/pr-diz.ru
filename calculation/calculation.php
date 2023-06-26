@@ -213,13 +213,6 @@ class CalculationBase {
     const KG = 'kg';
     const PIECES = 'pieces';
     
-    // Типы наценки
-    const ET_NOPRINT = 1; // Пленка без печати
-    const ET_PRINT = 2; // Пленка с печатью без ламинации
-    const ET_PRINT_1 = 3; // Пленка с печатью и ламинацией
-    const ET_PRINT_2 = 4; // Пленка с печатью и двумя ламинациями
-    const ET_SELF_ADHESIVE = 5; // Самоклеящиеся материалы
-    
     // Лыжи
     const NO_SKI = 1;
     const STANDARD_SKI = 2;
@@ -1780,16 +1773,16 @@ class Calculation extends CalculationBase {
             $ech_type = 0;
             
             if($work_type_id == WORK_TYPE_NOPRINT) {
-                $ech_type = self::ET_NOPRINT;
+                $ech_type = ET_NOPRINT;
             }
             elseif($this->laminations_number == 0) {
-                $ech_type = self::ET_PRINT;
+                $ech_type = ET_PRINT_NO_LAMINATION;
             }
             elseif($this->laminations_number == 1) {
-                $ech_type = self::ET_PRINT_1;
+                $ech_type = ET_PRINT_1_LAMINATION;
             }
             elseif($this->laminations_number == 2) {
-                $ech_type = self::ET_PRINT_2;
+                $ech_type = ET_PRINT_2_LAMINATIONS;
             }
             
             foreach($data_extracharge as $item) {
@@ -2338,7 +2331,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $this->extracharge = $extracharge;
         }
         else {
-            $ech_type = self::ET_SELF_ADHESIVE;
+            $ech_type = ET_SELF_ADHESIVE;
             
             foreach($data_extracharge as $item) {
                 if($item->ech_type == $ech_type && round($this->weight_dirty) >= $item->min_weight && (round($this->weight_dirty) <= $item->max_weight || empty($item->max_weight))) {
