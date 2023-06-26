@@ -16,8 +16,8 @@ if($id !== null) {
         
     array_push($file_data, array("Курс доллара, руб", CalculationBase::Display($calculation->usd, 5), "", ""));
     array_push($file_data, array("Курс евро, руб", CalculationBase::Display($calculation->euro, 5), "", ""));
-    if($calculation->work_type_id == Calculation::WORK_TYPE_PRINT) array_push ($file_data, array("Тип работы", "Плёнка с печатью", "", ""));
-    elseif($calculation->work_type_id == Calculation::WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
+    if($calculation->work_type_id == WORK_TYPE_PRINT) array_push ($file_data, array("Тип работы", "Плёнка с печатью", "", ""));
+    elseif($calculation->work_type_id == WORK_TYPE_NOPRINT) array_push ($file_data, array("Тип работы", "Плёнка без печати", "", ""));
         
     if(!empty($calculation->machine_id)) {
         array_push($file_data, array("Машина", PRINTER_NAMES[$calculation->machine_id], "", ""));
@@ -103,7 +103,7 @@ if($id !== null) {
     if(empty($calculation->thickness_3)) $calculation->thickness_3 = 0;
     if(empty($calculation->density_3)) $calculation->density_3 = 0;
     if(empty($calculation->price_3)) $calculation->price_3 = 0;
-    if($calculation->work_type_id == Calculation::WORK_TYPE_NOPRINT) $calculation->machine_id = null;
+    if($calculation->work_type_id == WORK_TYPE_NOPRINT) $calculation->machine_id = null;
     if(empty($calculation->raport)) $calculation->raport = 0;
     if(empty($calculation->lamination_roller_width)) $calculation->lamination_roller_width = 0;
     if(empty($calculation->ink_number)) $calculation->ink_number = 0;

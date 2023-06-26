@@ -1,4 +1,6 @@
 <?php
+require_once '../include/constants.php';
+
 // Данные приладки
 class DataPriladka {
     public $time; // Время приладки
@@ -207,11 +209,6 @@ class DataExtracharge {
 
 // Базовый класс для классов расчёта
 class CalculationBase {
-    // Типы работы
-    const WORK_TYPE_NOPRINT = 1;
-    const WORK_TYPE_PRINT = 2;
-    const WORK_TYPE_SELF_ADHESIVE = 3;
-    
     // Единицы размера тиража
     const KG = 'kg';
     const PIECES = 'pieces';
@@ -776,7 +773,7 @@ class CalculationBase {
             
             // Если тип работы - плёнка без печати, то 
             // машина = пустая, красочность = 0, рапорт = 0
-            if($work_type_id == Calculation::WORK_TYPE_NOPRINT) {
+            if($work_type_id == WORK_TYPE_NOPRINT) {
                 $machine_id = null;
                 $ink_number = 0;
                 $raport = 0;
@@ -811,7 +808,7 @@ class CalculationBase {
         // Размеры тиражей
         $quantities = array();
         
-        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
+        if($work_type_id == WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
             $sql = "select id, quantity from calculation_quantity where calculation_id = $id";
             $fetcher = new Fetcher($sql);
             
@@ -915,7 +912,7 @@ class CalculationBase {
             }
         }
     
-        if($work_type_id == self::WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
+        if($work_type_id == WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
             return new CalculationSelfAdhesive($data_priladka, 
                     $data_priladka_laminator,
                     $data_machine,
@@ -1272,7 +1269,7 @@ class Calculation extends CalculationBase {
         
         // Если тип работы - плёнка без печати, то 
         // машина = пустая, красочность = 0, рапорт = 0
-        if($work_type_id == self::WORK_TYPE_NOPRINT) {
+        if($work_type_id == WORK_TYPE_NOPRINT) {
             $machine_id = null;
             $ink_number = 0;
             $raport = 0;
@@ -1295,7 +1292,7 @@ class Calculation extends CalculationBase {
         if($customers_material_3 == true) $price_3 = 0;
         
         // Уравнивующий коэф 1(УК1)=0 когда нет печати,=1 когда есть печать
-        $this->uk1 = $work_type_id == self::WORK_TYPE_PRINT ? 1 : 0;
+        $this->uk1 = $work_type_id == WORK_TYPE_PRINT ? 1 : 0;
         
         // Уравнивующий коэф 2 (УК2)=0 когда нет ламинации 1 , = 1 когда есть ламинация 1
         $this->uk2 = $this->laminations_number > 0 ? 1 : 0;
@@ -1782,7 +1779,7 @@ class Calculation extends CalculationBase {
         else {
             $ech_type = 0;
             
-            if($work_type_id == self::WORK_TYPE_NOPRINT) {
+            if($work_type_id == WORK_TYPE_NOPRINT) {
                 $ech_type = self::ET_NOPRINT;
             }
             elseif($this->laminations_number == 0) {

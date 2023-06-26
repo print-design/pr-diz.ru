@@ -285,7 +285,7 @@ $cliches_used_old = 0;
 $quantities_sum = 0;
 $lengths_sum = 0;
 
-if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
     $grabber = new Grabber($sql);
     $error_message = $grabber->error;
@@ -502,7 +502,7 @@ $current_date_time = date("dmYHis");
             <div id="subtitle">Наименование: <?=$calculation ?></div>
             <div class="row">
                 <div class="col-6 topproperty">
-                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(intval($quantities_sum), 0)." шт" : CalculationBase::Display(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(floatval($lengths_sum), 0)." м" : CalculationBase::Display(floatval($length_pure_1), 0)." м" ?>
+                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(intval($quantities_sum), 0)." шт" : CalculationBase::Display(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(floatval($lengths_sum), 0)." м" : CalculationBase::Display(floatval($length_pure_1), 0)." м" ?>
                 </div>
                 <div class="col-6 topproperty">
                     <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=WORK_TYPE_NAMES[$work_type_id] ?>
@@ -530,7 +530,7 @@ $current_date_time = date("dmYHis");
                                 ?>
                             </td>
                         </tr>
-                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Поставщик мат-ла</td>
                             <td><?= empty($supplier) ? "Любой" : $supplier ?></td>
@@ -549,16 +549,16 @@ $current_date_time = date("dmYHis");
                             <td><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
+                            <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
                             <td><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
-                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Всего тиражей</td>
                             <td><?=count($printings) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Метраж на тираж</td>
                             <td><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
@@ -595,7 +595,7 @@ $current_date_time = date("dmYHis");
                             <td>Нет</td>
                         </tr>
                         <tr>
-                            <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
+                            <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
                             <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
@@ -606,7 +606,7 @@ $current_date_time = date("dmYHis");
                             <td>Кол-во ручьёв</td>
                             <td><?=$streams_number ?></td>
                         </tr>
-                        <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Этикеток в рапорте</td>
                             <td><?=$number_in_raport ?></td>
@@ -620,7 +620,7 @@ $current_date_time = date("dmYHis");
                             <td><?= (empty($knife) || $knife == 0) ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> красок</td>
                         </tr>
@@ -689,9 +689,9 @@ $current_date_time = date("dmYHis");
                         <div class="col-6 border-right">
                             <table class="w-100">
                                 <tr>
-                                    <td colspan="2" class="table-header font-weight-bold"><?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
+                                    <td colspan="2" class="table-header font-weight-bold"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
                                 </tr>
-                                <?php if($work_type_id != CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+                                <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                                 <tr>
                                     <td>Кол-во ламинаций</td>
                                     <td><?=$lamination ?></td>
@@ -775,7 +775,7 @@ $current_date_time = date("dmYHis");
                                     <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
                                 </tr>
                                 <tr>
-                                    <td><?=$work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
+                                    <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
                                     <?php
                                     $norm_stream = "";
                                     $sql = "select gap_stream from norm_gap order by date desc limit 1";
@@ -786,7 +786,7 @@ $current_date_time = date("dmYHis");
                                     ?>
                                     <td>
                                         <?php
-                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                        if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                             if(empty($norm_stream)) {
                                                 echo CalculationBase::Display(intval($stream_width), 0)." мм";
                                             }
@@ -880,7 +880,7 @@ $current_date_time = date("dmYHis");
                                         if(empty($length)) {
                                             echo "";
                                         }
-                                        elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                        elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                             // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
                                             $calc = CalculationBase::Create(filter_input(INPUT_GET, 'id'));
                                             echo CalculationBase::Display(floatval($calc->number_in_raport_pure) / floatval($calc->raport) * 1000.0, 4);
@@ -961,13 +961,13 @@ $current_date_time = date("dmYHis");
                         echo "Без фотометки";
                         break;
                     default :
-                        echo ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
+                        echo ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
                         break;
                 }
                 ?>
             </div>
             <?php
-            $roll_folder = ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
+            $roll_folder = ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
             switch ($photolabel) {
                 case PHOTOLABEL_LEFT:
                     $roll_folder = "roll_left";
@@ -1024,7 +1024,7 @@ $current_date_time = date("dmYHis");
             
             <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px;">Комментарий:</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
-            <?php if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): ?>
+            <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
             <div class="row">
                 <?php

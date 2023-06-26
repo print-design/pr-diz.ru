@@ -18,13 +18,13 @@ else {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * (select sum(quantity) from calculation_quantity where calculation_id = $id)) - cr.cost) / cr.cost) * 100 where c.id = $id and c.work_type_id = ".CalculationBase::WORK_TYPE_SELF_ADHESIVE;
+        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * (select sum(quantity) from calculation_quantity where calculation_id = $id)) - cr.cost) / cr.cost) * 100 where c.id = $id and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE;
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     
     if(empty ($error_message)) {
-        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * c.quantity) - cr.cost) / cr.cost) * 100 where c.id = $id and c.work_type_id <> ".CalculationBase::WORK_TYPE_SELF_ADHESIVE;
+        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * c.quantity) - cr.cost) / cr.cost) * 100 where c.id = $id and c.work_type_id <> ".WORK_TYPE_SELF_ADHESIVE;
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }

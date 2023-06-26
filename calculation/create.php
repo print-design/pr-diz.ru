@@ -123,23 +123,23 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'work_type_id') != CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity'))) {
+    if(filter_input(INPUT_POST, 'work_type_id') != WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'work_type_id') == CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'printings_number'))) {
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'printings_number'))) {
         $printings_number_valid = ISINVALID;
         $form_valid = false;
     }
     
     // Если тип "Самоклеящийся материал", то должен быть добавлен хотя бы один тираж
     // Иначе поле "Размер тиража" не должно быть пустое
-    if(filter_input(INPUT_POST, 'work_type_id') == CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity_1'))) {
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity_1'))) {
         $printings_number_valid = ISINVALID;
         $form_valid = false;
     }
-    elseif(filter_input(INPUT_POST, 'work_type_id') != CalculationBase::WORK_TYPE_SELF_ADHESIVE && empty (filter_input(INPUT_POST, 'quantity'))) {
+    elseif(filter_input(INPUT_POST, 'work_type_id') != WORK_TYPE_SELF_ADHESIVE && empty (filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
@@ -251,7 +251,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $form_valid = false;
             }
             
-            if(filter_input(INPUT_POST, 'work_type_id') == CalculationBase::WORK_TYPE_PRINT) {
+            if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT) {
                 if($$ink_var == 'lacquer' && empty($$lacquer_var)) {
                     $lacquer_valid_var = 'lacquer_'.$i.'_valid';
                     $$lacquer_valid_var = ISINVALID;
@@ -266,7 +266,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $name = addslashes(filter_input(INPUT_POST, 'name'));
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $unit = filter_input(INPUT_POST, 'unit');
-        $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == CalculationBase::WORK_TYPE_NOPRINT) $machine_id = "NULL";
+        $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = "NULL";
         $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity')); if(empty($quantity)) $quantity = "NULL";
         $film_id = filter_input(INPUT_POST, 'film_id');
         $film_variation_id = filter_input(INPUT_POST, 'film_variation_id'); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
@@ -329,11 +329,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         $laminator_id = filter_input(INPUT_POST, 'laminator_id'); if(empty($laminator_id)) $laminator_id = "NULL";
-        $length = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
-        $stream_width = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
+        $length = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
+        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
         $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = "NULL";
-        $number_in_raport = $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
+        $number_in_raport = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
         
@@ -404,7 +404,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $insert_id = $executer->insert_id;
         
         // Для самоклеящейся бумаги заполняем список тиражей
-        if(empty($error_message) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+        if(empty($error_message) && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             $qi = 1;
             $quantity_var = "quantity_$qi";
             
@@ -757,7 +757,7 @@ for ($i=1; $i<=$ink_number; $i++) {
         $$cliche_var = $row["cliche_$i"];
     }
     
-    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+    if($work_type_id == WORK_TYPE_PRINT) {
         if($$cliche_var != CalculationBase::OLD) {
             $new_forms_number++;
         }
@@ -852,7 +852,7 @@ if(isset($row['num_for_customer'])) {
 }
 
 // Общее количество новых форм
-if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $new_forms_number += ($cliches_count_flint + $cliches_count_kodak);
 }
 
@@ -951,7 +951,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
     </head>
     <body>
         <?php
-        if(!empty($work_type_id) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE && $form_valid) {
+        if(!empty($work_type_id) && $work_type_id == WORK_TYPE_SELF_ADHESIVE && $form_valid) {
             include './right_panel_self_adhesive.php';
         }
         elseif($form_valid) {
@@ -2090,7 +2090,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="row">
                                 <?php
                                 $ink_number_class = " col-12";
-                                if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                     $ink_number_class = " col-3";
                                 }
                                 ?>
@@ -2099,7 +2099,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <select id="ink_number" name="ink_number" class="form-control print-only self-adhesive-only d-none">
                                         <option value="" hidden="hidden">Количество красок...</option>
                                         <?php
-                                        if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE): 
+                                        if($work_type_id == WORK_TYPE_SELF_ADHESIVE): 
                                         $selected = "";
                                         if($ink_number == 0) {
                                             $selected = " selected='selected'";
@@ -2160,28 +2160,28 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 if($$ink_var_name == "white") {
                                     $ink_class = " col-6";
                                     
-                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                    if($work_type_id == WORK_TYPE_PRINT) {
                                         $percent_class = " col-3";
                                         $cliche_class = " col-3";
                                     }
-                                    elseif ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    elseif ($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                         $percent_class = " col-6";
                                     }
                                 }
                                 elseif($$ink_var_name == "lacquer") {
-                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                    if($work_type_id == WORK_TYPE_PRINT) {
                                         $ink_class = " col-3";
                                         $lacquer_class = " col-3";
                                     }
-                                    elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                         $ink_class = " col-6";
                                     }
                                     
-                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                    if($work_type_id == WORK_TYPE_PRINT) {
                                         $percent_class = " col-3";
                                         $cliche_class = " col-3";
                                     }
-                                    elseif ($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    elseif ($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                         $percent_class = " col-6";
                                     }
                                 }
@@ -2189,11 +2189,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     $ink_class = " col-3";
                                     $color_class = " col-3";
                                     
-                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                    if($work_type_id == WORK_TYPE_PRINT) {
                                         $percent_class = " col-3";
                                         $cliche_class = " col-3";
                                     }
-                                    elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                         $percent_class = " col-6";
                                     }
                                 }
@@ -2201,11 +2201,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     $ink_class = " col-3";
                                     $cmyk_class = " col-3";
                                     
-                                    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+                                    if($work_type_id == WORK_TYPE_PRINT) {
                                         $percent_class = " col-3";
                                         $cliche_class = " col-3";
                                     }
-                                    elseif($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+                                    elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                         $percent_class = " col-6";
                                     }
                                 }
@@ -2610,7 +2610,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Установление количества форм: Флинт, Кодак и старых
             function SetClichesCount() {
-                if($('#work_type_id').val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                if($('#work_type_id').val() == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
                     ink_number = $('#ink_number').val();
                     printings_number = $('#printings_number').val();
                     
@@ -2678,11 +2678,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 
                 // Для типа "Самоклеящийся материал" делаем список красок узким,
                 // чтобы уместились поля для количества форм
-                if($(this).val() == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                if($(this).val() == <?= WORK_TYPE_PRINT ?>) {
                     $('#ink-col-ink').removeClass('col-3');
                     $('#ink-col-ink').addClass('col-12');
                 }
-                else if($(this).val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                else if($(this).val() == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
                     $('#ink-col-ink').removeClass('col-12');
                     $('#ink-col-ink').addClass('col-3');
                 }
@@ -2690,11 +2690,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 // Устанавливаем флажки
                 // Для плёнки с печатью: вкл. ПФ в себес. 0, польз. пл. за ПФ 1
                 // Для самоклейки: вкл. ПФ в себес. 1, польз. пл. за ПФ 1, вкл. нож в себес. 0, польз. пл. за нож 1
-                if($(this).val() == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                if($(this).val() == <?= WORK_TYPE_PRINT ?>) {
                     $('#cliche_in_price').prop('checked', false);
                     $('#customer_pays_for_cliche').prop('checked', true);
                 }
-                else if($(this).val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                else if($(this).val() == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
                     $('#cliche_in_price').prop('checked', true);
                     $('#customer_pays_for_cliche').prop('checked', true);
                     $('#knife_in_price').prop('checked', false);
@@ -2754,7 +2754,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     
                     colorfulness = parseInt(colorfulnesses[$(this).val()]);
                     var colorfulness_list = "<option value='' hidden='hidden'>Количество красок...</option>";
-                    if($('#work_type_id').val() == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                    if($('#work_type_id').val() == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
                         colorfulness_list = colorfulness_list + "<option>0</option>";
                     }
                     for(var i=1; i<=colorfulness; i++) {
@@ -3079,7 +3079,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
             function SetFieldsVisibility(work_type_id) {
-                if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                if(work_type_id == <?= WORK_TYPE_PRINT ?>) {
                     // Если тип работы "Плёнка с печатью", то объём заказа и в килограммах и в штуках
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().removeClass('d-none');
@@ -3122,7 +3122,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('#no_ski_option').removeClass('d-none');
                     }
                 }
-                else if(work_type_id == <?= CalculationBase::WORK_TYPE_NOPRINT ?>) {
+                else if(work_type_id == <?= WORK_TYPE_NOPRINT ?>) {
                     // Если тип работы "Плёнка без печати", то объём заказа всегда в килограммах
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().removeClass('d-none');
@@ -3166,7 +3166,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('#no_ski_option').removeClass('d-none');
                     }
                 }
-                else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                else if(work_type_id == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
                     // Если тип работы "Самоклеящиеся материалы", то объём заказа всегда в штуках
                     $('#units').removeClass('d-none');
                     $('#unit_kg').parent().parent().addClass('d-none');
@@ -3519,13 +3519,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('#ink_block_' + i).removeClass('d-none');
                         $('#ink_' + i).attr('required', 'required');
                         
-                        if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?> && $('#percent_group_' + i).hasClass('col-6')) {
+                        if(work_type_id == <?= WORK_TYPE_PRINT ?> && $('#percent_group_' + i).hasClass('col-6')) {
                             $('#percent_group_' + i).removeClass('col-6');
                             $('#percent_group_' + i).addClass('col-3');
                             $('#cliche_group_' + i).removeClass('d-none');
                             $('#cliche_group_' + i).addClass('col-3');
                         }
-                        else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?> && $('#percent_group_' + i).hasClass('col-3')) {
+                        else if(work_type_id == <?= WORK_TYPE_SELF_ADHESIVE ?> && $('#percent_group_' + i).hasClass('col-3')) {
                             $('#percent_group_' + i).removeClass('col-3');
                             $('#percent_group_' + i).addClass('col-6');
                             $('#cliche_group_' + i).removeClass('col-3');
@@ -3573,14 +3573,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 
                 // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
                 if(ink == 'lacquer' || ink == 'white' || ink == 'cmyk' || ink == 'panton') {
-                    if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                    if(work_type_id == <?= WORK_TYPE_PRINT ?>) {
                         $('#percent_group_' + data_id).removeClass('col-6');
                         $('#percent_group_' + data_id).addClass('col-3');
                         $('#percent_group_' + data_id).removeClass('d-none');
                         $('#cliche_group_' + data_id).addClass('col-3');
                         $('#cliche_group_' + data_id).removeClass('d-none');
                     }
-                    else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                    else if(work_type_id == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
                         $('#percent_group_' + data_id).addClass('col-6');
                         $('#percent_group_' + data_id).removeClass('col-3');
                         $('#percent_group_' + data_id).removeClass('d-none');
@@ -3590,13 +3590,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 
                 if(ink == 'lacquer')  {
-                    if(work_type_id == <?= CalculationBase::WORK_TYPE_PRINT ?>) {
+                    if(work_type_id == <?= WORK_TYPE_PRINT ?>) {
                         $('#ink_group_' + data_id).addClass('col-3');
                         $('#lacquer_group_' + data_id).addClass('col-3');
                         $('#lacquer_group_' + data_id).removeClass('d-none');
                         $('#lacquer_' + data_id).attr('required', 'required');
                     }
-                    else if(work_type_id == <?= CalculationBase::WORK_TYPE_SELF_ADHESIVE ?>) {
+                    else if(work_type_id == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
                         $('#ink_group_' + data_id).addClass('col-6');
                     }
                     

@@ -225,7 +225,7 @@ for($i=1; $i<=$ink_number; $i++) {
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
     
-    if($work_type_id == CalculationBase::WORK_TYPE_PRINT) {
+    if($work_type_id == WORK_TYPE_PRINT) {
         if(!empty($$cliche_var) && $$cliche_var != CalculationBase::OLD) {
             $new_forms_number++;
         }
@@ -246,7 +246,7 @@ $knife_in_price = $row['knife_in_price'];
 $customer_pays_for_knife = $row['customer_pays_for_knife'];
 $extra_expense = $row['extra_expense'];
 
-if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $new_forms_number += ($cliches_count_flint + $cliches_count_kodak);
 }
 
@@ -339,7 +339,7 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
     </head>
     <body>
         <?php
-        if(!empty($work_type_id) && $work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
+        if(!empty($work_type_id) && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             include './right_panel_self_adhesive.php';
         }
         else {

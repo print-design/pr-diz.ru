@@ -87,7 +87,7 @@ class Queue {
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id.")"
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id.")"
-                . " and c.work_type_id <> ".CalculationBase::WORK_TYPE_NOPRINT
+                . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
                 . " and c.status_id = ".ORDER_STATUS_CONFIRMED;
         if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
             $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
@@ -170,13 +170,13 @@ class Queue {
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 1)"
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id." and lamination = 1)"
                 . " and (("
-                . "c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                . "c.work_type_id = ".WORK_TYPE_PRINT
                 . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
                 . ") or ("
-                . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                . "c.work_type_id = ".WORK_TYPE_NOPRINT
                 . " and c.status_id = ".ORDER_STATUS_CONFIRMED
                 . ") or ("
-                . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                . "c.work_type_id = ".WORK_TYPE_NOPRINT
                 . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
                 . "))"
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
@@ -204,13 +204,13 @@ class Queue {
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id." and lamination = 2)"
                 . " and (c.lamination2_film_variation_id is not null or (c.lamination2_individual_film_name is not null and c.lamination2_individual_film_name <> ''))"
                 . " and (("
-                . "c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                . "c.work_type_id = ".WORK_TYPE_PRINT
                 . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
                 . ") or ("
-                . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                . "c.work_type_id = ".WORK_TYPE_NOPRINT
                 . " and c.status_id = ".ORDER_STATUS_CONFIRMED
                 . ") or ("
-                . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                . "c.work_type_id = ".WORK_TYPE_NOPRINT
                 . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
                 . "))"
                 . " order by position, work_type_id, print_date, print_shift, print_position, status_date";
@@ -256,13 +256,13 @@ class Queue {
                 . "where pp.in_plan = 0 "
                 . "and pp.work_id = ".$this->work_id;
         if($this->machine_id == CUTTER_ATLAS) {
-            $sql .= " and c.work_type_id = ".CalculationBase::WORK_TYPE_SELF_ADHESIVE;
+            $sql .= " and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE;
         }
         else {
             $sql .= " and "
-                    . "(c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                    . "(c.work_type_id = ".WORK_TYPE_PRINT
                     . " or "
-                    . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                    . "c.work_type_id = ".WORK_TYPE_NOPRINT
                     . ")";
         }
         $sql .= " union "
@@ -284,24 +284,24 @@ class Queue {
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id.")"
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id.")";
         if($this->machine_id == CUTTER_ATLAS) {
-            $sql .= " and c.work_type_id = ".CalculationBase::WORK_TYPE_SELF_ADHESIVE
+            $sql .= " and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE
                     . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT;
         }
         else {
             $sql .= " and "
-                    . "((c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                    . "((c.work_type_id = ".WORK_TYPE_PRINT
                     . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
                     . " and c.lamination1_film_variation_id is null and (c.lamination1_individual_film_name is null or c.lamination1_individual_film_name = '')"
                     . ") or ("
-                    . "c.work_type_id = ".CalculationBase::WORK_TYPE_PRINT
+                    . "c.work_type_id = ".WORK_TYPE_PRINT
                     . " and c.status_id = ".ORDER_STATUS_PLAN_LAMINATE
                     . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                     . ") or ("
-                    . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                    . "c.work_type_id = ".WORK_TYPE_NOPRINT
                     . " and c.status_id = ".ORDER_STATUS_CONFIRMED
                     . " and c.lamination1_film_variation_id is null and (c.lamination1_individual_film_name is null or c.lamination1_individual_film_name = '')"
                     . ") or ("
-                    . "c.work_type_id = ".CalculationBase::WORK_TYPE_NOPRINT
+                    . "c.work_type_id = ".WORK_TYPE_NOPRINT
                     . " and c.status_id = ".ORDER_STATUS_PLAN_LAMINATE
                     . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                     . "))";
