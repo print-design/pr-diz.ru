@@ -899,7 +899,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit') ||
 // Если есть ламинация, а ламинатор пустой, то присваиваем ему значение "Сольвент".
 // (В старых расчётах ламинатор может быть не указан, поскольку тогда бессольвента не было.)
 if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) && empty($laminator_id)) {
-    $laminator_id = CalculationBase::SOLVENT_YES;
+    $laminator_id = LAMINATOR_SOLVENT;
 }
 ?>
 <!DOCTYPE html>
@@ -1630,22 +1630,22 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <?php
                                         $solvent_yes_checked = "";
                                         $solvent_no_checked = "";
-                                        if($laminator_id == CalculationBase::SOLVENT_YES) {
+                                        if($laminator_id == LAMINATOR_SOLVENT) {
                                             $solvent_yes_checked = " checked='checked'";
                                         }
-                                        elseif($laminator_id == CalculationBase::SOLVENT_NO) {
+                                        elseif($laminator_id == LAMINATOR_SOLVENTLESS) {
                                             $solvent_no_checked = " checked='checked'";
                                         }
                                         ?>
                                         <div class="col-8">
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="laminator_id" value="<?= CalculationBase::SOLVENT_YES ?>"<?=$solvent_yes_checked ?> />Сольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_yes" name="laminator_id" value="<?= LAMINATOR_SOLVENT ?>"<?=$solvent_yes_checked ?> />Сольвент
                                                 </label>
                                             </div>
                                             <div class="form-check-inline">
                                                 <label class="form-check-label mt-3">
-                                                    <input type="radio" class="form-check-input" id="solvent_no" name="laminator_id" value="<?= CalculationBase::SOLVENT_NO ?>"<?=$solvent_no_checked ?> />Бессольвент
+                                                    <input type="radio" class="form-check-input" id="solvent_no" name="laminator_id" value="<?= LAMINATOR_SOLVENTLESS ?>"<?=$solvent_no_checked ?> />Бессольвент
                                                 </label>
                                             </div>
                                         </div>
@@ -3376,7 +3376,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Обрабатываем выбор сольвентного или бессольвентного ламинатора
             $('#solvent_yes').click(function() {
-                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_YES ?>" })
+                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENT ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
                             SelectLaminatorRoller();
@@ -3388,7 +3388,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('#solvent_no').click(function() {
-                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= CalculationBase::SOLVENT_NO ?>" })
+                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENTLESS ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
                             SelectLaminatorRoller();

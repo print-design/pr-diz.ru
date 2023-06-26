@@ -153,7 +153,7 @@ $gap = $row['gap'];
 // Если есть ламинация, а ламинатор пустой, то присваиваем ему значение "Сольвент".
 // (В старых расчётах ламинатор может быть не указан, поскольку тогда бессольвента не было.)
 if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) && empty($laminator_id)) {
-    $laminator_id = CalculationBase::SOLVENT_YES;
+    $laminator_id = LAMINATOR_SOLVENT;
 }
 ?>
 <!DOCTYPE html>
