@@ -60,6 +60,7 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
 if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id');
     $work_id = filter_input(INPUT_POST, 'work_id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
     $lamination = filter_input(INPUT_POST, 'lamination');
     $length1 = filter_input(INPUT_POST, 'length1');
     
@@ -84,17 +85,21 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         if($row = $fetcher->Fetch()) {
-            if($work_id == WORK_LAMINATION && $lamination == 1) {
+            if($work_id == WORK_PRINTING) {
+                $length_total = $row['length_dirty_1'];
+                $worktime_total = $row['work_time_1'];
+            }
+            elseif($work_id == WORK_CUTTING) {
+                $length_total = $row['length_dirty_1'];
+                $worktime_total = $length_total / CUTTER_SPEEDS[$machine_id] / 60;
+            }
+            elseif($work_id == WORK_LAMINATION && $lamination == 1) {
                 $length_total = $row['length_dirty_2'];
                 $worktime_total = $row['work_time_2'];
             }
             elseif($work_id == WORK_LAMINATION && $lamination == 2) {
                 $length_total = $row['length_dirty_3'];
                 $worktime_total = $row['work_time_3'];
-            }
-            else {
-                $length_total = $row['length_dirty_1'];
-                $worktime_total = $row['work_time_1'];
             }
         }
     
@@ -503,12 +508,9 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             });
             
             function EditComment(ev) {
-                //$(ev.target).parents('td').children('.comment_pen').removeClass('d-inline');
                 $(ev.target).parents('td').children('.d-flex').children('.comment_pen').addClass('d-none');
-                //$(ev.target).parents('td').children('.comment_text').removeClass('d-inline');
                 $(ev.target).parents('td').children('.d-flex').children('.comment_text').addClass('d-none');
                 $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
-                //$(ev.target).parents('td').children('.comment_input').removeClass('d-block');
                 $(ev.target).parents('td').children('.comment_input').children('input').focus();
             }
             
@@ -518,13 +520,10 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + text })
                         .done(function(data) {
                             $(ev.target).val(data);
-                            //$(ev.target).parents('.comment_input').removeClass('d-block');
                             $(ev.target).parents('.comment_input').addClass('d-none');
                             $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
                             $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
-                            //$(ev.target).parents('td').children('.comment_pen').addClass('d-inline');
                             $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
-                            //$(ev.target).parents('td').children('.comment_text').addClass('d-inline');
                         })
                         .fail(function() {
                             alert('Ошибка при добавлении комментария');
@@ -595,10 +594,11 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     var id = $(this).attr('data-id');
                     var lamination = $(this).attr('data-lamination');
                 
-                    $.ajax({ url: "_divide_form.php?id=" + id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&lamination=" + lamination })
+                    $.ajax({ url: "_divide_form.php?id=" + id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&lamination=" + lamination })
                             .done(function(data) {
                                 $('#divide_modal_form').html(data);
                                 $('#divide').modal('show');
+                                $('input[name="scroll"]').val($('#timetable').scrollTop());
                             })
                             .fail(function() {
                                 alert('Ошибка при открытии формы разделения заказа');

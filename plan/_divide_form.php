@@ -2,9 +2,9 @@
 require_once '../include/topscripts.php';
 
 $calculation_id = filter_input(INPUT_GET, 'id');
-$work_id = filter_input(INPUT_GET, 'work_id');
 $lamination = filter_input(INPUT_GET, 'lamination');
 $work_id = filter_input(INPUT_GET, 'work_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id');
 
 $length_dirty = 0;
 
@@ -27,8 +27,10 @@ if($row = $fetcher->Fetch()) {
 ?>
 <input type="hidden" name="calculation_id" value="<?=$calculation_id ?>" />
 <input type="hidden" name="work_id" value="<?=$work_id ?>" />
+<input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
 <input type="hidden" name="lamination" value="<?=$lamination ?>" />
 <input type="hidden" id="divide_total" value="<?=$length_dirty ?>" />
+<input type="hidden" name="scroll" />
 <p><strong>Метраж исходного тиража:</strong> <?= DisplayNumber(floatval($length_dirty), 0) ?> м</p>
 <div class="form-group">
     <label for="length1">Метраж первого тиража</label>

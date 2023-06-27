@@ -27,6 +27,7 @@
                                 <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
                                 <input type="hidden" name="work_id" value="<?=$this->work_id ?>" />
                                 <input type="hidden" name="lamination" value="<?=$row['lamination'] ?>" />
+                                <input type="hidden" name="scroll" />
                                 <button type="submit" class="btn btn-link h-25" name="undivide_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Отменить разделение</button>
                             </form>
                             <?php endif; ?>
