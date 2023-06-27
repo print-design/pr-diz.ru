@@ -1,6 +1,5 @@
 <?php
 require_once '../include/topscripts.php';
-require_once '../calculation/calculation.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $lamination = filter_input(INPUT_GET, 'lamination');

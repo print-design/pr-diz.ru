@@ -1,6 +1,3 @@
-<?php
-require_once '../calculation/calculation.php';
-?>
 <div class="text-nowrap nav2">
     <?php
     foreach (PRINTERS as $printer):

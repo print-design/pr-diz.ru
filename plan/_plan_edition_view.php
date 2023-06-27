@@ -1,6 +1,3 @@
-<?php
-require_once '../calculation/calculation.php';
-?>
 <tr data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-id="<?=$this->edition['calculation_id'] ?>" data-position="<?=$this->edition['position'] ?>">
     <?php if($this->plan_shift->shift == 'day' && $this->edition_key == 0): ?>
     <td class="border-right" rowspan="<?=$this->plan_shift->date_editions_count ?>">

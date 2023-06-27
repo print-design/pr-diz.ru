@@ -1,6 +1,5 @@
 <?php
 require_once '../include/topscripts.php';
-require_once '../calculation/calculation.php';
 
 class Queue {
     private $work_id = null;

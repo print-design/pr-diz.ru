@@ -1,6 +1,3 @@
-<?php
-require_once '../calculation/calculation.php';
-?>
 <tr>
     <?php if($this->plan_shift->shift == 'day' && $this->edition_key == 0): ?>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> border-right" rowspan="<?=$this->plan_shift->date_editions_count ?>">
