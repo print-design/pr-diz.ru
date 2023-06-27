@@ -60,11 +60,11 @@ else {
         // Значения shipping_cost, income, income_total дополнительно корректируем, чтобы не было "разницы в 1 рубль"
         if($row = $fetcher->Fetch()) {
             $result['extracharge'] = $row['extracharge'];
-            $result['shipping_cost_per_unit'] = CalculationBase::Display(floatval($row['shipping_cost_per_unit']), 3);
-            $result['shipping_cost'] = CalculationBase::Display(floatval($row['shipping_cost']), 0);
-            $result['income_per_unit'] = CalculationBase::Display(floatval($row['income_per_unit']), 3);
-            $result['income'] = CalculationBase::Display(floatval($row['income']), 0);
-            $result['income_total'] = CalculationBase::Display(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
+            $result['shipping_cost_per_unit'] = DisplayNumber(floatval($row['shipping_cost_per_unit']), 3);
+            $result['shipping_cost'] = DisplayNumber(floatval($row['shipping_cost']), 0);
+            $result['income_per_unit'] = DisplayNumber(floatval($row['income_per_unit']), 3);
+            $result['income'] = DisplayNumber(floatval($row['income']), 0);
+            $result['income_total'] = DisplayNumber(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
         }
     }
     

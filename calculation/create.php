@@ -1269,7 +1269,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             echo "</div>";
                                             echo "<div class='col-3'>";
                                         }
-                                        echo "<p style='font-size: larger;'>$qi.&nbsp;&nbsp;&nbsp;".CalculationBase::Display(intval($$quantity_var), 0)." шт</p>";
+                                        echo "<p style='font-size: larger;'>$qi.&nbsp;&nbsp;&nbsp;".DisplayNumber(intval($$quantity_var), 0)." шт</p>";
                                         echo "<input type='hidden' id='quantity_$qi' name='quantity_$qi' value='".$$quantity_var."' />";
                                         $qi++;
                                         $quantity_var = "quantity_$qi";
@@ -2021,7 +2021,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             $f_length = floatval($length);
                                             $f_number_in_raport = floatval($number_in_raport);
                                             $gap_fact = ($f_raport - ($f_length * $f_number_in_raport)) / $f_number_in_raport;
-                                            $s_gap_fact = CalculationBase::Display($gap_fact, 2);
+                                            $s_gap_fact = DisplayNumber($gap_fact, 2);
                                             echo "Зазор между этикетками $s_gap_fact мм";
                                         }
                                         ?>

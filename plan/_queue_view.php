@@ -75,7 +75,7 @@
     <div class="mb-2"><?=$films_string ?></div>
     <?php endif; ?>
     <div class="row">
-        <div class="col-6"><strong>Метраж:</strong> <?= CalculationBase::Display(intval($row['length']), 0) ?></div>
+        <div class="col-6"><strong>Метраж:</strong> <?= DisplayNumber(intval($row['length']), 0) ?></div>
         <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
     </div>
     <div class="row">
@@ -84,7 +84,7 @@
             <?php if($this->work_id == WORK_LAMINATION): ?>
             <strong>Тип работы:</strong> <span class="text-nowrap"><?= WORK_TYPE_NAMES[$row['work_type_id']] ?></span>
             <?php else: ?>
-            <strong>Вал:</strong> <?= CalculationBase::Display(floatval($row['raport']), 3) ?>
+            <strong>Вал:</strong> <?= DisplayNumber(floatval($row['raport']), 3) ?>
             <?php endif; ?>
         </div>
     </div>

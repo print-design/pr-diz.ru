@@ -63,6 +63,18 @@ function IsInRole($role) {
     return false;
 }
 
+function DisplayNumber($value, $decimals) {
+    if(is_float($value) || is_double($value) || is_int($value)) {
+        return number_format($value, $decimals, ",", " ");
+    }
+    elseif(is_string($value)) {
+        return str_replace(".", ",", $value);
+    }
+    else {
+        return $value;
+    }
+}
+
 function Initials() {
     $last_name = filter_input(INPUT_COOKIE, LAST_NAME);
     $first_name = filter_input(INPUT_COOKIE, FIRST_NAME);

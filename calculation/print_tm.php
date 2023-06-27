@@ -502,7 +502,7 @@ $current_date_time = date("dmYHis");
             <div id="subtitle">Наименование: <?=$calculation ?></div>
             <div class="row">
                 <div class="col-6 topproperty">
-                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(intval($quantities_sum), 0)." шт" : CalculationBase::Display(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? CalculationBase::Display(floatval($lengths_sum), 0)." м" : CalculationBase::Display(floatval($length_pure_1), 0)." м" ?>
+                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(intval($quantities_sum), 0)." шт" : DisplayNumber(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(floatval($lengths_sum), 0)." м" : DisplayNumber(floatval($length_pure_1), 0)." м" ?>
                 </div>
                 <div class="col-6 topproperty">
                     <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=WORK_TYPE_NAMES[$work_type_id] ?>
@@ -542,15 +542,15 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($film_name) ? CalculationBase::Display(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                            <td class="text-nowrap"><?= empty($film_name) ? DisplayNumber(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($width_1), 0) ?> мм</td>
+                            <td><?= DisplayNumber(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
-                            <td><?= CalculationBase::Display(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
                         <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
@@ -561,12 +561,12 @@ $current_date_time = date("dmYHis");
                         <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td><?= CalculationBase::Display(floatval($length_pure_1), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <?php endif; ?>
                         <tr>
                             <td>Всего мат-ла</td>
-                            <td><?= CalculationBase::Display(floatval($length_dirty_1), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($length_dirty_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Печать</td>
@@ -588,7 +588,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Рапорт</td>
-                            <td><?= CalculationBase::Display(floatval($raport), 3) ?></td>
+                            <td><?= DisplayNumber(floatval($raport), 3) ?></td>
                         </tr>
                         <tr>
                             <td>Растяг</td>
@@ -600,7 +600,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Длина этикетки</td>
-                            <td><?= CalculationBase::Display(floatval($length), 0).(empty($length) ? "" : " мм") ?></td>
+                            <td><?= DisplayNumber(floatval($length), 0).(empty($length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
@@ -705,27 +705,27 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Толщина</td>
-                                    <td class="text-nowrap"><?= empty($lamination1_film_name) ? CalculationBase::Display(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                    <td class="text-nowrap"><?= empty($lamination1_film_name) ? DisplayNumber(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
-                                    <td><?= CalculationBase::Display(floatval($width_2), 0) ?> мм</td>
+                                    <td><?= DisplayNumber(floatval($width_2), 0) ?> мм</td>
                                 </tr>
                                 <tr>
                                     <td>Метраж на приладку</td>
-                                    <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
+                                    <td><?= DisplayNumber(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
                                 </tr>
                                 <tr>
                                     <td>Метраж на тираж</td>
-                                    <td><?= CalculationBase::Display(floatval($length_pure_2), 0) ?> м</td>
+                                    <td><?= DisplayNumber(floatval($length_pure_2), 0) ?> м</td>
                                 </tr>
                                 <tr>
                                     <td>Всего мат-ла</td>
-                                    <td><?= CalculationBase::Display(floatval($length_dirty_2), 0) ?> м</td>
+                                    <td><?= DisplayNumber(floatval($length_dirty_2), 0) ?> м</td>
                                 </tr>
                                 <tr>
                                     <td>Ламинационный вал</td>
-                                    <td><?= CalculationBase::Display(floatval($lamination_roller_width), 0) ?> мм</td>
+                                    <td><?= DisplayNumber(floatval($lamination_roller_width), 0) ?> мм</td>
                                 </tr>
                                 <tr>
                                     <td>Анилокс</td>
@@ -740,23 +740,23 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Толщина</td>
-                                    <td class="text-nowrap"><?= empty($lamination2_film_name) ? CalculationBase::Display(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : CalculationBase::Display(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(CalculationBase::Display(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                    <td class="text-nowrap"><?= empty($lamination2_film_name) ? DisplayNumber(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
-                                    <td><?= CalculationBase::Display(floatval($width_3), 0) ?> мм</td>
+                                    <td><?= DisplayNumber(floatval($width_3), 0) ?> мм</td>
                                 </tr>
                                 <tr>
                                     <td>Метраж на приладку</td>
-                                    <td><?= CalculationBase::Display(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
+                                    <td><?= DisplayNumber(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
                                 </tr>
                                 <tr>
                                     <td>Метраж на тираж</td>
-                                    <td><?= CalculationBase::Display(floatval($length_pure_3), 0) ?> м</td>
+                                    <td><?= DisplayNumber(floatval($length_pure_3), 0) ?> м</td>
                                 </tr>
                                 <tr>
                                     <td>Всего мат-ла</td>
-                                    <td><?= CalculationBase::Display(floatval($length_dirty_3), 0) ?> м</td>
+                                    <td><?= DisplayNumber(floatval($length_dirty_3), 0) ?> м</td>
                                 </tr>
                                 <?php endif; ?>
                             </table>
@@ -781,21 +781,21 @@ $current_date_time = date("dmYHis");
                                     $sql = "select gap_stream from norm_gap order by date desc limit 1";
                                     $fetcher = new Fetcher($sql);
                                     if($row = $fetcher->Fetch()) {
-                                        $norm_stream = CalculationBase::Display($row[0], 2);
+                                        $norm_stream = DisplayNumber($row[0], 2);
                                     }
                                     ?>
                                     <td>
                                         <?php
                                         if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                             if(empty($norm_stream)) {
-                                                echo CalculationBase::Display(intval($stream_width), 0)." мм";
+                                                echo DisplayNumber(intval($stream_width), 0)." мм";
                                             }
                                             else {
-                                                echo CalculationBase::Display(floatval($stream_width) + floatval($norm_stream), 2)." / ".CalculationBase::Display(floatval($norm_stream), 2)." мм";
+                                                echo DisplayNumber(floatval($stream_width) + floatval($norm_stream), 2)." / ".DisplayNumber(floatval($norm_stream), 2)." мм";
                                             }
                                         }
                                         else {
-                                            echo CalculationBase::Display(intval($stream_width), 0)." мм";
+                                            echo DisplayNumber(intval($stream_width), 0)." мм";
                                         }
                                         ?>
                                     </td>
@@ -815,11 +815,11 @@ $current_date_time = date("dmYHis");
                                                 echo 'Нет данных по длине этикетки';
                                             }
                                             else {
-                                                echo CalculationBase::Display(floatval($winding) * floatval($length) / 1000, 0);
+                                                echo DisplayNumber(floatval($winding) * floatval($length) / 1000, 0);
                                             }
                                         }
                                         else {
-                                            echo CalculationBase::Display(floatval($winding), 0);
+                                            echo DisplayNumber(floatval($winding), 0);
                                         }
                                         
                                         switch ($winding_unit) {
@@ -861,7 +861,7 @@ $current_date_time = date("dmYHis");
                                             $final_density = empty($weight) ? $individual_density : $weight;
                                             $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
                                             $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
-                                            echo CalculationBase::Display((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
+                                            echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
                                         }
                                         else {
                                             echo 'Нет';
@@ -883,10 +883,10 @@ $current_date_time = date("dmYHis");
                                         elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                             // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
                                             $calc = CalculationBase::Create(filter_input(INPUT_GET, 'id'));
-                                            echo CalculationBase::Display(floatval($calc->number_in_raport_pure) / floatval($calc->raport) * 1000.0, 4);
+                                            echo DisplayNumber(floatval($calc->number_in_raport_pure) / floatval($calc->raport) * 1000.0, 4);
                                         }
                                         else {
-                                            echo CalculationBase::Display(1 / floatval($length) * 1000, 4);
+                                            echo DisplayNumber(1 / floatval($length) * 1000, 4);
                                         }
                                         ?>
                                     </td>
@@ -1048,8 +1048,8 @@ $current_date_time = date("dmYHis");
                 <div class="col-3">
                     <div class="mt-4 mb-2 printing_title font-weight-bold">Тираж <?=$printing_sequence ?></div>
                     <div class="d-flex justify-content-between font-italic border-bottom">
-                        <div><?= CalculationBase::Display(intval($printing['quantity']), 0) ?> шт</div>
-                        <div><?= CalculationBase::Display(floatval($printing['length']), 0) ?> м</div>
+                        <div><?= DisplayNumber(intval($printing['quantity']), 0) ?> шт</div>
+                        <div><?= DisplayNumber(floatval($printing['length']), 0) ?> м</div>
                     </div>
                     <table class="mb-3 w-100">
                     <?php

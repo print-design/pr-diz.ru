@@ -44,9 +44,9 @@ else {
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
-            $result['shipping_cliche_cost'] = CalculationBase::Display(floatval($row['shipping_cliche_cost']), 0);
-            $result['income_cliche'] = CalculationBase::Display(floatval($row['income_cliche']), 0);
-            $result['income_total'] = CalculationBase::Display(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
+            $result['shipping_cliche_cost'] = DisplayNumber(floatval($row['shipping_cliche_cost']), 0);
+            $result['income_cliche'] = DisplayNumber(floatval($row['income_cliche']), 0);
+            $result['income_total'] = DisplayNumber(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
         }
     }
     

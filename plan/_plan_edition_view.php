@@ -18,7 +18,7 @@ require_once '../calculation/calculation.php';
         </div>
         <?php endif; ?>
         <div style="display: block; white-space: nowrap;">
-            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: block;"><?= CalculationBase::Display($this->plan_shift->shift_worktime, 2) ?> ч.</div>
+            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: block;"><?= DisplayNumber($this->plan_shift->shift_worktime, 2) ?> ч.</div>
         </div>
         <?php if(!$this->plan_shift->includes_continuation): ?>
         <div class="foredit" style="margin-top: 6px;">
@@ -133,11 +133,11 @@ require_once '../calculation/calculation.php';
         <div class="d-flex justify-content-between">
             <div>
                 <?php if($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING): ?>
-                <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_pure_1']), 0) ?></div>
+                <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['length_pure_1']), 0) ?></div>
                 <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
-                <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_pure_2']), 0) ?></div>
+                <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['length_pure_2']), 0) ?></div>
                 <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
-                <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_pure_3']), 0) ?></div>
+                <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['length_pure_3']), 0) ?></div>
                 <?php endif; ?>
                 <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION ? ' '.WORK_CONTINUATIONS[$this->plan_shift->timetable->work_id] : '' ?>
             </div>
@@ -207,7 +207,7 @@ require_once '../calculation/calculation.php';
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
-        <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(CalculationBase::Display(floatval($this->edition['raport']), 3), "0"), ",") ?>
+        <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(DisplayNumber(floatval($this->edition['raport']), 3), "0"), ",") ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
@@ -216,15 +216,15 @@ require_once '../calculation/calculation.php';
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline storekeeper_hidden"<?=$drop ?>>
-        <?= CalculationBase::Display(floatval($this->edition['worktime']), 2) ?>
+        <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> not_storekeeper_hidden">
         <?php if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)): ?>
-        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_1']), 0) ?></div>
+        <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['length_dirty_1']), 0) ?></div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
-        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_2']), 0) ?></div>
+        <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['length_dirty_2']), 0) ?></div>
         <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
-        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['length_dirty_3']), 0) ?></div>
+        <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['length_dirty_3']), 0) ?></div>
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> not_storekeeper_hidden">
@@ -268,11 +268,11 @@ require_once '../calculation/calculation.php';
     </td>
     <td class="<?=$this->plan_shift->shift ?> not_storekeeper_hidden cutting_hidden">
         <?php if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)): ?>
-        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['width_1']), 0) ?></div>
+        <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['width_1']), 0) ?></div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1): ?>
-        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['width_2']), 0) ?></div>
+        <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['width_2']), 0) ?></div>
         <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
-        <div class='text-nowrap'><?= CalculationBase::Display(floatval($this->edition['width_3']), 0) ?></div>
+        <div class='text-nowrap'><?= DisplayNumber(floatval($this->edition['width_3']), 0) ?></div>
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>

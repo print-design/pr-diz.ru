@@ -402,38 +402,38 @@ if(!empty($id)) {
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($cost_per_unit), 3) ?> &#8381; за шт</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= DisplayNumber(floatval($cost_per_unit), 3) ?> &#8381; за шт</span></div>
             <div class="mt-2">Себестоимость ПФ</div>
-            <div class="value"><?= CalculationBase::Display(floatval($cliche_cost), 0) ?> &#8381;</div>
-            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= (empty($stream_width) || empty($streams_number)) ? "" : CalculationBase::Display($stream_width * $streams_number + 20, 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= CalculationBase::Display((intval($raport) + 20) + 20, 0) ?>&nbsp;мм</div>
+            <div class="value"><?= DisplayNumber(floatval($cliche_cost), 0) ?> &#8381;</div>
+            <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= (empty($stream_width) || empty($streams_number)) ? "" : DisplayNumber($stream_width * $streams_number + 20, 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= DisplayNumber((intval($raport) + 20) + 20, 0) ?>&nbsp;мм</div>
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value"><span id="shipping_cost"><?= CalculationBase::Display(floatval($shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= CalculationBase::Display(floatval($shipping_cost_per_unit), 3) ?></span> &#8381; за шт</span></div>
+            <div class="value"><span id="shipping_cost"><?= DisplayNumber(floatval($shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= DisplayNumber(floatval($shipping_cost_per_unit), 3) ?></span> &#8381; за шт</span></div>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
-            <div class="value"><span id="shipping_cliche_cost"><?= CalculationBase::Display(floatval($shipping_cliche_cost), 0) ?></span> &#8381;</div>
+            <div class="value"><span id="shipping_cliche_cost"><?= DisplayNumber(floatval($shipping_cliche_cost), 0) ?></span> &#8381;</div>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
             <div>Прибыль</div>
-            <div class="value mb-2"><span id="income"><?= CalculationBase::Display(floatval($income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= CalculationBase::Display(floatval($income_per_unit), 3) ?></span> &#8381; за шт</span></div>
+            <div class="value mb-2"><span id="income"><?= DisplayNumber(floatval($income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= DisplayNumber(floatval($income_per_unit), 3) ?></span> &#8381; за шт</span></div>
             <div class="mt-2">Прибыль ПФ</div>
-            <div class="value"><span id="income_cliche"><?= CalculationBase::Display(floatval($income_cliche), 0) ?></span> &#8381;</div>
+            <div class="value"><span id="income_cliche"><?= DisplayNumber(floatval($income_cliche), 0) ?></span> &#8381;</div>
         </div>
     </div>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <div>Себестоимость ножа</div>
-            <div class="value"><?= CalculationBase::Display(floatval($knife), 0) ?> &#8381;</div>
+            <div class="value"><?= DisplayNumber(floatval($knife), 0) ?> &#8381;</div>
         </div>
         <div class="col-4 pr-4">
             <div>Отгрузочная стоимость ножа</div>
-            <div class="value"><span id="shipping_knife_cost"><?= CalculationBase::Display(floatval($shipping_knife_cost), 0) ?></span> &#8381;</div>
+            <div class="value"><span id="shipping_knife_cost"><?= DisplayNumber(floatval($shipping_knife_cost), 0) ?></span> &#8381;</div>
         </div>
         <div class="col-4 pr-4">
             <div>Прибыль на нож</div>
-            <div class="value"><span id="income_knife"><?= CalculationBase::Display(floatval($income_knife), 0) ?></span> &#8381;</div>
+            <div class="value"><span id="income_knife"><?= DisplayNumber(floatval($income_knife), 0) ?></span> &#8381;</div>
         </div>
     </div>
     <div class="row text-nowrap">
@@ -441,12 +441,12 @@ if(!empty($id)) {
         <div class="col-4 pr-4"></div>
         <div class="col-4">
             <div>Итоговая прибыль</div>
-            <div class="value mb-2"><span id="income_total"><?=CalculationBase::Display(round(floatval($income), 0) + round(floatval($income_cliche), 0) + round(floatval($income_knife), 0), 0) ?></span> &#8381;</div>
+            <div class="value mb-2"><span id="income_total"><?= DisplayNumber(round(floatval($income), 0) + round(floatval($income_cliche), 0) + round(floatval($income_knife), 0), 0) ?></span> &#8381;</div>
         </div>
     </div>
     <div class="mt-3 row text-nowrap">
         <div class="col-4">
-            <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= CalculationBase::Display(floatval($total_weight_dirty), 0) ?> кг</span></h2>
+            <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= DisplayNumber(floatval($total_weight_dirty), 0) ?> кг</span></h2>
         </div>
         <div class="col-8">
             <?php
@@ -458,19 +458,19 @@ if(!empty($id)) {
             <h2>Тиражей&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?=$printings_number ?></span></h2>
         </div>
     </div>
-    <h3>Самоклеящийся материал&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг</span></h3>
+    <h3>Самоклеящийся материал&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($weight_dirty), 0) ?> кг</span></h3>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_cost_per_unit), 3) ?> &#8381; за м<sup>2</sup></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($film_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_cost_per_unit), 3) ?> &#8381; за м<sup>2</sup></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= CalculationBase::Display(intval($width), 0) ?> мм</div>
+            <div class="value mb-2"><?= DisplayNumber(intval($width), 0) ?> мм</div>
             <div>На приладку тиража</div>
-            <div class="value mb-2"><?= CalculationBase::Display(intval($priladka_printing), 0) ?> м</div>
+            <div class="value mb-2"><?= DisplayNumber(intval($priladka_printing), 0) ?> м</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(intval($length_pure), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($weight_pure), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(intval($length_pure), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= CalculationBase::Display(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(intval($length_dirty), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($weight_dirty), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(intval($length_dirty), 0) ?> м</span></div>
         </div>
         <div class="col-8">
             <div class="row">
@@ -480,7 +480,7 @@ if(!empty($id)) {
                 $i = 1;
                 foreach($rows as $row):
                 ?>
-                    <div class='value mb-2'><span class='font-weight-normal'><?=$i ?>.&nbsp;&nbsp;&nbsp;</span><?=CalculationBase::Display(intval($row['quantity']), 0) ?> шт&nbsp;&nbsp;&nbsp;<span class='font-weight-normal'><?= CalculationBase::Display(intval($row['length']), 0) ?> м</span></div>
+                    <div class='value mb-2'><span class='font-weight-normal'><?=$i ?>.&nbsp;&nbsp;&nbsp;</span><?= DisplayNumber(intval($row['quantity']), 0) ?> шт&nbsp;&nbsp;&nbsp;<span class='font-weight-normal'><?= DisplayNumber(intval($row['length']), 0) ?> м</span></div>
                 <?php if($i == $half): ?>
                 </div>
                 <div class="col-6">
@@ -510,11 +510,11 @@ if(!empty($id)) {
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= CalculationBase::Display(floatval($film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($film_waste_weight), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($film_waste_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_waste_weight), 2) ?> кг</span></div>
                 <div>Краска</div>
-                <div class="value mb-2"><?= CalculationBase::Display(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($ink_weight), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($ink_weight), 2) ?> кг</span></div>
                 <div>Печать тиража</div>
-                <div class="value mb-2"><?= CalculationBase::Display(floatval($work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= CalculationBase::Display(floatval($work_time), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($work_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($work_time), 2) ?> ч</span></div>
             </div>
         </div>
     </div>

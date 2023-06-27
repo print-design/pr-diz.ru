@@ -570,19 +570,6 @@ class CalculationBase {
         }
     }
     
-    // Отображение чисел в удобном формате
-    public static function Display($value, $decimals) {
-        if(is_float($value) || is_double($value) || is_int($value)) {
-            return number_format($value, $decimals, ",", " ");
-        }
-        elseif(is_string($value)) {
-            return str_replace(".", ",", $value);
-        }
-        else {
-            return $value;
-        }
-    }
-    
     // Подготовка параметров для конструктора класса расчёта
     // и создание объекта расчёта
     public static function Create($id) {

@@ -30,7 +30,7 @@ if($row = $fetcher->Fetch()) {
 <input type="hidden" name="work_id" value="<?=$work_id ?>" />
 <input type="hidden" name="lamination" value="<?=$lamination ?>" />
 <input type="hidden" id="divide_total" value="<?=$length_dirty ?>" />
-<p><strong>Метраж исходного тиража:</strong> <?= CalculationBase::Display(floatval($length_dirty), 0) ?> м</p>
+<p><strong>Метраж исходного тиража:</strong> <?= DisplayNumber(floatval($length_dirty), 0) ?> м</p>
 <div class="form-group">
     <label for="length1">Метраж первого тиража</label>
     <input type="text" 
