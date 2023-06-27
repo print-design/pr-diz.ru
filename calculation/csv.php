@@ -34,7 +34,7 @@ if($id !== null) {
     array_push($file_data, array("Лыжи 1", $calculation->GetSkiName($calculation->ski_1), "", ""));
     if($calculation->ski_1 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 1, мм", DisplayNumber ($calculation->width_ski_1, 5), "", ""));
     if($calculation->customers_material_1 == true) array_push ($file_data, array("Материал заказчика 1", "", "", ""));
-    else array_push ($file_data, array("Цена 1", DisplayNumber ($calculation->price_1, 5)." ". $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (". DisplayNumber ($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == Calculation::EURO ? " (". DisplayNumber ($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
+    else array_push ($file_data, array("Цена 1", DisplayNumber ($calculation->price_1, 5)." ". $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (". DisplayNumber ($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CURRENCY_EURO ? " (". DisplayNumber ($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
         
     if($calculation->laminations_number > 0) {
         array_push($file_data, array("Марка 2", $calculation->film_2, "", ""));
@@ -43,7 +43,7 @@ if($id !== null) {
         array_push($file_data, array("Лыжи 2", $calculation->GetSkiName($calculation->ski_2), "", ""));
         if($calculation->ski_2 == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки 2, мм", DisplayNumber ($calculation->width_ski_2, 5), "", ""));
         if($calculation->customers_material_2 == true) array_push ($file_data, array("Материал заказчика 2", "", "", ""));
-        else array_push ($file_data, array("Цена 2", DisplayNumber ($calculation->price_2, 5)." ". $calculation->GetCurrencyName($calculation->currency_2).($calculation->currency_2 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_2 * $calculation->usd, 5)." руб)" : "").($calculation->currency_2 == Calculation::EURO ? " (".DisplayNumber ($calculation->price_2 * $calculation->euro, 5)." руб)" : ""), "", ""));
+        else array_push ($file_data, array("Цена 2", DisplayNumber ($calculation->price_2, 5)." ". $calculation->GetCurrencyName($calculation->currency_2).($calculation->currency_2 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_2 * $calculation->usd, 5)." руб)" : "").($calculation->currency_2 == CURRENCY_EURO ? " (".DisplayNumber ($calculation->price_2 * $calculation->euro, 5)." руб)" : ""), "", ""));
     }
         
     if($calculation->laminations_number > 1) {
@@ -53,7 +53,7 @@ if($id !== null) {
         array_push($file_data, array("Лыжи 3", $calculation->GetSkiName($calculation->ski_3), "", ""));
         if($calculation->ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", DisplayNumber ($calculation->width_ski_3, 5), "", ""));
         if($calculation->customers_material_3 == true) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
-        else array_push ($file_data, array("Цена 3", DisplayNumber ($calculation->price_3, 5)." ". $calculation->GetCurrencyName($calculation->currency_3).($calculation->currency_3 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_3 * $calculation->usd, 5)." руб)" : "").($calculation->currency_3 == Calculation::EURO ? " (".DisplayNumber ($calculation->price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
+        else array_push ($file_data, array("Цена 3", DisplayNumber ($calculation->price_3, 5)." ". $calculation->GetCurrencyName($calculation->currency_3).($calculation->currency_3 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_3 * $calculation->usd, 5)." руб)" : "").($calculation->currency_3 == CURRENCY_EURO ? " (".DisplayNumber ($calculation->price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
     }
         
     array_push($file_data, array("Ширина ручья, мм", $calculation->stream_width, "", ""));
