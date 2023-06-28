@@ -2124,11 +2124,31 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-flint">
                                     <label for="cliches_count_flint">Кол-во новых Флинт</label>
-                                    <input type="text" id="cliches_count_flint" name="cliches_count_flint" value="<?=$cliches_count_flint ?>" class="form-control int-only self-adhesive-only d-none" />
+                                    <input type="text" 
+                                           id="cliches_count_flint" 
+                                           name="cliches_count_flint" 
+                                           value="<?=$cliches_count_flint ?>" 
+                                           class="form-control int-only self-adhesive-only d-none" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                           onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                           onmouseup="javascript: $(this).attr('id', 'cliches_count_flint'); $(this).attr('name', 'cliches_count_flint');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'cliches_count_flint'); $(this).attr('name', 'cliches_count_flint');" 
+                                           onfocusout="javascript: $(this).attr('id', 'cliches_count_flint'); $(this).attr('name', 'cliches_count_flint');" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-kodak">
                                     <label for="cliches_count_kodak">Кол-во новых Кодак</label>
-                                    <input type="text" id="cliches_count_kodak" name="cliches_count_kodak" value="<?=$cliches_count_kodak ?>" class="form-control int-only self-adhesive-only d-none" />
+                                    <input type="text" 
+                                           id="cliches_count_kodak" 
+                                           name="cliches_count_kodak" 
+                                           value="<?=$cliches_count_kodak ?>" 
+                                           class="form-control int-only self-adhesive-only d-none" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                           onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                                           onmouseup="javascript: $(this).attr('id', 'cliches_count_kodak'); $(this).attr('name', 'cliches_count_kodak');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'cliches_count_kodak'); $(this).attr('name', 'cliches_count_kodak');" 
+                                           onfocusout="javascript: $(this).attr('id', 'cliches_count_kodak'); $(this).attr('name', 'cliches_count_kodak');" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-old">
                                     <label for="cliches_count_old">Кол-во старых форм</label>
