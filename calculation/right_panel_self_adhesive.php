@@ -118,6 +118,7 @@ if(!empty($id)) {
         
         // Наценка на тираж
         $new_extracharge = $calculation->extracharge;
+        if($new_extracharge === null) $new_extracharge = "NULL";
         
         // Наценка на ПФ
         $new_extracharge_cliche = $calculation->extracharge_cliche;
