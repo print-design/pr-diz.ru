@@ -1740,7 +1740,7 @@ class Calculation extends CalculationBase {
         
         // Если имеющаяся наценка не пустая, оставляем её
         // Если пустая, вычисляем
-        if(!empty($extracharge) && $extracharge > 0) { // !!!! Значение 0.000 не считается EMPTY
+        if(!empty($extracharge)) { // !!!! Значение 0.000 не считается EMPTY
             $this->extracharge = $extracharge;
         }
         else {
