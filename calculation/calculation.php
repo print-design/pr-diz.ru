@@ -1826,8 +1826,10 @@ class Calculation extends CalculationBase {
         // Отгрузочная стоимость за единицу
         $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
         
-        // !!!! Корректируем отгрузочную стоимость, чтобы она точно равнялась стоимости за единицу (округлённой до 3), умноженной на размер тиража
-        $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $quantity;
+        if($this->extracharge != 0) {
+            // !!!! Корректируем отгрузочную стоимость, чтобы она точно равнялась стоимости за единицу (округлённой до 3), умноженной на размер тиража
+            $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $quantity;
+        }
         
         // Прибыль
         $this->income = ($this->shipping_cost - $this->cost) - ($extra_expense * $quantity);
@@ -2378,8 +2380,10 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Отгрузочная стоимость за единицу
         $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;
         
-        // !!!! Корректируем отгрузочную стоимость, чтобы она точно равнялась стоимости за единицу (округлённой до 3), умноженной на размер тиража
-        $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $this->quantity;
+        if($this->extracharge != 0) {
+            // !!!! Корректируем отгрузочную стоимость, чтобы она точно равнялась стоимости за единицу (округлённой до 3), умноженной на размер тиража
+            $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $this->quantity;
+        }
         
         // Прибыль
         $this->income = $this->shipping_cost - $this->cost - ($extra_expense * $this->quantity);
