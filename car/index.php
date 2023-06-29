@@ -40,7 +40,7 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
     $id = trim(filter_input(INPUT_POST, 'id'));
     
     // Если первый символ р или Р, ищем среди рулонов
-    if(mb_substr($id, 0, 1) == "р" || mb_substr($id, 0, 1) == "Р") {
+    if((mb_substr($id, 0, 1) == "р" || mb_substr($id, 0, 1) == "Р") && is_numeric(mb_substr($id, 1))) {
         $roll_id = mb_substr($id, 1);
         $sql = "select r.id "
                 . "from roll r "
@@ -53,75 +53,29 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
             header('Location: '.APPLICATION.'/car/roll.php?id='.$row[0]);
         }
         else {
-            $error_message = FindByCell($id);
+            $error_message = "Не найдено";
         }
     }
     // Если первый символ п или П
-    elseif(mb_substr($id, 0, 1) == "п" || mb_substr ($id, 0, 1) == "П") {
-        $pallet_trim = mb_substr($id, 1);
-        $substrings = mb_split("\D", $pallet_trim);
+    elseif((mb_substr($id, 0, 1) == "п" || mb_substr ($id, 0, 1) == "П") && is_numeric(mb_substr($id, 1))) {
+        $pallet_id = mb_substr($id, 1);
         
-        // Если внутри имеется буква, ищем среди рулонов, которые в паллетах
-        if(count($substrings) == 2 && mb_strlen($substrings[0]) > 0 && mb_strlen($substrings[1]) > 0) {
-            $pallet_id = $substrings[0];
-            $ordinal = $substrings[1];
-            $sql = "select pr.id "
-                    . "from pallet_roll pr "
-                    . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                    . "where pr.pallet_id=$pallet_id and pr.ordinal=$ordinal"
-                    . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")");
-            
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                header('Location: '.APPLICATION.'/car/pallet_roll.php?id='.$row[0]);
-            }
-            else {
-                $error_message = FindByCell($id);
-            }
-        }
-        elseif(count($substrings) == 1 && mb_strlen($substrings[0]) > 0) {
-            $pallet_id = $substrings[0];
-            $sql = "select p.id "
-                    . "from pallet p "
-                    . "where p.id=$pallet_id "
-                    . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-                    . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
-                    . ")";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
-            }
-            else {
-                $error_message = FindByCell($id);
-            }
+        $sql = "select p.id "
+                . "from pallet p "
+                . "where p.id=$pallet_id "
+                . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
+                . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
+                . ")";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
         }
         else {
-            $error_message = FindByCell($id);
+            $error_message = "Не найдено";
         }
     }
     else {
-        // Ищем среди паллетов и рулонов
-        $sql = "select "
-            . "(select count(p.id) "
-            . "from pallet p "
-            . "where p.id='$id' "
-            . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
-            . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
-            . ")) + "
-            . "(select count(r.id) "
-            . "from roll r "
-            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-            . "where r.id='$id'"
-            . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")")
-            . ")";
-        $fetcher = new Fetcher($sql);
-        $row = $fetcher->Fetch();
-        if($row[0] != 0) {
-            header('Location: '.APPLICATION.'/car/by_id.php?id='.$id);
-        }
-        else {
-            $error_message = FindByCell($id);
-        }
+        $error_message = "Не найдено";
     }
 }
 ?>
