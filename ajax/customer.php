@@ -76,9 +76,9 @@ if($row = $fetcher->Fetch()):
                     <select class="form-control" id="customer_card_manager_select">
                         <?php
                         $u_sql = "select id, last_name, first_name from user where role_id = ".ROLE_MANAGER
-                                . "union "
-                                . "select id, last_name, first_name from user where id = ".$row['user_id']." "
-                                . "order by last_name, first_name";
+                                . " union "
+                                . "select id, last_name, first_name from user where id = ".$row['user_id']
+                                . " order by last_name, first_name";
                         $u_fetcher = new Fetcher($u_sql);
                         while ($u_row = $u_fetcher->Fetch()):
                             $manager_selected = $row['user_id'] == $u_row['id'] ? " selected='selected'" : "";
