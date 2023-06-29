@@ -1744,6 +1744,7 @@ class Calculation extends CalculationBase {
             $this->extracharge = $extracharge;
         }
         else {
+            $this->extracharge = 0;
             $ech_type = 0;
             
             if($work_type_id == WORK_TYPE_NOPRINT) {
@@ -2307,6 +2308,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $this->extracharge = $extracharge;
         }
         else {
+            $this->extracharge = 0;
             $ech_type = ET_SELF_ADHESIVE;
             
             foreach($data_extracharge as $item) {
