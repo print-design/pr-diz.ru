@@ -1,5 +1,5 @@
 <?php
-const LINKS_VISIBLE = 5;
+const LINKS_VISIBLE = 6;
 
 $pager_pages_count = ceil($pager_total_count / $pager_take);
 $pager_get_params = filter_input_array(INPUT_GET);
