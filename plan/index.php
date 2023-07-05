@@ -376,7 +376,6 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
         <div class="container-fluid">
             <?php
             $header = '';
-
             ?>
             <?php if($work_id == WORK_PRINTING): ?>
             <div class="text-nowrap nav2">
