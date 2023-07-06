@@ -111,7 +111,7 @@
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?php
         if(!empty($this->edition['customer_id']) && !empty($this->edition['num_for_customer'])) {
             echo $this->edition['customer_id'].'-'.$this->edition['num_for_customer'];
