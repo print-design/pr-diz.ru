@@ -73,7 +73,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $length_invalid_message = "Неверное значение";
     }
     
-    if(IsInRole(array(ROLE_TECHNOLOGIST, ROLE_NAMES[ROLE_STOREKEEPER]))) {
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
         $cell = filter_input(INPUT_POST, 'cell');
         if(empty($cell)) {
             $cell_valid = ISINVALID;
@@ -109,14 +109,14 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "update roll set cell = '$cell', ";
+            $sql = "";
             
             // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql .= "comment = '$comment' where id=$id";
+                $sql = "update roll set cell = '$cell', comment = '$comment' where id = $id";
             }
             else {
-                $sql .= "comment = concat(comment, ' ', '$comment') where id=$id";
+                $sql = "update roll set comment = concat(comment, ' ', '$comment') where id = $id";
             }
             
             $error_message = (new Executer($sql))->error;

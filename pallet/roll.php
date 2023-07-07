@@ -58,13 +58,12 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             $sql = "";
             
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql .= "cell='$cell', comment='$comment'";
+                $sql .= "update pallet set cell = '$cell', comment = '$comment' where id = $pallet_id";
             }
             else {
-                $sql .= "comment=concat(comment, ' ', '$comment')";
+                $sql .= "update pallet set comment = concat(comment, ' ', '$comment') where id = $pallet_id";
             }
 
-            $sql = "update pallet set $sql where id=$pallet_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         
