@@ -341,7 +341,7 @@ $total_weight = $row['total_weight'];
                     $("#thickness").val('');
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film="+$(this).val() })
+                    $.ajax({ url: "../supplier/_thickness.php?film="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
                         

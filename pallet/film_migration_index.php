@@ -351,7 +351,7 @@ $total_weight = $row[0];
                     $("#thickness").val('');
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_brand_name="+$(this).val() })
+                    $.ajax({ url: "../supplier/_thickness.php?film_brand_name="+$(this).val() })
                             .done(function(data){
                                 var thicknesses = JSON.parse(data);
                         
@@ -420,7 +420,7 @@ $total_weight = $row[0];
                 var pallet_id = $(this).attr('data-pallet-id');
                 var getstring = $(this).attr('data-get');
                 if(pallet_id != null) {
-                    $.ajax({ url: "../ajax/pallet_rolls.php?id=" + pallet_id + "&getstring=" + getstring })
+                    $.ajax({ url: "_pallet_rolls.php?id=" + pallet_id + "&getstring=" + getstring })
                             .done(function(data) {
                                 $('#rollsModal .modal-dialog .modal-content').html(data);
                             });

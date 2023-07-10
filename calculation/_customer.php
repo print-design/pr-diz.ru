@@ -171,7 +171,7 @@ endif;
     }
     
     function OKCustomerPerson(id) {
-        $.ajax({ url: "../ajax/customer_edit.php?id=" + id + "&person=" + encodeURIComponent($('#customer_card_person_input').val()) })
+        $.ajax({ url: "_customer_edit.php?id=" + id + "&person=" + encodeURIComponent($('#customer_card_person_input').val()) })
                 .done(function(data) {
                     $('#customer_card_person_value').text(data);
                     CancelCustomerPerson();
@@ -198,7 +198,7 @@ endif;
     }
     
     function OKCustomerPhone(id) {
-        $.ajax({ dataType: 'JSON', url: "../ajax/customer_edit.php?id=" + id + "&phone=" + encodeURIComponent($('#customer_card_phone_input').val()) + "&extension=" + $('#customer_card_extension_input').val() })
+        $.ajax({ dataType: 'JSON', url: "_customer_edit.php?id=" + id + "&phone=" + encodeURIComponent($('#customer_card_phone_input').val()) + "&extension=" + $('#customer_card_extension_input').val() })
                 .done(function(data) {
                     $('#customer_card_phone_value').text(data.phone + (data.extension.length == 0 ? "" : " (доп. " + data.extension + ")"));
                     $('#customer_card_phone_value').attr('data-phone', data.phone);
@@ -226,7 +226,7 @@ endif;
     }
     
     function OKCustomerEmail(id) {
-        $.ajax({ url: "../ajax/customer_edit.php?id=" + id + "&email=" + encodeURIComponent($('#customer_card_email_input').val()) })
+        $.ajax({ url: "_customer_edit.php?id=" + id + "&email=" + encodeURIComponent($('#customer_card_email_input').val()) })
                 .done(function(data) {
                     $('#customer_card_email_value').text(data);
                     CancelCustomerEmail();
@@ -252,7 +252,7 @@ endif;
     }
     
     function OKCustomerManager(id) {
-        $.ajax({ dataType: 'JSON', url: "../ajax/customer_edit.php?id=" + id + "&manager_id=" + $('#customer_card_manager_select').val() })
+        $.ajax({ dataType: 'JSON', url: "_customer_edit.php?id=" + id + "&manager_id=" + $('#customer_card_manager_select').val() })
                 .done(function(data) {
                     $('#customer_card_manager_value').text(data.last_name + ' ' + data.first_name);
                     $('#customer_card_manager_value').attr('data-id', data.id);

@@ -2724,7 +2724,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Заполняем список машин
             function FillMachines(work_type_id) {
-                $.ajax({ url: "../ajax/machine.php?work_type_id=" + work_type_id })
+                $.ajax({ url: "_machine.php?work_type_id=" + work_type_id })
                         .done(function(data) {
                             $('#machine_id').html(data);
                             $('#machine_id').change();
@@ -2783,7 +2783,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#ink_number').html(colorfulness_list);
                     
                     // Заполняем список рапортов
-                    $.ajax({ url: "../ajax/raport.php?machine_id=" + $(this).val() })
+                    $.ajax({ url: "_raport.php?machine_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#raport').html(data);
                                 SetRaportOnChange();
@@ -2866,7 +2866,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#film_variation_id').html("<option value=''>Толщина...</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
+                    $.ajax({ url: "../supplier/_thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#film_variation_id').html(data);
                     })
@@ -2879,7 +2879,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Обработка выбора толщины основной плёнки: отображение цены
             $('#film_variation_id').change(function(){
                 if($(this).val() != '') {
-                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
+                    $.ajax({ dataType: 'JSON', url: "../supplier/_film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('label#for_price').text("Цена (" + data.text + ")");
                             $('#price_min').val(data.price);
@@ -2930,7 +2930,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#lamination1_film_variation_id').html("<option value=''>Толщина...</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
+                    $.ajax({ url: "../supplier/_thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#lamination1_film_variation_id').html(data);
                     })
@@ -2943,7 +2943,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Обработка выбора толщины ламинации 1: отображение цены
             $('#lamination1_film_variation_id').change(function(){
                 if($(this).val() != '') {
-                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
+                    $.ajax({ dataType: 'JSON', url: "../supplier/_film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('label#for_lamination1_price').text("Цена (" + data.text + ")");
                             $('#lamination1_price_min').val(data.price);
@@ -2994,7 +2994,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#lamination2_film_variation_id').html("<option value=''>Толщина...</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
+                    $.ajax({ url: "../supplier/_thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#lamination2_film_variation_id').html(data);
                     })
@@ -3007,7 +3007,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Обработка выбора толщины ламинации 2: отображение цены
             $('#lamination2_film_variation_id').change(function(){
                 if($(this).val() != '') {
-                    $.ajax({ dataType: 'JSON', url: "../ajax/film_price.php?film_variation_id=" + $(this).val() })
+                    $.ajax({ dataType: 'JSON', url: "../supplier/_film_price.php?film_variation_id=" + $(this).val() })
                         .done(function(data) {
                             $('label#for_lamination2_price').text("Цена (" + data.text + ")");
                             $('#lamination2_price_min').val(data.price);
@@ -3396,7 +3396,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Обрабатываем выбор сольвентного или бессольвентного ламинатора
             $('#solvent_yes').click(function() {
-                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENT ?>" })
+                $.ajax({ url: "_laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENT ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
                             SelectLaminatorRoller();
@@ -3408,7 +3408,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('#solvent_no').click(function() {
-                $.ajax({ url: "../ajax/laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENTLESS ?>" })
+                $.ajax({ url: "_laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENTLESS ?>" })
                         .done(function(data) {
                             $('#lamination_roller_width').html(data);
                             SelectLaminatorRoller();

@@ -240,7 +240,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                     $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
-                    $.ajax({ url: "../ajax/thickness.php?film_id=" + $(this).val() })
+                    $.ajax({ url: "../supplier/_thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#film_variation_id').html(data);
                             })

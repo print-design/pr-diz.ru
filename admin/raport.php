@@ -111,7 +111,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
         <script>
             $('a.activate').click(function() {
                 this_el = $(this);
-                $.ajax({ url: "../ajax/activate.php?type=raport&id=" + $(this).attr('data-id') })
+                $.ajax({ url: "_activate.php?type=raport&id=" + $(this).attr('data-id') })
                         .done(function(data) {
                             switch(data) {
                                 case "0":

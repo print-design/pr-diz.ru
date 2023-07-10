@@ -111,7 +111,7 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
         <script>
             $('a.activate').click(function() {
                 this_el = $(this);
-                $.ajax({ url: "../ajax/activate.php?type=laminator_roller&id=" + $(this).attr('data-id') })
+                $.ajax({ url: "_activate.php?type=laminator_roller&id=" + $(this).attr('data-id') })
                         .done(function(data) {
                             switch(data) {
                                 case "0":
