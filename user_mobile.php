@@ -34,25 +34,18 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST]
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $position = "Работник";
-            if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
-                $position = "Водитель погрузчика";
-            }
-            elseif(IsInRole(ROLE_NAMES[ROLE_CUTTER])) {
-                $position = "Резчик раскрой";
-            }
-            elseif(IsInRole(ROLE_NAMES[ROLE_AUDITOR])) {
-                $position = "Ревизор";
-            }
-            ?>
-            <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;"><?=$position ?>:</p>
-            <?php
-            $sql = "select last_name, first_name from user where id=". GetUserId();
+            $local_name = "";
+            $last_name = "";
+            $first_name = "";
+            
+            $sql = "select last_name, first_name, role_id from user where id=". GetUserId();
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()):
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];
+            $role_id = $row['role_id']
             ?>
+            <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;"><?=ROLE_LOCAL_NAMES[$role_id] ?>:</p>
             <p class="mt-2 mb-5" style="font-size: 24px; line-height: 32px; font-weight: 600;"><?=$last_name.' '.$first_name ?></p>
             <?php
             endif;
