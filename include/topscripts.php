@@ -30,9 +30,6 @@ $months_genitive[10] = "октября";
 $months_genitive[11] = "ноября";
 $months_genitive[12] = "декабря";
 
-// Роли
-const TECHNOLOGIST = "technologist";
-
 // Функции
 function LoggedIn() {
     return !empty(filter_input(INPUT_COOKIE, USERNAME));
