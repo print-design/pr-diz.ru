@@ -13,7 +13,6 @@ if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
 }
 
 // Обработка отправки формы - смена пароля
-define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 

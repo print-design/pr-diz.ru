@@ -14,7 +14,6 @@ $solvent_genitive = "растворителя";
 if($laminator_id == 2) $solvent_genitive = "отвердителя";
 
 // Валидация формы
-define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 

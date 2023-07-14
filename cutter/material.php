@@ -17,7 +17,6 @@ $last_source = $opened_roll['last_source'];
 $streams_count = $opened_roll['streams_count'];
 
 // Валидация формы
-define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 

@@ -296,7 +296,6 @@ class Fetcher {
 }
 
 // Валидация формы логина
-define('LOGINISINVALID', ' is-invalid');
 $login_form_valid = true;
 
 $login_username_valid = '';
@@ -306,13 +305,13 @@ $login_password_valid = '';
 if(null !== filter_input(INPUT_POST, 'login_submit')) {
     $login_username = filter_input(INPUT_POST, 'login_username');
     if(empty($login_username)) {
-        $login_username_valid = LOGINISINVALID;
+        $login_username_valid = ISINVALID;
         $login_form_valid = false;
     }
     
     $login_password = filter_input(INPUT_POST, 'login_password');
     if(empty($login_password)) {
-        $login_password_valid = LOGINISINVALID;
+        $login_password_valid = ISINVALID;
         $login_form_valid = false;
     }
     
@@ -410,7 +409,6 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
             }
         }
         else {
-            define('ISINVALID', ' is-invalid');
             $code_valid = ISINVALID;
             include 'twofactor_email.php';
         }

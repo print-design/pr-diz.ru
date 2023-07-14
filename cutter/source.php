@@ -26,7 +26,6 @@ elseif(empty ($streams_count)) {
 }
 
 // Валидация формы
-define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 

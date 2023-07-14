@@ -7,7 +7,6 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Валидация формы
-define('ISINVALID', 'is-invalid');
 $form_valid = true;
 $error_message = '';
 

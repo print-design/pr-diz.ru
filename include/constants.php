@@ -123,4 +123,7 @@ const ROLL_STATUS_CUT = 3;
 const ROLL_STATUSES = array(ROLL_STATUS_FREE, ROLL_STATUS_UTILIZED, ROLL_STATUS_CUT);
 const ROLL_STATUS_NAMES = array(ROLL_STATUS_FREE => "Свободный", ROLL_STATUS_UTILIZED => "Сработанный", ROLL_STATUS_CUT => "Раскроили");
 const ROLL_STATUS_COLOURS = array(ROLL_STATUS_FREE => "forestgreen", ROLL_STATUS_UTILIZED => "red", ROLL_STATUS_CUT => "violet");
+
+// Другое
+const ISINVALID = ' is-invalid';
 ?>

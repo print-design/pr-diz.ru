@@ -15,7 +15,6 @@ if($machine_id != PRINTER_ATLAS) {
 }
 
 // Валидация формы
-define('ISINVALID', ' is-invalid');
 $form_valid = true;
 $error_message = '';
 
