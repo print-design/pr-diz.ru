@@ -627,7 +627,7 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                         <tr>
                             <td>Требование по мат.</td>
-                            <td><?=$requirement1." м" ?></td>
+                            <td><?= DisplayNumber(intval($requirement1), 0)." м" ?></td>
                         </tr>
                         <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
@@ -742,7 +742,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Требование по мат.</td>
-                                    <td><?=$requirement2." м" ?></td>
+                                    <td><?= DisplayNumber(intval($requirement2), 0)." м" ?></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
@@ -773,7 +773,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Требование по мат.</td>
-                                    <td><?=$requirement3." м" ?></td>
+                                    <td><?= DisplayNumber(intval($requirement3), 0)." м" ?></td>
                                 </tr>
                                 <?php endif; ?>
                             </table>
