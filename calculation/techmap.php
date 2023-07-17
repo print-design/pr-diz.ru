@@ -61,6 +61,7 @@ $package_valid = '';
 $photolabel_valid = '';
 $roll_type_valid = '';
 $cliche_valid = '';
+$requirement_valid = '';
 
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
@@ -140,6 +141,17 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
             $cliche_valid = ISINVALID;
             $form_valid = false;
         }
+    }
+    
+    // Проверяем, чтобы были заполнены все требования для материалов
+    $sql = "select requirement1, requirement2, requirement3 from calculation where id = $id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch() && 
+            (empty($row['requirement1']) || 
+            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement2']) || 
+            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement3']))))) {
+        $requirement_valid = ISINVALID;
+        $form_valid = false;
     }
     
     if($form_valid) {
@@ -222,6 +234,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
         . "c.knife, "
         . "c.cliches_count_flint, c.cliches_count_kodak, c.cliches_count_old, "
+        . "c.requirement1, c.requirement2, c.requirement3, "
         . "cus.name customer, sup.name supplier, "
         . "u.last_name, u.first_name, "
         . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
@@ -323,6 +336,10 @@ $knife = $row['knife'];
 $cliches_count_flint = $row['cliches_count_flint'];
 $cliches_count_kodak = $row['cliches_count_kodak'];
 $cliches_count_old = $row['cliches_count_old'];
+
+$requirement1 = filter_input(INPUT_POST, 'requirement1');
+$requirement2 = filter_input(INPUT_POST, 'requirement2');
+$requirement3 = filter_input(INPUT_POST, 'requirement3');
 
 $customer = $row['customer'];
 $supplier = $row['supplier'];
@@ -822,17 +839,17 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             </div>
             <div class="row mt-5">
                 <div class="col-4">
-                    <h2>Информация для печатника</h2>
-                    <div class="subtitle">Печать</div>
+                    <h2 style="line-height: 30px;">Информация для печатника</h2>
+                    <div class="subtitle" style="line-height: 20px;">Печать</div>
                 </div>
                 <div class="col-4">
                     <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
-                    <h2>Информация для ламинации</h2>
-                    <div class="subtitle">Кол-во ламинаций: <?=$lamination ?></div>
+                    <h2 style="line-height: 30px;">Информация для ламинации</h2>
+                    <div class="subtitle" style="line-height: 20px;">Кол-во ламинаций: <?=$lamination ?></div>
                     <?php endif; ?>
                 </div>
                 <div class="col-4">
-                    <h2>Информация для резчика</h2>
+                    <h2 style="line-height: 30px;">Информация для резчика</h2>
                 </div>
             </div>
             <div class="row mt-3">
@@ -950,6 +967,10 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             <td><?= (empty($knife) || $knife == 0) ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
+                        <tr>
+                            <td>Требование по мат.</td>
+                            <td><?= (empty($requirement1) ? "Ждем данные" : $requirement1." м") ?></td>
+                        </tr>
                     </table>
                 </div>
                 <div class="col-4">
@@ -987,6 +1008,10 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Анилокс</td>
                             <td>Нет</td>
+                        </tr>
+                        <tr>
+                            <td>Требование по мат.</td>
+                            <td><?=(empty($requirement2) ? "Ждем данные" : $requirement2." м") ?></td>
                         </tr>
                     </table>
                     <?php endif; ?>
@@ -1133,7 +1158,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                         echo "Безликие";
                                         break;
                                     default :
-                                        echo "Ждём данные";
+                                        echo "Ждем данные";
                                         break;
                                 }
                                 ?>
@@ -1283,6 +1308,10 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             <td>Всего мат-ла</td>
                             <td><?= DisplayNumber(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
+                        <tr>
+                            <td>Требование по мат.</td>
+                            <td><?=(empty($requirement3) ? "Ждем данные" : $requirement3." м") ?></td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -1374,6 +1403,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             <?php endif; ?>
             <a name="form" />
             <div id="cliche_validation" class="text-danger<?= empty($cliche_valid) ? " d-none" : " d-block" ?>">Укажите формы для каждой краски</div>
+            <div id="requirement_validation" class="text-danger<?= empty($requirement_valid) ? " d-none" : " d-block" ?>">Укажите требование по материалу</div>
             <div style="position: relative;">
                 <form class="mt-3" method="post"<?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                     <input type="hidden" name="scroll" />

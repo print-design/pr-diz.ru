@@ -49,6 +49,7 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
         . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
         . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
         . "c.knife, "
+        . "c.requirement1, c.requirement2, c.requirement3, "
         . "cus.name customer, sup.name supplier, "
         . "u.last_name, u.first_name, "
         . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
@@ -145,6 +146,10 @@ for($i=1; $i<=$ink_number; $i++) {
 }
 
 $knife = $row['knife'];
+
+$requirement1 = $row['requirement1'];
+$requirement2 = $row['requirement2'];
+$requirement3 = $row['requirement3'];
 
 $customer = $row['customer'];
 $supplier = $row['supplier'];
@@ -620,6 +625,10 @@ $current_date_time = date("dmYHis");
                             <td><?= (empty($knife) || $knife == 0) ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
+                        <tr>
+                            <td>Требование по мат.</td>
+                            <td><?=$requirement1." м" ?></td>
+                        </tr>
                         <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> красок</td>
@@ -732,6 +741,10 @@ $current_date_time = date("dmYHis");
                                     <td>Нет</td>
                                 </tr>
                                 <tr>
+                                    <td>Требование по мат.</td>
+                                    <td><?=$requirement2." м" ?></td>
+                                </tr>
+                                <tr>
                                     <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
                                 </tr>
                                 <tr>
@@ -757,6 +770,10 @@ $current_date_time = date("dmYHis");
                                 <tr>
                                     <td>Всего мат-ла</td>
                                     <td><?= DisplayNumber(floatval($length_dirty_3), 0) ?> м</td>
+                                </tr>
+                                <tr>
+                                    <td>Требование по мат.</td>
+                                    <td><?=$requirement3." м" ?></td>
                                 </tr>
                                 <?php endif; ?>
                             </table>
