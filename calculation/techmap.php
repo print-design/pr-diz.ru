@@ -1917,6 +1917,9 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             
                             $('#edit_requirement_link_' + i).removeClass('d-none');
                             $('#edit_requirement_link_' + i).addClass('d-inline');
+                            
+                            $('#requirement_validation').removeClass('d-block');
+                            $('#requirement_validation').addClass('d-none');
                         })
                         .fail(function() {
                             alert('Ошибка при редактировании требования по материалу');
