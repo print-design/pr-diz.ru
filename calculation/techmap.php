@@ -147,9 +147,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $sql = "select requirement1, requirement2, requirement3 from calculation where id = $id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
+        $calculation = CalculationBase::Create($id);
+        $laminations_number = $calculation->laminations_number;
+        
         if(($work_type_id != WORK_TYPE_NOPRINT && empty($row['requirement1'])) || 
-            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement2'])) || 
-            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement3']))) {
+            ($laminations_number > 0 && empty($row['requirement2'])) || 
+            ($laminations_number > 1 && empty($row['requirement3']))) {
             $requirement_valid = ISINVALID;
             $form_valid = false;
         }
