@@ -147,9 +147,9 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $sql = "select requirement1, requirement2, requirement3 from calculation where id = $id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        if(empty($row['requirement1']) || 
-            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement2']) || 
-            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement3'])))) {
+        if(($work_type_id != WORK_TYPE_NOPRINT && empty($row['requirement1'])) || 
+            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement2'])) || 
+            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement3']))) {
             $requirement_valid = ISINVALID;
             $form_valid = false;
         }
@@ -971,12 +971,12 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Требование по мат.</td>
                             <td>
-                                <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : DisplayNumber(intval($requirement1), 0)." м") ?></div>
+                                <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : $requirement1) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_1"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(1);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_1">
                                     <form class="requirement_form form-inline">
                                         <div class="input-group">
-                                            <input type="text" class="form-control requirement_input int-only int-format" name="requirement" id="requirement_input_1" value="<?= empty($requirement1) ? "" : DisplayNumber(intval($requirement1), 0) ?>" data-id="<?=$id ?>" data-i="1" />
+                                            <input type="text" class="form-control requirement_input" name="requirement" id="requirement_input_1" value="<?=$requirement1 ?>" data-id="<?=$id ?>" data-i="1" />
                                             <div class="input-group-append">
                                                 <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 1);">OK</a>
                                             </div>
@@ -1026,12 +1026,12 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Требование по мат.</td>
                             <td>
-                                <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : DisplayNumber(intval($requirement2), 0)." м") ?></div>
+                                <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : $requirement2) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_2"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(2);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_2">
                                     <form class="requirement_form form-inline">
                                         <div class="input-group">
-                                            <input type="text" class="form-control requirement_input int-only int-format" name="requirement" id="requirement_input_2" value="<?= empty($requirement2) ? "" : DisplayNumber(intval($requirement2), 0) ?>" data-id="<?=$id ?>" data-i="2" />
+                                            <input type="text" class="form-control requirement_input" name="requirement" id="requirement_input_2" value="<?=$requirement2 ?>" data-id="<?=$id ?>" data-i="2" />
                                             <div class="input-group-append">
                                                 <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 2);">OK</a>
                                             </div>
@@ -1338,12 +1338,12 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Требование по мат.</td>
                             <td>
-                                <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : DisplayNumber(intval($requirement3), 0)." м") ?></div>
+                                <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : $requirement3) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_3"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(3);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_3">
                                     <form class="requirement_form form-inline">
                                         <div class="input-group">
-                                            <input type="text" class="form-control requirement_input int-only int-format" name="requirement" id="requirement_input_3" value="<?= empty($requirement3) ? "" : DisplayNumber(intval($requirement3), 0) ?>" data-id="<?=$id ?>" data-i="3" />
+                                            <input type="text" class="form-control requirement_input" name="requirement" id="requirement_input_3" value="<?=$requirement3 ?>" data-id="<?=$id ?>" data-i="3" />
                                             <div class="input-group-append">
                                                 <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 3);">OK</a>
                                             </div>
@@ -1851,35 +1851,6 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                 $('.edit_requirement_form').addClass('d-none');
                 $('#edit_requirement_form_' + i).removeClass('d-none');
                 $('#edit_requirement_form_' + i).addClass('d-inline');
-                
-                $('#requirement_input_' + i).keypress(function(e) {
-                    if(/\D/.test(e.key)) {
-                        return false;
-                    }
-                });
-                
-                $('#requirement_input_' + i).keyup(function() {
-                    var val = $(this).val();
-                    val = val.replaceAll(/\D/g, '');
-                    
-                    if(val === '') {
-                        $(this).val('');
-                    }
-                    else {
-                        val = parseInt(val);
-                        
-                        if($(this).hasClass('int-format')) {
-                            val = Intl.NumberFormat('ru-RU').format(val);
-                        }
-                        
-                        $(this).val(val);
-                    }
-                });
-                    
-                
-                $('#requirement_input_' + i).change(function() {
-                    $('#requirement_input_' + i).keyup();
-                });
                     
                     
                 $('#requirement_input_' + i).attr('onmousedown', "javascript: $(this).removeAttr('id'); $(this).removeAttr('name');");
@@ -1893,7 +1864,6 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             
             function SaveRequirement(id, i) {
                 var val = $('#requirement_input_' + i).val();
-                val = val.replaceAll(/\D/g, '');
                 
                 if(val == '') {
                     $('#requirement_input_' + i).focus();
@@ -1906,7 +1876,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                 $('#requirement_label_' + i).text('Ждем данные');
                             }
                             else {
-                                $('#requirement_label_' + i).text(Intl.NumberFormat('ru-RU').format(data) + ' м');
+                                $('#requirement_label_' + i).text(data);
                             }
                     
                             $('#edit_requirement_form_' + i).removeClass('d-inline');

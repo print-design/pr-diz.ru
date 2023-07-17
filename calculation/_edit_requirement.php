@@ -5,16 +5,9 @@ $id = filter_input(INPUT_GET, 'id');
 $i = filter_input(INPUT_GET, 'i');
 $value = addslashes(filter_input(INPUT_GET, 'value'));
 
-if(empty($value)) {
-    $value = "NULL";
-}
-else {
-    $value = preg_replace('/\D/', '', $value);
-}
-
 $result = "";
 
-$sql = "update calculation set requirement$i = $value where id = $id";
+$sql = "update calculation set requirement$i = '$value' where id = $id";
 $executer = new Executer($sql);
 $error_message = $executer->error;
 
