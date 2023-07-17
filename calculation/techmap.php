@@ -146,12 +146,13 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     // Проверяем, чтобы были заполнены все требования для материалов
     $sql = "select requirement1, requirement2, requirement3 from calculation where id = $id";
     $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch() && 
-            (empty($row['requirement1']) || 
+    if($row = $fetcher->Fetch()) {
+        if(empty($row['requirement1']) || 
             ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement2']) || 
-            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement3']))))) {
-        $requirement_valid = ISINVALID;
-        $form_valid = false;
+            ($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($row['requirement3'])))) {
+            $requirement_valid = ISINVALID;
+            $form_valid = false;
+        }
     }
     
     if($form_valid) {
@@ -337,9 +338,9 @@ $cliches_count_flint = $row['cliches_count_flint'];
 $cliches_count_kodak = $row['cliches_count_kodak'];
 $cliches_count_old = $row['cliches_count_old'];
 
-$requirement1 = filter_input(INPUT_POST, 'requirement1');
-$requirement2 = filter_input(INPUT_POST, 'requirement2');
-$requirement3 = filter_input(INPUT_POST, 'requirement3');
+$requirement1 = $row['requirement1'];
+$requirement2 = $row['requirement2'];
+$requirement3 = $row['requirement3'];
 
 $customer = $row['customer'];
 $supplier = $row['supplier'];
@@ -969,7 +970,20 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <?php endif; ?>
                         <tr>
                             <td>Требование по мат.</td>
-                            <td><?= (empty($requirement1) ? "Ждем данные" : $requirement1." м") ?></td>
+                            <td>
+                                <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : DisplayNumber(intval($requirement1), 0)." м") ?></div>
+                                <div class="edit_requirement_link d-inline" id="edit_requirement_link_1"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(1);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="edit_requirement_form d-none" id="edit_requirement_form_1">
+                                    <form class="requirement_form form-inline">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control requirement_input int-only int-format" name="requirement" id="requirement_input_1" value="<?= empty($requirement1) ? "" : DisplayNumber(intval($requirement1), 0) ?>" data-id="<?=$id ?>" data-i="1" />
+                                            <div class="input-group-append">
+                                                <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 1);">OK</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -1011,7 +1025,20 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Требование по мат.</td>
-                            <td><?=(empty($requirement2) ? "Ждем данные" : $requirement2." м") ?></td>
+                            <td>
+                                <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : DisplayNumber(intval($requirement2), 0)." м") ?></div>
+                                <div class="edit_requirement_link d-inline" id="edit_requirement_link_2"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(2);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="edit_requirement_form d-none" id="edit_requirement_form_2">
+                                    <form class="requirement_form form-inline">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control requirement_input int-only int-format" name="requirement" id="requirement_input_2" value="<?= empty($requirement2) ? "" : DisplayNumber(intval($requirement2), 0) ?>" data-id="<?=$id ?>" data-i="2" />
+                                            <div class="input-group-append">
+                                                <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 2);">OK</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                     <?php endif; ?>
@@ -1253,7 +1280,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                     <form class="panton_form form-inline">
                                         <div class="input-group">
                                             <div class="input-group-prepend"><span class="input-group-text">P</span></div>
-                                            <input type="text" class="form-control color_input" name="color" id="color_input_<?=$i ?>" value="<?=$$color_var ?>" data-id="<?=$id ?>" data-i="<?=$i ?>">
+                                            <input type="text" class="form-control color_input" name="color" id="color_input_<?=$i ?>" value="<?=$$color_var ?>" data-id="<?=$id ?>" data-i="<?=$i ?>" />
                                             <div class="input-group-append">
                                                 <a class="btn btn-outline-dark" href="javascript: void(0);" onclick="javascript: SavePanton(<?=$id ?>, <?=$i ?>);">OK</a>
                                             </div>
@@ -1310,7 +1337,20 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Требование по мат.</td>
-                            <td><?=(empty($requirement3) ? "Ждем данные" : $requirement3." м") ?></td>
+                            <td>
+                                <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : DisplayNumber(intval($requirement3), 0)." м") ?></div>
+                                <div class="edit_requirement_link d-inline" id="edit_requirement_link_3"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(3);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="edit_requirement_form d-none" id="edit_requirement_form_3">
+                                    <form class="requirement_form form-inline">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control requirement_input int-only int-format" name="requirement" id="requirement_input_3" value="<?= empty($requirement3) ? "" : DisplayNumber(intval($requirement3), 0) ?>" data-id="<?=$id ?>" data-i="3" />
+                                            <div class="input-group-append">
+                                                <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 3);">OK</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -1778,7 +1818,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             }
             
             function SavePanton(id, i) {
-                $.ajax({ url: "edit_panton.php?id=" + id + "&i=" + i + "&value=" + $('#color_input_' + i).val() })
+                $.ajax({ url: "_edit_panton.php?id=" + id + "&i=" + i + "&value=" + $('#color_input_' + i).val() })
                         .done(function(data) {
                             $('#color_label_' + i).text('P' + data);
                             
@@ -1793,6 +1833,93 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         })
                         .fail(function() {
                             alert('Ошибка при редактировании пантона');
+                        });
+            }
+            
+            function EditRequirement(i) {
+                $('.requirement_label').removeClass('d-none');
+                $('.requirement_label').addClass('d-inline');
+                $('#requirement_label_' + i).removeClass('d-inline');
+                $('#requirement_label_' + i).addClass('d-none');
+                
+                $('.edit_requirement_link').removeClass('d-none');
+                $('.edit_requirement_link').addClass('d-inline');
+                $('#edit_requirement_link_' + i).removeClass('d-inline');
+                $('#edit_requirement_link_' + i).addClass('d-none');
+                
+                $('.edit_requirement_form').removeClass('d-inline');
+                $('.edit_requirement_form').addClass('d-none');
+                $('#edit_requirement_form_' + i).removeClass('d-none');
+                $('#edit_requirement_form_' + i).addClass('d-inline');
+                
+                $('#requirement_input_' + i).keypress(function(e) {
+                    if(/\D/.test(e.key)) {
+                        return false;
+                    }
+                });
+                
+                $('#requirement_input_' + i).keyup(function() {
+                    var val = $(this).val();
+                    val = val.replaceAll(/\D/g, '');
+                    
+                    if(val === '') {
+                        $(this).val('');
+                    }
+                    else {
+                        val = parseInt(val);
+                        
+                        if($(this).hasClass('int-format')) {
+                            val = Intl.NumberFormat('ru-RU').format(val);
+                        }
+                        
+                        $(this).val(val);
+                    }
+                });
+                    
+                
+                $('#requirement_input_' + i).change(function() {
+                    $('#requirement_input_' + i).keyup();
+                });
+                    
+                    
+                $('#requirement_input_' + i).attr('onmousedown', "javascript: $(this).removeAttr('id'); $(this).removeAttr('name');");
+                $('#requirement_input_' + i).attr('onmouseup', "javascript: $(this).attr('id', 'requirement_input_" + i + "'); $(this).attr('name', 'requirement');");
+                $('#requirement_input_' + i).attr('onkeydown', "javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }");
+                $('#requirement_input_' + i).attr('onkeyup', "javascript: $(this).attr('id', 'requirement_input_" + i + "'); $(this).attr('name', 'requirement');");
+                $('#requirement_input_' + i).attr('onfocusout', "javascript: $(this).attr('id', 'requirement_input_" + i + "'); $(this).attr('name', 'requirement');");
+                
+                $('#requirement_input_' + i).focus();
+            }
+            
+            function SaveRequirement(id, i) {
+                var val = $('#requirement_input_' + i).val();
+                val = val.replaceAll(/\D/g, '');
+                
+                if(val == '') {
+                    $('#requirement_input_' + i).focus();
+                    return false;
+                }
+            
+                $.ajax({ url: "_edit_requirement.php?id=" + id + "&i=" + i + "&value=" + val })
+                        .done(function(data) {
+                            if(data == '') {
+                                $('#requirement_label_' + i).text('Ждем данные');
+                            }
+                            else {
+                                $('#requirement_label_' + i).text(Intl.NumberFormat('ru-RU').format(data) + ' м');
+                            }
+                    
+                            $('#edit_requirement_form_' + i).removeClass('d-inline');
+                            $('#edit_requirement_form_' + i).addClass('d-none');
+                            
+                            $('#requirement_label_' + i).removeClass('d-none');
+                            $('#requirement_label_' + i).addClass('d-inline');
+                            
+                            $('#edit_requirement_link_' + i).removeClass('d-none');
+                            $('#edit_requirement_link_' + i).addClass('d-inline');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при редактировании требования по материалу');
                         });
             }
             
