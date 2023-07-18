@@ -1668,7 +1668,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             $sql .= "and false ";
                             break;
                     }
-                    $sql .= "order by c.date";
+                    $sql .= "order by c.date desc";
                     $fetcher = new Fetcher($sql);
                     
                     while($row = $fetcher->Fetch()):
