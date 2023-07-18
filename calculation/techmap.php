@@ -978,12 +978,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                 <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : $requirement1) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_1">
                                     <form class="requirement_form form-inline">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control requirement_input" name="requirement" id="requirement_input_1" value="<?=$requirement1 ?>" data-id="<?=$id ?>" data-i="1" />
-                                            <div class="input-group-append">
-                                                <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 1);">OK</a>
-                                            </div>
-                                        </div>
+                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_1" data-id="<?=$id ?>" data-i="1"><?=$requirement1 ?></textarea>
+                                        <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 1);">OK</a>
                                     </form>
                                 </div>
                             </td>
@@ -1033,12 +1029,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                 <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : $requirement2) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_2">
                                     <form class="requirement_form form-inline">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control requirement_input" name="requirement" id="requirement_input_2" value="<?=$requirement2 ?>" data-id="<?=$id ?>" data-i="2" />
-                                            <div class="input-group-append">
-                                                <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 2);">OK</a>
-                                            </div>
-                                        </div>
+                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_2" data-id="<?=$id ?>" data-i="2"><?=$requirement2 ?></textarea>
+                                        <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 2);">OK</a>
                                     </form>
                                 </div>
                             </td>
@@ -1345,12 +1337,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                 <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : $requirement3) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_3">
                                     <form class="requirement_form form-inline">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control requirement_input" name="requirement" id="requirement_input_3" value="<?=$requirement3 ?>" data-id="<?=$id ?>" data-i="3" />
-                                            <div class="input-group-append">
-                                                <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 3);">OK</a>
-                                            </div>
-                                        </div>
+                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_3" data-id="<?=$id ?>" data-i="3"><?=$requirement3 ?></textarea>
+                                        <a class="btn btn-outline-dark form-control" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 3);">OK</a>
                                     </form>
                                 </div>
                             </td>
