@@ -974,8 +974,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Требование по материалу</td>
                             <td>
-                                <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : $requirement1) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_1"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(1);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : $requirement1) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_1">
                                     <form class="requirement_form form-inline">
                                         <div class="input-group">
@@ -1029,8 +1029,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Требование по материалу</td>
                             <td>
-                                <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : $requirement2) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_2"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(2);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : $requirement2) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_2">
                                     <form class="requirement_form form-inline">
                                         <div class="input-group">
@@ -1341,8 +1341,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Требование по материалу</td>
                             <td>
-                                <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : $requirement3) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_3"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(3);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : $requirement3) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_3">
                                     <form class="requirement_form form-inline">
                                         <div class="input-group">
