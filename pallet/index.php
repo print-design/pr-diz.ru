@@ -159,20 +159,32 @@ $total_weight = $row[0];
                         $pager_total_count = $row[0];
                     }
                     
+                    // Есть фильтр или нет. (параметр page не относится к фильтру)
+                    // Если есть фильтр, то при сортировке открытые паллеты ставим вперёд, чтобы менеджеры сначала брали плёнку из открытых паллетов.
+                    $has_filter = isset($_GET['page']) ? count(array_keys($_GET)) > 1 : count(array_keys($_GET)) > 0;
+                    
                     $sql = "select p.id, DATE_FORMAT(p.date, '%d.%m.%Y') date, f.name film, fv.thickness, fv.weight density, p.width, "
                             . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) net_weight, "
                             . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) length, "
                             . "s.name supplier, "
-                            . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number, "
-                            . "p.cell, u.first_name, u.last_name, "
+                            . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number, ";
+                    if($has_filter) {
+                        $sql .= "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and prsh1.status_id <> ".ROLL_STATUS_FREE.") absent_rolls_number, ";
+                    }
+                    $sql .= "p.cell, u.first_name, u.last_name, "
                             . "p.comment "
                             . "from pallet p "
                             . "left join film_variation fv on p.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join user u on p.storekeeper_id = u.id "
-                            . "$where "
-                            . "order by p.id desc limit $pager_skip, $pager_take";
+                            . "$where ";
+                    if($has_filter) {
+                        $sql .= "order by absent_rolls_number desc, p.id desc limit $pager_skip, $pager_take";
+                    }
+                    else {
+                        $sql .= "order by p.id desc limit $pager_skip, $pager_take";
+                    }
                     $fetcher = new Fetcher($sql);
                     
                     while ($row = $fetcher->Fetch()):
