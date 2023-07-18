@@ -972,7 +972,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <?php endif; ?>
                         <tr>
-                            <td>Требование по мат.</td>
+                            <td>Требование по материалу</td>
                             <td>
                                 <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : $requirement1) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_1"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(1);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
@@ -1027,7 +1027,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             <td>Нет</td>
                         </tr>
                         <tr>
-                            <td>Требование по мат.</td>
+                            <td>Требование по материалу</td>
                             <td>
                                 <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : $requirement2) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_2"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(2);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
@@ -1339,7 +1339,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             <td><?= DisplayNumber(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
                         <tr>
-                            <td>Требование по мат.</td>
+                            <td>Требование по материалу</td>
                             <td>
                                 <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : $requirement3) ?></div>
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_3"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(3);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
