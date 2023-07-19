@@ -313,13 +313,9 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
                 border-color: gray;
             }
             
-            h1 {
-                font-size: 32px;
-                font-weight: 600;
-            }
-            
-            h2 {
-                font-size: 26px;
+            p {
+                margin-bottom: 0;
+                margin-top: .3rem;
             }
             
             #status {

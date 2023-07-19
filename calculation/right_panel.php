@@ -410,8 +410,14 @@ if(!empty($id)) {
                 </div>
             </form>
         </div>
-        <?php if($cliche_in_price != 1): ?>
-        <div class="mr-4 p-2" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 25px;">
+        <?php
+        $cliche_in_price_display_class = "";
+        
+        if($cliche_in_price == 1) {
+            $cliche_in_price_display_class = " d-none";
+        }
+        ?>
+        <div class="mr-4 p-2<?=$cliche_in_price_display_class ?>" id="cliche_in_price_box" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 25px;">
             <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
             <form>
                 <input type="hidden" name="id" value="<?=$id ?>" />
@@ -433,7 +439,6 @@ if(!empty($id)) {
                 </div>
             </form>
         </div>
-        <?php endif; ?>
         <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#8364;</div>
             <div class="font-weight-bold" style="font-size: larger;"><?= number_format($euro, 2, ',', ' ') ?></div>
@@ -450,7 +455,7 @@ if(!empty($id)) {
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($cost_per_unit), 3) ?> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value mb-2"><span id="cost"><?= DisplayNumber(floatval($cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="cost_per_unit"><?= DisplayNumber(floatval($cost_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= DisplayNumber(floatval($cliche_cost), 0) ?> &#8381;</div>
             <div class="value mb-2 font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($stream_width * $streams_number + 20) + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            

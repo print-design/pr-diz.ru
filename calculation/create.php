@@ -1087,7 +1087,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <h1>Новый расчет</h1>
                         <?php else: ?>
                         <h1><?= htmlentities($name) ?></h1>
-                        <h2 style="font-size: 26px;">№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
+                        <h2>№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                         <?php endif; ?>
                         <!-- Заказчик -->
                         <div class="form-group">
@@ -2386,7 +2386,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <?php
                                         $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                                         ?>
-                                        <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); }" />Включить ПФ в себестоимость
+                                        <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); } RecalculateByCliche();" />Включить ПФ в себестоимость
                                     </label>
                                 </div>
                                 <div class="form-check">
@@ -2394,7 +2394,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <?php
                                         $checked = $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
                                         ?>
-                                        <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); }" />Заказчик платит за ПФ
+                                        <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); } RecalculateByCliche();" />Заказчик платит за ПФ
                                     </label>
                                 </div>
                             </div>
@@ -3818,6 +3818,46 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             }
             
+            // Пересчитываем по новому значению "Включить ПФ в себестоимость" и "Заказчик платит за ПФ"
+            function RecalculateByCliche() {
+                if($('#calculation').hasClass('d-none')) {
+                    return;
+                }
+                
+                var cliche_in_price = $('#cliche_in_price').is(':checked') ? 1 : 0;
+                var customer_pays_for_cliche = $('#customer_pays_for_cliche').is(':checked') ? 1 : 0;
+                
+                $.ajax({ dataType: 'JSON', url: '_recalculate_by_cliche.php?id=<?=$id ?>&cliche_in_price=' + cliche_in_price + '&customer_pays_for_cliche=' + customer_pays_for_cliche })
+                        .done(function(data) {
+                            if(data.error != '') {
+                                alert(data.error);
+                            }
+                            else {
+                                if(data.cliche_in_price == 1) {
+                                    $('#cliche_in_price_box').addClass('d-none');
+                                }
+                                else {
+                                    $('#cliche_in_price_box').removeClass('d-none');
+                                }
+                                
+                                $('#cost').text(data.cost);
+                                $('#cost_per_unit').text(data.cost_per_unit);
+                                $('#shipping_cost').text(data.shipping_cost);
+                                $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
+                                $('#input_shipping_cost_per_unit').val(data.input_shipping_cost_per_unit);
+                                $('#extracharge').val(Math.round(data.extracharge));
+                                $('#income').text(data.income);
+                                $('#income_per_unit').text(data.income_per_unit);
+                                $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
+                                $('#income_cliche').text(data.income_cliche);
+                                $('#income_total').text(data.income_total);                                
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при пересчёте по новым значениям Включать ПФ в себестоимость и Заказчик платит за ПФ');
+                        });
+            }
+            
             $('#extracharge_knife').keyup(function(){
                 SetExtrachargeKnife($(this).val());
             });
@@ -3929,7 +3969,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             // Скрытие расчёта при изменении значения полей
-            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit]").change(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit][id!=cliche_in_price][id!=customer_pays_for_cliche][id!=knife_in_price][id!=customer_pays_for_knife]").change(function () {
                 HideCalculation();
             });
             
