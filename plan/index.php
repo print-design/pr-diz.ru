@@ -372,7 +372,6 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
         <?php
         include '../include/header_plan.php';
         ?>
-        <div style="position: fixed; top: 0; left: 0; z-index: 1000;" id="waiting"></div>
         <div class="container-fluid">
             <?php
             $header = '';
@@ -420,15 +419,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h1><?=$header ?></h1>
-                </div>
-                <div>
-                    <a href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" target="_blank" class="font-weight-bold">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
-                </div>
-            </div>
-            <div class="wrapper" style="position: absolute; top: 170px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
+            <div class="wrapper" style="position: absolute; top: 100px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
                 <nav id="sidebar" class="foredit">
                     <div id="sidebar_toggle_button">
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
@@ -447,7 +438,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                             <button type="button" id="sidebarExpand" class="btn btn-link" style="display: none; padding-left: 0;">
                                 <img src="../images/icons/expand.png" style="margin-right: 8px;" />
                             </button>
-                            <h2>План</h2>
+                            <h2>План&nbsp;&nbsp;<?=$header ?></h2>
                         </div>
                         <div class="d-flex justify-content-end">
                             <form class="form-inline" method="get">
@@ -467,6 +458,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                             <a href="<?= BuildQueryRemove('from') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
                             <button type="button" class="btn btn-light foredit" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                            <a class="btn btn-light" href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" target="_blank">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
                         </div>
                     </div>
                     <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0; padding: 5px;">
