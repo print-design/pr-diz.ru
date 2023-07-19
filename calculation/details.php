@@ -547,6 +547,86 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
                 SetExtrachargeKnife($(this).val());
             });
             
+            // Пересчитываем по новому значению "Включить ПФ в себестоимость" и "Заказчик платит за ПФ"
+            function RecalculateByCliche() {
+                if($('#calculation').hasClass('d-none')) {
+                    return;
+                }
+                
+                var cliche_in_price = $('#cliche_in_price').is(':checked') ? 1 : 0;
+                var customer_pays_for_cliche = $('#customer_pays_for_cliche').is(':checked') ? 1 : 0;
+                
+                $.ajax({ dataType: 'JSON', url: '_recalculate_by_cliche.php?id=<?=$id ?>&cliche_in_price=' + cliche_in_price + '&customer_pays_for_cliche=' + customer_pays_for_cliche })
+                        .done(function(data) {
+                            if(data.error != '') {
+                                alert(data.error);
+                            }
+                            else {
+                                if(data.cliche_in_price == 1) {
+                                    $('#cliche_in_price_box').addClass('d-none');
+                                }
+                                else {
+                                    $('#cliche_in_price_box').removeClass('d-none');
+                                }
+                                
+                                $('#cost').text(data.cost);
+                                $('#cost_per_unit').text(data.cost_per_unit);
+                                $('#shipping_cost').text(data.shipping_cost);
+                                $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
+                                $('#input_shipping_cost_per_unit').val(data.input_shipping_cost_per_unit);
+                                $('#extracharge').val(Math.round(data.extracharge));
+                                $('#income').text(data.income);
+                                $('#income_per_unit').text(data.income_per_unit);
+                                $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
+                                $('#income_cliche').text(data.income_cliche);
+                                $('#income_total').text(data.income_total);                                
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при пересчёте по новым значениям Включать ПФ в себестоимость и Заказчик платит за ПФ');
+                        });
+            }
+            
+            // Пересчитываем по новому значению "Включить нож в себестоимость" и "Заказчик платит за нож"
+            function RecalculateByKnife() {
+                if($('#calculation').hasClass('d-none')) {
+                    return;
+                }
+                
+                var knife_in_price = $('#knife_in_price').is(':checked') ? 1 : 0;
+                var customer_pays_for_knife = $('#customer_pays_for_knife').is(':checked') ? 1 : 0;
+                
+                $.ajax({ dataType: 'JSON', url: '_recalculate_by_knife.php?id=<?=$id ?>&knife_in_price=' + knife_in_price + '&customer_pays_for_knife=' + customer_pays_for_knife })
+                        .done(function(data) {
+                            if(data.error != '') {
+                                alert(data.error);
+                            }
+                            else {
+                                if(data.knife_in_price == 1) {
+                                    $('#knife_in_price_box').addClass('d-none');
+                                }
+                                else {
+                                    $('#knife_in_price_box').removeClass('d-none');
+                                }
+                                
+                                $('#cost').text(data.cost);
+                                $('#cost_per_unit').text(data.cost_per_unit);
+                                $('#shipping_cost').text(data.shipping_cost);
+                                $('#shipping_cost_per_unit').text(data.shipping_cost_per_unit);
+                                $('#input_shipping_cost_per_unit').val(data.input_shipping_cost_per_unit);
+                                $('#extracharge').val(Math.round(data.extracharge));
+                                $('#income').text(data.income);
+                                $('#income_per_unit').text(data.income_per_unit);
+                                $('#shipping_knife_cost').text(data.shipping_knife_cost);
+                                $('#income_knife').text(data.income_knife);
+                                $('#income_total').text(data.income_total);                                
+                            }
+                        })
+                        .fail(function() {
+                            alert('Ошибка при пересчёте по новым значениям Включать ПФ в себестоимость и Заказчик платит за ПФ');
+                        });
+            }
+            
             // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
             AdjustFixedBlock($('#calculation'));
             

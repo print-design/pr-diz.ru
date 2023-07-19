@@ -243,7 +243,7 @@ function GetSkiNameExt($param, $param_width) {
                     <?php
                     $checked = $cliche_in_price == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); } this.form.submit();" />Включить ПФ в себестоимость
+                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); } RecalculateByCliche();" />Включить ПФ в себестоимость
                     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="cliche_in_price_submit" name="cliche_in_price_submit" value="1" />
                     <input type="hidden" name="scroll" />
@@ -259,7 +259,7 @@ function GetSkiNameExt($param, $param_width) {
                     <?php
                     $checked = $customer_pays_for_cliche == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); } this.form.submit();" />Заказчик платит за ПФ
+                    <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); } RecalculateByCliche();" />Заказчик платит за ПФ
                     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="customer_pays_for_cliche_submit" name="customer_pays_for_cliche_submit" value="1" />
                     <input type="hidden" name="scroll" />
@@ -278,7 +278,7 @@ function GetSkiNameExt($param, $param_width) {
                     <?php
                     $checked = $knife_in_price == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="knife_in_price" name="knife_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_knife').prop('checked', true); } this.form.submit();" />Включить нож в себестоимость
+                    <input type="checkbox" class="form-check-input" id="knife_in_price" name="knife_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_knife').prop('checked', true); } RecalculateByKnife();" />Включить нож в себестоимость
                     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="knife_in_price_submit" name="knife_in_price_submit" value="1" />
                     <input type="hidden" name="scroll" />
@@ -294,7 +294,7 @@ function GetSkiNameExt($param, $param_width) {
                     <?php
                     $checked = $customer_pays_for_knife == 1 ? " checked='checked'" : "";
                     ?>
-                    <input type="checkbox" class="form-check-input" id="customer_pays_for_knife" name="customer_pays_for_knife" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#knife_in_price').prop('checked', false); } this.form.submit();" />Заказчик платит за нож
+                    <input type="checkbox" class="form-check-input" id="customer_pays_for_knife" name="customer_pays_for_knife" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#knife_in_price').prop('checked', false); } RecalculateByKnife();" />Заказчик платит за нож
                     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                     <input type="hidden" id="customer_pays_for_knife_submit" name="customer_pays_for_knife_submit" value="1" />
                     <input type="hidden" name="scroll" />
