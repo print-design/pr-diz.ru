@@ -442,9 +442,10 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                         </div>
                         <div class="d-flex justify-content-end">
                             <form class="form-inline" method="get">
-                                <label for="from" style="font-size: larger;">от&nbsp;</label>
                                 <input type="hidden" name="work_id" value="<?=$work_id ?>" />
                                 <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
+                                <input type="hidden" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" />
+                                <label for="from" style="font-size: larger;">от&nbsp;</label>
                                 <input type="date" 
                                        id="from" 
                                        name="from" 
@@ -454,18 +455,31 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                        onchange="javascript: this.form.submit();" />
                                 
                             </form>
+                            <form class="form-inline" method="get">
+                                <input type="hidden" name="work_id" value="<?=$work_id ?>" />
+                                <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
+                                <input type="hidden" name="from" value="<?= filter_input(INPUT_GET, 'from') ?>" />
+                                <label for="to" style="font-size: larger;">до&nbsp;</label>
+                                <input type="date" 
+                                       id="to" 
+                                       name="to" 
+                                       class="form-control mr-2" 
+                                       value="<?= filter_input(INPUT_GET, 'to') ?>" 
+                                       style="border: 0; width: 8.5rem;" 
+                                       onchange="javascript: this.form.submit();" />
+                            </form>
                             <?php if(!empty(filter_input(INPUT_GET, 'from'))): ?>
-                            <a href="<?= BuildQueryRemove('from') ?>" class="btn btn-light">Сбросить</a>
+                            <a href="?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
                             <button type="button" class="btn btn-light foredit" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
-                            <a class="btn btn-light" href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>" target="_blank">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
+                            <a class="btn btn-light" href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>" target="_blank">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
                         </div>
                     </div>
                     <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0; padding: 5px;">
                         <?php
                         $date_from = null;
                         $date_to = null;
-                        GetDateFromDateTo(filter_input(INPUT_GET, 'from'), null, $date_from, $date_to);
+                        GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
                         
                         $timetable = new PlanTimetable($work_id, $machine_id, $date_from, $date_to);
                         $timetable->Show();

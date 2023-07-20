@@ -120,10 +120,14 @@ if(empty($work_id) || empty($machine_id)) {
         <?php
         $date_from = null;
         $date_to = null;
-        GetDateFromDateTo(filter_input(INPUT_GET, 'from'), null, $date_from, $date_to);
-        $diff3Days = new DateInterval('P3D');
-        $date_to = clone $date_from;
-        $date_to->add($diff3Days);
+        GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+        $datediff = date_diff($date_from, $date_to, true);
+        
+        if($datediff->days > 3) {
+            $diff3Days = new DateInterval('P3D');
+            $date_to = clone $date_from;
+            $date_to->add($diff3Days);
+        }
                         
         $timetable = new PlanTimetable($work_id, $machine_id, $date_from, $date_to);
         $timetable->Print();
