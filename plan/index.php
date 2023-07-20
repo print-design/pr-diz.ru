@@ -540,7 +540,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_delete_event.php?event_id=" + event_id })
                             .done(function(data) {
                                 if(data.error == '') {
-                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                                 }
                                 else {
                                     alert(data.error);
@@ -678,8 +678,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                         });
             }
             
-            function DrawTimetable(work_id, machine_id, from) {
-                $.ajax({ url: "_draw_timetable.php?work_id=" + work_id + "&machine_id=" + machine_id + "&from=" + from })
+            function DrawTimetable(work_id, machine_id, from, to) {
+                $.ajax({ url: "_draw_timetable.php?work_id=" + work_id + "&machine_id=" + machine_id + "&from=" + from + "&to=" + to })
                         .done(function(data) {
                             $('#timetable').html(data);
                             
@@ -698,7 +698,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 var shift = select.attr('data-shift');
                 $.ajax({ url: "_set_employee1.php?id=" + id + "&work_id=" + work_id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
                         .done(function() {
-                            DrawTimetable(select.attr('data-work-id'), select.attr('data-machine-id'), select.attr('data-from'));
+                            DrawTimetable(select.attr('data-work-id'), select.attr('data-machine-id'), select.attr('data-from'), select.attr('data-to'));
                         })
                         .fail(function() {
                             alert('Ошибка при смене работника');
@@ -713,7 +713,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 var shift = select.attr('data-shift');
                 $.ajax({ url: "_set_employee2.php?id=" + id + "&work_id=" + work_id + "&machine_id=" + machine_id + "&date=" + date + "&shift=" + shift })
                         .done(function() {
-                            DrawTimetable(select.attr('data-work-id'), select.attr('data-machine-id'), select.attr('data-from'));
+                            DrawTimetable(select.attr('data-work-id'), select.attr('data-machine-id'), select.attr('data-from'), select.attr('data-to'));
                         })
                         .fail(function() {
                             alert('Ошибка при смене помощника');
@@ -726,7 +726,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_move_down.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -743,7 +743,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_move_up.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -758,7 +758,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_add_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -773,7 +773,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_remove_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -788,7 +788,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_add_child_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -803,7 +803,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_remove_child_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -818,7 +818,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_add_part_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -833,7 +833,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_remove_part_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -848,7 +848,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_add_child_part_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -863,7 +863,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $.ajax({ dataType: 'JSON', url: "_remove_child_part_continuation.php?id=" + id })
                         .done(function(data) {
                             if(data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(data.error);
@@ -955,7 +955,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
-                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                                 }
                                 else {
                                     alert(remove_data.error);
@@ -973,7 +973,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_remove_event.php?event_id=" + event_id })
                             .done(function(remove_data) {
                                 if(remove_data.error == '') {
-                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                                 }
                                 else {
                                     alert(remove_data.error);
@@ -991,7 +991,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_remove_part.php?part_id=" + part_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
                         .done(function(remove_data) {
                             if(remove_data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(remove_data.error);
@@ -1022,7 +1022,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(add_data.error);
@@ -1040,7 +1040,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_add_event.php?event_id=" + event_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(add_data.error);
@@ -1058,7 +1058,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(add_data.error);
@@ -1077,7 +1077,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(add_data.error);
@@ -1095,7 +1095,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_add_event.php?event_id=" + event_id + "&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(add_data.error);
@@ -1113,7 +1113,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error == '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>');
+                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
                             }
                             else {
                                 alert(add_data.error);
