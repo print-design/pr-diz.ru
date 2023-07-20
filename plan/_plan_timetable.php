@@ -123,12 +123,12 @@ class PlanTimetable {
                 . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pp.id, pp.date, pp.shift, ".PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.ink_number, c.status_id, "
-                . "if(isnull(pp.worktime_continued), round(pp.length, 2), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_1, "
-                . "if(isnull(pp.worktime_continued), round(pp.length, 2), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_2, "
-                . "if(isnull(pp.worktime_continued), round(pp.length, 2), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_3, "
-                . "if(isnull(pp.worktime_continued), round(pp.length, 2), round(pp.length) / pp.worktime * pp.worktime_continued) as length_dirty_1, "
-                . "if(isnull(pp.worktime_continued), round(pp.length, 2), round(pp.length) / pp.worktime * pp.worktime_continued) as length_dirty_2, "
-                . "if(isnull(pp.worktime_continued), round(pp.length, 2), round(pp.length) / pp.worktime * pp.worktime_continued) as length_dirty_3, "
+                . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_1, "
+                . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_2, "
+                . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_3, "
+                . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_dirty_1, "
+                . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_dirty_2, "
+                . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_dirty_3, "
                 . "cr.width_1, cr.width_2, cr.width_3, "
                 . "c.customer_id, cus.name customer, c.manager_id, u.first_name, u.last_name, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
@@ -175,7 +175,7 @@ class PlanTimetable {
                 . "left join film f1 on fv1.film_id = f1.id "
                 . "left join film_variation fv2 on c.lamination2_film_variation_id = fv2.id "
                 . "left join film f2 on fv2.film_id = f2.id "
-                . "where pp.work_id = ".$this->work_id." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where pp.work_id = ".$this->work_id." and pp.machine_id = ".$this->machine_id." and ppc.date >= '".$this->dateFrom->format('Y-m-d')."' and ppc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "order by position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
