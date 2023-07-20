@@ -468,10 +468,13 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                        style="border: 0; width: 8.5rem;" 
                                        onchange="javascript: this.form.submit();" />
                             </form>
-                            <?php if(!empty(filter_input(INPUT_GET, 'from'))): ?>
+                            <?php if(!empty(filter_input(INPUT_GET, 'from')) || !empty(filter_input(INPUT_GET, 'to'))): ?>
                             <a href="?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
                             <button type="button" class="btn btn-light foredit" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
+                            <a class="btn btn-light" href="csv.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-csv"></i></a>
+                            <?php endif; ?>
                             <a class="btn btn-light" href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>" target="_blank">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
                         </div>
                     </div>
