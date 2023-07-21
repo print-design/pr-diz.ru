@@ -9,136 +9,111 @@ $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
 
 if(!empty($work_id) && !empty($machine_id)) {
+    $date_from = null;
+    $date_to = null;
+    GetDateFromDateTo($from, $to, $date_from, $date_to);
+    
     $xls = new PHPExcel();
-    $xls->setActiveSheetIndex(0);
-    $sheet = $xls->getActiveSheet();
-    $sheet->setTitle('Таблица умножения');
-    $sheet->setCellValue("A1", "Таблица умножения");
-    $xls->createSheet();
-    $xls->setActiveSheetIndex(1);
-    $sheet = $xls->getActiveSheet();
-    $sheet->setCellValue('B2', 'Сольфеджио');
-    $sheet->setTitle('Арпеджио');
+    $activeSheetIndex = 0;
+    
+    foreach(PRINTERS as $printer) {
+        if($printer == PRINTER_ATLAS) {
+            break;
+        }
+        
+        if($activeSheetIndex > 0) {
+            $xls->createSheet();
+        }
+        
+        $xls->setActiveSheetIndex($activeSheetIndex);
+        $sheet = $xls->getActiveSheet();
+        $sheet->setTitle(PRINTER_NAMES[$printer]);
+        $rowindex = 1;
+        
+        $sheet->setCellValue('A'.$rowindex, "Дата");
+        $sheet->setCellValue('B'.$rowindex, "День/Ночь");
+        $sheet->setCellValue('C'.$rowindex, "Менеджер");
+        $sheet->setCellValue('D'.$rowindex, "ID заказа");
+        $sheet->setCellValue('E'.$rowindex, "Наименование");
+        $sheet->setCellValue('F'.$rowindex, "Объём заказа, кг");
+        $sheet->setCellValue('G'.$rowindex, "Метраж");
+        $sheet->setCellValue('H'.$rowindex, "Красочность");
+        $sheet->setCellValue('I'.$rowindex, "Расходы на краску");
+        $sheet->setCellValue('J'.$rowindex, "Себестоимость ПФ");
+        $sheet->setCellValue('K'.$rowindex, "Себестоимость");
+        $sheet->setCellValue('L'.$rowindex, "Отгрузочаня стоимость");
+        $sheet->setCellValue('M'.$rowindex, "Итоговая прибыль");
+        
+        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
+                . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
+                . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
+                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+                . "from plan_edition pe "
+                . "inner join calculation c on pe.calculation_id = c.id "
+                . "inner join user u on c.manager_id = u.id "
+                . "inner join calculation_result cr on cr.calculation_id = c.id "
+                . "where pe.work_id = ".WORK_PRINTING." and pe.machine_id = ".$printer
+                . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
+                . "union "
+                . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
+                . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
+                . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
+                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+                . "from plan_part pp "
+                . "inner join calculation c on pp.calculation_id = c.id "
+                . "inner join user u on c.manager_id = u.id "
+                . "inner join calculation_result cr on cr.calculation_id = c.id "
+                . "where pp.work_id = ".WORK_PRINTING." and pp.machine_id = ".$printer
+                . " and pp.date >= '".$date_from->format('Y/m/d')."' and pp.date <= '".$date_to->format('Y/m/d')."' "
+                . "order by date, shift";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            $rowindex++;
+            
+            $sheet->setCellValue('A'.$rowindex, DateTime::createFromFormat("Y-m-d", $row['date'])->format('d.m.Y'));
+            $sheet->setCellValue('B'.$rowindex, $row['shift'] == "day" ? "День": "Ночь");
+            $sheet->setCellValue('C'.$rowindex, $row['last_name'].' '.$row['first_name']);
+            $sheet->setCellValue('D'.$rowindex, $row['customer_id']."-".$row["num_for_customer"]);
+            $sheet->setCellValue('E'.$rowindex, $row['name']);
+            
+            $sheet->getStyle('F'.$rowindex.':M'.$rowindex)->getNumberFormat()->setFormatCode('#,##0');
+            
+            $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('F'.$rowindex, $row['weight_pure_1']);
+            
+            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
+            
+            $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('H'.$rowindex, $row["ink_number"]);
+            
+            $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('I'.$rowindex, $row["ink_cost"]);
+            
+            $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('J'.$rowindex, $row['cliche_cost']);
+            
+            $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('K'.$rowindex, $row['cost']);
+            
+            $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('L'.$rowindex, $row['shipping_cost']);
+            
+            $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('M'.$rowindex, $row['total_income']);
+        }
+        
+        $activeSheetIndex++;
+    }
+    
+    $filename = "Печать_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
     
     header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="results.xls"');
+    header('Content-Disposition: attachment;filename="'.$filename.'"');
     header('Cache-Control: max-age=0');
     $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
     $objWriter->save('php://output');
     exit();
-    
-    $date_from = null;
-    $date_to = null;
-    GetDateFromDateTo($from, $to, $date_from, $date_to);
-
-    // Заголовки CSV-файла
-    $titles = array();
-    array_push($titles, "Дата");
-    array_push($titles, "День/Ночь");
-    array_push($titles, "Менеджер");
-    array_push($titles, "ID заказа");
-    array_push($titles, "Наименование");
-    array_push($titles, "Объём заказа, кг");
-    array_push($titles, "Метраж");
-    if($work_id == WORK_PRINTING) { array_push($titles, "Красочность"); }
-    if($work_id == WORK_PRINTING) { array_push($titles, "Расходы на краску"); }
-    if($work_id == WORK_LAMINATION) { array_push($titles, "Расходы на клей"); }
-    if($work_id == WORK_PRINTING) { array_push($titles, "Себестоимость ПФ"); }
-    array_push($titles, "Себестоимость");
-    array_push($titles, "Отгрузочаня стоимость");
-    array_push($titles, "Итоговая прибыль");
-    
-    // Данные CSV-файла
-    $file_data = array();
-    
-    $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
-            . "cr.length_pure_1, "
-            . "cr.length_pure_2, "
-            . "cr.length_pure_3, "
-            . "cr.weight_pure_1, "
-            . "cr.weight_pure_2, "
-            . "cr.weight_pure_3, "
-            . "cr.ink_cost, cr.glue_cost_2, cr.glue_cost_3, cr.cliche_cost, cr.cost, cr.shipping_cost, cr.income + cr.income_cliche + cr.income_knife as total_income, "
-            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
-            . "from plan_edition pe "
-            . "inner join calculation c on pe.calculation_id = c.id "
-            . "inner join user u on c.manager_id = u.id "
-            . "inner join calculation_result cr on cr.calculation_id = c.id "
-            . "where pe.work_id = $work_id and pe.machine_id = $machine_id and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
-            . "union "
-            . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
-            . "cr.length_pure_1, "
-            . "cr.length_pure_2, "
-            . "cr.length_pure_3, "
-            . "cr.weight_pure_1, "
-            . "cr.weight_pure_2, "
-            . "cr.weight_pure_3, "
-            . "cr.ink_cost, cr.glue_cost_2, cr.glue_cost_3, cr.cliche_cost, cr.cost, cr.shipping_cost, cr.income + cr.income_cliche + cr.income_knife as total_income, "
-            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
-            . "from plan_part pp "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "inner join user u on c.manager_id = u.id "
-            . "inner join calculation_result cr on cr.calculation_id = c.id "
-            . "where pp.work_id = $work_id and pp.machine_id = $machine_id and pp.date >= '".$date_from->format('Y/m/d')."' and pp.date <= '".$date_to->format('Y/m/d')."' "
-            . "order by date, shift";
-    $fetcher = new Fetcher($sql);
-    while($row = $fetcher->Fetch()) {
-        $weight_pure = $row['weight_pure_1'];
-        $length_pure = $row['length_pure_1'];
-        $glue_cost = 0;
-        
-        if($work_id == WORK_LAMINATION && $row['lamination'] == 1) {
-            $weight_pure = $row['weight_pure_2'];
-            $length_pure = $row['length_pure_2'];
-            $glue_cost = $row['glue_cost_2'];
-        }
-        elseif($work_id == WORK_LAMINATION && $row['lamination'] == 2) {
-            $weight_pure = $row['weight_pure_3'];
-            $length_pure = $row['length_pure_3'];
-            $glue_cost = $row['glue_cost_3'];
-        }
-        
-        $data_array = array();
-        array_push($data_array, DateTime::createFromFormat("Y-m-d", $row['date'])->format('d.m.Y'));
-        array_push($data_array, $row['shift'] == "day" ? "День": "Ночь");
-        array_push($data_array, $row['last_name'].' '.$row['first_name']);
-        array_push($data_array, $row['customer_id']."-".$row["num_for_customer"]);
-        array_push($data_array, $row['name']);
-        array_push($data_array, DisplayNumber(floatval($weight_pure), 0));
-        array_push($data_array, DisplayNumber(floatval($length_pure), 0));
-        if($work_id == WORK_PRINTING) { array_push($data_array, $row["ink_number"]); }
-        if($work_id == WORK_PRINTING) { array_push($data_array, DisplayNumber(floatval($row["ink_cost"]), 0)); }
-        if($work_id == WORK_LAMINATION) { array_push($data_array, DisplayNumber(floatval($glue_cost), 0)); }
-        if($work_id == WORK_PRINTING) { array_push($data_array, DisplayNumber(floatval($row['cliche_cost']), 0)); }
-        array_push($data_array, DisplayNumber(floatval($row['cost']), 0));
-        array_push($data_array, DisplayNumber(floatval($row['shipping_cost']), 0));
-        array_push($data_array, DisplayNumber(floatval($row['total_income']), 0));
-        
-        array_push($file_data, $data_array);
-    }
-
-    //***************************************************************************
-    // Сохранение в файл
-    $work_name = WORK_NAMES[$work_id];
-    $machine_name = '';
-
-    switch ($work_id) {
-        case WORK_PRINTING:
-            $machine_name = PRINTER_SHORTNAMES[$machine_id];
-            break;
-        case WORK_LAMINATION:
-            $machine_name = LAMINATOR_NAMES[$machine_id];
-            break;
-        case WORK_CUTTING:
-            $machine_name = CUTTER_NAMES[$machine_id];
-            break;
-    }
-
-    $file_name = $work_name."_".$machine_name."_".$date_from->format('Y-m-d') ."_".$date_to->format('Y-m-d').".csv";
-    
-    /*DownloadSendHeaders($file_name);
-    echo Array2Csv($file_data, $titles);
-    die();*/
 }
 ?>
 <html>
