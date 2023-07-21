@@ -6,9 +6,6 @@ if (!defined('PHPEXCEL_ROOT')) {
     require(PHPEXCEL_ROOT . 'PHPExcel/Autoloader.php');
 }
 
-//const PHPEXCEL_ROOT = APPLICATION;
-//require '../PHPExcel/Autoloader.php';
-
 /**
  * PHPExcel
  *
