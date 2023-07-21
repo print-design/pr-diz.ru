@@ -1,5 +1,4 @@
 <?php
-define('HOST', '/pr-diz.ru');
 define('APPLICATION', '/pr-diz.ru');
 
 define('DATABASE_HOST', 'localhost');

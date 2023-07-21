@@ -1,5 +1,7 @@
 <?php
 include '../include/topscripts.php';
+require_once '../include/PHPExcel.php';
+require_once '../PHPExcel/IOFactory.php';
 
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
@@ -7,6 +9,10 @@ $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
 
 if(!empty($work_id) && !empty($machine_id)) {
+    $objPHPExcel = new PHPExcel();
+    $objPHPExcel->setActiveSheetIndex(0);
+    
+    
     $date_from = null;
     $date_to = null;
     GetDateFromDateTo($from, $to, $date_from, $date_to);
@@ -116,13 +122,13 @@ if(!empty($work_id) && !empty($machine_id)) {
 
     $file_name = $work_name."_".$machine_name."_".$date_from->format('Y-m-d') ."_".$date_to->format('Y-m-d').".csv";
     
-    DownloadSendHeaders($file_name);
+    /*DownloadSendHeaders($file_name);
     echo Array2Csv($file_data, $titles);
-    die();
+    die();*/
 }
 ?>
 <html>
     <body>
-        <h1 style="text-decoration: underline;">Чтобы выгрузить в CSV, надо нажать на кнопку "Выгрузка" в верхнеё правой части страницы.</h1>
+        <h1 style="text-decoration: underline;">Чтобы выгрузить в CSV, надо нажать на кнопку "Выгрузка" в верхней правой части страницы.</h1>
     </body>
 </html>
