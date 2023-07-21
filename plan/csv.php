@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 require_once '../include/PHPExcel.php';
-require_once '../PHPExcel/IOFactory.php';
+require_once '../PHPExcel/Writer/Excel5.php';
 
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
@@ -9,9 +9,26 @@ $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
 
 if(!empty($work_id) && !empty($machine_id)) {
-    $objPHPExcel = new PHPExcel();
-    $objPHPExcel->setActiveSheetIndex(0);
+    $xls = new PHPExcel();
+    $xls->setActiveSheetIndex(0);
+    $sheet = $xls->getActiveSheet();
+    $sheet->setTitle('Таблица умножения');
+    $sheet->setCellValue("A1", "Таблица умножения");
+    $xls->createSheet();
+    $xls->setActiveSheetIndex(1);
+    $sheet = $xls->getActiveSheet();
+    $sheet->setCellValue('B2', 'Сольфеджио');
+    $sheet->setTitle('Арпеджио');
     
+    //header('Content-type: application/vnd.ms-excel');
+    //header('Content-Disposition: attachment;filename="name-of file.xls"');
+    //header('Cache-Control: max-age=0');
+    $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
+    
+    //DownloadSendHeaders('QWE.xls');
+    
+    $objWriter->save("name-of-file.xls");
+    exit();
     
     $date_from = null;
     $date_to = null;
