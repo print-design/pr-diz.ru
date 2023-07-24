@@ -102,6 +102,20 @@
             echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness;
         }
         elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1) {
+            if($this->edition['work_type_id'] == WORK_TYPE_NOPRINT) {
+                echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic'>".$this->edition['requirement1']."</div>";
+            
+                $film_name = $this->edition['film_name'];
+                $thickness = $this->edition['thickness'];
+        
+                if(empty($film_name)) {
+                    $film_name = $this->edition['individual_film_name'];
+                    $thickness = $this->edition['individual_thickness'];
+                }
+            
+                echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness."<br />+<br />";
+            }
+            
             echo empty($this->edition['requirement2']) ? '' : "<div class='font-italic'>".$this->edition['requirement2']."</div>";
             
             $lamination1_film_name = $this->edition['lamination1_film_name'];
@@ -115,6 +129,10 @@
             echo $lamination1_film_name."&nbsp;&nbsp;&nbsp;".$lamination1_thickness;
         }
         elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2) {
+            if($this->edition['work_type_id'] == WORK_TYPE_NOPRINT) {
+                echo "1 прогон<br />+<br />";
+            }
+            
             echo empty($this->edition['requirement3']) ? '' : "<div class='font-italic'>".$this->edition['requirement3']."</div>";
             
             $lamination2_film_name = $this->edition['lamination2_film_name'];
