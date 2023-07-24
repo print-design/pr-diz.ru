@@ -62,7 +62,8 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
                 . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
-                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
+                . "0 as second_part "
                 . "from plan_edition pe "
                 . "inner join calculation c on pe.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
@@ -73,7 +74,8 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
                 . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
-                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
+                . "(select count(id) from plan_part where calculation_id = pp.calculation_id and work_id = pp.work_id and machine_id = pp.machine_id and id < pp.id) second_part "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
@@ -91,31 +93,58 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('D'.$rowindex, $row['customer_id']."-".$row["num_for_customer"]);
             $sheet->setCellValue('E'.$rowindex, $row['name']);
             
-            $sheet->getStyle('F'.$rowindex.':M'.$rowindex)->getNumberFormat()->setFormatCode('#,##0');
+            if($row['second_part'] > 0) {
+                $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('F'.$rowindex, 'Разделен');
             
-            $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('F'.$rowindex, $row['weight_pure_1']);
+                $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('G'.$rowindex, 'Разделен');
             
-            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
+                $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('H'.$rowindex, 'Разделен');
             
-            $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('H'.$rowindex, $row["ink_number"]);
+                $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('I'.$rowindex, 'Разделен');
             
-            $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('I'.$rowindex, $row["ink_cost"]);
+                $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('J'.$rowindex, 'Разделен');
             
-            $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('J'.$rowindex, $row['cliche_cost']);
+                $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('K'.$rowindex, 'Разделен');
             
-            $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('K'.$rowindex, $row['cost']);
+                $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('L'.$rowindex, 'Разделен');
             
-            $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('L'.$rowindex, $row['shipping_cost']);
+                $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('M'.$rowindex, 'Разделен');
+            }
+            else {
+                $sheet->getStyle('F'.$rowindex.':M'.$rowindex)->getNumberFormat()->setFormatCode('#,##0');
+                
+                $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('F'.$rowindex, $row['weight_pure_1']);
             
-            $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('M'.$rowindex, $row['total_income']);
+                $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
+            
+                $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('H'.$rowindex, $row["ink_number"]);
+            
+                $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('I'.$rowindex, $row["ink_cost"]);
+            
+                $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('J'.$rowindex, $row['cliche_cost']);
+            
+                $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('K'.$rowindex, $row['cost']);
+            
+                $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('L'.$rowindex, $row['shipping_cost']);
+            
+                $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('M'.$rowindex, $row['total_income']);
+            }
         }
         
         $activeSheetIndex++;
