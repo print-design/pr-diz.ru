@@ -156,7 +156,7 @@ $total_weight = $row[0];
                     $orderby = "";
                     
                     if(array_key_exists('order', $_REQUEST)) {
-                        $orderby = "r.cell asc, ";
+                        $orderby = "p.cell asc, ";
                     }
                     
                     // Выборка
