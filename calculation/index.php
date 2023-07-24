@@ -262,7 +262,7 @@ else $title = $status_titles[1];
                                 break;
                             
                             case 'work_type':
-                                $orderby = "order by wt.name";
+                                $orderby = "order by c.work_type_id";
                                 break;
                             
                             case 'manager':

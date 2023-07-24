@@ -6,6 +6,16 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Формирование ссылки для сортировки по столбцу
+function OrderLink($param) {
+    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
+        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
+    }
+    else {
+        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
+    }
+}
+
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -110,7 +120,7 @@ $total_weight = $row['total_weight'];
                         <?php
                         $get_count = 0;
                         foreach ($_GET as $get_key=>$get_value) {
-                            if(!empty($get_value) && $get_key != PAGE && $get_key != "find") {
+                            if(!empty($get_value) && $get_key != PAGE && $get_key != "order" && $get_key != "find") {
                                 $get_count++;
                             }
                         }
@@ -136,7 +146,7 @@ $total_weight = $row['total_weight'];
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID рулона</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Менеджер</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Комментарий</th>
@@ -145,6 +155,14 @@ $total_weight = $row['total_weight'];
                 </thead>
                 <tbody>
                     <?php
+                    // Сортировка
+                    $orderby = "";
+                    
+                    if(array_key_exists('order', $_REQUEST)) {
+                        $orderby = "r.cell asc, ";
+                    }
+                    
+                    // Выборка
                     if(!empty($where)) {
                         $where = "where $where";
                     }
@@ -173,7 +191,7 @@ $total_weight = $row['total_weight'];
                             . "left join user u on r.storekeeper_id = u.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "$where "
-                            . "order by r.id desc limit $pager_skip, $pager_take";
+                            . "order by ".$orderby."r.id desc limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
                     
                     while ($row = $fetcher->Fetch()):

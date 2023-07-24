@@ -6,6 +6,16 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
+// Формирование ссылки для сортировки по столбцу
+function OrderLink($param) {
+    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
+        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
+    }
+    else {
+        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
+    }
+}
+
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -157,7 +167,7 @@ $total_weight = $row[0];
                         <?php
                         $get_count = 0;
                         foreach ($_GET as $get_key=>$get_value) {
-                            if(!empty($get_value) && $get_key != PAGE && $get_key != "find") {
+                            if(!empty($get_value) && $get_key != PAGE && $get_key != "order" && $get_key != "find") {
                                 $get_count++;
                             }
                         }
@@ -183,7 +193,7 @@ $total_weight = $row[0];
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">№ ячейки</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Комментарий</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 3%;"></th>
@@ -213,6 +223,13 @@ $total_weight = $row[0];
                         $pager_total_count = $row[0];
                     }
                     
+                    // Сортировка
+                    $orderby = "";
+                    
+                    if(array_key_exists('order', $_REQUEST)) {
+                        $orderby = "cell asc, ";
+                    }
+                    
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
                             . "p.width width, fv.thickness thickness, fv.weight density, p.cell cell, pr.weight net_weight, pr.length length, "
                             . "s.name supplier, "
@@ -235,7 +252,7 @@ $total_weight = $row[0];
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                             . "$wherefindroll "
-                            . "order by timestamp desc limit $pager_skip, $pager_take";
+                            . "order by ".$orderby."timestamp desc limit $pager_skip, $pager_take";
                     
                     $fetcher = new Fetcher($sql);
                     

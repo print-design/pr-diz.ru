@@ -75,16 +75,16 @@ if($folder == 'pallet' && $file == 'roll.php') {
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
             ?>
             <li class='nav-item'>
-                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Рулоны</a>
+                <a class="nav-link<?=$rolls_status ?>" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemoveArray(array('page', 'id', 'order')) ?>">Рулоны</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Паллеты</a>
+                <a class="nav-link<?=$pallets_status ?>" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemoveArray(array('page', 'id', 'order')) ?>">Паллеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Раскроили</a>
+                <a class="nav-link<?=$cut_sources_status ?>" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemoveArray(array('page', 'id', 'order')) ?>">Раскроили</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemoveArray(array('page', 'id')) ?>">Сработанная пленка</a>
+                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemoveArray(array('page', 'id', 'order')) ?>">Сработанная пленка</a>
             </li>
             <?php
             endif;

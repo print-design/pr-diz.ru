@@ -101,7 +101,7 @@ $total_weight = $row[0];
                         <?php
                         $get_count = 0;
                         foreach ($_GET as $get_key=>$get_value) {
-                            if(!empty($get_value) && $get_key != PAGE && $get_key != "find") {
+                            if(!empty($get_value) && $get_key != PAGE && $get_key != "order" && $get_key != "find") {
                                 $get_count++;
                             }
                         }

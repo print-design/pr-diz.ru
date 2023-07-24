@@ -149,6 +149,22 @@ function BuildQueryAddRemove($key, $value, $remove) {
     return $result;
 }
 
+function BuildQueryAddRemoveArray($key, $value, $array) {
+    $result = '';
+    $get_params = $_GET;
+    $get_params[$key] = $value;
+    foreach($array as $item_key) {
+        unset($get_params[$item_key]);
+    }
+    $result = http_build_query($get_params);
+    
+    if(!empty($result)) {
+        $result = "?$result";
+    }
+    
+    return $result;
+}
+
 function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     $dateFrom = null;
     $dateTo = null;
