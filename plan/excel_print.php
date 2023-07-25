@@ -75,7 +75,7 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
                 . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
                 . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-                . "(select count(id) from plan_part where calculation_id = pp.calculation_id and ((work_id = pp.work_id and machine_id = pp.machine_id and date < pp.date) || (work_id = pp.work_id and machine_id <> pp.machine_id and id < pp.id))) second_part "
+                . "(select count(id) from plan_part where calculation_id = pp.calculation_id and ((work_id = pp.work_id and machine_id = pp.machine_id and date < pp.date) || (work_id = pp.work_id and machine_id = pp.machine_id and date = pp.date and shift = 'day' and pp.shift = 'night') || (work_id = pp.work_id and machine_id <> pp.machine_id and id < pp.id))) second_part "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
