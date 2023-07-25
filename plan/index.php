@@ -474,7 +474,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                             <?php endif; ?>
                             <button type="button" class="btn btn-light foredit" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                             <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR])) && $work_id == WORK_PRINTING && $machine_id != PRINTER_ATLAS): ?>
-                            <a class="btn btn-light" href="excel.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-download"></i></a>
+                            <a class="btn btn-light" href="excel_print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-download"></i></a>
                             <?php endif; ?>
                             <a class="btn btn-light" href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>" target="_blank">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
                         </div>
