@@ -265,11 +265,11 @@
             
             echo empty($this->edition['requirement2']) ? '' : "<div class='font-italic'>".$this->edition['requirement2']."</div>";
             
-            $film_id = $this->edition['lamination1_film_id'];
+            $lamination1_film_id = $this->edition['lamination1_film_id'];
             $lamination1_film_name = $this->edition['lamination1_film_name'];
             $lamination1_thickness = $this->edition['lamination1_thickness'];
             $width = intval($this->edition['width_2']);
-            $filter = "<a href='".APPLICATION."/roll/?film_id=$film_id&thickness=$thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
+            $filter = "<a href='".APPLICATION."/roll/?film_id=$lamination1_film_id&thickness=$lamination1_thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
         
             if(empty($lamination1_film_name)) {
                 $lamination1_film_name = $this->edition['lamination1_individual_film_name'];
@@ -286,11 +286,11 @@
             
             echo empty($this->edition['requirement3']) ? '' : "<div class='font-italic'>".$this->edition['requirement3']."</div>";
             
-            $film_id = $this->edition['lamination2_film_id'];
+            $lamination2_film_id = $this->edition['lamination2_film_id'];
             $lamination2_film_name = $this->edition['lamination2_film_name'];
             $lamination2_thickness = $this->edition['lamination2_thickness'];
             $width = intval($this->edition['width_3']);
-            $filter = "<a href='".APPLICATION."/roll/?film_id=$film_id&thickness=$thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
+            $filter = "<a href='".APPLICATION."/roll/?film_id=$lamination2_film_id&thickness=$lamination2_thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
         
             if(empty($lamination2_film_name)) {
                 $lamination2_film_name = $this->edition['lamination2_individual_film_name'];
