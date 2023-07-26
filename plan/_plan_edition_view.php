@@ -230,42 +230,54 @@
         if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)) {
             echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic'>".$this->edition['requirement1']."</div>";
             
+            $film_id = $this->edition['film_id'];
             $film_name = $this->edition['film_name'];
             $thickness = $this->edition['thickness'];
+            $width = intval($this->edition['width_1']);
+            $filter = "<a href='".APPLICATION."/roll/?film_id=$film_id&thickness=$thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
         
             if(empty($film_name)) {
                 $film_name = $this->edition['individual_film_name'];
                 $thickness = $this->edition['individual_thickness'];
+                $filter = "";
             }
             
-            echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness;
+            echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness."&nbsp;&nbsp;&nbsp;".$filter;
         }
         elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1) {
             if($this->edition['work_type_id'] == WORK_TYPE_NOPRINT) {
                 echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic'>".$this->edition['requirement1']."</div>";
             
+                $film_id = $this->edition['film_id'];
                 $film_name = $this->edition['film_name'];
                 $thickness = $this->edition['thickness'];
+                $width = intval($this->edition['width_1']);
+                $filter = "<a href='".APPLICATION."/roll/?film_id=$film_id&thickness=$thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
         
                 if(empty($film_name)) {
                     $film_name = $this->edition['individual_film_name'];
                     $thickness = $this->edition['individual_thickness'];
+                    $filter = "";
                 }
             
-                echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness."<br />+<br />";
+                echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness."&nbsp;&nbsp;&nbsp;".$filter."<br />+<br />";
             }
             
             echo empty($this->edition['requirement2']) ? '' : "<div class='font-italic'>".$this->edition['requirement2']."</div>";
             
+            $film_id = $this->edition['lamination1_film_id'];
             $lamination1_film_name = $this->edition['lamination1_film_name'];
             $lamination1_thickness = $this->edition['lamination1_thickness'];
+            $width = intval($this->edition['width_2']);
+            $filter = "<a href='".APPLICATION."/roll/?film_id=$film_id&thickness=$thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
         
             if(empty($lamination1_film_name)) {
                 $lamination1_film_name = $this->edition['lamination1_individual_film_name'];
                 $lamination1_thickness = $this->edition['lamination1_individual_thickness'];
+                $filter = "";
             }
             
-            echo $lamination1_film_name."&nbsp;&nbsp;&nbsp;".$lamination1_thickness;
+            echo $lamination1_film_name."&nbsp;&nbsp;&nbsp;".$lamination1_thickness."&nbsp;&nbsp;&nbsp;".$filter;
         }
         elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2) {
             if($this->edition['work_type_id'] == WORK_TYPE_NOPRINT) {
@@ -274,15 +286,19 @@
             
             echo empty($this->edition['requirement3']) ? '' : "<div class='font-italic'>".$this->edition['requirement3']."</div>";
             
+            $film_id = $this->edition['lamination2_film_id'];
             $lamination2_film_name = $this->edition['lamination2_film_name'];
             $lamination2_thickness = $this->edition['lamination2_thickness'];
+            $width = intval($this->edition['width_3']);
+            $filter = "<a href='".APPLICATION."/roll/?film_id=$film_id&thickness=$thickness&width_from=$width&width_to=$width' target='_blank' title='Склад'><i class='fas fa-filter'></i></a>";
         
             if(empty($lamination2_film_name)) {
                 $lamination2_film_name = $this->edition['lamination2_individual_film_name'];
                 $lamination2_thickness = $this->edition['lamination2_individual_thickness'];
+                $filter = "";
             }
             
-            echo $lamination2_film_name."&nbsp;&nbsp;&nbsp;".$lamination2_thickness;
+            echo $lamination2_film_name."&nbsp;&nbsp;&nbsp;".$lamination2_thickness.(empty($filter) ? "" : "&nbsp;&nbsp;&nbsp;".$filter);
         }
         ?>
         </div>
