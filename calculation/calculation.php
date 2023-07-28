@@ -2371,7 +2371,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->income_knife = ($this->shipping_knife_cost - $this->knife_cost) * (($this->ukknife - 1) / -1);
         
         // Себестоимость
-        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf) + ($this->knife_cost * $this->ukknife) + $this->scotch_cost;
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + ($this->cliche_cost * $this->ukpf) + ($this->knife_cost * $this->ukknife) + $this->scotch_cost + ($extra_expense * $this->quantity);
         
         // Себестоимость за единицу
         $this->cost_per_unit = $this->cost / $this->quantity;
@@ -2388,10 +2388,10 @@ class CalculationSelfAdhesive extends CalculationBase {
         }
         
         // Прибыль
-        $this->income = $this->shipping_cost - $this->cost - ($extra_expense * $this->quantity);
+        $this->income = $this->shipping_cost - $this->cost;
         
         // Прибыль за единицу
-        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit - $extra_expense;
+        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty;
