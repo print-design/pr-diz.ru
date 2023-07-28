@@ -1816,7 +1816,7 @@ class Calculation extends CalculationBase {
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
         
         // Себестоимость
-        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf) + $this->scotch_cost;
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf) + $this->scotch_cost + ($quantity * $extra_expense);
         
         // Себестоимость за единицу
         $this->cost_per_unit = $this->cost / $quantity;
@@ -1833,10 +1833,10 @@ class Calculation extends CalculationBase {
         }
         
         // Прибыль
-        $this->income = ($this->shipping_cost - $this->cost) - ($extra_expense * $quantity);
+        $this->income = ($this->shipping_cost - $this->cost);
         
         // Прибыль за единицу
-        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit - $extra_expense;
+        $this->income_per_unit = $this->shipping_cost_per_unit - $this->cost_per_unit;
         
         // Масса плёнки с приладкой
         $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;

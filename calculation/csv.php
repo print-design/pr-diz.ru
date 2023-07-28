@@ -756,8 +756,8 @@ if($id !== null) {
         
     array_push($file_data, array("Себестоимость, руб",
         DisplayNumber($calculation->cost, 5),
-        "|= ".DisplayNumber($calculation->film_cost, 5)." + ".DisplayNumber($calculation->work_cost, 5)." + ".DisplayNumber($calculation->ink_cost, 5)." + ".DisplayNumber($calculation->glue_cost, 5)." + (".DisplayNumber($calculation->cliche_cost, 5)." * ".DisplayNumber($calculation->ukpf, 0).") + ".DisplayNumber($calculation->scotch_cost, 5),
-        "стоимость плёнки + стоимость работы + стоимость краски + стоимость клея + (стоимость форм * УКПФ) + стоимость скотча"));
+        "|= ".DisplayNumber($calculation->film_cost, 5)." + ".DisplayNumber($calculation->work_cost, 5)." + ".DisplayNumber($calculation->ink_cost, 5)." + ".DisplayNumber($calculation->glue_cost, 5)." + (".DisplayNumber($calculation->cliche_cost, 5)." * ".DisplayNumber($calculation->ukpf, 0).") + ".DisplayNumber($calculation->scotch_cost, 5)." + (".$calculation->quantity." * ".DisplayNumber($calculation->extra_expense, 5).")",
+        "стоимость плёнки + стоимость работы + стоимость краски + стоимость клея + (стоимость форм * УКПФ) + стоимость скотча + (объём заказа, кг/шт * доп. расходы на кг / шт)"));
         
     array_push($file_data, array("Себестоимость за ". $calculation->GetUnitName($calculation->unit).", руб",
         DisplayNumber($calculation->cost_per_unit, 5),
@@ -776,13 +776,13 @@ if($id !== null) {
             
     array_push($file_data, array("Прибыль, руб",
         DisplayNumber($calculation->income, 5),
-        "|= (".DisplayNumber($calculation->shipping_cost, 5)." - ".DisplayNumber($calculation->cost, 5).") - (".DisplayNumber($calculation->extra_expense, 5)." * ".$calculation->quantity.")",
-        "(отгрузочная стоимость - себестоимость) - (доп. расходы на кг / шт * объём заказа, кг/шт)"));
+        "|= ".DisplayNumber($calculation->shipping_cost, 5)." - ".DisplayNumber($calculation->cost, 5),
+        "отгрузочная стоимость - себестоимость"));
             
     array_push($file_data, array("Прибыль за ".$calculation->GetUnitName($calculation->unit).", руб",
         DisplayNumber($calculation->income_per_unit, 5),
-        "|= ".DisplayNumber($calculation->shipping_cost_per_unit, 5)." - ".DisplayNumber($calculation->cost_per_unit, 5)." - ".DisplayNumber($calculation->extra_expense, 5),
-        "отгрузочная стоимость за ". $calculation->GetUnitName($calculation->unit)." - себестоимость за ". $calculation->GetUnitName($calculation->unit)." - дополнительные расходы с ".$calculation->GetUnitName($calculation->unit)));
+        "|= ".DisplayNumber($calculation->shipping_cost_per_unit, 5)." - ".DisplayNumber($calculation->cost_per_unit, 5),
+        "отгрузочная стоимость за ". $calculation->GetUnitName($calculation->unit)." - себестоимость за ". $calculation->GetUnitName($calculation->unit)));
             
     array_push($file_data, array("Отгрузочная стоимость ПФ, руб",
         DisplayNumber($calculation->shipping_cliche_cost, 5),
