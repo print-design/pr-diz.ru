@@ -947,7 +947,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <tr>
                             <td>Растяг</td>
                             <td>
-                                <?php if(empty($machine_id)) {
+                                <?php
+                                if(empty($machine_id)) {
                                     echo "Нет";
                                 }
                                 else {
