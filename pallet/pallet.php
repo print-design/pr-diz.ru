@@ -362,9 +362,9 @@ if(null === $comment) $comment = $row['comment'];
                             while($row = $fetcher->Fetch()):
                             ?>
                             <tr>
-                                <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y H:i') ?></td>
+                                <td class="font-italic"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y H:i') ?></td>
                                 <td><?=$row['comment'] ?></td>
-                                <td class="text-nowrap"><?=$row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.') ?></td>
+                                <td class="text-nowrap font-italic"><?=$row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.') ?></td>
                             </tr>
                             <?php endwhile; ?>
                         </table>
