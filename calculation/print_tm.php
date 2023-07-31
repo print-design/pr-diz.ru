@@ -277,7 +277,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 $machine_coeff = null;
 
 if(!empty($machine_id)) {
-    GetMachineCoeff(PRINTER_SHORTNAMES[$machine_id]);
+    $machine_coeff = GetMachineCoeff($machine_id);
 }
 
 // Тиражи и формы
