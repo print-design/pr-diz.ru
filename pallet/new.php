@@ -182,6 +182,12 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
             }
         }
+        
+        if(empty($error_message) && !empty($comment)) {
+            $sql = "insert into pallet_comment (pallet_id, comment, user_id) values ($pallet_id, '$comment', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
     }
 }
 ?>

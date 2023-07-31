@@ -190,7 +190,7 @@ $total_weight = $row[0];
                         $sql .= "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and prsh1.status_id <> ".ROLL_STATUS_FREE.") absent_rolls_number, ";
                     }
                     $sql .= "p.cell, u.first_name, u.last_name, "
-                            . "p.comment "
+                            . "(select group_concat(comment separator ' ') from pallet_comment where pallet_id = p.id group by pallet_id) as comment "
                             . "from pallet p "
                             . "left join film_variation fv on p.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "

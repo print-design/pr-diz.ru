@@ -10,7 +10,8 @@ if(empty($id)) {
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
         . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, p.cell, ifnull(prsh.status_id, ".ROLL_STATUS_FREE.") status_id, "
-        . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
+        . "(select group_concat(comment separator ' ') from pallet_comment where pallet_id = p.id group by pallet_id) as comment, "
+        . "pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
         . "from pallet p "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "

@@ -9,6 +9,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'delete-pallet-submit')) {
     $id = filter_input(INPUT_POST, 'id');
+    $error_message = (new Executer("delete from pallet_comment where pallet_id = $id"))->error;
     $error_message = (new Executer("delete from pallet where id = $id"))->error;
 }
 
