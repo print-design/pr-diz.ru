@@ -448,7 +448,13 @@ if(!empty($id)) {
         </div>
     </div>
     <div class="row text-nowrap">
-        <div class="col-4 pr-4"></div>
+        <div class="col-4 pr-4">
+            <div class="mt-2">Доп. расходы</div>
+            <?php
+            $calculation = CalculationBase::Create($id);
+            ?>
+            <div class="value"><?= DisplayNumber(floatval($extra_expense) * floatval($calculation->quantity), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="extra_expense"><?= DisplayNumber(floatval($extra_expense), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+        </div>
         <div class="col-4 pr-4"></div>
         <div class="col-4">
             <div>Итоговая прибыль</div>
