@@ -183,7 +183,8 @@ $total_weight = $row['total_weight'];
                     
                     $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, f.name film, fv.thickness, fv.weight density, r.width, r.net_weight, r.length, "
                             . "s.name supplier, r.cell, u.first_name, u.last_name, "
-                            . "rsh.status_id status_id, r.comment "
+                            . "rsh.status_id status_id, "
+                            . "(select group_concat(comment separator ' ') from roll_comment where roll_id = r.id group by roll_id) as comment "
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "

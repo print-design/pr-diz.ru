@@ -39,7 +39,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
-    $sql = "select film_variation_id, length, width, net_weight from roll where id=$id";
+    $sql = "select film_variation_id, length, width, net_weight from roll where id = $id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $old_film_variation_id = $row['film_variation_id'];
@@ -96,7 +96,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     if($form_valid) {
         // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
-        $sql = "select status_id from roll_status_history where roll_id=$id order by id desc limit 1";
+        $sql = "select status_id from roll_status_history where roll_id = $id order by id desc limit 1";
         $row = (new Fetcher($sql))->Fetch();
         $status_id = filter_input(INPUT_POST, 'status_id');
         
@@ -119,6 +119,14 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             }
             
             $error_message = (new Executer($sql))->error;
+        }
+        
+        if(empty($error_message) && !empty($comment)) {
+            $user_id = GetUserId();
+            
+            $sql = "insert into roll_comment (roll_id, comment, user_id) values ($id, '$comment', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
         }
         
         if(empty($error_message)) {
@@ -144,7 +152,7 @@ $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i'
         . "from roll r "
         . "inner join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-        . "where r.id=$id";
+        . "where r.id = $id";
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
@@ -520,17 +528,25 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER]))) {
                             $comment_disabled = " disabled='disabled'";
                         }
-                        
-                        $comment_value = htmlentities($comment);
-                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                            $comment_value = "";
-                        }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-                        <p><?= htmlentities($comment) ?></p>
-                        <?php endif; ?>
-                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
+                        <table class="table">
+                            <?php
+                            $sql = "select rc.date, rc.comment, u.last_name, u.first_name "
+                                    . "from roll_comment rc "
+                                    . "inner join user u on rc.user_id = u.id "
+                                    . "where rc.roll_id = ". filter_input(INPUT_GET, 'id');
+                            $fetcher = new Fetcher($sql);
+                            while($row = $fetcher->Fetch()):
+                            ?>
+                            <tr>
+                                <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y H:i') ?></td>
+                                <td><?=$row['comment'] ?></td>
+                                <td class="text-nowrap"><?=$row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.') ?></td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </table>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">

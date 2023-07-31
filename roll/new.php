@@ -158,6 +158,12 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 header('Location: '.APPLICATION."/roll/print.php?id=$roll_id");
             }
         }
+        
+        if(empty($error_message) && !empty($comment)) {
+            $sql = "insert into roll_comment (roll_id, comment, user_id) values ($roll_id, '$comment', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
     }
 }
 ?>
