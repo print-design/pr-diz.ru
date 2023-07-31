@@ -148,7 +148,10 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $calculation = CalculationBase::Create($id);
-        $laminations_number = $calculation->laminations_number;
+        $laminations_number = 0;
+        if($work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+            $laminations_number = $calculation->laminations_number;
+        }
         
         if(($work_type_id != WORK_TYPE_NOPRINT && empty($row['requirement1'])) || 
             ($laminations_number > 0 && empty($row['requirement2'])) || 
@@ -943,7 +946,25 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Растяг</td>
-                            <td>Нет</td>
+                            <td>
+                                <?php if(empty($machine_id)) {
+                                    echo "Нет";
+                                }
+                                else {
+                                    $count = 0;
+                                    $sql = "select count(id) from raport where active = 1 and machine_id = $machine_id and value = $raport";
+                                    $fetcher = new Fetcher($sql);
+                                    if($row = $fetcher->Fetch()) {
+                                        if($row[0] == 0) {
+                                            echo "Да";
+                                        }
+                                        else {
+                                            echo "Нет";
+                                        }
+                                    }
+                                }
+                                ?>
+                            </td>
                         </tr>
                         <tr>
                             <td><?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
