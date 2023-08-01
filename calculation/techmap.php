@@ -874,7 +874,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td>Поставщик мат-ла</td>
+                            <td style="line-height: 18px;">Поставщик мат-ла</td>
                             <td>
                                 <?php
                                 if(empty($techmap_id)) {
@@ -892,7 +892,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         <?php endif; ?>
                         <tr>
                             <td>Марка мат-ла</td>
-                            <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
+                            <td style="line-height: 18px;"><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
@@ -903,7 +903,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             <td><?= DisplayNumber(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td><?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
+                            <td style="line-height: 18px;"><?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
                             <td><?= DisplayNumber(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
                         <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
@@ -994,8 +994,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <?php endif; ?>
                         <tr>
-                            <td>Требование по материалу</td>
-                            <td>
+                            <td style="line-height: 18px;">Требование по материалу</td>
+                            <td style="line-height: 18px;">
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_1"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(1);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
                                 <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : $requirement1) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_1">
@@ -1045,8 +1045,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             <td>Нет</td>
                         </tr>
                         <tr>
-                            <td>Требование по материалу</td>
-                            <td>
+                            <td style="line-height: 18px;">Требование по материалу</td>
+                            <td style="line-height: 18px;">
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_2"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(2);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
                                 <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : $requirement2) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_2">
@@ -1353,8 +1353,8 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                             <td><?= DisplayNumber(floatval($length_dirty_3), 0) ?> м</td>
                         </tr>
                         <tr>
-                            <td>Требование по материалу</td>
-                            <td>
+                            <td style="line-height: 18px;">Требование по материалу</td>
+                            <td style="line-height: 18px;">
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_3"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(3);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
                                 <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : $requirement3) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_3">
