@@ -65,6 +65,14 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 
             $executer = new Executer($sql);
             $error_message = $executer->error;
+            
+            if(empty($error_message) && !empty($comment)) {
+                $user_id = GetUserId();
+                
+                $sql = "insert into pallet_comment (pallet_id, comment, user_id) values ($pallet_id, '$comment', $user_id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
         
             if(empty($error_message)) {
                 if($row['status_id'] == ROLL_STATUS_UTILIZED) {
@@ -353,17 +361,25 @@ if(null === $comment) $comment = $row['comment'];
                         if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER]))) {
                             $comment_disabled = " disabled='disabled'";
                         }
-                        
-                        $comment_value = htmlentities($comment);
-                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                            $comment_value = "";
-                        }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-                        <p><?= htmlentities($comment) ?></p>
-                        <?php endif; ?>
-                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?= $comment_value ?></textarea>
+                        <table class="table">
+                            <?php
+                            $sql = "select pc.date, pc.comment, u.last_name, u.first_name "
+                                    . "from pallet_comment pc "
+                                    . "inner join user u on pc.user_id = u.id "
+                                    . "where pc.pallet_id = $pallet_id";
+                            $fetcher = new Fetcher($sql);
+                            while($row = $fetcher->Fetch()):
+                            ?>
+                            <tr>
+                                <td class="font-italic"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y H:i') ?></td>
+                                <td><?=$row['comment'] ?></td>
+                                <td class="text-nowrap font-italic"><?=$row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.') ?></td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </table>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">

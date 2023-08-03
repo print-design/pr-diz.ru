@@ -1,9 +1,9 @@
 <?php
 include '../include/topscripts.php';
 
-// Пекренаправление на страницу карщика или резчика при чтении QR-кода
+// Пекренаправление на страницу карщика при чтении QR-кода
 if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
-    header('Location: '.APPLICATION.'/car/roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
+    header('Location: '.APPLICATION.'/car/pallet_edit.php?id='. filter_input(INPUT_GET, 'id'));
 }
 
 // Авторизация
@@ -14,7 +14,7 @@ elseif(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPE
 // Если не задано значение id, перенаправляем на список
 $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
-    header('Location: '.APPLICATION.'/roll/');
+    header('Location: '.APPLICATION.'/pallet/');
 }
 
 // Валидация формы
@@ -27,8 +27,8 @@ $width_valid = '';
 $film_variation_id_valid = '';
 $length_valid = '';
 $net_weight_valid = '';
+$rolls_number_valid = '';
 $cell_valid = '';
-$status_id_valid = '';
 
 $invalid_message = '';
 $length_invalid_message = '';
@@ -36,10 +36,13 @@ $length_invalid_message = '';
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    
+
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
-    $sql = "select film_variation_id, length, width, net_weight from roll where id=$id";
+    $sql = "select p.film_variation_id, p.width, "
+            . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
+            . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight "
+            . "from pallet p where p.id=$id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $old_film_variation_id = $row['film_variation_id'];
@@ -60,7 +63,15 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         if(empty($net_weight)) $net_weight = $old_net_weight;
     }
     
-    $weight_result = filter_input(INPUT_POST, 'net_weight_normal');
+    // Определяем удельный вес
+    $ud_ves = null;
+    $sql = "select weight from film_variation where id=$film_variation_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $ud_ves = $row[0];
+    }
+    
+    $weight_result = floatval($ud_ves) * floatval($length) * floatval($width) / 1000.0 / 1000.0;
     $weight_result_high = $weight_result + ($weight_result * 15.0 / 100.0);
     $weight_result_low = $weight_result - ($weight_result * 15.0 / 100.0);
     
@@ -80,71 +91,49 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-        $status_id = filter_input(INPUT_POST, 'status_id');
-        if(empty($status_id)) {
-            if(empty($cell)) {
-                $status_id_valid = ISINVALID;
-                $form_valid = false;
-            }
-        }
-    }
-    
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
-        $sql = "select status_id from roll_status_history where roll_id=$id order by id desc limit 1";
-        $row = (new Fetcher($sql))->Fetch();
-        $status_id = filter_input(INPUT_POST, 'status_id');
-        
-        if((!$row || $row['status_id'] != $status_id) && !empty($status_id)) {
-            $user_id = GetUserId();
-            
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($id, $status_id, $user_id)";
-            $error_message = (new Executer($sql))->error;
-        }
-        
         if(empty($error_message)) {
             $sql = "";
             
             // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql = "update roll set cell = '$cell', comment = '$comment' where id = $id";
+                $sql = "update pallet set cell = '$cell', comment = '$comment' where id = $id";
             }
             else {
-                $sql = "update roll set comment = concat(comment, ' ', '$comment') where id = $id";
+                $sql = "update pallet set comment = concat(comment, ' ', '$comment') where id = $id";
             }
             
             $error_message = (new Executer($sql))->error;
         }
         
+        if(empty($error_message) && !empty($comment)) {
+            $user_id = GetUserId();
+            
+            $sql = "insert into pallet_comment (pallet_id, comment, user_id) values ($id, '$comment', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
         if(empty($error_message)) {
-            if($row['status_id'] == ROLL_STATUS_UTILIZED) {
-                header('Location: '.APPLICATION.'/utilized/'. BuildQueryRemove('id'));
-            }
-            elseif($row['status_id'] == ROLL_STATUS_CUT) {
-                header('Location: '.APPLICATION.'/cut_source/'. BuildQueryRemove('id'));
-            }
-            else {
-                header('Location: '.APPLICATION.'/roll/'. BuildQueryRemove('id'));
-            }
+            header('Location: '.APPLICATION.'/pallet/'. BuildQueryRemove('id'));
         }
     }
 }
 
 // Получение данных
-$sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.width, r.film_variation_id, r.length, "
-        . "(select film_id from film_variation where id = r.film_variation_id) film_id, "
-        . "r.net_weight, r.cell, "
-        . "rsh.status_id status_id, DATE_FORMAT(rsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(rsh.date, '%H.%i') status_time, "
-        . "r.comment, r.cut_wind_id, r.cutting_wind_id "
-        . "from roll r "
-        . "inner join user u on r.storekeeper_id = u.id "
-        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-        . "where r.id=$id";
+$sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.film_variation_id, p.width, "
+        . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) length, "
+        . "(select film_id from film_variation where id = p.film_variation_id) film_id, "
+        . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) net_weight, "
+        . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number, "
+        . "p.cell, "
+        . "p.comment "
+        . "from pallet p inner join user u on p.storekeeper_id = u.id "
+        . "where p.id=$id";
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
@@ -166,24 +155,24 @@ if(null === $film_variation_id) $film_variation_id = $row['film_variation_id'];
 
 $length = filter_input(INPUT_POST, 'length');
 if(null === $length) $length = $row['length'];
+if(null === $length) $length = 0;
 
 $net_weight = filter_input(INPUT_POST, 'net_weight');
 if(null === $net_weight) $net_weight = $row['net_weight'];
+if(null === $net_weight) $net_weight = 0;
+
+$rolls_number = filter_input(INPUT_POST, 'rolls_number');
+if(null === $rolls_number) $rolls_number = $row['rolls_number'];
+if(null === $rolls_number) $rolls_number = 0;
 
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];
 
-$status_id = filter_input(INPUT_POST, 'status_id');
-if(null === $status_id) $status_id = $row['status_id'];
-
-$status_date = $row['status_date'];
-$status_time = $row['status_time'];
+$status_id = ROLL_STATUS_FREE;
+if($rolls_number == 0) $status_id = ROLL_STATUS_UTILIZED;
 
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
-
-$cut_wind_id = $row['cut_wind_id'];
-$cutting_wind_id = $row['cutting_wind_id'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -201,18 +190,9 @@ $cutting_wind_id = $row['cutting_wind_id'];
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger>$error_message</div>";
             }
-            
-            // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
-            // иначе - в раздел "Рулоны".
-            if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED):
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php elseif(isset($status_id) && $status_id == ROLL_STATUS_CUT): ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php else: ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php endif; ?>
-            <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <h1 style="font-size: 24px; font-weight: 600;">Информация о паллете № <?="П".$id ?> от <?= $date ?></h1>
             <?php if(!empty($time) && $time != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
             <?php endif; ?>
@@ -221,7 +201,6 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                     <input type="hidden" id="date" name="date" value="<?= $date ?>" />
                     <input type="hidden" id="storekeeper_id" name="storekeeper_id" value="<?= $storekeeper_id ?>" />
-                    <input type="hidden" id="net_weight_normal" name="net_weight_normal" />
                     <input type="hidden" id="scroll" name="scroll" />
                     <div class="form-group">
                         <label for="storekeeper">Принят кладовщиком</label>
@@ -328,26 +307,30 @@ $cutting_wind_id = $row['cutting_wind_id'];
                             <input type="text" id="cell" name="cell" value="<?= $cell ?>" class="form-control no-latin<?=$cell_valid ?>" placeholder="Введите ячейку"<?=$cell_disabled ?> />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
-                        <div class="col-6 form-group"></div>
-                    </div>
-                    <div class="form-group d-none">
-                        <?php
-                        $manager_disabled = " disabled='disabled'";
-                        ?>
-                        <label for="manager_id">Менеджер</label>
-                        <select id="manager_id" name="manager_id" class="form-control"<?=$manager_disabled ?>>
-                            <option value="">Выберите менеджера</option>
-                        </select>
+                        <div class="col-6 form-group">
+                            <label for="rolls_number">Количество рулонов</label>
+                            <?php
+                            $rolls_number_disabled = " disabled='disabled'";
+                            ?>
+                            <select id="rolls_number" name="rolls_number" class="form-control<?=$rolls_number_valid ?>"<?=$rolls_number_disabled ?>>
+                                <option value="">Выберите количество</option>
+                                <?php if($rolls_number == 0): ?>
+                                <option value="0" selected="selected">0</option>
+                                <?php
+                                endif;
+                                for($i=1; $i<21; $i++) {
+                                    $selected = '';
+                                    if($rolls_number == $i) $selected = " selected='selected'";
+                                    echo "<option value='$i'$selected>$i</option>";
+                                }
+                                ?>
+                            </select>
+                            <div class="invalid-feedback">Количество рулонов обязательно</div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <?php
-                        $status_id_disabled = "";
-                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                            $status_id_disabled = " disabled='disabled'";
-                        }
-                        ?>
                         <label for="status_id">Статус</label>
-                        <select id="status_id" name="status_id" class="form-control<?=$status_id_valid ?>" required="required"<?=$status_id_disabled ?>>
+                        <select id="status_id" name="status_id" class="form-control" required="required" disabled='disabled'>
                             <?php
                             foreach(ROLL_STATUSES as $status):
                                 if(!(empty($status_id) && $status == ROLL_STATUS_UTILIZED)) { // Если статуса нет, то нельзя сразу поставить "Сработанный".
@@ -355,182 +338,37 @@ $cutting_wind_id = $row['cutting_wind_id'];
                                     if(empty($status_id)) $status_id = ROLL_STATUS_FREE; // По умолчанию ставим статус "Свободный".
                                     if($status_id == $status) $selected = " selected = 'selected'";
                                 }
-                                ?>
+                            ?>
                             <option value="<?=$status ?>"<?=$selected ?>><?=ROLL_STATUS_NAMES[$status] ?></option>
                             <?php endforeach; ?>
                         </select>
                         <div class="invalid-feedback">Статус обязательно</div>
                     </div>
-                    <!-- Отображаем, в каких нарезках данный ролик участвовал -->
-                    <?php
-                    // Если этот рулон был раскроен
-                    if($status_id == ROLL_STATUS_CUT):
-                    ?>
-                    <div class="form-group">
-                        <label>Как резали:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?=$status_date.' в '.$status_time ?><br />
-                        <?php
-                        $sql = "select cstr.width "
-                                . "from cut_source cs "
-                                . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 0";
-                        $fetcher = new Fetcher($sql);
-                        $result = "";
-                        while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row[0].' мм';
-                        }
-                        echo $result;
-                        
-                        $sql = "select cstr.width "
-                                . "from cutting_source cs "
-                                . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 0";
-                        $fetcher = new Fetcher($sql);
-                        $result = "";
-                        while($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row[0].' мм';
-                        }
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    // Если этот рулон появился в результате нарезки (старая версия)
-                    elseif(!empty($cut_wind_id)):
-                    ?>
-                    <div class="form-group">
-                        <label>Получился из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?php
-                        $sql = "select cstr.width "
-                                . "from cut_wind cw "
-                                . "inner join cut c on cw.cut_id = c.id "
-                                . "inner join cut_stream cstr on cw.cut_id = cstr.cut_id "
-                                . "where cw.id = $cut_wind_id";
-                        $fetcher = new Fetcher($sql);
-                        $result = "";
-                        while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row['width'].' мм';
-                        }
-                        echo "$date в $time<br />";
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    // Если этот рулон появился в результате нарезки (новая версия)
-                    elseif(!empty($cutting_wind_id)):
-                    ?>
-                    <div class="form-group">
-                        <label>Получился из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                            <?php
-                            $sql = "select cstr.width "
-                                    . "from cutting_wind cw "
-                                    . "inner join cutting_source cs on cw.cutting_source_id = cs.id "
-                                    . "inner join cutting c on cs.cutting_id = c.id "
-                                    . "inner join cutting_stream cstr on cstr.cutting_id = c.id "
-                                    . "where cw.id = $cutting_wind_id";
-                            $fetcher = new Fetcher($sql);
-                            $result = "";
-                            while ($row = $fetcher->Fetch()) {
-                                if($result != "") {
-                                    $result .= " - ";
-                                }
-                                $result .= $row['width'].' мм';
-                            }
-                            echo "$date в $time<br />";
-                            echo $result;
-                            ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    // Если этот рулон появился в результате нарезки (старая версия)
-                    $sql = "select cs.width "
-                            . "from cut c "
-                            . "inner join cut_stream cs on cs.cut_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id');
-                    $grabber = new Grabber($sql);
-                    if(count($grabber->result) > 0):
-                    ?>
-                    <div class="form-group">
-                        <label>Остаток из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?php
-                        $result = "";
-                        foreach($grabber->result as $row) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row['width'].' мм';
-                        }
-                        echo "$date в $time<br />";
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    // Если этот рулон появился в результате нарезки (новая версия)
-                    $sql = "select cs.width "
-                            . "from cutting c "
-                            . "inner join cutting_stream cs on cs.cutting_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id');
-                    $grabber = new Grabber($sql);
-                    if(count($grabber->result) > 0):
-                    ?>
-                    <div class="form-group">
-                        <label>Остаток из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                            <?php
-                            $result = "";
-                            foreach($grabber->result as $row) {
-                                if($result != "") {
-                                    $result .= " - ";
-                                }
-                                $result .= $row['width'].' мм';
-                            }
-                            echo "$date в $time<br />";
-                            echo $result;
-                            ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    ?>
                     <div class="form-group">
                         <?php
                         $comment_disabled = "";
                         if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER]))) {
                             $comment_disabled = " disabled='disabled'";
                         }
-                        
-                        $comment_value = htmlentities($comment);
-                        if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                            $comment_value = "";
-                        }
                         ?>
                         <label for="comment">Комментарий</label>
-                        <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-                        <p><?= htmlentities($comment) ?></p>
-                        <?php endif; ?>
-                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
+                        <table class="table">
+                            <?php
+                            $sql = "select pc.date, pc.comment, u.last_name, u.first_name "
+                                    . "from pallet_comment pc "
+                                    . "inner join user u on pc.user_id = u.id "
+                                    . "where pc.pallet_id = ". filter_input(INPUT_GET, 'id');
+                            $fetcher = new Fetcher($sql);
+                            while($row = $fetcher->Fetch()):
+                            ?>
+                            <tr>
+                                <td class="font-italic"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y H:i') ?></td>
+                                <td><?=$row['comment'] ?></td>
+                                <td class="text-nowrap font-italic"><?=$row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.') ?></td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </table>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
@@ -543,7 +381,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                             <?php endif; ?>
                         </div>
                     </div>
-                </div>
+                </div>                
             </form>
         </div>
         <?php
@@ -553,39 +391,6 @@ $cutting_wind_id = $row['cutting_wind_id'];
             if($('.is-invalid').first() != null) {
                 $('.is-invalid').first().focus();
             }
-            
-            // Все марки плёнки с их вариациями
-            var films = new Map();
-            
-            <?php
-            $sql = "SELECT fv.film_id, fv.id, fv.thickness, fv.weight FROM film_variation fv";
-            $fetcher = new Fetcher($sql);
-            while ($row = $fetcher->Fetch()):
-            ?>
-            if(films.get(<?= $row['film_id'] ?>) == undefined) {
-                films.set(<?= $row['film_id'] ?>, new Map());
-            }
-            films.get(<?= $row['film_id'] ?>).set(<?= $row['id'] ?>, [<?=$row['thickness'] ?>, <?= $row['weight'] ?>]);
-            <?php        
-            endwhile;
-            ?>
-                
-            // Расчёт длины и массы плёнки по шпуле, толщине, радиусу, ширине, удельному весу
-            function CalculateWeight() {
-                film_id = $('#film_id').val();
-                length = $('#length').val();
-                width = $('#width').val();
-                film_variation_id = $('#film_variation_id').val();
-                
-                if(!isNaN(length) && !isNaN(width) && !isNaN(film_variation_id) && length != '' && width != '' && film_variation_id != '') {
-                    thickness = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[0];
-                    density = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[1];
-                    weight = GetFilmWeightByLengthWidth(length, width, density);
-                    $('#net_weight_normal').val(weight.toFixed(2));
-                }
-            }
-            
-            $(document).ready(CalculateWeight);
         </script>
     </body>
 </html>

@@ -22,7 +22,6 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
     $type = filter_input(INPUT_POST, 'type');
     
     $sql_history = '';
-    $sql_comment = '';
     $sql = '';
     
     switch ($type) {
@@ -32,7 +31,6 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
             break;
         case 'roll':
             $sql_history = "delete from roll_status_history where roll_id = $id";
-            $sql_comment = "delete from roll_comment where roll_id = $id";
             $sql = "delete from roll where id = $id";
             break;
     }
@@ -40,20 +38,9 @@ if(null !== filter_input(INPUT_POST, 'delete-film-submit')) {
     if(!empty($sql)) {
         $error_message = (new Executer($sql_history))->error;
         
-        if(empty($error_message) && $type == "roll") {
-            $error_message = (new Executer($sql_comment))->error;
-        }
-        
         if(empty($error_message)) {
             $error_message = (new Executer($sql))->error;
-        }
-        
-        if(empty($error_message)) {
-            $sql_empty_pallet_comment = "delete from pallet_comment where pallet_id not in (select distinct pallet_id from pallet_comment)";
-            $error_message = (new Executer($sql_empty_pallet_comment))->error;
-        }
-        
-        if(empty($error_message)) {
+            
             $sql_empty_pallet = "delete from pallet where id not in (select distinct pallet_id from pallet_roll)";
             $error_message = (new Executer($sql_empty_pallet))->error;
         }
@@ -246,8 +233,7 @@ $total_weight = $row[0];
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
                             . "p.width width, fv.thickness thickness, fv.weight density, p.cell cell, pr.weight net_weight, pr.length length, "
                             . "s.name supplier, "
-                            . "prsh.status_id status_id, "
-                            . "(select group_concat(comment separator ' ') from pallet_comment where pallet_id = p.id group by pallet_id) as comment "
+                            . "prsh.status_id status_id, p.comment comment "
                             . "from pallet_roll pr "
                             . "inner join pallet p on pr.pallet_id = p.id "
                             . "left join film_variation fv on p.film_variation_id = fv.id "
@@ -259,8 +245,7 @@ $total_weight = $row[0];
                             . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
                             . "r.width width, fv.thickness thickness, fv.weight density, r.cell cell, r.net_weight net_weight, r.length length, "
                             . "s.name supplier, "
-                            . "rsh.status_id status_id, "
-                            . "(select group_concat(comment separator ' ') from roll_comment where roll_id = r.id group by roll_id) as comment "
+                            . "rsh.status_id status_id, r.comment comment "
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "

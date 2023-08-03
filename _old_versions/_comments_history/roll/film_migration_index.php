@@ -12,6 +12,10 @@ if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
     $error_message = (new Executer("delete from roll_status_history where roll_id = $id"))->error;
     
     if(empty($error_message)) {
+        $error_message = (new Executer("delete from roll_comment where roll_id = $id"))->error;
+    }
+    
+    if(empty($error_message)) {
         $error_message = (new Executer("delete from roll where id = $id"))->error;
     }
 }

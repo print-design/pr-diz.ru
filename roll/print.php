@@ -12,7 +12,7 @@ $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_na
         . "r.film_variation_id, f.name film, r.width, fv.thickness, fv.weight, r.length, "
         . "r.net_weight, r.cell, "
         . "(select status_id from roll_status_history where roll_id = r.id order by id desc limit 0, 1) status_id, "
-        . "(select group_concat(comment separator ' ') from roll_comment where roll_id = r.id group by roll_id) as comment "
+        . "r.comment "
         . "from roll r "
         . "left join user u on r.storekeeper_id = u.id "
         . "left join supplier s on r.supplier_id = s.id "
