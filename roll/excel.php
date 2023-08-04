@@ -73,6 +73,7 @@ $sheet->getColumnDimension('H')->setAutoSize(true);
 $sheet->getColumnDimension('I')->setAutoSize(true);
 $sheet->getColumnDimension('J')->setAutoSize(true);
 $sheet->getColumnDimension('K')->setAutoSize(true);
+$sheet->getColumnDimension('L')->setAutoSize(true);
 
 $rowindex = 1;
 
@@ -84,9 +85,10 @@ $sheet->setCellValue('E'.$rowindex, "Вес");
 $sheet->setCellValue('F'.$rowindex, "Длина");
 $sheet->setCellValue('G'.$rowindex, "Поставщик");
 $sheet->setCellValue('H'.$rowindex, "ID паллета");
-$sheet->setCellValue('I'.$rowindex, "Кол-во рулонов");
-$sheet->setCellValue('J'.$rowindex, "№ ячейки");
-$sheet->setCellValue('K'.$rowindex, "Комментарий");
+$sheet->setCellValue('I'.$rowindex, "Рулонов своб.");
+$sheet->setCellValue('J'.$rowindex, "Рулонов исх.");
+$sheet->setCellValue('K'.$rowindex, "№ ячейки");
+$sheet->setCellValue('L'.$rowindex, "Комментарий");
 
 $sql = "select p.id, DATE_FORMAT(p.date, '%d.%m.%Y') date, f.name film, fv.thickness, p.width, "
         . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) net_weight, "
@@ -113,9 +115,10 @@ while($row = $fetcher->Fetch()) {
     $sheet->setCellValue('F'.$rowindex, $row['length']);
     $sheet->setCellValue('G'.$rowindex, $row['supplier']);
     $sheet->setCellValue('H'.$rowindex, "П".$row['id']);
-    $sheet->setCellValue('I'.$rowindex, $row['rolls_number_free'].'/'.$row['rolls_number_total']);
-    $sheet->setCellValue('J'.$rowindex, $row['cell']);
-    $sheet->setCellValue('K'.$rowindex, $row['comment']);
+    $sheet->setCellValue('I'.$rowindex, $row['rolls_number_free']);
+    $sheet->setCellValue('J'.$rowindex, $row['rolls_number_total']);
+    $sheet->setCellValue('K'.$rowindex, $row['cell']);
+    $sheet->setCellValue('L'.$rowindex, $row['comment']);
 }
 
 $filename = "Склад_".(new DateTime())->format('Y-m-d').".xls";
