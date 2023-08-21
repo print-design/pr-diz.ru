@@ -99,7 +99,7 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                     <form method="post" class="form-inline">
                         <input type="hidden" name="laminator_id" value="<?=$laminator_id ?>" />
                         <input type="hidden" name="scroll" />
-                        <input type="text" class="form-control mr-2 int-only" name="value" placeholder="Ширина вала..." required="required" />
+                        <input type="text" class="form-control mr-2 int-only" name="value" placeholder="Ширина вала..." required="required" autocomplete="off" />
                         <button type="submit" name="roller_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
                     </form>
                 </div>
