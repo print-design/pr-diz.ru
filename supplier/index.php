@@ -72,7 +72,7 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Поставщик" required="required" />
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Поставщик" required="required" autocomplete="off" />
                             </div>
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
