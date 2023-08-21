@@ -98,18 +98,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="usd">Доллар</label>
                             <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only<?=$usd_valid ?>" 
-                                       id="usd" 
-                                       name="usd" 
-                                       value="<?= empty($usd) ? "" : floatval($usd) ?>" 
-                                       placeholder="Доллар" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" 
-                                       onfocusout="javascript: $(this).attr('id', 'usd'); $(this).attr('name', 'usd'); $(this).attr('placeholder', 'Доллар');" />
+                                <input type="text" class="form-control float-only<?=$usd_valid ?>" id="usd" name="usd" value="<?= empty($usd) ? "" : floatval($usd) ?>" placeholder="Доллар" required="required" autocomplete="off" />
                                 <div class="input-group-append"><span class="input-group-text">руб.</span></div>
                             </div>
                             <div class="invalid-feedback">Доллар обязательно</div>
@@ -117,18 +106,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="euro">Евро</label>
                             <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only<?=$euro_valid ?>" 
-                                       id="euro" 
-                                       name="euro" 
-                                       value="<?= empty($euro) ? "" : floatval($euro) ?>" 
-                                       placeholder="Евро" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" 
-                                       onfocusout="javascript: $(this).attr('id', 'euro'); $(this).attr('name', 'euro'); $(this).attr('placeholder', 'Евро');" />
+                                <input type="text" class="form-control float-only<?=$euro_valid ?>" id="euro" name="euro" value="<?= empty($euro) ? "" : floatval($euro) ?>" placeholder="Евро" required="required" autocomplete="off" />
                                 <div class="input-group-append"><span class="input-group-text">руб.</span></div>
                             </div>
                             <div class="invalid-feedback">Евро обязательно</div>
