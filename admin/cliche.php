@@ -131,18 +131,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="flint_price">Flint (за м<sup>2</sup>)</label>
                             <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only<?=$flint_price_valid ?>" 
-                                       id="flint_price" 
-                                       name="flint_price" 
-                                       value="<?= empty($flint_price) ? "" : floatval($flint_price) ?>" 
-                                       placeholder="Стоимость, за м2" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'flint_price'); $(this).attr('name', 'flint_price'); $(this).attr('placeholder', 'Стоимость, за м2');" />
+                                <input type="text" class="form-control float-only<?=$flint_price_valid ?>" id="flint_price" name="flint_price" value="<?= empty($flint_price) ? "" : floatval($flint_price) ?>" placeholder="Стоимость, за м2" required="required" autocomplete="off" />
                                 <div class="input-group-append">
                                     <select id="flint_currency" name="flint_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -157,18 +146,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="kodak_price">Kodak (за м<sup>2</sup>)</label>
                             <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only<?=$kodak_price_valid ?>" 
-                                       id="kodak_price" 
-                                       name="kodak_price" 
-                                       value="<?= empty($kodak_price) ? "" : floatval($kodak_price) ?>" 
-                                       placeholder="Стоимость, за м2" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за м2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'kodak_price'); $(this).attr('name', 'kodak_price'); $(this).attr('placeholder', 'Стоимость, за м2');" />
+                                <input type="text" class="form-control float-only<?=$kodak_price_valid ?>" id="kodak_price" name="kodak_price" value="<?= empty($kodak_price) ? "" : floatval($kodak_price) ?>" placeholder="Стоимость, за м2" required="required" autocomplete="off" />
                                 <div class="input-group-append">
                                     <select id="kodak_currency" name="kodak_currency" required="required">
                                         <option value="" hidden="">...</option>
@@ -183,18 +161,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="form-group">
                             <label for="scotch_price">Скотч (за м<sup>2</sup>)</label>
                             <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-only<?=$scotch_price_valid ?>" 
-                                       id="scotch_price" 
-                                       name="scotch_price" 
-                                       value="<?= empty($scotch_price) ? "" : floatval($scotch_price) ?>" 
-                                       placeholder="Скотч, м2" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'scotch_price'); $(this).attr('name', 'scotch_price'); $(this).attr('placeholder', 'Скотч, м2');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'scotch_price'); $(this).attr('name', 'scotch_price'); $(this).attr('placeholder', 'Скотч, м2');" 
-                                       onfocusout="javascript: $(this).attr('id', 'scotch_price'); $(this).attr('name', 'scotch_price'); $(this).attr('placeholder', 'Скотч, м2');" />
+                                <input type="text" class="form-control float-only<?=$scotch_price_valid ?>" id="scotch_price" name="scotch_price" value="<?= empty($scotch_price) ? "" : floatval($scotch_price) ?>" placeholder="Скотч, м2" required="required" autocomplete="off" />
                                 <div class="input-group-append">
                                     <select id="scotch_currency" name="scotch_currency" required="required">
                                         <option value="" hidden="">...</option>
