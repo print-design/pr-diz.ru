@@ -99,7 +99,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                     <form method="post" class="form-inline">
                         <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="scroll" />
-                        <input type="text" class="form-control mr-2 float-only" name="value" placeholder="Шаг..." required="required" />
+                        <input type="text" class="form-control mr-2 float-only" name="value" placeholder="Шаг..." required="required" autocomplete="off" />
                         <button type="submit" name="raport_create_submit" class="btn btn-outline-dark fas fa-plus"></button>
                     </form>
                 </div>
