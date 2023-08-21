@@ -94,53 +94,19 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="first_name">Имя</label>
-                            <input type="text" 
-                                   id="first_name" 
-                                   name="first_name" 
-                                   class="form-control<?=$first_name_valid ?>" 
-                                   value="<?= filter_input(INPUT_POST, 'first_name') ?>" 
-                                   required="required" 
-                                   autocomplete="off" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onmouseup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" 
-                                   onfocusout="javascript: $(this).attr('id', 'first_name'); $(this).attr('name', 'first_name');" />
+                            <input type="text" id="first_name" name="first_name" class="form-control<?=$first_name_valid ?>" value="<?= filter_input(INPUT_POST, 'first_name') ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Имя обязательно</div>
                         </div>
                         <div class="col-6 form-group">
                             <label for="last_name">Фамилия</label>
-                            <input type="text" 
-                                   id="last_name" 
-                                   name="last_name" 
-                                   class="form-control<?=$last_name_valid ?>" 
-                                   value="<?= filter_input(INPUT_POST, 'last_name') ?>" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onmouseup="javascript: $(this).attr('id', 'last_name'); $(this).attr('name', 'last_name');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'last_name'); $(this).attr('name', 'last_name');" 
-                                   onfocusout="javascript: $(this).attr('id', 'last_name'); $(this).attr('name', 'last_name');" />
+                            <input type="text" id="last_name" name="last_name" class="form-control<?=$last_name_valid ?>" value="<?= filter_input(INPUT_POST, 'last_name') ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Фамилия обязательно</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6 form-group">
                             <label for="phone">Телефон</label>
-                            <input type="tel" 
-                                   id="phone" 
-                                   name="phone" 
-                                   class="form-control<?=$phone_valid ?>" 
-                                   value="<?= filter_input(INPUT_POST, 'phone') ?>" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                   onmouseup="javascript: $(this).attr('id', 'phone'); $(this).attr('name', 'phone');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'phone'); $(this).attr('name', 'phone');" 
-                                   onfocusout="javascript: $(this).attr('id', 'phone'); $(this).attr('name', 'phone');" />
+                            <input type="tel" id="phone" name="phone" class="form-control<?=$phone_valid ?>" value="<?= filter_input(INPUT_POST, 'phone') ?>" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Телефон обязательно</div>
                         </div>
                     </div>
