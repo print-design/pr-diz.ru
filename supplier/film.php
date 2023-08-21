@@ -161,12 +161,12 @@ while($row = $fetcher->Fetch()) {
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" id="thickness" name="thickness" class="form-control int-only" placeholder="Толщина" required="required" />
+                                        <input type="text" id="thickness" name="thickness" class="form-control int-only" placeholder="Толщина" required="required" autocomplete="off" />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" required="required" />
+                                        <input type="text" id="weight" name="weight" class="form-control float-only" placeholder="Удельный вес" required="required" autocomplete="off" />
                                     </div>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@ while($row = $fetcher->Fetch()) {
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Марка пленки" required="required" />
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Марка пленки" required="required" autocomplete="off" />
                             </div>
                         </div>
                         <div class="modal-footer" style="justify-content: flex-start;">
