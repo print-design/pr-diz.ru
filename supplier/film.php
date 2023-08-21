@@ -246,18 +246,7 @@ while($row = $fetcher->Fetch()) {
                             <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
                             <div class="input-group">
                                 <label for="price" style="font-size: 14px;">от&nbsp;</label>
-                                <input type="text" 
-                                       name="price" 
-                                       class="form-control float-only film-price" 
-                                       placeholder="Цена" style="width: 80px;" 
-                                       value="<?=$film_variation['price'] ?>" 
-                                       data-film-variation-id="<?=$fv_key ?>" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                       onfocusout="javascript: $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
+                                <input type="text" name="price" class="form-control float-only film-price" placeholder="Цена" style="width: 80px;" value="<?=$film_variation['price'] ?>" data-film-variation-id="<?=$fv_key ?>" required="required" autocomplete="off" />
                                 <div class="input-group-append">
                                     <select name="currency" class="film-currency" required="required">
                                         <option value="" hidden="">...</option>
