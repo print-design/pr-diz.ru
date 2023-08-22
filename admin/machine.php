@@ -128,50 +128,17 @@ if($row = $fetcher->Fetch()) {
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
                             <label for="price">Цена работы оборудования (руб/час)</label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$price_valid ?>" 
-                                   id="price" 
-                                   name="price" 
-                                   value="<?= empty($price) ? "" : floatval($price) ?>" 
-                                   placeholder="Цена, руб/час" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" />
+                            <input type="text" class="form-control float-only<?=$price_valid ?>" id="price" name="price" value="<?= empty($price) ? "" : floatval($price) ?>" placeholder="Цена, руб/час" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Цена обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="speed">Скорость работы оборудования (км/час)</label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$speed_valid ?>" 
-                                   id="speed" 
-                                   name="speed" 
-                                   value="<?= empty($speed) ? "" : floatval($speed) ?>" 
-                                   placeholder="Скорость, км/час" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" />
+                            <input type="text" class="form-control float-only<?=$speed_valid ?>" id="speed" name="speed" value="<?= empty($speed) ? "" : floatval($speed) ?>" placeholder="Скорость, км/час" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Скорость обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="width">Ширина машины, мм</label>
-                            <input type="text" 
-                                   class="form-control int-only<?=$width_valid ?>" 
-                                   id="width" 
-                                   name="width" 
-                                   value="<?= empty($width) ? "" : intval($width) ?>" 
-                                   placeholder="Ширина машины, мм" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" 
-                                   onfocusout="javascript: $(this).attr('id', 'width'); $(this).attr('name', 'width'); $(this).attr('placeholder', 'Ширина машины, мм');" />
+                            <input type="text" class="form-control int-only<?=$width_valid ?>" id="width" name="width" value="<?= empty($width) ? "" : intval($width) ?>" placeholder="Ширина машины, мм" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Ширина машины обязательно</div>
                         </div>
                         <?php if($machine_id == PRINTER_ATLAS): ?>
@@ -179,18 +146,7 @@ if($row = $fetcher->Fetch()) {
                         <?php else: ?>
                         <div class="form-group">
                             <label for="vaporization_expense">Расход растворителя на испарение, г/м<sup>2</sup></label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$vaporization_expense_valid ?>" 
-                                   id="vaporization_expense" 
-                                   name="vaporization_expense" 
-                                   value="<?= empty($vaporization_expense) ? "" : floatval($vaporization_expense) ?>" 
-                                   placeholder="Расх. раств. на испар., г/м2" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'vaporization_expense'); $(this).attr('name', 'vaporization_expense'); $(this).attr('placeholder', 'Расх. раств. на испар., г/м2');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'vaporization_expense'); $(this).attr('name', 'vaporization_expense'); $(this).attr('placeholder', 'Расх. раств. на испар., г/м2');" 
-                                   onfocusout="javascript: $(this).attr('id', 'vaporization_expense'); $(this).attr('name', 'vaporization_expense'); $(this).attr('placeholder', 'Расх. раств. на испар., г/м2');" />
+                            <input type="text" class="form-control float-only<?=$vaporization_expense_valid ?>" id="vaporization_expense" name="vaporization_expense" value="<?= empty($vaporization_expense) ? "" : floatval($vaporization_expense) ?>" placeholder="Расх. раств. на испар., г/м2" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Расход растворителя на испарение обязательно</div>
                         </div>
                         <?php endif; ?>

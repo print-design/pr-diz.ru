@@ -114,50 +114,17 @@ if($row = $fetcher->Fetch()) {
                         <input type="hidden" id="laminator_id" name="laminator_id" value="<?= filter_input(INPUT_GET, 'laminator_id') ?>" />
                         <div class="form-group">
                             <label for="price">Цена работы оборудования, руб/час</label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$price_valid ?>" 
-                                   id="price" 
-                                   name="price" 
-                                   value="<?= empty($price) ? "" : floatval($price) ?>" 
-                                   placeholder="Цена, руб/час" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена, руб/час');" />
+                            <input type="text" class="form-control float-only<?=$price_valid ?>" id="price" name="price" value="<?= empty($price) ? "" : floatval($price) ?>" placeholder="Цена, руб/час" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Цена обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="speed">Скорость работы оборудования, км/час</label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$speed_valid ?>" 
-                                   id="speed" 
-                                   name="speed" 
-                                   value="<?= empty($speed) ? "" : floatval($speed) ?>" 
-                                   placeholder="Скорость, км/час" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" 
-                                   onfocusout="javascript: $(this).attr('id', 'speed'); $(this).attr('name', 'speed'); $(this).attr('placeholder', 'Скорость, км/час');" />
+                            <input type="text" class="form-control float-only<?=$speed_valid ?>" id="speed" name="speed" value="<?= empty($speed) ? "" : floatval($speed) ?>" placeholder="Скорость, км/час" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Скорость обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="max_width">Максимальная ширина материала, мм</label>
-                            <input type="text" 
-                                   class="form-control int-only<?=$max_width_valid ?>" 
-                                   id="max_width" 
-                                   name="max_width" 
-                                   value="<?= empty($max_width) ? "" : intval($max_width) ?>" 
-                                   placeholder="Ширина, мм" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Ширина, мм');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Ширина, мм');" 
-                                   onfocusout="javascript: $(this).attr('id', 'max_width'); $(this).attr('name', 'max_width'); $(this).attr('placeholder', 'Ширина, мм');" />
+                            <input type="text" class="form-control int-only<?=$max_width_valid ?>" id="max_width" name="max_width" value="<?= empty($max_width) ? "" : intval($max_width) ?>" placeholder="Ширина, мм" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Максимальная ширина материала обязательно</div>
                         </div>
                         <button type="submit" id="norm_laminator_submit" name="norm_laminator_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>

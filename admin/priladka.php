@@ -127,69 +127,25 @@ if($row = $fetcher->Fetch()) {
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
                             <label for="time">Время приладки 1 краски (мин)</label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$time_valid ?>" 
-                                   id="time" 
-                                   name="time" 
-                                   value="<?= empty($time) ? "" : floatval($time) ?>" 
-                                   placeholder="Время, мин" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Время, мин');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Время, мин');" 
-                                   onfocusout="javascript: $(this).attr('id', 'time'); $(this).attr('name', 'time'); $(this).attr('placeholder', 'Время, мин');" />
+                            <input type="text" class="form-control float-only<?=$time_valid ?>" id="time" name="time" value="<?= empty($time) ? "" : floatval($time) ?>" placeholder="Время, мин" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="length">Метраж приладки 1 краски (метры)</label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$length_valid ?>" 
-                                   id="length" 
-                                   name="length" 
-                                   value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                   placeholder="Метраж, метры" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" 
-                                   onfocusout="javascript: $(this).attr('id', 'length'); $(this).attr('name', 'length'); $(this).attr('placeholder', 'Метраж, метры');" />
+                            <input type="text" class="form-control float-only<?=$length_valid ?>" id="length" name="length" value="<?= empty($length) ? "" : floatval($length) ?>" placeholder="Метраж, метры" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
                         <?php if($machine_id == PRINTER_ATLAS): ?>
                         <div class="form-group">
                             <label for="stamp">Метраж приладки штампа (метры)</label>
-                            <input type="text" 
-                                   class="form-control float-only<?=$stamp_valid ?>" 
-                                   id="stamp" 
-                                   name="stamp" 
-                                   value="<?= empty($stamp) ? "" : floatval($stamp) ?>" 
-                                   placeholder="Метраж, метры" 
-                                   required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'stamp'); $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Метраж, метры');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'stamp'); $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Метраж, метры');" 
-                                   onfocusout="javascript: $(this).attr('id', 'stamp'); $(this).attr('name', 'stamp'); $(this).attr('placeholder', 'Метраж, метры');" />
+                            <input type="text" class="form-control float-only<?=$stamp_valid ?>" id="stamp" name="stamp" value="<?= empty($stamp) ? "" : floatval($stamp) ?>" placeholder="Метраж, метры" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Метраж приладки штампа обязательно</div>
                         </div>
                         <?php endif; ?>
                         <div class="form-group">
                             <label for="length">Процент отходов на СтартСтоп</label>
                             <div class="input-group">
-                                <input type="text" 
-                                       class="form-control float-none<?=$waste_percent_valid ?>" 
-                                       id="waste_percent" 
-                                       name="waste_percent" 
-                                       value="<?= empty($waste_percent) ? "" : intval($waste_percent) ?>" 
-                                       placeholder="Процент отходов на СтартСтоп" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Процент отходов на СтартСтоп');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Процент отходов на СтартСтоп');" 
-                                       onfocusout="javascript: $(this).attr('id', 'waste_percent'); $(this).attr('name', 'waste_percent'); $(this).attr('placeholder', 'Процент отходов на СтартСтоп');" />
+                                <input type="text" class="form-control float-none<?=$waste_percent_valid ?>" id="waste_percent" name="waste_percent" value="<?= empty($waste_percent) ? "" : intval($waste_percent) ?>" placeholder="Процент отходов на СтартСтоп" required="required" autocomplete="off" />
                                 <div class="input-group-append"><span class="input-group-text">%</span></div>
                             </div>
                             <div class="invalid-feedback">Метраж обязательно</div>
