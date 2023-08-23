@@ -138,6 +138,9 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                         <p><strong>Толщина:</strong> <?=$thickness ?> мкм</p>
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
+                        <?php if(IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
+                        <p><strong>Ячейка:</strong> <?= htmlentities($cell) ?></p>
+                        <?php endif; ?>
                         <p><strong>Комментарий:</strong></p>
                         <div style="white-space: pre-wrap;"><?=$comment ?></div>
                         <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
@@ -175,5 +178,12 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
+        <script>
+            <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
+                $('#cell').focus();
+            <?php elseif(IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
+                $('#comment').focus();
+            <?php endif; ?>
+        </script>
     </body>
 </html>
