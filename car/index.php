@@ -103,5 +103,9 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
+        <script>
+            // Устанавливаем фокус
+            $('input#id').focus();
+        </script>
     </body>
 </html>
