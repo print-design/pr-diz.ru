@@ -344,7 +344,10 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             $('input#source_id').change(function(e) {
                 $(e.target).removeClass('is-invalid');
                 SetClearVisibility($(e.target));
-            });    
+            });
+            
+            // Установка фокуса
+            $('input#source_id').focus();
         </script>
     </body>
 </html>
