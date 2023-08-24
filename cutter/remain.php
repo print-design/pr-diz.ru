@@ -315,6 +315,7 @@ if($row = $fetcher->Fetch()) {
                 if($(this).is(':checked')) {
                     $('.remainder-group').removeClass('d-none');
                     $('input#radius').attr('required', 'required');
+                    $('input#radius').focus();
                     
                     $('.no-remainder-group').addClass('d-none');
                 }
@@ -371,6 +372,9 @@ if($row = $fetcher->Fetch()) {
             $('#radius').keyup(CalculateByRadius);
             
             $('#radius').change(CalculateByRadius);
+            
+            // Установка фокуса
+            $('input#radius').focus();
         </script>
     </body>
 </html>
