@@ -450,6 +450,9 @@ while ($row = $fetcher->Fetch()) {
             $('#length').keyup(CalculateByRadius);
             
             $('#length').change(CalculateByRadius);
+            
+            // Установка фокуса
+            $('#length').focus();
         </script>
     </body>
 </html>
