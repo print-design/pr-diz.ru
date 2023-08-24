@@ -253,6 +253,9 @@ while($row = $fetcher->Fetch()) {
             }
             
             SetStreams($('#streams_count').val());
+            
+            // Установка фокуса
+            $('#streams_count').focus();
         </script>
     </body>
 </html>
