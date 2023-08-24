@@ -391,6 +391,9 @@ if($row = $fetcher->Fetch()) {
             });
             
             $(window).on('resize', AdjustButtons);
+            
+            // Установление фокуса
+            $('#width').focus();
         </script>
     </body>
 </html>
