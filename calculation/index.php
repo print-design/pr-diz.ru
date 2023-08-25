@@ -199,6 +199,10 @@ else $title = $status_titles[1];
                             $name_where = "where c.status_id <> ".ORDER_STATUS_DRAFT." and c.status_id <> ".ORDER_STATUS_TRASH;
                             if($status_id == ORDER_STATUS_DRAFT) $name_where = "where c.status_id = ".ORDER_STATUS_DRAFT;
                             elseif($status_id == ORDER_STATUS_TRASH) $name_where = "where c.status_id = ".ORDER_STATUS_TRASH;
+                            $customer_manager = GetUserId();
+                            if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
+                                $name_where .= " and c.manager_id = $customer_manager";
+                            }
                             if(!empty($customer)) {
                                 $name_where .= " and c.customer_id = $customer";
                             }
