@@ -525,6 +525,10 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $(ev.target).parents('td').children('.d-flex').children('.comment_text').addClass('d-none');
                 $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
                 $(ev.target).parents('td').children('.comment_input').children('input').focus();
+                
+                input = $(ev.target).parents('td').children('.comment_input').children('input');
+                input.prop("selectionStart", input.val().length);
+                input.prop("selectionEnd", input.val().length);
             }
             
             function SaveComment(ev, plan_type, id) {
