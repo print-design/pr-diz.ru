@@ -85,6 +85,13 @@ $total_weight = $row[0];
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            <?php if(IsInRole(ROLE_NAMES[ROLE_STOREKEEPER])): ?>
+            .non_storekeeper { display: none; }
+            <?php else: ?>
+            .storekeeper { display: none; }
+            <?php endif; ?>
+        </style>
     </head>
     <body>
         <?php
@@ -147,7 +154,8 @@ $total_weight = $row[0];
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Кто заказал</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;" class="storekeeper">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;" class="non_storekeeper">Комментарий</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 3%;"></th>
                     </tr>
                 </thead>
@@ -220,7 +228,8 @@ $total_weight = $row[0];
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['rolls_number'].' из '.($row['absent_rolls_number'] + $row['rolls_number']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[ROLL_STATUS_FREE] ?>;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= mb_strtoupper(ROLL_STATUS_NAMES[ROLL_STATUS_FREE]) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>'><?= htmlentities($row['comment']) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" class="storekeeper"><div class="d-flex justify-content-start"><div class="pr-2 comment_pen foredit"><a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a></div><div class="comment_text"><?= htmlentities($row['comment']) ?></div></div><div class="d-none comment_input"><input type="text" class="form-control" value="<?= htmlentities($row['comment']) ?>" onfocusout="SaveComment(event, <?=$row['id'] ?>);" /></td></div></td>
+                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" data-toggle="modal" data-target="#rollsModal" data-text="Рулоны" data-pallet-id='<?=$row['id'] ?>' class="non_storekeeper"><?= htmlentities($row['comment']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                             <div class="film_menu">
@@ -346,6 +355,33 @@ $total_weight = $row[0];
         include '../include/footer.php';
         ?>
         <script>
+            function EditComment(ev) {
+                $(ev.target).parents('td').children('.d-flex').children('.comment_pen').addClass('d-none');
+                $(ev.target).parents('td').children('.d-flex').children('.comment_text').addClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').children('input').focus();
+                
+                input = $(ev.target).parents('td').children('.comment_input').children('input');
+                input.prop("selectionStart", input.val().length);
+                input.prop("selectionEnd", input.val().length);
+            }
+            
+            function SaveComment(ev, id) {
+                text = $(ev.target).val();
+                $(ev.target).val('');
+                $.ajax({ url: "_edit_comment.php?id=" + id + "&text=" + text })
+                        .done(function(data) {
+                            $(ev.target).val(data);
+                            $(ev.target).parents('.comment_input').addClass('d-none');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при редактировании комментария');
+                        });
+            }
+            
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             
             $("#slider").slider({

@@ -140,6 +140,13 @@ $total_weight = $row[0];
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            <?php if(IsInRole(ROLE_NAMES[ROLE_STOREKEEPER])): ?>
+            .non_storekeeper { display: none; }
+            <?php else: ?>
+            .storekeeper { display: none; }
+            <?php endif; ?>
+        </style>
     </head>
     <body>
         <?php
@@ -197,7 +204,8 @@ $total_weight = $row[0];
                         <th style="padding-left: 5px; padding-right: 5px;">ID пленки</th>
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;" class="storekeeper">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;" class="non_storekeeper">Комментарий</th>
                         <th style="padding-left: 5px; padding-right: 5px; width: 3%;"></th>
                     </tr>
                 </thead>
@@ -273,7 +281,8 @@ $total_weight = $row[0];
                         <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'] : 'Р'.$row['id']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?= mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap"><?= $row['comment'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" class="storekeeper"><div class="d-flex justify-content-start"><div class="pr-2 comment_pen foredit"><a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a></div><div class="comment_text"><?= htmlentities($row['comment']) ?></div></div><div class="d-none comment_input"><input type="text" class="form-control" value="<?= htmlentities($row['comment']) ?>" onfocusout="SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" /></td></div></td>
+                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" class="non_storekeeper"><?= $row['comment'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                             <div class="film_menu">
@@ -393,6 +402,40 @@ $total_weight = $row[0];
         include '../include/footer.php';
         ?>
         <script>
+            function EditComment(ev) {
+                $(ev.target).parents('td').children('.d-flex').children('.comment_pen').addClass('d-none');
+                $(ev.target).parents('td').children('.d-flex').children('.comment_text').addClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').children('input').focus();
+                
+                input = $(ev.target).parents('td').children('.comment_input').children('input');
+                input.prop("selectionStart", input.val().length);
+                input.prop("selectionEnd", input.val().length);
+            }
+            
+            function SaveComment(ev, type, id, pallet_id) {
+                text = $(ev.target).val();
+                $(ev.target).val('');
+                ajax_path = "";
+                if(type == 'pallet_roll') {
+                    ajax_path = "../pallet/_edit_comment.php?id=" + pallet_id;
+                }
+                else if(type == 'roll') {
+                    ajax_path = "../roll/_edit_comment.php?id=" + id;
+                }
+                $.ajax({ url: ajax_path + "&text=" + text })
+                        .done(function(data) {
+                            $(ev.target).val(data);
+                            $(ev.target).parents('.comment_input').addClass('d-none');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при редактировании комментария');
+                        });
+            }
+            
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             
             $("#slider").slider({
