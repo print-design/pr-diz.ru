@@ -219,8 +219,21 @@ $total_weight = $row['total_weight'];
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="d-none"><?= $row['last_name'].' '.$row['first_name'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?= mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" class="storekeeper"><div class="d-flex justify-content-start"><div class="pr-2 comment_pen foredit"><a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a></div><div class="comment_text"><?= htmlentities($row['comment']) ?></div></div><div class="d-none comment_input"><input type="text" class="form-control" value="<?= htmlentities($row['comment']) ?>" onfocusout="SaveComment(event, <?=$row['id'] ?>);" /></td></div></td>
-                        <td style="padding-left: 5px; padding-right: 5px; white-space: pre-wrap;" class="non_storekeeper"><?= htmlentities($row['comment']) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" class="storekeeper">
+                            <div class="d-flex justify-content-start">
+                                <div class="pr-2 comment_pen foredit">
+                                    <a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a>
+                                </div>
+                                <div class="comment_text"><?= htmlentities($row['comment']) ?></div>
+                            </div>
+                            <div class="d-none comment_input">
+                                <input type="text" 
+                                       class="form-control" 
+                                       value="<?= htmlentities($row['comment']) ?>" 
+                                       onfocusout="SaveComment(event, <?=$row['id'] ?>);" />
+                            </div>
+                        </td>
+                        <td style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper"><?= htmlentities($row['comment']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                             <div class="film_menu">
