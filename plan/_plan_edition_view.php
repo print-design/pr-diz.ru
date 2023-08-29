@@ -324,7 +324,13 @@
             </div>
             <div class="comment_text"><?=$this->edition['comment'] ?></div>
         </div>
-        <div class="d-none comment_input"><input type="text" class="form-control comment_cell_<?=$this->edition['type'] ?>" value="<?=$this->edition['comment'] ?>" onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);" /></td></div>
+        <div class="d-none comment_input">
+            <input type="text" 
+                   class="form-control comment_cell_<?=$this->edition['type'] ?>" 
+                   value="<?=$this->edition['comment'] ?>" 
+                   onkeydown="if(event.key == 'Enter') { SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>); }" 
+                   onfocusout="SaveComment(event, <?=$this->edition['type'] ?>, <?=$this->edition['id'] ?>);" />
+        </div>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right" style="position:relative;"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT && IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
