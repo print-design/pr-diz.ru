@@ -292,6 +292,7 @@ $total_weight = $row[0];
                                 <input type="text" 
                                        class="form-control comment_input_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>" 
                                        value="<?= htmlentities($row['comment']) ?>" 
+                                       onkeydown="if(event.key == 'Enter') { SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>); }" 
                                        onfocusout="SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" />
                             </div>
                         </td>

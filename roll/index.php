@@ -230,6 +230,7 @@ $total_weight = $row['total_weight'];
                                 <input type="text" 
                                        class="form-control" 
                                        value="<?= htmlentities($row['comment']) ?>" 
+                                       onkeydown="if(event.key == 'Enter') { SaveComment(event, <?=$row['id'] ?>); }" 
                                        onfocusout="SaveComment(event, <?=$row['id'] ?>);" />
                             </div>
                         </td>
