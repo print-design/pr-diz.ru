@@ -27,6 +27,7 @@
     <td class="<?=$top.' '.$this->shift ?>"></td>
     <td class="<?=$top.' '.$this->shift ?> storekeeper_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden"></td>
+    <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden storekeeper_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> storekeeper_hidden"></td>

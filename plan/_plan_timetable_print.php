@@ -6,8 +6,9 @@
         <th>№</th>
         <th>Заказ</th>
         <th class="storekeeper_hidden">Метраж</th>
+        <th class="cutting_hidden lamination_hidden storekeeper_hidden">Кол-во образцов</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden">Вал</th>
-        <th class="cutting_hidden storekeeper_hidden">Лам-я</th>
+        <th class="cutting_hidden storekeeper_hidden text-nowrap">Лам-я</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden">Краски</th>
         <th class="storekeeper_hidden">Время</th>
         <th class="not_storekeeper_hidden">Нужно подготовить</th>

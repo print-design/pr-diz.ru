@@ -203,6 +203,9 @@
         </div>
         <?php endif; ?>
     </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
+        <?= $this->edition['samples_count'] ?>
+    </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(DisplayNumber(floatval($this->edition['raport']), 3), "0"), ",") ?>
     </td>
