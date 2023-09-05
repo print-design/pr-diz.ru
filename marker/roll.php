@@ -215,7 +215,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                             <div class="invalid-feedback">Радиус от вала обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label type="cell">Ячейка на складе</label>
+                            <label for="cell">Ячейка на складе</label>
                             <input type="text" id="cell" name="cell" value="<?= filter_input(INPUT_POST, 'cell') ?>" class="form-control<?=$cell_valid ?>" placeholder="Введите ячейку на складе" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Ячейка на складе обязательно</div>
                         </div>
@@ -239,7 +239,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                     $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
-                    $.ajax({ url: "../supplier/_thickness.php?film_id=" + $(this).val() })
+                    $.ajax({ url: "_thickness.php?film_id=" + $(this).val() })
                             .done(function(data) {
                                 $('#film_variation_id').html(data);
                             })
