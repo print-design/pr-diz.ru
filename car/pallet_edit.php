@@ -191,6 +191,8 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
         ?>
         <script>
             <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
+                $('#cell').prop('selectionStart', $('#cell').val().length);
+                $('#cell').prop('selectionEnd', $('#cell').val().length);
                 $('#cell').focus();
             <?php elseif(IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
                 $('#comment').focus();
