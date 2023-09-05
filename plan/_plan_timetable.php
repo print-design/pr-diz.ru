@@ -200,6 +200,7 @@ class PlanTimetable {
             $row['samples_count'] = '';
             
             if($this->work_id == WORK_PRINTING) {
+                // Вычисление количества образцов
                 $AN = 0;
                 
                 if($row['type'] != PLAN_TYPE_EVENT) {
@@ -220,6 +221,38 @@ class PlanTimetable {
                 }
                 elseif($row['type'] == PLAN_TYPE_CONTINUATION || $row['type'] == PLAN_TYPE_PART_CONTINUATION) {
                     $row['samples_count'] = ceil(($row['length_pure_1'] / $AN) + 1);
+                }
+                
+                // Если статус не изменился на "в плане печати", а остался "ожидание постановки в план",
+                // меняем принудительно.
+                if($row['type'] == PLAN_TYPE_EDITION) {
+                    if($row['status_id'] == ORDER_STATUS_CONFIRMED) {
+                        $sql1 = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = ".$row['calculation_id'];
+                        $executer = new Executer($sql1);
+                        $error = $executer->error;
+                    }
+                }
+            }
+            elseif($this->work_id == WORK_LAMINATION) {
+                // Если статус не изменился на "в плане ламинации", а остался "ожидание постановки в план" или "в плане печати",
+                // меняем принудительно.
+                if($row['type'] == PLAN_TYPE_EDITION) {
+                    if($row['status_id'] == ORDER_STATUS_CONFIRMED || $row['status_id'] == ORDER_STATUS_PLAN_PRINT) {
+                        $sql1 = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = ".$row['calculation_id'];
+                        $executer = new Executer($sql1);
+                        $error = $executer->error;
+                    }
+                }
+            }
+            elseif($this->work_id == WORK_CUTTING) {
+                // Если статус не изменился на "в плане резки", а остался "ожидание постановки в план", "в плане печати" или "в плане ламинации",
+                // меняем принудительно.
+                if($row['type'] == PLAN_TYPE_EDITION) {
+                    if($row['status_id'] == ORDER_STATUS_CONFIRMED || $row['status_id'] == ORDER_STATUS_PLAN_PRINT || $row['status_id'] == ORDER_STATUS_PLAN_LAMINATE) {
+                        $sql1 = "update calculation set status_id = ".ORDER_STATUS_PLAN_CUT." where id = ".$row['calculation_id'];
+                        $executer = new Executer($sql1);
+                        $error = $executer->error;
+                    }
                 }
             }
             
