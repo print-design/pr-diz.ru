@@ -16,14 +16,14 @@
         $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
         if(array_key_exists($key, $this->plan_shift->timetable->workshifts1)) {
             $employee = $this->plan_shift->timetable->employees[$this->plan_shift->timetable->workshifts1[$key]];
-            echo $employee['last_name'].' '.$employee['first_name'];
+            echo "<span class='text-nowrap'>".$employee['last_name'].' '.$employee['first_name']."</span>";
         }
         
         if($this->plan_shift->timetable->work_id == WORK_PRINTING && $this->plan_shift->timetable->machine_id == PRINTER_COMIFLEX) {
             if(array_key_exists($key, $this->plan_shift->timetable->workshifts2)) {
                 echo '<br />';
                 $employee = $this->plan_shift->timetable->employees[$this->plan_shift->timetable->workshifts2[$key]];
-                echo $employee['last_name'].' '.$employee['first_name'];
+                echo "<span class='text-nowrap'>".$employee['last_name'].' '.$employee['first_name']."</span>";
             }
         }
         ?>
