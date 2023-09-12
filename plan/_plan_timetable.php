@@ -217,10 +217,10 @@ class PlanTimetable {
                 }
                 
                 if($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
-                    $row['samples_count'] = floor(($row['length_pure_1'] / $AN) + 1);
+                    $row['samples_count'] = ceil(($row['length_pure_1'] / $AN) + 1);
                 }
                 elseif($row['type'] == PLAN_TYPE_CONTINUATION || $row['type'] == PLAN_TYPE_PART_CONTINUATION) {
-                    $row['samples_count'] = ceil(($row['length_pure_1'] / $AN) + 1);
+                    $row['samples_count'] = floor(($row['length_pure_1'] / $AN) + 1);
                 }
                 
                 // Если статус не изменился на "в плане печати", а остался "ожидание постановки в план",
