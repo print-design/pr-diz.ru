@@ -333,15 +333,6 @@ $current_date_time = date("dmYHis");
         <link href="<?=APPLICATION ?>/css/main.css?version=73" rel="stylesheet">
         <link rel="shortcut icon" type="image/x-icon" href="<?=APPLICATION ?>/favicon.ico" />
         <style>
-            html {
-                font-family: sans-serif;
-                line-height: 1.15;
-                -webkit-text-size-adjust: 100%;
-                -ms-text-size-adjust: 100%;
-                -ms-overflow-style: scrollbar;
-                -webkit-tap-highlight-color: transparent;
-            }
-            
             img {
                 vertical-align: middle;
                 border-style: none;
@@ -354,6 +345,10 @@ $current_date_time = date("dmYHis");
                 padding-left: 0;
                 font-family: 'SF Pro Display';
                 font-size: 16px;
+            }
+            
+            table {
+                border-collapse: collapse;
             }
             
             .header_qr {
@@ -435,7 +430,7 @@ $current_date_time = date("dmYHis");
             }
             
             td.fotometka img:nth-child(1) {
-                 height: 50px;
+                 height: 32px;
                  width: auto;
             }
             
@@ -517,7 +512,7 @@ $current_date_time = date("dmYHis");
                 
                 .break_page {
                     page-break-before: always;
-                    height: 210px;
+                    height: 150px;
                 }
             }
             
@@ -578,7 +573,7 @@ $current_date_time = date("dmYHis");
         <div id="placeholder_top"></div>
         <div id="main">
             <div class="row" style="display: flex; flex-wrap: wrap;">
-                <div class="col-4 border-right" style="-webkit-box-flex: 0; flex: 0 0 33%; max-width: 33%; border-right: 1px solid  #dee2e6;">
+                <div class="col-4 border-right" style="-webkit-box-flex: 0; flex: 0 0 33%; max-width: 33%; border-right: 1px solid  #dee2e6; padding-right: 5px;">
                     <table class="w-100" style="width: 100%;">
                         <tr>
                             <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;">ИНФОРМАЦИЯ ДЛЯ ПЕЧАТИ</td>
@@ -756,7 +751,7 @@ $current_date_time = date("dmYHis");
                 </div>
                 <div class="col-8" style="-webkit-box-flex: 0; flex: 0 0 66%; max-width: 66%;">
                     <div class="row" style="display: flex; flex-wrap: wrap;">
-                        <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 49%; max-width: 49%; border-right: 1px solid #dee2e6;">
+                        <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; border-right: 1px solid #dee2e6; padding-left: 5px; padding-right: 5px;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
                                     <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
@@ -839,7 +834,7 @@ $current_date_time = date("dmYHis");
                                 <?php endif; ?>
                             </table>
                         </div>
-                        <div class="col-6" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
+                        <div class="col-6" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; padding-left: 5px;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
                                     <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</td>
@@ -1099,7 +1094,6 @@ $current_date_time = date("dmYHis");
                     </table>
                 </div>
             </div>
-            
             <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Комментарий:</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
             <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
@@ -1123,7 +1117,7 @@ $current_date_time = date("dmYHis");
                     $counter = 1;
                 }
                 ?>
-                <div class="col-3" style="-webkit-box-flex: 0; flex: 0 0 25%; max-width: 25%;">
+                <div class="col-3" style="-webkit-box-flex: 0; flex: 0 0 22%; max-width: 20%; padding-right: 30px;">
                     <div class="mt-4 mb-2 printing_title font-weight-bold" style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 700;">Тираж <?=$printing_sequence ?></div>
                     <div class="d-flex justify-content-between font-italic border-bottom" style="display: flex; -webkit-box-pack: 0; justify-content: space-between; font-style: italic; border-bottom: 1px solid #dee2e6;">
                         <div><?= DisplayNumber(intval($printing['quantity']), 0) ?> шт</div>
