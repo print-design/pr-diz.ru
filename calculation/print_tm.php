@@ -1061,7 +1061,7 @@ $current_date_time = date("dmYHis");
                             break;
                     }
                     ?>
-                    <table class="fotometka" style="display: none;">
+                    <table class="fotometka">
                         <tr>
                             <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
                                 <img src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" />
