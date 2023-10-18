@@ -56,11 +56,15 @@ if(empty($work_id) || empty($machine_id)) {
                 font-size: 16px;
             }
             
+            table.typography, table.typography tbody, table.typography tbody tr, table.typography tbody tr td {
+                page-break-before: avoid;
+            }
+            
             table.typography tbody tr td.top {
                 border-top: solid 2px darkgray;
             }
             
-            table.print tr td.top {
+            table.typography tbody tr td.top {
                 border-top: solid 2px darkgray;
             }
             
