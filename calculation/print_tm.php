@@ -578,7 +578,7 @@ $current_date_time = date("dmYHis");
         <div id="placeholder_top"></div>
         <div id="main">
             <div class="row" style="display: flex; flex-wrap: wrap;">
-                <div class="col-4 border-right" style="-webkit-box-flex: 0; flex: 0 0 33.333333%; max-width: 33.333333%; border-right: 1px solid #dee2e6;">
+                <div class="col-4 border-right" style="-webkit-box-flex: 0; flex: 0 0 33%; max-width: 33%; border-right: 1px solid  #dee2e6;">
                     <table class="w-100" style="width: 100%;">
                         <tr>
                             <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;">ИНФОРМАЦИЯ ДЛЯ ПЕЧАТИ</td>
@@ -754,9 +754,9 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                     </table>
                 </div>
-                <div class="col-8" style="-webkit-box-flex: 0; flex: 0 0 66.666666%; max-width: 66.666666%;">
+                <div class="col-8" style="-webkit-box-flex: 0; flex: 0 0 66%; max-width: 66%;">
                     <div class="row" style="display: flex; flex-wrap: wrap;">
-                        <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%; border-right: 1px solid #dee2e6;">
+                        <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 49%; max-width: 49%; border-right: 1px solid #dee2e6;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
                                     <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
@@ -1044,59 +1044,59 @@ $current_date_time = date("dmYHis");
                         }
                         ?>
                     </div>
-            <?php
-            $roll_folder = ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
-            switch ($photolabel) {
-                case PHOTOLABEL_LEFT:
-                    $roll_folder = "roll_left";
-                    break;
-                case PHOTOLABEL_RIGHT:
-                    $roll_folder = "roll_right";
-                    break;
-                case PHOTOLABEL_BOTH:
-                    $roll_folder = "roll_both";
-                    break;
-                case PHOTOLABEL_NONE:
-                    $roll_folder = "roll";
-                    break;
-            }
-            ?>
-            <table class="fotometka">
-                <tr>
-                    <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 1): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                    <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 2): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                    <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 3): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                    <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 4): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                    <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 5): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                    <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 6): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                    <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 7): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                    <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>">
-                        <img src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" />
-                        <?php if($roll_type == 8): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                    </td>
-                </tr>
-            </table>
+                    <?php
+                    $roll_folder = ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
+                    switch ($photolabel) {
+                        case PHOTOLABEL_LEFT:
+                            $roll_folder = "roll_left";
+                            break;
+                        case PHOTOLABEL_RIGHT:
+                            $roll_folder = "roll_right";
+                            break;
+                        case PHOTOLABEL_BOTH:
+                            $roll_folder = "roll_both";
+                            break;
+                        case PHOTOLABEL_NONE:
+                            $roll_folder = "roll";
+                            break;
+                    }
+                    ?>
+                    <table class="fotometka" style="display: none;">
+                        <tr>
+                            <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 1): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                            <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 2): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                            <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 3): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                            <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 4): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                            <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 5): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                            <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 6): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                            <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 7): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                            <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>">
+                                <img src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" />
+                                <?php if($roll_type == 8): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             
