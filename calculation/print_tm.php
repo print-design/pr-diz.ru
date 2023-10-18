@@ -328,11 +328,29 @@ $current_date_time = date("dmYHis");
 <!DOCTYPE html>
 <html>
     <head>
-        <?php
-        include '../include/head.php';
-        ?>
+        <link href="<?=APPLICATION ?>/fontawesome-free-5.15.1-web/css/all.min.css" rel="stylesheet" />
+        <link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
+        <link href="<?=APPLICATION ?>/css/main.css?version=73" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="<?=APPLICATION ?>/favicon.ico" />
         <style>
+            html {
+                font-family: sans-serif;
+                line-height: 1.15;
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+                -ms-overflow-style: scrollbar;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            img {
+                vertical-align: middle;
+                border-style: none;
+            }
+            
             body {
+                margin: 0;
+                line-height: 1.5;
+                
                 padding-left: 0;
                 font-family: 'SF Pro Display';
                 font-size: 16px;
@@ -436,6 +454,49 @@ $current_date_time = date("dmYHis");
             }
             
             @media print {
+                body {
+                    font-size: 12px;
+                }
+                
+                .header_qr {
+                    margin-right: 10px;
+                    height: 55px;
+                    width: 55px;
+                }
+                
+                .header_qr img {
+                    height: 55px;
+                    width: 55px;
+                }
+                
+                .header_title {
+                    font-size: 13px;
+                }
+                
+                #title {
+                    font-size: 23px;
+                    margin-top: 7px;
+                }
+                
+                #subtitle {
+                    font-size: 18px;
+                }
+            
+                .topproperty {
+                    font-size: 14px;
+                    margin-top: 4px;
+                }
+            
+                .table-header {
+                    padding-top: 4px;
+                }
+            
+                td {
+                    line-height: 16px;
+                    padding-top: 4px;
+                    padding-bottom: 4px;
+                }
+            
                 #fixed_top {
                     position: fixed;
                     top: 0px;
@@ -451,7 +512,7 @@ $current_date_time = date("dmYHis");
                 }
                 
                 #placeholder_top {
-                    height: 210px;
+                    height: 150px;
                 }
                 
                 .break_page {
@@ -471,7 +532,7 @@ $current_date_time = date("dmYHis");
     </head>
     <body>
         <div id="fixed_top">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between" style="display: flex; justify-content: space-between;">
                 <div>
                     <?php
                     include_once '../qr/qrlib.php';
@@ -483,47 +544,47 @@ $current_date_time = date("dmYHis");
                         QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 0, true);
                     } while (!file_exists($filename));
                     ?>
-                    <div class="d-inline-block header_qr"><img src='<?=$filename ?>' /></div>
-                    <div class="d-inline-block header_title font-weight-bold mr-3">
+                    <div class="d-inline-block header_qr" style="display: inline-block;"><img src='<?=$filename ?>' /></div>
+                    <div class="d-inline-block header_title font-weight-bold mr-3" style="display: inline-block; font-weight: 700; margin-right: 1rem;">
                         Заказ №<?=$customer_id ?>-<?=$num_for_customer ?><br />
                         от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
                     </div>
-                    <div class="d-inline-block header_title font-weight-bold mr-2">
+                    <div class="d-inline-block header_title font-weight-bold mr-2" style="display: inline-block; font-weight: 700; margin-right: 0.5rem;">
                         Карта составлена:
                         <br />
                         Менеджер:
                     </div>
-                    <div class="d-inline-block header_title">
+                    <div class="d-inline-block header_title" style="display: inline-block;">
                         <?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?>
                         <br />
                         <?=$first_name ?> <?=$last_name ?>
                     </div>
                 </div>
                 <div>
-                    <div class="d-inline-block right_logo"><img src="../images/logo_with_label.svg" /></div>
+                    <div class="d-inline-block right_logo" style="display: inline-block;"><img src="../images/logo_with_label.svg" /></div>
                 </div>
             </div>
             <div id="title">Заказчик: <?=$customer ?></div>
             <div id="subtitle">Наименование: <?=$calculation ?></div>
-            <div class="row">
-                <div class="col-6 topproperty">
+            <div class="row" style="display: flex; flex-wrap: wrap;">
+                <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
                     <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(intval($quantities_sum), 0)." шт" : DisplayNumber(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(floatval($lengths_sum), 0)." м" : DisplayNumber(floatval($length_pure_1), 0)." м" ?>
                 </div>
-                <div class="col-6 topproperty">
+                <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
                     <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=WORK_TYPE_NAMES[$work_type_id] ?>
                 </div>
             </div>
         </div>
         <div id="placeholder_top"></div>
         <div id="main">
-            <div class="row">
-                <div class="col-4 border-right">
-                    <table class="w-100">
+            <div class="row" style="display: flex; flex-wrap: wrap;">
+                <div class="col-4 border-right" style="-webkit-box-flex: 0; flex: 0 0 33.333333%; max-width: 33.333333%; border-right: 1px solid #dee2e6;">
+                    <table class="w-100" style="width: 100%;">
                         <tr>
-                            <td colspan="2" class="table-header font-weight-bold">ИНФОРМАЦИЯ ДЛЯ ПЕЧАТИ</td>
+                            <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;">ИНФОРМАЦИЯ ДЛЯ ПЕЧАТИ</td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="font-weight-bold">Печать</td>
+                            <td colspan="2" class="font-weight-bold" style="font-weight: 700;">Печать</td>
                         </tr>
                         <tr>
                             <td>Машина</td>
@@ -547,7 +608,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($film_name) ? DisplayNumber(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                            <td class="text-nowrap" style="white-space: nowrap;"><?= empty($film_name) ? DisplayNumber(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -631,7 +692,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td colspan="2" class="font-weight-bold border-bottom-2">Красочность: <?=$ink_number ?> красок</td>
+                            <td colspan="2" class="font-weight-bold border-bottom-2" style="font-weight: 700; border-bottom: solid 2px gray;">Красочность: <?=$ink_number ?> красок</td>
                         </tr>
                         <?php
                         for($i = 1; $i <= $ink_number; $i++):
@@ -693,12 +754,12 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                     </table>
                 </div>
-                <div class="col-8">
-                    <div class="row">
-                        <div class="col-6 border-right">
-                            <table class="w-100">
+                <div class="col-8" style="-webkit-box-flex: 0; flex: 0 0 66.666666%; max-width: 66.666666%;">
+                    <div class="row" style="display: flex; flex-wrap: wrap;">
+                        <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%; border-right: 1px solid #dee2e6;">
+                            <table class="w-100" style="width: 100%;">
                                 <tr>
-                                    <td colspan="2" class="table-header font-weight-bold"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
+                                    <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
                                 </tr>
                                 <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                                 <tr>
@@ -706,7 +767,7 @@ $current_date_time = date("dmYHis");
                                     <td><?=$lamination ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="font-weight-bold">Ламинация 1</td>
+                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700;">Ламинация 1</td>
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
@@ -714,7 +775,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Толщина</td>
-                                    <td class="text-nowrap"><?= empty($lamination1_film_name) ? DisplayNumber(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                    <td class="text-nowrap" style="white-space: nowrap;"><?= empty($lamination1_film_name) ? DisplayNumber(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
@@ -745,7 +806,7 @@ $current_date_time = date("dmYHis");
                                     <td><?=$requirement2 ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="font-weight-bold border-bottom-2">Ламинация 2</td>
+                                    <td colspan="2" class="font-weight-bold border-bottom-2" style="font-weight: 700; border-bottom: solid 2px gray;">Ламинация 2</td>
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
@@ -753,7 +814,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Толщина</td>
-                                    <td class="text-nowrap"><?= empty($lamination2_film_name) ? DisplayNumber(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                    <td class="text-nowrap" style="white-space: nowrap;"><?= empty($lamination2_film_name) ? DisplayNumber(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
@@ -778,10 +839,10 @@ $current_date_time = date("dmYHis");
                                 <?php endif; ?>
                             </table>
                         </div>
-                        <div class="col-6">
-                            <table class="w-100">
+                        <div class="col-6" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
+                            <table class="w-100" style="width: 100%;">
                                 <tr>
-                                    <td colspan="2" class="table-header font-weight-bold">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</td>
+                                    <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</td>
                                 </tr>
                                 <tr>
                                     <td>Отгрузка в</td>
@@ -962,27 +1023,27 @@ $current_date_time = date("dmYHis");
                         </div>
                     </div>
                     <div class="photolable">
-                <span class="font-weight-bold">Фотометка:</span>&nbsp;
-                <?php
-                switch ($photolabel) {
-                    case PHOTOLABEL_LEFT:
-                        echo "Левая";
-                        break;
-                    case PHOTOLABEL_RIGHT:
-                        echo "Правая";
-                        break;
-                    case PHOTOLABEL_BOTH:
-                        echo "Две фотометки";
-                        break;
-                    case PHOTOLABEL_NONE:
-                        echo "Без фотометки";
-                        break;
-                    default :
-                        echo ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
-                        break;
-                }
-                ?>
-            </div>
+                        <span class="font-weight-bold" style="font-weight: 700;">Фотометка:</span>&nbsp;
+                        <?php
+                        switch ($photolabel) {
+                            case PHOTOLABEL_LEFT:
+                                echo "Левая";
+                                break;
+                            case PHOTOLABEL_RIGHT:
+                                echo "Правая";
+                                break;
+                            case PHOTOLABEL_BOTH:
+                                echo "Две фотометки";
+                                break;
+                            case PHOTOLABEL_NONE:
+                                echo "Без фотометки";
+                                break;
+                            default :
+                                echo ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
+                                break;
+                        }
+                        ?>
+                    </div>
             <?php
             $roll_folder = ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
             switch ($photolabel) {
@@ -1039,11 +1100,11 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             
-            <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px;">Комментарий:</div>
+            <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Комментарий:</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
             <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
-            <div class="row">
+            <div class="row" style="display: flex; flex-wrap: wrap;">
                 <?php
                 $printing_sequence = 0;
                 $counter = 0;
@@ -1062,13 +1123,13 @@ $current_date_time = date("dmYHis");
                     $counter = 1;
                 }
                 ?>
-                <div class="col-3">
-                    <div class="mt-4 mb-2 printing_title font-weight-bold">Тираж <?=$printing_sequence ?></div>
-                    <div class="d-flex justify-content-between font-italic border-bottom">
+                <div class="col-3" style="-webkit-box-flex: 0; flex: 0 0 25%; max-width: 25%;">
+                    <div class="mt-4 mb-2 printing_title font-weight-bold" style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 700;">Тираж <?=$printing_sequence ?></div>
+                    <div class="d-flex justify-content-between font-italic border-bottom" style="display: flex; -webkit-box-pack: 0; justify-content: space-between; font-style: italic; border-bottom: 1px solid #dee2e6;">
                         <div><?= DisplayNumber(intval($printing['quantity']), 0) ?> шт</div>
                         <div><?= DisplayNumber(floatval($printing['length']), 0) ?> м</div>
                     </div>
-                    <table class="mb-3 w-100">
+                    <table class="mb-3 w-100" style="margin-bottom: 1rem; width: 100%;">
                     <?php
                     for($i = 1; $i <= $ink_number; $i++):
                     $ink_var = "ink_$i";
@@ -1138,7 +1199,7 @@ $current_date_time = date("dmYHis");
             </div>
             <?php endif; ?>
             <div id="fixed_bottom">
-                <table class="w-100">
+                <table class="w-100" style="width: 100%;">
                     <tr class="left">
                         <td>Дизайнер:</td>
                         <td>Менеджер:</td>
