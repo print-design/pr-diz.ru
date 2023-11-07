@@ -127,12 +127,12 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <div class="form-group">
-                            <label for="price">Цена работы оборудования (руб/час)</label>
+                            <label for="price">Цена работы оборудования, руб/час</label>
                             <input type="text" class="form-control float-only<?=$price_valid ?>" id="price" name="price" value="<?= empty($price) ? "" : floatval($price) ?>" placeholder="Цена, руб/час" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Цена обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="speed">Скорость работы оборудования (км/час)</label>
+                            <label for="speed">Скорость работы оборудования, км/час</label>
                             <input type="text" class="form-control float-only<?=$speed_valid ?>" id="speed" name="speed" value="<?= empty($speed) ? "" : floatval($speed) ?>" placeholder="Скорость, км/час" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Скорость обязательно</div>
                         </div>

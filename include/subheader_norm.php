@@ -2,14 +2,14 @@
     <?php
     $machines_class = empty($machine_id) ? "" : " active";
     $laminators_class = empty($laminator_id) ? "" : " active";
-    $cutters_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cutter.php')) == APPLICATION.'/admin/cutter.php' ? " active" : "";
+    $cutters_class = empty($cutter_id) ? "" : " active";
     $raw_class = (substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' || 
             substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' || 
             substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php') ? " active" : "";
     ?>
-    <a href="<?=APPLICATION ?>/admin/machine.php<?= BuildQuery('machine_id', PRINTER_COMIFLEX) ?>" class="mr-4<?=$machines_class ?>">Печатные машины</a>
-    <a href="<?=APPLICATION ?>/admin/laminator.php<?= BuildQuery('laminator_id', LAMINATOR_SOLVENT) ?>" class="mr-4<?=$laminators_class ?>">Ламинаторы</a>
-    <a href="<?=APPLICATION ?>/admin/cutter.php" class="mr-4<?=$cutters_class ?>">Резки</a>
+    <a href="<?=APPLICATION ?>/admin/machine.php?machine_id=<?= PRINTER_COMIFLEX ?>" class="mr-4<?=$machines_class ?>">Печатные машины</a>
+    <a href="<?=APPLICATION ?>/admin/laminator.php?laminator_id=<?= LAMINATOR_SOLVENT ?>" class="mr-4<?=$laminators_class ?>">Ламинаторы</a>
+    <a href="<?=APPLICATION ?>/admin/cutter.php?cutter_id=<?= CUTTER_1 ?>" class="mr-4<?=$cutters_class ?>">Резки</a>
     <a href="<?=APPLICATION ?>/admin/extracharge.php" class="mr-4<?=$raw_class ?>">Сырье</a>
 </div>
 <hr class="pb-0 mb-0" />
@@ -39,6 +39,15 @@
     }
     ?>
     <a href="<?=$file_name. BuildQueryAddRemove('laminator_id', $key, 'machine_id') ?>" class="mr-4<?=$laminator_id_class ?>"><?=$value ?></a>
+    <?php
+    endforeach;
+    endif;
+    
+    if(!empty($cutters_class)):
+    foreach(CUTTER_NAMES as $key => $value):
+    $cutter_id_class = (!empty($cutter_id) && $key == $cutter_id) ? " active" : "";
+    ?>
+    <a href="cutter.php?cutter_id=<?=$key ?>" class="mr-4<?=$cutter_id_class ?>"><?=$value ?></a>
     <?php
     endforeach;
     endif;

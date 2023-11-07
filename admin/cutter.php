@@ -5,6 +5,9 @@ include '../include/topscripts.php';
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Резка
+$cutter_id = filter_input(INPUT_GET, 'cutter_id');
 ?>
 <!DOCTYPE html>
 <html>

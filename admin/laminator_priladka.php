@@ -115,12 +115,12 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <input type="hidden" id="laminator_id" name="laminator_id" value="<?= $laminator_id ?>" />
                         <div class="form-group">
-                            <label for="time">Время приладки (мин)</label>
+                            <label for="time">Время приладки, мин</label>
                             <input type="text" class="form-control float-only<?=$time_valid ?>" id="time" name="time" value="<?= empty($time) ? "" : floatval($time) ?>" placeholder="Время, мин" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Метраж приладки (метры)</label>
+                            <label for="length">Метраж приладки, метры</label>
                             <input type="text" class="form-control float-only<?=$length_valid ?>" id="length" name="length" value="<?= empty($length) ? "" : floatval($length) ?>" placeholder="Метраж, метры" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
