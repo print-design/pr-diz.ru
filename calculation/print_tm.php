@@ -1121,14 +1121,16 @@ $current_date_time = date("dmYHis");
             <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Комментарий:</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
             <div style="font-weight: 700; border-bottom: solid 2px gray; width: 33%;">Наименования</div>
-            <table class="w-100" style="width: 33%; border-right: 1px solid  #dee2e6; padding-right: 5px;">
-                <?php for($stream_i = 1; $stream_i <= $streams_number; $stream_i++): ?>
-                <tr>
-                    <td>Ручей <?=$stream_i ?></td>
-                    <td><?=$streams['stream_'.$stream_i] ?></td>
-                </tr>
-                <?php endfor; ?>
-            </table>
+            <div style="width: 33%; border-right: 1px solid  #dee2e6; padding-right: 5px;">
+                <table style="width: 100%;">
+                    <?php for($stream_i = 1; $stream_i <= $streams_number; $stream_i++): ?>
+                    <tr>
+                        <td>Ручей <?=$stream_i ?></td>
+                        <td><?=$streams['stream_'.$stream_i] ?></td>
+                    </tr>
+                    <?php endfor; ?>
+                </table>
+            </div>
             <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
             <div class="row" style="display: flex; flex-wrap: wrap;">
