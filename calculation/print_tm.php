@@ -322,6 +322,30 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     }
 }
 
+// Названия ручьёв
+$sql = "select position, name from calculation_stream where calculation_id = $id order by position";
+$grabber = new Grabber($sql);
+$result = $grabber->result;
+$error_message = $grabber->error;
+
+$stream_positions_names = array();
+
+foreach($result as $stream_position_name) {
+    $stream_positions_names[$stream_position_name['position']] = $stream_position_name['name'];
+}
+
+$streams = array();
+$streams_number = intval($streams_number);
+
+if(!is_nan($streams_number)) {
+    for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
+        $stream_var = "stream_$stream_i";
+        $$stream_var = $stream_positions_names[$stream_i];
+        
+        $streams[$stream_var] = $$stream_var;
+    }
+}
+
 // Текущее время
 $current_date_time = date("dmYHis");
 ?>
@@ -1096,6 +1120,26 @@ $current_date_time = date("dmYHis");
             </div>
             <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Комментарий:</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
+            <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Наименования:</div>
+            <?php
+            for($stream_i = 1; $stream_i <= $streams_number; $stream_i++):
+            
+            /*
+             * 
+             * <?php for($stream_i = 1; $stream_i <= $streams_number; $stream_i++): ?>
+                            <div class="form-group">
+                                <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i ?></label>
+                                <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
+                                <div class="invalid-feedback">Наименование обязательно</div>
+                            </div>
+                            <?php endfor; ?>
+             * 
+             */
+            
+            
+            ?>
+            <div class="d-block"><strong>Ручей <?=$stream_i ?>.</strong> <?=$streams['stream_'.$stream_i] ?></div>
+            <?php endfor; ?>
             <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
             <div class="row" style="display: flex; flex-wrap: wrap;">
