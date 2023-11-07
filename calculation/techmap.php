@@ -206,7 +206,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            $sql = "select id, position, name from calculation_stream where calculation_id = $id";
+            $sql = "select id, position, name from calculation_stream where calculation_id = $id order by position";
             $grabber = new Grabber($sql);
             $result = $grabber->result;
             $error_message = $grabber->error;
@@ -587,7 +587,7 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
 }
 
 // Названия ручьёв
-$sql = "select position, name from calculation_stream where calculation_id = $id";
+$sql = "select position, name from calculation_stream where calculation_id = $id order by position";
 $grabber = new Grabber($sql);
 $result = $grabber->result;
 $error_message = $grabber->error;
@@ -1063,7 +1063,7 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td>Этикеток в рапорте</td>
+                            <td style="line-height: 18px;">Этикеток в рапорте</td>
                             <td><?=$number_in_raport ?></td>
                         </tr>
                         <tr>
@@ -1255,7 +1255,7 @@ if(!is_nan($streams_number)) {
                             <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
                         </tr>
                         <tr>
-                            <td>Этикеток в 1 м. пог.</td>
+                            <td style="line-height: 18px;">Этикеток в 1 м. пог.</td>
                             <td>
                                 <?php
                                 if(empty($length)) {
@@ -1693,7 +1693,7 @@ if(!is_nan($streams_number)) {
                             <?php for($stream_i = 1; $stream_i <= $streams_number; $stream_i++): ?>
                             <div class="form-group">
                                 <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i ?></label>
-                                <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_number["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
+                                <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
                                 <div class="invalid-feedback">Наименование обязательно</div>
                             </div>
                             <?php endfor; ?>
@@ -1822,6 +1822,19 @@ if(!is_nan($streams_number)) {
                                     <input type="hidden" name="photolabel" value="<?=$tm_photolabel ?>" />
                                     <input type="hidden" name="roll_type" value="<?=$tm_roll_type ?>" />
                                     <input type="hidden" name="comment" value="<?=$tm_comment ?>" />
+                                    <?php
+                                    // Названия ручьёв
+                                    $sql = "select position, name from calculation_stream where calculation_id = $c_id order by position";
+                                    $grabber = new Grabber($sql);
+                                    $result = $grabber->result;
+                                    $error_message = $grabber->error;
+                                    
+                                    foreach($result as $stream_position_name):
+                                    $stream_var = "stream_".$stream_position_name['position'];
+                                    $$stream_var = $stream_position_name['name'];
+                                    ?>
+                                    <input type="hidden" name="<?=$stream_var ?>" value="<?=$$stream_var ?>" />
+                                    <?php endforeach; ?>
                                     <button type="submit" class="btn btn-light">+ Подцепить</button>
                                 </form>
                             </div>
