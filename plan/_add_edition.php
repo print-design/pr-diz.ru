@@ -75,7 +75,7 @@ elseif($work_id == WORK_CUTTING) {
         $cutter_speed = floatval($row['speed']);
     }
     
-    $edition->WorkTime = ($length_pure_1 / $cutter_speed / 60.0) + ($cutter_time / 60.0);
+    $edition->WorkTime = ($length_pure_1 / $cutter_speed / 1000.0) + ($cutter_time / 60.0);
 }
 elseif($work_id == WORK_LAMINATION && $lamination == 1) {
     $edition->WorkTime = $work_time_2;
