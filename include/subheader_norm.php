@@ -44,10 +44,10 @@
     endif;
     
     if(!empty($cutters_class)):
-    foreach(CUTTER_NAMES as $key => $value):
-    $cutter_id_class = (!empty($cutter_id) && $key == $cutter_id) ? " active" : "";
+    foreach(CUTTERS as $cutter):
+    $cutter_id_class = (!empty($cutter_id) && $cutter == $cutter_id) ? " active" : "";
     ?>
-    <a href="cutter.php?cutter_id=<?=$key ?>" class="mr-4<?=$cutter_id_class ?>"><?=$value ?></a>
+    <a href="cutter.php?cutter_id=<?=$cutter ?>" class="mr-4<?=$cutter_id_class ?>"><?=CUTTER_NAMES[$cutter] ?></a>
     <?php
     endforeach;
     endif;
