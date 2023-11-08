@@ -29,7 +29,7 @@ $length_dirty_1 = 0;
 $has_lamination = false;
 $two_laminations = false;
 
-$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3, c.work_type_id, cr.length_dirty_1, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3, c.work_type_id, cr.length_dirty_1, cr.length_pure_1, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
@@ -41,6 +41,7 @@ if($row = $fetcher->Fetch()) {
     
     $work_type_id = $row['work_type_id'];
     $length_dirty_1 = $row['length_dirty_1'];
+    $length_pure_1 = $row['length_pure_1'];
     
     if(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
         $has_lamination = true;
@@ -65,7 +66,16 @@ if($work_id == WORK_PRINTING) {
     $edition->WorkTime = $work_time_1;
 }
 elseif($work_id == WORK_CUTTING) {
-    $edition->WorkTime = $length_dirty_1 / CUTTER_SPEEDS[$edition->MachineId] / 60;
+    $cutter_time = 0;
+    $cutter_speed = 0;
+    $sql = "select time, speed from norm_cutter where cutter_id = ".$edition->MachineId." order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $cutter_time = floatval($row['time']);
+        $cutter_speed = floatval($row['speed']);
+    }
+    
+    $edition->WorkTime = ($length_pure_1 / $cutter_speed / 60.0) + ($cutter_time / 60.0);
 }
 elseif($work_id == WORK_LAMINATION && $lamination == 1) {
     $edition->WorkTime = $work_time_2;
