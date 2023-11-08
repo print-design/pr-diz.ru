@@ -23,7 +23,7 @@ if(!IsInRole(CUTTER_USERS)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1>Список работ "Резка"</h1>
+            <h1>Список работ "<?=filter_input(INPUT_COOKIE, ROLE_LOCAL) ?>"</h1>
         </div>
         <?php
         include '../include/footer.php';
