@@ -332,6 +332,26 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
     }
     
     if($login_form_valid) {
+        //*****************************************************
+        // Сначала пробуем залогниться, как пользователь резки.
+        $lower_username = strtolower($login_username);
+        $lower_password = strtolower($login_password);
+        
+        if(in_array($lower_username, CUTTER_USERS) && $lower_username == $lower_password) {
+            setcookie(USER_ID, CUTTER_USER_IDS[$lower_username], time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(USERNAME, $lower_username, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(PASSWORD5, $lower_password, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(LAST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(FIRST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(ROLE, $lower_username, time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(ROLE_LOCAL, CUTTER_USER_NAMES[$lower_username], time() + 60 * 60 * 24 * 100000, "/");
+            setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
+            header('Refresh:0');
+            exit();
+        }
+        //******************************************************
+        
+        // Если это не пользователь резки, то логинимся, как обычный пользователь.
         $user_id = '';
         $username = '';
         $password = '';
@@ -450,7 +470,7 @@ if(null !== filter_input(INPUT_POST, 'logout_submit')) {
 }
 
 // Выход из системы, если удалили пользователя или сменили пароль
-if(LoggedIn()) {
+if(LoggedIn() && !IsInRole(CUTTER_USERS)) {
     $username = filter_input(INPUT_COOKIE, USERNAME);
     $password5 = filter_input(INPUT_COOKIE, PASSWORD5);
     $sql = "select count(id) from user where username = '$username' and substring(password, 2, 5) = '$password5' and active=true";

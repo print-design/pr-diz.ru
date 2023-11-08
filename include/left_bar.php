@@ -13,6 +13,7 @@ if($count > 1) {
 $zakaz_class = '';
 $sklad_class = '';
 $plan_class = '';
+$cut_class = '';
 $admin_class = '';
 
 if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
@@ -23,6 +24,9 @@ elseif($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $f
 }
 elseif($folder == "plan") {
     $plan_class = " active";
+}
+elseif ($folder == "cut") {
+    $cut_class = " active";
 }
 elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     $admin_class = " active";
@@ -48,6 +52,12 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_STOREKEEPER]))):
     ?>
     <a href="<?=APPLICATION ?>/plan/" class="left_bar_item<?=$plan_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
+    <?php
+    endif;
+    // Резка
+    if(IsInRole(CUTTER_USERS)):
+    ?>
+    <a href="<?=APPLICATION ?>/cut/" class="left_bar_item<?=$cut_class ?>" title="Резка" data-toogle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
     // Админка
