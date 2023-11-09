@@ -24,7 +24,7 @@ while($row = $fetcher->Fetch()) {
 }
 
 if(empty($result)) {
-    $result = "ВЫХОДНОЙ";
+    $result = "ВЫХОДНОЙ ДЕНЬ";
 }
 
 echo $result;

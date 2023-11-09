@@ -7,12 +7,22 @@ if(!LoggedIn()) {
 }
         
 // Получение личных данных
+$username = '';
+$last_name = '';
+$first_name = '';
+$email = '';
+$phone = '';
+
+if(!IsInRole(CUTTER_USERS)):
 $row = (new Fetcher("select username, last_name, first_name, email, phone from user where id=".GetUserId()))->Fetch();
-$username = $row['username'];
-$last_name = $row['last_name'];
-$first_name = $row['first_name'];
-$email = $row['email'];
-$phone = $row['phone'];
+if($row) {
+    $username = $row['username'];
+    $last_name = $row['last_name'];
+    $first_name = $row['first_name'];
+    $email = $row['email'];
+    $phone = $row['phone'];
+}
+endif;
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,6 +75,7 @@ $phone = $row['phone'];
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_cut.php';
         ?>
     </body>
 </html>
