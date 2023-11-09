@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include './_cut_timetable.php';
 
 // Авторизация
 if(!IsInRole(CUTTER_USERS)) {
@@ -12,6 +13,32 @@ if(!IsInRole(CUTTER_USERS)) {
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            /* Таблица */
+            table.typography {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                color: #191919;
+            }
+            
+            table.typography tr th {
+                color: #68676C;
+                border-top: 0;
+            }
+            
+            table.typography tr td {
+                background-color: white;
+            }
+            
+            table.typography tr tdt.night {
+                background-color: #F0F1FA;
+            }
+            
+            thead#grafik-thead {
+                background-color: lightcyan;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -24,6 +51,14 @@ if(!IsInRole(CUTTER_USERS)) {
             }
             ?>
             <h1>Список работ "<?=filter_input(INPUT_COOKIE, ROLE_LOCAL) ?>"</h1>
+            <?php
+            $date_from = null;
+            $date_to = null;
+            GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+            
+            $timetable = new CutTimetable($date_from, $date_to);
+            $timetable->Show();
+            ?>
         </div>
         <?php
         include '../include/footer.php';
