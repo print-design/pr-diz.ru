@@ -15,7 +15,7 @@ if(!IsInRole(CUTTER_USERS)) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_cut.php';
         ?>
         <div class="container-fluid">
             <?php
