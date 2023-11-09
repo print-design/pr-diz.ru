@@ -24,6 +24,7 @@ class CutDate {
         $day_shift->Show();
         
         $night_shift = new CutShift($this->date, 'night', $this->timetable, $this->night_editions, $date_editions_count, $night_editions_count);
+        $night_shift->Show();
     }
 }
 ?>

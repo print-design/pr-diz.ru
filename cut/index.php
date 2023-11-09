@@ -25,13 +25,14 @@ if(!IsInRole(CUTTER_USERS)) {
             table.typography tr th {
                 color: #68676C;
                 border-top: 0;
+                font-weight: bold;
             }
             
             table.typography tr td {
                 background-color: white;
             }
             
-            table.typography tr tdt.night {
+            table.typography tr td.night {
                 background-color: #F0F1FA;
             }
             
