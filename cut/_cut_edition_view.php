@@ -52,6 +52,6 @@
     </td>
     <td class="<?=$this->cut_shift->shift ?> text-nowrap"><i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?></td>
     <td class="<?=$this->cut_shift->shift ?>">
-        <button type="button" class="btn btn-dark">Приступить</button>
+        <button type="button" class="btn btn-outline-dark">Приступить</button>
     </td>
 </tr>
