@@ -739,7 +739,7 @@ if(!is_nan($streams_number)) {
                         $cmyk_var = "cmyk_$i";
                         
                         $cliche_width_style = " w-100";
-                        $repeat_display_style = " d-none"; //echo "QWE"; print_r($cliches);
+                        $repeat_display_style = " d-none";
                         if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::REPEAT) {
                             $cliche_width_style = " w-50";
                             $repeat_display_style = "";
