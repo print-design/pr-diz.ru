@@ -57,7 +57,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     // Резка
     if(IsInRole(CUTTER_USERS)):
     ?>
-    <a href="<?=APPLICATION ?>/cut/" class="left_bar_item<?=$cut_class ?>" title="Резка" data-toogle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
+    <a href="<?=APPLICATION ?>/cut/" class="left_bar_item<?=$cut_class ?>" title="Резка" data-toogle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_star.svg" style="height: 26px; width: auto;" /></a>
     <?php
     endif;
     // Админка
