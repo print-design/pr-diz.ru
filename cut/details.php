@@ -330,6 +330,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         </tr>
                     </table>
                 </div>
+                <div class="col-4" style="padding-left: 20px;"></div>
                 <div class="col-4" style="padding-left: 20px;">
                     <div class="cutter_info">
                         <div class="subtitle">Хар-ки</div>
@@ -448,11 +449,6 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                                 </td>
                             </tr>
                         </table>
-                    </div>
-                </div>
-                <div class="col-4" style="padding-left: 20px;">
-                    <div class="cutter_info">
-                        <div class="subtitle">&nbsp;</div>
                         <div class="subtitle">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</div>
                         <table>
                             <tr>
