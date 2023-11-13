@@ -263,13 +263,43 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 font-size: 20px;
                 line-height: 40px
             }
+            
+            table {
+                width: 100%;
+            }
+            
+            tr {
+                border-bottom: solid 1px #e3e3e3;
+            }
+            
+            th {
+                white-space: nowrap;
+                padding-right: 30px;
+                vertical-align: top;
+            }
+            
+            td {
+                line-height: 25px;
+            }
+            
+            tr td:nth-child(2) {
+                text-align: right;
+                padding-left: 10px;
+                font-weight: bold;
+            }
+            
+            .cutter_info {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 20px;
+            }
         </style>
     </head>
     <body>
         <?php
         include '../include/header_cut.php';
         ?>
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding: 30px;">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
@@ -278,15 +308,8 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/' ?>">К списку резок</a>
             <h1><?= $name ?></h1>
             <div class="row">
-                <div class="col-4">
+                <div class="col-4" style="padding-right: 30px;">
                     <div class="name"><?=$customer ?></div>
-                </div>
-                <div class="col-8">
-                    <div class="subtitle">Хар-ки</div>                    
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                     <table>
                         <tr>
@@ -307,306 +330,313 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         </tr>
                     </table>
                 </div>
-                <div class="col-4">
-                    <div class="subtitle">ИНФОРМАЦИЯ ПО ПЕЧАТИ</div>
-                    <table>
-                        <tr>
-                            <td><?= empty($machine_id) ? "" : PRINTER_NAMES[$machine_id] ?> Марка мат-ла</td>
-                            <td><?= (empty($film_name) ? "" : $film_name).(empty($individual_film_name) ? "" : $individual_film_name) ?></td>
-                        </tr>
-                        <tr>
-                            <td>Толщина</td>
-                            <td>
-                                <?php
-                                if(!empty($thickness)) {
-                                    echo DisplayNumber(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($weight), 2), "0").' г/м<sup>2</sup>';
-                                }
-                                elseif(!empty($individual_thickness)) {
-                                    echo DisplayNumber(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($individual_density), 2), "0").' г/м<sup>2</sup>';
-                                }
-                                else {
-                                    echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Ширина мат-ла</td>
-                            <td><?= DisplayNumber(floatval($width_1), 0) ?> мм</td>
-                        </tr>
-                        <tr>
-                            <td>Метраж на тираж</td>
-                            <td><?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Печать</td>
-                            <td>
-                                <?php
-                                switch ($side) {
-                                    case SIDE_FRONT:
-                                        echo 'Лицевая';
-                                        break;
-                                    case SIDE_BACK:
-                                        echo 'Оборотная';
-                                        break;
-                                    default :
-                                        echo "Ждем данные";
-                                        break;
+                <div class="col-4" style="padding-left: 20px;">
+                    <div class="cutter_info">
+                        <div class="subtitle">Хар-ки</div>
+                        <div class="subtitle">ИНФОРМАЦИЯ ПО ПЕЧАТИ</div>
+                        <table>
+                            <tr>
+                                <td><?= empty($machine_id) ? "" : PRINTER_NAMES[$machine_id] ?> Марка мат-ла</td>
+                                <td><?= (empty($film_name) ? "" : $film_name).(empty($individual_film_name) ? "" : $individual_film_name) ?></td>
+                            </tr>
+                            <tr>
+                                <td>Толщина</td>
+                                <td>
+                                    <?php
+                                    if(!empty($thickness)) {
+                                        echo DisplayNumber(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($weight), 2), "0").' г/м<sup>2</sup>';
                                     }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Длина этикетки</td>
-                            <td><?= rtrim(rtrim(DisplayNumber(floatval($length), 2), "0"), ",").(empty($length) ? "" : " мм") ?></td>
-                        </tr>
-                        <tr>
-                            <td>Кол-во ручьёв</td>
-                            <td><?=$streams_number ?></td>
-                        </tr>
-                        <tr>
-                            <td>Красочность</td>
-                            <td><?=$ink_number ?> кр.</td>
-                        </tr>
-                    </table>
-                    <div class="subtitle">ИНФОРМАЦИЯ ПО ЛАМИНАЦИИ 1</div>
-                    <table>
-                        <tr>
-                            <td>Кол-во ламинаций</td>
-                            <td><?= $laminations_number == 2 ? "2 ламинации" : ($laminations_number == 1 ? "1 ламинация" : "нет") ?></td>
-                        </tr>
-                        <tr>
-                            <td>Марка пленки</td>
-                            <td><?= (empty($lamination1_film_name) ? "" : $lamination1_film_name).(empty($lamination1_individual_film_name) ? "" : $lamination1_individual_film_name) ?></td>
-                        </tr>
-                        <tr>
-                            <td>Толщина</td>
-                            <td>
-                                <?php
-                                if(!empty($lamination1_thickness)) {
-                                    echo DisplayNumber(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>';
-                                }
-                                elseif(!empty($lamination1_individual_thickness)) {
-                                    echo DisplayNumber(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>';
-                                }
-                                else {
-                                    echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Ширина мат-ла</td>
-                            <td><?= DisplayNumber(floatval($width_2), 0) ?> мм</td>
-                        </tr>
-                    </table>
-                    <div class="subtitle">ИНФОРМАЦИЯ ПО ЛАМИНАЦИИ 2</div>
-                    <table>
-                        <tr>
-                            <td>Марка пленки</td>
-                            <td><?= (empty($lamination2_film_name) ? "" : $lamination2_film_name).(empty($lamination2_individual_film_name) ? "" : $lamination2_individual_film_name) ?></td>
-                        </tr>
-                        <tr>
-                            <td>Толщина</td>
-                            <td>
-                                <?php
-                                if(!empty($lamination2_thickness)) {
-                                    echo DisplayNumber(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>';
-                                }
-                                elseif(!empty($lamination2_individual_thickness)) {
-                                    echo DisplayNumber(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>';
-                                }
-                                else {
-                                    echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
+                                    elseif(!empty($individual_thickness)) {
+                                        echo DisplayNumber(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($individual_density), 2), "0").' г/м<sup>2</sup>';
+                                    }
+                                    else {
+                                        echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ширина мат-ла</td>
+                                <td><?= DisplayNumber(floatval($width_1), 0) ?> мм</td>
+                            </tr>
+                            <tr>
+                                <td>Метраж на тираж</td>
+                                <td><?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
+                            </tr>
+                            <tr>
+                                <td>Печать</td>
+                                <td>
+                                    <?php
+                                    switch ($side) {
+                                        case SIDE_FRONT:
+                                            echo 'Лицевая';
+                                            break;
+                                        case SIDE_BACK:
+                                            echo 'Оборотная';
+                                            break;
+                                        default :
+                                            echo "Ждем данные";
+                                            break;
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Длина этикетки</td>
+                                <td><?= rtrim(rtrim(DisplayNumber(floatval($length), 2), "0"), ",").(empty($length) ? "" : " мм") ?></td>
+                            </tr>
+                            <tr>
+                                <td>Кол-во ручьёв</td>
+                                <td><?=$streams_number ?></td>
+                            </tr>
+                            <tr>
+                                <td>Красочность</td>
+                                <td><?=$ink_number ?> кр.</td>
+                            </tr>
+                        </table>
+                        <div class="subtitle">ИНФОРМАЦИЯ ПО ЛАМИНАЦИИ 1</div>
+                        <table>
+                            <tr>
+                                <td>Кол-во ламинаций</td>
+                                <td><?= $laminations_number == 2 ? "2 ламинации" : ($laminations_number == 1 ? "1 ламинация" : "нет") ?></td>
+                            </tr>
+                            <tr>
+                                <td>Марка пленки</td>
+                                <td><?= (empty($lamination1_film_name) ? "" : $lamination1_film_name).(empty($lamination1_individual_film_name) ? "" : $lamination1_individual_film_name) ?></td>
+                            </tr>
+                            <tr>
+                                <td>Толщина</td>
+                                <td>
+                                    <?php
+                                    if(!empty($lamination1_thickness)) {
+                                        echo DisplayNumber(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>';
+                                    }
+                                    elseif(!empty($lamination1_individual_thickness)) {
+                                        echo DisplayNumber(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>';
+                                    }
+                                    else {
+                                        echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ширина мат-ла</td>
+                                <td><?= DisplayNumber(floatval($width_2), 0) ?> мм</td>
+                            </tr>
+                        </table>
+                        <div class="subtitle">ИНФОРМАЦИЯ ПО ЛАМИНАЦИИ 2</div>
+                        <table>
+                            <tr>
+                                <td>Марка пленки</td>
+                                <td><?= (empty($lamination2_film_name) ? "" : $lamination2_film_name).(empty($lamination2_individual_film_name) ? "" : $lamination2_individual_film_name) ?></td>
+                            </tr>
+                            <tr>
+                                <td>Толщина</td>
+                                <td>
+                                    <?php
+                                    if(!empty($lamination2_thickness)) {
+                                        echo DisplayNumber(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>';
+                                    }
+                                    elseif(!empty($lamination2_individual_thickness)) {
+                                        echo DisplayNumber(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>';
+                                    }
+                                    else {
+                                        echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <div class="subtitle">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</div>
-                    <table>
-                        <tr>
-                            <td>Объем заказа</td>
-                            <td><?= DisplayNumber(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Отгрузка в</td>
-                            <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
-                        </tr>
-                        <tr>
-                            <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
-                                <?php
-                                $norm_stream = "";
-                                if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                                    $sql = "select gap_stream from norm_gap order by date desc limit 1";
-                                    $fetcher = new Fetcher($sql);
-                                    if($row = $fetcher->Fetch()) {
-                                        $norm_stream = DisplayNumber($row[0], 2);
+                <div class="col-4" style="padding-left: 20px;">
+                    <div class="cutter_info">
+                        <div class="subtitle">&nbsp;</div>
+                        <div class="subtitle">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</div>
+                        <table>
+                            <tr>
+                                <td>Объем заказа</td>
+                                <td><?= DisplayNumber(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
+                            </tr>
+                            <tr>
+                                <td>Отгрузка в</td>
+                                <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                            </tr>
+                            <tr>
+                                <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
+                                    <?php
+                                    $norm_stream = "";
+                                    if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                        $sql = "select gap_stream from norm_gap order by date desc limit 1";
+                                        $fetcher = new Fetcher($sql);
+                                        if($row = $fetcher->Fetch()) {
+                                            $norm_stream = DisplayNumber($row[0], 2);
+                                        }
                                     }
-                                }
-                                ?>
-                            <td>
-                                <?php
-                                if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                                    if(empty($norm_stream)) {
+                                    ?>
+                                <td>
+                                    <?php
+                                    if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                        if(empty($norm_stream)) {
+                                            echo DisplayNumber(intval($stream_width), 0)." мм";
+                                        }
+                                        else {
+                                            echo DisplayNumber(floatval($stream_width) + floatval($norm_stream), 2)." / ".DisplayNumber(floatval($norm_stream), 2)." мм";
+                                        }
+                                    }
+                                    else {
                                         echo DisplayNumber(intval($stream_width), 0)." мм";
                                     }
-                                    else {
-                                        echo DisplayNumber(floatval($stream_width) + floatval($norm_stream), 2)." / ".DisplayNumber(floatval($norm_stream), 2)." мм";
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Намотка до</td>
+                                <td>
+                                    <?php
+                                    if(empty($winding)) {
+                                        echo 'Ждем данные';
                                     }
-                                }
-                                else {
-                                    echo DisplayNumber(intval($stream_width), 0)." мм";
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Намотка до</td>
-                            <td>
-                                <?php
-                                if(empty($winding)) {
-                                    echo 'Ждем данные';
-                                }
-                                elseif(empty ($winding_unit)) {
-                                    echo 'Нет данных по кг/мм/м/шт';
-                                }
-                                elseif($winding_unit == 'pc') {
-                                    if(empty($length)) {
-                                        echo 'Нет данных по длине этикетки';
+                                    elseif(empty ($winding_unit)) {
+                                        echo 'Нет данных по кг/мм/м/шт';
+                                    }
+                                    elseif($winding_unit == 'pc') {
+                                        if(empty($length)) {
+                                            echo 'Нет данных по длине этикетки';
+                                        }
+                                        else {
+                                            echo DisplayNumber(floatval($winding) * floatval($length) / 1000, 0);
+                                        }
                                     }
                                     else {
-                                        echo DisplayNumber(floatval($winding) * floatval($length) / 1000, 0);
+                                        echo DisplayNumber(floatval($winding), 0);
                                     }
-                                }
-                                else {
-                                    echo DisplayNumber(floatval($winding), 0);
-                                }
                                 
-                                switch ($winding_unit) {
-                                    case 'kg':
-                                        echo " кг";
-                                        break;
-                                    case 'mm':
-                                        echo " мм";
-                                        break;
-                                    case 'm':
-                                        echo " м";
-                                        break;
-                                    case 'pc':
-                                        echo " м";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="line-height: 18px;">Прим. метраж намотки</td>
-                            <td style="line-height: 18px;">
-                                <?php
-                                /* 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))
-                                 * 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))-200
-                                 * 2) Если намотка до = «мм» , то значение = "Нет"
-                                 * 3) Если намотка до = «м», то значение = "Нет"
-                                 * 4) Если намотка до = «шт» , то значение = "Нет" */
-                                if(empty($winding) || empty($winding_unit)) {
-                                    echo 'Ждем данные';
-                                }
-                                elseif(empty ($weight) && empty($individual_density)) {
-                                    echo 'Нет данных по уд. весу пленки';
-                                }
-                                elseif(empty ($width_1)) {
-                                    echo 'Нет данных по ширине мат-ла';
-                                }
-                                elseif($winding_unit == 'kg') {
-                                    $final_density = empty($weight) ? $individual_density : $weight;
-                                    $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
-                                    $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
-                                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
-                                }
-                                else {
-                                    echo 'Нет';
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Шпуля</td>
-                            <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
-                        </tr>
-                        <tr>
-                            <td style="line-height: 18px;">Этикеток в 1 м. пог.</td>
-                            <td>
-                                <?php
-                                if(empty($length)) {
-                                    echo "";
-                                }
-                                elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                                    // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
-                                    echo DisplayNumber(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
-                                }
-                                else {
-                                    echo DisplayNumber(1 / floatval($length) * 1000, 4);
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Бирки</td>
-                            <td>
-                                <?php
-                                switch ($labels) {
-                                    case LABEL_PRINT_DESIGN:
-                                        echo "Принт-Дизайн";
-                                        break;
-                                    case LABEL_FACELESS:
-                                        echo "Безликие";
-                                        break;
-                                    default :
-                                        echo "Ждем данные";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Склейки</td>
-                            <td>Помечать</td>
-                        </tr>
-                        <tr>
-                            <td>Отходы</td>
-                            <td><?=$waste ?></td>
-                        </tr>
-                        <tr>
-                            <td>Упаковка</td>
-                            <td>
-                                <?php
-                                switch ($package) {
-                                    case PACKAGE_PALLETED:
-                                        echo "Паллетирование";
-                                        break;
-                                    case PACKAGE_BULK:
-                                        echo "Россыпью";
-                                        break;
-                                    case PACKAGE_EUROPALLET:
-                                        echo "Европаллет";
-                                        break;
-                                    case PACKAGE_BOXES:
-                                        echo "Коробки";
-                                        break;
-                                    default :
-                                        echo "Ждем данные";
-                                        break;
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
+                                    switch ($winding_unit) {
+                                        case 'kg':
+                                            echo " кг";
+                                            break;
+                                        case 'mm':
+                                            echo " мм";
+                                            break;
+                                        case 'm':
+                                            echo " м";
+                                            break;
+                                        case 'pc':
+                                            echo " м";
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Прим. метраж намотки</td>
+                                <td>
+                                    <?php
+                                    /* 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))
+                                     * 1) Если намотка до =«кг», то Примерный метраж = (намотка до *1000*1000)/((уд вес пленка 1 + уд вес пленка 2 + уд вес пленка 3)*обрезная ширина))-200
+                                     * 2) Если намотка до = «мм» , то значение = "Нет"
+                                     * 3) Если намотка до = «м», то значение = "Нет"
+                                     * 4) Если намотка до = «шт» , то значение = "Нет" */
+                                    if(empty($winding) || empty($winding_unit)) {
+                                        echo 'Ждем данные';
+                                    }
+                                    elseif(empty ($weight) && empty($individual_density)) {
+                                        echo 'Нет данных по уд. весу пленки';
+                                    }
+                                    elseif(empty ($width_1)) {
+                                        echo 'Нет данных по ширине мат-ла';
+                                    }
+                                    elseif($winding_unit == 'kg') {
+                                        $final_density = empty($weight) ? $individual_density : $weight;
+                                        $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
+                                        $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
+                                        echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
+                                    }
+                                    else {
+                                        echo 'Нет';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Шпуля</td>
+                                <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
+                            </tr>
+                            <tr>
+                                <td>Этикеток в 1 м. пог.</td>
+                                <td>
+                                    <?php
+                                    if(empty($length)) {
+                                        echo "";
+                                    }
+                                    elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                        // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
+                                        echo DisplayNumber(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
+                                    }
+                                    else {
+                                        echo DisplayNumber(1 / floatval($length) * 1000, 4);
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Бирки</td>
+                                <td>
+                                    <?php
+                                    switch ($labels) {
+                                        case LABEL_PRINT_DESIGN:
+                                            echo "Принт-Дизайн";
+                                            break;
+                                        case LABEL_FACELESS:
+                                            echo "Безликие";
+                                            break;
+                                        default :
+                                            echo "Ждем данные";
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Склейки</td>
+                                <td>Помечать</td>
+                            </tr>
+                            <tr>
+                                <td>Отходы</td>
+                                <td><?=$waste ?></td>
+                            </tr>
+                            <tr>
+                                <td>Упаковка</td>
+                                <td>
+                                    <?php
+                                    switch ($package) {
+                                        case PACKAGE_PALLETED:
+                                            echo "Паллетирование";
+                                            break;
+                                        case PACKAGE_BULK:
+                                            echo "Россыпью";
+                                            break;
+                                        case PACKAGE_EUROPALLET:
+                                            echo "Европаллет";
+                                            break;
+                                        case PACKAGE_BOXES:
+                                            echo "Коробки";
+                                            break;
+                                        default :
+                                            echo "Ждем данные";
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+            <a href="javascript: void(0);" class="btn btn-dark" style="width: 175px;">Начать работу</a>
+            </div>            
         <?php
         include '../include/footer.php';
         include '../include/footer_cut.php';
