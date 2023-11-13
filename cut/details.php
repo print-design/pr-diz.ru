@@ -277,10 +277,17 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             ?>
             <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/' ?>">К списку резок</a>
             <h1><?= $name ?></h1>
-            <div class="name"><?=$customer ?></div>
-            <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
             <div class="row">
                 <div class="col-4">
+                    <div class="name"><?=$customer ?></div>
+                </div>
+                <div class="col-8">
+                    <div class="subtitle">Хар-ки</div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                     <table>
                         <tr>
                             <td>Объём заказа</td>
@@ -301,7 +308,6 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     </table>
                 </div>
                 <div class="col-4">
-                    <div class="subtitle">Хар-ки</div>
                     <div class="subtitle">ИНФОРМАЦИЯ ПО ПЕЧАТИ</div>
                     <table>
                         <tr>
