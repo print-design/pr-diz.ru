@@ -279,7 +279,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             }
             
             td {
-                line-height: 25px;
+                line-height: 22px;
             }
             
             tr td:nth-child(2) {
@@ -292,6 +292,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 border-radius: 15px;
                 box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
                 padding: 20px;
+                padding-top: 5px;
             }
         </style>
     </head>
@@ -299,16 +300,16 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
         <?php
         include '../include/header_cut.php';
         ?>
-        <div class="container-fluid" style="padding: 30px;">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
+            <div class="row">
+                <div class="col-4">
             <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/'.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "?machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>">К списку резок</a>
             <h1><?= $name ?></h1>
-            <div class="row">
-                <div class="col-4" style="padding-right: 20px;">
                     <div class="name"><?=$customer ?></div>
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                     <table>
