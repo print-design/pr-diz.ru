@@ -19,11 +19,6 @@ const PACKAGE_BOXES = 4;
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
 
-// Отходы
-const WASTE_PRESS = "В пресс";
-const WASTE_KAGAT = "В кагат";
-const WASTE_PAPER = "В макулатуру";
-
 // Фотометка
 const PHOTOLABEL_LEFT = "left";
 const PHOTOLABEL_RIGHT = "right";
@@ -228,13 +223,10 @@ $film_name1 = empty($film_name) ? $individual_film_name : $film_name;
 $film_name2 = empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name;
 $film_name3 = empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name;
 
-$waste_press_films = array("CPP cast", "CPP LA", "HGPL прозрачка", "HMIL.M металл", "HOHL жемчуг", "HWHL белая", "LOBA жемчуг", "LOHM.M", "MGS матовая");
-$waste_paper_film = "Офсет БДМ-7";
-
-if(in_array($film_name1, $waste_press_films)) {
+if(in_array($film_name1, WASTE_PRESS_FILMS)) {
     $waste1 = WASTE_PRESS;
 }
-elseif($film_name1 == $waste_paper_film) {
+elseif($film_name1 == WASTE_PAPER_FILM) {
     $waste1 = WASTE_PAPER;
 }
 elseif(empty ($film_name1)) {
@@ -244,10 +236,10 @@ else {
     $waste1 = WASTE_KAGAT;
 }
 
-if(in_array($film_name2, $waste_press_films)) {
+if(in_array($film_name2, WASTE_PRESS_FILMS)) {
     $waste2 = WASTE_PRESS;
 }
-elseif ($film_name2 == $waste_paper_film) {
+elseif ($film_name2 == WASTE_PAPER_FILM) {
     $waste2 = WASTE_PAPER;
 }
 elseif(empty ($film_name2)) {
@@ -257,10 +249,10 @@ else {
     $waste2 = WASTE_KAGAT;
 }
 
-if(in_array($film_name3, $waste_press_films)) {
+if(in_array($film_name3, WASTE_PRESS_FILMS)) {
     $waste3 = WASTE_PRESS;
 }
-elseif($film_name3 == $waste_paper_film) {
+elseif($film_name3 == WASTE_PAPER_FILM) {
     $waste3 = WASTE_PAPER;
 }
 elseif(empty ($film_name3)) {
@@ -339,10 +331,12 @@ $streams_number = intval($streams_number);
 
 if(!is_nan($streams_number)) {
     for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
-        $stream_var = "stream_$stream_i";
-        $$stream_var = $stream_positions_names[$stream_i];
+        if(array_key_exists($stream_i, $stream_positions_names)) {
+            $stream_var = "stream_$stream_i";
+            $$stream_var = $stream_positions_names[$stream_i];
         
-        $streams[$stream_var] = $$stream_var;
+            $streams[$stream_var] = $$stream_var;
+        }
     }
 }
 
@@ -1126,7 +1120,7 @@ $current_date_time = date("dmYHis");
                     <?php for($stream_i = 1; $stream_i <= $streams_number; $stream_i++): ?>
                     <tr>
                         <td>Ручей <?=$stream_i ?></td>
-                        <td><?=$streams['stream_'.$stream_i] ?></td>
+                        <td><?= array_key_exists('stream_'.$stream_i, $streams) ? $streams['stream_'.$stream_i] : "" ?></td>
                     </tr>
                     <?php endfor; ?>
                 </table>
