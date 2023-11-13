@@ -3,8 +3,16 @@ include '../include/topscripts.php';
 include './_cut_timetable.php';
 
 // Авторизация
-if(!IsInRole(CUTTER_USERS)) {
+if(!IsInRole(CUTTER_USERS) && !IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) {
     header('Location: '.APPLICATION.'/unauthorized.php');
+}
+
+$machine_id = 0;
+if(IsInRole(CUTTER_USERS)) {
+    $machine_id = GetUserId();
+}
+else {
+    $machine_id = filter_input(INPUT_GET, 'machine_id');
 }
 ?>
 <!DOCTYPE html>
@@ -51,14 +59,18 @@ if(!IsInRole(CUTTER_USERS)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1>Список работ "<?=filter_input(INPUT_COOKIE, ROLE_LOCAL) ?>"</h1>
+            <h1>Список работ <?= IsInRole(CUTTER_USERS) ? filter_input(INPUT_COOKIE, ROLE_LOCAL) : (empty($machine_id) ? "" : CUTTER_NAMES[$machine_id]) ?></h1>
             <?php
-            $date_from = null;
-            $date_to = null;
-            GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
             
-            $timetable = new CutTimetable($date_from, $date_to);
-            $timetable->Show();
+            
+            if(!empty($machine_id)) {
+                $date_from = null;
+                $date_to = null;
+                GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+            
+                $timetable = new CutTimetable($machine_id, $date_from, $date_to);
+                $timetable->Show();
+            }
             ?>
         </div>
         <?php

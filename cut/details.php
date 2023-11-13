@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include '../calculation/calculation.php';
 
 // Авторизация
-if(!IsInRole(CUTTER_USERS)) {
+if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -305,7 +305,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/' ?>">К списку резок</a>
+            <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/'.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "?machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>">К списку резок</a>
             <h1><?= $name ?></h1>
             <div class="row">
                 <div class="col-4" style="padding-right: 20px;">

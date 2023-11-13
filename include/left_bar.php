@@ -55,9 +55,9 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <?php
     endif;
     // Резка
-    if(IsInRole(CUTTER_USERS)):
+    if(IsInRole(CUTTER_USERS) || IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))):
     ?>
-    <a href="<?=APPLICATION ?>/cut/" class="left_bar_item<?=$cut_class ?>" title="Резка" data-toogle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_star.svg" style="height: 26px; width: auto;" /></a>
+    <a href="<?=APPLICATION ?>/cut/<?= IsInRole(CUTTER_USERS) ? "" : "?machine_id=".CUTTER_1 ?>" class="left_bar_item<?=$cut_class ?>" title="Резка" data-toogle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_star.svg" style="height: 26px; width: auto;" /></a>
     <?php
     endif;
     // Админка

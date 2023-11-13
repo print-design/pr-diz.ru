@@ -52,6 +52,6 @@
     </td>
     <td class="<?=$this->cut_shift->shift ?> text-nowrap"><i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?></td>
     <td class="<?=$this->cut_shift->shift ?>">
-        <a class="btn btn-outline-dark" href="details.php?id=<?=$this->edition['calculation_id'] ?>">Приступить</a>
+        <a class="btn btn-outline-dark" href="details.php?id=<?=$this->edition['calculation_id'] ?><?= empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "&machine_id=". filter_input(INPUT_GET, 'machine_id') ?>">Приступить</a>
     </td>
 </tr>

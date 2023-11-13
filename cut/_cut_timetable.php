@@ -3,6 +3,7 @@ require_once '../include/topscripts.php';
 require_once './_cut_date.php';
 
 class CutTimetable {
+    public $machine_id;
     public $dateFrom;
     public $dateTo;
     public $cut_dates = array();
@@ -10,7 +11,8 @@ class CutTimetable {
     public $workshifts = array();
     public $editions = array();
     
-    public function __construct($dateFrom, $dateTo) {
+    public function __construct($machine_id, $dateFrom, $dateTo) {
+        $this->machine_id = $machine_id;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
         
@@ -25,7 +27,7 @@ class CutTimetable {
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
                 . "left join plan_employee e on ws.employee1_id = e.id "
-                . "where ws.work_id = ".WORK_CUTTING." and ws.machine_id = ". GetUserId()
+                . "where ws.work_id = ".WORK_CUTTING." and ws.machine_id = ".$this->machine_id
                 . " and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
@@ -43,7 +45,7 @@ class CutTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ". GetUserId()." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.status_id, "
                 . "round(cr.length_pure_1) / e.worktime * pc.worktime as length_pure_1, "
@@ -56,7 +58,7 @@ class CutTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ". GetUserId()." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pp.id, pp.date, pp.shift, ".PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.status_id, "
                 . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_1, "
@@ -68,7 +70,7 @@ class CutTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where pp.in_plan = 1 and pp.work_id = ".WORK_CUTTING." and pp.machine_id = ". GetUserId()." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where pp.in_plan = 1 and pp.work_id = ".WORK_CUTTING." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select ppc.id, ppc.date, ppc.shift, ".PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.status_id, "
                 . "round(pp.length) / pp.worktime * ppc.worktime as length_pure_1, "
@@ -81,7 +83,7 @@ class CutTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where pp.work_id = ".WORK_CUTTING." and pp.machine_id = ". GetUserId()." and ppc.date >= '".$this->dateFrom->format('Y-m-d')."' and ppc.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where pp.work_id = ".WORK_CUTTING." and pp.machine_id = ".$this->machine_id." and ppc.date >= '".$this->dateFrom->format('Y-m-d')."' and ppc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "order by position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
