@@ -308,7 +308,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/' ?>">К списку резок</a>
             <h1><?= $name ?></h1>
             <div class="row">
-                <div class="col-4" style="padding-right: 30px;">
+                <div class="col-4" style="padding-right: 20px;">
                     <div class="name"><?=$customer ?></div>
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                     <table>
