@@ -89,6 +89,6 @@
             <?php endif; ?>
         </div>
     </div>
-    <div style="margin-top: 10px;"><strong>Статус:</strong> <?=ORDER_STATUS_NAMES[$row['status_id']] ?></div>
+    <div><strong>Статус:</strong> <span style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>; font-weight: bold;"><?=ORDER_STATUS_NAMES[$row['status_id']] ?></span></div>
     <div><strong>Менеджер:</strong> <?=$row['last_name'] ?> <?= mb_substr($row['first_name'], 0, 1)  ?>.</div>
 </div>
