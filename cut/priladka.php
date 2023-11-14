@@ -296,6 +296,16 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 padding: 20px;
                 padding-top: 5px;
             }
+            
+            #status {
+                width: 100%;
+                padding: 12px;
+                margin-top: 40p;
+                margin-bottom: 40px;
+                border-radius: 10px;
+                font-weight: bold;
+                text-align: center; 
+            }
         </style>
     </head>
     <body>
@@ -310,33 +320,15 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             ?>
             <div class="row">
                 <div class="col-4">
-                    <?php if($status_id != ORDER_STATUS_CUT_PRILADKA): ?>
-                    <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/'.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "?machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>">К списку резок</a>
-                    <?php endif; ?>
-                    <h1><?= $name ?></h1>
+                    <h1><?=$name ?></h1>
                     <div class="name"><?=$customer ?></div>
-                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
-                    <table>
-                        <tr>
-                            <td>Объём заказа</td>
-                            <td><?= DisplayNumber(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Менеджер</td>
-                            <td><?=$last_name.' '.$first_name ?></td>
-                        </tr>
-                        <tr>
-                            <td>Тип работы</td>
-                            <td><?=WORK_TYPE_NAMES[$work_type_id] ?></td>
-                        </tr>
-                        <tr>
-                            <td>Карта составлена</td>
-                            <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
-                        </tr>
-                    </table>
+                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+                    <div id="status" style="border: solid 2px <?=ORDER_STATUS_COLORS[$status_id] ?>; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">
+                        <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
+                    </div>
                 </div>
-                <div class="col-4" style="padding-left: 20px;"></div>
-                <div class="col-4" style="padding-left: 20px;">
+                <div class="col-4"></div>
+                <div class="col-4">
                     <div class="cutter_info">
                         <div class="subtitle">Хар-ки</div>
                         <div class="subtitle">ИНФОРМАЦИЯ ПО ПЕЧАТИ</div>
@@ -636,8 +628,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     </div>
                 </div>
             </div>
-            <a href="priladka.php?id=<?=$id.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "&machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>" class="btn btn-dark" style="width: 175px;">Начать работу</a>
-            </div>            
+        </div>
         <?php
         include '../include/footer.php';
         include '../include/footer_cut.php';
