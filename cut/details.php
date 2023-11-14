@@ -13,6 +13,20 @@ if($id === null) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
+// Начало резки
+if(null !== filter_input(INPUT_POST, 'start_cut_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    
+    $sql = "update calculation set status_id=".ORDER_STATUS_CUT_PRILADKA." where id=$id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header('Location: priladka.php?id='.$id.(empty($machine_id) ? '' : '&amchine_id='.$machine_id));
+    }
+}
+
 // Печать: лицевая, оборотная
 const SIDE_FRONT = 1;
 const SIDE_BACK = 2;
@@ -636,8 +650,12 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     </div>
                 </div>
             </div>
-            <a href="priladka.php?id=<?=$id.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "&machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>" class="btn btn-dark" style="width: 175px;">Начать работу</a>
-            </div>            
+            <form method="post">
+                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                <button type="submit" name="start_cut_submit" class="btn btn-dark" style="width: 175px;">Начать работу</button>
+            </form>
+        </div>            
         <?php
         include '../include/footer.php';
         include '../include/footer_cut.php';
