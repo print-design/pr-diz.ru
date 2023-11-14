@@ -318,8 +318,12 @@
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline" style="font-weight: bold;<?= empty($this->edition['status_id']) ? '' : ' color:'.ORDER_STATUS_COLORS[$this->edition['status_id']] ?>"<?=$drop ?>>
-        <?= empty($this->edition['status_id']) ? '' : ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
+        <?php
+        if(!empty($this->edition['status_id'])):
+        ?>
+        <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
+        <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell comment_invisible"<?=$drop ?>>
         <div class="d-flex justify-content-start">
