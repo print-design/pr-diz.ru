@@ -286,6 +286,9 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             .comment_invisible {
                 display: none;
             }
+            .samples_count_invisible {
+                display: none;
+            }
             .notforedit {
                 display: none;
             }
@@ -506,12 +509,14 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 $('#sidebar').addClass('active');
                 $('#sidebarExpand').show();
                 $('.comment_cell').removeClass('comment_invisible');
+                $('.samples_count_cell').removeClass('samples_count_invisible');
             });
                 
             $('#sidebarExpand').on('click', function() {
                 $('#sidebar').removeClass('active');
                 $('#sidebarExpand').hide();
                 $('.comment_cell').addClass('comment_invisible');
+                $('.samples_count_cell').addClass('samples_count_invisible');
             });
                 
             // При показе формы добавления события,
