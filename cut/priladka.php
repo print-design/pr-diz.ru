@@ -322,10 +322,27 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 <div class="col-4">
                     <h1><?=$name ?></h1>
                     <div class="name"><?=$customer ?></div>
-                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+                    <div class="subtitle mb-4">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                     <div id="status" style="border: solid 2px <?=ORDER_STATUS_COLORS[$status_id] ?>; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">
                         <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
                     </div>
+                    <div class="name">Приладка</div>
+                    <form method="post">
+                        <div class="input-group">
+                            <input type="text" class="form-control float-only" name="length" placeholder="Метраж приладки" required="required" autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">м</span>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-dark w-100" name="length_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-light w-100"><img src="../images/icons/exclamation_circle_red.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="col-4"></div>
                 <div class="col-4">
