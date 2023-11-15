@@ -339,7 +339,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                                 <button type="submit" class="btn btn-dark w-100" name="length_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-light w-100"><img src="../images/icons/exclamation_circle_red.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
+                                <button type="button" class="btn btn-light w-100"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
                             </div>
                         </div>
                     </form>
