@@ -325,7 +325,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <div class="row">
                 <div class="col-4">
                     <?php if($status_id != ORDER_STATUS_CUT_PRILADKA): ?>
-                    <a class="btn btn-outline-dark backlink" href="<?= APPLICATION.'/cut/'.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "?machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>">К списку резок</a>
+                    <a class="btn btn-light backlink" href="<?= APPLICATION.'/cut/'.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "?machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>">К списку резок</a>
                     <?php endif; ?>
                     <h1><?= $name ?></h1>
                     <div class="name"><?=$customer ?></div>
