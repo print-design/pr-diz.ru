@@ -16,21 +16,6 @@ if($id === null) {
 // Расчёт
 $calculation = Calculation::Create($id);
 
-// Начало резки
-if(null !== filter_input(INPUT_POST, 'length_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $length = filter_input(INPUT_POST, 'length');
-    
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING." where id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        header('Location: take.php?id='.$id.(empty($machine_id) ? '' : '&machine_id='.$machine_id));
-    }
-}
-
 // Получение объекта
 $date = '';
 $name = '';
@@ -141,25 +126,6 @@ if($row = $fetcher->Fetch()) {
                     <div id="status" style="border: solid 2px <?=ORDER_STATUS_COLORS[$status_id] ?>; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">
                         <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
                     </div>
-                    <div class="name">Приладка</div>
-                    <form method="post">
-                        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
-                        <div class="input-group">
-                            <input type="text" class="form-control int-only" name="length" placeholder="Метраж приладки" required="required" autocomplete="off" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">м</span>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <button type="submit" class="btn btn-dark w-100" name="length_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
-                            </div>
-                            <div class="col-6">
-                                <button type="button" class="btn btn-light w-100"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
                 <div class="col-4"></div>
                 <div class="col-4">
@@ -167,9 +133,5 @@ if($row = $fetcher->Fetch()) {
                 </div>
             </div>
         </div>
-        <?php
-        include '../include/footer.php';
-        include '../include/footer_cut.php';
-        ?>
     </body>
 </html>
