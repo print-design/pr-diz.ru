@@ -19,7 +19,7 @@
                         <div class="command">
                             <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? "print_tm" : "techmap" ?>.php?id=<?=$row['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) ? " target='_blank'" : "" ?>><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
                         </div>
-                        <div class="command">
+                        <div class="command d-none">
                             <?php if($row['type'] == PLAN_TYPE_EDITION): ?>
                             <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
                             <?php elseif($row['type'] == PLAN_TYPE_PART): ?>
