@@ -113,6 +113,10 @@ if($row = $fetcher->Fetch()) {
                 padding: 20px;
                 margin-bottom: 20px;
             }
+            
+            .target {
+                border-top: solid 3px gray;
+            }
         </style>
     </head>
     <body>
@@ -138,64 +142,9 @@ if($row = $fetcher->Fetch()) {
                         </div>
                     </div>
                     <div class="name">Съём 1</div>
-                    <?php
-                    $sql = "select id, name from calculation_stream where calculation_id = $id order by position";
-                    $fetcher = new Fetcher($sql);
-                    while($row = $fetcher->Fetch()):
-                    ?>
-                    <div class="calculation_stream">
-                        <div class="d-flex justify-content-between mb-3">
-                            <div class="d-flex justify-content-sm-start">
-                                <div class="mr-3" draggable="true">
-                                    <img src="../images/icons/double-vertical-dots.svg" />
-                                </div>
-                                <div class="font-weight-bold"><?=$row['name'] ?></div>
-                            </div>
-                            <div style="background-color: #0A9D4E0D; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: #0A9D4E;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="weight">Масса катушки</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control int-only" name="weight" value="22" />
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">кг</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="length">Метраж</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control int-only" name="length" value="80" />
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">м</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="diameter">Диаметр от вала</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control int-only" name="diameter" value="120" />
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">мм</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="print_label">&nbsp;</label>
-                                    <button type="button" class="btn btn-light w-100" name="print_label"><img src="../images/icons/print.svg" class="mr-2" />Распечатать бирку</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div id="calculation_streams">
+                        <?php include './_calculation_streams.php'; ?>
                     </div>
-                    <?php endwhile; ?>
                     <div class="d-flex justify-content-xl-start">
                         <div><button type="button" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Съём закончен</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
@@ -211,5 +160,35 @@ if($row = $fetcher->Fetch()) {
                 </div>
             </div>
         </div>
+        <?php
+        include '../include/footer.php';
+        include '../include/footer_cut.php';
+        ?>
+        <script>
+            function DragStart(ev) {
+                ev.dataTransfer.setData('source_id', $(ev.target).attr('data-id'));
+            }
+            
+            function DragOver(ev) {
+                ev.preventDefault();
+                if($(ev.target).parents('.calculation_stream').length > 0) { 
+                    calculation_stream = $(ev.target).parents('.calculation_stream')[0];
+                    $(calculation_stream).addClass('target');
+                }
+            }
+            
+            function DragLeave(ev) {
+                ev.preventDefault();
+                $(ev.target).removeClass('target');
+            }
+            
+            function Drop(ev) {
+                ev.preventDefault();
+                source_id = ev.dataTransfer.getData('source_id');
+                target_id = $(ev.target).closest('.calculation_stream').attr('data-id');
+                alert(source_id + ' -- ' + target_id);
+                $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>');
+            }
+        </script>
     </body>
 </html>
