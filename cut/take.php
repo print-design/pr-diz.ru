@@ -106,6 +106,13 @@ if($row = $fetcher->Fetch()) {
                 font-weight: bold;
                 text-align: center; 
             }
+            
+            .calculation_stream {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 20px;
+                margin-bottom: 20px;
+            }
         </style>
     </head>
     <body>
@@ -144,7 +151,7 @@ if($row = $fetcher->Fetch()) {
                                 </div>
                                 <div class="font-weight-bold"><?=$row['name'] ?></div>
                             </div>
-                            <div><span style="font-size: x-small; vertical-align: middle;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано</div>
+                            <div style="background-color: #0A9D4E0D; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: #0A9D4E;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано</div>
                         </div>
                         <div class="row">
                             <div class="col-3">
@@ -189,6 +196,15 @@ if($row = $fetcher->Fetch()) {
                         </div>
                     </div>
                     <?php endwhile; ?>
+                    <div class="d-flex justify-content-xl-start">
+                        <div><button type="button" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Съём закончен</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
+                    </div>
+                    <div class="calculation_stream mt-5">
+                        <div class="name">Готовые съёмы</div>
+                        <div class="subtitle">Общий метраж съёмов: 0 м</div>
+                    </div>
                 </div>
                 <div class="col-4">
                     <?php include './_cut_right.php'; ?>
