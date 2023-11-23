@@ -9,10 +9,10 @@ $sql = "select id, name from calculation_stream where calculation_id = $calculat
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
 ?>
-<div class="calculation_stream" data-id="<?=$row['id'] ?>" ondragover="DragOver(event);" ondragleave="DragLeave(event);" ondrop="Drop(event);">
+<div class="calculation_stream" data-id="<?=$row['id'] ?>" ondragover="DragOver(event);" ondrop="Drop(event);">
     <div class="d-flex justify-content-between mb-3">
         <div class="d-flex justify-content-sm-start">
-            <div class="mr-3" draggable="true" data-id="<?=$row['id'] ?>" ondragstart="DragStart(event);">
+            <div class="mr-3" draggable="true" data-id="<?=$row['id'] ?>" ondragstart="DragStart(event);" ondragend="DragEnd();">
                 <img src="../images/icons/double-vertical-dots.svg" draggable="false" />
             </div>
             <div class="font-weight-bold"><?=$row['name'] ?></div>

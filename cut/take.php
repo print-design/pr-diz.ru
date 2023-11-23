@@ -169,25 +169,38 @@ if($row = $fetcher->Fetch()) {
                 ev.dataTransfer.setData('source_id', $(ev.target).attr('data-id'));
             }
             
+            function DragEnd() {
+                $('.calculation_stream.target').removeClass('target');
+            }
+            
             function DragOver(ev) {
                 ev.preventDefault();
                 if($(ev.target).parents('.calculation_stream').length > 0) { 
                     calculation_stream = $(ev.target).parents('.calculation_stream')[0];
+                    $('.calculation_stream.target').removeClass('target');
                     $(calculation_stream).addClass('target');
                 }
-            }
-            
-            function DragLeave(ev) {
-                ev.preventDefault();
-                $(ev.target).removeClass('target');
             }
             
             function Drop(ev) {
                 ev.preventDefault();
                 source_id = ev.dataTransfer.getData('source_id');
                 target_id = $(ev.target).closest('.calculation_stream').attr('data-id');
-                alert(source_id + ' -- ' + target_id);
-                $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>');
+                
+                if(!isNaN(source_id) && !isNaN(target_id) && source_id != target_id) {
+                    $.ajax({ dataType: 'JSON', url: "_drag_streams.php?source_id=" + source_id + "&target_id=" + target_id })
+                            .done(function(data) {
+                                if(data.error == '') {
+                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>');
+                                }
+                                else {
+                                    alert(data.error);
+                                }
+                            })
+                            .fail(function() {
+                                alert('Ошибка при вызове исполняющей программы');
+                            });
+                }
             }
         </script>
     </body>
