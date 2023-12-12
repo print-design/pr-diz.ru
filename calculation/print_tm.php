@@ -384,12 +384,6 @@ $current_date_time = date("dmYHis");
                 margin-top: 6px;
             }
             
-            .table-header {
-                color: #cccccc;
-                padding-top: 6px;
-                border-bottom: solid 2px gray;
-            }
-            
             td {
                 line-height: 20px;
                 padding-top: 7px;
@@ -419,11 +413,6 @@ $current_date_time = date("dmYHis");
                 padding-right: 20px;
                 text-align: right;
                 vertical-align: top;
-            }
-            
-            td.fotometka img:nth-child(1) {
-                 height: 32px;
-                 width: auto;
             }
             
             .photolable {
@@ -472,10 +461,6 @@ $current_date_time = date("dmYHis");
                 .topproperty {
                     font-size: 14px;
                     margin-top: 4px;
-                }
-            
-                .table-header {
-                    padding-top: 4px;
                 }
             
                 td {
@@ -568,10 +553,10 @@ $current_date_time = date("dmYHis");
                 <div class="col-4 border-right" style="-webkit-box-flex: 0; flex: 0 0 33%; max-width: 33%; border-right: 1px solid  #dee2e6; padding-right: 5px;">
                     <table class="w-100" style="width: 100%;">
                         <tr>
-                            <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;">ИНФОРМАЦИЯ ДЛЯ ПЕЧАТИ</td>
+                            <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;">Печать</td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="font-weight-bold" style="font-weight: 700;">Печать</td>
+                            <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Печать</td>
                         </tr>
                         <tr>
                             <td>Машина</td>
@@ -679,7 +664,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td colspan="2" class="font-weight-bold border-bottom-2" style="font-weight: 700; border-bottom: solid 2px gray;">Красочность: <?=$ink_number ?> красок</td>
+                            <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Красочность: <?=$ink_number ?> красок</td>
                         </tr>
                         <?php
                         for($i = 1; $i <= $ink_number; $i++):
@@ -746,7 +731,7 @@ $current_date_time = date("dmYHis");
                         <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; border-right: 1px solid #dee2e6; padding-left: 5px; padding-right: 5px;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
-                                    <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> ИНФОРМАЦИЯ ДЛЯ ЛАМИНАЦИИ<?php else: echo "<br /> "; endif; ?></td>
+                                    <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> Ламинация<?php else: echo "<br /> "; endif; ?></td>
                                 </tr>
                                 <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                                 <tr>
@@ -754,7 +739,7 @@ $current_date_time = date("dmYHis");
                                     <td><?=$lamination ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700;">Ламинация 1</td>
+                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Ламинация 1</td>
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
@@ -793,7 +778,7 @@ $current_date_time = date("dmYHis");
                                     <td><?=$requirement2 ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="font-weight-bold border-bottom-2" style="font-weight: 700; border-bottom: solid 2px gray;">Ламинация 2</td>
+                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Ламинация 2</td>
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
@@ -829,7 +814,7 @@ $current_date_time = date("dmYHis");
                         <div class="col-6" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; padding-left: 5px;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
-                                    <td colspan="2" class="table-header font-weight-bold" style="color: #cccccc; padding-top: 6px; border-bottom: solid 2px gray; font-weight: 700;">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</td>
+                                    <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;">Резка</td>
                                 </tr>
                                 <tr>
                                     <td>Отгрузка в</td>
@@ -1006,87 +991,97 @@ $current_date_time = date("dmYHis");
                                         ?>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="2" class="font-weight-bold border-bottom-2 pt-5" style="font-size: 18px; padding-top: 30px; font-weight: 700;">Наименования</td>
+                                </tr>
+                                <?php
+                                $sql = "select name from calculation_stream where calculation_id = $id order by position";
+                                $fetcher = new Fetcher($sql);
+                                while ($row = $fetcher->Fetch()):
+                                ?>
+                                <tr><td colspan="2"><?=$row['name'] ?></td></tr>
+                                <?php endwhile; ?>
                             </table>
                         </div>
                     </div>
-                    <div class="photolable">
-                        <span class="font-weight-bold" style="font-weight: 700;">Фотометка:</span>&nbsp;
-                        <?php
-                        switch ($photolabel) {
-                            case PHOTOLABEL_LEFT:
-                                echo "Левая";
-                                break;
-                            case PHOTOLABEL_RIGHT:
-                                echo "Правая";
-                                break;
-                            case PHOTOLABEL_BOTH:
-                                echo "Две фотометки";
-                                break;
-                            case PHOTOLABEL_NONE:
-                                echo "Без фотометки";
-                                break;
-                            default :
-                                echo ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
-                                break;
-                        }
-                        ?>
-                    </div>
-                    <?php
-                    $roll_folder = ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
-                    switch ($photolabel) {
-                        case PHOTOLABEL_LEFT:
-                            $roll_folder = "roll_left";
-                            break;
-                        case PHOTOLABEL_RIGHT:
-                            $roll_folder = "roll_right";
-                            break;
-                        case PHOTOLABEL_BOTH:
-                            $roll_folder = "roll_both";
-                            break;
-                        case PHOTOLABEL_NONE:
-                            $roll_folder = "roll";
-                            break;
-                    }
-                    ?>
-                    <table class="fotometka">
-                        <tr>
-                            <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 1): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                            <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 2): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                            <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 3): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                            <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 4): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                            <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 5): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                            <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 6): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                            <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 7): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                            <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>">
-                                <img src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" />
-                                <?php if($roll_type == 8): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
-                            </td>
-                        </tr>
-                    </table>
                 </div>
             </div>
-            <div class="font-weight-bold" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Комментарий:</div>
+            <div class="border-bottom-2" style="font-size: 18px; margin-top: 10px; font-weight: 700;">
+                Фотометка:&nbsp;
+                <?php
+                switch ($photolabel) {
+                    case PHOTOLABEL_LEFT:
+                        echo "Левая";
+                        break;
+                    case PHOTOLABEL_RIGHT:
+                        echo "Правая";
+                        break;
+                    case PHOTOLABEL_BOTH:
+                        echo "Две фотометки";
+                        break;
+                    case PHOTOLABEL_NONE:
+                        echo "Без фотометки";
+                        break;
+                    default :
+                        echo ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
+                        break;
+                }
+                ?>
+            </div>
+            <?php
+            $roll_folder = ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
+            switch ($photolabel) {
+                case PHOTOLABEL_LEFT:
+                    $roll_folder = "roll_left";
+                    break;
+                case PHOTOLABEL_RIGHT:
+                    $roll_folder = "roll_right";
+                    break;
+                case PHOTOLABEL_BOTH:
+                    $roll_folder = "roll_both";
+                    break;
+                case PHOTOLABEL_NONE:
+                    $roll_folder = "roll";
+                    break;
+            }
+            ?>
+            <table class="fotometka">
+                <tr>
+                    <td class="fotometka<?= $roll_type == 1 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 1): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 2 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 2): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 3 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 3): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 4 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 4): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 5 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 5): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 6 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 6): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 7 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 7): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                    <td class="fotometka<?= $roll_type == 8 ? " fotochecked" : "" ?>">
+                        <img src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" />
+                        <?php if($roll_type == 8): ?><br /><img src="../images/icons/check_black.svg" /><?php endif; ?>
+                    </td>
+                </tr>
+            </table>
+            <div class="font-weight-bold border-bottom-2" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Комментарий</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
             <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
