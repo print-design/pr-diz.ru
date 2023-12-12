@@ -124,6 +124,14 @@ const ROLL_STATUSES = array(ROLL_STATUS_FREE, ROLL_STATUS_UTILIZED, ROLL_STATUS_
 const ROLL_STATUS_NAMES = array(ROLL_STATUS_FREE => "Свободный", ROLL_STATUS_UTILIZED => "Сработанный", ROLL_STATUS_CUT => "Раскроили");
 const ROLL_STATUS_COLOURS = array(ROLL_STATUS_FREE => "forestgreen", ROLL_STATUS_UTILIZED => "red", ROLL_STATUS_CUT => "violet");
 
+// Отходы
+const WASTE_PRESS = "В пресс";
+const WASTE_KAGAT = "В кагат";
+const WASTE_PAPER = "В макулатуру";
+
+const WASTE_PRESS_FILMS = array("CPP cast", "CPP LA", "HGPL прозрачка", "HMIL.M металл", "HOHL жемчуг", "HWHL белая", "LOBA жемчуг", "LOHM.M", "MGS матовая");
+const WASTE_PAPER_FILM = "Офсет БДМ-7";
+
 // Другое
 const ISINVALID = ' is-invalid';
 ?>

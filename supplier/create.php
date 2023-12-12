@@ -108,7 +108,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
+            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
             <h1>Добавление поставщика</h1>
             <form method="post">
                 <div class="form-group" style="padding-bottom: 6px;">

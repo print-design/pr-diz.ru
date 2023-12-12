@@ -206,11 +206,11 @@ $cutting_wind_id = $row['cutting_wind_id'];
             // иначе - в раздел "Рулоны".
             if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED):
             ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php elseif(isset($status_id) && $status_id == ROLL_STATUS_CUT): ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php else: ?>
-            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
+            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php endif; ?>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
             <?php if(!empty($time) && $time != '00:00'): ?>

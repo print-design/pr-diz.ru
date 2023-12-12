@@ -472,15 +472,15 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                             <?php if(!empty(filter_input(INPUT_GET, 'from')) || !empty(filter_input(INPUT_GET, 'to'))): ?>
                             <a href="?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
-                            <button type="button" class="btn btn-light foredit" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                            <button type="button" class="btn btn-light foredit ml-2" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                             <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
                             <?php if($work_id == WORK_PRINTING && $machine_id != PRINTER_ATLAS): ?>
-                            <a class="btn btn-light" href="excel_print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-download"></i></a>
+                            <a class="btn btn-light ml-2" href="excel_print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-download"></i></a>
                             <?php elseif($work_id == WORK_LAMINATION): ?>
-                            <a class="btn btn-light" href="excel_laminate.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-download"></i></a>
+                            <a class="btn btn-light ml-2" href="excel_laminate.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-download"></i></a>
                             <?php endif; ?>
                             <?php endif; ?>
-                            <a class="btn btn-light" href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>" target="_blank">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
+                            <a class="btn btn-light ml-2" href="print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>" target="_blank">Печать&nbsp;&nbsp;&nbsp;<i class="fas fa-print"></i></a>
                         </div>
                     </div>
                     <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0; padding: 5px;">

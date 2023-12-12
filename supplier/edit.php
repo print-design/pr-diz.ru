@@ -192,7 +192,7 @@ while($row = $fetcher->Fetch()) {
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-0">
-                    <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
+                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
                 </div>
                 <div class="pt-1">
                     <button class="btn btn-dark" data-toggle="modal" data-target="#create_film">

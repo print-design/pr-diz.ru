@@ -13,6 +13,17 @@ $weekdays[4] = 'Чт';
 $weekdays[5] = 'Пт';
 $weekdays[6] = 'Сб';
 
+global $weekday_names;
+
+$weekday_names = array();
+$weekday_names[0] = 'Воскресенье';
+$weekday_names[1] = 'Понедельник';
+$weekday_names[2] = 'Вторник';
+$weekday_names[3] = 'Среда';
+$weekday_names[4] = 'Четверг';
+$weekday_names[5] = 'Пятница';
+$weekday_names[6] = 'Суббота';
+
 global $months_genitive;
 
 $months_genitive = array();
