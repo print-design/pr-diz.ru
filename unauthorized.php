@@ -17,7 +17,6 @@ include 'include/topscripts.php';
         </div>
         <?php
         include 'include/footer.php';
-        include 'include/footer_cut.php';
         ?>
     </body>
 </html>

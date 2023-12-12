@@ -12,9 +12,9 @@ const ROLE_SCHEDULER = 12;
 
 const ROLES = array(ROLE_ELECTROCARIST, ROLE_STOREKEEPER, ROLE_MARKER, ROLE_MANAGER, ROLE_SCHEDULER, ROLE_AUDITOR, ROLE_CUTTER, ROLE_MANAGER_SENIOR, ROLE_TECHNOLOGIST);
 const ROLE_NAMES = array(ROLE_TECHNOLOGIST => "technologist", ROLE_MANAGER => "manager", ROLE_STOREKEEPER => "storekeeper", ROLE_ELECTROCARIST => "electrocarist", ROLE_CUTTER => "cutter", ROLE_MARKER => "marker", ROLE_AUDITOR => "auditor", ROLE_MANAGER_SENIOR => "manager-senior", ROLE_SCHEDULER => "scheduler");
-const ROLE_LOCAL_NAMES = array(ROLE_TECHNOLOGIST => "Технолог", ROLE_MANAGER => "Менеджер", ROLE_STOREKEEPER => "Кладовщик", ROLE_ELECTROCARIST => "Карщик", ROLE_CUTTER => "Резчик раскрой", ROLE_MARKER => "Маркировщик", ROLE_AUDITOR => "Ревизор", ROLE_MANAGER_SENIOR => "Старший менеджер", ROLE_SCHEDULER => "Планировщик");
-const ROLE_TWOFACTOR = array(ROLE_ELECTROCARIST => 0, ROLE_STOREKEEPER => 0, ROLE_MARKER => 0, ROLE_MANAGER => 0, ROLE_SCHEDULER => 0, ROLE_AUDITOR => 0, ROLE_CUTTER => 0, ROLE_MANAGER_SENIOR => 0, ROLE_TECHNOLOGIST => 0);
-//const ROLE_TWOFACTOR = array(ROLE_ELECTROCARIST => 0, ROLE_STOREKEEPER => 1, ROLE_MARKER => 0, ROLE_MANAGER => 1, ROLE_SCHEDULER => 0, ROLE_AUDITOR => 0, ROLE_CUTTER => 0, ROLE_MANAGER_SENIOR => 1, ROLE_TECHNOLOGIST => 1);
+const ROLE_LOCAL_NAMES = array(ROLE_ELECTROCARIST => "Карщик", ROLE_STOREKEEPER => "Кладовщик", ROLE_MARKER => "Маркировщик", ROLE_MANAGER => "Менеджер", ROLE_SCHEDULER => "Планировщик", ROLE_AUDITOR => "Ревизор", ROLE_CUTTER => "Резчик раскрой", ROLE_MANAGER_SENIOR => "Старший менеджер", ROLE_TECHNOLOGIST => "Технолог");
+//const ROLE_TWOFACTOR = array(ROLE_ELECTROCARIST => 0, ROLE_STOREKEEPER => 0, ROLE_MARKER => 0, ROLE_MANAGER => 0, ROLE_SCHEDULER => 0, ROLE_AUDITOR => 0, ROLE_CUTTER => 0, ROLE_MANAGER_SENIOR => 0, ROLE_TECHNOLOGIST => 0);
+const ROLE_TWOFACTOR = array(ROLE_ELECTROCARIST => 0, ROLE_STOREKEEPER => 1, ROLE_MARKER => 0, ROLE_MANAGER => 1, ROLE_SCHEDULER => 0, ROLE_AUDITOR => 0, ROLE_CUTTER => 0, ROLE_MANAGER_SENIOR => 1, ROLE_TECHNOLOGIST => 1);
 
 // Валюты
 const CURRENCY_RUB = "rub";
@@ -52,18 +52,6 @@ const CUTTERS = array(CUTTER_1, CUTTER_2, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTE
 const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_2 => "Резка 2", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;");
 const CUTTER_SPEEDS = array(CUTTER_1 => 35, CUTTER_2 => 35, CUTTER_3 => 35, CUTTER_4 => 80, CUTTER_ATLAS => 35, CUTTER_SOMA => 120);
 
-// Резчики (пользователи)
-const CUTTER_USER_1 = "cut1";
-const CUTTER_USER_2 = "cut2";
-const CUTTER_USER_3 = "cut3";
-const CUTTER_USER_1600 = "cut1600";
-const CUTTER_USER_SOMA = "somacut";
-const CUTTER_USER_ATLAS = "atlascut";
-
-const CUTTER_USERS = array(CUTTER_USER_1, CUTTER_USER_2, CUTTER_USER_3, CUTTER_USER_1600, CUTTER_USER_SOMA, CUTTER_USER_ATLAS);
-const CUTTER_USER_IDS = array(CUTTER_USER_1 => CUTTER_1, CUTTER_USER_2 => CUTTER_2, CUTTER_USER_3 => CUTTER_3, CUTTER_USER_1600 => CUTTER_4, CUTTER_USER_SOMA => CUTTER_SOMA, CUTTER_USER_ATLAS => CUTTER_ATLAS);
-const CUTTER_USER_NAMES = array(CUTTER_USER_1 => "Резка 1", CUTTER_USER_2 => "Резка 2", CUTTER_USER_3 => "Резка 3", CUTTER_USER_1600 => "Резка 1600", CUTTER_USER_SOMA => "Резка Сома", CUTTER_USER_ATLAS => "Резка Атлас");
-
 // Типы работы
 const WORK_TYPE_NOPRINT = 1;
 const WORK_TYPE_PRINT = 2;
@@ -84,14 +72,12 @@ const ORDER_STATUS_TRASH = 7; // В корзине
 const ORDER_STATUS_PLAN_PRINT = 8; // В плане печати
 const ORDER_STATUS_PLAN_LAMINATE = 9; // В плане ламинации
 const ORDER_STATUS_PLAN_CUT = 10; // В плане резки
-const ORDER_STATUS_CUT_PRILADKA = 11; // Приладка в резке
-const ORDER_STATUS_CUTTING = 12; // Режем
 
 const ORDER_STATUS_NOT_IN_WORK = 100; // Сделан расчёт или составлена тех. карта
 
-const ORDER_STATUS_NAMES = array(ORDER_STATUS_DRAFT => "Черновик", ORDER_STATUS_CALCULATION => "Сделан расчёт", ORDER_STATUS_WAITING => "Ждём подтверждения", ORDER_STATUS_CONFIRMED => "Ждём постановки в план", ORDER_STATUS_REJECTED => "Отклонено", ORDER_STATUS_TECHMAP => "Составлена тех. карта", ORDER_STATUS_TRASH => "В корзине", ORDER_STATUS_PLAN_PRINT => "В плане печати", ORDER_STATUS_PLAN_LAMINATE => "В плане ламинации", ORDER_STATUS_PLAN_CUT => "В плане резки", ORDER_STATUS_CUT_PRILADKA => "Приладка на резке", ORDER_STATUS_CUTTING => "Режем");
-const ORDER_STATUS_COLORS = array(ORDER_STATUS_DRAFT => "gray", ORDER_STATUS_CALCULATION => "steelblue", ORDER_STATUS_WAITING => "goldenrod", ORDER_STATUS_CONFIRMED => "mediumseagreen", ORDER_STATUS_REJECTED => "crimson", ORDER_STATUS_TECHMAP => "saddlebrown", ORDER_STATUS_TRASH => "black", ORDER_STATUS_PLAN_PRINT => "#9933ff", ORDER_STATUS_PLAN_LAMINATE => "#4d009a", ORDER_STATUS_PLAN_CUT => "#27004e", ORDER_STATUS_CUT_PRILADKA => "chocolate", ORDER_STATUS_CUTTING => "brown");
-const ORDER_STATUS_ICONS = array(ORDER_STATUS_DRAFT => "fas fa-edit", ORDER_STATUS_CALCULATION => "fas fa-check", ORDER_STATUS_WAITING => "fas fa-clock", ORDER_STATUS_CONFIRMED => "fas fa-check-double", ORDER_STATUS_REJECTED => "fas fa-times-circle", ORDER_STATUS_TECHMAP => "fas fa-file", ORDER_STATUS_TRASH => "fas fa-trash-alt", ORDER_STATUS_PLAN_PRINT => "fas fa-print", ORDER_STATUS_PLAN_LAMINATE => "fas fa-layer-group", ORDER_STATUS_PLAN_CUT => "fas fa-cut", ORDER_STATUS_CUT_PRILADKA => "fas fa-sliders-h", ORDER_STATUS_CUTTING => "fas fa-cut");
+const ORDER_STATUS_NAMES = array(ORDER_STATUS_DRAFT => "Черновик", ORDER_STATUS_CALCULATION => "Сделан расчёт", ORDER_STATUS_WAITING => "Ждём подтверждения", ORDER_STATUS_CONFIRMED => "Ждём постановки в план", ORDER_STATUS_REJECTED => "Отклонено", ORDER_STATUS_TECHMAP => "Составлена тех. карта", ORDER_STATUS_TRASH => "В корзине", ORDER_STATUS_PLAN_PRINT => "В плане печати", ORDER_STATUS_PLAN_LAMINATE => "В плане ламинации", ORDER_STATUS_PLAN_CUT => "В плане резки");
+const ORDER_STATUS_COLORS = array(ORDER_STATUS_DRAFT => "gray", ORDER_STATUS_CALCULATION => "steelblue", ORDER_STATUS_WAITING => "goldenrod", ORDER_STATUS_CONFIRMED => "mediumseagreen", ORDER_STATUS_REJECTED => "crimson", ORDER_STATUS_TECHMAP => "saddlebrown", ORDER_STATUS_TRASH => "black", ORDER_STATUS_PLAN_PRINT => "#9933ff", ORDER_STATUS_PLAN_LAMINATE => "#4d009a", ORDER_STATUS_PLAN_CUT => "#27004e");
+const ORDER_STATUS_ICONS = array(ORDER_STATUS_DRAFT => "fas fa-edit", ORDER_STATUS_CALCULATION => "fas fa-check", ORDER_STATUS_WAITING => "fas fa-clock", ORDER_STATUS_CONFIRMED => "fas fa-check-double", ORDER_STATUS_REJECTED => "fas fa-times-circle", ORDER_STATUS_TECHMAP => "fas fa-file", ORDER_STATUS_TRASH => "fas fa-trash-alt", ORDER_STATUS_PLAN_PRINT => "fas fa-print", ORDER_STATUS_PLAN_LAMINATE => "fas fa-layer-group", ORDER_STATUS_PLAN_CUT => "fas fa-cut");
 
 // Разделы плана
 const WORK_PRINTING = 1;
@@ -137,14 +123,6 @@ const ROLL_STATUS_CUT = 3;
 const ROLL_STATUSES = array(ROLL_STATUS_FREE, ROLL_STATUS_UTILIZED, ROLL_STATUS_CUT);
 const ROLL_STATUS_NAMES = array(ROLL_STATUS_FREE => "Свободный", ROLL_STATUS_UTILIZED => "Сработанный", ROLL_STATUS_CUT => "Раскроили");
 const ROLL_STATUS_COLOURS = array(ROLL_STATUS_FREE => "forestgreen", ROLL_STATUS_UTILIZED => "red", ROLL_STATUS_CUT => "violet");
-
-// Отходы
-const WASTE_PRESS = "В пресс";
-const WASTE_KAGAT = "В кагат";
-const WASTE_PAPER = "В макулатуру";
-
-const WASTE_PRESS_FILMS = array("CPP cast", "CPP LA", "HGPL прозрачка", "HMIL.M металл", "HOHL жемчуг", "HWHL белая", "LOBA жемчуг", "LOHM.M", "MGS матовая");
-const WASTE_PAPER_FILM = "Офсет БДМ-7";
 
 // Другое
 const ISINVALID = ' is-invalid';

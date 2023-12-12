@@ -1,21 +1,5 @@
 <div class="text-nowrap nav2">
     <?php
-    $machines_class = empty($machine_id) ? "" : " active";
-    $laminators_class = empty($laminator_id) ? "" : " active";
-    $cutters_class = empty($cutter_id) ? "" : " active";
-    $raw_class = (substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' || 
-            substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' || 
-            substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php') ? " active" : "";
-    ?>
-    <a href="<?=APPLICATION ?>/admin/machine.php?machine_id=<?= PRINTER_COMIFLEX ?>" class="mr-4<?=$machines_class ?>">Печатные машины</a>
-    <a href="<?=APPLICATION ?>/admin/laminator.php?laminator_id=<?= LAMINATOR_SOLVENT ?>" class="mr-4<?=$laminators_class ?>">Ламинаторы</a>
-    <a href="<?=APPLICATION ?>/admin/cutter.php?cutter_id=<?= CUTTER_1 ?>" class="mr-4<?=$cutters_class ?>">Резки</a>
-    <a href="<?=APPLICATION ?>/admin/extracharge.php" class="mr-4<?=$raw_class ?>">Сырье</a>
-</div>
-<hr class="pb-0 mb-0" />
-<div class="text-nowrap nav2">
-    <?php
-    if(!empty($machines_class)):
     foreach (PRINTERS as $printer):
     $machine_id_class = (!empty($machine_id) && $printer == $machine_id) ? " active" : "";
             
@@ -27,9 +11,11 @@
     <a href="<?= $file_name. BuildQueryAddRemove('machine_id', $printer, 'laminator_id') ?>" class="mr-4<?=$machine_id_class ?>"><?=PRINTER_NAMES[$printer] ?></a>
     <?php
     endforeach;
-    endif;
     
-    if(!empty($laminators_class)):
+    $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
+    $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
+    $cliche_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php' ? " active" : "";
+    
     foreach(LAMINATOR_NAMES as $key => $value):
     $laminator_id_class = (!empty($laminator_id) && $key == $laminator_id) ? " active" : "";
     
@@ -39,28 +25,10 @@
     }
     ?>
     <a href="<?=$file_name. BuildQueryAddRemove('laminator_id', $key, 'machine_id') ?>" class="mr-4<?=$laminator_id_class ?>"><?=$value ?></a>
-    <?php
-    endforeach;
-    endif;
-    
-    if(!empty($cutters_class)):
-    foreach(CUTTERS as $cutter):
-    $cutter_id_class = (!empty($cutter_id) && $cutter == $cutter_id) ? " active" : "";
-    ?>
-    <a href="cutter.php?cutter_id=<?=$cutter ?>" class="mr-4<?=$cutter_id_class ?>"><?=CUTTER_NAMES[$cutter] ?></a>
-    <?php
-    endforeach;
-    endif;
-    
-    if(!empty($raw_class)):
-    $extracharge_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/extracharge.php')) == APPLICATION.'/admin/extracharge.php' ? " active" : "";
-    $ink_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/ink.php')) == APPLICATION.'/admin/ink.php' ? " active" : "";
-    $cliche_class = substr(filter_input(INPUT_SERVER, 'PHP_SELF'), 0, strlen(APPLICATION.'/admin/cliche.php')) == APPLICATION.'/admin/cliche.php' ? " active" : "";
-    ?>
+    <?php endforeach; ?>
     <a href="extracharge.php" class="mr-4<?=$extracharge_class ?>">Наценка</a>
     <a href="ink.php" class="mr-4<?=$ink_class ?>">Цена краски</a>
     <a href="cliche.php" class="mr-4<?=$cliche_class ?>">Цена форм</a>
-    <?php endif; ?>
 </div>
 <?php
 if(!empty($machine_id)):

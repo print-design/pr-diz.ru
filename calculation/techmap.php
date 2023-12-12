@@ -29,6 +29,11 @@ const PACKAGE_BOXES = 4;
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
 
+// Отходы
+const WASTE_PRESS = "В пресс";
+const WASTE_KAGAT = "В кагат";
+const WASTE_PAPER = "В макулатуру";
+
 // Фотометка
 const PHOTOLABEL_LEFT = "left";
 const PHOTOLABEL_RIGHT = "right";
@@ -57,7 +62,6 @@ $photolabel_valid = '';
 $roll_type_valid = '';
 $cliche_valid = '';
 $requirement_valid = '';
-$streams_valid = array();
 
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
@@ -157,29 +161,6 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         }
     }
     
-    // Проверяем, чтобы были заполнены наименования ручьёв
-    $streams = array();
-    $streams_number = filter_input(INPUT_POST, 'streams_number');
-    $streams_number = intval($streams_number);
-    
-    if(!is_nan($streams_number)) {
-        for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
-            $stream_valid_var = "stream_valid_$stream_i";
-            $$stream_valid_var = '';
-            
-            $stream_var = "stream_$stream_i";
-            $$stream_var = filter_input(INPUT_POST, "stream_$stream_i");
-            
-            if(empty($$stream_var)) {
-                $$stream_valid_var = ISINVALID;
-                $form_valid = false;
-            }
-            
-            $streams[$stream_var] = $$stream_var;
-            $streams_valid[$stream_valid_var] = $$stream_valid_var;
-        }
-    }
-    
     if($form_valid) {
         if(empty($supplier_id)) {
             $supplier_id = "NULL";
@@ -199,36 +180,6 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         
         $executer = new Executer($sql);
         $error_message = $executer->error;
-        
-        if(empty($error_message)) {
-            $sql = "select id, position, name from calculation_stream where calculation_id = $id order by position";
-            $grabber = new Grabber($sql);
-            $result = $grabber->result;
-            $error_message = $grabber->error;
-            
-            $stream_position_ids_names = array();
-            
-            foreach($result as $position_id_name) {
-                $stream_position_ids_names[$position_id_name['position']] = array('id' => $position_id_name['id'], 'name' => $position_id_name['name']);
-            }
-            
-            for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
-                if(empty($error_message)) {
-                    $sql = "";
-                    $stream_name = addslashes($streams["stream_$stream_i"]);
-                    if(empty($stream_position_ids_names[$stream_i])) {
-                        $sql = "insert into calculation_stream (calculation_id, position, name) values ($id, $stream_i, '$stream_name')";
-                    }
-                    else {
-                        $stream_id = $stream_position_ids_names[$stream_i]['id'];
-                        $sql = "update calculation_stream set name = '$stream_name' where id = $stream_id";
-                    }
-                    
-                    $executer = new Executer($sql);
-                    $error_message = $executer->error;
-                }
-            }
-        }
         
         if(empty($error_message)) {
             $sql = "update calculation set status_id = ".ORDER_STATUS_TECHMAP." where id = $id and status_id = ".ORDER_STATUS_CALCULATION;
@@ -494,10 +445,13 @@ $film_name1 = empty($film_name) ? $individual_film_name : $film_name;
 $film_name2 = empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name;
 $film_name3 = empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name;
 
-if(in_array($film_name1, WASTE_PRESS_FILMS)) {
+$waste_press_films = array("CPP cast", "CPP LA", "HGPL прозрачка", "HMIL.M металл", "HOHL жемчуг", "HWHL белая", "LOBA жемчуг", "LOHM.M", "MGS матовая");
+$waste_paper_film = "Офсет БДМ-7";
+
+if(in_array($film_name1, $waste_press_films)) {
     $waste1 = WASTE_PRESS;
 }
-elseif($film_name1 == WASTE_PAPER_FILM) {
+elseif($film_name1 == $waste_paper_film) {
     $waste1 = WASTE_PAPER;
 }
 elseif(empty ($film_name1)) {
@@ -507,10 +461,10 @@ else {
     $waste1 = WASTE_KAGAT;
 }
 
-if(in_array($film_name2, WASTE_PRESS_FILMS)) {
+if(in_array($film_name2, $waste_press_films)) {
     $waste2 = WASTE_PRESS;
 }
-elseif ($film_name2 == WASTE_PAPER_FILM) {
+elseif ($film_name2 == $waste_paper_film) {
     $waste2 = WASTE_PAPER;
 }
 elseif(empty ($film_name2)) {
@@ -520,10 +474,10 @@ else {
     $waste2 = WASTE_KAGAT;
 }
 
-if(in_array($film_name3, WASTE_PRESS_FILMS)) {
+if(in_array($film_name3, $waste_press_films)) {
     $waste3 = WASTE_PRESS;
 }
-elseif($film_name3 == WASTE_PAPER_FILM) {
+elseif($film_name3 == $waste_paper_film) {
     $waste3 = WASTE_PAPER;
 }
 elseif(empty ($film_name3)) {
@@ -575,34 +529,6 @@ if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                 $cliches_used_old++;
                 break;
         }
-    }
-}
-
-// Названия ручьёв
-$sql = "select position, name from calculation_stream where calculation_id = $id order by position";
-$grabber = new Grabber($sql);
-$result = $grabber->result;
-$error_message = $grabber->error;
-
-$stream_positions_names = array();
-
-foreach($result as $stream_position_name) {
-    $stream_positions_names[$stream_position_name['position']] = $stream_position_name['name'];
-}
-
-$streams = array();
-$streams_number = intval($streams_number);
-
-if(!is_nan($streams_number)) {
-    for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
-        $stream_var = "stream_$stream_i";
-        $$stream_var = filter_input(INPUT_POST, $stream_var);
-        
-        if(empty($$stream_var) && key_exists($stream_i, $stream_positions_names)) {
-            $$stream_var = $stream_positions_names[$stream_i];
-        }
-        
-        $streams[$stream_var] = $$stream_var;
     }
 }
 ?>
@@ -731,7 +657,7 @@ if(!is_nan($streams_number)) {
                         $cmyk_var = "cmyk_$i";
                         
                         $cliche_width_style = " w-100";
-                        $repeat_display_style = " d-none";
+                        $repeat_display_style = " d-none"; //echo "QWE"; print_r($cliches);
                         if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::REPEAT) {
                             $cliche_width_style = " w-50";
                             $repeat_display_style = "";
@@ -852,7 +778,7 @@ if(!is_nan($streams_number)) {
             }
             ?>
             <div class="d-flex justify-content-between">
-                <div><a class="btn btn-light backlink" href="details.php<?= BuildQuery('id', $id) ?>">К расчету</a></div>
+                <div><a class="btn btn-outline-dark backlink" href="details.php<?= BuildQuery('id', $id) ?>">К расчету</a></div>
                 <div>
                     <?php
                     if(!empty($techmap_id)):     
@@ -1055,7 +981,7 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td style="line-height: 18px;">Этикеток в рапорте</td>
+                            <td>Этикеток в рапорте</td>
                             <td><?=$number_in_raport ?></td>
                         </tr>
                         <tr>
@@ -1247,7 +1173,7 @@ if(!is_nan($streams_number)) {
                             <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
                         </tr>
                         <tr>
-                            <td style="line-height: 18px;">Этикеток в 1 м. пог.</td>
+                            <td>Этикеток в 1 м. пог.</td>
                             <td>
                                 <?php
                                 if(empty($length)) {
@@ -1679,19 +1605,6 @@ if(!is_nan($streams_number)) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <h3>Наименования</h3>
-                            <input type="hidden" name="streams_number" value="<?=$streams_number ?>" />
-                            <?php for($stream_i = 1; $stream_i <= $streams_number; $stream_i++): ?>
-                            <div class="form-group">
-                                <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i ?></label>
-                                <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
-                                <div class="invalid-feedback">Наименование обязательно</div>
-                            </div>
-                            <?php endfor; ?>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-6 d-flex justify-content-between mt-3">
                             <div>
                                 <?php
@@ -1814,19 +1727,6 @@ if(!is_nan($streams_number)) {
                                     <input type="hidden" name="photolabel" value="<?=$tm_photolabel ?>" />
                                     <input type="hidden" name="roll_type" value="<?=$tm_roll_type ?>" />
                                     <input type="hidden" name="comment" value="<?=$tm_comment ?>" />
-                                    <?php
-                                    // Названия ручьёв
-                                    $sql = "select position, name from calculation_stream where calculation_id = $c_id order by position";
-                                    $grabber = new Grabber($sql);
-                                    $result = $grabber->result;
-                                    $error_message = $grabber->error;
-                                    
-                                    foreach($result as $stream_position_name):
-                                    $stream_var = "stream_".$stream_position_name['position'];
-                                    $$stream_var = $stream_position_name['name'];
-                                    ?>
-                                    <input type="hidden" name="<?=$stream_var ?>" value="<?=$$stream_var ?>" />
-                                    <?php endforeach; ?>
                                     <button type="submit" class="btn btn-light">+ Подцепить</button>
                                 </form>
                             </div>

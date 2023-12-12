@@ -126,18 +126,18 @@ if($row = $fetcher->Fetch()) {
                     <form method="post">
                         <input type="hidden" id="machine_id" name="machine_id" value="<?= $machine_id ?>" />
                         <div class="form-group">
-                            <label for="time">Время приладки 1 краски, мин</label>
+                            <label for="time">Время приладки 1 краски (мин)</label>
                             <input type="text" class="form-control float-only<?=$time_valid ?>" id="time" name="time" value="<?= empty($time) ? "" : floatval($time) ?>" placeholder="Время, мин" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Время обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="length">Метраж приладки 1 краски, метры</label>
+                            <label for="length">Метраж приладки 1 краски (метры)</label>
                             <input type="text" class="form-control float-only<?=$length_valid ?>" id="length" name="length" value="<?= empty($length) ? "" : floatval($length) ?>" placeholder="Метраж, метры" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Метраж обязательно</div>
                         </div>
                         <?php if($machine_id == PRINTER_ATLAS): ?>
                         <div class="form-group">
-                            <label for="stamp">Метраж приладки штампа, метры</label>
+                            <label for="stamp">Метраж приладки штампа (метры)</label>
                             <input type="text" class="form-control float-only<?=$stamp_valid ?>" id="stamp" name="stamp" value="<?= empty($stamp) ? "" : floatval($stamp) ?>" placeholder="Метраж, метры" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Метраж приладки штампа обязательно</div>
                         </div>

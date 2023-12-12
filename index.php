@@ -48,7 +48,6 @@ and open the template in the editor.
         </div>
         <?php
         include 'include/footer.php';
-        include 'include/footer_cut.php';
         ?>
     </body>
 </html>

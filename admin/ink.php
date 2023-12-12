@@ -710,7 +710,7 @@ if($row = $fetcher->Fetch()) {
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
-                                    <label for="min_price_per_ink">Минимальная стоимость 1 цвета, руб</label>
+                                    <label for="min_price_per_ink">Минимальная стоимость 1 цвета (руб)</label>
                                     <input type="text" class="form-control int-only<?=$min_price_per_ink_valid ?>" id="min_price_per_ink" name="min_price_per_ink" value="<?= floatval($min_price_per_ink) ?>" placeholder="Мин. стоимость 1 цвета, руб" required="required" autocomplete="off" />
                                     <div class="invalid-feedback">Минимальная стоимость 1 цвета обязательно</div>
                                 </div>

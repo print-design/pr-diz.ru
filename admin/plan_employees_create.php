@@ -75,7 +75,7 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-light backlink" href="plan_employees.php">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="plan_employees.php">Назад</a>
             <div style="width: 387px;">
                 <h1 style="font-size: 24px; font-weight: 600;">Добавление сотрудника</h1>
                 <form method="post">

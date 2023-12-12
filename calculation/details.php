@@ -362,7 +362,7 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
                 $backlink_get = BuildQueryRemoveArray(array('status', 'id'));
             }
             ?>
-            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">Назад</a>
+            <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
                 <h1><?= htmlentities($name) ?></h1>

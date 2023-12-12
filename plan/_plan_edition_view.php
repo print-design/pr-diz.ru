@@ -95,12 +95,12 @@
     }
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline fordrag"<?=$drop ?>>
-        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && $this->edition['status_id'] != ORDER_STATUS_CUT_PRILADKA): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation']): ?>
         <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
-        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation'] && $this->edition['status_id'] != ORDER_STATUS_CUT_PRILADKA): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation']): ?>
         <div draggable="true" ondragstart="DragTimetablePart(event);" data-id="<?=$this->edition['id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
@@ -203,7 +203,7 @@
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden samples_count_cell samples_count_invisible"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['samples_count'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
@@ -317,13 +317,6 @@
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
-    </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
-        <?php
-        if(!empty($this->edition['status_id'])):
-        ?>
-        <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
-        <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell comment_invisible"<?=$drop ?>>
         <div class="d-flex justify-content-start">

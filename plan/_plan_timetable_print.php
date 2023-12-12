@@ -15,7 +15,6 @@
         <th class="not_storekeeper_hidden">Марка <span class="text-nowrap">мат-ла</span></th>
         <th class="not_storekeeper_hidden cutting_hidden">Ширина <span class="text-nowrap">мат-ла</span></th>
         <th>Менеджер</th>
-        <th>Статус</th>
         <th>Комментарий</th>
     </tr>
     <?php

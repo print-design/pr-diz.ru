@@ -3,7 +3,7 @@ if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
 ?>
 <ul class="navbar-nav">
     <li class="nav-item dropdown" id="nav-user">
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><span class="text-nowrap" id="top_user_name" style="color: #EC3A7A;"><?= filter_input(INPUT_COOKIE, LAST_NAME).' '.filter_input(INPUT_COOKIE, FIRST_NAME) ?></span></a>
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown"><span class="text-nowrap" style="color: #EC3A7A;"><?= filter_input(INPUT_COOKIE, LAST_NAME).' '.filter_input(INPUT_COOKIE, FIRST_NAME) ?></span></a>
         <div id="nav-role"><?= filter_input(INPUT_COOKIE, ROLE_LOCAL) ?></div>
         <div class="dropdown-menu" id="user-dropdown">
             <a href="<?=APPLICATION ?>/personal/" class="btn btn-link dropdown-item"><i class="fas fa-user"></i>&nbsp;Мои настройки</a>

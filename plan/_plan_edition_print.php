@@ -164,9 +164,6 @@
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
-        <?= empty($this->edition['status_id']) ? '' : ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
-    </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?=$this->edition['comment'] ?>
     </td>
 </tr>
