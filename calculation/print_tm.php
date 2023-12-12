@@ -1180,12 +1180,10 @@ $current_date_time = date("dmYHis");
             </div>
             <?php endif; ?>
             <div id="fixed_bottom">
-                <table class="w-100" style="width: 100%;">
-                    <tr class="left">
-                        <td>Дизайнер:</td>
-                        <td>Менеджер:</td>
-                    </tr>
-                </table>
+                <div style="display: flex; justify-content: space-between;">
+                    <div class="border-bottom-2" style="width: 48%; font-size: 18px; font-weight: 700; margin-bottom: 30px;">Дизайнер:</div>
+                    <div class="border-bottom-2" style="width: 48%; font-size: 18px; font-weight: 700; margin-bottom: 30px;">Менеджер:</div>
+                </div>
             </div>
             <?php
             // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
