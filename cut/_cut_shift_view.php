@@ -2,7 +2,7 @@
     <?php if($this->shift == 'day'): ?>
     <td class="border-right" rowspan="<?=$this->date_editions_count ?>">
         <?=$GLOBALS['weekday_names'][$this->date->format('w')] ?>
-        <div style="font-size: 18px; font-weight: bold; margin-top: 10px;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
+        <div style="font-size: 18px; font-weight: bold;"><?= ltrim($this->date->format('d.m'), '0') ?></div>
     </td>
     <?php endif; ?>
     <td class="<?=$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
