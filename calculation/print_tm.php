@@ -991,16 +991,20 @@ $current_date_time = date("dmYHis");
                                         ?>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="2" class="font-weight-bold border-bottom-2 pt-5" style="font-size: 18px; padding-top: 30px; font-weight: 700;">Наименования</td>
-                                </tr>
                                 <?php
                                 $sql = "select name from calculation_stream where calculation_id = $id order by position";
-                                $fetcher = new Fetcher($sql);
-                                while ($row = $fetcher->Fetch()):
+                                $grabber = new Grabber($sql);
+                                $streams = $grabber->result;
+                                $i = 0;
                                 ?>
-                                <tr><td colspan="2"><?=$row['name'] ?></td></tr>
-                                <?php endwhile; ?>
+                                <tr>
+                                    <td colspan="2" class="font-weight-bold border-bottom-2 pt-5" style="font-size: 18px; padding-top: 30px; font-weight: 700;">Наименования, <?= count($streams) ?> шт.</td>
+                                </tr>
+                                <?php
+                                foreach($streams as $stream):
+                                ?>
+                                <tr><td colspan="2"><?=(++$i).'. '.$stream['name'] ?></td></tr>
+                                <?php endforeach; ?>
                             </table>
                         </div>
                     </div>
