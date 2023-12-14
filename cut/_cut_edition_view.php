@@ -53,7 +53,7 @@
     <td class="<?=$this->cut_shift->shift ?> text-nowrap"><i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?></td>
     <td class="<?=$this->cut_shift->shift ?>">
         <?php if($this->edition['button_start']): ?>
-        <a href="details.php?id=<?=$this->edition['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
+        <a href="details.php?id=<?=$this->edition['calculation_id'].(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "&machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
         <?php endif; ?>
     </td>
 </tr>

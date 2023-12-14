@@ -106,7 +106,7 @@ class CutTimetable {
             $row['manager'] = $row['last_name'].' '.mb_substr($row['first_name'], 0, 1).'.';
             
             // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки"
-            if($row['status_id' == ORDER_STATUS_PLAN_CUT] && $button_start) {
+            if($row['status_id'] == ORDER_STATUS_PLAN_CUT && $button_start) {
                 $row['button_start'] = true;
                 $button_start = false;
             }

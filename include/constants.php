@@ -84,12 +84,13 @@ const ORDER_STATUS_TRASH = 7; // В корзине
 const ORDER_STATUS_PLAN_PRINT = 8; // В плане печати
 const ORDER_STATUS_PLAN_LAMINATE = 9; // В плане ламинации
 const ORDER_STATUS_PLAN_CUT = 10; // В плане резки
+const ORDER_STATUS_CUT_PRILADKA = 11; // Приладка в резке
 
 const ORDER_STATUS_NOT_IN_WORK = 100; // Сделан расчёт или составлена тех. карта
 
-const ORDER_STATUS_NAMES = array(ORDER_STATUS_DRAFT => "Черновик", ORDER_STATUS_CALCULATION => "Сделан расчёт", ORDER_STATUS_WAITING => "Ждём подтверждения", ORDER_STATUS_CONFIRMED => "Ждём постановки в план", ORDER_STATUS_REJECTED => "Отклонено", ORDER_STATUS_TECHMAP => "Составлена тех. карта", ORDER_STATUS_TRASH => "В корзине", ORDER_STATUS_PLAN_PRINT => "В плане печати", ORDER_STATUS_PLAN_LAMINATE => "В плане ламинации", ORDER_STATUS_PLAN_CUT => "В плане резки");
-const ORDER_STATUS_COLORS = array(ORDER_STATUS_DRAFT => "gray", ORDER_STATUS_CALCULATION => "steelblue", ORDER_STATUS_WAITING => "goldenrod", ORDER_STATUS_CONFIRMED => "mediumseagreen", ORDER_STATUS_REJECTED => "crimson", ORDER_STATUS_TECHMAP => "saddlebrown", ORDER_STATUS_TRASH => "black", ORDER_STATUS_PLAN_PRINT => "#9933ff", ORDER_STATUS_PLAN_LAMINATE => "#4d009a", ORDER_STATUS_PLAN_CUT => "#27004e");
-const ORDER_STATUS_ICONS = array(ORDER_STATUS_DRAFT => "fas fa-edit", ORDER_STATUS_CALCULATION => "fas fa-check", ORDER_STATUS_WAITING => "fas fa-clock", ORDER_STATUS_CONFIRMED => "fas fa-check-double", ORDER_STATUS_REJECTED => "fas fa-times-circle", ORDER_STATUS_TECHMAP => "fas fa-file", ORDER_STATUS_TRASH => "fas fa-trash-alt", ORDER_STATUS_PLAN_PRINT => "fas fa-print", ORDER_STATUS_PLAN_LAMINATE => "fas fa-layer-group", ORDER_STATUS_PLAN_CUT => "fas fa-cut");
+const ORDER_STATUS_NAMES = array(ORDER_STATUS_DRAFT => "Черновик", ORDER_STATUS_CALCULATION => "Сделан расчёт", ORDER_STATUS_WAITING => "Ждём подтверждения", ORDER_STATUS_CONFIRMED => "Ждём постановки в план", ORDER_STATUS_REJECTED => "Отклонено", ORDER_STATUS_TECHMAP => "Составлена тех. карта", ORDER_STATUS_TRASH => "В корзине", ORDER_STATUS_PLAN_PRINT => "В плане печати", ORDER_STATUS_PLAN_LAMINATE => "В плане ламинации", ORDER_STATUS_PLAN_CUT => "В плане резки", ORDER_STATUS_CUT_PRILADKA => "Приладка на резке");
+const ORDER_STATUS_COLORS = array(ORDER_STATUS_DRAFT => "gray", ORDER_STATUS_CALCULATION => "steelblue", ORDER_STATUS_WAITING => "goldenrod", ORDER_STATUS_CONFIRMED => "mediumseagreen", ORDER_STATUS_REJECTED => "crimson", ORDER_STATUS_TECHMAP => "saddlebrown", ORDER_STATUS_TRASH => "black", ORDER_STATUS_PLAN_PRINT => "#9933ff", ORDER_STATUS_PLAN_LAMINATE => "#4d009a", ORDER_STATUS_PLAN_CUT => "#27004e", ORDER_STATUS_CUT_PRILADKA => "chocolate");
+const ORDER_STATUS_ICONS = array(ORDER_STATUS_DRAFT => "fas fa-edit", ORDER_STATUS_CALCULATION => "fas fa-check", ORDER_STATUS_WAITING => "fas fa-clock", ORDER_STATUS_CONFIRMED => "fas fa-check-double", ORDER_STATUS_REJECTED => "fas fa-times-circle", ORDER_STATUS_TECHMAP => "fas fa-file", ORDER_STATUS_TRASH => "fas fa-trash-alt", ORDER_STATUS_PLAN_PRINT => "fas fa-print", ORDER_STATUS_PLAN_LAMINATE => "fas fa-layer-group", ORDER_STATUS_PLAN_CUT => "fas fa-cut", ORDER_STATUS_CUT_PRILADKA => "fas fa-sliders-h");
 
 // Разделы плана
 const WORK_PRINTING = 1;
