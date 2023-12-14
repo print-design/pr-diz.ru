@@ -11,6 +11,9 @@ class CutTimetable {
     public $workshifts = array();
     public $editions = array();
     
+    // Имеется ли хоть одна работа со статусом "Приладка на резке"
+    public $has_priladka = false;
+    
     public function __construct($machine_id, $dateFrom, $dateTo) {
         $this->machine_id = $machine_id;
         $this->dateFrom = $dateFrom;
@@ -34,7 +37,8 @@ class CutTimetable {
             $this->workshifts[$row['date'].'_'.$row['shift']] = $row['id'];
         }
         
-        // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки"
+        // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки",
+        // и только если нет ни одной работы в статусе "Приладка на резке".
         $button_start = true;
         
         // Тиражи
@@ -105,13 +109,23 @@ class CutTimetable {
             // Полное имя и фамилия менеджера
             $row['manager'] = $row['last_name'].' '.mb_substr($row['first_name'], 0, 1).'.';
             
-            // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки"
+            // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки".
             if($row['status_id'] == ORDER_STATUS_PLAN_CUT && $button_start) {
                 $row['button_start'] = true;
                 $button_start = false;
             }
             else {
                 $row['button_start'] = false;
+            }
+            
+            // Кнопка "Продолжить" имеется у работ со статусом "Приладка на резке".
+            // И если такая есть хоть одна, то кнопки "Приступить" ни у кого быть не может.
+            if($row['status_id'] == ORDER_STATUS_CUT_PRILADKA) {
+                $row['button_continue'] = true;
+                $this->has_priladka = true;
+            }
+            else {
+                $row['button_continue'] = false;
             }
             
             array_push($this->editions[$row['date']][$row['shift']], $row);

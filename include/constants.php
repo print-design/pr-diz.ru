@@ -84,7 +84,7 @@ const ORDER_STATUS_TRASH = 7; // В корзине
 const ORDER_STATUS_PLAN_PRINT = 8; // В плане печати
 const ORDER_STATUS_PLAN_LAMINATE = 9; // В плане ламинации
 const ORDER_STATUS_PLAN_CUT = 10; // В плане резки
-const ORDER_STATUS_CUT_PRILADKA = 11; // Приладка в резке
+const ORDER_STATUS_CUT_PRILADKA = 11; // Приладка на резке
 
 const ORDER_STATUS_NOT_IN_WORK = 100; // Сделан расчёт или составлена тех. карта
 
