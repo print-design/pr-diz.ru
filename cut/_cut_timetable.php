@@ -34,6 +34,9 @@ class CutTimetable {
             $this->workshifts[$row['date'].'_'.$row['shift']] = $row['id'];
         }
         
+        // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки"
+        $button_start = true;
+        
         // Тиражи
         $sql = "select e.id id, e.date, e.shift, ".PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.status_id, "
                 . "if(isnull(e.worktime_continued), round(cr.length_pure_1), round(cr.length_pure_1) / e.worktime * e.worktime_continued) as length_pure_1, "
@@ -88,7 +91,7 @@ class CutTimetable {
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.work_id = ".WORK_CUTTING." and pp.machine_id = ".$this->machine_id." and ppc.date >= '".$this->dateFrom->format('Y-m-d')."' and ppc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
-                . "order by position";
+                . "order by date, shift, position";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
             if(!array_key_exists($row['date'], $this->editions)) {
@@ -99,7 +102,17 @@ class CutTimetable {
                 $this->editions[$row['date']][$row['shift']] = array();
             }
             
+            // Полное имя и фамилия менеджера
             $row['manager'] = $row['last_name'].' '.mb_substr($row['first_name'], 0, 1).'.';
+            
+            // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки"
+            if($row['status_id' == ORDER_STATUS_PLAN_CUT] && $button_start) {
+                $row['button_start'] = true;
+                $button_start = false;
+            }
+            else {
+                $row['button_start'] = false;
+            }
             
             array_push($this->editions[$row['date']][$row['shift']], $row);
         }
@@ -115,9 +128,8 @@ class CutTimetable {
             array_push($period, $this->dateFrom);
         }
         
+        // Распределение тиражей по датам и сменам
         foreach($period as $date) {
-            $str_date = $date->format('Y-m-d');
-            
             $day_editions = array();
             if(key_exists($date->format('Y-m-d'), $this->editions) && key_exists('day', $this->editions[$date->format('Y-m-d')])) {
                 $day_editions = $this->editions[$date->format('Y-m-d')]['day'];

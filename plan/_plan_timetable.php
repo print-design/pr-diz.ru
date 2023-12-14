@@ -271,8 +271,6 @@ class PlanTimetable {
         }
         
         foreach ($period as $date) {
-            $str_date = $date->format('Y-m-d');
-            
             $day_editions = array();
             if(key_exists($date->format('Y-m-d'), $this->editions) && key_exists('day', $this->editions[$date->format('Y-m-d')])) {
                 $day_editions = $this->editions[$date->format('Y-m-d')]['day'];

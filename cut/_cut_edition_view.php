@@ -51,4 +51,9 @@
         <?= $this->edition['manager'] ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?> text-nowrap"><i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?></td>
+    <td class="<?=$this->cut_shift->shift ?>">
+        <?php if($this->edition['button_start']): ?>
+        <a href="details.php?id=<?=$this->edition['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
+        <?php endif; ?>
+    </td>
 </tr>
