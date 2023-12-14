@@ -18,6 +18,9 @@ class PlanShift {
     
     // Присутствует ли в этой смене допечатка
     public $includes_continuation = false;
+    
+    // Присутствует ли в этой смене приладка на резке
+    public $includes_cut_priladka = false;
 
     public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $editions, $date_editions_count, $shift_editions_count) {
         $this->date = $date;
@@ -38,6 +41,10 @@ class PlanShift {
                 
                 if($edition['type'] == PLAN_TYPE_CONTINUATION || $edition['type'] == PLAN_TYPE_PART_CONTINUATION) {
                     $this->includes_continuation = true;
+                }
+                
+                if($edition['status_id'] == ORDER_STATUS_CUT_PRILADKA) {
+                    $this->includes_cut_priladka = true;
                 }
             }
             
