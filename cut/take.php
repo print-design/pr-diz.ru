@@ -19,12 +19,13 @@ $calculation = Calculation::Create($id);
 // Получение объекта
 $date = '';
 $name = '';
+$unit = '';
 $status_id = '';
 $customer_id = '';
 $customer = '';
 $num_for_customer = '';
 
-$sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
+$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, cus.name customer, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
@@ -33,6 +34,7 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $date = $row['date'];
     $name = $row['name'];
+    $unit = $row['unit'];
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
@@ -111,7 +113,11 @@ if($row = $fetcher->Fetch()) {
                 border-radius: 15px;
                 box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
                 padding: 20px;
-                margin-bottom: 20px;
+                margin-bottom: 10px;
+            }
+            
+            #calculation_streams_bottom {
+                padding-top: 10px;
             }
             
             .target {
@@ -137,7 +143,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="name"><?=$customer ?></div>
                             <div class="subtitle mb-4">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                             <div id="status" style="border: solid 2px <?=ORDER_STATUS_COLORS[$status_id] ?>; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">
-                                <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
+                                <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id].' 0 '.($unit == 'kg' ? "кг" : "шт")." из ".$calculation->quantity ?>
                             </div>
                         </div>
                     </div>
@@ -145,7 +151,7 @@ if($row = $fetcher->Fetch()) {
                     <div id="calculation_streams">
                         <?php include './_calculation_streams.php'; ?>
                     </div>
-                    <div class="d-flex justify-content-xl-start">
+                    <div class="d-flex justify-content-xl-start" id="calculation_streams_bottom" data-id="0" ondragover="DragOverBottom(event);" ondrop="DropBottom(event);">
                         <div><button type="button" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Съём закончен</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
@@ -178,6 +184,12 @@ if($row = $fetcher->Fetch()) {
                 }
             }
             
+            function DragOverBottom(ev) {
+                ev.preventDefault();
+                $('.calculation_stream.target').removeClass('target');
+                $('#calculation_streams_bottom').addClass('target');
+            }
+            
             function Drop(ev) {
                 ev.preventDefault();
                 source_id = ev.dataTransfer.getData('source_id');
@@ -196,6 +208,30 @@ if($row = $fetcher->Fetch()) {
                             .fail(function() {
                                 alert('Ошибка при вызове исполняющей программы');
                             });
+                }
+            }
+            
+            function DropBottom(ev) {
+                ev.preventDefault();
+                source_id = ev.dataTransfer.getData('source_id');
+                
+                if(!isNaN(source_id)) {
+                    $.ajax({ dataType: 'JSON', url: "_drag_to_bottom.php?source_id=" + source_id })
+                            .done(function(data) {
+                                if(data.error == '') {
+                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>');
+                                    $('#calculation_streams_bottom').removeClass('target');
+                                }
+                                else {
+                                    alert(data.error);
+                                    $('#calculation_streams_bottom').removeClass('target');
+                                }
+                            })
+                            .fail(function() { alert("_drag_to_bottom.php?source_id=" + source_id);
+                                alert('Ошибка при вызове исполняющей программы');
+                                $('#calculation_streams_bottom').removeClass('target');
+                            });
+                    
                 }
             }
         </script>
