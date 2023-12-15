@@ -5,7 +5,7 @@ $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 if(empty($calculation_id)) {
     $calculation_id = $id;
 }
-$sql = "select id, name, position from calculation_stream where calculation_id = $calculation_id order by position";
+$sql = "select id, name from calculation_stream where calculation_id = $calculation_id order by position";
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
 ?>
@@ -15,7 +15,7 @@ while($row = $fetcher->Fetch()):
             <div class="mr-3" draggable="true" data-id="<?=$row['id'] ?>" ondragstart="DragStart(event);" ondragend="DragEnd();">
                 <img src="../images/icons/double-vertical-dots.svg" draggable="false" />
             </div>
-            <div class="font-weight-bold"><?=$row['name'] ?><?=" ---------- ".$row['position'] ?></div>
+            <div class="font-weight-bold"><?=$row['name'] ?></div>
         </div>
         <div style="background-color: #0A9D4E0D; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: #0A9D4E;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано</div>
     </div>

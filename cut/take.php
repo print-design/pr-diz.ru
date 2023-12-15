@@ -173,6 +173,7 @@ if($row = $fetcher->Fetch()) {
             
             function DragEnd() {
                 $('.calculation_stream.target').removeClass('target');
+                $('#calculation_streams_bottom').removeClass('target');
             }
             
             function DragOver(ev) {

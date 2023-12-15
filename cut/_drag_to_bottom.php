@@ -22,7 +22,7 @@ $error = $executer->error;
 if(empty($error)) {
     $max_position = 0;
     
-    $sql = "select max(position) from calculation_stream where calculation_id = $source_calculation_id";
+    $sql = "select max(position) from calculation_stream where calculation_id = $source_calculation_id and id <> $source_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $max_position = $row[0];
