@@ -150,10 +150,6 @@ if($row = $fetcher->Fetch()) {
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
-                    <div class="calculation_stream mt-5">
-                        <div class="name">Готовые съёмы</div>
-                        <div class="subtitle">Общий метраж съёмов: 0 м</div>
-                    </div>
                 </div>
                 <div class="col-4">
                     <?php include './_cut_right.php'; ?>

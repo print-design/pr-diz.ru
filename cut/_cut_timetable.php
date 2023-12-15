@@ -14,6 +14,9 @@ class CutTimetable {
     // Имеется ли хоть одна работа со статусом "Приладка на резке"
     public $has_priladka = false;
     
+    // Имеется ли хоть одна работа со статусом "Режется"
+    public $has_take = false;
+    
     public function __construct($machine_id, $dateFrom, $dateTo) {
         $this->machine_id = $machine_id;
         $this->dateFrom = $dateFrom;
@@ -118,11 +121,15 @@ class CutTimetable {
                 $row['button_start'] = false;
             }
             
-            // Кнопка "Продолжить" имеется у работ со статусом "Приладка на резке".
+            // Кнопка "Продолжить" имеется у работ со статусом "Приладка на резке" или "Режется".
             // И если такая есть хоть одна, то кнопки "Приступить" ни у кого быть не может.
             if($row['status_id'] == ORDER_STATUS_CUT_PRILADKA) {
                 $row['button_continue'] = true;
                 $this->has_priladka = true;
+            }
+            elseif($row['status_id'] == ORDER_STATUS_CUTTING) {
+                $row['button_continue'] = true;
+                $this->has_take = true;
             }
             else {
                 $row['button_continue'] = false;
