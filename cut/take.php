@@ -16,6 +16,31 @@ if($id === null) {
 // Расчёт
 $calculation = Calculation::Create($id);
 
+// Обработка формы распечатки ручья
+$invalid_stream = 0;
+
+if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $stream_id = filter_input(INPUT_POST, 'stream_id');
+    
+    $weight = filter_input(INPUT_POST, 'weight');
+    $length = filter_input(INPUT_POST, 'length');
+    $radius = filter_input(INPUT_POST, 'radius');
+    
+    $weight = preg_replace('\D', '', $weight);
+    $length = preg_replace('\D', '', $length);
+    $radius = preg_replace('\D', '', $radius);
+    
+    $is_valid = false;
+    
+    // Валидация данных
+    
+    if(!$is_valid) {
+        $invalid_stream = $stream_id;
+    }
+}
+
 // Получение объекта
 $date = '';
 $name = '';
@@ -23,12 +48,14 @@ $unit = '';
 $status_id = '';
 $customer_id = '';
 $customer = '';
+$spool = '';
 $num_for_customer = '';
 
-$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, cus.name customer, "
+$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, cus.name customer, tm.spool, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
+        . "inner join techmap tm on tm.calculation_id = c.id "
         . "where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
@@ -38,6 +65,7 @@ if($row = $fetcher->Fetch()) {
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
+    $spool = $row['spool'];
     $num_for_customer = $row['num_for_customer'];
 }
 ?>
