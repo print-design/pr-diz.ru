@@ -23,14 +23,54 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     $stream_id = filter_input(INPUT_POST, 'stream_id');
+    $stream_width = filter_input(INPUT_POST, 'stream_width');
+    $spool = filter_input(INPUT_POST, 'spool');
     
-    $weight = filter_input(INPUT_POST, 'weight');
-    $length = filter_input(INPUT_POST, 'length');
-    $radius = filter_input(INPUT_POST, 'radius');
+    $density1 = intval(filter_input(INPUT_POST, 'density1'));
+    $density2 = intval(filter_input(INPUT_POST, 'density2'));
+    $density3 = intval(filter_input(INPUT_POST, 'density3'));
+    
+    $weight = intval(filter_input(INPUT_POST, 'weight'));
+    $length = intval(filter_input(INPUT_POST, 'length'));
+    $radius = intval(filter_input(INPUT_POST, 'radius'));
     
     $is_valid = false;
+    $validation1 = false;
+    $validation2 = false;
     
     // Валидация данных
+    // Валидация 1 между инпутами «Масса» и «Метраж» 
+    // 0,9* (метраж*ширину ручья/1000*(удельный вес пленка 1 + удельный вес пленка 2 + удельный вес пленка 3)/1000)
+    // <Масса катушки < 1,1* (метраж*ширину ручья/1000*(удельный вес пленка 1 + удельный вес пленка 2 + удельный вес пленка 3)/1000)
+    if(0.9 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000) < $weight && $weight < 1.1 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000)) {
+        $validation1 = true;
+    }
+    
+    // Валидация 2 между инпутами «Метраж» и «Радиус»
+    // Если 76 шпуля
+    // 0,85* (0,15*R*R+11,3961*R-176,4427)
+    // <Метраж катушки<1,15* (0,15*R*R+11,3961*R-176,4427)
+    // Если 152 шпуля
+    // 1,15* (0,1524*R*R+23,1245*R-228,5017)<Метраж<1,15* (0,1524*R*R+23,1245*R-228,5017)
+    if($spool == 76) {
+        if(0.85 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) < $length && $length < 1.15 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427)) {
+            $validation2 = true;
+        }
+    }
+    elseif($spool == 152) {
+        if(1.15 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) < $length && $length < 1.15 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017)) {
+            $validation2 = true;
+        }
+    }
+    else {
+        if($weight > 0 && $length > 0 && $radius > 0) {
+            $validation2 = true;
+        }
+    }
+
+    if($validation1 && $validation2) {
+        $is_valid = true;
+    }
     
     if(!$is_valid) {
         $invalid_stream = $stream_id;
@@ -43,15 +83,26 @@ $name = '';
 $unit = '';
 $status_id = '';
 $customer_id = '';
+$stream_width = '';
+
+$density1 = '';
+$density2 = '';
+$density3 = '';
+
 $customer = '';
 $spool = '';
 $num_for_customer = '';
 
-$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, cus.name customer, tm.spool, "
+$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, stream_width, "
+        . "individual_density, fv1.weight density1, lamination1_individual_density, fv2.weight density2, lamination2_individual_density, fv3.weight density3, "
+        . "cus.name customer, tm.spool, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
         . "inner join techmap tm on tm.calculation_id = c.id "
+        . "left join film_variation fv1 on c.film_variation_id = fv1.id "
+        . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
+        . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
         . "where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
@@ -60,6 +111,32 @@ if($row = $fetcher->Fetch()) {
     $unit = $row['unit'];
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
+    $stream_width = $row['stream_width'];
+    
+    $density1 = $row['individual_density'];
+    if(empty($density1)) {
+        $density1 = $row['density1'];
+    }
+    if(empty($density1)) {
+        $density1 = 0;
+    }
+    
+    $density2 = $row['lamination1_individual_density'];
+    if(empty($density2)) {
+        $density2 = $row['density2'];
+    }
+    if(empty($density2)) {
+        $density2 = 0;
+    }
+    
+    $density3 = $row['lamination2_individual_density'];
+    if(empty($density3)) {
+        $density3 = $row['density3'];
+    }
+    if(empty($density3)) {
+        $density3 = $row['density3'];
+    }
+    
     $customer = $row['customer'];
     $spool = $row['spool'];
     $num_for_customer = $row['num_for_customer'];

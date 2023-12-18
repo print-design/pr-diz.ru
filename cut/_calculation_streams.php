@@ -37,6 +37,11 @@ while($row = $fetcher->Fetch()):
         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
         <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
         <input type="hidden" name="stream_id" value="<?=$row['id'] ?>" />
+        <input type="hidden" name="stream_width" value="<?=$stream_width ?>" />
+        <input type="hidden" name="density1" value="<?=$density1 ?>" />
+        <input type="hidden" name="density2" value="<?=$density2 ?>" />
+        <input type="hidden" name="density3" value="<?=$density3 ?>" />
+        <input type="hidden" name="spool" value="<?=$spool ?>" />
         <input type="hidden" name="scroll" />
         <div class="row">
             <div class="col-3">
