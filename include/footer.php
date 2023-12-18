@@ -140,6 +140,32 @@ if(file_exists('find.php')) {
         e.target.value = e.target.value.replace(/\D/g,'');
     }
     
+    function KeyDownFloatValue(e) {
+        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+            if(!/[\.\,\d]/.test(e.key)) {
+                return false;
+            }
+            
+            if(/[\.\,]/.test(e.key) && (e.target.value.includes('.') || e.target.value.includes(','))) {
+                return false;
+            }
+        }
+    }
+    
+    function KeyUpFloatValue(e) {
+        val = val.replace(',', '.');
+        val = val.replace(/[^\.\d]/g, '');
+        e.target.value = val;
+    }
+    
+    function ChangeFloatValue(e) {
+        val = e.target.value;
+        val = val.replace(',', '.');
+        val = val.replace(/[^\.\d]/g, '');
+        val = parseFloat(val);
+        e.target.value = val;
+    }
+    
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
     // Обработка изменения нажатия клавиш
     function KeyDownLimitIntValue(textbox, e, max) {
