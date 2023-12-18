@@ -28,10 +28,6 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $length = filter_input(INPUT_POST, 'length');
     $radius = filter_input(INPUT_POST, 'radius');
     
-    $weight = preg_replace('\D', '', $weight);
-    $length = preg_replace('\D', '', $length);
-    $radius = preg_replace('\D', '', $radius);
-    
     $is_valid = false;
     
     // Валидация данных

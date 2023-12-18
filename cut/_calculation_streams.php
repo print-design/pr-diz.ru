@@ -16,10 +16,6 @@ while($row = $fetcher->Fetch()):
         $stream_weight = filter_input(INPUT_POST, 'weight');
         $stream_length = filter_input(INPUT_POST, 'length');
         $stream_radius = filter_input(INPUT_POST, 'radius');
-        
-        $stream_weight = preg_replace('\D', '', $weight);
-        $stream_length = preg_replace('\D', '', $length);
-        $stream_radius = preg_replace('\D', '', $radius);
     }
 ?>
 <div class="calculation_stream" data-id="<?=$row['id'] ?>" ondragover="DragOver(event);" ondrop="Drop(event);">
@@ -47,7 +43,7 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="weight">Масса катушки</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only" name="weight" value="<?=$stream_weight ?>" required="required" />
+                        <input type="text" class="form-control" name="weight" value="<?=$stream_weight ?>" required="required" onkeydown="return KeyDownIntValue(event);" onkeyup="KeyUpIntValue(event);" onchange="ChangeIntValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">кг</span>
                         </div>
@@ -58,7 +54,7 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="length">Метраж</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only" name="length" value="<?=$stream_length ?>" required="required" />
+                        <input type="text" class="form-control" name="length" value="<?=$stream_length ?>" required="required" onkeydown="return KeyDownIntValue(event);" onkeyup="KeyUpIntValue(event);" onchange="ChangeIntValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">м</span>
                         </div>
@@ -69,7 +65,7 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="radius">Радиус от вала</label>
                     <div class="input-group">
-                        <input type="text" class="form-control int-only" name="radius" value="<?=$stream_radius ?>" required="required" />
+                        <input type="text" class="form-control" name="radius" value="<?=$stream_radius ?>" required="required" onkeydown="return KeyDownIntValue(event);" onkeyup="KeyUpIntValue(event);" onchange="ChangeIntValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">мм</span>
                         </div>

@@ -124,6 +124,22 @@ if(file_exists('find.php')) {
         $(this).val(val);
     });
     
+    
+    // Фильтрация ввода (другой способ)
+    function KeyDownIntValue(e) {
+        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+            return /\d/.test(e.key);
+        }
+    }
+    
+    function KeyUpIntValue(e) {
+        e.target.value = e.target.value.replace(/\D/g,'');
+    }
+    
+    function ChangeIntValue(e) {
+        e.target.value = e.target.value.replace(/\D/g,'');
+    }
+    
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
     // Обработка изменения нажатия клавиш
     function KeyDownLimitIntValue(textbox, e, max) {
