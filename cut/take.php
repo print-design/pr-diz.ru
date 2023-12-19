@@ -75,6 +75,15 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     if(!$is_valid) {
         $invalid_stream = $stream_id;
     }
+    else {
+        $sql = "update calculation_stream set weight = $weight, length = $length, radius = $radius, printed = now() where id = $stream_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            header("Location:".APPLICATION."/cut/take.php?id=$id&machine_id=$machine_id&stream_id=$stream_id");
+        }
+    }
 }
 
 // Получение объекта
@@ -83,26 +92,13 @@ $name = '';
 $unit = '';
 $status_id = '';
 $customer_id = '';
-$stream_width = '';
-
-$density1 = '';
-$density2 = '';
-$density3 = '';
-
 $customer = '';
-$spool = '';
 $num_for_customer = '';
 
-$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, stream_width, "
-        . "individual_density, fv1.weight density1, lamination1_individual_density, fv2.weight density2, lamination2_individual_density, fv3.weight density3, "
-        . "cus.name customer, tm.spool, "
+$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, cus.name customer, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
-        . "inner join techmap tm on tm.calculation_id = c.id "
-        . "left join film_variation fv1 on c.film_variation_id = fv1.id "
-        . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
-        . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
         . "where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
@@ -111,34 +107,7 @@ if($row = $fetcher->Fetch()) {
     $unit = $row['unit'];
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
-    $stream_width = $row['stream_width'];
-    
-    $density1 = $row['individual_density'];
-    if(empty($density1)) {
-        $density1 = $row['density1'];
-    }
-    if(empty($density1)) {
-        $density1 = 0;
-    }
-    
-    $density2 = $row['lamination1_individual_density'];
-    if(empty($density2)) {
-        $density2 = $row['density2'];
-    }
-    if(empty($density2)) {
-        $density2 = 0;
-    }
-    
-    $density3 = $row['lamination2_individual_density'];
-    if(empty($density3)) {
-        $density3 = $row['density3'];
-    }
-    if(empty($density3)) {
-        $density3 = $row['density3'];
-    }
-    
     $customer = $row['customer'];
-    $spool = $row['spool'];
     $num_for_customer = $row['num_for_customer'];
 }
 ?>
@@ -301,7 +270,7 @@ if($row = $fetcher->Fetch()) {
                     $.ajax({ dataType: 'JSON', url: "_drag_streams.php?source_id=" + source_id + "&target_id=" + target_id })
                             .done(function(data) {
                                 if(data.error == '') {
-                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>');
+                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
                                 }
                                 else {
                                     alert(data.error);
@@ -321,7 +290,7 @@ if($row = $fetcher->Fetch()) {
                     $.ajax({ dataType: 'JSON', url: "_drag_to_bottom.php?source_id=" + source_id })
                             .done(function(data) {
                                 if(data.error == '') {
-                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>');
+                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
                                     $('#calculation_streams_bottom').removeClass('target');
                                 }
                                 else {
@@ -329,7 +298,7 @@ if($row = $fetcher->Fetch()) {
                                     $('#calculation_streams_bottom').removeClass('target');
                                 }
                             })
-                            .fail(function() { alert("_drag_to_bottom.php?source_id=" + source_id);
+                            .fail(function() {
                                 alert('Ошибка при вызове исполняющей программы');
                                 $('#calculation_streams_bottom').removeClass('target');
                             });
