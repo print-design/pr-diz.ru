@@ -253,12 +253,71 @@ if($row = $fetcher->Fetch()) {
             $stream_name = '';
             $stream_weight = '';
             $stream_length = '';
-            $sql = "select name, weight, length from calculation_stream where id = $stream_id";
+            
+            $film1 = '';
+            $film2 = '';
+            $film3 = '';
+            
+            $density1 = 0;
+            $density2 = 0;
+            $density3 = 0;
+    
+            $sql = "select cs.name, cs.weight, cs.length, "
+                    . "c.individual_film_name, f1.name film1, c.lamination1_individual_film_name, f2.name film2, c.lamination2_individual_film_name, f3.name film3, "
+                    . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
+                    . "from calculation_stream cs "
+                    . "inner join calculation c on cs.calculation_id = c.id "
+                    . "left join film_variation fv1 on c.film_variation_id = fv1.id "
+                    . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
+                    . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
+                    . "left join film f1 on fv1.film_id = f1.id "
+                    . "left join film f2 on fv2.film_id = f2.id "
+                    . "left join film f3 on fv3.film_id = f3.id "
+                    . "where cs.id = $stream_id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $stream_name = $row['name'];
                 $stream_weight = $row['weight'];
                 $stream_length = $row['length'];
+                
+                $film1 = $row['individual_film_name'];
+                if(empty($film1)) {
+                    $film1 = $row['film1'];
+                }
+                
+                $film2 = $row['lamination1_individual_film_name'];
+                if(empty($film2)) {
+                    $film2 = $row['film2'];
+                }
+                
+                $film3 = $row['lamination2_individual_film_name'];
+                if(empty($film3)) {
+                    $film3 = $row['film3'];
+                }
+                
+                $density1 = $row['individual_density'];
+                if(empty($density1)) {
+                    $density1 = $row['density1'];
+                }
+                if(empty($density1)) {
+                    $density1 = 0;
+                }
+                    
+                $density2 = $row['lamination1_individual_density'];
+                if(empty($density2)) {
+                    $density2 = $row['density2'];
+                }
+                if(empty($density2)) {
+                    $density2 = 0;
+                }
+                    
+                $density3 = $row['lamination2_individual_density'];
+                if(empty($density3)) {
+                    $density3 = $row['density3'];
+                }
+                if(empty($density3)) {
+                    $density3 = 0;
+                }
             }
             ?>
             <img src="<?=APPLICATION ?>/images/logo.svg" />
@@ -290,6 +349,26 @@ if($row = $fetcher->Fetch()) {
                 <tr>
                     <td>Кол-во</td>
                     <td></td>
+                </tr>
+            </table>
+            <p>
+                <?php
+                echo $film1.' '.$density1;
+                
+                if(!empty($film2) && !empty($density2)) {
+                    echo " + $film2 $density2";
+                }
+                
+                if(!empty($film3) && !empty($density3)) {
+                    echo " + $film3 $density3";
+                }
+                ?>
+            </p>
+            <p>Гарантия хранения 12 мес.</p>
+            <p>ТУ</p>
+            <table>
+                <tr>
+                    <td><img src="<?=APPLICATION ?>/images/package.png" style="clip: rect(0px,200px, 150px, 0px);" /></td>
                 </tr>
             </table>
         </div>
