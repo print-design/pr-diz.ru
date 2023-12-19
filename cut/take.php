@@ -193,13 +193,21 @@ if($row = $fetcher->Fetch()) {
             .target {
                 border-top: solid 3px gray;
             }
+            
+            @media print {
+                .no_print {
+                    display:none;
+                }
+            }
         </style>
     </head>
     <body>
+        <div class="no_print">
         <?php
         include '../include/header_cut.php';
         ?>
-        <div class="container-fluid">
+        </div>
+        <div class="container-fluid no_print">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
@@ -232,6 +240,9 @@ if($row = $fetcher->Fetch()) {
                 </div>
             </div>
         </div>
+        <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
+        <div id="print">ПЕЧАТЬ</div>
+        <?php endif; ?>
         <?php
         include '../include/footer.php';
         include '../include/footer_cut.php';
@@ -305,6 +316,25 @@ if($row = $fetcher->Fetch()) {
                     
                 }
             }
+            
+            <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
+            var css = '@page { size: portrait; margin: 8mm; }',
+                    head = document.head || document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+            
+            style.type = 'text/css';
+            style.media = 'print';
+            
+            if (style.styleSheet){
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+            
+            head.appendChild(style);
+            
+            window.print();
+            <?php endif; ?>
         </script>
     </body>
 </html>
