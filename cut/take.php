@@ -26,13 +26,13 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $stream_width = filter_input(INPUT_POST, 'stream_width');
     $spool = filter_input(INPUT_POST, 'spool');
     
-    $density1 = intval(filter_input(INPUT_POST, 'density1'));
-    $density2 = intval(filter_input(INPUT_POST, 'density2'));
-    $density3 = intval(filter_input(INPUT_POST, 'density3'));
+    $density1 = floatval(filter_input(INPUT_POST, 'density1'));
+    $density2 = floatval(filter_input(INPUT_POST, 'density2'));
+    $density3 = floatval(filter_input(INPUT_POST, 'density3'));
     
-    $weight = intval(filter_input(INPUT_POST, 'weight'));
-    $length = intval(filter_input(INPUT_POST, 'length'));
-    $radius = intval(filter_input(INPUT_POST, 'radius'));
+    $weight = floatval(filter_input(INPUT_POST, 'weight'));
+    $length = floatval(filter_input(INPUT_POST, 'length'));
+    $radius = floatval(filter_input(INPUT_POST, 'radius'));
     
     $is_valid = false;
     $validation1 = false;
@@ -199,6 +199,12 @@ if($row = $fetcher->Fetch()) {
                     display:none;
                 }
             }
+            
+            @media screen {
+                .print_only {
+                    display: none;
+                }
+            }
         </style>
     </head>
     <body>
@@ -241,7 +247,52 @@ if($row = $fetcher->Fetch()) {
             </div>
         </div>
         <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
-        <div id="print">ПЕЧАТЬ</div>
+        <div class="print_only">
+            <?php
+            $stream_id = filter_input(INPUT_GET, 'stream_id');
+            $stream_name = '';
+            $stream_weight = '';
+            $stream_length = '';
+            $sql = "select name, weight, length from calculation_stream where id = $stream_id";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $stream_name = $row['name'];
+                $stream_weight = $row['weight'];
+                $stream_length = $row['length'];
+            }
+            ?>
+            <img src="<?=APPLICATION ?>/images/logo.svg" />
+            ООО Принт-Дизайн
+            <p>170006, г. Тверь, ул. Учительская д. 54</p>
+            <p>+7(4822)781-780</p>
+            <p><?=$customer_id.'-'.$num_for_customer ?>. <?=$customer ?></p>
+            <table>
+                <tr>
+                    <td>Дата</td>
+                    <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y H:i') ?></td>
+                </tr>
+                <tr>
+                    <td>Заказ</td>
+                    <td><?=$name ?></td>
+                </tr>
+                <tr>
+                    <td>Ручей</td>
+                    <td><?=$stream_name ?></td>
+                </tr>
+                <tr>
+                    <td>Масса</td>
+                    <td><?=$stream_weight ?> кг</td>
+                </tr>
+                <tr>
+                    <td>Метраж</td>
+                    <td><?=$stream_length ?> м</td>
+                </tr>
+                <tr>
+                    <td>Кол-во</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
         <?php endif; ?>
         <?php
         include '../include/footer.php';
