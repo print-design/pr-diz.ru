@@ -60,13 +60,28 @@ else {
             }
             
             if(!empty($machine_id)):
-            
+                
             $diff4Days = new DateInterval('P4D');
             $diff3Months = new DateInterval('P3M');
+            
+            // Работы отображаются, начиная с дня 4 сутками ранее.
             $now = new DateTime();
             $date_from = clone $now;
             $date_from->sub($diff4Days);
-            $date_to = clone $now;
+            
+            // Если за рамками 4 суток присутствует работа в статусе "Приладка на резке" или "Режется",
+            // отображаем список, начиная с этой работы.
+            $sql = "select min(e.date) min_date "
+                    . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
+                    . "where c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING
+                    ." and e.work_id = ".WORK_CUTTING." and e.machine_id = $machine_id and "
+                    . "e.date < '".$date_from->format('Y-m-d')."'";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $date_from = DateTime::createFromFormat('Y-m-d', $row['min_date']);
+            }
+            
+            $date_to = clone $date_from;
             $date_to->add($diff3Months);
             $timetable = new CutTimetable($machine_id, $date_from, $date_to);
             
