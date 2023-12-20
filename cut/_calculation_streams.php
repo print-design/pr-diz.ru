@@ -66,7 +66,7 @@ while($row = $fetcher->Fetch()):
             <div class="font-weight-bold"><?=$row['name'] ?></div>
         </div>
         <?php if(!empty($printed)): ?>
-        <div style="background-color: #0A9D4E0D; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: #0A9D4E;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано <?= DateTime::createFromFormat('Y-m-d H:i:s', $printed)->format('d.m.Y H:i:s') ?></div>
+        <div style="background-color: #0A9D4E0D; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: #0A9D4E;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано <?= DateTime::createFromFormat('Y-m-d H:i:s', $printed)->format('d.m.Y H:i') ?></div>
         <?php endif; ?>
         <?php if(isset($invalid_stream) && $invalid_stream == $stream_id): ?>
         <div style="background-color: mistyrose; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: red;">&#9679;</span>&nbsp;&nbsp;&nbsp;Невалидные данные</div>
