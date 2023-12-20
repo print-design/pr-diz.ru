@@ -20,7 +20,7 @@ class PlanShift {
     public $includes_continuation = false;
     
     // Присутствует ли в этой смене приладка на резке
-    public $includes_cut_priladka = false;
+    public $includes_cut = false;
 
     public function __construct(DateTime $date, $shift, PlanTimetable $timetable, $editions, $date_editions_count, $shift_editions_count) {
         $this->date = $date;
@@ -43,8 +43,8 @@ class PlanShift {
                     $this->includes_continuation = true;
                 }
                 
-                if($edition['status_id'] == ORDER_STATUS_CUT_PRILADKA) {
-                    $this->includes_cut_priladka = true;
+                if(in_array($edition['status_id'], ORDER_STATUSES_IN_CUT)) {
+                    $this->includes_cut = true;
                 }
             }
             

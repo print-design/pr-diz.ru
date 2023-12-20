@@ -29,7 +29,7 @@
         <?php
         $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
         
-        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) && !$this->plan_shift->includes_cut_priladka):
+        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) && !$this->plan_shift->includes_cut):
         ?>
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control" style="min-width: 100px;" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->plan_shift->timetable->dateTo->format('Y-m-d') ?>">
             <option value="">...</option>
@@ -54,7 +54,7 @@
         endif;
         
         if($this->plan_shift->timetable->work_id == WORK_PRINTING && $this->plan_shift->timetable->machine_id == PRINTER_COMIFLEX):
-        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) && !$this->plan_shift->includes_cut_priladka):
+        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) && !$this->plan_shift->includes_cut):
         ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control mt-2" style="min-width: 100px;" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->plan_shift->timetable->dateTo->format('Y-m-d') ?>">
             <option value="">...</option>
@@ -95,12 +95,12 @@
     }
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline fordrag"<?=$drop ?>>
-        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && $this->edition['status_id'] != ORDER_STATUS_CUT_PRILADKA): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && !$this->in_cut): ?>
         <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
-        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation'] && $this->edition['status_id'] != ORDER_STATUS_CUT_PRILADKA): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation'] && !$this->in_cut): ?>
         <div draggable="true" ondragstart="DragTimetablePart(event);" data-id="<?=$this->edition['id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>

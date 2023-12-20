@@ -3,11 +3,17 @@ class PlanEdition {
     private $plan_shift;
     private $edition_key;
     private $edition;
+    
+    private $in_cut = false;
 
     public function __construct(PlanShift $plan_shift, $edition_key, $edition) {
         $this->plan_shift = $plan_shift;
         $this->edition_key = $edition_key;
         $this->edition = $edition;
+        
+        if(in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)) {
+            $this->in_cut = true;
+        }
     }
     
     function Show() {
