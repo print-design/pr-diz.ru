@@ -852,7 +852,7 @@ if(!is_nan($streams_number)) {
             }
             ?>
             <div class="d-flex justify-content-between">
-                <div><a class="btn btn-outline-dark backlink" href="details.php<?= BuildQuery('id', $id) ?>">К расчету</a></div>
+                <div><a class="btn btn-light backlink" href="details.php<?= BuildQuery('id', $id) ?>">К расчету</a></div>
                 <div>
                     <?php
                     if(!empty($techmap_id)):     
