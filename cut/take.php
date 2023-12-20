@@ -119,6 +119,12 @@ if($row = $fetcher->Fetch()) {
         ?>
         <style>
             @media print {
+                body {
+                    padding: 0;
+                    margin: 0;
+                    font-size: 6px;
+                }
+                
                 .no_print {
                     display:none;
                 }
@@ -320,10 +326,14 @@ if($row = $fetcher->Fetch()) {
                 }
             }
             ?>
-            <img src="<?=APPLICATION ?>/images/logo.svg" />
-            ООО Принт-Дизайн
-            <p>170006, г. Тверь, ул. Учительская д. 54</p>
-            <p>+7(4822)781-780</p>
+            <div class="d-flex justify-content-start mb-1">
+                <div class="mr-1"><img src="<?=APPLICATION ?>/images/logo.svg" style="width: 20px; height: 20px;" class="mt-1" /></div>
+                <div>
+                    <strong>ООО Принт-Дизайн</strong><br />
+                    170006, г. Тверь, ул. Учительская д. 54<br />
+                    +7(4822)781-780
+                </div>
+            </div>
             <p><?=$customer_id.'-'.$num_for_customer ?>. <?=$customer ?></p>
             <table>
                 <tr>
@@ -367,9 +377,9 @@ if($row = $fetcher->Fetch()) {
             <p>Гарантия хранения 12 мес.</p>
             <p>ТУ 2245-001-218273282-2003</p>
             <div class="d-flex justify-content-start">
-                <div class="mr-3 position-relative" style="width: 42px; height: 44px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -185px; left: -45px; width: 300px; clip: rect(185px, 85px, 225px, 45px);" /></div>
-                <div class="mr-3 position-relative" style="width: 42px; height: 44px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -135px; left: -45px; width: 300px; clip: rect(135px, 85px, 170px, 45px);" /></div>
-                <div class="position-relative" style="width: 42px; height: 44px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -185px; left: -100px; width: 300px; clip: rect(185px, 145px, 225px, 100px);" /></div>
+                <div class="mr-1 position-relative" style="width: 21px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -93px; left: -23px; width: 150px; clip: rect(93px, 43px, 113px, 23px);" /></div>
+                <div class="mr-1 position-relative" style="width: 21px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -68px; left: -23px; width: 150px; clip: rect(68px, 46px, 85px, 23px);" /></div>
+                <div class="position-relative" style="width: 21px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -93px; left: -50px; width: 150px; clip: rect(93px, 73px, 113px, 50px);" /></div>
             </div>
             <table>
                 <tr>
@@ -453,7 +463,7 @@ if($row = $fetcher->Fetch()) {
             }
             
             <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
-            var css = '@page { size: portrait; margin: 8mm; }',
+            var css = '@page { size: portrait; margin: 2mm; }',
                     head = document.head || document.getElementsByTagName('head')[0],
                     style = document.createElement('style');
             
