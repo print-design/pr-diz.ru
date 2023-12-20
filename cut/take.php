@@ -118,82 +118,6 @@ if($row = $fetcher->Fetch()) {
         include '../include/head.php';
         ?>
         <style>
-            h1 {
-                font-size: 33px;
-            }
-            
-            h2, .name {
-                font-size: 26px;
-                font-weight: bold;
-                line-height: 45px;
-            }
-            
-            h3 {
-                font-size: 20px;
-            }
-            
-            .subtitle {
-                font-weight: bold;
-                font-size: 20px;
-                line-height: 40px
-            }
-            
-            table {
-                width: 100%;
-            }
-            
-            tr {
-                border-bottom: solid 1px #e3e3e3;
-            }
-            
-            th {
-                white-space: nowrap;
-                padding-right: 30px;
-                vertical-align: top;
-            }
-            
-            td {
-                line-height: 22px;
-            }
-            
-            tr td:nth-child(2) {
-                text-align: right;
-                padding-left: 10px;
-                font-weight: bold;
-            }
-            
-            .cutter_info {
-                border-radius: 15px;
-                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
-                padding: 20px;
-                padding-top: 5px;
-            }
-            
-            #status {
-                width: 100%;
-                padding: 12px;
-                margin-top: 40p;
-                margin-bottom: 40px;
-                border-radius: 10px;
-                font-weight: bold;
-                text-align: center; 
-            }
-            
-            .calculation_stream {
-                border-radius: 15px;
-                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
-                padding: 20px;
-                margin-bottom: 10px;
-            }
-            
-            #calculation_streams_bottom {
-                padding-top: 10px;
-            }
-            
-            .target {
-                border-top: solid 3px gray;
-            }
-            
             @media print {
                 .no_print {
                     display:none;
@@ -201,6 +125,82 @@ if($row = $fetcher->Fetch()) {
             }
             
             @media screen {
+                h1 {
+                    font-size: 33px;
+                }
+            
+                h2, .name {
+                    font-size: 26px;
+                    font-weight: bold;
+                    line-height: 45px;
+                }
+            
+                h3 {
+                    font-size: 20px;
+                }
+            
+                .subtitle {
+                    font-weight: bold;
+                    font-size: 20px;
+                    line-height: 40px
+                }
+            
+                table {
+                    width: 100%;
+                }
+            
+                tr {
+                    border-bottom: solid 1px #e3e3e3;
+                }
+            
+                th {
+                    white-space: nowrap;
+                    padding-right: 30px;
+                    vertical-align: top;
+                }
+            
+                td {
+                    line-height: 22px;
+                }
+            
+                tr td:nth-child(2) {
+                    text-align: right;
+                    padding-left: 10px;
+                    font-weight: bold;
+                }
+            
+                .cutter_info {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 20px;
+                    padding-top: 5px;
+                }
+            
+                #status {
+                    width: 100%;
+                    padding: 12px;
+                    margin-top: 40p;
+                    margin-bottom: 40px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    text-align: center; 
+                }
+            
+                .calculation_stream {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 20px;
+                    margin-bottom: 10px;
+                }
+            
+                #calculation_streams_bottom {
+                    padding-top: 10px;
+                }
+            
+                .target {
+                    border-top: solid 3px gray;
+                }
+            
                 .print_only {
                     display: none;
                 }
@@ -365,10 +365,15 @@ if($row = $fetcher->Fetch()) {
                 ?>
             </p>
             <p>Гарантия хранения 12 мес.</p>
-            <p>ТУ</p>
+            <p>ТУ 2245-001-218273282-2003</p>
+            <div class="d-flex justify-content-start">
+                <div class="mr-3 position-relative" style="width: 42px; height: 44px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -185px; left: -45px; width: 300px; clip: rect(185px, 85px, 225px, 45px);" /></div>
+                <div class="mr-3 position-relative" style="width: 42px; height: 44px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -135px; left: -45px; width: 300px; clip: rect(135px, 85px, 170px, 45px);" /></div>
+                <div class="position-relative" style="width: 42px; height: 44px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -185px; left: -100px; width: 300px; clip: rect(185px, 145px, 225px, 100px);" /></div>
+            </div>
             <table>
                 <tr>
-                    <td><img src="<?=APPLICATION ?>/images/package.png" style="clip: rect(0px,200px, 150px, 0px);" /></td>
+                    <td></td>
                 </tr>
             </table>
         </div>
