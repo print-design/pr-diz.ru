@@ -95,12 +95,12 @@
     }
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline fordrag"<?=$drop ?>>
-        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && !$this->in_cut): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
         <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
-        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation'] && !$this->in_cut): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
         <div draggable="true" ondragstart="DragTimetablePart(event);" data-id="<?=$this->edition['id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
