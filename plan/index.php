@@ -434,7 +434,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                     </div>
                 </nav>
                 <div id="content" style="width: 100%; position: relative;">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between pr-3">
                         <div class="d-flex justify-content-start">
                             <button type="button" id="sidebarExpand" class="btn btn-link" style="display: none; padding-left: 0;">
                                 <img src="../images/icons/expand.png" style="margin-right: 8px;" />
