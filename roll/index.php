@@ -122,8 +122,7 @@ $total_weight = $row['total_weight'];
                     <a href="new.php" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;Новый ролик</a>
                     <a href="excel.php" class="btn btn-light ml-3"><i class="fas fa-file-download"></i>&nbsp;Выгрузить</a>
                     <?php endif; ?>
-                    <button class="btn btn-outline-dark disabled d-none" data-toggle="modal" data-target="#filterModal" data-text="Фильтр"><img src="../images/icons/filter.svg" style="margin-right: 20px;" />Фильтр</button>
-                    <div style="display: inline-block; position: relative; margin-right: 55px; margin-left: 80px;">
+                    <div class="ml-5" style="display: inline-block; position: relative;">
                         <a href="javascript: void(0);"><img src="../images/icons/filter1.svg" data-toggle="modal" data-target="#filterModal" data-text="Фильтр" /></a>
                         <?php
                         $get_count = 0;
