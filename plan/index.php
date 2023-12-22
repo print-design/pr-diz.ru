@@ -678,28 +678,12 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             
             EnableMenu();
             
-            function DrawQueue(work_id, machine_id) {
-                $.ajax({ url: "_draw_queue.php?work_id=" + work_id + "&machine_id=" + machine_id })
-                        .done(function(queue_data) {
-                            $('#queue').html(queue_data);
-                            EnableMenu();
-                        })
-                        .fail(function() {
-                            alert('Ошибка при перерисовке очереди');
-                            EnableMenu();
-                        });
-            }
-            
             function DrawTimetable(work_id, machine_id, from, to) {
-                $.ajax({ url: "_draw_timetable.php?work_id=" + work_id + "&machine_id=" + machine_id + "&from=" + from + "&to=" + to })
-                        .done(function(data) {
-                            $('#timetable').html(data);
-                            
-                            DrawQueue(work_id, machine_id);
-                        })
-                        .fail(function() {
-                            alert('Ошибка при перерисовке страницы');
-                        });
+                $('#timetable').load("_draw_timetable.php?work_id=" + work_id + "&machine_id=" + machine_id + "&from=" + from + "&to=" + to, function() {
+                    $('#queue').load("_draw_queue.php?work_id=" + work_id + "&machine_id=" + machine_id, function() {
+                        EnableMenu();
+                    });
+                });
             }
             
             function ChangeEmployee1(select) {
