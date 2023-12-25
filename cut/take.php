@@ -86,7 +86,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         if(empty($take_stream_id)) {
-            $sql = "insert into calculation_take_stream values(calculation_take_id, calculation_stream_id, weight, length, radius, printed) values($take_id, $stream_id, $weight, $length, $radius, now())";
+            $sql = "insert into calculation_take_stream (calculation_take_id, calculation_stream_id, weight, length, radius, printed) values($take_id, $stream_id, $weight, $length, $radius, now())";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -287,7 +287,7 @@ if($row = $fetcher->Fetch()) {
                     <div id="calculation_streams">
                         <?php include './_calculation_streams.php'; ?>
                     </div>
-                    <div class="d-flex justify-content-xl-start" id="calculation_streams_bottom" data-id="0" ondragover="DragOverBottom(event);" ondrop="DropBottom(event);">
+                    <div class="d-flex justify-content-xl-start mb-4" id="calculation_streams_bottom" data-id="0" ondragover="DragOverBottom(event);" ondrop="DropBottom(event);">
                         <div><button type="button" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Съём закончен</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
@@ -316,11 +316,13 @@ if($row = $fetcher->Fetch()) {
             $density2 = 0;
             $density3 = 0;
     
-            $sql = "select cs.name, cs.weight, cs.length, cs.printed, "
+            $sql = "select cs.name, cts.weight, cts.length, cts.printed, "
                     . "c.individual_film_name, f1.name film1, c.lamination1_individual_film_name, f2.name film2, c.lamination2_individual_film_name, f3.name film3, "
                     . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
-                    . "from calculation_stream cs "
-                    . "inner join calculation c on cs.calculation_id = c.id "
+                    . "from calculation_take_stream cts "
+                    . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
+                    . "inner join calculation_take ct on cts.calculation_take_id = ct.id "
+                    . "inner join calculation c on ct.calculation_id = c.id "
                     . "left join film_variation fv1 on c.film_variation_id = fv1.id "
                     . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
                     . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
