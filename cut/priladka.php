@@ -17,14 +17,26 @@ if($id === null) {
 $calculation = Calculation::Create($id);
 
 // Начало резки
-if(null !== filter_input(INPUT_POST, 'length_submit')) {
+if(null !== filter_input(INPUT_POST, 'ready_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     $length = filter_input(INPUT_POST, 'length');
     
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING." where id = $id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING.", cut_priladka = $length where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "select count(id) from calculation_take where calculation_id = $id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            if($row[0] == 0) {
+                $sql = "insert into calculation_take (calculation_id) values ($id)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+        }
+    }
     
     if(empty($error_message)) {
         header('Location: take.php?id='.$id.(empty($machine_id) ? '' : '&machine_id='.$machine_id));
@@ -137,9 +149,9 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-4">
                     <h1><?=$name ?></h1>
                     <div class="name"><?=$customer ?></div>
-                    <div class="subtitle mb-4">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
-                    <div id="status" style="border: solid 2px <?=ORDER_STATUS_COLORS[$status_id] ?>; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">
-                        <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
+                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+                    <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; display: inline-block;">
+                        <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
                     </div>
                     <div class="name">Приладка</div>
                     <form method="post">
@@ -153,7 +165,7 @@ if($row = $fetcher->Fetch()) {
                         </div>
                         <div class="row mt-4">
                             <div class="col-6">
-                                <button type="submit" class="btn btn-dark w-100" name="length_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
+                                <button type="submit" class="btn btn-dark w-100" name="ready_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
                             </div>
                             <div class="col-6">
                                 <button type="button" class="btn btn-light w-100"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
