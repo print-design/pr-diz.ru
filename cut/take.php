@@ -425,7 +425,7 @@ if($row = $fetcher->Fetch()) {
                     $.ajax({ dataType: 'JSON', url: "_drag_streams.php?source_id=" + source_id + "&target_id=" + target_id })
                             .done(function(data) {
                                 if(data.error == '') {
-                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
+                                    $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
                                 }
                                 else {
                                     alert(data.error);
@@ -445,7 +445,7 @@ if($row = $fetcher->Fetch()) {
                     $.ajax({ dataType: 'JSON', url: "_drag_to_bottom.php?source_id=" + source_id })
                             .done(function(data) {
                                 if(data.error == '') {
-                                    $('#calculation_streams').load('_calculation_streams.php?calculation_id=<?=$id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
+                                    $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
                                     $('#calculation_streams_bottom').removeClass('target');
                                 }
                                 else {
