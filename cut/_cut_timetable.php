@@ -124,15 +124,10 @@ class CutTimetable {
             // Кнопка "Продолжить" имеется у работ со статусом "Приладка на резке" или "Режется".
             // И если такая есть хоть одна, то кнопки "Приступить" ни у кого быть не может.
             if($row['status_id'] == ORDER_STATUS_CUT_PRILADKA) {
-                $row['button_continue'] = true;
                 $this->has_priladka = true;
             }
             elseif($row['status_id'] == ORDER_STATUS_CUTTING) {
-                $row['button_continue'] = true;
                 $this->has_take = true;
-            }
-            else {
-                $row['button_continue'] = false;
             }
             
             array_push($this->editions[$row['date']][$row['shift']], $row);
