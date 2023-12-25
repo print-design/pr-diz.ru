@@ -20,7 +20,8 @@ $calculation = Calculation::Create($id);
 $invalid_stream = 0;
 
 if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $take_id = filter_input(INPUT_POST, 'take_id');
+    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     $stream_id = filter_input(INPUT_POST, 'stream_id');
     $stream_width = filter_input(INPUT_POST, 'stream_width');
@@ -36,7 +37,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     
     $is_valid = false;
     $validation1 = false;
-    $validation2 = false;
+    $validation2 = false; 
     
     // Валидация данных
     // Валидация 1 между инпутами «Масса» и «Метраж» 
@@ -77,12 +78,26 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         $invalid_stream = $stream_id;
     }
     else {
-        $sql = "update calculation_stream set weight = $weight, length = $length, radius = $radius, printed = now() where id = $stream_id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
+        $take_stream_id = 0;
+        $sql = "select id from calculation_take_stream where calculation_take_id = $take_id and calculation_stream_id = $stream_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $take_stream_id = $row['id'];
+        }
+        
+        if(empty($take_stream_id)) {
+            $sql = "insert into calculation_take_stream values(calculation_take_id, calculation_stream_id, weight, length, radius, printed) values($take_id, $stream_id, $weight, $length, $radius, now())";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        else {
+            $sql = "update calculation_take_stream set weight = $weight, length = $length, radius = $radius, printed = now() where id = $take_stream_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         if(empty($error_message)) {
-            header("Location:".APPLICATION."/cut/take.php?id=$id&machine_id=$machine_id&stream_id=$stream_id");
+            header("Location:".APPLICATION."/cut/take.php?id=$calculation_id&machine_id=$machine_id&stream_id=$stream_id");
         }
     }
 }
