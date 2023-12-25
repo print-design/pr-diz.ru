@@ -94,12 +94,27 @@ $unit = '';
 $status_id = '';
 $customer_id = '';
 $customer = '';
+
+$techmap_date = '';
+$side = '';
+$winding = '';
+$winding_unit = '';
+$spool = '';
+$labels = '';
+$package = '';
+
 $num_for_customer = '';
+$take_id = '';
+$take_number = '';
 
 $sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, cus.name customer, "
-        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+        . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
+        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
+        . "(select max(id) from calculation_take where calculation_id = $id) take_id, "
+        . "(select count(id) from calculation_take where calculation_id = $id) take_number "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
+        . "inner join techmap tm on tm.calculation_id = c.id "
         . "where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
@@ -109,7 +124,18 @@ if($row = $fetcher->Fetch()) {
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
+    
+    $techmap_date = $row['techmap_date'];
+    $side = $row['side'];
+    $winding = $row['winding'];
+    $winding_unit = $row['winding_unit'];
+    $spool = $row['spool'];
+    $labels = $row['labels'];
+    $package = $row['package'];
+    
     $num_for_customer = $row['num_for_customer'];
+    $take_id = $row['take_id'];
+    $take_number = $row['take_number'];
 }
 ?>
 <!DOCTYPE html>
@@ -238,11 +264,11 @@ if($row = $fetcher->Fetch()) {
                             <div class="name"><?=$customer ?></div>
                             <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                             <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; display: inline-block;">
-                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' 0 '.($unit == 'kg' ? "кг" : "шт")." из ".$calculation->quantity ?>
+                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id]." 0 м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
                             </div>
                         </div>
                     </div>
-                    <div class="name">Съём 1</div>
+                    <div class="name">Съём <?=$take_number ?></div>
                     <div id="calculation_streams">
                         <?php include './_calculation_streams.php'; ?>
                     </div>

@@ -41,13 +41,22 @@ $length = '';
 $customer_id = '';
 $customer = '';
 $length_pure_1;
-$techmap_date = '';
 $last_name = '';
 $first_name = '';
+
+$techmap_date = '';
+$side = '';
+$winding = '';
+$winding_unit = '';
+$spool = '';
+$labels = '';
+$package = '';
+
 $num_for_customer = '';
 
 $sql = "select c.date, c.name, c.unit, c.work_type_id, c.status_id, c.length, c.customer_id, cus.name customer, "
-        . "cr.length_pure_1, tm.date techmap_date, u.last_name, u.first_name, "
+        . "cr.length_pure_1, u.last_name, u.first_name, "
+        . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -67,9 +76,17 @@ if($row = $fetcher->Fetch()) {
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
     $length_pure_1 = $row['length_pure_1'];
-    $techmap_date = $row['techmap_date'];
     $last_name = $row['last_name'];
     $first_name = $row['first_name'];
+    
+    $techmap_date = $row['techmap_date'];
+    $side = $row['side'];
+    $winding = $row['winding'];
+    $winding_unit = $row['winding_unit'];
+    $spool = $row['spool'];
+    $labels = $row['labels'];
+    $package = $row['package'];
+    
     $num_for_customer = $row['num_for_customer'];
 }
 ?>

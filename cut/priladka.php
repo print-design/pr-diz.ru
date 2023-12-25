@@ -49,12 +49,23 @@ $name = '';
 $status_id = '';
 $customer_id = '';
 $customer = '';
+
+$techmap_date = '';
+$side = '';
+$winding = '';
+$winding_unit = '';
+$spool = '';
+$labels = '';
+$package = '';
+
 $num_for_customer = '';
 
 $sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
+        . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
+        . "inner join techmap tm on tm.calculation_id = c.id "
         . "where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
@@ -63,6 +74,15 @@ if($row = $fetcher->Fetch()) {
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
+    
+    $techmap_date = $row['techmap_date'];
+    $side = $row['side'];
+    $winding = $row['winding'];
+    $winding_unit = $row['winding_unit'];
+    $spool = $row['spool'];
+    $labels = $row['labels'];
+    $package = $row['package'];
+    
     $num_for_customer = $row['num_for_customer'];
 }
 ?>

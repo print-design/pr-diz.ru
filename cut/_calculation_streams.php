@@ -1,29 +1,33 @@
 <?php
 require_once '../include/topscripts.php';
 
-$calculation_id = filter_input(INPUT_GET, 'calculation_id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
-if(empty($calculation_id)) {
-    $calculation_id = $id;
+if(null !== filter_input(INPUT_GET, 'take_id')) {
+    $take_id = filter_input(INPUT_GET, 'take_id');
 }
-$sql = "select cs.id stream_id, cs.calculation_id, cs.name, cs.weight, cs.length, cs.radius, cs.printed, c.stream_width, tm.spool, "
+
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+$sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.weight, cts.length, cts.radius, cts.printed, c.stream_width, tm.spool, "
         . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
-        . "from calculation_stream cs "
-        . "inner join calculation c on cs.calculation_id = c.id "
+        . "from calculation_take ct "
+        . "inner join calculation c on ct.calculation_id = c.id "
+        . "inner join calculation_stream cs on cs.calculation_id = c.id "
         . "inner join techmap tm on tm.calculation_id = c.id "
         . "left join film_variation fv1 on c.film_variation_id = fv1.id "
         . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
         . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
-        . "where cs.calculation_id = $calculation_id "
+        . "left join calculation_take_stream cts on cts.calculation_take_id = ct.id and calculation_stream_id = cs.id "
+        . "where ct.id = $take_id "
         . "order by cs.position";
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
-    $id = $row['calculation_id'];
+    $take_id = $row['take_id'];
+    $calculation_id = $row['calculation_id'];
     $stream_id = $row['stream_id'];
+    $stream_name = $row['name'];
     $stream_weight = $row['weight'];
     $stream_length = $row['length'];
     $stream_radius = $row['radius'];
-    $printed = $row['printed'];
+    $stream_printed = $row['printed'];
     $stream_width = $row['stream_width'];
     $spool = $row['spool'];
     
@@ -63,17 +67,18 @@ while($row = $fetcher->Fetch()):
             <div class="mr-3" draggable="true" data-id="<?=$stream_id ?>" ondragstart="DragStart(event);" ondragend="DragEnd();">
                 <img src="../images/icons/double-vertical-dots.svg" draggable="false" />
             </div>
-            <div class="font-weight-bold"><?=$row['name'] ?></div>
+            <div class="font-weight-bold"><?=$stream_name ?></div>
         </div>
-        <?php if(!empty($printed)): ?>
-        <div style="background-color: #0A9D4E0D; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: #0A9D4E;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано <?= DateTime::createFromFormat('Y-m-d H:i:s', $printed)->format('d.m.Y H:i') ?></div>
+        <?php if(!empty($stream_printed)): ?>
+        <div style="background-color: #0A9D4E0D; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: #0A9D4E;">&#9679;</span>&nbsp;&nbsp;&nbsp;Распечатано <?= DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed)->format('d.m.Y H:i') ?></div>
         <?php endif; ?>
         <?php if(isset($invalid_stream) && $invalid_stream == $stream_id): ?>
         <div style="background-color: mistyrose; padding-left: 5px; padding-right: 5px; border-radius: 8px;"><span style="font-size: x-small; vertical-align: middle; color: red;">&#9679;</span>&nbsp;&nbsp;&nbsp;Невалидные данные</div>
         <?php endif; ?>
     </div>
     <form method="post" action="<?=APPLICATION ?>/cut/take.php?id=<?=$calculation_id ?>&machine_id=<?=$machine_id ?>">
-        <input type="hidden" name="id" value="<?=$calculation_id ?>" />
+        <input type="hidden" name="take_id" value="<?=$take_id ?>" />
+        <input type="hidden" name="calculation_id" value="<?=$calculation_id ?>" />
         <input type="hidden" name="machine_id" value="<?= $machine_id ?>" />
         <input type="hidden" name="stream_id" value="<?=$stream_id ?>" />
         <input type="hidden" name="stream_width" value="<?=$stream_width ?>" />
