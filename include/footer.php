@@ -127,7 +127,7 @@ if(file_exists('find.php')) {
     
     // Фильтрация ввода (другой способ)
     function KeyDownIntValue(e) {
-        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+        if(e.which != 8 && e.which != 9 && e.which != 46 && e.which != 37 && e.which != 39) {
             return /\d/.test(e.key);
         }
     }
@@ -141,7 +141,7 @@ if(file_exists('find.php')) {
     }
     
     function KeyDownFloatValue(e) {
-        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+        if(e.which != 8 && e.which != 9 && e.which != 46 && e.which != 37 && e.which != 39) {
             if(!/[\.\,\d]/.test(e.key)) {
                 return false;
             }
@@ -169,7 +169,7 @@ if(file_exists('find.php')) {
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
     // Обработка изменения нажатия клавиш
     function KeyDownLimitIntValue(textbox, e, max) {
-        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+        if(e.which != 8 && e.which != 9 && e.which != 46 && e.which != 37 && e.which != 39) {
             if(/\D/.test(e.key)) {
                 return false;
             }
