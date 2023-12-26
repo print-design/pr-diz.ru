@@ -53,8 +53,8 @@
     <td class="<?=$this->cut_shift->shift ?> text-nowrap">
         <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
         <?php
-        if($this->edition['status_id'] == ORDER_STATUS_CUTTING) {
-            echo DisplayNumber(floatval($this->edition['length_cutted']), 0)." м из ".DisplayNumber(floatval($this->edition['length_total']), 0);
+        if($this->edition['status_id'] == ORDER_STATUS_CUTTING || $this->edition['status_id'] == ORDER_STATUS_CUTTED) {
+            echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($this->edition['length_cutted']), 0)." м из ".DisplayNumber(floatval($this->edition['length_total']), 0);
         }
         ?>
     </td>
@@ -66,7 +66,7 @@
         <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUTTING): ?>
         <a href="take.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
         <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUTTED): ?>
-        <a href="cutted.php?id=<?=$this->editions['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
+        <a href="cutted.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
         <?php endif; ?>
     </td>
 </tr>

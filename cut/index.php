@@ -69,11 +69,11 @@ else {
             $date_from = clone $now;
             $date_from->sub($diff4Days);
             
-            // Если за рамками 4 суток присутствует работа в статусе "Приладка на резке" или "Режется",
+            // Если за рамками 4 суток присутствует работа в статусе "Приладка на резке", "Режется", "Закончили резку", "Готово к упаковке"
             // отображаем список, начиная с этой работы.
             $sql = "select e.date "
                     . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
-                    . "where c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING
+                    . "where c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING." or c.status_id = ".ORDER_STATUS_CUTTED." or c.status_id = ".ORDER_STATUS_PACK_READY
                     ." and e.work_id = ".WORK_CUTTING." and e.machine_id = $machine_id and "
                     . "e.date < '".$date_from->format('Y-m-d')."' "
                     . "order by e.date asc";

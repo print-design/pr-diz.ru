@@ -98,7 +98,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         if(empty($error_message)) {
-            header("Location:".APPLICATION."/cut/take.php?id=$calculation_id&machine_id=$machine_id&stream_id=$stream_id");
+            header("Location: take.php?id=$calculation_id&machine_id=$machine_id&stream_id=$stream_id");
         }
     }
 }
@@ -320,29 +320,10 @@ if($row = $fetcher->Fetch()) {
             $stream_length = '';
             $stream_printed = '';
             $dt_printed = '';
-            
-            $film1 = '';
-            $film2 = '';
-            $film3 = '';
-            
-            $density1 = 0;
-            $density2 = 0;
-            $density3 = 0;
-    
-            $sql = "select cs.name, cts.weight, cts.length, cts.printed, "
-                    . "c.individual_film_name, f1.name film1, c.lamination1_individual_film_name, f2.name film2, c.lamination2_individual_film_name, f3.name film3, "
-                    . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
+            $sql = "select cs.name, cts.weight, cts.length, cts.printed "
                     . "from calculation_take_stream cts "
                     . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
-                    . "inner join calculation_take ct on cts.calculation_take_id = ct.id "
-                    . "inner join calculation c on ct.calculation_id = c.id "
-                    . "left join film_variation fv1 on c.film_variation_id = fv1.id "
-                    . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
-                    . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
-                    . "left join film f1 on fv1.film_id = f1.id "
-                    . "left join film f2 on fv2.film_id = f2.id "
-                    . "left join film f3 on fv3.film_id = f3.id "
-                    . "where cs.id = $stream_id";
+                    . "where cts.calculation_stream_id = $stream_id and cts.calculation_take_id = $take_id";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $stream_name = $row['name'];
@@ -350,45 +331,6 @@ if($row = $fetcher->Fetch()) {
                 $stream_length = $row['length'];
                 $stream_printed = $row['printed'];
                 $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
-                
-                $film1 = $row['individual_film_name'];
-                if(empty($film1)) {
-                    $film1 = $row['film1'];
-                }
-                
-                $film2 = $row['lamination1_individual_film_name'];
-                if(empty($film2)) {
-                    $film2 = $row['film2'];
-                }
-                
-                $film3 = $row['lamination2_individual_film_name'];
-                if(empty($film3)) {
-                    $film3 = $row['film3'];
-                }
-                
-                $density1 = $row['individual_density'];
-                if(empty($density1)) {
-                    $density1 = $row['density1'];
-                }
-                if(empty($density1)) {
-                    $density1 = 0;
-                }
-                    
-                $density2 = $row['lamination1_individual_density'];
-                if(empty($density2)) {
-                    $density2 = $row['density2'];
-                }
-                if(empty($density2)) {
-                    $density2 = 0;
-                }
-                    
-                $density3 = $row['lamination2_individual_density'];
-                if(empty($density3)) {
-                    $density3 = $row['density3'];
-                }
-                if(empty($density3)) {
-                    $density3 = 0;
-                }
             }
             
             $stream_date = $dt_printed->format('d-m-Y');

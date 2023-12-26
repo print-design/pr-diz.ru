@@ -31,14 +31,14 @@
     <tr>
         <td colspan="2" class="font-weight-bold">
             <?php
-            echo $film1.' '.$density1;
+            echo $calculation->film_1.' '.$calculation->density_1;
                 
-            if(!empty($film2) && !empty($density2)) {
-                echo " + $film2 $density2";
+            if(!empty($calculation->film_2) && !empty($calculation->density_2)) {
+                echo " + ".$calculation->film_2." ".$calculation->density_2;
             }
                 
-            if(!empty($film3) && !empty($density3)) {
-                echo " + $film3 $density3";
+            if(!empty($calculation->film_3) && !empty($calculation->density_3)) {
+                echo " + ".$calculation->film_3." ".$calculation->density_3;
             }
             ?>
         </td>
