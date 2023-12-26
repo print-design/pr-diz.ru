@@ -38,7 +38,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     
     $is_valid = false;
     $validation1 = false;
-    $validation2 = false; 
+    $validation2 = false;
     
     // Валидация данных
     // Валидация 1 между инпутами «Масса» и «Метраж» 
@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
     }
     elseif($spool == 152) {
-        if(1.15 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($density1 + $density2 + $density3)) < $length && $length < 1.15 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($density1 + $density2 + $density3))) {
+        if(0.85 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($density1 + $density2 + $density3)) < $length && $length < 1.15 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($density1 + $density2 + $density3))) {
             $validation2 = true;
         }
     }
