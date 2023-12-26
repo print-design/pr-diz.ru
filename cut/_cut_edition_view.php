@@ -50,7 +50,14 @@
     <td class="<?=$this->cut_shift->shift ?>">
         <?= $this->edition['manager'] ?>
     </td>
-    <td class="<?=$this->cut_shift->shift ?> text-nowrap"><i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?></td>
+    <td class="<?=$this->cut_shift->shift ?> text-nowrap">
+        <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
+        <?php
+        if($this->edition['status_id'] == ORDER_STATUS_CUTTING) {
+            echo DisplayNumber(floatval($this->edition['length_cutted']), 0)." м из ".DisplayNumber(floatval($this->edition['length_total']), 0);
+        }
+        ?>
+    </td>
     <td class="<?=$this->cut_shift->shift ?>">
         <?php if($this->edition['button_start'] && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take): ?>
         <a href="details.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
