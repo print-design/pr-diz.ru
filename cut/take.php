@@ -17,6 +17,7 @@ if($id === null) {
 $calculation = Calculation::Create($id);
 
 // Обработка формы распечатки ручья
+$error_message = '';
 $invalid_stream = 0;
 
 if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
@@ -105,7 +106,6 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
 // Получение объекта
 $date = '';
 $name = '';
-$unit = '';
 $status_id = '';
 $customer_id = '';
 $customer = '';
@@ -122,13 +122,15 @@ $length_cutted = '';
 $num_for_customer = '';
 $take_id = '';
 $take_number = '';
+$printed_streams_count = '';
 
-$sql = "select c.date, c.name, c.unit, c.status_id, c.customer_id, cus.name customer, "
+$sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
         . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
         . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cutted, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select max(id) from calculation_take where calculation_id = $id) take_id, "
-        . "(select count(id) from calculation_take where calculation_id = $id) take_number "
+        . "(select count(id) from calculation_take where calculation_id = $id) take_number, "
+        . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = $id)) printed_streams_count "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
         . "inner join techmap tm on tm.calculation_id = c.id "
@@ -137,7 +139,6 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $date = $row['date'];
     $name = $row['name'];
-    $unit = $row['unit'];
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
@@ -154,6 +155,7 @@ if($row = $fetcher->Fetch()) {
     $num_for_customer = $row['num_for_customer'];
     $take_id = $row['take_id'];
     $take_number = $row['take_number'];
+    $printed_streams_count = $row['printed_streams_count'];
 }
 ?>
 <!DOCTYPE html>
@@ -281,7 +283,7 @@ if($row = $fetcher->Fetch()) {
                             <h1><?=$name ?></h1>
                             <div class="name"><?=$customer ?></div>
                             <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
-                            <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; display: inline-block;">
+                            <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
                                 <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cutted), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
                             </div>
                         </div>
@@ -291,7 +293,15 @@ if($row = $fetcher->Fetch()) {
                         <?php include './_calculation_streams.php'; ?>
                     </div>
                     <div class="d-flex justify-content-xl-start mb-4" id="calculation_streams_bottom" data-id="0" ondragover="DragOverBottom(event);" ondrop="DropBottom(event);">
-                        <div><button type="button" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Съём закончен</button></div>
+                        <?php
+                        if($printed_streams_count < $calculation->streams_number) {
+                            $finish_submit_disabled_class = ' disabled';
+                        }
+                        else {
+                            $finish_submit_disabled_class = '';
+                        }
+                        ?>
+                        <div><a href="taken.php?id=<?= filter_input(INPUT_GET, 'id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-dark pl-4 pr-4 mr-4<?=$finish_submit_disabled_class ?>"><i class="fas fa-check mr-2"></i>Съём закончен</a></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>

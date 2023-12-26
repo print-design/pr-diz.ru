@@ -16,30 +16,19 @@ if($id === null) {
 // Расчёт
 $calculation = Calculation::Create($id);
 
-// Начало резки
-if(null !== filter_input(INPUT_POST, 'ready_submit')) {
+// Создание нового съёма
+$error_message = '';
+
+if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $length = filter_input(INPUT_POST, 'length');
     
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING.", cut_priladka = $length where id = $id";
+    $sql = "insert into calculation_take (calculation_id) values ($id)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "select count(id) from calculation_take where calculation_id = $id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            if($row[0] == 0) {
-                $sql = "insert into calculation_take (calculation_id) values ($id)";
-                $executer = new Executer($sql);
-                $error_message = $executer->error;
-            }
-        }
-    }
-    
-    if(empty($error_message)) {
-        header('Location: take.php?id='.$id.(empty($machine_id) ? '' : '&machine_id='.$machine_id));
+        header('Location: '.APPLICATION."/cut/take.php?id=$id&machine_id=$machine_id");
     }
 }
 
@@ -58,10 +47,12 @@ $spool = '';
 $labels = '';
 $package = '';
 
+$length_cutted = '';
 $num_for_customer = '';
 
 $sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
         . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
+        . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cutted, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
@@ -74,7 +65,7 @@ if($row = $fetcher->Fetch()) {
     $status_id = $row['status_id'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
-    
+
     $techmap_date = $row['techmap_date'];
     $side = $row['side'];
     $winding = $row['winding'];
@@ -82,13 +73,15 @@ if($row = $fetcher->Fetch()) {
     $spool = $row['spool'];
     $labels = $row['labels'];
     $package = $row['package'];
-    
+
+    $length_cutted = $row['length_cutted'];
     $num_for_customer = $row['num_for_customer'];
 }
 ?>
 <!DOCTYPE html>
 <html>
     <head>
+        <head>
         <?php
         include '../include/head.php';
         ?>
@@ -166,34 +159,30 @@ if($row = $fetcher->Fetch()) {
             }
             ?>
             <div class="row">
-                <div class="col-4">
-                    <h1><?=$name ?></h1>
-                    <div class="name"><?=$customer ?></div>
-                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
-                    <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 20px; margin-bottom: 20px; display: inline-block;">
-                        <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-6">
+                            <h1><?=$name ?></h1>
+                            <div class="name"><?=$customer ?></div>
+                            <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+                            <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
+                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cutted), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
+                            </div>
+                        </div>
                     </div>
-                    <div class="name">Приладка</div>
-                    <form method="post">
-                        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
-                        <div class="input-group">
-                            <input type="text" class="form-control int-only" name="length" placeholder="Метраж приладки" required="required" autocomplete="off" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">м</span>
-                            </div>
+                    <div class="d-flex justify-content-start mb-4 mt-4">
+                        <div>
+                            <form method="post">
+                                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                                <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                                <button type="submit" name="new_take_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Начать новый съём</button>
+                            </form>
                         </div>
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <button type="submit" class="btn btn-dark w-100" name="ready_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
-                            </div>
-                            <div class="col-6">
-                                <button type="button" class="btn btn-light w-100"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
-                            </div>
-                        </div>
-                    </form>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Тираж выполнен</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
+                    </div>
                 </div>
-                <div class="col-4"></div>
                 <div class="col-4">
                     <?php include './_cut_right.php'; ?>
                 </div>
