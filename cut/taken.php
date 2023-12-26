@@ -95,7 +95,6 @@ if($row = $fetcher->Fetch()) {
 <!DOCTYPE html>
 <html>
     <head>
-        <head>
         <?php
         include '../include/head.php';
         ?>

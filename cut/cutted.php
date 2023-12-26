@@ -1,8 +1,205 @@
 <?php
+include '../include/topscripts.php';
+include '../calculation/calculation.php';
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+// Авторизация
+if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
 
+// Если не указан id, направляем к списку заданий
+$id = filter_input(INPUT_GET, 'id');
+if($id === null) {
+    header('Location: '.APPLICATION.'/cut/');
+}
+
+// Расчёт
+$calculation = Calculation::Create($id);
+
+// Возвращение к съёмам
+$error_message = '';
+
+if(null !== filter_input(INPUT_POST, 'back_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING." where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header("Location: take.php?id=$id&machine_id=$machine_id");
+    }
+}
+
+// Готовность к упаковке
+if(null !== filter_input(INPUT_POST, 'pack_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PACK_READY." where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header("Location: ".APPLICATION."/cut/?machine_id=$machine_id");
+    }
+}
+
+// Получение объекта
+$date = '';
+$name = '';
+$status_id = '';
+$customer_id = '';
+$customer = '';
+
+$techmap_date = '';
+$side = '';
+$winding = '';
+$winding_unit = '';
+$spool = '';
+$labels = '';
+$package = '';
+
+$length_cutted = '';
+$num_for_customer = '';
+
+$sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
+        . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
+        . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cutted, "
+        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+        . "from calculation c "
+        . "inner join customer cus on c.customer_id = cus.id "
+        . "inner join techmap tm on tm.calculation_id = c.id "
+        . "where c.id = $id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $date = $row['date'];
+    $name = $row['name'];
+    $status_id = $row['status_id'];
+    $customer_id = $row['customer_id'];
+    $customer = $row['customer'];
+
+    $techmap_date = $row['techmap_date'];
+    $side = $row['side'];
+    $winding = $row['winding'];
+    $winding_unit = $row['winding_unit'];
+    $spool = $row['spool'];
+    $labels = $row['labels'];
+    $package = $row['package'];
+
+    $length_cutted = $row['length_cutted'];
+    $num_for_customer = $row['num_for_customer'];
+}
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <?php
+        include '../include/head.php';
+        ?>
+        <style>
+            h1 {
+                font-size: 33px;
+            }
+            
+            h2, .name {
+                font-size: 26px;
+                font-weight: bold;
+                line-height: 45px;
+            }
+            
+            h3 {
+                font-size: 20px;
+            }
+            
+            .subtitle {
+                font-weight: bold;
+                font-size: 20px;
+                line-height: 40px
+            }
+            
+            table {
+                width: 100%;
+            }
+            
+            tr {
+                border-bottom: solid 1px #e3e3e3;
+            }
+            
+            th {
+                white-space: nowrap;
+                padding-right: 30px;
+                vertical-align: top;
+            }
+            
+            td {
+                line-height: 22px;
+            }
+            
+            tr td:nth-child(2) {
+                text-align: right;
+                padding-left: 10px;
+                font-weight: bold;
+            }
+            
+            .cutter_info {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 20px;
+                padding-top: 5px;
+            }
+            
+            #status {
+                width: 100%;
+                padding: 12px;
+                margin-top: 40p;
+                margin-bottom: 40px;
+                border-radius: 10px;
+                font-weight: bold;
+                text-align: center; 
+            }
+        </style>
+    </head>
+    <body>
+        <?php
+        include '../include/header_cut.php';
+        ?>
+        <div class="container-fluid">
+            <?php
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
+            <div class="row">
+                <div class="col-8">
+                    <form method="post">
+                        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                        <button type="submit" class="btn btn-light backlink" name="back_submit">Вернуться к резке</button>
+                    </form>
+                    <div class="row">
+                        <div class="col-6">
+                            <h1><?=$name ?></h1>
+                            <div class="name"><?=$customer ?></div>
+                            <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+                            <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
+                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cutted), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-start mb-4 mt-4">
+                        <div>
+                            <form method="post">
+                                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                                <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                                <button type="submit" name="pack_submit" class="btn btn-dark pl-4 pr-4 mr-4">Завершить</button>
+                            </form>
+                        </div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
