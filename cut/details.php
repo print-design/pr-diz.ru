@@ -40,7 +40,7 @@ $status_id = '';
 $length = '';
 $customer_id = '';
 $customer = '';
-$length_pure_1;
+$length_pure_1 = '';
 $last_name = '';
 $first_name = '';
 

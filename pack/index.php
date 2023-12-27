@@ -68,7 +68,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
             <?php
             $sql = "select c.id, ct.time, c.customer_id, e.machine_id, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.status_id, "
                     . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
-                    . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cutted, "
+                    . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
                     . "(select concat(last_name, ' ', left(first_name, 1), '.') from plan_employee where id = (select employee1_id from plan_workshift1 where work_id = ".WORK_CUTTING." and machine_id = e.machine_id and date = date(ct.time) and shift = 'day')) as day_cutter, "
                     . "(select concat(last_name, ' ', left(first_name, 1), '.') from plan_employee where id = (select employee1_id from plan_workshift1 where work_id = ".WORK_CUTTING." and machine_id = e.machine_id and date = date(ct.time) and shift = 'night')) as night_cutter, "
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
@@ -97,7 +97,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
                         <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$row['status_id']] ?>
                         <?php
                         if($row['status_id'] == ORDER_STATUS_CUTTING || $row['status_id'] == ORDER_STATUS_CUTTED || $row['status_id'] == ORDER_STATUS_PACK_READY) {
-                            echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cutted']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0);
+                            echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cut']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0);
                         }
                         ?>
                     </td>

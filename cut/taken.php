@@ -61,12 +61,12 @@ $spool = '';
 $labels = '';
 $package = '';
 
-$length_cutted = '';
+$length_cut = '';
 $num_for_customer = '';
 
 $sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
         . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
-        . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cutted, "
+        . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
@@ -88,7 +88,7 @@ if($row = $fetcher->Fetch()) {
     $labels = $row['labels'];
     $package = $row['package'];
 
-    $length_cutted = $row['length_cutted'];
+    $length_cut = $row['length_cut'];
     $num_for_customer = $row['num_for_customer'];
 }
 ?>
@@ -179,7 +179,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="name"><?=$customer ?></div>
                             <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                             <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
-                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cutted), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
+                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
                             </div>
                         </div>
                     </div>
