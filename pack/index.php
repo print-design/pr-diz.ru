@@ -79,7 +79,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
                     . "inner join user u on c.manager_id = u.id "
                     . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
                     . "where c.status_id = ".ORDER_STATUS_PACK_READY." and e.work_id = ".WORK_CUTTING
-                    . " order by ct.time asc";
+                    . " order by ct.time asc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
