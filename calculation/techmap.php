@@ -1058,7 +1058,7 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
-                            <td>Этикеток в рапорте</td>
+                            <td style="line-height: 18px;">Этикеток в рапорте</td>
                             <td><?=$number_in_raport ?></td>
                         </tr>
                         <tr>
