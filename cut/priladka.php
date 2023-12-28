@@ -14,7 +14,7 @@ if($id === null) {
 }
 
 // Расчёт
-$calculation = Calculation::Create($id);
+$calculation = CalculationBase::Create($id);
 
 // Начало резки
 if(null !== filter_input(INPUT_POST, 'ready_submit')) {

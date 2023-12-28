@@ -14,7 +14,7 @@ if($id === null) {
 }
 
 // Расчёт
-$calculation = Calculation::Create($id);
+$calculation = CalculationBase::Create($id);
 
 if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
     $id = filter_input(INPUT_POST, 'id');

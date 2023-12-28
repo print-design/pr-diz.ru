@@ -14,7 +14,7 @@ if($id === null) {
 }
 
 // Расчёт
-$calculation = Calculation::Create($id);
+$calculation = CalculationBase::Create($id);
 
 // Возвращение к съёмам
 $error_message = '';
