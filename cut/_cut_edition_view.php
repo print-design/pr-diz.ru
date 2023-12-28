@@ -53,7 +53,7 @@
     <td class="<?=$this->cut_shift->shift ?> text-nowrap">
         <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
         <?php
-        if($this->edition['status_id'] == ORDER_STATUS_CUTTING || $this->edition['status_id'] == ORDER_STATUS_CUTTED || $this->edition['status_id'] == ORDER_STATUS_PACK_READY) {
+        if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
             echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($this->edition['length_cut']), 0)." м из ".DisplayNumber(floatval($this->edition['length_total']), 0);
         }
         ?>

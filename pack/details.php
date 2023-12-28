@@ -16,6 +16,19 @@ if($id === null) {
 // Расчёт
 $calculation = Calculation::Create($id);
 
+if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $status_id = filter_input(INPUT_POST, 'status_id');
+    
+    $sql = "update calculation set status_id = $status_id where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(!empty($error_message)) {
+        header("Location: details.php?status_id=$status_id");
+    }
+}
+
 // Получение объекта
 $date = '';
 $name = '';
@@ -126,7 +139,7 @@ if($row = $fetcher->Fetch()) {
             ?>
             <div class="row">
                 <div class="col-4">
-                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/">К списку</a>
+                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if($status_id == ORDER_STATUS_SHIP_READY) echo "?status_id=".ORDER_STATUS_SHIP_READY ?>">К списку</a>
                     <h1><?=$row['name'] ?></h1>
                     <div class="name"><?=$row['customer'] ?></div>
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
@@ -152,8 +165,16 @@ if($row = $fetcher->Fetch()) {
                         </tr>
                     </table>
                     <div class="d-flex justify-content-xl-start mt-4">
-                        <div><a href="pack.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Подтвердить</a></div>
+                        <?php if($status_id == ORDER_STATUS_PACK_READY): ?>
+                        <div>
+                            <form method="post">
+                                <input type="hidden" name="id" value="<?=$id ?>" />
+                                <input type="hidden" name="status_id" value="<?=ORDER_STATUS_SHIP_READY ?>" />
+                                <button type="submit" name="confirm_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Подтвердить</button>
+                            </form>
+                        </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <?php endif; ?>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><i class="fas fa-download mr-2"></i>Выгрузка</button></div>
                     </div>
                 </div>

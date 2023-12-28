@@ -5,6 +5,13 @@ include '../include/topscripts.php';
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
+
+// Статус
+$status_id = ORDER_STATUS_PACK_READY;
+
+if(null !== filter_input(INPUT_GET, 'status_id')) {
+    $status_id = filter_input(INPUT_GET, 'status_id');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,7 +52,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
                     . "from calculation c "
                     . "inner join plan_edition e on e.calculation_id = c.id "
                     . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
-                    . "where c.status_id = ".ORDER_STATUS_PACK_READY." and e.work_id = ".WORK_CUTTING;
+                    . "where c.status_id = $status_id and e.work_id = ".WORK_CUTTING;
             $fetcher = new Fetcher($sql);
             
             if($row = $fetcher->Fetch()) {
@@ -78,7 +85,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
                     . "inner join user u on c.manager_id = u.id "
                     . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
-                    . "where c.status_id = ".ORDER_STATUS_PACK_READY." and e.work_id = ".WORK_CUTTING
+                    . "where c.status_id = $status_id and e.work_id = ".WORK_CUTTING
                     . " order by ct.time asc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
@@ -96,13 +103,13 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
                     <td>
                         <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$row['status_id']] ?>
                         <?php
-                        if($row['status_id'] == ORDER_STATUS_CUTTING || $row['status_id'] == ORDER_STATUS_CUTTED || $row['status_id'] == ORDER_STATUS_PACK_READY) {
+                        if(in_array($row['status_id'], ORDER_STATUSES_WITH_METERS)) {
                             echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cut']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0);
                         }
                         ?>
                     </td>
                     <td>
-                        <a href="start.php?id=<?=$row['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
+                        <a href="details.php?id=<?=$row['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
                     </td>
                 </tr>
             <?php

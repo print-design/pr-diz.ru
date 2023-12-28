@@ -166,7 +166,7 @@
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?= empty($this->edition['status_id']) ? '' : ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
         <?php
-        if($this->edition['status_id'] == ORDER_STATUS_CUTTING || $this->edition['status_id'] == ORDER_STATUS_CUTTED || $this->edition['status_id'] == ORDER_STATUS_PACK_READY) {
+        if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
             echo "<span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_cut']), 0)."</span> м из <span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_total']), 0)."</span>";
         }
         ?>
