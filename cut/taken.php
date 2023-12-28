@@ -33,16 +33,16 @@ if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
 }
 
 // Завершение резки
-if(null !== filter_input(INPUT_POST, 'cutted_submit')) {
+if(null !== filter_input(INPUT_POST, 'finished_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTED." where id = $id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_FINISHED." where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        header("Location: cutted.php?id=$id&machine_id=$machine_id");
+        header("Location: finished.php?id=$id&machine_id=$machine_id");
     }
 }
 
@@ -196,7 +196,7 @@ if($row = $fetcher->Fetch()) {
                             <form method="post">
                                 <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                                 <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
-                                <button type="submit" name="cutted_submit" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Тираж выполнен</button>
+                                <button type="submit" name="finished_submit" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Тираж выполнен</button>
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>

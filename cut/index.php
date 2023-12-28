@@ -73,7 +73,7 @@ else {
             // отображаем список, начиная с этой работы.
             $sql = "select e.date "
                     . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
-                    . "where c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING." or c.status_id = ".ORDER_STATUS_CUTTED." or c.status_id = ".ORDER_STATUS_PACK_READY
+                    . "where c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING." or c.status_id = ".ORDER_STATUS_CUT_FINISHED." or c.status_id = ".ORDER_STATUS_PACK_READY
                     ." and e.work_id = ".WORK_CUTTING." and e.machine_id = $machine_id and "
                     . "e.date < '".$date_from->format('Y-m-d')."' "
                     . "order by e.date asc";

@@ -65,8 +65,8 @@
         <a href="priladka.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
         <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUTTING): ?>
         <a href="take.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
-        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUTTED): ?>
-        <a href="cutted.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
+        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_FINISHED): ?>
+        <a href="finished.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
         <?php endif; ?>
     </td>
 </tr>
