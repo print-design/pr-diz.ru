@@ -4,7 +4,7 @@ include '../include/left_bar.php';
 $pack_status = '';
 $ship_status = '';
 
-if(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIP_READY) {
+if(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIP_READY || $status_id == ORDER_STATUS_SHIP_READY) {
     $ship_status = ' disabled';
 }
 else {
