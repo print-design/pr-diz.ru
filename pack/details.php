@@ -139,7 +139,7 @@ if($row = $fetcher->Fetch()) {
             ?>
             <div class="row">
                 <div class="col-4">
-                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if($status_id == ORDER_STATUS_SHIP_READY) echo "?status_id=".ORDER_STATUS_SHIP_READY ?>">К списку</a>
+                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if(!empty($status_id) && $status_id != ORDER_STATUS_PACK_READY) echo "?status_id=$status_id"; ?>">К списку</a>
                     <h1><?=$row['name'] ?></h1>
                     <div class="name"><?=$row['customer'] ?></div>
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
@@ -174,6 +174,14 @@ if($row = $fetcher->Fetch()) {
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <?php elseif($status_id == ORDER_STATUS_SHIP_READY): ?>
+                        <div>
+                            <form method="post">
+                                <input type="hidden" name="id" value="<?=$id ?>" />
+                                <input type="hidden" name="status_id" value="<?=ORDER_STATUS_SHIPPED ?>" />
+                                <button type="submit" name="confirm_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Отгружено</button>
+                            </form>
+                        </div>
                         <?php endif; ?>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><i class="fas fa-download mr-2"></i>Выгрузка</button></div>
                     </div>

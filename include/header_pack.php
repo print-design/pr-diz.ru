@@ -3,9 +3,13 @@ include '../include/left_bar.php';
 
 $pack_status = '';
 $ship_status = '';
+$shipped_status = '';
 
 if(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIP_READY || $status_id == ORDER_STATUS_SHIP_READY) {
     $ship_status = ' disabled';
+}
+elseif(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIPPED || $status_id == ORDER_STATUS_SHIPPED) {
+    $shipped_status = ' disabled';
 }
 else {
     $pack_status = ' disabled';
@@ -16,7 +20,7 @@ else {
         <ul class="navbar-nav">
             <li class="nav-item"><a class="nav-link<?=$pack_status ?>" href="<?=APPLICATION ?>/pack/">Упаковка</a></li>
             <li class="nav-item"><a class="nav-link<?=$ship_status ?>" href="<?=APPLICATION ?>/pack/?status_id=<?=ORDER_STATUS_SHIP_READY ?>">Ждёт отгрузки</a></li>
-            <li class="nav-item"><a class="nav-link" href="javascript: void();">Отгружено</a></li>
+            <li class="nav-item"><a class="nav-link<?=$shipped_status ?>" href="<?=APPLICATION ?>/pack/?status_id=<?=ORDER_STATUS_SHIPPED ?>">Отгружено</a></li>
         </ul>
         <div class="ml-auto"></div>
         <?php
