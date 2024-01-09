@@ -365,40 +365,42 @@ $row = $fetcher->Fetch();
 //$lamination2_width_ski = $row['lamination2_width_ski'];
 
 //$streams_number = $row['streams_number'];
-$stream_width = $row['stream_width'];
-$length = $row['length'];
-$raport = $row['raport'];
-$number_in_raport = $row['number_in_raport'];
-$lamination_roller_width = $row['lamination_roller_width'];
-$ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
-$status_id = $row['status_id'];
+//$stream_width = $row['stream_width'];
+//$length = $row['length'];
+//$raport = $row['raport'];
+//$number_in_raport = $row['number_in_raport'];
+//$lamination_roller_width = $row['lamination_roller_width'];
+//$ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
+//$status_id = $row['status_id'];
 
-for($i=1; $i<=$ink_number; $i++) {
-    $ink_var = "ink_$i";
-    $$ink_var = $row[$ink_var];
+if(!empty($calculation->ink_number)) {
+    for($i=1; $i<=$calculation->ink_number; $i++) {
+        $ink_var = "ink_$i";
+        $$ink_var = $row[$ink_var];
     
-    $color_var = "color_$i";
-    $$color_var = $row[$color_var];
+        $color_var = "color_$i";
+        $$color_var = $row[$color_var];
     
-    $cmyk_var = "cmyk_$i";
-    $$cmyk_var = $row[$cmyk_var];
+        $cmyk_var = "cmyk_$i";
+        $$cmyk_var = $row[$cmyk_var];
     
-    $percent_var = "percent_$i";
-    $$percent_var = $row[$percent_var];
-    
-    $cliche_var = "cliche_$i";
-    $$cliche_var = $row[$cliche_var];
+        $percent_var = "percent_$i";
+        $$percent_var = $row[$percent_var];
+        
+        $cliche_var = "cliche_$i";
+        $$cliche_var = $row[$cliche_var];
+    }
 }
 
-$knife = $row['knife'];
+//$knife = $row['knife'];
 
-$cliches_count_flint = $row['cliches_count_flint'];
-$cliches_count_kodak = $row['cliches_count_kodak'];
-$cliches_count_old = $row['cliches_count_old'];
+//$cliches_count_flint = $row['cliches_count_flint'];
+//$cliches_count_kodak = $row['cliches_count_kodak'];
+//$cliches_count_old = $row['cliches_count_old'];
 
-$requirement1 = $row['requirement1'];
-$requirement2 = $row['requirement2'];
-$requirement3 = $row['requirement3'];
+//$requirement1 = $row['requirement1'];
+//$requirement2 = $row['requirement2'];
+//$requirement3 = $row['requirement3'];
 
 $customer = $row['customer'];
 $supplier = $row['supplier'];
@@ -416,7 +418,7 @@ $length_pure_3 = $row['length_pure_3'];
 $length_dirty_3 = $row['length_dirty_3'];
 $gap = $row['gap'];
 
-$num_for_customer = $row['num_for_customer'];
+//$num_for_customer = $row['num_for_customer'];
 
 $lamination = (empty($calculation->laminations_number) || $calculation->laminations_number == 0) ? "нет" : $calculation->laminations_number;
 
@@ -683,13 +685,14 @@ if(!is_nan($calculation->streams_number)) {
                                 <div>Старая</div>
                             </div>
                             <div class="text-right ml-2">
-                                <div class="cliches_used_flint">выбрано <span class="flint_used"><?=$cliches_used_flint ?></span> из <?=$cliches_count_flint ?></div>
-                                <div class="cliches_used_kodak">выбрано <span class="kodak_used"><?=$cliches_used_kodak ?></span> из <?=$cliches_count_kodak ?></div>
-                                <div class="cliches_used_old">выбрано <span class="old_used"><?=$cliches_used_old ?></span> из <?=$cliches_count_old ?></div>
+                                <div class="cliches_used_flint">выбрано <span class="flint_used"><?=$cliches_used_flint ?></span> из <?=$calculation->cliches_count_flint ?></div>
+                                <div class="cliches_used_kodak">выбрано <span class="kodak_used"><?=$cliches_used_kodak ?></span> из <?=$calculation->cliches_count_kodak ?></div>
+                                <div class="cliches_used_old">выбрано <span class="old_used"><?=$cliches_used_old ?></span> из <?=$calculation->cliches_count_old ?></div>
                             </div>
                         </div>
                         <?php
-                        for($i = 1; $i <= $ink_number; $i++):
+                        if(!empty($calculation->ink_number)):
+                        for($i = 1; $i <= $calculation->ink_number; $i++):
                         $ink_var = "ink_$i";
                         $color_var = "color_$i";
                         $cmyk_var = "cmyk_$i";
@@ -755,15 +758,15 @@ if(!is_nan($calculation->streams_number)) {
                                     }
                                 
                                     $flint_hidden = '';
-                                    if(empty($flint_selected) && $cliches_used_flint >= $cliches_count_flint) {
+                                    if(empty($flint_selected) && $cliches_used_flint >= $calculation->cliches_count_flint) {
                                         $flint_hidden = " hidden='hidden'";
                                     }
                                     $kodak_hidden = '';
-                                    if(empty($kodak_selected) && $cliches_used_kodak >= $cliches_count_kodak) {
+                                    if(empty($kodak_selected) && $cliches_used_kodak >= $calculation->cliches_count_kodak) {
                                         $kodak_hidden = " hidden='hidden'";
                                     }
                                     $old_hidden = '';
-                                    if(empty($old_selected) && $cliches_used_old >= $cliches_count_old) {
+                                    if(empty($old_selected) && $cliches_used_old >= $calculation->cliches_count_old) {
                                         $old_hidden = " hidden='hidden'";
                                     }
                                     $repeat_hidden = '';
@@ -790,7 +793,10 @@ if(!is_nan($calculation->streams_number)) {
                                 </select>
                             </div>
                         </div>
-                        <?php endfor; ?>
+                        <?php
+                        endfor;
+                        endif;
+                        ?>
                     </div>
                     <div class="modal-footer set_printings set_printings_<?=$printing_sequence ?> <?=$display ?>" style="justify-content: flex-start;">
                         <?php if($printing_sequence == 1): ?>
@@ -824,7 +830,7 @@ if(!is_nan($calculation->streams_number)) {
                     $no_print_class = "d-none";
                     
                     if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                        $total_cliches_count = count($printings) * $ink_number;
+                        $total_cliches_count = count($printings) * $calculation->ink_number;
                         $valid_cliches_count = 0;
                     
                         foreach ($cliches as $cliches_row) {
@@ -848,11 +854,11 @@ if(!is_nan($calculation->streams_number)) {
             </div>
             <div class="name">Заказчик: <?=$customer ?></div>
             <div class="name">Наименование: <?=$calculation->name ?></div>
-            <div class="subtitle">№<?=$calculation->customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
+            <div class="subtitle">№<?=$calculation->customer_id ?>-<?=$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
             <div class="row">
                 <div class="col-5">
                     <div style="background-color: lightgray; padding-left: 10px; padding-top: 2px; border-radius: 10px; width: 60%;">
-                        <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
+                        <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$calculation->status_id] ?>
                     </div>
                     <h2 class="mt-2">Остальная информация</h2>
                     <table>
@@ -945,7 +951,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td style="line-height: 18px;"><?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
-                            <td><?= DisplayNumber(floatval($calculation->data_priladka->length) * floatval($ink_number), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation->data_priladka->length) * floatval($calculation->ink_number), 0) ?> м</td>
                         </tr>
                         <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
@@ -983,7 +989,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td>Рапорт</td>
-                            <td><?= DisplayNumber(floatval($raport), 3) ?></td>
+                            <td><?= DisplayNumber(floatval($calculation->raport), 3) ?></td>
                         </tr>
                         <tr>
                             <td>Растяг</td>
@@ -994,7 +1000,7 @@ if(!is_nan($calculation->streams_number)) {
                                 }
                                 else {
                                     $count = 0;
-                                    $sql = "select count(id) from raport where active = 1 and machine_id = ".$calculation->machine_id." and value = $raport";
+                                    $sql = "select count(id) from raport where active = 1 and machine_id = ".$calculation->machine_id." and value = ".$calculation->raport;
                                     $fetcher = new Fetcher($sql);
                                     if($row = $fetcher->Fetch()) {
                                         if($row[0] == 0) {
@@ -1010,11 +1016,11 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td><?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
-                            <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
+                            <td><?=$calculation->stream_width.(empty($calculation->stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Длина этикетки</td>
-                            <td><?= rtrim(DisplayNumber(floatval($length), 2), "0").(empty($length) ? "" : " мм") ?></td>
+                            <td><?= rtrim(rtrim(DisplayNumber(floatval($calculation->length), 2), "0"), ",").(empty($calculation->length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
@@ -1023,25 +1029,25 @@ if(!is_nan($calculation->streams_number)) {
                         <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td style="line-height: 18px;">Этикеток в рапорте</td>
-                            <td><?=$number_in_raport ?></td>
+                            <td><?=$calculation->number_in_raport ?></td>
                         </tr>
                         <tr>
                             <td>Красочность</td>
-                            <td><?=$ink_number ?> цв.</td>
+                            <td><?=$calculation->ink_number ?> цв.</td>
                         </tr>
                         <tr>
                             <td>Штамп</td>
-                            <td><?= (empty($knife) || $knife == 0) ? "Старый" : "Новый" ?></td>
+                            <td><?= (empty($calculation->knife) || $calculation->knife == 0) ? "Старый" : "Новый" ?></td>
                         </tr>
                         <?php endif; ?>
                         <tr>
                             <td style="line-height: 18px;">Требование по материалу</td>
                             <td style="line-height: 18px;">
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_1"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(1);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
-                                <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($requirement1) ? "Ждем данные" : $requirement1) ?></div>
+                                <div class="requirement_label d-inline" id="requirement_label_1"><?= (empty($calculation->requirement1) ? "Ждем данные" : $calculation->requirement1) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_1">
                                     <form class="requirement_form form-inline">
-                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_1" data-id="<?=$id ?>" data-i="1"><?=$requirement1 ?></textarea>
+                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_1" data-id="<?=$id ?>" data-i="1"><?=$calculation->requirement1 ?></textarea>
                                         <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 1);">OK</a>
                                     </form>
                                 </div>
@@ -1079,7 +1085,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td>Ламинационный вал</td>
-                            <td><?= DisplayNumber(floatval($lamination_roller_width), 0) ?> мм</td>
+                            <td><?= DisplayNumber(floatval($calculation->lamination_roller_width), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Анилокс</td>
@@ -1089,10 +1095,10 @@ if(!is_nan($calculation->streams_number)) {
                             <td style="line-height: 18px;">Требование по материалу</td>
                             <td style="line-height: 18px;">
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_2"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(2);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
-                                <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($requirement2) ? "Ждем данные" : $requirement2) ?></div>
+                                <div class="requirement_label d-inline" id="requirement_label_2"><?= (empty($calculation->requirement2) ? "Ждем данные" : $calculation->requirement2) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_2">
                                     <form class="requirement_form form-inline">
-                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_2" data-id="<?=$id ?>" data-i="2"><?=$requirement2 ?></textarea>
+                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_2" data-id="<?=$id ?>" data-i="2"><?=$calculation->requirement2 ?></textarea>
                                         <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 2);">OK</a>
                                     </form>
                                 </div>
@@ -1128,14 +1134,14 @@ if(!is_nan($calculation->streams_number)) {
                                 <?php
                                 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                     if(empty($norm_stream)) {
-                                        echo DisplayNumber(intval($stream_width), 0)." мм";
+                                        echo DisplayNumber(intval($calculation->stream_width), 0)." мм";
                                     }
                                     else {
-                                        echo DisplayNumber(floatval($stream_width) + floatval($norm_stream), 2)." / ".DisplayNumber(floatval($norm_stream), 2)." мм";
+                                        echo DisplayNumber(floatval($calculation->stream_width) + floatval($norm_stream), 2)." / ".DisplayNumber(floatval($norm_stream), 2)." мм";
                                     }
                                 }
                                 else {
-                                    echo DisplayNumber(intval($stream_width), 0)." мм";
+                                    echo DisplayNumber(intval($calculation->stream_width), 0)." мм";
                                 }
                                 ?>
                             </td>
@@ -1151,11 +1157,11 @@ if(!is_nan($calculation->streams_number)) {
                                     echo 'Нет данных по кг/мм/м/шт';
                                 }
                                 elseif($winding_unit == 'pc') {
-                                    if(empty($length)) {
+                                    if(empty($calculation->length)) {
                                         echo 'Нет данных по длине этикетки';
                                     }
                                     else {
-                                        echo DisplayNumber(floatval($winding) * floatval($length) / 1000, 0);
+                                        echo DisplayNumber(floatval($winding) * floatval($calculation->length) / 1000, 0);
                                     }
                                 }
                                 else {
@@ -1198,7 +1204,7 @@ if(!is_nan($calculation->streams_number)) {
                                     echo 'Нет данных по ширине мат-ла';
                                 }
                                 elseif($winding_unit == 'kg') {
-                                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($stream_width)) - 200, 0)." м";
+                                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width)) - 200, 0)." м";
                                 }
                                 else {
                                     echo 'Нет';
@@ -1214,7 +1220,7 @@ if(!is_nan($calculation->streams_number)) {
                             <td>Этикеток в 1 м. пог.</td>
                             <td>
                                 <?php
-                                if(empty($length)) {
+                                if(empty($calculation->length)) {
                                     echo "";
                                 }
                                 elseif($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
@@ -1222,7 +1228,7 @@ if(!is_nan($calculation->streams_number)) {
                                     echo DisplayNumber(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
                                 }
                                 else {
-                                    echo DisplayNumber(1 / floatval($length) * 1000, 4);
+                                    echo DisplayNumber(1 / floatval($calculation->length) * 1000, 4);
                                 }
                                 ?>
                             </td>
@@ -1283,10 +1289,10 @@ if(!is_nan($calculation->streams_number)) {
             <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="row mt-3">
                 <div class="col-4">
-                    <h3>Красочность: <?=$ink_number ?> цв.</h3>
+                    <h3>Красочность: <?=$calculation->ink_number ?> цв.</h3>
                     <table>
                         <?php
-                        for($i = 1; $i <= $ink_number; $i++):
+                        for($i = 1; $i <= $calculation->ink_number; $i++):
                         $ink_var = "ink_$i";
                         $color_var = "color_$i";
                         $cmyk_var = "cmyk_$i";
@@ -1393,10 +1399,10 @@ if(!is_nan($calculation->streams_number)) {
                             <td style="line-height: 18px;">Требование по материалу</td>
                             <td style="line-height: 18px;">
                                 <div class="edit_requirement_link d-inline" id="edit_requirement_link_3"><a class="edit_requirement" href="javascript: void(0);" onclick="javascript: EditRequirement(3);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
-                                <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($requirement3) ? "Ждем данные" : $requirement3) ?></div>
+                                <div class="requirement_label d-inline" id="requirement_label_3"><?= (empty($calculation->requirement3) ? "Ждем данные" : $calculation->requirement3) ?></div>
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_3">
                                     <form class="requirement_form form-inline">
-                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_3" data-id="<?=$id ?>" data-i="3"><?=$requirement3 ?></textarea>
+                                        <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_3" data-id="<?=$id ?>" data-i="3"><?=$calculation->requirement3 ?></textarea>
                                         <a class="btn btn-outline-dark form-control" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 3);">OK</a>
                                     </form>
                                 </div>
@@ -1424,7 +1430,7 @@ if(!is_nan($calculation->streams_number)) {
                     </div>
                     <table class="mb-3 w-100">
                     <?php
-                    for($i = 1; $i <= $ink_number; $i++):
+                    for($i = 1; $i <= $calculation->ink_number; $i++):
                     $ink_var = "ink_$i";
                     $color_var = "color_$i";
                     $cmyk_var = "cmyk_$i";
@@ -1663,7 +1669,7 @@ if(!is_nan($calculation->streams_number)) {
                                 if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
                                     $submit_class = "";
                                 }
-                                elseif($status_id == ORDER_STATUS_TECHMAP) {
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP) {
                                     $plan_class = "";
                                 }
                                 ?>
@@ -1678,7 +1684,7 @@ if(!is_nan($calculation->streams_number)) {
                                 $no_print_class = "d-none";
                     
                                 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                                    $total_cliches_count = count($printings) * $ink_number;
+                                    $total_cliches_count = count($printings) * $calculation->ink_number;
                                     $valid_cliches_count = 0;
                     
                                     foreach ($cliches as $cliches_row) {
@@ -1698,7 +1704,7 @@ if(!is_nan($calculation->streams_number)) {
                         </div>
                     </div>
                 </form>
-                <?php if(!empty($techmap_id) && $status_id == ORDER_STATUS_TECHMAP): ?>
+                <?php if(!empty($techmap_id) && $calculation->status_id == ORDER_STATUS_TECHMAP): ?>
                 <div style="position: absolute; right: 0px; bottom: 0px;">
                     <form method="post">
                         <input type="hidden" name="id" value="<?=$id ?>" />
@@ -1972,7 +1978,7 @@ if(!is_nan($calculation->streams_number)) {
             // Обработка выбора формы (начальные значения)
             <?php
             if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE):
-                $total_cliches_count = count($printings) * $ink_number;
+                $total_cliches_count = count($printings) * $calculation->ink_number;
                 $valid_cliches_count = 0;
                     
                 foreach ($cliches as $cliches_row) {
@@ -2039,13 +2045,13 @@ if(!is_nan($calculation->streams_number)) {
                                 $('option.option_flint').removeAttr('hidden');
                                 $('option.option_kodak').removeAttr('hidden');
                                 $('option.option_old').removeAttr('hidden');
-                                if(data.flint_used >= <?=$cliches_count_flint ?>) {
+                                if(data.flint_used >= <?=$calculation->cliches_count_flint ?>) {
                                     $('option.option_flint').attr('hidden', 'hidden');
                                 }
-                                if(data.kodak_used >= <?=$cliches_count_kodak ?>) {
+                                if(data.kodak_used >= <?=$calculation->cliches_count_kodak ?>) {
                                     $('option.option_kodak').attr('hidden', 'hidden');
                                 }
-                                if(data.old_used >= <?=$cliches_count_old ?>) {
+                                if(data.old_used >= <?=$calculation->cliches_count_old ?>) {
                                     $('option.option_old').attr('hidden', 'hidden');
                                 }
                                 $('option#option_' + data.cliche + '_' + data.printing_id + '_' + data.sequence).removeAttr('hidden');
