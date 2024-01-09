@@ -167,7 +167,7 @@
         <?= empty($this->edition['status_id']) ? '' : ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
         <?php
         if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
-            echo "<span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_cut']), 0)."</span> м из <span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_total']), 0)."</span>";
+            echo "<div style='font-size: smaller;'><span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_cut']), 0)."</span> м из <span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_total']), 0)."</span></div>";
         }
         ?>
     </td>

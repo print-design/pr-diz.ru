@@ -325,7 +325,7 @@
         <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
         <?php
         if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
-            echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($this->edition['length_cut']), 0)." м из ".DisplayNumber(floatval($this->edition['length_total']), 0);
+            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($this->edition['length_cut']), 0)." м из ".DisplayNumber(floatval($this->edition['length_total']), 0)."</div>";
         }
         endif;
         ?>

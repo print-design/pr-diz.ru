@@ -104,7 +104,7 @@ if(null !== filter_input(INPUT_GET, 'status_id')) {
                         <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$row['status_id']] ?>
                         <?php
                         if(in_array($row['status_id'], ORDER_STATUSES_WITH_METERS)) {
-                            echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cut']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0);
+                            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cut']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0)."</div>";
                         }
                         ?>
                     </td>
