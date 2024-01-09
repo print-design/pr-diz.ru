@@ -43,10 +43,27 @@ if(null !== filter_input(INPUT_POST, 'ready_submit')) {
     }
 }
 
+// Снятие с резки
+if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $cut_remove_cause = addslashes(filter_input(INPUT_POST, 'cut_remove_cause'));
+    
+    $sql = "update calculation set cut_remove_cause = '$cut_remove_cause' where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_REMOVED." where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
 // Получение объекта
 $date = '';
 $name = '';
 $status_id = '';
+$cut_remove_cause = '';
 $customer_id = '';
 $customer = '';
 
@@ -60,7 +77,7 @@ $package = '';
 
 $num_for_customer = '';
 
-$sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
+$sql = "select c.date, c.name, c.status_id, c.cut_remove_cause, c.customer_id, cus.name customer, "
         . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
@@ -72,6 +89,7 @@ if($row = $fetcher->Fetch()) {
     $date = $row['date'];
     $name = $row['name'];
     $status_id = $row['status_id'];
+    $cut_remove_cause = $row['cut_remove_cause'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
     
@@ -153,11 +171,27 @@ if($row = $fetcher->Fetch()) {
                 font-weight: bold;
                 text-align: center; 
             }
+            
+            .modal-content {
+                border-radius: 20px;
+            }
+            
+            .modal-header {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+            
+            .modal-footer {
+                border-top: 0;
+                padding-top: 0;
+            }
         </style>
     </head>
     <body>
         <?php
         include '../include/header_cut.php';
+        
+        include './_cut_remove.php';
         ?>
         <div class="container-fluid">
             <?php
@@ -173,6 +207,9 @@ if($row = $fetcher->Fetch()) {
                     <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 20px; margin-bottom: 20px; display: inline-block;">
                         <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
                     </div>
+                    <?php if($status_id == ORDER_STATUS_CUT_REMOVED): ?>
+                    <div class='alert alert-warning'><?=$cut_remove_cause ?></div>
+                    <?php endif; ?>
                     <div class="name">Приладка</div>
                     <form method="post">
                         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
@@ -188,7 +225,7 @@ if($row = $fetcher->Fetch()) {
                                 <button type="submit" class="btn btn-dark w-100" name="ready_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-light w-100"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
+                                <button type="button" class="btn btn-light w-100" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
                             </div>
                         </div>
                     </form>
@@ -203,5 +240,14 @@ if($row = $fetcher->Fetch()) {
         include '../include/footer.php';
         include '../include/footer_cut.php';
         ?>
+        <script>
+            $('#cut_remove').on('shown.bs.modal', function() {
+                $('input:text:visible:first').focus();
+            });
+            
+            $('#cut_remove').on('hidden.bs.modal', function() {
+                $('input#cut_remove_cause').val('');
+            });
+        </script>
     </body>
 </html>

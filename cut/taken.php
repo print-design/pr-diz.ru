@@ -159,11 +159,27 @@ if($row = $fetcher->Fetch()) {
                 font-weight: bold;
                 text-align: center; 
             }
+            
+            .modal-content {
+                border-radius: 20px;
+            }
+            
+            .modal-header {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+            
+            .modal-footer {
+                border-top: 0;
+                padding-top: 0;
+            }
         </style>
     </head>
     <body>
         <?php
         include '../include/header_cut.php';
+        
+        include './_cut_remove.php';
         ?>
         <div class="container-fluid">
             <?php
@@ -181,6 +197,9 @@ if($row = $fetcher->Fetch()) {
                             <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
                                 <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
                             </div>
+                            <?php if($status_id == ORDER_STATUS_CUT_REMOVED): ?>
+                            <div class='alert alert-warning'><?=$cut_remove_cause ?></div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="d-flex justify-content-start mb-4 mt-4">
@@ -199,7 +218,7 @@ if($row = $fetcher->Fetch()) {
                                 <button type="submit" name="finished_submit" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Тираж выполнен</button>
                             </form>
                         </div>
-                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
                 </div>
                 <div class="col-4">
@@ -211,5 +230,14 @@ if($row = $fetcher->Fetch()) {
         include '../include/footer.php';
         include '../include/footer_cut.php';
         ?>
+        <script>
+            $('#cut_remove').on('shown.bs.modal', function() {
+                $('input:text:visible:first').focus();
+            });
+            
+            $('#cut_remove').on('hidden.bs.modal', function() {
+                $('input#cut_remove_cause').val('');
+            });
+        </script>
     </body>
 </html>

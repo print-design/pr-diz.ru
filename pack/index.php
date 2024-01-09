@@ -106,6 +106,9 @@ if(null !== filter_input(INPUT_GET, 'status_id')) {
                         if(in_array($row['status_id'], ORDER_STATUSES_WITH_METERS)) {
                             echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cut']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0)."</div>";
                         }
+                        elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED) {
+                            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$this->edition['cut_remove_cause']."</div>";
+                        }
                         ?>
                     </td>
                     <td>

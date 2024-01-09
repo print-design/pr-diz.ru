@@ -103,6 +103,11 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     }
 }
 
+// Снятие с резки
+if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
+    //
+}
+
 // Получение объекта
 $date = '';
 $name = '';
@@ -262,12 +267,28 @@ if($row = $fetcher->Fetch()) {
                     display: none;
                 }
             }
+            
+            .modal-content {
+                border-radius: 20px;
+            }
+            
+            .modal-header {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+            
+            .modal-footer {
+                border-top: 0;
+                padding-top: 0;
+            }
         </style>
     </head>
     <body>
         <div class="no_print">
         <?php
         include '../include/header_cut.php';
+        
+        include './_cut_remove.php';
         ?>
         </div>
         <div class="container-fluid no_print">
@@ -286,6 +307,9 @@ if($row = $fetcher->Fetch()) {
                             <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
                                 <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
                             </div>
+                            <?php if($status_id == ORDER_STATUS_CUT_REMOVED): ?>
+                            <div class='alert alert-warning'><?=$cut_remove_cause ?></div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="name">Съём <?=$take_number ?></div>
@@ -303,7 +327,7 @@ if($row = $fetcher->Fetch()) {
                         ?>
                         <div><a href="taken.php?id=<?= filter_input(INPUT_GET, 'id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-dark pl-4 pr-4 mr-4<?=$finish_submit_disabled_class ?>"><i class="fas fa-check mr-2"></i>Съём закончен</a></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
-                        <div><button type="button" class="btn btn-light pl-4 pr-4"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
                 </div>
                 <div class="col-4">
@@ -432,6 +456,14 @@ if($row = $fetcher->Fetch()) {
                     
                 }
             }
+            
+            $('#cut_remove').on('shown.bs.modal', function() {
+                $('input:text:visible:first').focus();
+            });
+            
+            $('#cut_remove').on('hidden.bs.modal', function() {
+                $('input#cut_remove_cause').val('');
+            });
             
             <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
             var css = '@page { size: portrait; margin: 2mm; }',
