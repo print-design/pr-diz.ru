@@ -242,7 +242,7 @@ class CalculationBase {
     
     // Исходные величины для вычислений
     public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-            $usd, $euro, $date, $name, $unit, $quantity, $quantities, $work_type_id,
+            $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id,
             $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1,
             $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2,
             $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3,
@@ -271,6 +271,7 @@ class CalculationBase {
             $usd, // Курс доллара
             $euro, // Курс евро
             $date, // Дата
+            $customer_id, // ID заказчика
             $name, // Наименование
             $unit, // Кг или шт
             $quantity, // Размер тиража в кг или шт
@@ -345,6 +346,7 @@ class CalculationBase {
         $this->usd = $usd; // Курс доллара
         $this->euro = $euro; // Курс евро
         $this->date = $date; // Дата
+        $this->customer_id = $customer_id; // ID заказчика
         $this->name = $name; // Наименование
         $this->unit = $unit; // Кг или шт
         $this->quantity = $quantity; // Размер тиража в кг или шт
@@ -575,6 +577,7 @@ class CalculationBase {
     public static function Create($id) {
         // ПОЛУЧЕНИЕ ИСХОДНЫХ ДАННЫХ
         $date = null;
+        $customer_id = null;
         $name = null;
         $unit = null; // Кг или шт
         $quantity = null; // Размер тиража
@@ -623,7 +626,7 @@ class CalculationBase {
         $customer_pays_for_cliche = null; // Заказчик платит за ПФ
         $extra_expense = null; // Дополнительные расходы с кг/шт
         
-        $sql = "select rc.date, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
+        $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
                 . "f.name film, fv.thickness thickness, fv.weight density, "
                 . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
                 . "rc.customers_material, rc.ski, rc.width_ski, "
@@ -654,6 +657,7 @@ class CalculationBase {
         
         if ($row = $fetcher->Fetch()) {
             $date = $row['date'];
+            $customer_id = $row['customer_id'];
             $name = $row['name'];
             
             $unit = $row['unit']; // Кг или шт
@@ -892,6 +896,7 @@ class CalculationBase {
                     $usd, // Курс доллара
                     $euro, // Курс евро
                     $date, // Дата
+                    $customer_id, // ID заказчика
                     $name, // Наименование
                     $unit, // Кг или шт
                     $quantity, // Размер тиража в кг или шт
@@ -967,6 +972,7 @@ class CalculationBase {
                     $usd, // Курс доллара
                     $euro, // Курс евро
                     $date, // Дата
+                    $customer_id, // ID заказчика
                     $name, // Наименование
                     $unit, // Кг или шт
                     $quantity, // Размер тиража в кг или шт
@@ -1129,6 +1135,7 @@ class Calculation extends CalculationBase {
             $usd, // Курс доллара
             $euro, // Курс евро
             $date, // Дата
+            $customer_id, // ID заказчика
             $name, // Наименование
             $unit, // Кг или шт
             $quantity, // Размер тиража в кг или шт
@@ -1192,7 +1199,7 @@ class Calculation extends CalculationBase {
             $extra_expense // Дополнительные расходы с кг/шт
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-                $usd, $euro, $date, $name, $unit, $quantity, $quantities, $work_type_id, 
+                $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
@@ -1954,6 +1961,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $usd, // Курс доллара
             $euro, // Курс евро
             $date, // Дата
+            $customer_id, // ID заказчика
             $name, // Наименование
             $unit, // Кг или шт
             $quantity, // Размер тиража в кг или шт
@@ -2017,7 +2025,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $extra_expense // Дополнительные расходы с кг/шт
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-                $usd, $euro, $date, $name, $unit, $quantity, $quantities, $work_type_id, 
+                $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 

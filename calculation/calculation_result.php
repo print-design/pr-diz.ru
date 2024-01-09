@@ -139,7 +139,7 @@ class CalculationResult {
                 . "cr.film_waste_cost_2, cr.film_waste_weight_2, cr.glue_cost_2, cr.glue_expense_2, cr.work_cost_2, cr.work_time_2, "
                 . "cr.film_waste_cost_3, cr.film_waste_weight_3, cr.glue_cost_3, cr.glue_expense_3, cr.work_cost_3, cr.work_time_3, "
                 . "cr.gap, cr.priladka_printing, "
-                . "tm.techmap_id, tm.techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
+                . "tm.id techmap_id, tm.date techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
                 . "from calculation c "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "left join techmap tm on tm.calculation_id = c.id "

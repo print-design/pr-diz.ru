@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './calculation.php';
+include './calculation_result.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
@@ -277,6 +278,8 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
 
 // ПОЛУЧЕНИЕ ОБЪЕКТА
 $id = filter_input(INPUT_GET, 'id');
+$calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 
 $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, laminator_id, "
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
@@ -313,13 +316,13 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
 $fetcher = new Fetcher($sql);
 $row = $fetcher->Fetch();
 
-$date = $row['date'];
-$customer_id = $row['customer_id'];
-$calculation = $row['calculation'];
-$quantity = $row['quantity'];
-$unit = $row['unit'];
-$work_type_id = $row['work_type_id'];
-$machine_id = $row['machine_id'];
+//$date = $row['date'];
+//$customer_id = $row['customer_id'];
+//$calculation = $row['calculation'];
+//$quantity = $row['quantity'];
+//$unit = $row['unit'];
+//$work_type_id = $row['work_type_id'];
+//$machine_id = $row['machine_id'];
 $laminator_id = $row['laminator_id'];
 
 $film_variation_id = $row['film_variation_id'];
@@ -452,38 +455,6 @@ if($roll_type === null) $roll_type = $row['roll_type'];
 $comment = filter_input(INPUT_POST, 'comment');
 if($comment === null) $comment = $row['comment'];
 
-// ПОЛУЧЕНИЕ НОРМ
-$data_priladka = new DataPriladka(0, 0, 0, 0);
-$data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
-
-if(!empty($date)) {
-    if(empty($machine_id)) {
-        $data_priladka = new DataPriladka(0, 0, 0, 0);
-    }
-    else {
-        $sql = "select time, length, stamp, waste_percent from norm_priladka where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
-        if ($row = $fetcher->Fetch()) {
-            $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
-        }
-    }
-    
-    if(empty($laminator_id)) {
-        $data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
-    }
-    else {
-        $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent']);
-        }
-    }
-}
-
-// УРАВНИВАЮЩИЕ КОЭФФИЦИЕНТЫ
-$uk2 = !empty($lamination1_film_name) || !empty($lamination1_individual_film_name) ? 1 : 0; // "нет ламинации - 0, есть ламинация - 1"
-$uk3 = !empty($lamination2_film_name) || !empty($lamination2_individual_film_name) ? 1 : 0; // "нет второй ламинации - 0, есть вторая ламинация - 1"
-
 // Отходы
 $waste1 = "";
 $waste2 = "";
@@ -539,8 +510,8 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
 $machine_coeff = null;
 
-if(!empty($machine_id)) {
-    $machine_coeff = GetMachineCoeff($machine_id);
+if(!empty($calculation->machine_id)) {
+    $machine_coeff = GetMachineCoeff($calculation->machine_id);
 }
 
 // Тиражи и формы
@@ -551,7 +522,7 @@ $cliches_used_flint = 0;
 $cliches_used_kodak = 0;
 $cliches_used_old = 0;
 
-if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
     $grabber = new Grabber($sql);
     $error_message = $grabber->error;
@@ -693,7 +664,7 @@ if(!is_nan($streams_number)) {
         <?php
         include '../include/header.php';
         ?>
-        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+        <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
         <div id="set_printings" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -859,7 +830,7 @@ if(!is_nan($streams_number)) {
                     $print_class = "d-block";
                     $no_print_class = "d-none";
                     
-                    if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                    if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                         $total_cliches_count = count($printings) * $ink_number;
                         $valid_cliches_count = 0;
                     
@@ -883,8 +854,8 @@ if(!is_nan($streams_number)) {
                 <div><button type="btn" class="btn btn-outline-dark" data-toggle="modal" data-target="#techmapModal">Подгрузить из другого заказа</button></div>
             </div>
             <div class="name">Заказчик: <?=$customer ?></div>
-            <div class="name">Наименование: <?=$calculation ?></div>
-            <div class="subtitle">№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+            <div class="name">Наименование: <?=$calculation->name ?></div>
+            <div class="subtitle">№<?=$calculation->customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
             <div class="row">
                 <div class="col-5">
                     <div style="background-color: lightgray; padding-left: 10px; padding-top: 2px; border-radius: 10px; width: 60%;">
@@ -902,12 +873,12 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <tr>
                             <th>Название заказа</th>
-                            <td class="text-left"><?=$calculation ?></td>
+                            <td class="text-left"><?=$calculation->name ?></td>
                         </tr>
-                        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <th>Объем заказа</th>
-                            <td class="text-left"><strong><?= DisplayNumber(intval($quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
+                            <td class="text-left"><strong><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
                         </tr>
                         <?php endif; ?>
                         <tr>
@@ -916,7 +887,7 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <tr>
                             <th>Тип работы</th>
-                            <td class="text-left"><?=WORK_TYPE_NAMES[$work_type_id] ?></td>
+                            <td class="text-left"><?=WORK_TYPE_NAMES[$calculation->work_type_id] ?></td>
                         </tr>
                     </table>
                 </div>
@@ -927,7 +898,7 @@ if(!is_nan($streams_number)) {
                     <div class="subtitle" style="line-height: 20px;">Печать</div>
                 </div>
                 <div class="col-4">
-                    <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                    <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                     <h2 style="line-height: 30px;">Информация для ламинации</h2>
                     <div class="subtitle" style="line-height: 20px;">Кол-во ламинаций: <?=$lamination ?></div>
                     <?php endif; ?>
@@ -943,13 +914,13 @@ if(!is_nan($streams_number)) {
                             <td style="padding-top: 5px;">Машина</td>
                             <td style="padding-top: 5px;">
                                 <?php
-                                if(!empty($machine_id)) {
-                                    echo mb_stristr(PRINTER_SHORTNAMES[$machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$machine_id]);
+                                if(!empty($calculation->machine_id)) {
+                                    echo mb_stristr(PRINTER_SHORTNAMES[$calculation->machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$calculation->machine_id]);
                                 }
                                 ?>
                             </td>
                         </tr>
-                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td style="line-height: 18px;">Поставщик мат-ла</td>
                             <td>
@@ -980,16 +951,16 @@ if(!is_nan($streams_number)) {
                             <td><?= DisplayNumber(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td style="line-height: 18px;"><?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
-                            <td><?= DisplayNumber(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
+                            <td style="line-height: 18px;"><?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
+                            <td><?= DisplayNumber(floatval($calculation->data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
-                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Всего тиражей</td>
                             <td><?= count($printings) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Метраж на тираж</td>
                             <td><?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
@@ -1025,12 +996,12 @@ if(!is_nan($streams_number)) {
                             <td>Растяг</td>
                             <td>
                                 <?php
-                                if(empty($machine_id)) {
+                                if(empty($calculation->machine_id)) {
                                     echo "Нет";
                                 }
                                 else {
                                     $count = 0;
-                                    $sql = "select count(id) from raport where active = 1 and machine_id = $machine_id and value = $raport";
+                                    $sql = "select count(id) from raport where active = 1 and machine_id = ".$calculation->machine_id." and value = $raport";
                                     $fetcher = new Fetcher($sql);
                                     if($row = $fetcher->Fetch()) {
                                         if($row[0] == 0) {
@@ -1045,7 +1016,7 @@ if(!is_nan($streams_number)) {
                             </td>
                         </tr>
                         <tr>
-                            <td><?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
+                            <td><?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
                             <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
@@ -1056,7 +1027,7 @@ if(!is_nan($streams_number)) {
                             <td>Кол-во ручьёв</td>
                             <td><?=$streams_number ?></td>
                         </tr>
-                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td style="line-height: 18px;">Этикеток в рапорте</td>
                             <td><?=$number_in_raport ?></td>
@@ -1086,7 +1057,7 @@ if(!is_nan($streams_number)) {
                     </table>
                 </div>
                 <div class="col-4">
-                    <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                    <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                     <h3>Ламинация 1</h3>
                     <table>
                         <tr>
@@ -1103,7 +1074,7 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= DisplayNumber(floatval($data_priladka_laminator->length) * $uk2, 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation->data_priladka_laminator->length) * $calculation->uk2, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
@@ -1142,17 +1113,17 @@ if(!is_nan($streams_number)) {
                     <table>
                         <tr>
                             <td>Отгрузка в</td>
-                            <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                            <td><?=$calculation->unit == 'kg' ? 'Кг' : 'Шт' ?></td>
                         </tr>
                         <tr>
                             <td>Готовая продукция</td>
-                            <td style="line-height: 18px;"><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
+                            <td style="line-height: 18px;"><?=$calculation->unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
                         </tr>
                         <tr>
-                            <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
+                            <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
                             <?php
                             $norm_stream = "";
-                            if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                            if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                 $sql = "select gap_stream from norm_gap order by date desc limit 1";
                                 $fetcher = new Fetcher($sql);
                                 if($row = $fetcher->Fetch()) {
@@ -1162,7 +1133,7 @@ if(!is_nan($streams_number)) {
                             ?>
                             <td>
                                 <?php
-                                if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                     if(empty($norm_stream)) {
                                         echo DisplayNumber(intval($stream_width), 0)." мм";
                                     }
@@ -1256,10 +1227,9 @@ if(!is_nan($streams_number)) {
                                 if(empty($length)) {
                                     echo "";
                                 }
-                                elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                elseif($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                     // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
-                                    $calc = CalculationBase::Create(filter_input(INPUT_GET, 'id'));
-                                    echo DisplayNumber(floatval($calc->number_in_raport_pure) / floatval($calc->raport) * 1000.0, 4);
+                                    echo DisplayNumber(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
                                 }
                                 else {
                                     echo DisplayNumber(1 / floatval($length) * 1000, 4);
@@ -1320,7 +1290,7 @@ if(!is_nan($streams_number)) {
                     </table>
                 </div>
             </div>
-            <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+            <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="row mt-3">
                 <div class="col-4">
                     <h3>Красочность: <?=$ink_number ?> цв.</h3>
@@ -1419,7 +1389,7 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <tr>
                             <td>Метраж на приладку</td>
-                            <td><?= DisplayNumber(floatval($data_priladka_laminator->length) * $uk3, 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation->data_priladka_laminator->length) * $calculation->uk3, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
@@ -1446,7 +1416,7 @@ if(!is_nan($streams_number)) {
                 </div>
             </div>
             <?php endif; ?>
-            <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+            <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="mt-5 mb-3">
                 <button type="button" id="show_set_printings" class="btn btn-outline-dark" data-toggle="modal" data-target="#set_printings">Настроить тиражи</button>
             </div>
@@ -1535,15 +1505,15 @@ if(!is_nan($streams_number)) {
             <div id="cliche_validation" class="text-danger<?= empty($cliche_valid) ? " d-none" : " d-block" ?>">Укажите формы для каждой краски</div>
             <div id="requirement_validation" class="text-danger<?= empty($requirement_valid) ? " d-none" : " d-block" ?>">Укажите требование по материалу</div>
             <div style="position: relative;">
-                <form class="mt-3" method="post"<?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                <form class="mt-3" method="post"<?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                     <input type="hidden" name="scroll" />
                     <input type="hidden" name="id" value="<?= $id ?>" />
-                    <input type="hidden" name="work_type_id" value="<?=$work_type_id ?>" />
+                    <input type="hidden" name="work_type_id" value="<?=$calculation->work_type_id ?>" />
                     <input type="hidden" name="techmap_id" value="<?=$techmap_id ?>" />
                     <div class="row">
                         <div class="col-6">
                             <h2>Информация для резчика</h2>
-                            <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                            <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                             <div class="form-group">
                                 <label for="supplier_id">Поставщик мат-ла</label>
                                 <select id="supplier_id" name="supplier_id" class="form-control">
@@ -1637,13 +1607,13 @@ if(!is_nan($streams_number)) {
                                     <option value="<?=PHOTOLABEL_LEFT ?>"<?=$photolabel == PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
                                     <option value="<?=PHOTOLABEL_RIGHT ?>"<?=$photolabel == PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
                                     <option value="<?=PHOTOLABEL_BOTH ?>"<?=$photolabel == PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
-                                    <option value="<?=PHOTOLABEL_NONE ?>"<?=$photolabel == PHOTOLABEL_NONE || (empty($photolabel) && $work_type_id == WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
+                                    <option value="<?=PHOTOLABEL_NONE ?>"<?=$photolabel == PHOTOLABEL_NONE || (empty($photolabel) && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
                                 </select>
                                 <div class="invalid-feedback">Расположение фотометки обязательно</div>
                             </div>
                             <div class="form-group roll-selector">
                                 <?php
-                                $roll_folder = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left";
+                                $roll_folder = $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left";
                                 switch ($photolabel) {
                                     case PHOTOLABEL_LEFT:
                                         $roll_folder = "roll_left";
@@ -1717,7 +1687,7 @@ if(!is_nan($streams_number)) {
                                 $print_class = "d-block";
                                 $no_print_class = "d-none";
                     
-                                if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                     $total_cliches_count = count($printings) * $ink_number;
                                     $valid_cliches_count = 0;
                     
@@ -1760,8 +1730,8 @@ if(!is_nan($streams_number)) {
                             . "tm.id tm_id, tm.supplier_id tm_supplier_id, tm.side tm_side, tm.winding tm_winding, tm.winding_unit tm_winding_unit, tm.spool tm_spool, tm.labels tm_labels, tm.package tm_package, tm.photolabel tm_photolabel, tm.roll_type tm_roll_type, tm.comment tm_comment "
                             . "from calculation c "
                             . "inner join techmap tm on tm.calculation_id = c.id "
-                            . "where customer_id = $customer_id "
-                            . "and work_type_id = $work_type_id ";
+                            . "where customer_id = ".$calculation->customer_id
+                            . " and work_type_id = ".$calculation->work_type_id." ";
                     if(!empty($techmap_id)) {
                         $sql .= "and tm.id <> $techmap_id ";
                     }
@@ -1999,7 +1969,7 @@ if(!is_nan($streams_number)) {
                         });
             }
             
-            <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+            <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                 
             // Переход между страницами редактирования форм тиражей
             $('.change_printing').click(function() {
@@ -2011,7 +1981,7 @@ if(!is_nan($streams_number)) {
             
             // Обработка выбора формы (начальные значения)
             <?php
-            if($work_type_id == WORK_TYPE_SELF_ADHESIVE):
+            if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE):
                 $total_cliches_count = count($printings) * $ink_number;
                 $valid_cliches_count = 0;
                     
@@ -2091,7 +2061,7 @@ if(!is_nan($streams_number)) {
                                 $('option#option_' + data.cliche + '_' + data.printing_id + '_' + data.sequence).removeAttr('hidden');
                                 
                                 // Если заполнены не все формы, то запрещаем печатать техкарту
-                                <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                                <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                                     empty_old_cliche = old_cliche === '';
                                     empty_new_cliche = data.cliche === '';
                                     
