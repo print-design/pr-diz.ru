@@ -323,48 +323,48 @@ $row = $fetcher->Fetch();
 //$unit = $row['unit'];
 //$work_type_id = $row['work_type_id'];
 //$machine_id = $row['machine_id'];
-$laminator_id = $row['laminator_id'];
+//$laminator_id = $row['laminator_id'];
 
-$film_variation_id = $row['film_variation_id'];
-$film_name = $row['film_name'];
-$thickness = $row['thickness'];
-$weight = $row['weight'];
-$price = $row['price'];
-$currency = $row['currency'];
-$individual_film_name = $row['individual_film_name'];
-$individual_thickness = $row['individual_thickness'];
-$individual_density = $row['individual_density'];
-$customers_material = $row['customers_material'];
-$ski = $row['ski'];
-$width_ski = $row['width_ski'];
+//$film_variation_id = $row['film_variation_id'];
+//$film_name = $row['film_name'];
+//$thickness = $row['thickness'];
+//$weight = $row['weight'];
+//$price = $row['price'];
+//$currency = $row['currency'];
+//$individual_film_name = $row['individual_film_name'];
+//$individual_thickness = $row['individual_thickness'];
+//$individual_density = $row['individual_density'];
+//$customers_material = $row['customers_material'];
+//$ski = $row['ski'];
+//$width_ski = $row['width_ski'];
 
-$lamination1_film_variation_id = $row['lamination1_film_variation_id'];
-$lamination1_film_name = $row['lamination1_film_name'];
-$lamination1_thickness = $row['lamination1_thickness'];
-$lamination1_weight = $row['lamination1_weight'];
-$lamination1_price = $row['lamination1_price'];
-$lamination1_currency = $row['lamination1_currency'];
-$lamination1_individual_film_name = $row['lamination1_individual_film_name'];
-$lamination1_individual_thickness = $row['lamination1_individual_thickness'];
-$lamination1_individual_density = $row['lamination1_individual_density'];
-$lamination1_customers_material = $row['lamination1_customers_material'];
-$lamination1_ski = $row['lamination1_ski'];
-$lamination1_width_ski = $row['lamination1_width_ski'];
+//$lamination1_film_variation_id = $row['lamination1_film_variation_id'];
+//$lamination1_film_name = $row['lamination1_film_name'];
+//$lamination1_thickness = $row['lamination1_thickness'];
+//$lamination1_weight = $row['lamination1_weight'];
+//$lamination1_price = $row['lamination1_price'];
+//$lamination1_currency = $row['lamination1_currency'];
+//$lamination1_individual_film_name = $row['lamination1_individual_film_name'];
+//$lamination1_individual_thickness = $row['lamination1_individual_thickness'];
+//$lamination1_individual_density = $row['lamination1_individual_density'];
+//$lamination1_customers_material = $row['lamination1_customers_material'];
+//$lamination1_ski = $row['lamination1_ski'];
+//$lamination1_width_ski = $row['lamination1_width_ski'];
 
-$lamination2_film_variation_id = $row['lamination2_film_variation_id'];
-$lamination2_film_name = $row['lamination2_film_name'];
-$lamination2_thickness = $row['lamination2_thickness'];
-$lamination2_weight = $row['lamination2_weight'];
-$lamination2_price = $row['lamination2_price'];
-$lamination2_currency = $row['lamination2_currency'];
-$lamination2_individual_film_name = $row['lamination2_individual_film_name'];
-$lamination2_individual_thickness = $row['lamination2_individual_thickness'];
-$lamination2_individual_density = $row['lamination2_individual_density'];
-$lamination2_customers_material = $row['lamination2_customers_material'];
-$lamination2_ski = $row['lamination2_ski'];
-$lamination2_width_ski = $row['lamination2_width_ski'];
+//$lamination2_film_variation_id = $row['lamination2_film_variation_id'];
+//$lamination2_film_name = $row['lamination2_film_name'];
+//$lamination2_thickness = $row['lamination2_thickness'];
+//$lamination2_weight = $row['lamination2_weight'];
+//$lamination2_price = $row['lamination2_price'];
+//$lamination2_currency = $row['lamination2_currency'];
+//$lamination2_individual_film_name = $row['lamination2_individual_film_name'];
+//$lamination2_individual_thickness = $row['lamination2_individual_thickness'];
+//$lamination2_individual_density = $row['lamination2_individual_density'];
+//$lamination2_customers_material = $row['lamination2_customers_material'];
+//$lamination2_ski = $row['lamination2_ski'];
+//$lamination2_width_ski = $row['lamination2_width_ski'];
 
-$streams_number = $row['streams_number'];
+//$streams_number = $row['streams_number'];
 $stream_width = $row['stream_width'];
 $length = $row['length'];
 $raport = $row['raport'];
@@ -418,9 +418,7 @@ $gap = $row['gap'];
 
 $num_for_customer = $row['num_for_customer'];
 
-$lamination = "нет";
-if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
-if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
+$lamination = (empty($calculation->laminations_number) || $calculation->laminations_number == 0) ? "нет" : $calculation->laminations_number;
 
 $techmap_id = $row['techmap_id'];
 $techmap_date = $row['techmap_date']; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
@@ -461,43 +459,39 @@ $waste2 = "";
 $waste3 = "";
 $waste = "";
 
-$film_name1 = empty($film_name) ? $individual_film_name : $film_name;
-$film_name2 = empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name;
-$film_name3 = empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name;
-
-if(in_array($film_name1, WASTE_PRESS_FILMS)) {
+if(in_array($calculation->film_1, WASTE_PRESS_FILMS)) {
     $waste1 = WASTE_PRESS;
 }
-elseif($film_name1 == WASTE_PAPER_FILM) {
+elseif($calculation->film_1 == WASTE_PAPER_FILM) {
     $waste1 = WASTE_PAPER;
 }
-elseif(empty ($film_name1)) {
+elseif(empty ($calculation->film_1)) {
     $waste1 = "";
 }
 else {
     $waste1 = WASTE_KAGAT;
 }
 
-if(in_array($film_name2, WASTE_PRESS_FILMS)) {
+if(in_array($calculation->film_2, WASTE_PRESS_FILMS)) {
     $waste2 = WASTE_PRESS;
 }
-elseif ($film_name2 == WASTE_PAPER_FILM) {
+elseif ($calculation->film_2 == WASTE_PAPER_FILM) {
     $waste2 = WASTE_PAPER;
 }
-elseif(empty ($film_name2)) {
+elseif(empty ($calculation->film_2)) {
     $waste2 = "";
 }
 else {
     $waste2 = WASTE_KAGAT;
 }
 
-if(in_array($film_name3, WASTE_PRESS_FILMS)) {
+if(in_array($calculation->film_3, WASTE_PRESS_FILMS)) {
     $waste3 = WASTE_PRESS;
 }
-elseif($film_name3 == WASTE_PAPER_FILM) {
+elseif($calculation->film_3 == WASTE_PAPER_FILM) {
     $waste3 = WASTE_PAPER;
 }
-elseif(empty ($film_name3)) {
+elseif(empty ($calculation->film_3)) {
     $waste3 = "";
 }
 else {
@@ -562,10 +556,9 @@ foreach($result as $stream_position_name) {
 }
 
 $streams = array();
-$streams_number = intval($streams_number);
 
-if(!is_nan($streams_number)) {
-    for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
+if(!is_nan($calculation->streams_number)) {
+    for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
         $stream_var = "stream_$stream_i";
         $$stream_var = filter_input(INPUT_POST, $stream_var);
         
@@ -940,11 +933,11 @@ if(!is_nan($streams_number)) {
                         <?php endif; ?>
                         <tr>
                             <td>Марка мат-ла</td>
-                            <td style="line-height: 18px;"><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
+                            <td style="line-height: 18px;"><?= $calculation->film_1 ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($film_name) ? DisplayNumber(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                            <td class="text-nowrap"><?= DisplayNumber(floatval($calculation->thickness_1), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_1), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -1025,7 +1018,7 @@ if(!is_nan($streams_number)) {
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
-                            <td><?=$streams_number ?></td>
+                            <td><?=$calculation->streams_number ?></td>
                         </tr>
                         <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
@@ -1062,11 +1055,11 @@ if(!is_nan($streams_number)) {
                     <table>
                         <tr>
                             <td>Марка мат-ла</td>
-                            <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
+                            <td><?= $calculation->film_2 ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($lamination1_film_name) ? DisplayNumber(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                            <td class="text-nowrap"><?= DisplayNumber(floatval($calculation->thickness_2), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_2), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -1198,17 +1191,14 @@ if(!is_nan($streams_number)) {
                                 if(empty($winding) || empty($winding_unit)) {
                                     echo 'Ждем данные';
                                 }
-                                elseif(empty ($weight) && empty($individual_density)) {
+                                elseif(empty ($calculation->density_1)) {
                                     echo 'Нет данных по уд. весу пленки';
                                 }
                                 elseif(empty ($width_1)) {
                                     echo 'Нет данных по ширине мат-ла';
                                 }
                                 elseif($winding_unit == 'kg') {
-                                    $final_density = empty($weight) ? $individual_density : $weight;
-                                    $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
-                                    $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
-                                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
+                                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($stream_width)) - 200, 0)." м";
                                 }
                                 else {
                                     echo 'Нет';
@@ -1377,11 +1367,11 @@ if(!is_nan($streams_number)) {
                     <table>
                         <tr>
                             <td>Марка мат-ла</td>
-                            <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                            <td><?= $calculation->film_3 ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-nowrap"><?= empty($lamination2_film_name) ? DisplayNumber(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                            <td class="text-nowrap"><?= DisplayNumber(floatval($calculation->thickness_3), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_3), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -1519,7 +1509,7 @@ if(!is_nan($streams_number)) {
                                 <select id="supplier_id" name="supplier_id" class="form-control">
                                     <option value="">Любой</option>
                                     <?php
-                                    $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = $film_variation_id)";
+                                    $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = (select film_variation_id from calculation where id = $id))";
                                     $fetcher = new Fetcher($sql);
                                     while($row = $fetcher->Fetch()):
                                         $checked = $supplier_id == $row['id'] ? " selected='selected'" : "";
@@ -1654,8 +1644,8 @@ if(!is_nan($streams_number)) {
                     <div class="row">
                         <div class="col-12">
                             <h3>Наименования</h3>
-                            <input type="hidden" name="streams_number" value="<?=$streams_number ?>" />
-                            <?php for($stream_i = 1; $stream_i <= $streams_number; $stream_i++): ?>
+                            <input type="hidden" name="streams_number" value="<?=$calculation->streams_number ?>" />
+                            <?php for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++): ?>
                             <div class="form-group">
                                 <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i ?></label>
                                 <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
