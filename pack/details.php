@@ -24,8 +24,8 @@ if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
-    if(!empty($error_message)) {
-        header("Location: details.php?status_id=$status_id");
+    if(empty($error_message)) {
+        header("Location: details.php?id=$id&waiting=1");
     }
 }
 
@@ -174,7 +174,7 @@ if($row = $fetcher->Fetch()) {
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
-                        <?php elseif($status_id == ORDER_STATUS_SHIP_READY): ?>
+                        <?php elseif($status_id == ORDER_STATUS_SHIP_READY && null == filter_input(INPUT_GET, 'waiting')): ?>
                         <div>
                             <form method="post">
                                 <input type="hidden" name="id" value="<?=$id ?>" />

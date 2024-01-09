@@ -92,7 +92,7 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="weight">Масса катушки</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="weight" value="<?=$stream_weight ?>" required="required" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control" name="weight" value="<?=$stream_weight ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">кг</span>
                         </div>
@@ -103,7 +103,7 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="length">Метраж</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="length" value="<?=$stream_length ?>" required="required" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control" name="length" value="<?=$stream_length ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">м</span>
                         </div>
@@ -114,7 +114,7 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="radius">Радиус от вала</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="radius" value="<?=$stream_radius ?>" required="required" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control" name="radius" value="<?=$stream_radius ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">мм</span>
                         </div>
