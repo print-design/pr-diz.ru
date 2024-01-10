@@ -105,7 +105,18 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
 
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
-    //
+    $id = filter_input(INPUT_POST, 'id');
+    $cut_remove_cause = addslashes(filter_input(INPUT_POST, 'cut_remove_cause'));
+    
+    $sql = "update calculation set cut_remove_cause = '$cut_remove_cause' where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_REMOVED." where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
 }
 
 // Получение объекта
