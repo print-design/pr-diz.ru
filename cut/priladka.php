@@ -206,10 +206,16 @@ if($row = $fetcher->Fetch()) {
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                     <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 20px; margin-bottom: 20px; display: inline-block;">
                         <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
+                        <?php
+                        if(in_array($status_id, ORDER_STATUSES_WITH_METERS)) {
+                            echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0);
+                        }
+                                
+                        if($status_id == ORDER_STATUS_CUT_REMOVED) {
+                            echo " ".$cut_remove_cause;
+                        }
+                        ?>
                     </div>
-                    <?php if($status_id == ORDER_STATUS_CUT_REMOVED): ?>
-                    <div class='alert alert-warning'><?=$cut_remove_cause ?></div>
-                    <?php endif; ?>
                     <div class="name">Приладка</div>
                     <form method="post">
                         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
@@ -221,12 +227,14 @@ if($row = $fetcher->Fetch()) {
                             </div>
                         </div>
                         <div class="row mt-4">
+                            <?php if($status_id != ORDER_STATUS_CUT_REMOVED): ?>
                             <div class="col-6">
                                 <button type="submit" class="btn btn-dark w-100" name="ready_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
                             </div>
                             <div class="col-6">
                                 <button type="button" class="btn btn-light w-100" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>

@@ -35,6 +35,7 @@ $name = '';
 $unit = '';
 $work_type_id = '';
 $status_id = '';
+$cut_remove_cause = '';
 
 $customer_id = '';
 $customer = '';
@@ -46,7 +47,7 @@ $techmap_date = '';
 $length_cut = '';
 $num_for_customer = '';
 
-$sql = "select c.id, c.date, c.name, c.unit, c.work_type_id, c.status_id, c.customer_id, "
+$sql = "select c.id, c.date, c.name, c.unit, c.work_type_id, c.status_id, c.cut_remove_cause, c.customer_id, "
         . "cus.name customer, cr.length_pure_1, u.last_name, u.first_name, tm.date techmap_date, "
         . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
@@ -63,6 +64,7 @@ if($row = $fetcher->Fetch()) {
     $unit = $row['unit'];
     $work_type_id = $row['work_type_id'];
     $status_id = $row['status_id'];
+    $cut_remove_cause = $row['cut_remove_cause'];
     
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
@@ -144,7 +146,16 @@ if($row = $fetcher->Fetch()) {
                     <div class="name"><?=$row['customer'] ?></div>
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                     <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
-                        <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
+                        <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
+                        <?php
+                        if(in_array($status_id, ORDER_STATUSES_WITH_METERS)) {
+                            echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0);
+                        }
+                                
+                        if($status_id == ORDER_STATUS_CUT_REMOVED) {
+                            echo " ".$cut_remove_cause;
+                        }
+                        ?>
                     </div>
                     <table>
                         <tr>

@@ -50,6 +50,7 @@ if(null !== filter_input(INPUT_POST, 'pack_submit')) {
 $date = '';
 $name = '';
 $status_id = '';
+$cut_remove_cause = '';
 $customer_id = '';
 $customer = '';
 
@@ -64,7 +65,7 @@ $package = '';
 $length_cut = '';
 $num_for_customer = '';
 
-$sql = "select c.date, c.name, c.status_id, c.customer_id, cus.name customer, "
+$sql = "select c.date, c.name, c.status_id, c.cut_remove_cause, c.customer_id, cus.name customer, "
         . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
         . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
@@ -77,6 +78,7 @@ if($row = $fetcher->Fetch()) {
     $date = $row['date'];
     $name = $row['name'];
     $status_id = $row['status_id'];
+    $cut_remove_cause = $row['cut_remove_cause'];
     $customer_id = $row['customer_id'];
     $customer = $row['customer'];
 
@@ -184,11 +186,21 @@ if($row = $fetcher->Fetch()) {
                             <div class="name"><?=$customer ?></div>
                             <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
                             <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
-                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id].' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0) ?>
+                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
+                                <?php
+                                if(in_array($status_id, ORDER_STATUSES_WITH_METERS)) {
+                                    echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0);
+                                }
+                                
+                                if($status_id == ORDER_STATUS_CUT_REMOVED) {
+                                    echo " ".$cut_remove_cause;
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-start mb-4 mt-4">
+                        <?php if($status_id != ORDER_STATUS_CUT_REMOVED): ?>
                         <div>
                             <form method="post">
                                 <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
@@ -197,6 +209,7 @@ if($row = $fetcher->Fetch()) {
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

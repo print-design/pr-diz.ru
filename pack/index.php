@@ -73,7 +73,7 @@ if(null !== filter_input(INPUT_GET, 'status_id')) {
                     <th></th>
                 </tr>
             <?php
-            $sql = "select c.id, ct.time, c.customer_id, e.machine_id, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.status_id, "
+            $sql = "select c.id, ct.time, c.customer_id, e.machine_id, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.status_id, c.cut_remove_cause, "
                     . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
                     . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
                     . "(select concat(last_name, ' ', left(first_name, 1), '.') from plan_employee where id = (select employee1_id from plan_workshift1 where work_id = ".WORK_CUTTING." and machine_id = e.machine_id and date = date(ct.time) and shift = 'day')) as day_cutter, "
@@ -107,7 +107,7 @@ if(null !== filter_input(INPUT_GET, 'status_id')) {
                             echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cut']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0)."</div>";
                         }
                         elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED) {
-                            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$this->edition['cut_remove_cause']."</div>";
+                            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row['cut_remove_cause']."</div>";
                         }
                         ?>
                     </td>

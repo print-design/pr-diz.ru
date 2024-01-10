@@ -169,6 +169,9 @@
         if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
             echo "<div style='font-size: smaller;'><span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_cut']), 0)."</span> м из <span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_total']), 0)."</span></div>";
         }
+        elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED) {
+            echo "<div style='font-size: smaller;'>".$this->edition['cut_remove_cause']."</div>";
+        }
         ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
