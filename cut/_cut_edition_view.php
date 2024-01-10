@@ -51,6 +51,9 @@
         <?= $this->edition['manager'] ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?> text-nowrap">
+        <?php
+        if(!empty($this->edition['status_id'])):
+        ?>
         <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
         <?php
         if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
@@ -59,6 +62,7 @@
         elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED) {
             echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$this->edition['cut_remove_cause']."</div>";
         }
+        endif;
         ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?>">
