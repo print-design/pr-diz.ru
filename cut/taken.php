@@ -224,9 +224,6 @@ if($row = $fetcher->Fetch()) {
                                 }
                                 ?>
                             </div>
-                            <?php if($status_id == ORDER_STATUS_CUT_REMOVED): ?>
-                            <div class='alert alert-warning'><?=$cut_remove_cause ?></div>
-                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="d-flex justify-content-start mb-4 mt-4">

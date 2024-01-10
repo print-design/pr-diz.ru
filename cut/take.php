@@ -329,9 +329,6 @@ if($row = $fetcher->Fetch()) {
                                 }
                                 ?>
                             </div>
-                            <?php if($status_id == ORDER_STATUS_CUT_REMOVED): ?>
-                            <div class='alert alert-warning'><?=$cut_remove_cause ?></div>
-                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="name">Съём <?=$take_number ?></div>
