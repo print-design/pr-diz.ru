@@ -281,179 +281,59 @@ $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
-$sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, laminator_id, "
-        . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
-        . "c.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
-        . "c.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
-        . "c.streams_number, c.stream_width, c.length, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.status_id, "
-        . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
-        . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
-        . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
-        . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, c.cliche_1, "
-        . "c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
-        . "c.knife, "
-        . "c.cliches_count_flint, c.cliches_count_kodak, c.cliches_count_old, "
-        . "c.requirement1, c.requirement2, c.requirement3, "
-        . "cus.name customer, sup.name supplier, "
-        . "u.last_name, u.first_name, "
-        . "cr.width_1, cr.length_pure_1, cr.length_dirty_1, cr.width_2, cr.length_pure_2, cr.length_dirty_2, cr.width_3, cr.length_pure_3, cr.length_dirty_3, gap, "
-        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "tm.id techmap_id, tm.date techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
-        . "from calculation c "
-        . "left join techmap tm on tm.calculation_id = c.id "
-        . "left join film_variation fv on c.film_variation_id = fv.id "
-        . "left join film f on fv.film_id = f.id "
-        . "left join film_variation lam1fv on c.lamination1_film_variation_id = lam1fv.id "
-        . "left join film lam1f on lam1fv.film_id = lam1f.id "
-        . "left join film_variation lam2fv on c.lamination2_film_variation_id = lam2fv.id "
-        . "left join film lam2f on lam2fv.film_id = lam2f.id "
-        . "inner join customer cus on c.customer_id = cus.id "
-        . "inner join user u on c.manager_id = u.id "
-        . "left join calculation_result cr on cr.calculation_id = c.id "
-        . "left join supplier sup on tm.supplier_id = sup.id "
-        . "where c.id = $id";
-
-$fetcher = new Fetcher($sql);
-$row = $fetcher->Fetch();
-
-//$date = $row['date'];
-//$customer_id = $row['customer_id'];
-//$calculation = $row['calculation'];
-//$quantity = $row['quantity'];
-//$unit = $row['unit'];
-//$work_type_id = $row['work_type_id'];
-//$machine_id = $row['machine_id'];
-//$laminator_id = $row['laminator_id'];
-
-//$film_variation_id = $row['film_variation_id'];
-//$film_name = $row['film_name'];
-//$thickness = $row['thickness'];
-//$weight = $row['weight'];
-//$price = $row['price'];
-//$currency = $row['currency'];
-//$individual_film_name = $row['individual_film_name'];
-//$individual_thickness = $row['individual_thickness'];
-//$individual_density = $row['individual_density'];
-//$customers_material = $row['customers_material'];
-//$ski = $row['ski'];
-//$width_ski = $row['width_ski'];
-
-//$lamination1_film_variation_id = $row['lamination1_film_variation_id'];
-//$lamination1_film_name = $row['lamination1_film_name'];
-//$lamination1_thickness = $row['lamination1_thickness'];
-//$lamination1_weight = $row['lamination1_weight'];
-//$lamination1_price = $row['lamination1_price'];
-//$lamination1_currency = $row['lamination1_currency'];
-//$lamination1_individual_film_name = $row['lamination1_individual_film_name'];
-//$lamination1_individual_thickness = $row['lamination1_individual_thickness'];
-//$lamination1_individual_density = $row['lamination1_individual_density'];
-//$lamination1_customers_material = $row['lamination1_customers_material'];
-//$lamination1_ski = $row['lamination1_ski'];
-//$lamination1_width_ski = $row['lamination1_width_ski'];
-
-//$lamination2_film_variation_id = $row['lamination2_film_variation_id'];
-//$lamination2_film_name = $row['lamination2_film_name'];
-//$lamination2_thickness = $row['lamination2_thickness'];
-//$lamination2_weight = $row['lamination2_weight'];
-//$lamination2_price = $row['lamination2_price'];
-//$lamination2_currency = $row['lamination2_currency'];
-//$lamination2_individual_film_name = $row['lamination2_individual_film_name'];
-//$lamination2_individual_thickness = $row['lamination2_individual_thickness'];
-//$lamination2_individual_density = $row['lamination2_individual_density'];
-//$lamination2_customers_material = $row['lamination2_customers_material'];
-//$lamination2_ski = $row['lamination2_ski'];
-//$lamination2_width_ski = $row['lamination2_width_ski'];
-
-//$streams_number = $row['streams_number'];
-//$stream_width = $row['stream_width'];
-//$length = $row['length'];
-//$raport = $row['raport'];
-//$number_in_raport = $row['number_in_raport'];
-//$lamination_roller_width = $row['lamination_roller_width'];
-//$ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
-//$status_id = $row['status_id'];
-
 if(!empty($calculation->ink_number)) {
     for($i=1; $i<=$calculation->ink_number; $i++) {
         $ink_var = "ink_$i";
-        $$ink_var = $row[$ink_var];
+        $$ink_var = $calculation->$ink_var;
     
         $color_var = "color_$i";
-        $$color_var = $row[$color_var];
+        $$color_var = $calculation->$color_var;
     
         $cmyk_var = "cmyk_$i";
-        $$cmyk_var = $row[$cmyk_var];
+        $$cmyk_var = $calculation->$cmyk_var;
     
         $percent_var = "percent_$i";
-        $$percent_var = $row[$percent_var];
+        $$percent_var = $calculation->$percent_var;
         
         $cliche_var = "cliche_$i";
-        $$cliche_var = $row[$cliche_var];
+        $$cliche_var = $calculation->$cliche_var;
     }
 }
 
-//$knife = $row['knife'];
-
-//$cliches_count_flint = $row['cliches_count_flint'];
-//$cliches_count_kodak = $row['cliches_count_kodak'];
-//$cliches_count_old = $row['cliches_count_old'];
-
-//$requirement1 = $row['requirement1'];
-//$requirement2 = $row['requirement2'];
-//$requirement3 = $row['requirement3'];
-
-$customer = $row['customer'];
-$supplier = $row['supplier'];
-$last_name = $row['last_name'];
-$first_name = $row['first_name'];
-
-$width_1 = $row['width_1'];
-$length_pure_1 = $row['length_pure_1'];
-$length_dirty_1 = $row['length_dirty_1'];
-$width_2 = $row['width_2'];
-$length_pure_2 = $row['length_pure_2'];
-$length_dirty_2 = $row['length_dirty_2'];
-$width_3 = $row['width_3'];
-$length_pure_3 = $row['length_pure_3'];
-$length_dirty_3 = $row['length_dirty_3'];
-$gap = $row['gap'];
-
-//$num_for_customer = $row['num_for_customer'];
-
 $lamination = (empty($calculation->laminations_number) || $calculation->laminations_number == 0) ? "нет" : $calculation->laminations_number;
 
-$techmap_id = $row['techmap_id'];
-$techmap_date = $row['techmap_date']; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
+$techmap_id = $calculation_result->techmap_id;
+$techmap_date = $calculation_result->techmap_date; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
 
 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-if($supplier_id === null) $supplier_id = $row['supplier_id'];
+if($supplier_id === null) $supplier_id = $calculation_result->supplier_id;
 
 $side = filter_input(INPUT_POST, 'side');
-if($side === null) $side = $row['side'];
+if($side === null) $side = $calculation_result->side;
 
 $winding = filter_input(INPUT_POST, 'winding');
-if($winding === null) $winding = $row['winding'];
+if($winding === null) $winding =  $calculation_result->winding;
 
 $winding_unit = filter_input(INPUT_POST, 'winding_unit');
-if($winding_unit === null) $winding_unit = $row['winding_unit'];
+if($winding_unit === null) $winding_unit = $calculation_result->winding_unit;
 
 $spool = filter_input(INPUT_POST, 'spool');
-if($spool === null) $spool = $row['spool'];
+if($spool === null) $spool = $calculation_result->spool;
 
 $labels = filter_input(INPUT_POST, 'labels');
-if($labels === null) $labels = $row['labels'];
+if($labels === null) $labels = $calculation_result->labels;
 
 $package = filter_input(INPUT_POST, 'package');
-if($package === null) $package = $row['package'];
+if($package === null) $package = $calculation_result->package;
 
 $photolabel = filter_input(INPUT_POST, 'photolabel');
-if($photolabel === null) $photolabel = $row['photolabel'];
+if($photolabel === null) $photolabel = $calculation_result->photolabel;
 
 $roll_type = filter_input(INPUT_POST, 'roll_type');
-if($roll_type === null) $roll_type = $row['roll_type'];
+if($roll_type === null) $roll_type = $calculation_result->roll_type;
 
 $comment = filter_input(INPUT_POST, 'comment');
-if($comment === null) $comment = $row['comment'];
+if($comment === null) $comment = $calculation_result->comment;
 
 // Отходы
 $waste1 = "";
@@ -852,7 +732,7 @@ if(!is_nan($calculation->streams_number)) {
                 <div><h1><?= empty($techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1></div>
                 <div><button type="btn" class="btn btn-outline-dark" data-toggle="modal" data-target="#techmapModal">Подгрузить из другого заказа</button></div>
             </div>
-            <div class="name">Заказчик: <?=$customer ?></div>
+            <div class="name">Заказчик: <?=$calculation->customer ?></div>
             <div class="name">Наименование: <?=$calculation->name ?></div>
             <div class="subtitle">№<?=$calculation->customer_id ?>-<?=$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
             <div class="row">
@@ -868,7 +748,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <th>Заказчик</th>
-                            <td class="text-left"><?=$customer ?></td>
+                            <td class="text-left"><?=$calculation->customer ?></td>
                         </tr>
                         <tr>
                             <th>Название заказа</th>
@@ -877,12 +757,12 @@ if(!is_nan($calculation->streams_number)) {
                         <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <th>Объем заказа</th>
-                            <td class="text-left"><strong><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
+                            <td class="text-left"><strong><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
                         </tr>
                         <?php endif; ?>
                         <tr>
                             <th>Менеджер</th>
-                            <td class="text-left"><?=$first_name ?> <?=$last_name ?></td>
+                            <td class="text-left"><?=$calculation->first_name ?> <?=$calculation->last_name ?></td>
                         </tr>
                         <tr>
                             <th>Тип работы</th>
@@ -927,11 +807,11 @@ if(!is_nan($calculation->streams_number)) {
                                 if(empty($techmap_id)) {
                                     echo "Ждем данные";
                                 }
-                                elseif(empty ($supplier)) {
+                                elseif(empty ($calculation_result->supplier)) {
                                     echo "Любой";
                                 }
                                 else {
-                                    echo $supplier;
+                                    echo $calculation_result->supplier;
                                 }
                                 ?>
                             </td>
@@ -947,7 +827,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td><?= DisplayNumber(floatval($width_1), 0) ?> мм</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
                             <td style="line-height: 18px;"><?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
@@ -962,12 +842,12 @@ if(!is_nan($calculation->streams_number)) {
                         <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td><?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
                         </tr>
                         <?php endif; ?>
                         <tr>
                             <td>Всего мат-ла</td>
-                            <td><?= DisplayNumber(floatval($length_dirty_1), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->length_dirty_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Печать</td>
@@ -1069,19 +949,19 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td><?= DisplayNumber(floatval($width_2), 0) ?> мм</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->width_2), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td>Метраж на приладку</td>
+                            <td style="line-height: 18px;">Метраж на приладку</td>
                             <td><?= DisplayNumber(floatval($calculation->data_priladka_laminator->length) * $calculation->uk2, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td><?= DisplayNumber(floatval($length_pure_2), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->length_pure_2), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Всего мат-ла</td>
-                            <td><?= DisplayNumber(floatval($length_dirty_2), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->length_dirty_2), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Ламинационный вал</td>
@@ -1200,7 +1080,7 @@ if(!is_nan($calculation->streams_number)) {
                                 elseif(empty ($calculation->density_1)) {
                                     echo 'Нет данных по уд. весу пленки';
                                 }
-                                elseif(empty ($width_1)) {
+                                elseif(empty ($calculation_result->width_1)) {
                                     echo 'Нет данных по ширине мат-ла';
                                 }
                                 elseif($winding_unit == 'kg') {
@@ -1381,19 +1261,19 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
-                            <td><?= DisplayNumber(floatval($width_3), 0) ?> мм</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->width_3), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td>Метраж на приладку</td>
+                            <td style="line-height: 18px;">Метраж на приладку</td>
                             <td><?= DisplayNumber(floatval($calculation->data_priladka_laminator->length) * $calculation->uk3, 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Метраж на тираж</td>
-                            <td><?= DisplayNumber(floatval($length_pure_3), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->length_pure_3), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Всего мат-ла</td>
-                            <td><?= DisplayNumber(floatval($length_dirty_3), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->length_dirty_3), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td style="line-height: 18px;">Требование по материалу</td>
@@ -1720,7 +1600,7 @@ if(!is_nan($calculation->streams_number)) {
         <div class="modal fixed-left fade" id="techmapModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-aside" role="document">
                 <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;">
-                    <h2><?=$customer ?></h2>
+                    <h2><?=$calculation->customer ?></h2>
                     <?php
                     $sql = "select c.id c_id, c.date c_date, c.name c_name, "
                             . "tm.id tm_id, tm.supplier_id tm_supplier_id, tm.side tm_side, tm.winding tm_winding, tm.winding_unit tm_winding_unit, tm.spool tm_spool, tm.labels tm_labels, tm.package tm_package, tm.photolabel tm_photolabel, tm.roll_type tm_roll_type, tm.comment tm_comment "

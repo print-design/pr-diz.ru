@@ -258,7 +258,7 @@ class CalculationBase {
             $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche,
             $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
             $requirement1, $requirement2, $requirement3, 
-            $num_for_customer;
+            $customer, $last_name, $first_name, $num_for_customer;
     
     // Конструктор
     public function __construct(DataPriladka $data_priladka, 
@@ -342,6 +342,9 @@ class CalculationBase {
             $requirement2, // Требование по материалу 2
             $requirement3, // Требование по материалу 3
             
+            $customer, // Заказчик
+            $last_name, // Фамилия менеджера
+            $first_name, // Имя менеджера
             $num_for_customer // Номер заказа у данного заказчика
             ) {
         $this->data_priladka = $data_priladka;
@@ -425,6 +428,9 @@ class CalculationBase {
         $this->requirement2 = $requirement2; // Требования по материалу 2
         $this->requirement3 = $requirement3; // Требования по материалу 3
         
+        $this->customer = $customer; // Заказчик
+        $this->last_name = $last_name; // Фамилия менеджера
+        $this->first_name = $first_name; // Имя менеджера
         $this->num_for_customer = $num_for_customer; // Номер заказа у данного заказчика
     }
     
@@ -649,6 +655,9 @@ class CalculationBase {
         $requirement2 = null; // Требования по материалу 2
         $requirement3 = null; // Требования по материалу 3
         
+        $customer = null; // Заказчик
+        $last_name = null; // Фамилия менеджера
+        $first_name = null; // Имя менеджера
         $num_for_customer = null; // Номер заказа у данного заказчика
         
         $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
@@ -671,6 +680,7 @@ class CalculationBase {
                 . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
                 . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense, "
                 . "rc.requirement1, rc.requirement2, rc.requirement3, "
+                . "cus.name customer, u.last_name, u.first_name, "
                 . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
                 . "from calculation rc "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -679,6 +689,8 @@ class CalculationBase {
                 . "left join film lamination1_f on lamination1_fv.film_id = lamination1_f.id "
                 . "left join film_variation lamination2_fv on rc.lamination2_film_variation_id = lamination2_fv.id "
                 . "left join film lamination2_f on lamination2_fv.film_id = lamination2_f.id "
+                . "left join customer cus on rc.customer_id = cus.id "
+                . "left join user u on rc.manager_id = u.id "
                 . "where rc.id = $id";
         $fetcher = new Fetcher($sql);
         
@@ -775,6 +787,9 @@ class CalculationBase {
             $requirement2 = $row['requirement2']; // Требования по материалу 2
             $requirement3 = $row['requirement3']; // Требования по материалу 3
             
+            $customer = $row['customer']; // Заказчик
+            $last_name = $row['last_name']; // Фамилия менеджера
+            $first_name = $row['first_name']; // Имя менеджера
             $num_for_customer = $row['num_for_customer']; // Номер заказа у данного заказчика
             
             // Если тип работы - плёнка без печати, то 
@@ -1000,6 +1015,9 @@ class CalculationBase {
                     $requirement2, // Требования по материалу 2
                     $requirement3, // Требования по материалу 3
                     
+                    $customer, // Заказчик
+                    $last_name, // Фамилия менеджера
+                    $first_name, // Имя менеджера
                     $num_for_customer); // Номер заказа у данного заказчика
         }
         elseif(empty ($error_message)) {
@@ -1084,6 +1102,9 @@ class CalculationBase {
                     $requirement2, // Требования по материалу 2
                     $requirement3, // Требования по материалу 3
                     
+                    $customer, // Заказчик
+                    $last_name, // Фамилия менеджера
+                    $first_name, // Имя менеджера
                     $num_for_customer); // Номер заказа для данного заказчика
         }
         else {
@@ -1255,6 +1276,9 @@ class Calculation extends CalculationBase {
             $requirement2, // Требования по материалу 2
             $requirement3, // Требования по материалу 3
             
+            $customer, // Заказчик
+            $last_name, // Фамилия менеджера
+            $first_name, // Имя менеджера
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
@@ -1270,7 +1294,8 @@ class Calculation extends CalculationBase {
                 $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
                 $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
-                $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, $requirement1, $requirement2, $requirement3, $num_for_customer);
+                $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
+                $requirement1, $requirement2, $requirement3, $customer, $last_name, $first_name, $num_for_customer);
                 
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
@@ -2089,6 +2114,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             $requirement2, // Требования по материалу 2
             $requirement3, // Требования по материалу 3
             
+            $customer, // Заказчик
+            $last_name, // Фамилия менеджера
+            $first_name, // Имя менеджера
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
@@ -2104,7 +2132,8 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $percent_1, $percent_2, $percent_3, $percent_4, $percent_5, $percent_6, $percent_7, $percent_8, 
                 $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
-                $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, $requirement1, $requirement2, $requirement3, $num_for_customer);
+                $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
+                $requirement1, $requirement2, $requirement3, $customer, $last_name, $first_name, $num_for_customer);
         
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);

@@ -16,6 +16,7 @@ class CalculationResult {
     
     // Данные тех. карты
     public $techmap_id, $techmap_date, $supplier_id, $side, $winding, $winding_unit, $spool, $labels, $package, $photolabel, $roll_type, $comment;
+    public $supplier;
     
     // Печать: лицевая, оборотная
     public const SIDE_FRONT = 1;
@@ -55,7 +56,9 @@ class CalculationResult {
             $film_waste_cost_1, $film_waste_weight_1, $ink_cost, $ink_weight, $work_cost_1, $work_time_1,
             $film_waste_cost_2, $film_waste_weight_2, $glue_cost_2, $glue_expense_2, $work_cost_2, $work_time_2,
             $film_waste_cost_3, $film_waste_weight_3, $glue_cost_3, $glue_expense_3, $work_cost_3, $work_time_3,
-            $gap, $priladka_printing) {
+            $gap, $priladka_printing, 
+            $techmap_id, $techmap_date, $supplier_id, $side, $winding, $winding_unit, $spool, $labels, $package, $photolabel, $roll_type, $comment, 
+            $supplier) {
         $this->usd = $usd; // Курс доллара
         $this->euro = $euro; // Курс евро
         
@@ -123,6 +126,21 @@ class CalculationResult {
         
         $this->gap = $gap; // Фактический зазор между этикетками
         $this->priladka_printing = $priladka_printing; // Метраж приладки одного тиража, м
+        
+        $this->techmap_id = $techmap_id; // ID тех. карты
+        $this->techmap_date = $techmap_date; // Дата тех. карты
+        $this->supplier_id = $supplier_id; // ID поставщика материала
+        $this->side = $side; // Сторона печати
+        $this->winding = $winding; // Намотка до
+        $this->winding_unit = $winding_unit; // Намотка до, единица измерения
+        $this->spool = $spool; // Шпуля
+        $this->labels = $labels; // Бирки
+        $this->package = $package; // Упаковка
+        $this->photolabel = $photolabel; // Фотометка
+        $this->roll_type = $roll_type; // Тип ролика
+        $this->comment = $comment; // Комментарий
+        
+        $this->supplier = $supplier;
     }
     
     // Получение из базы
@@ -139,10 +157,12 @@ class CalculationResult {
                 . "cr.film_waste_cost_2, cr.film_waste_weight_2, cr.glue_cost_2, cr.glue_expense_2, cr.work_cost_2, cr.work_time_2, "
                 . "cr.film_waste_cost_3, cr.film_waste_weight_3, cr.glue_cost_3, cr.glue_expense_3, cr.work_cost_3, cr.work_time_3, "
                 . "cr.gap, cr.priladka_printing, "
-                . "tm.id techmap_id, tm.date techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment "
+                . "tm.id techmap_id, tm.date techmap_date, tm.supplier_id, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, tm.photolabel, tm.roll_type, tm.comment, "
+                . "sup.name supplier "
                 . "from calculation c "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "left join techmap tm on tm.calculation_id = c.id "
+                . "left join supplier sup on tm.supplier_id = sup.id "
                 . "where c.id = $id";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
@@ -157,7 +177,9 @@ class CalculationResult {
                     $row['film_waste_cost_1'], $row['film_waste_weight_1'], $row['ink_cost'], $row['ink_weight'], $row['work_cost_1'], $row['work_time_1'],
                     $row['film_waste_cost_2'], $row['film_waste_weight_2'], $row['glue_cost_2'], $row['glue_expense_2'], $row['work_cost_2'], $row['work_time_2'],
                     $row['film_waste_cost_3'], $row['film_waste_weight_3'], $row['glue_cost_3'], $row['glue_expense_3'], $row['work_cost_3'], $row['work_time_3'],
-                    $row['gap'], $row['priladka_printing']);
+                    $row['gap'], $row['priladka_printing'], 
+                    $row['techmap_id'], $row['techmap_date'], $row['supplier_id'], $row['side'], $row['winding'], $row['winding_unit'], $row['spool'], $row['labels'], $row['package'], $row['photolabel'], $row['roll_type'], $row['comment'], 
+                    $row['supplier']);
         }
         else {
             return "Ошибка при получении результатов рассчёта";
