@@ -897,7 +897,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td>Длина этикетки</td>
-                            <td><?= rtrim(rtrim(DisplayNumber(floatval($calculation->length), 2), "0"), ",").(empty($calculation->length) ? "" : " мм") ?></td>
+                            <td><?= DisplayNumber(floatval($calculation->length), 0).(empty($calculation->length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
