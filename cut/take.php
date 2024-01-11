@@ -99,6 +99,12 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         if(empty($error_message)) {
+            $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING." where id = $id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
+        if(empty($error_message)) {
             header("Location: take.php?id=$calculation_id&machine_id=$machine_id&stream_id=$stream_id");
         }
     }
