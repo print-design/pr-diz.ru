@@ -68,7 +68,7 @@
     <td class="<?=$this->cut_shift->shift ?>">
         <?php if($this->edition['status_id'] == ORDER_STATUS_PLAN_CUT && $this->edition['button_start'] && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take): ?>
         <a href="details.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
-        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED && $this->edition['button_start'] && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take): ?>
+        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take): ?>
         <a href="take.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
         <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_PRILADKA): ?>
         <a href="priladka.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
