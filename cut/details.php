@@ -7,9 +7,10 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не указан id, направляем к списку заданий
+// Если не указан id или машина, направляем к списку заданий
 $id = filter_input(INPUT_GET, 'id');
-if($id === null) {
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
@@ -161,7 +162,7 @@ if($row = $fetcher->Fetch()) {
             ?>
             <div class="row">
                 <div class="col-4">
-                    <a class="btn btn-light backlink" href="<?= APPLICATION.'/cut/'.(empty(filter_input(INPUT_GET, 'machine_id')) ? '' : "?machine_id=". filter_input(INPUT_GET, 'machine_id')) ?>">К списку резок</a>
+                    <a class="btn btn-light backlink" href="<?= APPLICATION.'/cut/?machine_id='.$machine_id ?>">К списку резок</a>
                     <h1><?= $name ?></h1>
                     <div class="name"><?=$customer ?></div>
                     <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
@@ -185,8 +186,8 @@ if($row = $fetcher->Fetch()) {
                     </table>
                     <div style="position: absolute; left: 0px; bottom: 0px; margin: 15px;">
                         <form method="post">
-                            <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                            <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                            <input type="hidden" name="id" value="<?=$id ?>" />
+                            <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                             <button type="submit" name="start_cut_submit" class="btn btn-dark" style="width: 175px;">Начать работу</button>
                         </form>
                     </div>

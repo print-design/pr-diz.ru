@@ -22,7 +22,7 @@ $waste = "";
 if(in_array($calculation->film_1, WASTE_PRESS_FILMS)) {
     $waste1 = WASTE_PRESS;
 }
-elseif($calculation->film1 == WASTE_PAPER_FILM) {
+elseif($calculation->film_1 == WASTE_PAPER_FILM) {
     $waste1 = WASTE_PAPER;
 }
 elseif(empty ($calculation->film_1)) {

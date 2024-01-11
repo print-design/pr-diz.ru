@@ -14,6 +14,10 @@ if(IsInRole(CUTTER_USERS)) {
 else {
     $machine_id = filter_input(INPUT_GET, 'machine_id');
 }
+
+if(empty($machine_id)) {
+    header('Location: '.APPLICATION.'/cut/?machine_id='.CUTTER_1);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -61,19 +65,19 @@ else {
             
             if(!empty($machine_id)):
                 
-            $diff4Days = new DateInterval('P4D');
+            $diff5Days = new DateInterval('P5D');
             $diff3Months = new DateInterval('P3M');
             
-            // Работы отображаются, начиная с дня 4 сутками ранее.
+            // Работы отображаются, начиная с дня 5 сутками ранее.
             $now = new DateTime();
             $date_from = clone $now;
-            $date_from->sub($diff4Days);
+            $date_from->sub($diff5Days);
             
-            // Если за рамками 4 суток присутствует работа в статусе "Приладка на резке", "Режется", "Закончили резку", "Готово к упаковке"
+            // Если за рамками 5 суток присутствует работа в статусе "Приладка на резке", "Режется", "Сняли с резки"
             // отображаем список, начиная с этой работы.
             $sql = "select e.date "
                     . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
-                    . "where (c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING." or c.status_id = ".ORDER_STATUS_CUT_FINISHED." or c.status_id = ".ORDER_STATUS_PACK_READY.") "
+                    . "where (c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING." or c.status_id = ".ORDER_STATUS_CUT_REMOVED.") "
                     . "and e.work_id = ".WORK_CUTTING." and e.machine_id = $machine_id and "
                     . "e.date < '".$date_from->format('Y-m-d')."' "
                     . "order by e.date asc";

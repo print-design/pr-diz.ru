@@ -7,9 +7,10 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не указан id, направляем к списку заданий
+// Если не указан id или машина, направляем к списку заданий
 $id = filter_input(INPUT_GET, 'id');
-if($id === null) {
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
@@ -218,8 +219,8 @@ if($row = $fetcher->Fetch()) {
                     </div>
                     <div class="name">Приладка</div>
                     <form method="post">
-                        <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                        <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <div class="input-group">
                             <input type="text" class="form-control int-only" name="length" placeholder="Метраж приладки" required="required" autocomplete="off" />
                             <div class="input-group-append">
@@ -227,14 +228,12 @@ if($row = $fetcher->Fetch()) {
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <?php if($status_id != ORDER_STATUS_CUT_REMOVED): ?>
                             <div class="col-6">
                                 <button type="submit" class="btn btn-dark w-100" name="ready_submit"><i class="fas fa-check"></i>&nbsp;&nbsp;&nbsp;Приладка выполнена</button>
                             </div>
                             <div class="col-6">
                                 <button type="button" class="btn btn-light w-100" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" />&nbsp;&nbsp;&nbsp;Возникла проблема</button>
                             </div>
-                            <?php endif; ?>
                         </div>
                     </form>
                 </div>

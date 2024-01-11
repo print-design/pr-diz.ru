@@ -7,9 +7,10 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не указан id, направляем к списку заданий
+// Если не указан id или машина, направляем к списку заданий
 $id = filter_input(INPUT_GET, 'id');
-if($id === null) {
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
@@ -227,24 +228,22 @@ if($row = $fetcher->Fetch()) {
                         </div>
                     </div>
                     <div class="d-flex justify-content-start mb-4 mt-4">
-                        <?php if($status_id != ORDER_STATUS_CUT_REMOVED): ?>
                         <div>
                             <form method="post">
-                                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                                <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                                <input type="hidden" name="id" value="<?=$id ?>" />
+                                <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                                 <button type="submit" name="new_take_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Начать новый съём</button>
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div>
                             <form method="post">
-                                <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
-                                <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                                <input type="hidden" name="id" value="<?=$id ?>" />
+                                <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                                 <button type="submit" name="finished_submit" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Тираж выполнен</button>
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
-                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="col-4">

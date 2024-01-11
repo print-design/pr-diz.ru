@@ -7,9 +7,10 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не указан id, направляем к списку заданий
+// Если не указан id или не указана машина, направляем к списку заданий
 $id = filter_input(INPUT_GET, 'id');
-if($id === null) {
+$machine_id = filter_input(INPUT_GET, 'machine_id');
+if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
@@ -36,9 +37,9 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $length = floatval(filter_input(INPUT_POST, 'length'));
     $radius = floatval(filter_input(INPUT_POST, 'radius'));
     
-    $is_valid = false;
-    $validation1 = false;
-    $validation2 = false;
+    $is_valid = true;
+    $validation1 = true;
+    $validation2 = true;
     
     // Валидация данных
     // Валидация 1 между инпутами «Масса» и «Метраж» 
@@ -174,6 +175,11 @@ if($row = $fetcher->Fetch()) {
     $take_id = $row['take_id'];
     $take_number = $row['take_number'];
     $printed_streams_count = $row['printed_streams_count'];
+}
+
+// Если у данной работы ещё не было сделано ни одного съёма, перенаправляем на страницу приладки
+if(empty($take_id)) {
+    header('Location: details.php?id='.$id.(empty($machine_id) ? '' : '&machine_id='.$machine_id));
 }
 ?>
 <!DOCTYPE html>
@@ -336,7 +342,6 @@ if($row = $fetcher->Fetch()) {
                         <?php include './_calculation_streams.php'; ?>
                     </div>
                     <div class="d-flex justify-content-xl-start mb-4" id="calculation_streams_bottom" data-id="0" ondragover="DragOverBottom(event);" ondrop="DropBottom(event);">
-                        <?php if($status_id != ORDER_STATUS_CUT_REMOVED): ?>
                         <?php
                         if($printed_streams_count < $calculation->streams_number) {
                             $finish_submit_disabled_class = ' disabled';
@@ -345,10 +350,9 @@ if($row = $fetcher->Fetch()) {
                             $finish_submit_disabled_class = '';
                         }
                         ?>
-                        <div><a href="taken.php?id=<?= filter_input(INPUT_GET, 'id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-dark pl-4 pr-4 mr-4<?=$finish_submit_disabled_class ?>"><i class="fas fa-check mr-2"></i>Съём закончен</a></div>
+                        <div><a href="taken.php?id=<?=$id ?>&machine_id=<?= $machine_id ?>" class="btn btn-dark pl-4 pr-4 mr-4<?=$finish_submit_disabled_class ?>"><i class="fas fa-check mr-2"></i>Съём закончен</a></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
-                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="col-4">
@@ -387,7 +391,7 @@ if($row = $fetcher->Fetch()) {
             
             $sql = "select pe.last_name, pe.first_name "
                     . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-                    . "where date_format(pw.date, '%d-%m-%Y') = '$stream_date' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = ". filter_input(INPUT_GET, 'machine_id');
+                    . "where date_format(pw.date, '%d-%m-%Y') = '$stream_date' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
             $stream_cutter = '';
 
             $fetcher = new Fetcher($sql);
@@ -442,7 +446,7 @@ if($row = $fetcher->Fetch()) {
                     $.ajax({ dataType: 'JSON', url: "_drag_streams.php?source_id=" + source_id + "&target_id=" + target_id })
                             .done(function(data) {
                                 if(data.error == '') {
-                                    $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
+                                    $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?=$machine_id ?>');
                                 }
                                 else {
                                     alert(data.error);
@@ -462,7 +466,7 @@ if($row = $fetcher->Fetch()) {
                     $.ajax({ dataType: 'JSON', url: "_drag_to_bottom.php?source_id=" + source_id })
                             .done(function(data) {
                                 if(data.error == '') {
-                                    $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>');
+                                    $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?=$machine_id ?>');
                                     $('#calculation_streams_bottom').removeClass('target');
                                 }
                                 else {
