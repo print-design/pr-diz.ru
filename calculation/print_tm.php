@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './calculation.php';
+include './calculation_result.php';
 
 // Печать: лицевая, оборотная
 const SIDE_FRONT = 1;
@@ -32,6 +33,8 @@ function GetMachineCoeff($printer) {
 
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
+$calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 
 $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.work_type_id, c.machine_id, c.laminator_id, "
         . "c.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
@@ -67,20 +70,20 @@ $sql = "select c.date, c.customer_id, c.name calculation, c.quantity, c.unit, c.
 $fetcher = new Fetcher($sql);
 $row = $fetcher->Fetch();
 
-$date = $row['date'];
-$customer_id = $row['customer_id'];
-$calculation = $row['calculation'];
-$quantity = $row['quantity'];
-$unit = $row['unit'];
-$work_type_id = $row['work_type_id'];
-$machine_id = $row['machine_id'];
-$laminator_id = $row['laminator_id'];
+//$date = $row['date'];
+//$customer_id = $row['customer_id'];
+//$calculation = $row['calculation'];
+//$quantity = $row['quantity'];
+//$unit = $row['unit'];
+//$work_type_id = $row['work_type_id'];
+//$machine_id = $row['machine_id'];
+//$laminator_id = $row['laminator_id'];
 
-$film_variation_id = $row['film_variation_id'];
-$film_name = $row['film_name'];
-$thickness = $row['thickness'];
-$weight = $row['weight'];
-$price = $row['price'];
+//$film_variation_id = $row['film_variation_id'];
+//$film_name = $row['film_name'];
+//$thickness = $row['thickness'];
+//$weight = $row['weight'];
+//$price = $row['price'];
 $currency = $row['currency'];
 $individual_film_name = $row['individual_film_name'];
 $individual_thickness = $row['individual_thickness'];
@@ -89,11 +92,11 @@ $customers_material = $row['customers_material'];
 $ski = $row['ski'];
 $width_ski = $row['width_ski'];
 
-$lamination1_film_variation_id = $row['lamination1_film_variation_id'];
-$lamination1_film_name = $row['lamination1_film_name'];
-$lamination1_thickness = $row['lamination1_thickness'];
-$lamination1_weight = $row['lamination1_weight'];
-$lamination1_price = $row['lamination1_price'];
+//$lamination1_film_variation_id = $row['lamination1_film_variation_id'];
+//$lamination1_film_name = $row['lamination1_film_name'];
+//$lamination1_thickness = $row['lamination1_thickness'];
+//$lamination1_weight = $row['lamination1_weight'];
+//$lamination1_price = $row['lamination1_price'];
 $lamination1_currency = $row['lamination1_currency'];
 $lamination1_individual_film_name = $row['lamination1_individual_film_name'];
 $lamination1_individual_thickness = $row['lamination1_individual_thickness'];
@@ -102,11 +105,11 @@ $lamination1_customers_material = $row['lamination1_customers_material'];
 $lamination1_ski = $row['lamination1_ski'];
 $lamination1_width_ski = $row['lamination1_width_ski'];
 
-$lamination2_film_variation_id = $row['lamination2_film_variation_id'];
-$lamination2_film_name = $row['lamination2_film_name'];
-$lamination2_thickness = $row['lamination2_thickness'];
-$lamination2_weight = $row['lamination2_weight'];
-$lamination2_price = $row['lamination2_price'];
+//$lamination2_film_variation_id = $row['lamination2_film_variation_id'];
+//$lamination2_film_name = $row['lamination2_film_name'];
+//$lamination2_thickness = $row['lamination2_thickness'];
+//$lamination2_weight = $row['lamination2_weight'];
+//$lamination2_price = $row['lamination2_price'];
 $lamination2_currency = $row['lamination2_currency'];
 $lamination2_individual_film_name = $row['lamination2_individual_film_name'];
 $lamination2_individual_thickness = $row['lamination2_individual_thickness'];
@@ -123,21 +126,23 @@ $number_in_raport = $row['number_in_raport'];
 $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number']; if(empty($ink_number)) $ink_number = 0;
 
-for($i=1; $i<=$ink_number; $i++) {
-    $ink_var = "ink_$i";
-    $$ink_var = $row[$ink_var];
+if(!empty($calculation->ink_number)) {
+    for($i=1; $i<=$calculation->ink_number; $i++) {
+        $ink_var = "ink_$i";
+        $$ink_var = $calculation->$ink_var;
     
-    $color_var = "color_$i";
-    $$color_var = $row[$color_var];
+        $color_var = "color_$i";
+        $$color_var = $calculation->$color_var;
     
-    $cmyk_var = "cmyk_$i";
-    $$cmyk_var = $row[$cmyk_var];
+        $cmyk_var = "cmyk_$i";
+        $$cmyk_var = $calculation->$cmyk_var;
     
-    $percent_var = "percent_$i";
-    $$percent_var = $row[$percent_var];
+        $percent_var = "percent_$i";
+        $$percent_var = $calculation->$percent_var;
     
-    $cliche_var = "cliche_$i";
-    $$cliche_var = $row[$cliche_var];
+        $cliche_var = "cliche_$i";
+        $$cliche_var = $calculation->$cliche_var;
+    }
 }
 
 $knife = $row['knife'];
@@ -164,12 +169,7 @@ $gap = $row['gap'];
 
 $num_for_customer = $row['num_for_customer'];
 
-$lamination = "нет";
-if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
-if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
-
-$techmap_id = $row['techmap_id'];
-$techmap_date = $row['techmap_date']; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
+$lamination = (empty($calculation->laminations_number) || $calculation->laminations_number == 0) ? "нет" : $calculation->laminations_number;
 
 $side = $row['side'];
 $winding = $row['winding'];
@@ -185,23 +185,23 @@ $comment = $row['comment'];
 $data_priladka = new DataPriladka(0, 0, 0, 0);
 $data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
 
-if(!empty($date)) {
-    if(empty($machine_id)) {
+if(!empty($calculation->date)) {
+    if(empty($calculation->machine_id)) {
         $data_priladka = new DataPriladka(0, 0, 0, 0);
     }
     else {
-        $sql = "select time, length, stamp, waste_percent from norm_priladka where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
+        $sql = "select time, length, stamp, waste_percent from norm_priladka where date <= '".$calculation->date."' and machine_id = ".$calculation->machine_id." order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if ($row = $fetcher->Fetch()) {
             $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
         }
     }
     
-    if(empty($laminator_id)) {
+    if(empty($calculation->laminator_id)) {
         $data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
     }
     else {
-        $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
+        $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '".$calculation->date."' and laminator_id = ".$calculation->laminator_id." order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent']);
@@ -223,39 +223,39 @@ $film_name1 = empty($film_name) ? $individual_film_name : $film_name;
 $film_name2 = empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name;
 $film_name3 = empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name;
 
-if(in_array($film_name1, WASTE_PRESS_FILMS)) {
+if(in_array($calculation->film_1, WASTE_PRESS_FILMS)) {
     $waste1 = WASTE_PRESS;
 }
-elseif($film_name1 == WASTE_PAPER_FILM) {
+elseif($calculation->film_1 == WASTE_PAPER_FILM) {
     $waste1 = WASTE_PAPER;
 }
-elseif(empty ($film_name1)) {
+elseif(empty ($calculation->film_1)) {
     $waste1 = "";
 }
 else {
     $waste1 = WASTE_KAGAT;
 }
 
-if(in_array($film_name2, WASTE_PRESS_FILMS)) {
+if(in_array($calculation->film_2, WASTE_PRESS_FILMS)) {
     $waste2 = WASTE_PRESS;
 }
-elseif ($film_name2 == WASTE_PAPER_FILM) {
+elseif ($calculation->film_2 == WASTE_PAPER_FILM) {
     $waste2 = WASTE_PAPER;
 }
-elseif(empty ($film_name2)) {
+elseif(empty ($calculation->film_2)) {
     $waste2 = "";
 }
 else {
     $waste2 = WASTE_KAGAT;
 }
 
-if(in_array($film_name3, WASTE_PRESS_FILMS)) {
+if(in_array($calculation->film_3, WASTE_PRESS_FILMS)) {
     $waste3 = WASTE_PRESS;
 }
-elseif($film_name3 == WASTE_PAPER_FILM) {
+elseif($calculation->film_3 == WASTE_PAPER_FILM) {
     $waste3 = WASTE_PAPER;
 }
-elseif(empty ($film_name3)) {
+elseif(empty ($calculation->film_3)) {
     $waste3 = "";
 }
 else {
@@ -268,8 +268,8 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 
 $machine_coeff = null;
 
-if(!empty($machine_id)) {
-    $machine_coeff = GetMachineCoeff($machine_id);
+if(!empty($calculation->machine_id)) {
+    $machine_coeff = GetMachineCoeff($calculation->machine_id);
 }
 
 // Тиражи и формы
@@ -282,7 +282,7 @@ $cliches_used_old = 0;
 $quantities_sum = 0;
 $lengths_sum = 0;
 
-if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
     $grabber = new Grabber($sql);
     $error_message = $grabber->error;
@@ -518,8 +518,8 @@ $current_date_time = date("dmYHis");
                     ?>
                     <div class="d-inline-block header_qr" style="display: inline-block;"><img src='<?=$filename ?>' /></div>
                     <div class="d-inline-block header_title font-weight-bold mr-3" style="display: inline-block; font-weight: 700; margin-right: 1rem;">
-                        Заказ №<?=$customer_id ?>-<?=$num_for_customer ?><br />
-                        от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?>
+                        Заказ №<?=$calculation->customer_id ?>-<?=$num_for_customer ?><br />
+                        от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?>
                     </div>
                     <div class="d-inline-block header_title font-weight-bold mr-2" style="display: inline-block; font-weight: 700; margin-right: 0.5rem;">
                         Карта составлена:
@@ -527,7 +527,7 @@ $current_date_time = date("dmYHis");
                         Менеджер:
                     </div>
                     <div class="d-inline-block header_title" style="display: inline-block;">
-                        <?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?>
+                        <?= empty($calculation_result->techmap_date) ? date('d.m.Y H:i') : DateTime::createFromFormat('Y-m-d H:i:s', $calculation_result->techmap_date)->format('d.m.Y H:i') ?>
                         <br />
                         <?=$first_name ?> <?=$last_name ?>
                     </div>
@@ -537,13 +537,13 @@ $current_date_time = date("dmYHis");
                 </div>
             </div>
             <div id="title">Заказчик: <?=$customer ?></div>
-            <div id="subtitle">Наименование: <?=$calculation ?></div>
+            <div id="subtitle">Наименование: <?=$calculation->name ?></div>
             <div class="row" style="display: flex; flex-wrap: wrap;">
                 <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
-                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(intval($quantities_sum), 0)." шт" : DisplayNumber(intval($quantity), 0).($unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(floatval($lengths_sum), 0)." м" : DisplayNumber(floatval($length_pure_1), 0)." м" ?>
+                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(intval($quantities_sum), 0)." шт" : DisplayNumber(intval($calculation->quantity), 0).($calculation->unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(floatval($lengths_sum), 0)." м" : DisplayNumber(floatval($length_pure_1), 0)." м" ?>
                 </div>
                 <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
-                    <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=WORK_TYPE_NAMES[$work_type_id] ?>
+                    <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=WORK_TYPE_NAMES[$calculation->work_type_id] ?>
                 </div>
             </div>
         </div>
@@ -562,13 +562,13 @@ $current_date_time = date("dmYHis");
                             <td>Машина</td>
                             <td>
                                 <?php
-                                if(!empty($machine_id)) {
-                                    echo mb_stristr(PRINTER_SHORTNAMES[$machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$machine_id]);
+                                if(!empty($calculation->machine_id)) {
+                                    echo mb_stristr(PRINTER_SHORTNAMES[$calculation->machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$calculation->machine_id]);
                                 }
                                 ?>
                             </td>
                         </tr>
-                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Поставщик мат-ла</td>
                             <td><?= empty($supplier) ? "Любой" : $supplier ?></td>
@@ -576,27 +576,27 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                         <tr>
                             <td>Марка мат-ла</td>
-                            <td><?= empty($film_name) ? $individual_film_name : $film_name ?></td>
+                            <td><?= $calculation->film_1 ?></td>
                         </tr>
                         <tr>
                             <td>Толщина</td>
-                            <td class="text-nowrap" style="white-space: nowrap;"><?= empty($film_name) ? DisplayNumber(floatval($individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                            <td class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_1), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_1), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
                             <td><?= DisplayNumber(floatval($width_1), 0) ?> мм</td>
                         </tr>
                         <tr>
-                            <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
+                            <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "На приладку 1 тиража" : "Метраж на приладку" ?></td>
                             <td><?= DisplayNumber(floatval($data_priladka->length) * floatval($ink_number), 0) ?> м</td>
                         </tr>
-                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Всего тиражей</td>
                             <td><?=count($printings) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Метраж на тираж</td>
                             <td><?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
@@ -633,7 +633,7 @@ $current_date_time = date("dmYHis");
                             <td>Нет</td>
                         </tr>
                         <tr>
-                            <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
+                            <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
                             <td><?=$stream_width.(empty($stream_width) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
@@ -644,7 +644,7 @@ $current_date_time = date("dmYHis");
                             <td>Кол-во ручьёв</td>
                             <td><?=$streams_number ?></td>
                         </tr>
-                        <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td>Этикеток в рапорте</td>
                             <td><?=$number_in_raport ?></td>
@@ -662,7 +662,7 @@ $current_date_time = date("dmYHis");
                             <td>Требование по материалу</td>
                             <td><?=$requirement1 ?></td>
                         </tr>
-                        <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                        <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
                             <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Красочность: <?=$ink_number ?> красок</td>
                         </tr>
@@ -731,9 +731,9 @@ $current_date_time = date("dmYHis");
                         <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; border-right: 1px solid #dee2e6; padding-left: 5px; padding-right: 5px;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
-                                    <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;"><?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> Ламинация<?php else: echo "<br /> "; endif; ?></td>
+                                    <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;"><?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> Ламинация<?php else: echo "<br /> "; endif; ?></td>
                                 </tr>
-                                <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                                <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                                 <tr>
                                     <td>Кол-во ламинаций</td>
                                     <td><?=$lamination ?></td>
@@ -743,11 +743,11 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
-                                    <td><?= empty($lamination1_film_name) ? $lamination1_individual_film_name : $lamination1_film_name ?></td>
+                                    <td><?= $calculation->film_2 ?></td>
                                 </tr>
                                 <tr>
                                     <td>Толщина</td>
-                                    <td class="text-nowrap" style="white-space: nowrap;"><?= empty($lamination1_film_name) ? DisplayNumber(floatval($lamination1_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination1_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination1_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                    <td class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_2), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_2), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
@@ -782,11 +782,11 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
-                                    <td><?= empty($lamination2_film_name) ? $lamination2_individual_film_name : $lamination2_film_name ?></td>
+                                    <td><?= $calculation->film_3 ?></td>
                                 </tr>
                                 <tr>
                                     <td>Толщина</td>
-                                    <td class="text-nowrap" style="white-space: nowrap;"><?= empty($lamination2_film_name) ? DisplayNumber(floatval($lamination2_individual_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_individual_density), 2), "0").' г/м<sup>2</sup>' : DisplayNumber(floatval($lamination2_thickness), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($lamination2_weight), 2), "0").' г/м<sup>2</sup>' ?></td>
+                                    <td class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_3), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_3), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
@@ -818,14 +818,14 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Отгрузка в</td>
-                                    <td><?=$unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                                    <td><?=$calculation->unit == 'kg' ? 'Кг' : 'Шт' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Готовая продукция</td>
-                                    <td><?=$unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
+                                    <td><?=$calculation->unit == 'kg' ? 'Взвешивать' : 'Записывать метраж' ?></td>
                                 </tr>
                                 <tr>
-                                    <td><?=$work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
+                                    <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
                                     <?php
                                     $norm_stream = "";
                                     $sql = "select gap_stream from norm_gap order by date desc limit 1";
@@ -836,7 +836,7 @@ $current_date_time = date("dmYHis");
                                     ?>
                                     <td>
                                         <?php
-                                        if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                        if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                             if(empty($norm_stream)) {
                                                 echo DisplayNumber(intval($stream_width), 0)." мм";
                                             }
@@ -901,17 +901,14 @@ $current_date_time = date("dmYHis");
                                         if(empty($winding) || empty($winding_unit)) {
                                             echo 'Ждем данные';
                                         }
-                                        elseif(empty ($weight) && empty($individual_density)) {
+                                        elseif(empty ($calculation->density_1)) {
                                             echo 'Нет данных по уд. весу пленки';
                                         }
                                         elseif(empty ($width_1)) {
                                             echo 'Нет данных по ширине мат-ла';
                                         }
                                         elseif($winding_unit == 'kg') {
-                                            $final_density = empty($weight) ? $individual_density : $weight;
-                                            $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
-                                            $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
-                                            echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($stream_width)) - 200, 0)." м";
+                                            echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width)) - 200, 0)." м";
                                         }
                                         else {
                                             echo 'Нет';
@@ -930,10 +927,9 @@ $current_date_time = date("dmYHis");
                                         if(empty($length)) {
                                             echo "";
                                         }
-                                        elseif($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                        elseif($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                                             // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
-                                            $calc = CalculationBase::Create(filter_input(INPUT_GET, 'id'));
-                                            echo DisplayNumber(floatval($calc->number_in_raport_pure) / floatval($calc->raport) * 1000.0, 4);
+                                            echo DisplayNumber(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
                                         }
                                         else {
                                             echo DisplayNumber(1 / floatval($length) * 1000, 4);
@@ -1027,13 +1023,13 @@ $current_date_time = date("dmYHis");
                         echo "Без фотометки";
                         break;
                     default :
-                        echo ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
+                        echo ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
                         break;
                 }
                 ?>
             </div>
             <?php
-            $roll_folder = ($work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
+            $roll_folder = ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
             switch ($photolabel) {
                 case PHOTOLABEL_LEFT:
                     $roll_folder = "roll_left";
@@ -1087,7 +1083,7 @@ $current_date_time = date("dmYHis");
             </table>
             <div class="font-weight-bold border-bottom-2" style="font-size: 18px; margin-top: 10px; font-weight: 700;">Комментарий</div>
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$comment ?></div>
-            <?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+            <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
             <div class="row" style="display: flex; flex-wrap: wrap;">
                 <?php
