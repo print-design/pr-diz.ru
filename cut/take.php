@@ -118,6 +118,10 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
+    
+    if(empty($error_message)) {
+        header("Location: take.php?id=$id&machine_id=$machine_id");
+    }
 }
 
 // Получение объекта
