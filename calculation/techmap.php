@@ -301,8 +301,6 @@ if(!empty($calculation->ink_number)) {
 }
 
 $lamination = (empty($calculation->laminations_number) || $calculation->laminations_number == 0) ? "нет" : $calculation->laminations_number;
-
-$techmap_id = $calculation_result->techmap_id;
 $techmap_date = $calculation_result->techmap_date; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
 
 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
@@ -705,7 +703,7 @@ if(!is_nan($calculation->streams_number)) {
                 <div><a class="btn btn-light backlink" href="details.php<?= BuildQuery('id', $id) ?>">К расчету</a></div>
                 <div>
                     <?php
-                    if(!empty($techmap_id)):     
+                    if(!empty($calculation_result->techmap_id)):     
                     $print_class = "d-block";
                     $no_print_class = "d-none";
                     
@@ -729,7 +727,7 @@ if(!is_nan($calculation->streams_number)) {
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <div><h1><?= empty($techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1></div>
+                <div><h1><?= empty($calculation_result->techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1></div>
                 <div><button type="btn" class="btn btn-outline-dark" data-toggle="modal" data-target="#techmapModal">Подгрузить из другого заказа</button></div>
             </div>
             <div class="name">Заказчик: <?=$calculation->customer ?></div>
@@ -804,7 +802,7 @@ if(!is_nan($calculation->streams_number)) {
                             <td style="line-height: 18px;">Поставщик мат-ла</td>
                             <td>
                                 <?php
-                                if(empty($techmap_id)) {
+                                if(empty($calculation_result->techmap_id)) {
                                     echo "Ждем данные";
                                 }
                                 elseif(empty ($calculation_result->supplier)) {
@@ -1000,24 +998,14 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Обр. шир. / Гор. зазор" : "Обрезная ширина" ?></td>
-                            <?php
-                            $norm_stream = "";
-                            if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                                $sql = "select gap_stream from norm_gap order by date desc limit 1";
-                                $fetcher = new Fetcher($sql);
-                                if($row = $fetcher->Fetch()) {
-                                    $norm_stream = DisplayNumber($row[0], 2);
-                                }
-                            }
-                            ?>
                             <td>
                                 <?php
                                 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                                    if(empty($norm_stream)) {
+                                    if(empty($calculation->data_gap->gap_stream)) {
                                         echo DisplayNumber(intval($calculation->stream_width), 0)." мм";
                                     }
                                     else {
-                                        echo DisplayNumber(floatval($calculation->stream_width) + floatval($norm_stream), 2)." / ".DisplayNumber(floatval($norm_stream), 2)." мм";
+                                        echo DisplayNumber(floatval($calculation->stream_width) + floatval($calculation->data_gap->gap_stream), 2)." / ".DisplayNumber(floatval($calculation->data_gap->gap_stream), 2)." мм";
                                     }
                                 }
                                 else {
@@ -1385,7 +1373,7 @@ if(!is_nan($calculation->streams_number)) {
                     <input type="hidden" name="scroll" />
                     <input type="hidden" name="id" value="<?= $id ?>" />
                     <input type="hidden" name="work_type_id" value="<?=$calculation->work_type_id ?>" />
-                    <input type="hidden" name="techmap_id" value="<?=$techmap_id ?>" />
+                    <input type="hidden" name="techmap_id" value="<?=$calculation_result->techmap_id ?>" />
                     <div class="row">
                         <div class="col-6">
                             <h2>Информация для резчика</h2>
@@ -1546,7 +1534,7 @@ if(!is_nan($calculation->streams_number)) {
                                 <?php
                                 $submit_class = " d-none";
                                 $plan_class = " d-none";
-                                if(empty($techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
+                                if(empty($calculation_result->techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
                                     $submit_class = "";
                                 }
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP) {
@@ -1558,7 +1546,7 @@ if(!is_nan($calculation->streams_number)) {
                             </div>
                             <div>
                                 <?php
-                                if(!empty($techmap_id)):
+                                if(!empty($calculation_result->techmap_id)):
                             
                                 $print_class = "d-block";
                                 $no_print_class = "d-none";
@@ -1584,11 +1572,11 @@ if(!is_nan($calculation->streams_number)) {
                         </div>
                     </div>
                 </form>
-                <?php if(!empty($techmap_id) && $calculation->status_id == ORDER_STATUS_TECHMAP): ?>
+                <?php if(!empty($calculation_result->techmap_id) && $calculation->status_id == ORDER_STATUS_TECHMAP): ?>
                 <div style="position: absolute; right: 0px; bottom: 0px;">
                     <form method="post">
                         <input type="hidden" name="id" value="<?=$id ?>" />
-                        <input type="hidden" name="techmap_id" value="<?= $techmap_id ?>" />
+                        <input type="hidden" name="techmap_id" value="<?= $calculation_result->techmap_id ?>" />
                         <input type="hidden"  name="delete_techmap_submit" value="1" />
                         <button type="button" class="btn btn-dark" style="width: 175px;" onclick="javascript: if(confirm('Действительно удалить тех. карту?')) { this.form.submit(); };">Удалить тех. карту</button>
                     </form>
@@ -1608,8 +1596,8 @@ if(!is_nan($calculation->streams_number)) {
                             . "inner join techmap tm on tm.calculation_id = c.id "
                             . "where customer_id = ".$calculation->customer_id
                             . " and work_type_id = ".$calculation->work_type_id." ";
-                    if(!empty($techmap_id)) {
-                        $sql .= "and tm.id <> $techmap_id ";
+                    if(!empty($calculation_result->techmap_id)) {
+                        $sql .= "and tm.id <> ".$calculation_result->techmap_id." ";
                     }
                     switch($lamination) {
                         case "нет":
@@ -1691,7 +1679,7 @@ if(!is_nan($calculation->streams_number)) {
             });
             
             // Показываем кнопку "Сохранить" при внесении изменений
-            <?php if(!empty($techmap_id)): ?>
+            <?php if(!empty($calculation_result->techmap_id)): ?>
                 $('select').change(function() {
                     $('#techmap_submit').removeClass('d-none');
                 });
