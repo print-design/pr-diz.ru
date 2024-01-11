@@ -301,7 +301,6 @@ if(!empty($calculation->ink_number)) {
 }
 
 $lamination = (empty($calculation->laminations_number) || $calculation->laminations_number == 0) ? "нет" : $calculation->laminations_number;
-$techmap_date = $calculation_result->techmap_date; if(empty($techmap_date)) $techmap_date = date('Y-m-d H:i:s');
 
 $supplier_id = filter_input(INPUT_POST, 'supplier_id');
 if($supplier_id === null) $supplier_id = $calculation_result->supplier_id;
@@ -742,7 +741,7 @@ if(!is_nan($calculation->streams_number)) {
                     <table>
                         <tr>
                             <th>Карта составлена</th>
-                            <td class="text-left"><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
+                            <td class="text-left"><?= empty($calculation_result->techmap_date) ? date('d.m.Y H:i') : DateTime::createFromFormat('Y-m-d H:i:s', $calculation_result->techmap_date)->format('d.m.Y H:i') ?></td>
                         </tr>
                         <tr>
                             <th>Заказчик</th>
