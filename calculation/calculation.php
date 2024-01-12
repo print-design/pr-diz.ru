@@ -257,7 +257,7 @@ class CalculationBase {
             
             $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche,
             $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
-            $requirement1, $requirement2, $requirement3, 
+            $requirement1, $requirement2, $requirement3, $cut_priladka, $cut_remove_cause, 
             $customer, $last_name, $first_name, $num_for_customer;
     
     // Конструктор
@@ -341,6 +341,8 @@ class CalculationBase {
             $requirement1, // Требование по материалу 1
             $requirement2, // Требование по материалу 2
             $requirement3, // Требование по материалу 3
+            $cut_priladka, // Приладка на резке
+            $cut_remove_cause, // Причина снятия с резки
             
             $customer, // Заказчик
             $last_name, // Фамилия менеджера
@@ -427,6 +429,8 @@ class CalculationBase {
         $this->requirement1 = $requirement1; // Требования по материалу 1
         $this->requirement2 = $requirement2; // Требования по материалу 2
         $this->requirement3 = $requirement3; // Требования по материалу 3
+        $this->cut_priladka = $cut_priladka; // Приладка на резке
+        $this->cut_remove_cause = $cut_remove_cause; // Причина снятия с резки
         
         $this->customer = $customer; // Заказчик
         $this->last_name = $last_name; // Фамилия менеджера
@@ -654,6 +658,8 @@ class CalculationBase {
         $requirement1 = null; // Требования по материалу 1
         $requirement2 = null; // Требования по материалу 2
         $requirement3 = null; // Требования по материалу 3
+        $cut_priladka = null; // Приладка на резке
+        $cut_remove_cause = null; // Причина снятия с резки
         
         $customer = null; // Заказчик
         $last_name = null; // Фамилия менеджера
@@ -679,7 +685,7 @@ class CalculationBase {
                 . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
                 . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
                 . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense, "
-                . "rc.requirement1, rc.requirement2, rc.requirement3, "
+                . "rc.requirement1, rc.requirement2, rc.requirement3, rc.cut_priladka, rc.cut_remove_cause, "
                 . "cus.name customer, u.last_name, u.first_name, "
                 . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
                 . "from calculation rc "
@@ -786,6 +792,8 @@ class CalculationBase {
             $requirement1 = $row['requirement1']; // Требования по материалу 1
             $requirement2 = $row['requirement2']; // Требования по материалу 2
             $requirement3 = $row['requirement3']; // Требования по материалу 3
+            $cut_priladka = $row['cut_priladka']; // Приладка на резке
+            $cut_remove_cause = $row['cut_remove_cause']; // Причина снятия с резки
             
             $customer = $row['customer']; // Заказчик
             $last_name = $row['last_name']; // Фамилия менеджера
@@ -1014,6 +1022,8 @@ class CalculationBase {
                     $requirement1, // Требования по материалу 1
                     $requirement2, // Требования по материалу 2
                     $requirement3, // Требования по материалу 3
+                    $cut_priladka, // Приладка на резке
+                    $cut_remove_cause, // Причина снятия с резки
                     
                     $customer, // Заказчик
                     $last_name, // Фамилия менеджера
@@ -1101,6 +1111,8 @@ class CalculationBase {
                     $requirement1, // Требования по материалу 1
                     $requirement2, // Требования по материалу 2
                     $requirement3, // Требования по материалу 3
+                    $cut_priladka, // Приладка на резке
+                    $cut_remove_cause, // Причина снятия с резки
                     
                     $customer, // Заказчик
                     $last_name, // Фамилия менеджера
@@ -1275,6 +1287,8 @@ class Calculation extends CalculationBase {
             $requirement1, // Требования по материалу 1
             $requirement2, // Требования по материалу 2
             $requirement3, // Требования по материалу 3
+            $cut_priladka, // Приладка на резке
+            $cut_remove_cause, // Причина снятия с резки
             
             $customer, // Заказчик
             $last_name, // Фамилия менеджера
@@ -1295,7 +1309,8 @@ class Calculation extends CalculationBase {
                 $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
                 $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
-                $requirement1, $requirement2, $requirement3, $customer, $last_name, $first_name, $num_for_customer);
+                $requirement1, $requirement2, $requirement3, $cut_priladka, $cut_remove_cause, 
+                $customer, $last_name, $first_name, $num_for_customer);
                 
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
@@ -2113,6 +2128,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $requirement1, // Требования по материалу 1
             $requirement2, // Требования по материалу 2
             $requirement3, // Требования по материалу 3
+            $cut_priladka, // Приладка на резке
+            $cut_remove_cause, // Причина снятия с резки
             
             $customer, // Заказчик
             $last_name, // Фамилия менеджера
@@ -2133,7 +2150,8 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $cliche_1, $cliche_2, $cliche_3, $cliche_4, $cliche_5, $cliche_6, $cliche_7, $cliche_8, 
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
                 $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
-                $requirement1, $requirement2, $requirement3, $customer, $last_name, $first_name, $num_for_customer);
+                $requirement1, $requirement2, $requirement3, $cut_priladka, $cut_remove_cause, 
+                $customer, $last_name, $first_name, $num_for_customer);
         
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);

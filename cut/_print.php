@@ -6,15 +6,15 @@
         +7(4822)781-780
     </div>
 </div>
-<div class="mb-2"><strong><?=$customer_id.'-'.$num_for_customer ?>.</strong> <?=$customer ?></div>
+<div class="mb-2"><strong><?=$calculation->customer_id.'-'.$calculation->num_for_customer ?>.</strong> <?=$calculation->customer ?></div>
 <table>
     <tr>
         <td>Дата</td>
-        <td class="pl-1 font-weight-bold"><?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y H:i') ?></td>
+        <td class="pl-1 font-weight-bold"><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y H:i') ?></td>
     </tr>
     <tr>
         <td>Заказ</td>
-        <td class="pl-1 font-weight-bold"><?=$name ?></td>
+        <td class="pl-1 font-weight-bold"><?=$calculation->name ?></td>
     </tr>
     <tr>
         <td class="pb-2">Ручей</td>

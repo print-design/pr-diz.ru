@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include '../calculation/calculation.php';
+include '../calculation/calculation_result.php';
 
 // Авторизация
 if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))) {
@@ -13,9 +14,6 @@ $machine_id = filter_input(INPUT_GET, 'machine_id');
 if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
-
-// Расчёт
-$calculation = CalculationBase::Create($id);
 
 // Начало резки
 if(null !== filter_input(INPUT_POST, 'start_cut_submit')) {
@@ -32,64 +30,8 @@ if(null !== filter_input(INPUT_POST, 'start_cut_submit')) {
 }
 
 // Получение объекта
-$date = '';
-$name = '';
-$unit = '';
-$work_type_id = '';
-$status_id = '';
-
-$length = '';
-$customer_id = '';
-$customer = '';
-$length_pure_1 = '';
-$last_name = '';
-$first_name = '';
-
-$techmap_date = '';
-$side = '';
-$winding = '';
-$winding_unit = '';
-$spool = '';
-$labels = '';
-$package = '';
-
-$num_for_customer = '';
-
-$sql = "select c.date, c.name, c.unit, c.work_type_id, c.status_id, c.length, c.customer_id, cus.name customer, "
-        . "cr.length_pure_1, u.last_name, u.first_name, "
-        . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
-        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
-        . "from calculation c "
-        . "inner join calculation_result cr on cr.calculation_id = c.id "
-        . "inner join customer cus on c.customer_id = cus.id "
-        . "inner join techmap tm on tm.calculation_id = c.id "
-        . "inner join user u on c.manager_id = u.id "
-        . "where c.id = $id";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $date = $row['date'];
-    $name = $row['name'];
-    $unit = $row['unit'];
-    $work_type_id = $row['work_type_id'];
-    $status_id = $row['status_id'];
-    
-    $length = $row['length'];
-    $customer_id = $row['customer_id'];
-    $customer = $row['customer'];
-    $length_pure_1 = $row['length_pure_1'];
-    $last_name = $row['last_name'];
-    $first_name = $row['first_name'];
-    
-    $techmap_date = $row['techmap_date'];
-    $side = $row['side'];
-    $winding = $row['winding'];
-    $winding_unit = $row['winding_unit'];
-    $spool = $row['spool'];
-    $labels = $row['labels'];
-    $package = $row['package'];
-    
-    $num_for_customer = $row['num_for_customer'];
-}
+$calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -163,25 +105,25 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-4">
                     <a class="btn btn-light backlink" href="<?= APPLICATION.'/cut/?machine_id='.$machine_id ?>">К списку резок</a>
-                    <h1><?= $name ?></h1>
-                    <div class="name"><?=$customer ?></div>
-                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+                    <h1><?= $calculation->name ?></h1>
+                    <div class="name"><?=$calculation->customer ?></div>
+                    <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
                     <table>
                         <tr>
                             <td>Объём заказа</td>
-                            <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
+                            <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Менеджер</td>
-                            <td><?=$last_name.' '.$first_name ?></td>
+                            <td><?=$calculation->last_name.' '.$calculation->first_name ?></td>
                         </tr>
                         <tr>
                             <td>Тип работы</td>
-                            <td><?=WORK_TYPE_NAMES[$work_type_id] ?></td>
+                            <td><?=WORK_TYPE_NAMES[$calculation->work_type_id] ?></td>
                         </tr>
                         <tr>
                             <td>Карта составлена</td>
-                            <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
+                            <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation_result->techmap_date)->format('d.m.Y H:i') ?></td>
                         </tr>
                     </table>
                     <div style="position: absolute; left: 0px; bottom: 0px; margin: 15px;">

@@ -85,17 +85,17 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
         </tr>
         <tr>
             <td>Ширина мат-ла</td>
-            <td><?= DisplayNumber(floatval($calculation->width_1), 0) ?> мм</td>
+            <td><?= DisplayNumber(floatval($calculation_result->width_1), 0) ?> мм</td>
         </tr>
         <tr>
             <td>Метраж на тираж</td>
-            <td><?= DisplayNumber(floatval($calculation->length_pure_1), 0) ?> м</td>
+            <td><?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
         </tr>
         <tr>
             <td>Печать</td>
             <td>
                 <?php
-                switch ($side) {
+                switch ($calculation_result->side) {
                     case SIDE_FRONT:
                         echo 'Лицевая';
                         break;
@@ -147,7 +147,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
         </tr>
         <tr>
             <td>Ширина мат-ла</td>
-            <td><?= DisplayNumber(floatval($calculation->width_2), 0) ?> мм</td>
+            <td><?= DisplayNumber(floatval($calculation_result->width_2), 0) ?> мм</td>
         </tr>
     </table>
     <div class="subtitle">ИНФОРМАЦИЯ ПО ЛАМИНАЦИИ 2</div>
@@ -174,7 +174,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
     <table>
         <tr>
             <td>Объем заказа</td>
-            <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->length_pure_1), 0) ?> м</td>
+            <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
         </tr>
         <tr>
             <td>Отгрузка в</td>
@@ -202,25 +202,25 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>Намотка до</td>
             <td>
                 <?php
-                if(empty($winding)) {
+                if(empty($calculation_result->winding)) {
                     echo 'Ждем данные';
                 }
-                elseif(empty ($winding_unit)) {
+                elseif(empty ($calculation_result->winding_unit)) {
                     echo 'Нет данных по кг/мм/м/шт';
                 }
-                elseif($winding_unit == 'pc') {
+                elseif($calculation_result->winding_unit == 'pc') {
                     if(empty($calculation->length)) {
                         echo 'Нет данных по длине этикетки';
                     }
                     else {
-                        echo DisplayNumber(floatval($winding) * floatval($calculation->length) / 1000, 0);
+                        echo DisplayNumber(floatval($calculation_result->winding) * floatval($calculation->length) / 1000, 0);
                     }
                 }
                 else {
-                    echo DisplayNumber(floatval($winding), 0);
+                    echo DisplayNumber(floatval($calculation_result->winding), 0);
                 }                    
                         
-                switch ($winding_unit) {
+                switch ($calculation_result->winding_unit) {
                     case 'kg':
                         echo " кг";
                         break;
@@ -246,20 +246,17 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 * 2) Если намотка до = «мм» , то значение = "Нет"
                 * 3) Если намотка до = «м», то значение = "Нет"
                 * 4) Если намотка до = «шт» , то значение = "Нет" */
-                if(empty($winding) || empty($winding_unit)) {
+                if(empty($calculation_result->winding) || empty($calculation_result->winding_unit)) {
                     echo 'Ждем данные';
                 }
-                elseif(empty ($weight) && empty($individual_density)) {
+                elseif(empty ($calculation->density_1)) {
                     echo 'Нет данных по уд. весу пленки';
                 }
-                elseif(empty ($calculation->width_1)) {
+                elseif(empty ($calculation_result->width_1)) {
                     echo 'Нет данных по ширине мат-ла';
                 }
-                elseif($winding_unit == 'kg') {
-                    $final_density = empty($weight) ? $individual_density : $weight;
-                    $lamination1_final_density = empty($lamination1_weight) ? $lamination1_individual_density : $lamination1_weight;
-                    $lamination2_final_density = empty($lamination2_weight) ? $lamination2_individual_density : $lamination2_weight;
-                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($final_density) + ($lamination1_final_density === null ? 0 : floatval($lamination1_final_density)) + ($lamination2_final_density === null ? 0 : floatval($lamination2_final_density))) * floatval($calculation->stream_width)) - 200, 0)." м";
+                elseif($calculation_result->winding_unit == 'kg') {
+                    echo DisplayNumber((floatval($calculation_result->winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width)) - 200, 0)." м";
                 }
                 else {
                     echo 'Нет';
@@ -269,7 +266,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
         </tr>
         <tr>
             <td>Шпуля</td>
-            <td><?= empty($spool) ? "Ждем данные" : $spool." мм" ?></td>
+            <td><?= empty($calculation_result->spool) ? "Ждем данные" : $calculation_result->spool." мм" ?></td>
         </tr>
         <tr>
             <td>Этикеток в 1 м. пог.</td>
@@ -292,7 +289,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>Бирки</td>
             <td>
                 <?php
-                switch ($labels) {
+                switch ($calculation_result->labels) {
                     case LABEL_PRINT_DESIGN:
                         echo "Принт-Дизайн";
                         break;
@@ -318,7 +315,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>Упаковка</td>
             <td>
                 <?php
-                switch ($package) {
+                switch ($calculation_result->package) {
                     case PACKAGE_PALLETED:
                         echo "Паллетирование";
                         break;

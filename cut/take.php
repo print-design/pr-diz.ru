@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include '../calculation/calculation.php';
+include '../calculation/calculation_result.php';
 
 // Авторизация
 if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))) {
@@ -13,9 +14,6 @@ $machine_id = filter_input(INPUT_GET, 'machine_id');
 if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
-
-// Расчёт
-$calculation = CalculationBase::Create($id);
 
 // Обработка формы распечатки ручья
 $error_message = '';
@@ -131,63 +129,28 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
 }
 
 // Получение объекта
-$date = '';
-$name = '';
-$status_id = '';
-$cut_remove_cause = '';
-$customer_id = '';
-$customer = '';
+$calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 
-$techmap_date = '';
-$side = '';
-$winding = '';
-$winding_unit = '';
-$spool = '';
-$labels = '';
-$package = '';
+$take_id = null;
+$take_number = null;
+$length_cut = null;
+$printed_streams_count = null;
 
-$length_cut = '';
-$num_for_customer = '';
-$take_id = '';
-$take_number = '';
-$printed_streams_count = '';
-
-$sql = "select c.date, c.name, c.status_id, c.cut_remove_cause, c.customer_id, cus.name customer, "
-        . "tm.date techmap_date, tm.side, tm.winding, tm.winding_unit, tm.spool, tm.labels, tm.package, "
+$sql = "select (select max(id) from calculation_take where calculation_id = c.id) take_id, "
+        . "(select count(id) from calculation_take where calculation_id = c.id) take_number, "
         . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
-        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "(select max(id) from calculation_take where calculation_id = $id) take_id, "
-        . "(select count(id) from calculation_take where calculation_id = $id) take_number, "
-        . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = $id)) printed_streams_count "
-        . "from calculation c "
-        . "inner join customer cus on c.customer_id = cus.id "
-        . "inner join techmap tm on tm.calculation_id = c.id "
-        . "where c.id = $id";
+        . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = c.id)) printed_streams_count "
+        . "from calculation c where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $date = $row['date'];
-    $name = $row['name'];
-    $status_id = $row['status_id'];
-    $cut_remove_cause = $row['cut_remove_cause'];
-    $customer_id = $row['customer_id'];
-    $customer = $row['customer'];
-    
-    $techmap_date = $row['techmap_date'];
-    $side = $row['side'];
-    $winding = $row['winding'];
-    $winding_unit = $row['winding_unit'];
-    $spool = $row['spool'];
-    $labels = $row['labels'];
-    $package = $row['package'];
-    
-    $length_cut = $row['length_cut'];
-    $num_for_customer = $row['num_for_customer'];
     $take_id = $row['take_id'];
     $take_number = $row['take_number'];
+    $length_cut = $row['length_cut'];
     $printed_streams_count = $row['printed_streams_count'];
 }
 
-// Если у данной работы ещё не было сделано ни одного съёма, перенаправляем на страницу приладки
+// Если у данной работы ещё не было сделано ни одного съёма, перенаправляем на страницу начала работы
 if(empty($take_id)) {
     header('Location: details.php?id='.$id.(empty($machine_id) ? '' : '&machine_id='.$machine_id));
 }
@@ -330,17 +293,17 @@ if(empty($take_id)) {
                 <div class="col-8">
                     <div class="row">
                         <div class="col-6">
-                            <h1><?=$name ?></h1>
-                            <div class="name"><?=$customer ?></div>
-                            <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
+                            <h1><?=$calculation->name ?></h1>
+                            <div class="name"><?=$calculation->customer ?></div>
+                            <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
                             <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
-                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$status_id] ?>
+                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$calculation->status_id] ?>
                                 <?php
-                                if(in_array($status_id, ORDER_STATUSES_WITH_METERS)) {
+                                if(in_array($calculation->status_id, ORDER_STATUSES_WITH_METERS)) {
                                     echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation->length_pure_1), 0);
                                 }
                                 
-                                if($status_id == ORDER_STATUS_CUT_REMOVED) {
+                                if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {
                                     echo " ".$cut_remove_cause;
                                 }
                                 ?>
