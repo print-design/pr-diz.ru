@@ -35,9 +35,9 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $length = floatval(filter_input(INPUT_POST, 'length'));
     $radius = floatval(filter_input(INPUT_POST, 'radius'));
     
-    $is_valid = false;
-    $validation1 = false;
-    $validation2 = false;
+    $is_valid = true;
+    $validation1 = true;
+    $validation2 = true;
     
     // Валидация данных
     // Валидация 1 между инпутами «Масса» и «Метраж» 
@@ -208,19 +208,14 @@ if(empty($take_id)) {
                 }
             
                 th {
+                    font-weight: bold!important;
                     white-space: nowrap;
                     padding-right: 30px;
                     vertical-align: top;
                 }
-            
+                            
                 td {
                     line-height: 22px;
-                }
-            
-                tr td:nth-child(2) {
-                    text-align: right;
-                    padding-left: 10px;
-                    font-weight: bold;
                 }
             
                 .cutter_info {
@@ -327,6 +322,7 @@ if(empty($take_id)) {
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
+                    <?php include './_table.php'; ?>
                 </div>
                 <div class="col-4">
                     <?php include './_cut_right.php'; ?>

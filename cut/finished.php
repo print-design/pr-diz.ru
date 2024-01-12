@@ -93,6 +93,7 @@ if($row = $fetcher->Fetch()) {
             }
             
             th {
+                font-weight: bold;
                 white-space: nowrap;
                 padding-right: 30px;
                 vertical-align: top;
@@ -100,12 +101,6 @@ if($row = $fetcher->Fetch()) {
             
             td {
                 line-height: 22px;
-            }
-            
-            tr td:nth-child(2) {
-                text-align: right;
-                padding-left: 10px;
-                font-weight: bold;
             }
             
             .cutter_info {

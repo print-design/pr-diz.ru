@@ -98,6 +98,7 @@ $calculation_result = CalculationResult::Create($id);
             }
             
             th {
+                font-weight: bold;
                 white-space: nowrap;
                 padding-right: 30px;
                 vertical-align: top;
@@ -105,12 +106,6 @@ $calculation_result = CalculationResult::Create($id);
             
             td {
                 line-height: 22px;
-            }
-            
-            tr td:nth-child(2) {
-                text-align: right;
-                padding-left: 10px;
-                font-weight: bold;
             }
             
             .cutter_info {
