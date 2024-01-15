@@ -157,6 +157,7 @@ if($row = $fetcher->Fetch()) {
                             </div>
                         </div>
                     </div>
+                    <?php include './_table.php'; ?>
                     <div class="d-flex justify-content-start mb-4 mt-4">
                         <div>
                             <form method="post">

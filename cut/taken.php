@@ -202,6 +202,7 @@ if($row = $fetcher->Fetch()) {
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
+                    <?php include './_table.php'; ?>
                 </div>
                 <div class="col-4">
                     <?php include './_cut_right.php'; ?>

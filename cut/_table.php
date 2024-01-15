@@ -14,7 +14,7 @@
         $length = $row['length'];
     }
     ?>
-    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(intval($weight), 0) ?> кг, <?= DisplayNumber(intval($length), 0) ?> м, этикеток <?= DisplayNumber(floor($calculation->streams_number * $length * 1000 / $calculation->length), 0) ?> шт.</div>
+    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(intval($weight), 0) ?> кг, <?= DisplayNumber(intval($length), 0) ?> м, этикеток <?= DisplayNumber(floor($length * 1000 / $calculation->length), 0) ?> шт.</div>
     <table class="table">
         <tr>
             <th style="border-top-width: 0;">Наименование</th>
@@ -28,7 +28,8 @@
                 . "from calculation_take_stream cts "
                 . "left join calculation_stream cs on cts.calculation_stream_id = cs.id "
                 . "where cs.calculation_id = $id "
-                . "group by cts.calculation_stream_id";
+                . "group by cts.calculation_stream_id "
+                . "order by cs.position";
         $fetcher = new Fetcher($sql);
         while ($row = $fetcher->Fetch()):
         ?>
@@ -37,7 +38,7 @@
             <td><?=$row['bobbins'] ?></td>
             <td><?=$row['weight'] ?? 0 ?> кг</td>
             <td><?=$row['length'] ?? 0 ?> м</td>
-            <td><?= floor($calculation->streams_number * $row['length'] * 1000 / $calculation->length) ?></td>
+            <td><?= floor($row['length'] * 1000 / $calculation->length) ?> шт.</td>
         </tr>
         <?php endwhile; ?>
     </table>
@@ -52,10 +53,6 @@
     <div class="name">Готовые съёмы</div>
     <div class="subtitle">Общий метраж съёмов: <?= DisplayNumber(intval($total_length), 0) ?> м</div>
     <?php
-    /*$sql = "select id, timestamp, "
-            . "() weight, "
-            . "() length "
-            . "from calculation_take ct where ct.calculation_id = $id";*/
     $sql = "select ct.id, ct.timestamp, sum(cts.weight) weight, sum(cts.length) length "
                 . "from calculation_take_stream cts "
                 . "left join calculation_take ct on cts.calculation_take_id = ct.id "
@@ -86,6 +83,42 @@
         $take_first_name = $row['first_name'];
     }
     ?>
-    <div><strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'.' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м</div>
+    <div style="padding-left: 10px; padding-right: 10px; border: solid 1px #e3e3e3; border-radius: 15px; margin-top: 15px; margin-bottom: 5px;">
+        <div style="padding-top: 15px; padding-bottom: 15px;">
+            <a href="javascript: void(0);" class="show_table" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <a href="javascript: void(0);" class="hide_table d-none" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'.' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м, <?= DisplayNumber(floor($take['length'] * 1000 / $calculation->length), 0) ?> шт.
+        </div>
+        <table class="table take_table d-none" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
+            <tr>
+                <th>ID</th>
+                <th>Наименование</th>
+                <th>Время</th>
+                <th>Масса</th>
+                <th>Метраж</th>
+                <th>Этикеток</th>
+                <th></th>
+            </tr>
+            <?php 
+            $sql = "select cts.id, cs.name, date_format(cts.printed, '%H:%i') printed, cts.weight, cts.length "
+                    . "from calculation_take_stream cts "
+                    . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
+                    . "where cts.calculation_take_id = ".$take['id']
+                    . " order by cs.position";
+            $fetcher = new Fetcher($sql);
+            while($row = $fetcher->Fetch()):
+            ?>
+            <tr style="border-bottom: 0;">
+                <td><?=$row['id'] ?></td>
+                <td><?=$row['name'] ?></td>
+                <td><?=$row['printed'] ?></td>
+                <td><?=$row['weight'] ?> кг</td>
+                <td><?=$row['length'] ?> м</td>
+                <td><?= DisplayNumber(floor($row['length'] * 1000 / $calculation->length), 0) ?> шт.</td>
+                <td></td>
+            </tr>
+            <?php endwhile; ?>
+        </table>
+    </div>
     <?php endforeach; ?>
 </div>
