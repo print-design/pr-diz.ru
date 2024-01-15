@@ -115,7 +115,7 @@
                 <td style="text-align: left;"><?=$row['weight'] ?> кг</td>
                 <td style="text-align: left;"><?=$row['length'] ?> м</td>
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * 1000 / $calculation->length), 0) ?> шт.</td>
-                <td style="text-align: left;"></td>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
             </tr>
             <?php endwhile; ?>
         </table>
