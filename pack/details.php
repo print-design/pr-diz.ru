@@ -175,6 +175,15 @@ if($row = $fetcher->Fetch()) {
                             <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
                         </tr>
                     </table>
+                    <?php
+                    $machine_id = null;
+                    $sql = "select machine_id from plan_edition where calculation_id = $id";
+                    $fetcher = new Fetcher($sql);
+                    if($row = $fetcher->Fetch()) {
+                        $machine_id = $row[0];
+                    }
+                    include '../cut/_table.php';
+                    ?>
                     <div class="d-flex justify-content-xl-start mt-4">
                         <?php if($status_id == ORDER_STATUS_PACK_READY): ?>
                         <div>
@@ -201,6 +210,19 @@ if($row = $fetcher->Fetch()) {
             <?php
             include '../include/footer.php';
             ?>
+            <script>
+            function ShowTakeTable(id) {
+                $('a.show_table[data-id=' + id + ']').addClass('d-none');
+                $('a.hide_table[data-id=' + id + ']').removeClass('d-none');
+                $('table.take_table[data-id=' + id + ']').removeClass('d-none');
+            }
+            
+            function HideTakeTable(id) {
+                $('a.hide_table[data-id=' + id + ']').addClass('d-none');
+                $('a.show_table[data-id=' + id + ']').removeClass('d-none');
+                $('table.take_table[data-id=' + id + ']').addClass('d-none');
+            }
+            </script>
         </div>
     </body>
 </html>
