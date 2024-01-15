@@ -175,6 +175,10 @@ if($row = $fetcher->Fetch()) {
                             <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
                         </tr>
                     </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
                     <?php
                     $machine_id = null;
                     $sql = "select machine_id from plan_edition where calculation_id = $id and work_id = ".WORK_CUTTING;
