@@ -17,11 +17,11 @@
     <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(intval($weight), 0) ?> кг, <?= DisplayNumber(intval($length), 0) ?> м, этикеток <?= DisplayNumber(floor($length * 1000 / $calculation->length), 0) ?> шт.</div>
     <table class="table">
         <tr>
-            <th style="border-top-width: 0;">Наименование</th>
-            <th style="border-top-width: 0;">Катушек</th>
-            <th style="border-top-width: 0;">Масса</th>
-            <th style="border-top-width: 0;">Метраж</th>
-            <th style="border-top-width: 0;">Этикеток</th>
+            <th style="border-top-width: 0; font-weight: bold;">Наименование</th>
+            <th style="border-top-width: 0; font-weight: bold;">Катушек</th>
+            <th style="border-top-width: 0; font-weight: bold;">Масса</th>
+            <th style="border-top-width: 0; font-weight: bold;">Метраж</th>
+            <th style="border-top-width: 0; font-weight: bold;">Этикеток</th>
         </tr>
         <?php
         $sql = "select cs.id, cs.name, count(cts.id) bobbins, sum(cts.weight) weight, sum(cts.length) length "
@@ -34,11 +34,11 @@
         while ($row = $fetcher->Fetch()):
         ?>
         <tr>
-            <td><?=$row['name'] ?></td>
-            <td><?=$row['bobbins'] ?></td>
-            <td><?=$row['weight'] ?? 0 ?> кг</td>
-            <td><?=$row['length'] ?? 0 ?> м</td>
-            <td><?= floor($row['length'] * 1000 / $calculation->length) ?> шт.</td>
+            <td style="text-align: left;"><?=$row['name'] ?></td>
+            <td style="text-align: left;"><?=$row['bobbins'] ?></td>
+            <td style="text-align: left;"><?=$row['weight'] ?? 0 ?> кг</td>
+            <td style="text-align: left;"><?=$row['length'] ?? 0 ?> м</td>
+            <td style="text-align: left;"><?= floor($row['length'] * 1000 / $calculation->length) ?> шт.</td>
         </tr>
         <?php endwhile; ?>
     </table>
@@ -91,13 +91,13 @@
         </div>
         <table class="table take_table d-none" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
-                <th>ID</th>
-                <th>Наименование</th>
-                <th>Время</th>
-                <th>Масса</th>
-                <th>Метраж</th>
-                <th>Этикеток</th>
-                <th></th>
+                <th style="font-weight: bold;">ID</th>
+                <th style="font-weight: bold;">Наименование</th>
+                <th style="font-weight: bold;">Время</th>
+                <th style="font-weight: bold;">Масса</th>
+                <th style="font-weight: bold;">Метраж</th>
+                <th style="font-weight: bold;">Этикеток</th>
+                <th style="font-weight: bold;"></th>
             </tr>
             <?php 
             $sql = "select cts.id, cs.name, date_format(cts.printed, '%H:%i') printed, cts.weight, cts.length "
@@ -109,13 +109,13 @@
             while($row = $fetcher->Fetch()):
             ?>
             <tr style="border-bottom: 0;">
-                <td><?=$row['id'] ?></td>
-                <td><?=$row['name'] ?></td>
-                <td><?=$row['printed'] ?></td>
-                <td><?=$row['weight'] ?> кг</td>
-                <td><?=$row['length'] ?> м</td>
-                <td><?= DisplayNumber(floor($row['length'] * 1000 / $calculation->length), 0) ?> шт.</td>
-                <td></td>
+                <td style="text-align: left;"><?=$row['id'] ?></td>
+                <td style="text-align: left;"><?=$row['name'] ?></td>
+                <td style="text-align: left;"><?=$row['printed'] ?></td>
+                <td style="text-align: left;"><?=$row['weight'] ?> кг</td>
+                <td style="text-align: left;"><?=$row['length'] ?> м</td>
+                <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * 1000 / $calculation->length), 0) ?> шт.</td>
+                <td style="text-align: left;"></td>
             </tr>
             <?php endwhile; ?>
         </table>
