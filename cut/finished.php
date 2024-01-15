@@ -119,6 +119,13 @@ if($row = $fetcher->Fetch()) {
                 font-weight: bold;
                 text-align: center; 
             }
+            
+            .calculation_stream {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 20px;
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body>

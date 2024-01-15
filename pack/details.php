@@ -127,6 +127,13 @@ if($row = $fetcher->Fetch()) {
                 padding-left: 10px;
                 font-weight: bold;
             }
+            
+            .calculation_stream {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 20px;
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body>
@@ -177,7 +184,7 @@ if($row = $fetcher->Fetch()) {
                     </table>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-4">
                 <div class="col-8">
                     <?php
                     $machine_id = null;
