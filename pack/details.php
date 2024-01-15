@@ -177,7 +177,7 @@ if($row = $fetcher->Fetch()) {
                     </table>
                     <?php
                     $machine_id = null;
-                    $sql = "select machine_id from plan_edition where calculation_id = $id";
+                    $sql = "select machine_id from plan_edition where calculation_id = $id and work_id = ".WORK_CUTTING;
                     $fetcher = new Fetcher($sql);
                     if($row = $fetcher->Fetch()) {
                         $machine_id = $row[0];
