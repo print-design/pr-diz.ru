@@ -14,14 +14,16 @@
         $length = $row['length'];
     }
     ?>
-    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(intval($weight), 0) ?> кг, <?= DisplayNumber(intval($length), 0) ?> м, этикеток <?= DisplayNumber(floor($length * 1000 / $calculation->length), 0) ?> шт.</div>
+    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(intval($weight), 0) ?> кг, <?= DisplayNumber(intval($length), 0) ?> м<?= $calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", этикеток ".DisplayNumber(floor($length * 1000 / $calculation->length), 0)." шт." ?></div>
     <table class="table">
         <tr>
             <th style="border-top-width: 0; font-weight: bold;">Наименование</th>
             <th style="border-top-width: 0; font-weight: bold;">Катушек</th>
             <th style="border-top-width: 0; font-weight: bold;">Масса</th>
             <th style="border-top-width: 0; font-weight: bold;">Метраж</th>
+            <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <th style="border-top-width: 0; font-weight: bold;">Этикеток</th>
+            <?php endif; ?>
         </tr>
         <?php
         $sql = "select cs.id, cs.name, count(cts.id) bobbins, sum(cts.weight) weight, sum(cts.length) length "
@@ -38,7 +40,9 @@
             <td style="text-align: left;"><?=$row['bobbins'] ?></td>
             <td style="text-align: left;"><?=$row['weight'] ?? 0 ?> кг</td>
             <td style="text-align: left;"><?=$row['length'] ?? 0 ?> м</td>
+            <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <td style="text-align: left;"><?= floor($row['length'] * 1000 / $calculation->length) ?> шт.</td>
+            <?php endif; ?>
         </tr>
         <?php endwhile; ?>
     </table>
@@ -87,7 +91,7 @@
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_table" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <a href="javascript: void(0);" class="hide_table d-none" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'.' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м, <?= DisplayNumber(floor($take['length'] * 1000 / $calculation->length), 0) ?> шт.
+            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * 1000 / $calculation->length), 0)." шт." ?>
         </div>
         <table class="table take_table d-none" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
@@ -96,7 +100,9 @@
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
                 <th style="font-weight: bold;">Метраж</th>
+                <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <th style="font-weight: bold;">Этикеток</th>
+                <?php endif; ?>
                 <th style="font-weight: bold;"></th>
             </tr>
             <?php 
@@ -114,7 +120,9 @@
                 <td style="text-align: left;"><?=$row['printed'] ?></td>
                 <td style="text-align: left;"><?=$row['weight'] ?> кг</td>
                 <td style="text-align: left;"><?=$row['length'] ?> м</td>
+                <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * 1000 / $calculation->length), 0) ?> шт.</td>
+                <?php endif; ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
             </tr>
             <?php endwhile; ?>
