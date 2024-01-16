@@ -69,8 +69,6 @@ if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
 }
 
 // Берём расчёт из таблицы базы
-$id = filter_input(INPUT_GET, 'id');
-
 if(!empty($id)) {
     $calculation_result = CalculationResult::Create($id);
     
