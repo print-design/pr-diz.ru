@@ -62,37 +62,10 @@ if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
 }
 
 // Берём расчёт из таблицы базы
-$usd = null; $euro = null; $cost = null; $cost_per_unit = null; $shipping_cost = null; $shipping_cost_per_unit = null; $income = null; $income_per_unit = null; $cliche_cost = null; $shipping_cliche_cost = null; $income_cliche = null; $total_weight_dirty = null;
-$film_cost_1 = null; $film_cost_per_unit_1 = null; $width_1 = null; $weight_pure_1 = null; $length_pure_1 = null; $weight_dirty_1 = null; $length_dirty_1 = null;
-$film_cost_2 = null; $film_cost_per_unit_2 = null; $width_2 = null; $weight_pure_2 = null; $length_pure_2 = null; $weight_dirty_2 = null; $length_dirty_2 = null;
-$film_cost_3 = null; $film_cost_per_unit_3 = null; $width_3 = null; $weight_pure_3 = null; $length_pure_3 = null; $weight_dirty_3 = null; $length_dirty_3 = null;
-$film_waste_cost_1 = null; $film_waste_weight_1 = null; $ink_cost = null; $ink_weight = null; $work_cost_1 = null; $work_time_1 = null;
-$film_waste_cost_2 = null; $film_waste_weight_2 = null; $glue_cost_2 = null; $glue_expense_2 = null; $work_cost_2 = null; $work_time_2 = null;
-$film_waste_cost_3 = null; $film_waste_weight_3 = null; $glue_cost_3 = null; $glue_expense_3 = null; $work_cost_3 = null; $work_time_3 = null;
-
-$id = filter_input(INPUT_GET, 'id');
-
 if(!empty($id)) {
-    $sql_calculation_result = "select usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, income, income_per_unit, cliche_cost, shipping_cliche_cost, income_cliche, total_weight_dirty, "
-            . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
-            . "film_cost_2, film_cost_per_unit_2, width_2, weight_pure_2, length_pure_2, weight_dirty_2, length_dirty_2, "
-            . "film_cost_3, film_cost_per_unit_3, width_3, weight_pure_3, length_pure_3, weight_dirty_3, length_dirty_3, "
-            . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1, "
-            . "film_waste_cost_2, film_waste_weight_2, glue_cost_2, glue_expense_2, work_cost_2, work_time_2, "
-            . "film_waste_cost_3, film_waste_weight_3, glue_cost_3, glue_expense_3, work_cost_3, work_time_3 "
-            . "from calculation_result where calculation_id = $id order by id desc limit 1";
-    $fetcher = new Fetcher($sql_calculation_result);
+    $calculation_result = CalculationResult::Create($id);
 
-    if($row = $fetcher->Fetch()) {
-        $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $income = $row['income']; $income_per_unit = $row['income_per_unit']; $cliche_cost = $row['cliche_cost']; $shipping_cliche_cost = $row['shipping_cliche_cost']; $income_cliche = $row['income_cliche']; $total_weight_dirty = $row['total_weight_dirty'];
-        $film_cost_1 = $row['film_cost_1']; $film_cost_per_unit_1 = $row['film_cost_per_unit_1']; $width_1 = $row['width_1']; $weight_pure_1 = $row['weight_pure_1']; $length_pure_1 = $row['length_pure_1']; $weight_dirty_1 = $row['weight_dirty_1']; $length_dirty_1 = $row['length_dirty_1'];
-        $film_cost_2 = $row['film_cost_2']; $film_cost_per_unit_2 = $row['film_cost_per_unit_2']; $width_2 = $row['width_2']; $weight_pure_2 = $row['weight_pure_2']; $length_pure_2 = $row['length_pure_2']; $weight_dirty_2 = $row['weight_dirty_2']; $length_dirty_2 = $row['length_dirty_2'];
-        $film_cost_3 = $row['film_cost_3']; $film_cost_per_unit_3 = $row['film_cost_per_unit_3']; $width_3 = $row['width_3']; $weight_pure_3 = $row['weight_pure_3']; $length_pure_3 = $row['length_pure_3']; $weight_dirty_3 = $row['weight_dirty_3']; $length_dirty_3 = $row['length_dirty_3'];
-        $film_waste_cost_1 = $row['film_waste_cost_1']; $film_waste_weight_1 = $row['film_waste_weight_1']; $ink_cost = $row['ink_cost']; $ink_weight = $row['ink_weight']; $work_cost_1 = $row['work_cost_1']; $work_time_1 = $row['work_time_1'];
-        $film_waste_cost_2 = $row['film_waste_cost_2']; $film_waste_weight_2 = $row['film_waste_weight_2']; $glue_cost_2 = $row['glue_cost_2']; $glue_expense_2 = $row['glue_expense_2']; $work_cost_2 = $row['work_cost_2']; $work_time_2 = $row['work_time_2'];
-        $film_waste_cost_3 = $row['film_waste_cost_3']; $film_waste_weight_3 = $row['film_waste_weight_3']; $glue_cost_3 = $row['glue_cost_3']; $glue_expense_3 = $row['glue_expense_3']; $work_cost_3 = $row['work_cost_3']; $work_time_3 = $row['work_time_3'];
-    }
-    else {
+    if(!is_a($calculation_result, CalculationResult::class)) {
         // Новый расчёт
         $calculation = CalculationBase::Create($id);
         
@@ -344,20 +317,7 @@ if(!empty($id)) {
     
         //***************************************************
         // ЧИТАЕМ СОХРАНЁННЫЕ РЕЗУЛЬТАТЫ ИЗ БАЗЫ
-        $fetcher = new Fetcher($sql_calculation_result);
-    
-        if($row = $fetcher->Fetch()) {
-            $usd = $row['usd']; $euro = $row['euro']; $cost = $row['cost']; $cost_per_unit = $row['cost_per_unit']; $shipping_cost = $row['shipping_cost']; $shipping_cost_per_unit = $row['shipping_cost_per_unit']; $income = $row['income']; $income_per_unit = $row['income_per_unit']; $cliche_cost = $row['cliche_cost']; $shipping_cliche_cost = $row['shipping_cliche_cost']; $income_cliche = $row['income_cliche']; $total_weight_dirty = $row['total_weight_dirty'];
-            $film_cost_1 = $row['film_cost_1']; $film_cost_per_unit_1 = $row['film_cost_per_unit_1']; $width_1 = $row['width_1']; $weight_pure_1 = $row['weight_pure_1']; $length_pure_1 = $row['length_pure_1']; $weight_dirty_1 = $row['weight_dirty_1']; $length_dirty_1 = $row['length_dirty_1'];
-            $film_cost_2 = $row['film_cost_2']; $film_cost_per_unit_2 = $row['film_cost_per_unit_2']; $width_2 = $row['width_2']; $weight_pure_2 = $row['weight_pure_2']; $length_pure_2 = $row['length_pure_2']; $weight_dirty_2 = $row['weight_dirty_2']; $length_dirty_2 = $row['length_dirty_2'];
-            $film_cost_3 = $row['film_cost_3']; $film_cost_per_unit_3 = $row['film_cost_per_unit_3']; $width_3 = $row['width_3']; $weight_pure_3 = $row['weight_pure_3']; $length_pure_3 = $row['length_pure_3']; $weight_dirty_3 = $row['weight_dirty_3']; $length_dirty_3 = $row['length_dirty_3'];
-            $film_waste_cost_1 = $row['film_waste_cost_1']; $film_waste_weight_1 = $row['film_waste_weight_1']; $ink_cost = $row['ink_cost']; $ink_weight = $row['ink_weight']; $work_cost_1 = $row['work_cost_1']; $work_time_1 = $row['work_time_1'];
-            $film_waste_cost_2 = $row['film_waste_cost_2']; $film_waste_weight_2 = $row['film_waste_weight_2']; $glue_cost_2 = $row['glue_cost_2']; $glue_expense_2 = $row['glue_expense_2']; $work_cost_2 = $row['work_cost_2']; $work_time_2 = $row['work_time_2'];
-            $film_waste_cost_3 = $row['film_waste_cost_3']; $film_waste_weight_3 = $row['film_waste_weight_3']; $glue_cost_3 = $row['glue_cost_3']; $glue_expense_3 = $row['glue_expense_3']; $work_cost_3 = $row['work_cost_3']; $work_time_3 = $row['work_time_3'];
-        }
-        else {
-            $error_message = "Ошибка при чтении из базы сохранённых данных";
-        }
+        $calculation_result = CalculationResult::Create($id);
     }
 }
 ?>
@@ -397,7 +357,7 @@ if(!empty($id)) {
                            id="input_shipping_cost_per_unit"
                            name="input_shipping_cost_per_unit"
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round(floatval($shipping_cost_per_unit), 3)  ?>" 
+                           value="<?= round(floatval($calculation_result->shipping_cost_per_unit), 3)  ?>" 
                            required="required"
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
@@ -441,11 +401,11 @@ if(!empty($id)) {
         </div>
         <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#8364;</div>
-            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($euro, 2, ',', ' ') ?></div>
+            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($calculation_result->euro, 2, ',', ' ') ?></div>
         </div>
         <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#36;</div>
-            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($usd, 2, ',', ' ') ?></div>
+            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($calculation_result->usd, 2, ',', ' ') ?></div>
         </div>
     </div>
     <div class="mt-3">
@@ -455,24 +415,24 @@ if(!empty($id)) {
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2"><span id="cost"><?= DisplayNumber(floatval($cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="cost_per_unit"><?= DisplayNumber(floatval($cost_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value mb-2"><span id="cost"><?= DisplayNumber(floatval($calculation_result->cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="cost_per_unit"><?= DisplayNumber(floatval($calculation_result->cost_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
-            <div class="value"><?= DisplayNumber(floatval($cliche_cost), 0) ?> &#8381;</div>
+            <div class="value"><?= DisplayNumber(floatval($calculation_result->cliche_cost), 0) ?> &#8381;</div>
             <div class="value font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($stream_width * $streams_number + 20) + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value"><span id="shipping_cost"><?= DisplayNumber(floatval($shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= DisplayNumber(floatval($shipping_cost_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value"><span id="shipping_cost"><?= DisplayNumber(floatval($calculation_result->shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
-            <div class="value"><span id="shipping_cliche_cost"><?= DisplayNumber(floatval($shipping_cliche_cost), 0) ?></span> &#8381;</div>
+            <div class="value"><span id="shipping_cliche_cost"><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost), 0) ?></span> &#8381;</div>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
             <div>Прибыль</div>
-            <div class="value mb-2"><span id="income"><?= DisplayNumber(floatval($income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= DisplayNumber(floatval($income_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>
+            <div class="value mb-2"><span id="income"><?= DisplayNumber(floatval($calculation_result->income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= DisplayNumber(floatval($calculation_result->income_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? 'кг' : 'шт') ?></span></div>
             <div class="mt-2">Прибыль ПФ</div>
-            <div class="value"><span id="income_cliche"><?= DisplayNumber(floatval($income_cliche), 0) ?></span> &#8381;</div>
+            <div class="value"><span id="income_cliche"><?= DisplayNumber(floatval($calculation_result->income_cliche), 0) ?></span> &#8381;</div>
         </div>
     </div>
     <div class="row text-nowrap">
@@ -483,45 +443,45 @@ if(!empty($id)) {
         <div class="col-4 pr-4"></div>
         <div class="col-4">
             <div>Итоговая прибыль</div>
-            <div class="value mb-2"><span id="income_total"><?= DisplayNumber(round(floatval($income), 0) + round(floatval($income_cliche), 0), 0) ?></span> &#8381;</div>
+            <div class="value mb-2"><span id="income_total"><?= DisplayNumber(round(floatval($calculation_result->income), 0) + round(floatval($calculation_result->income_cliche), 0), 0) ?></span> &#8381;</div>
         </div>
     </div>
     <div class="mt-3">
-        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= DisplayNumber(floatval($total_weight_dirty), 0) ?> кг</span></h2>
+        <h2>Материалы&nbsp;&nbsp;&nbsp;<span style="font-weight: normal;"><?= DisplayNumber(floatval($calculation_result->total_weight_dirty), 0) ?> кг</span></h2>
     </div>
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
-            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($weight_dirty_1), 0) ?> кг</span></h3>
+            <h3>Основная пленка&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->weight_dirty_1), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($film_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_cost_per_unit_1), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->film_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->film_cost_per_unit_1), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= DisplayNumber(intval($width_1), 0) ?> мм</div>
+            <div class="value mb-2"><?= DisplayNumber(intval($calculation_result->width_1), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($weight_pure_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($length_pure_1), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->weight_pure_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($length_dirty_1), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->weight_dirty_1), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->length_dirty_1), 0) ?> м</span></div>
         </div>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($weight_dirty_2), 0) ?> кг</span></h3>
+            <h3>Ламинация 1&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->weight_dirty_2), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($film_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_cost_per_unit_2), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->film_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->film_cost_per_unit_2), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= DisplayNumber(intval($width_2), 0) ?> мм</div>
+            <div class="value mb-2"><?= DisplayNumber(intval($calculation_result->width_2), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($weight_pure_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($length_pure_2), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->weight_pure_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->length_pure_2), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($weight_dirty_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($length_dirty_2), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->weight_dirty_2), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->length_dirty_2), 0) ?> м</span></div>
         </div>
         <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
-            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($weight_dirty_3), 0) ?> кг</span></h3>
+            <h3>Ламинация 2&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->weight_dirty_3), 0) ?> кг</span></h3>
             <div>Закупочная стоимость</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($film_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_cost_per_unit_3), 3) ?> &#8381; за кг</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->film_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->film_cost_per_unit_3), 3) ?> &#8381; за кг</span></div>
             <div>Ширина</div>
-            <div class="value mb-2"><?= DisplayNumber(intval($width_3), 0) ?> мм</div>
+            <div class="value mb-2"><?= DisplayNumber(intval($calculation_result->width_3), 0) ?> мм</div>
             <div>Масса без приладки</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($weight_pure_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($length_pure_3), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->weight_pure_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->length_pure_3), 0) ?> м</span></div>
             <div>Масса с приладкой</div>
-            <div class="value mb-2"><?= DisplayNumber(floatval($weight_dirty_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($length_dirty_3), 0) ?> м</span></div>
+            <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->weight_dirty_3), 0) ?> кг&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->length_dirty_3), 0) ?> м</span></div>
         </div>
     </div>
     <div id="show_costs">
@@ -543,27 +503,27 @@ if(!empty($id)) {
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($film_waste_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_waste_weight_1), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->film_waste_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->film_waste_weight_1), 2) ?> кг</span></div>
                 <div>Краска</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($ink_weight), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->ink_cost), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->ink_weight), 2) ?> кг</span></div>
                 <div>Печать тиража</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($work_time_1), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->work_cost_1), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->work_time_1), 2) ?> ч</span></div>
             </div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_waste_weight_2), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->film_waste_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->film_waste_weight_2), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($glue_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($glue_expense_2), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->glue_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->glue_expense_2), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($work_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($work_time_2), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->work_cost_2), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->work_time_2), 2) ?> ч</span></div>
             </div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;">
                 <div>Отходы</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($film_waste_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($film_waste_weight_3), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->film_waste_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->film_waste_weight_3), 2) ?> кг</span></div>
                 <div>Клей</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($glue_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($glue_expense_3), 2) ?> кг</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->glue_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->glue_expense_3), 2) ?> кг</span></div>
                 <div>Работа ламинатора</div>
-                <div class="value mb-2"><?= DisplayNumber(floatval($work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($work_time_3), 2) ?> ч</span></div>
+                <div class="value mb-2"><?= DisplayNumber(floatval($calculation_result->work_cost_3), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><?= DisplayNumber(floatval($calculation_result->work_time_3), 2) ?> ч</span></div>
             </div>
         </div>
     </div>

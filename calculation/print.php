@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include './calculation.php';
+include './calculation_result.php';
 
 // Атрибут "поле неактивно"
 $disabled_attr = " disabled='disabled'";
