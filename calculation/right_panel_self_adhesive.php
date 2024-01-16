@@ -69,13 +69,6 @@ if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
 }
 
 // Берём расчёт из таблицы базы
-/*$usd = null;*/ /*$euro = null;*/ /*$cost = null; $cost_per_unit = null;*/ /*$shipping_cost = null; $shipping_cost_per_unit = null;*/ /*$income = null; $income_per_unit = null; */
-/*$cliche_cost = null;*/ /*$shipping_cliche_cost = null;*/ /*$income_cliche = null; */
-/*$knife_cost = null;*/ /*$shipping_knife_cost = null;*/ /*$income_knife = null; */
-/*$total_weight_dirty = null;*/
-/*$film_cost = null; $film_cost_per_unit = null;*/ /*$width = null;*/ /*$weight_pure = null;*/ /*$length_pure = null;*/ /*$weight_dirty = null;*/ /*$length_dirty = null;*/
-/*$film_waste_cost = null; $film_waste_weight = null;*/ /*$ink_cost = null; $ink_weight = null;*/ /*$work_cost = null; $work_time = null;*/ /*$priladka_printing;*/
-
 $id = filter_input(INPUT_GET, 'id');
 
 if(!empty($id)) {
