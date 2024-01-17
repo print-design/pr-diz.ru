@@ -67,7 +67,9 @@ if(!empty($id)) {
 
     if(!is_a($calculation_result, CalculationResult::class)) {
         // Новый расчёт
-        $calculation = CalculationBase::Create($id);
+        if(empty($calculation) || !is_a($calculation, Calculation::class)) {
+            $calculation = CalculationBase::Create($id);
+        }
         
         // Курс доллара
         $new_usd = $calculation->usd;
