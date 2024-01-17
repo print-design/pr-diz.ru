@@ -329,7 +329,7 @@ if(empty($take_id)) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'stream_id') && null === filter_input(INPUT_GET, 'take_id')): ?>
         <div class="print_only">
             <?php
             $stream_id = filter_input(INPUT_GET, 'stream_id');
