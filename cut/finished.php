@@ -193,6 +193,14 @@ if($row = $fetcher->Fetch()) {
             $('#cut_remove').on('hidden.bs.modal', function() {
                 $('input#cut_remove_cause').val('');
             });
+            
+            $('#edit_take_stream').on('shown.bs.modal', function() {
+                $('input#take_stream_weight').focus();
+            });
+            
+            $('#edit_take_stream').on('hidden.bs.modal', function() {
+                $('input#take_stream_weight').val('');
+            });
         </script>
     </body>
 </html>

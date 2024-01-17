@@ -1,3 +1,38 @@
+<div id="edit_take_stream" class="modal fade show">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="<?=APPLICATION ?>/cut/_edit_take_stream.php">
+                <input type="hidden" name="id" id="take_stream_id" />
+                <input type="hidden" name="take_id" id="take_stream_take_id" />
+                <input type="hidden" name="scroll" />
+                <input type="hidden" name="redirect" value="<?=$_SERVER['REQUEST_URI'] ?>" />
+                <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
+                <?php foreach ($_GET as $get_key => $get_value): ?>
+                <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
+                <?php endforeach; ?>
+                <div class="modal-header">
+                    <p class="font-weight-bold" style="font-size: x-large;" id="take_stream_name"></p>
+                    <button type="button" class="close edit_take_stream_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="weight">Масса катушки</label>
+                        <div class="input-group">
+                            <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">кг</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: flex-start;">
+                    <button type="submit" class="btn btn-dark" id="edit_take_stream_submit" name="edit_take_stream_submit"><img src="../images/icons/print_light.svg" class="mr-2" />Распечатать бирку</button>
+                    <button type="button" class="btn btn-light" id="edit_take_stream_dismiss" data-dismiss="modal">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="calculation_stream">
     <div class="name" style="font-size: 33px;"><?=CUTTER_NAMES[$machine_id] ?></div>
     <div class="name">Результаты резки</div>
@@ -93,7 +128,13 @@
             <a href="javascript: void(0);" class="hide_table d-none" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * 1000 / $calculation->length), 0)." шт." ?>
         </div>
-        <table class="table take_table d-none" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
+        <?php
+        $take_class = " d-none";
+        if(filter_input(INPUT_GET, 'take_id') == $take['id']) {
+            $take_class = "";
+        }
+        ?>
+        <table class="table take_table<?=$take_class ?>" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
                 <th style="font-weight: bold;">ID</th>
                 <th style="font-weight: bold;">Наименование</th>
@@ -123,7 +164,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * 1000 / $calculation->length), 0) ?> шт.</td>
                 <?php endif; ?>
-                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_take_id').val('<?=$take['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
             </tr>
             <?php endwhile; ?>
         </table>

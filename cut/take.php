@@ -459,6 +459,14 @@ if(empty($take_id)) {
                 $('input#cut_remove_cause').val('');
             });
             
+            $('#edit_take_stream').on('shown.bs.modal', function() {
+                $('input#take_stream_weight').focus();
+            });
+            
+            $('#edit_take_stream').on('hidden.bs.modal', function() {
+                $('input#take_stream_weight').val('');
+            });
+            
             <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
             var css = '@page { size: portrait; margin: 2mm; }',
                     head = document.head || document.getElementsByTagName('head')[0],

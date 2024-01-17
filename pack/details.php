@@ -222,17 +222,25 @@ if($row = $fetcher->Fetch()) {
             include '../include/footer.php';
             ?>
             <script>
-            function ShowTakeTable(id) {
-                $('a.show_table[data-id=' + id + ']').addClass('d-none');
-                $('a.hide_table[data-id=' + id + ']').removeClass('d-none');
-                $('table.take_table[data-id=' + id + ']').removeClass('d-none');
-            }
+                function ShowTakeTable(id) {
+                    $('a.show_table[data-id=' + id + ']').addClass('d-none');
+                    $('a.hide_table[data-id=' + id + ']').removeClass('d-none');
+                    $('table.take_table[data-id=' + id + ']').removeClass('d-none');
+                }
             
-            function HideTakeTable(id) {
-                $('a.hide_table[data-id=' + id + ']').addClass('d-none');
-                $('a.show_table[data-id=' + id + ']').removeClass('d-none');
-                $('table.take_table[data-id=' + id + ']').addClass('d-none');
-            }
+                function HideTakeTable(id) {
+                    $('a.hide_table[data-id=' + id + ']').addClass('d-none');
+                    $('a.show_table[data-id=' + id + ']').removeClass('d-none');
+                    $('table.take_table[data-id=' + id + ']').addClass('d-none');
+                }
+            
+                $('#edit_take_stream').on('shown.bs.modal', function() {
+                    $('input#take_stream_weight').focus();
+                });
+            
+                $('#edit_take_stream').on('hidden.bs.modal', function() {
+                    $('input#take_stream_weight').val('');
+                });
             </script>
         </div>
     </body>
