@@ -6,7 +6,7 @@ if(null !== filter_input(INPUT_GET, 'take_id')) {
 }
 
 $machine_id = filter_input(INPUT_GET, 'machine_id');
-$sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.weight, cts.length, cts.radius, cts.printed, c.stream_width, tm.spool, "
+$sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.weight, cts.length, cts.printed, c.stream_width, tm.spool, "
         . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
         . "from calculation_take ct "
         . "inner join calculation c on ct.calculation_id = c.id "
@@ -26,7 +26,6 @@ while($row = $fetcher->Fetch()):
     $stream_name = $row['name'];
     $stream_weight = $row['weight'];
     $stream_length = $row['length'];
-    $stream_radius = $row['radius'];
     $stream_printed = $row['printed'];
     $stream_width = $row['stream_width'];
     $spool = $row['spool'];
@@ -58,7 +57,6 @@ while($row = $fetcher->Fetch()):
     if(null !== filter_input(INPUT_POST, 'stream_print_submit') && $stream_id == filter_input(INPUT_POST, 'stream_id')) {
         $stream_weight = filter_input(INPUT_POST, 'weight');
         $stream_length = filter_input(INPUT_POST, 'length');
-        $stream_radius = filter_input(INPUT_POST, 'radius');
     }
 ?>
 <div class="calculation_stream" data-id="<?=$stream_id ?>" ondragover="DragOver(event);" ondrop="Drop(event);">
@@ -114,7 +112,7 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="radius">Радиус от вала</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="radius" value="<?=$stream_radius ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control" name="radius" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">мм</span>
                         </div>

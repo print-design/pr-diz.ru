@@ -86,12 +86,12 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         if(empty($take_stream_id)) {
-            $sql = "insert into calculation_take_stream (calculation_take_id, calculation_stream_id, weight, length, radius, printed) values($take_id, $stream_id, $weight, $length, $radius, now())";
+            $sql = "insert into calculation_take_stream (calculation_take_id, calculation_stream_id, weight, length, printed) values($take_id, $stream_id, $weight, $length, now())";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
         else {
-            $sql = "update calculation_take_stream set weight = $weight, length = $length, radius = $radius, printed = now() where id = $take_stream_id";
+            $sql = "update calculation_take_stream set weight = $weight, length = $length, printed = now() where id = $take_stream_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }

@@ -3,9 +3,7 @@
         <div class="modal-content">
             <form method="post" action="<?=APPLICATION ?>/cut/_edit_take_stream.php">
                 <input type="hidden" name="id" id="take_stream_id" />
-                <input type="hidden" name="take_id" id="take_stream_take_id" />
                 <input type="hidden" name="scroll" />
-                <input type="hidden" name="redirect" value="<?=$_SERVER['REQUEST_URI'] ?>" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
                 <?php foreach ($_GET as $get_key => $get_value): ?>
                 <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
@@ -73,8 +71,8 @@
         <tr>
             <td style="text-align: left;"><?=$row['name'] ?></td>
             <td style="text-align: left;"><?=$row['bobbins'] ?></td>
-            <td style="text-align: left;"><?=$row['weight'] ?? 0 ?> кг</td>
-            <td style="text-align: left;"><?=$row['length'] ?? 0 ?> м</td>
+            <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
+            <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <td style="text-align: left;"><?= floor($row['length'] * 1000 / $calculation->length) ?> шт.</td>
             <?php endif; ?>
@@ -160,12 +158,12 @@
                 <td style="text-align: left;"><?=$row['id'] ?></td>
                 <td style="text-align: left;"><?=$row['name'] ?></td>
                 <td style="text-align: left;"><?=$row['printed'] ?></td>
-                <td style="text-align: left;"><?=$row['weight'] ?> кг</td>
-                <td style="text-align: left;"><?=$row['length'] ?> м</td>
+                <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
+                <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * 1000 / $calculation->length), 0) ?> шт.</td>
                 <?php endif; ?>
-                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_take_id').val('<?=$take['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
             </tr>
             <?php endwhile; ?>
         </table>
