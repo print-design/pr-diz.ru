@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <label for="weight">Масса катушки</label>
                         <div class="input-group">
-                            <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" />
+                            <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" autocomplete="off" />
                             <div class="input-group-append">
                                 <span class="input-group-text">кг</span>
                             </div>
