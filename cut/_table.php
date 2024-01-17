@@ -121,20 +121,21 @@
         $take_last_name = $row['last_name'];
         $take_first_name = $row['first_name'];
     }
+    
+    $hide_table_class = " d-none";
+    $show_table_class = "";
+    if(filter_input(INPUT_GET, 'take_id') == $take['id']) {
+        $hide_table_class = "";
+        $show_table_class = " d-none";
+    }
     ?>
     <div style="padding-left: 10px; padding-right: 10px; border: solid 1px #e3e3e3; border-radius: 15px; margin-top: 15px; margin-bottom: 5px;">
         <div style="padding-top: 15px; padding-bottom: 15px;">
-            <a href="javascript: void(0);" class="show_table" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <a href="javascript: void(0);" class="hide_table d-none" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <a href="javascript: void(0);" class="hide_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * 1000 / $calculation->length), 0)." шт." ?>
         </div>
-        <?php
-        $take_class = " d-none";
-        if(filter_input(INPUT_GET, 'take_id') == $take['id']) {
-            $take_class = "";
-        }
-        ?>
-        <table class="table take_table<?=$take_class ?>" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
+        <table class="table take_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
                 <th style="font-weight: bold;">ID</th>
                 <th style="font-weight: bold;">Наименование</th>
