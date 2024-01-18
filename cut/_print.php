@@ -1,3 +1,65 @@
+<?php
+$stream_name = '';
+$stream_weight = '';
+$stream_length = '';
+$stream_printed = '';
+$dt_printed = '';
+
+if(null !== filter_input(INPUT_GET, 'stream_id')) {
+    $stream_id = filter_input(INPUT_GET, 'stream_id');
+    
+    $sql = "select cs.name, cts.weight, cts.length, cts.printed "
+            . "from calculation_take_stream cts "
+            . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
+            . "where cts.calculation_stream_id = $stream_id and cts.calculation_take_id = (select max(id) from calculation_take where calculation_id = cs.calculation_id)";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $stream_name = $row['name'];
+        $stream_weight = $row['weight'];
+        $stream_length = $row['length'];
+        $stream_printed = $row['printed'];
+        $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
+    }
+}
+elseif(null !== filter_input(INPUT_GET, 'take_stream_id')) {
+    $take_stream_id = filter_input(INPUT_GET, 'take_stream_id');
+    
+    $sql = "select cs.name, cts.weight, cts.length, cts.printed "
+            . "from calculation_take_stream cts "
+            . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
+            . "where cts.id = $take_stream_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $stream_name = $row['name'];
+        $stream_weight = $row['weight'];
+        $stream_length = $row['length'];
+        $stream_printed = $row['printed'];
+        $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
+    }
+}
+            
+$stream_date = $dt_printed->format('d-m-Y');
+$stream_hour = $dt_printed->format('G');
+$stream_shift = 'day';
+if($stream_hour < 8 || $stream_hour > 19) {
+    $stream_shift = 'night';
+}
+            
+$sql = "select pe.last_name, pe.first_name "
+        . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
+        . "where date_format(pw.date, '%d-%m-%Y') = '$stream_date' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
+$stream_cutter = '';
+
+$fetcher = new Fetcher($sql);
+
+while($row = $fetcher->Fetch()) {
+    $stream_cutter .= $row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.');
+}
+
+if(empty($stream_cutter)) {
+    $stream_cutter = "ВЫХОДНОЙ ДЕНЬ";
+}
+?>
 <div class="d-flex justify-content-start mb-1">
     <div class="mr-2"><img src="<?=APPLICATION ?>/images/logo.svg" style="width: 20px; height: 20px;" class="mt-1" /></div>
     <div>
@@ -22,11 +84,11 @@
     </tr>
     <tr>
         <td>Масса</td>
-        <td class="pl-1 font-weight-bold"><?=$stream_weight ?> кг</td>
+        <td class="pl-1 font-weight-bold"><?= rtrim(rtrim(DisplayNumber(floatval($stream_weight), 2), '0'), ',')  ?> кг</td>
     </tr>
     <tr>
         <td class="pb-2">Метраж</td>
-        <td class="pl-1 pb-2 font-weight-bold"><?=$stream_length ?> м</td>
+        <td class="pl-1 pb-2 font-weight-bold"><?= rtrim(rtrim(DisplayNumber($stream_length, 2), '0'), ',')  ?> м</td>
     </tr>
     <tr>
         <td colspan="2" class="font-weight-bold">

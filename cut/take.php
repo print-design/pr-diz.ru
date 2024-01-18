@@ -329,50 +329,8 @@ if(empty($take_id)) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'stream_id') && null === filter_input(INPUT_GET, 'take_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
         <div class="print_only">
-            <?php
-            $stream_id = filter_input(INPUT_GET, 'stream_id');
-            $stream_name = '';
-            $stream_weight = '';
-            $stream_length = '';
-            $stream_printed = '';
-            $dt_printed = '';
-            $sql = "select cs.name, cts.weight, cts.length, cts.printed "
-                    . "from calculation_take_stream cts "
-                    . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
-                    . "where cts.calculation_stream_id = $stream_id and cts.calculation_take_id = $take_id";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $stream_name = $row['name'];
-                $stream_weight = $row['weight'];
-                $stream_length = $row['length'];
-                $stream_printed = $row['printed'];
-                $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
-            }
-            
-            $stream_date = $dt_printed->format('d-m-Y');
-            $stream_hour = $dt_printed->format('G');
-            $stream_shift = 'day';
-            if($stream_hour < 8 || $stream_hour > 19) {
-                $stream_shift = 'night';
-            }
-            
-            $sql = "select pe.last_name, pe.first_name "
-                    . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-                    . "where date_format(pw.date, '%d-%m-%Y') = '$stream_date' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
-            $stream_cutter = '';
-
-            $fetcher = new Fetcher($sql);
-
-            while($row = $fetcher->Fetch()) {
-                $stream_cutter .= $row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.');
-            }
-
-            if(empty($stream_cutter)) {
-                $stream_cutter = "ВЫХОДНОЙ ДЕНЬ";
-            }
-            ?>
             <div class="pagebreak"><?php include './_print.php'; ?></div>
             <div><?php include './_print.php'; ?></div>
         </div>
@@ -467,7 +425,7 @@ if(empty($take_id)) {
                 $('input#take_stream_weight').val('');
             });
             
-            <?php if(null !== filter_input(INPUT_GET, 'stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
             var css = '@page { size: portrait; margin: 2mm; }',
                     head = document.head || document.getElementsByTagName('head')[0],
                     style = document.createElement('style');

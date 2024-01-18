@@ -15,6 +15,7 @@ if(null !== filter_input(INPUT_POST, 'edit_take_stream_submit')) {
     
     unset($location_get['stream_id']);
     $location_get['scroll'] = filter_input(INPUT_POST, 'scroll');
+    $location_get['take_stream_id'] = $id;
     
     $sql = "select calculation_take_id, weight, length from calculation_take_stream where id = $id";
     $fetcher = new Fetcher($sql);
