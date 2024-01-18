@@ -426,22 +426,22 @@ if(empty($take_id)) {
             });
             
             <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
-            var css = '@page { size: portrait; margin: 2mm; }',
-                    head = document.head || document.getElementsByTagName('head')[0],
-                    style = document.createElement('style');
+                var css = '@page { size: portrait; margin: 2mm; }',
+                        head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
             
-            style.type = 'text/css';
-            style.media = 'print';
+                style.type = 'text/css';
+                style.media = 'print';
             
-            if (style.styleSheet){
-                style.styleSheet.cssText = css;
-            } else {
-                style.appendChild(document.createTextNode(css));
-            }
+                if (style.styleSheet){
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(document.createTextNode(css));
+                }
             
-            head.appendChild(style);
+                head.appendChild(style);
             
-            window.print();
+                window.print();
             <?php endif; ?>
         </script>
     </body>

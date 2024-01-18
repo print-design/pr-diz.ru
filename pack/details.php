@@ -218,6 +218,12 @@ if($row = $fetcher->Fetch()) {
                     </div>
                 </div>
             </div>
+            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+            <div class="print_only">
+                <div class="pagebreak"><?php include './_print.php'; ?></div>
+                <div><?php include './_print.php'; ?></div>
+            </div>
+            <?php endif; ?>
             <?php
             include '../include/footer.php';
             ?>
@@ -241,6 +247,25 @@ if($row = $fetcher->Fetch()) {
                 $('#edit_take_stream').on('hidden.bs.modal', function() {
                     $('input#take_stream_weight').val('');
                 });
+                
+                <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+                    var css = '@page { size: portrait; margin: 2mm; }',
+                        head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
+            
+                    style.type = 'text/css';
+                    style.media = 'print';
+            
+                    if (style.styleSheet){
+                        style.styleSheet.cssText = css;
+                    } else {
+                        style.appendChild(document.createTextNode(css));
+                    }
+            
+                    head.appendChild(style);
+            
+                    window.print();
+                <?php endif; ?>
             </script>
         </div>
     </body>
