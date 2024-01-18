@@ -174,7 +174,7 @@ $calculation_result = CalculationResult::Create($id);
                         <input type="hidden" name="id" value="<?=$id ?>" />
                         <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <div class="input-group">
-                            <input type="text" class="form-control int-only" name="length" placeholder="Метраж приладки" required="required" autocomplete="off" />
+                            <input type="text" class="form-control int-only" name="length" placeholder="Метраж приладки" required="required" autocomplete="off" autofocus="autofocus" />
                             <div class="input-group-append">
                                 <span class="input-group-text">м</span>
                             </div>
