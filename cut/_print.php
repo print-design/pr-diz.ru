@@ -88,7 +88,7 @@ if(empty($stream_cutter)) {
     </tr>
     <tr>
         <td class="pb-2">Метраж</td>
-        <td class="pl-1 pb-2 font-weight-bold"><?= rtrim(rtrim(DisplayNumber($stream_length, 2), '0'), ',')  ?> м</td>
+        <td class="pl-1 pb-2 font-weight-bold"><?= rtrim(rtrim(DisplayNumber(floatval($stream_length), 2), '0'), ',')  ?></td>
     </tr>
     <tr>
         <td colspan="2" class="font-weight-bold">
