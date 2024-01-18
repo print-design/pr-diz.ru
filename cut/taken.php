@@ -80,67 +80,89 @@ if($row = $fetcher->Fetch()) {
         include '../include/head.php';
         ?>
         <style>
-            h1 {
-                font-size: 33px;
+            @media print {
+                body {
+                    padding: 0;
+                    margin: 0;
+                    font-size: 7px;
+                }
+                
+                .no_print {
+                    display:none;
+                }
+                
+                .pagebreak { 
+                    page-break-after: always;
+                }
             }
             
-            h2, .name {
-                font-size: 26px;
-                font-weight: bold;
-                line-height: 45px;
-            }
+            @media screen {
+                h1 {
+                    font-size: 33px;
+                }
             
-            h3 {
-                font-size: 20px;
-            }
+                h2, .name {
+                    font-size: 26px;
+                    font-weight: bold;
+                    line-height: 45px;
+                }
             
-            .subtitle {
-                font-weight: bold;
-                font-size: 20px;
-                line-height: 40px
-            }
+                h3 {
+                    font-size: 20px;
+                }
             
-            table {
-                width: 100%;
-            }
+                .subtitle {
+                    font-weight: bold;
+                    font-size: 20px;
+                    line-height: 40px
+                }
             
-            tr {
-                border-bottom: solid 1px #e3e3e3;
-            }
+                table {
+                    width: 100%;
+                }
             
-            th {
-                font-weight: bold;
-                white-space: nowrap;
-                padding-right: 30px;
-                vertical-align: top;
-            }
+                tr {
+                    border-bottom: solid 1px #e3e3e3;
+                }
             
-            td {
-                line-height: 22px;
-            }
+                th {
+                    font-weight: bold;
+                    white-space: nowrap;
+                    padding-right: 30px;
+                    vertical-align: top;
+                }
             
-            .cutter_info {
-                border-radius: 15px;
-                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
-                padding: 20px;
-                padding-top: 5px;
-            }
+                td {
+                    line-height: 22px;
+                }
             
-            #status {
-                width: 100%;
-                padding: 12px;
-                margin-top: 40p;
-                margin-bottom: 40px;
-                border-radius: 10px;
-                font-weight: bold;
-                text-align: center; 
-            }
+                .cutter_info {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 20px;
+                    padding-top: 5px;
+                }
             
-            .calculation_stream {
-                border-radius: 15px;
-                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
-                padding: 20px;
-                margin-bottom: 10px;
+                #status {
+                    width: 100%;
+                    padding: 12px;
+                    margin-top: 40p;
+                    margin-bottom: 40px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    text-align: center; 
+                }
+            
+                .calculation_stream {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 20px;
+                    margin-bottom: 10px;
+                }
+                
+                .print_only {
+                    display: none;
+                }
             }
             
             .modal-content {
@@ -159,12 +181,14 @@ if($row = $fetcher->Fetch()) {
         </style>
     </head>
     <body>
+        <div class="no_print">
         <?php
         include '../include/header_cut.php';
         
         include './_cut_remove.php';
         ?>
-        <div class="container-fluid">
+        </div>
+        <div class="container-fluid no_print">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";

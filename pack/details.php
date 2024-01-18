@@ -84,63 +84,101 @@ if($row = $fetcher->Fetch()) {
         include '../include/head.php';
         ?>
         <style>
-            h1 {
-                font-size: 33px;
+            @media print {
+                body {
+                    padding: 0;
+                    margin: 0;
+                    font-size: 7px;
+                }
+                
+                .no_print {
+                    display:none;
+                }
+                
+                .pagebreak { 
+                    page-break-after: always;
+                }
             }
             
-            h2, .name {
-                font-size: 26px;
-                font-weight: bold;
-                line-height: 45px;
+            @media screen {
+                h1 {
+                    font-size: 33px;
+                }
+            
+                h2, .name {
+                    font-size: 26px;
+                    font-weight: bold;
+                    line-height: 45px;
+                }
+            
+                h3 {
+                    font-size: 20px;
+                }
+            
+                .subtitle {
+                    font-weight: bold;
+                    font-size: 20px;
+                    line-height: 40px
+                }
+            
+                table {
+                    width: 100%;
+                }
+            
+                tr {
+                    border-bottom: solid 1px #e3e3e3;
+                }
+            
+                th {
+                    white-space: nowrap;
+                    padding-right: 30px;
+                    vertical-align: top;
+                }
+            
+                td {
+                    line-height: 22px;
+                }
+            
+                tr td:nth-child(2) {
+                    text-align: right;
+                    padding-left: 10px;
+                    font-weight: bold;
+                }
+            
+                .calculation_stream {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 20px;
+                    margin-bottom: 10px;
+                }
+            
+                .print_only {
+                    display: none;
+                }
             }
             
-            h3 {
-                font-size: 20px;
+            .modal-content {
+                border-radius: 20px;
             }
             
-            .subtitle {
-                font-weight: bold;
-                font-size: 20px;
-                line-height: 40px
+            .modal-header {
+                border-bottom: 0;
+                padding-bottom: 0;
             }
             
-            table {
-                width: 100%;
-            }
-            
-            tr {
-                border-bottom: solid 1px #e3e3e3;
-            }
-            
-            th {
-                white-space: nowrap;
-                padding-right: 30px;
-                vertical-align: top;
-            }
-            
-            td {
-                line-height: 22px;
-            }
-            
-            tr td:nth-child(2) {
-                text-align: right;
-                padding-left: 10px;
-                font-weight: bold;
-            }
-            
-            .calculation_stream {
-                border-radius: 15px;
-                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
-                padding: 20px;
-                margin-bottom: 10px;
+            .modal-footer {
+                border-top: 0;
+                padding-top: 0;
             }
         </style>
     </head>
     <body>
+        <div class="no_print">
         <?php
         include '../include/header_pack.php';
         ?>
-        <div class="container-fluid">
+        </div>
+        <div class="container-fluid no_print">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
@@ -218,55 +256,55 @@ if($row = $fetcher->Fetch()) {
                     </div>
                 </div>
             </div>
-            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
-            <div class="print_only">
-                <div class="pagebreak"><?php include './_print.php'; ?></div>
-                <div><?php include './_print.php'; ?></div>
-            </div>
-            <?php endif; ?>
-            <?php
-            include '../include/footer.php';
-            ?>
-            <script>
-                function ShowTakeTable(id) {
-                    $('a.show_table[data-id=' + id + ']').addClass('d-none');
-                    $('a.hide_table[data-id=' + id + ']').removeClass('d-none');
-                    $('table.take_table[data-id=' + id + ']').removeClass('d-none');
-                }
-            
-                function HideTakeTable(id) {
-                    $('a.hide_table[data-id=' + id + ']').addClass('d-none');
-                    $('a.show_table[data-id=' + id + ']').removeClass('d-none');
-                    $('table.take_table[data-id=' + id + ']').addClass('d-none');
-                }
-            
-                $('#edit_take_stream').on('shown.bs.modal', function() {
-                    $('input#take_stream_weight').focus();
-                });
-            
-                $('#edit_take_stream').on('hidden.bs.modal', function() {
-                    $('input#take_stream_weight').val('');
-                });
-                
-                <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
-                    var css = '@page { size: portrait; margin: 2mm; }',
-                        head = document.head || document.getElementsByTagName('head')[0],
-                        style = document.createElement('style');
-            
-                    style.type = 'text/css';
-                    style.media = 'print';
-            
-                    if (style.styleSheet){
-                        style.styleSheet.cssText = css;
-                    } else {
-                        style.appendChild(document.createTextNode(css));
-                    }
-            
-                    head.appendChild(style);
-            
-                    window.print();
-                <?php endif; ?>
-            </script>
         </div>
+        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+        <div class="print_only">
+            <div class="pagebreak"><?php include '../cut/_print.php'; ?></div>
+            <div><?php include '../cut/_print.php'; ?></div>
+        </div>
+        <?php endif; ?>
+        <?php
+        include '../include/footer.php';
+        ?>
+        <script>
+            function ShowTakeTable(id) {
+                $('a.show_table[data-id=' + id + ']').addClass('d-none');
+                $('a.hide_table[data-id=' + id + ']').removeClass('d-none');
+                $('table.take_table[data-id=' + id + ']').removeClass('d-none');
+            }
+            
+            function HideTakeTable(id) {
+                $('a.hide_table[data-id=' + id + ']').addClass('d-none');
+                $('a.show_table[data-id=' + id + ']').removeClass('d-none');
+                $('table.take_table[data-id=' + id + ']').addClass('d-none');
+            }
+            
+            $('#edit_take_stream').on('shown.bs.modal', function() {
+                $('input#take_stream_weight').focus();
+            });
+            
+            $('#edit_take_stream').on('hidden.bs.modal', function() {
+                $('input#take_stream_weight').val('');
+            });
+                
+            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+                var css = '@page { size: portrait; margin: 2mm; }',
+                    head = document.head || document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+            
+                style.type = 'text/css';
+                style.media = 'print';
+        
+                if (style.styleSheet){
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(document.createTextNode(css));
+                }
+            
+                head.appendChild(style);
+            
+                window.print();
+            <?php endif; ?>
+        </script>
     </body>
 </html>
