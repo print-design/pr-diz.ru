@@ -281,7 +281,7 @@ $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
-if(!empty($calculation->ink_number)) { print_r($calculation->lacquer_1);
+if(!empty($calculation->ink_number)) {
     for($i=1; $i<=$calculation->ink_number; $i++) {
         $ink_var = "ink_$i";
         $$ink_var = $calculation->$ink_var;
