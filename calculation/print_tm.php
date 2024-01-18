@@ -46,6 +46,9 @@ if(!empty($calculation->ink_number)) {
     
         $cmyk_var = "cmyk_$i";
         $$cmyk_var = $calculation->$cmyk_var;
+        
+        $lacquer_var = "lacquer_$i";
+        $$lacquer_var = $calculation->$lacquer_var;
     
         $percent_var = "percent_$i";
         $$percent_var = $calculation->$percent_var;
@@ -231,7 +234,7 @@ $current_date_time = date("dmYHis");
                 border-bottom: solid 1px #cccccc;
             }
             
-            tr td:nth-child(2) {
+            tr td:nth-child(2), tr td:nth-child(5) {
                 text-align: right;
                 padding-left: 10px;
                 font-weight: bold;
@@ -502,15 +505,26 @@ $current_date_time = date("dmYHis");
                             <td>Требование по материалу</td>
                             <td><?=$calculation->requirement1 ?></td>
                         </tr>
-                        <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                    </table>
+                    <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                    <p class="font-weight-bold" style="font-weight: bold;">Красочность: <?=$calculation->ink_number ?> красок</p>
+                    <table class="w-100" style="width: 100%;">
+                        <?php if($calculation->ink_number > 0): ?>
                         <tr>
-                            <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Красочность: <?=$calculation->ink_number ?> красок</td>
+                            <th></th>
+                            <th>Секция</th>
+                            <th>Скотч</th>
+                            <th>Анилокс</th>
+                            <th></th>
                         </tr>
                         <?php
+                        endif;
+                                                            
                         for($i = 1; $i <= $calculation->ink_number; $i++):
                         $ink_var = "ink_$i";
                         $color_var = "color_$i";
                         $cmyk_var = "cmyk_$i";
+                        $lacquer_var = "lacquer_$i";
                         $percent_var = "percent_$i";
                         $cliche_var = "cliche_$i";
                         ?>
@@ -541,11 +555,24 @@ $current_date_time = date("dmYHis");
                                         echo "Белая";
                                         break;
                                     case CalculationBase::LACQUER;
-                                        echo "Лак";
+                                        switch($$lacquer_var) {
+                                            case CalculationBase::LACQUER_GLOSSY:
+                                                echo 'Лак глянцевый';
+                                                break;
+                                            case CalculationBase::LACQUER_MATTE:
+                                                echo 'Лак матовый';
+                                                break;
+                                            default :
+                                                echo "Лак";
+                                                break;
+                                        }
                                         break;
                                 }
                                 ?>
                             </td>
+                            <td style="border-left: solid 1px #cccccc; border-right: solid 1px #cccccc;"></td>
+                            <td style="border-right: solid 1px #cccccc;"></td>
+                            <td style="border-right: solid 1px #cccccc;"></td>
                             <td>
                                 <?php
                                 switch ($$cliche_var) {
@@ -563,8 +590,8 @@ $current_date_time = date("dmYHis");
                             </td>
                         </tr>
                         <?php endfor; ?>
-                        <?php endif; ?>
                     </table>
+                    <?php endif; ?>
                 </div>
                 <div class="col-8" style="-webkit-box-flex: 0; flex: 0 0 66%; max-width: 66%;">
                     <div class="row" style="display: flex; flex-wrap: wrap;">
@@ -948,6 +975,7 @@ $current_date_time = date("dmYHis");
                     $ink_var = "ink_$i";
                     $color_var = "color_$i";
                     $cmyk_var = "cmyk_$i";
+                    $lacquer_var = "lacquer_$i";
                     ?>
                         <tr>
                             <td>
@@ -976,7 +1004,17 @@ $current_date_time = date("dmYHis");
                                         echo 'Белая';
                                         break;
                                     case CalculationBase::LACQUER:
-                                        echo 'Лак';
+                                        switch($$lacquer_var) {
+                                            case CalculationBase::LACQUER_GLOSSY:
+                                                echo 'Лак глянцевый';
+                                                break;
+                                            case CalculationBase::LACQUER_MATTE:
+                                                echo 'Лак матовый';
+                                                break;
+                                            default :
+                                                echo 'Лак';
+                                                break;
+                                        }
                                         break;
                                 }
                                 ?>

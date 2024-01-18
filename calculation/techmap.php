@@ -281,7 +281,7 @@ $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
-if(!empty($calculation->ink_number)) {
+if(!empty($calculation->ink_number)) { print_r($calculation->lacquer_1);
     for($i=1; $i<=$calculation->ink_number; $i++) {
         $ink_var = "ink_$i";
         $$ink_var = $calculation->$ink_var;
@@ -291,6 +291,9 @@ if(!empty($calculation->ink_number)) {
     
         $cmyk_var = "cmyk_$i";
         $$cmyk_var = $calculation->$cmyk_var;
+        
+        $lacquer_var = "lacquer_$i";
+        $$lacquer_var = $calculation->$lacquer_var;
     
         $percent_var = "percent_$i";
         $$percent_var = $calculation->$percent_var;
@@ -573,9 +576,10 @@ if(!is_nan($calculation->streams_number)) {
                         $ink_var = "ink_$i";
                         $color_var = "color_$i";
                         $cmyk_var = "cmyk_$i";
+                        $lacquer_var = "lacquer_$i";
                         
                         $cliche_width_style = " w-100";
-                        $repeat_display_style = " d-none"; //echo "QWE"; print_r($cliches);
+                        $repeat_display_style = " d-none";
                         if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::REPEAT) {
                             $cliche_width_style = " w-50";
                             $repeat_display_style = "";
@@ -608,8 +612,18 @@ if(!is_nan($calculation->streams_number)) {
                                         case CalculationBase::WHITE:
                                             echo 'Белая';
                                             break;
-                                        case CalculationBase::LACQUER:
-                                            echo 'Лак';
+                                        case CalculationBase::LACQUER: 
+                                            switch ($$lacquer_var) {
+                                                case CalculationBase::LACQUER_GLOSSY:
+                                                    echo 'Лак глянцевый';
+                                                    break;
+                                                case CalculationBase::LACQUER_MATTE:
+                                                    echo 'Лак матовый';
+                                                    break;
+                                                default :
+                                                    echo 'Лак';
+                                                    break;
+                                            }
                                             break;
                                     }
                                     ?>
@@ -1163,6 +1177,7 @@ if(!is_nan($calculation->streams_number)) {
                         $ink_var = "ink_$i";
                         $color_var = "color_$i";
                         $cmyk_var = "cmyk_$i";
+                        $lacquer_var = "lacquer_$i";
                         $percent_var = "percent_$i";
                         $cliche_var = "cliche_$i";
                         ?>
@@ -1194,7 +1209,17 @@ if(!is_nan($calculation->streams_number)) {
                                         echo "Белая";
                                         break;
                                     case CalculationBase::LACQUER;
-                                        echo "Лак";
+                                        switch ($$lacquer_var) {
+                                            case CalculationBase::LACQUER_GLOSSY:
+                                                echo 'Лак глянцевый';
+                                                break;
+                                            case CalculationBase::LACQUER_MATTE:
+                                                echo 'Лак матовый';
+                                                break;
+                                            default :
+                                                echo "Лак";
+                                                break;
+                                        }
                                         break;
                                 }
                                 ?>
@@ -1301,6 +1326,7 @@ if(!is_nan($calculation->streams_number)) {
                     $ink_var = "ink_$i";
                     $color_var = "color_$i";
                     $cmyk_var = "cmyk_$i";
+                    $lacquer_var = "lacquer_$i";
                     ?>
                         <tr>
                             <td>
@@ -1329,7 +1355,17 @@ if(!is_nan($calculation->streams_number)) {
                                         echo 'Белая';
                                         break;
                                     case CalculationBase::LACQUER:
-                                        echo 'Лак';
+                                        switch ($$lacquer_var) {
+                                            case CalculationBase::LACQUER_GLOSSY:
+                                                echo 'Лак глянцевый';
+                                                break;
+                                            case CalculationBase::LACQUER_MATTE:
+                                                echo 'Лак матовый';
+                                                break;
+                                            default :
+                                                echo 'Лак';
+                                                break;
+                                        }
                                         break;
                                 }
                                 ?>
