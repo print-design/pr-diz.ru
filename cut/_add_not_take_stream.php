@@ -1,0 +1,20 @@
+<?php
+include '../include/topscripts.php';
+
+if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $location = filter_input(INPUT_POST, 'php_self');
+    $location_get = array();
+    
+    foreach($_POST as $key=>$value) {
+        if(mb_substr($key, 0, 4) == 'get_' && mb_strlen($key) > 4) {
+            $location_get[mb_substr($key, 4)] = $value;
+        }
+    }
+    
+    unset($location_get['stream_id']);
+    $location_get['outer'] = 1; 
+    
+    header('Location: '.$location."?".http_build_query($location_get).'#not_take');
+}
+?>

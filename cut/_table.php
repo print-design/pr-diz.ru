@@ -36,7 +36,6 @@
         <div class="modal-content">
             <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php">
                 <input type="hidden" name="id" value="<?=$id ?>" />
-                <input type="hidden" name="scroll" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
                 <?php foreach($_GET as $get_key => $get_value): ?>
                 <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
@@ -48,7 +47,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="calculation_stream_id">Наименование</label>
-                        <select name="calculation_stream_id" class="form-control">
+                        <select name="calculation_stream_id" id="calculation_stream_id" class="form-control" required="required">
                             <option value="" hidden="hidden">...</option>
                             <?php
                             $sql = "select id, name from calculation_stream where calculation_id = $id";
@@ -62,7 +61,7 @@
                     <div class="form-group">
                         <label for="weight">Масса катушки</label>
                         <div class="input-group">
-                            <input type="text" name="weight" class="form-control float-only" required="required" autocomplete="off" />
+                            <input type="text" name="weight" id="weight" class="form-control float-only" required="required" autocomplete="off" />
                             <div class="input-group-append">
                                 <span class="input-group-text">кг</span>
                             </div>
@@ -224,4 +223,32 @@
         </table>
     </div>
     <?php endforeach; ?>
+    <a name="not_take"></a>
+    <?php
+    $sql = "select cnts.id, cs.name stream, date_format(cnts.printed, '%H:%i') printed, cnts.weight, cnts.length "
+            . "from calculation_not_take_stream cnts "
+            . "inner join calculation_stream cs on cnts.calculation_stream_id = cs.id "
+            . "where cs.calculation_id = $id";
+    $grabber = new Grabber($sql);
+    $streams = $grabber->result;
+    if(count($streams) > 0):
+    foreach($streams as $stream):
+    $hide_table_class = " d-none";
+    $show_table_class = "";
+    if(!empty(filter_input(INPUT_GET, 'outer'))) {
+        $hide_table_class = "";
+        $show_table_class = " d-none";
+    }
+    ?>
+    <div style="padding-left: 10px; padding-right: 10px; border: solid 1px #e3e3e3; border-radius: 15px; margin-top: 15px; margin-bottom: 5px;">
+        <div style="padding-top: 15px; padding-bottom: 15px;">
+            <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <a href="javascript: void(0);" class="hide_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $number_in_meter), 0)." шт." ?>
+        </div>
+    </div>
+    <?php
+    endforeach;
+    endif;
+    ?>
 </div>
