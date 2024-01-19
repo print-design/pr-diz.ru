@@ -276,7 +276,6 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     echo "";
                 }
                 elseif($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                    // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
                     echo DisplayNumber(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
                 }
                 else {
