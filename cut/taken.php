@@ -267,10 +267,14 @@ if($row = $fetcher->Fetch()) {
                 $('input#take_stream_weight').val('');
             });
             
+            $('#add_not_take_stream').on('shown.bs.modal', function() {
+                $('select#calculation_stream_id').focus();
+            });
+            
             $('#add_not_take_stream').on('hidden.bs.modal', function() {
                 $('select#calculation_stream_id').val('');
                 $('input#weight').val('');
-            })
+            });
             
             <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',

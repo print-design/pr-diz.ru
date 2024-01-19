@@ -242,7 +242,7 @@ if($row = $fetcher->Fetch()) {
                                 <button type="submit" name="confirm_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Подтвердить</button>
                             </form>
                         </div>
-                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <?php elseif($status_id == ORDER_STATUS_SHIP_READY && null == filter_input(INPUT_GET, 'waiting')): ?>
                         <div>
                             <form method="post">
@@ -286,6 +286,15 @@ if($row = $fetcher->Fetch()) {
             $('#edit_take_stream').on('hidden.bs.modal', function() {
                 $('input#take_stream_weight').val('');
             });
+            
+            $('#add_not_take_stream').on('shown.bs.modal', function() {
+                $('select#calculation_stream_id').focus();
+            });
+            
+            $('#add_not_take_stream').on('hidden.bs.modal', function() {
+                $('select#calculation_stream_id').val('');
+                $('input#weight').val('');
+            })
                 
             <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
