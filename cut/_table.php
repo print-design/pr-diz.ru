@@ -225,14 +225,23 @@
     <?php endforeach; ?>
     <a name="not_take"></a>
     <?php
-    $sql = "select cnts.id, cs.name stream, date_format(cnts.printed, '%H:%i') printed, cnts.weight, cnts.length "
+    $sql = "select cnts.id, cs.name, date_format(cnts.printed, '%H:%i') printed, cnts.weight, cnts.length "
             . "from calculation_not_take_stream cnts "
             . "inner join calculation_stream cs on cnts.calculation_stream_id = cs.id "
             . "where cs.calculation_id = $id";
     $grabber = new Grabber($sql);
     $streams = $grabber->result;
+    
+    $total_weight = 0;
+    $total_length = 0;
+    
+    foreach($streams as $stream) {
+        $total_weight += $stream['weight'];
+        $total_length += $stream['length'];
+    }
+    
     if(count($streams) > 0):
-    foreach($streams as $stream):
+    
     $hide_table_class = " d-none";
     $show_table_class = "";
     if(!empty(filter_input(INPUT_GET, 'outer'))) {
@@ -242,13 +251,38 @@
     ?>
     <div style="padding-left: 10px; padding-right: 10px; border: solid 1px #e3e3e3; border-radius: 15px; margin-top: 15px; margin-bottom: 5px;">
         <div style="padding-top: 15px; padding-bottom: 15px;">
-            <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <a href="javascript: void(0);" class="hide_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $number_in_meter), 0)." шт." ?>
+            <a href="javascript: void(0);" class="show_not_take_table<?=$show_table_class ?>" onclick="javascript: ShowNotTakeTable();"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <a href="javascript: void(0);" class="hide_not_take_table<?=$hide_table_class ?>" onclick="javascript: HideNotTakeTable();"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
+            <strong>Рулоны не из съёма</strong> <?= DisplayNumber(intval($total_weight), 0) ?> кг, <?= DisplayNumber(intval($total_length), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($total_length * $number_in_meter), 0)." шт." ?>
         </div>
+        <table class="table not_take_table<?=$hide_table_class ?>" style="border-bottom: 0;">
+            <tr>
+                <td style="font-weight: bold;">ID</td>
+                <th style="font-weight: bold;">Наименование</th>
+                <th style="font-weight: bold;">Время</th>
+                <th style="font-weight: bold;">Масса</th>
+                <th style="font-weight: bold;">Метраж</th>
+                <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                <th style="font-weight: bold;">Этикеток</th>
+                <?php endif; ?>
+                <th style="font-weight: bold;"></th>
+            </tr>
+            <?php foreach($streams as $stream): ?>
+            <tr style="border-bottom: 0;">
+                <td style="text-align: left;"><?=$stream['id'] ?></td>
+                <td style="text-align: left;"><?=$stream['name'] ?></td>
+                <td style="text-align: left;"><?=$stream['printed'] ?></td>
+                <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
+                <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>
+                <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $number_in_meter), 0) ?> шт.</td>
+                <?php endif; ?>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
     </div>
     <?php
-    endforeach;
     endif;
     ?>
 </div>

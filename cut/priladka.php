@@ -199,14 +199,5 @@ $calculation_result = CalculationResult::Create($id);
         include '../include/footer.php';
         include '../include/footer_cut.php';
         ?>
-        <script>
-            $('#cut_remove').on('shown.bs.modal', function() {
-                $('input:text:visible:first').focus();
-            });
-            
-            $('#cut_remove').on('hidden.bs.modal', function() {
-                $('input#cut_remove_cause').val('');
-            });
-        </script>
     </body>
 </html>
