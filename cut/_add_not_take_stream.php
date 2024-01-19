@@ -3,6 +3,21 @@ include '../include/topscripts.php';
 
 if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     $id = filter_input(INPUT_POST, 'id');
+    $calculation_stream_id = filter_input(INPUT_POST, 'calculation_stream_id');
+    $weight = filter_input(INPUT_POST, 'weight');
+    $length = 0;
+    
+    $sql = "select weight, length from calculation_take_stream "
+            . "where calculation_stream_id = $calculation_stream_id "
+            . "and calculation_take_id = (select max(id) from calculation_take where calculation_id = $id)";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $length = $weight * ($row['length'] / $row['weight']);
+    }
+    
+    $sql = "insert into calculation_not_take_stream (calculation_stream_id, weight, length, printed) values ($calculation_stream_id, $weight, $length, now())";
+    $executer = new Executer($sql);
+    
     $location = filter_input(INPUT_POST, 'php_self');
     $location_get = array();
     
