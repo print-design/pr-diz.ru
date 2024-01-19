@@ -223,7 +223,7 @@ if($row = $fetcher->Fetch()) {
                                 <button type="submit" name="new_take_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Начать новый съём</button>
                             </form>
                         </div>
-                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div>
                             <form method="post">
                                 <input type="hidden" name="id" value="<?=$id ?>" />
@@ -266,6 +266,11 @@ if($row = $fetcher->Fetch()) {
             $('#edit_take_stream').on('hidden.bs.modal', function() {
                 $('input#take_stream_weight').val('');
             });
+            
+            $('#add_not_take_stream').on('hidden.bs.modal', function() {
+                $('select#calculation_stream_id').val('');
+                $('input#weight').val('');
+            })
             
             <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',

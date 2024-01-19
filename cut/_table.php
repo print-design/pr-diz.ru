@@ -31,6 +31,52 @@
         </div>
     </div>
 </div>
+<div id="add_not_take_stream" class="modal fade show">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php">
+                <input type="hidden" name="id" value="<?=$id ?>" />
+                <input type="hidden" name="scroll" />
+                <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
+                <?php foreach($_GET as $get_key => $get_value): ?>
+                <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
+                <?php endforeach; ?>
+                <div class="modal-header">
+                    <p class="font-weight-bold" style="font-size: x-large;">Добавление рулона не из съёма</p>
+                    <button type="button" class="close edit_take_stream_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="calculation_stream_id">Наименование</label>
+                        <select name="calculation_stream_id" class="form-control">
+                            <option value="" hidden="hidden">...</option>
+                            <?php
+                            $sql = "select id, name from calculation_stream where calculation_id = $id";
+                            $fetcher = new Fetcher($sql);
+                            while($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"><?=$row['name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Масса катушки</label>
+                        <div class="input-group">
+                            <input type="text" name="weight" class="form-control float-only" required="required" autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">кг</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: flex-start;">
+                    <button type="submit" class="btn btn-dark" id="add_not_take_stream_submit" name="add_not_take_stream_submit"><img src="../images/icons/print_light.svg" class="mr-2" />Распечатать бирку</button>
+                    <button type="button" class="btn btn-light" id="add_not_take_stream_dismiss" data-dismiss="modal">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="calculation_stream">
     <div class="name" style="font-size: 33px;"><?=CUTTER_NAMES[$machine_id] ?></div>
     <div class="name">Результаты резки</div>

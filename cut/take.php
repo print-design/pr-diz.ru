@@ -319,7 +319,7 @@ if(empty($take_id)) {
                         }
                         ?>
                         <div><a href="taken.php?id=<?=$id ?>&machine_id=<?= $machine_id ?>" class="btn btn-dark pl-4 pr-4 mr-4<?=$finish_submit_disabled_class ?>"><i class="fas fa-check mr-2"></i>Съём закончен</a></div>
-                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
                     <?php include './_table.php'; ?>
@@ -424,6 +424,11 @@ if(empty($take_id)) {
             $('#edit_take_stream').on('hidden.bs.modal', function() {
                 $('input#take_stream_weight').val('');
             });
+            
+            $('#add_not_take_stream').on('hidden.bs.modal', function() {
+                $('select#calculation_stream_id').val('');
+                $('input#weight').val('');
+            })
             
             <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
