@@ -161,7 +161,7 @@ $calculation_result = CalculationResult::Create($id);
                         <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$calculation->status_id] ?>
                         <?php
                         if(in_array($calculation->status_id, ORDER_STATUSES_WITH_METERS)) {
-                            echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval($calculation_result->length_pure_1), 0);
+                            echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval(is_a($calculation, CalculationSelfAdhesive::class) ? $calculation->length_pure : $calculation->length_pure_1), 0);
                         }
                                 
                         if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {
