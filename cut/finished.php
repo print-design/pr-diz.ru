@@ -196,7 +196,7 @@ if($row = $fetcher->Fetch()) {
                                 }
                                 
                                 if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {
-                                    echo " ".$cut_remove_cause;
+                                    echo " ".$calculation->cut_remove_cause;
                                 }
                                 ?>
                             </div>
