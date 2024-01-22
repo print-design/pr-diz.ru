@@ -329,7 +329,7 @@ if(empty($take_id)) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
         <div class="print_only">
             <div class="pagebreak"><?php include './_print.php'; ?></div>
             <div><?php include './_print.php'; ?></div>
@@ -409,7 +409,7 @@ if(empty($take_id)) {
                 }
             }
             
-            <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                         head = document.head || document.getElementsByTagName('head')[0],
                         style = document.createElement('style');

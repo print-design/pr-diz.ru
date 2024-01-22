@@ -49,6 +49,14 @@
         $('input#weight').val('');
     });
     
+    $('#edit_not_take_stream').on('shown.bs.modal', function() {
+        $('input#not_take_stream_weight').focus();
+    });
+            
+    $('#edit_not_take_stream').on('hidden.bs.modal', function() {
+        $('input#not_take_stream_weight').val('');
+    });
+    
     <?php if(IsInRole(CUTTER_USERS)): ?>
     function ShowCutterName() {
         $('span#top_user_name').load("<?=APPLICATION ?>/cut/_get_user.php");

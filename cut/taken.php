@@ -27,7 +27,7 @@ if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        header("Location: take.php?id=$id&machine_id=$machine_id");
+        header("Location: take.php?id=$id&machine_id=$machine_id#");
     }
 }
 
@@ -41,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'finished_submit')) {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        header("Location: finished.php?id=$id&machine_id=$machine_id");
+        header("Location: finished.php?id=$id&machine_id=$machine_id#");
     }
 }
 
@@ -240,7 +240,7 @@ if($row = $fetcher->Fetch()) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
         <div class="print_only">
             <div class="pagebreak"><?php include './_print.php'; ?></div>
             <div><?php include './_print.php'; ?></div>
@@ -251,7 +251,7 @@ if($row = $fetcher->Fetch()) {
         include '../include/footer_cut.php';
         ?>
         <script>
-            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                         head = document.head || document.getElementsByTagName('head')[0],
                         style = document.createElement('style');

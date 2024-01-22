@@ -257,7 +257,7 @@ if($row = $fetcher->Fetch()) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
         <div class="print_only">
             <div class="pagebreak"><?php include '../cut/_print.php'; ?></div>
             <div><?php include '../cut/_print.php'; ?></div>
@@ -306,9 +306,17 @@ if($row = $fetcher->Fetch()) {
             $('#add_not_take_stream').on('hidden.bs.modal', function() {
                 $('select#calculation_stream_id').val('');
                 $('input#weight').val('');
-            })
+            });
+            
+            $('#edit_not_take_stream').on('shown.bs.modal', function() {
+                $('input#not_take_stream_weight').focus();
+            });
+            
+            $('#edit_not_take_stream').on('hidden.bs.modal', function() {
+                $('input#not_take_stream_weight').val('');
+            });
                 
-            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                     head = document.head || document.getElementsByTagName('head')[0],
                     style = document.createElement('style');

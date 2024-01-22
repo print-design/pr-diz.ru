@@ -37,6 +37,22 @@ elseif(null !== filter_input(INPUT_GET, 'take_stream_id')) {
         $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
     }
 }
+elseif(null !== filter_input(INPUT_GET, 'not_take_stream_id')) {
+    $not_take_stream_id = filter_input(INPUT_GET, 'not_take_stream_id');
+    
+    $sql = "select cs.name, cnts.weight, cnts.length, cnts.printed "
+            . "from calculation_not_take_stream cnts "
+            . "inner join calculation_stream cs on cnts.calculation_stream_id = cs.id "
+            . "where cnts.id = $not_take_stream_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $stream_name = $row['name'];
+        $stream_weight = $row['weight'];
+        $stream_length = $row['length'];
+        $stream_printed = $row['printed'];
+        $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
+    }
+}
             
 $stream_date = $dt_printed->format('d-m-Y');
 $stream_hour = $dt_printed->format('G');

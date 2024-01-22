@@ -76,6 +76,38 @@
         </div>
     </div>
 </div>
+<div id="edit_not_take_stream" class="modal fade show">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="<?=APPLICATION ?>/cut/_edit_not_take_stream.php">
+                <input type="hidden" name="id" id="not_take_stream_id" />
+                <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
+                <?php foreach ($_GET as $get_key => $get_value): ?>
+                <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
+                <?php endforeach; ?>
+                <div class="modal-header">
+                    <p class="font-weight-bold" style="font-size: x-large;" id="not_take_stream_name"></p>
+                    <button type="button" class="close edit_not_take_stream_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="weight">Масса катушки</label>
+                        <div class="input-group">
+                            <input type="text" name="weight" class="form-control float-only" id="not_take_stream_weight" required="required" autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">кг</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: flex-start;">
+                    <button type="submit" class="btn btn-dark" id="edit_not_take_stream_submit" name="edit_not_take_stream_submit"><img src="../images/icons/print_light.svg" class="mr-2" />Распечатать бирку</button>
+                    <button type="button" class="btn btn-light" id="edit_not_take_stream_dismiss" data-dismiss="modal">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="calculation_stream">
     <div class="name" style="font-size: 33px;"><?=CUTTER_NAMES[$machine_id] ?></div>
     <div class="name">Результаты резки</div>
@@ -199,7 +231,7 @@
                 <?php endif; ?>
                 <th style="font-weight: bold;"></th>
             </tr>
-            <?php 
+            <?php
             $sql = "select cts.id, cs.name, date_format(cts.printed, '%H:%i') printed, cts.weight, cts.length "
                     . "from calculation_take_stream cts "
                     . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
@@ -244,7 +276,7 @@
     
     $hide_table_class = " d-none";
     $show_table_class = "";
-    if(!empty(filter_input(INPUT_GET, 'outer'))) {
+    if(!empty(filter_input(INPUT_GET, 'not_take_stream_id'))) {
         $hide_table_class = "";
         $show_table_class = " d-none";
     }
@@ -277,7 +309,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
-                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_not_take_stream" onclick="javascript: $('#not_take_stream_id').val('<?=$stream['id'] ?>'); $('#not_take_stream_name').html('<?=$stream['name'] ?>');" /></a></td>
             </tr>
             <?php endforeach; ?>
         </table>

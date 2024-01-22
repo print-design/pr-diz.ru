@@ -17,6 +17,7 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     
     $sql = "insert into calculation_not_take_stream (calculation_stream_id, weight, length, printed) values ($calculation_stream_id, $weight, $length, now())";
     $executer = new Executer($sql);
+    $not_take_stream_id = $executer->insert_id;
     
     $location = filter_input(INPUT_POST, 'php_self');
     $location_get = array();
@@ -28,7 +29,9 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     }
     
     unset($location_get['stream_id']);
-    $location_get['outer'] = 1; 
+    unset($location_get['take_stream_id']);
+    unset($location_get['take_id']);
+    $location_get['not_take_stream_id'] = $not_take_stream_id;
     
     header('Location: '.$location."?".http_build_query($location_get).'#not_take');
 }
