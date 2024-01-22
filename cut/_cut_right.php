@@ -67,7 +67,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
     <div class="subtitle">ИНФОРМАЦИЯ ПО ПЕЧАТИ</div>
     <table>
         <tr>
-            <td><?=(empty($calculation->machine_id) ? '' : ' '.PRINTER_NAMES[$calculation->machine_id].' ') ?>Марка мат-ла</td>
+            <td style="width: 50%;"><?=(empty($calculation->machine_id) ? '' : ' '.PRINTER_NAMES[$calculation->machine_id].' ') ?>Марка мат-ла</td>
             <td><?=$calculation->film_1 ?></td>
         </tr>
         <tr>
@@ -125,7 +125,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
     <div class="subtitle">ИНФОРМАЦИЯ ПО ЛАМИНАЦИИ 1</div>
     <table>
         <tr>
-            <td>Кол-во ламинаций</td>
+            <td style="width: 50%;">Кол-во ламинаций</td>
             <td><?= empty($calculation->laminations_number) ? "нет" : $calculation->laminations_number ?></td>
         </tr>
         <tr>
@@ -153,7 +153,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
     <div class="subtitle">ИНФОРМАЦИЯ ПО ЛАМИНАЦИИ 2</div>
     <table>
         <tr>
-            <td>Марка пленки</td>
+            <td style="width: 50%;">Марка пленки</td>
             <td><?= $calculation->film_3 ?></td>
         </tr>
         <tr>
@@ -173,7 +173,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
     <div class="subtitle">ИНФОРМАЦИЯ ДЛЯ РЕЗЧИКА</div>
     <table>
         <tr>
-            <td>Объем заказа</td>
+            <td style="width: 50%;">Объем заказа</td>
             <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
         </tr>
         <tr>
