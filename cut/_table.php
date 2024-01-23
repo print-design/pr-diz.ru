@@ -125,12 +125,22 @@
     $weight = 0;
     $length = 0;
     
+    // Количество катушек, суммарный вес и суммарная длина роликов из съёмов.
     $sql = "select count(id) bobbins, sum(weight) weight, sum(length) length from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $bobbins = $row['bobbins'];
         $weight = $row['weight'];
         $length = $row['length'];
+    }
+    
+    // Количество катушек, суммарный вес и суммарная длина роликов не из съёмов.
+    $sql = "select count(id) bobbins, sum(weight) weight, sum(length) length from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $bobbins += $row['bobbins'];
+        $weight += $row['weight'];
+        $length += $row['length'];
     }
     ?>
     <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(intval($weight), 0) ?> кг, <?= DisplayNumber(intval($length), 0) ?> м<?= $calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", этикеток ".DisplayNumber(floor($length * $number_in_meter), 0)." шт." ?></div>
@@ -145,11 +155,21 @@
             <?php endif; ?>
         </tr>
         <?php
-        $sql = "select cs.id, cs.name, count(cts.id) bobbins, sum(cts.weight) weight, sum(cts.length) length "
-                . "from calculation_take_stream cts "
-                . "left join calculation_stream cs on cts.calculation_stream_id = cs.id "
+        $sql = "select cs.id, cs.name, "
+                . "ifnull((select count(id) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
+                . "+ "
+                . "ifnull((select count(id) from calculation_not_take_stream where calculation_stream_id = cs.id), 0) "
+                . "bobbins, "
+                . "ifnull((select sum(weight) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
+                . "+ "
+                . "ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id = cs.id), 0) "
+                . "weight, "
+                . "ifnull((select sum(length) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
+                . "+ "
+                . "ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id = cs.id), 0) "
+                . "length "
+                . "from calculation_stream cs "
                 . "where cs.calculation_id = $id "
-                . "group by cts.calculation_stream_id "
                 . "order by cs.position";
         $fetcher = new Fetcher($sql);
         while ($row = $fetcher->Fetch()):

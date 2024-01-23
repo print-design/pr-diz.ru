@@ -72,6 +72,11 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $length_cut = $row['0'];
 }
+
+// Ошибки при расчётах (если есть)
+if(null !== filter_input(INPUT_GET, 'error_message')) {
+    $error_message = filter_input(INPUT_GET, 'error_message');
+}
 ?>
 <!DOCTYPE html>
 <html>

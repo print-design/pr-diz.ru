@@ -18,6 +18,11 @@ else {
 if(empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/?machine_id='.CUTTER_1);
 }
+
+// Ошибки при расчётах (если есть)
+if(null !== filter_input(INPUT_GET, 'error_message')) {
+    $error_message = filter_input(INPUT_GET, 'error_message');
+}
 ?>
 <!DOCTYPE html>
 <html>

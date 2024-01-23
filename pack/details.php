@@ -76,6 +76,11 @@ if($row = $fetcher->Fetch()) {
     $length_cut = $row['length_cut'];
     $num_for_customer = $row['num_for_customer'];
 }
+
+// Ошибки при расчётах (если есть)
+if(null !== filter_input(INPUT_GET, 'error_message')) {
+    $error_message = filter_input(INPUT_GET, 'error_message');
+}
 ?>
 <!DOCTYPE html>
 <html>

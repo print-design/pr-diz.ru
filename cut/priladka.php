@@ -61,6 +61,11 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
 // Получение объекта
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
+
+// Ошибки при расчётах (если есть)
+if(null !== filter_input(INPUT_GET, 'error_message')) {
+    $error_message = filter_input(INPUT_GET, 'error_message');
+}
 ?>
 <!DOCTYPE html>
 <html>

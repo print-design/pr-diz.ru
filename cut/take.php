@@ -154,6 +154,11 @@ if($row = $fetcher->Fetch()) {
 if(empty($take_id)) {
     header('Location: details.php?id='.$id.(empty($machine_id) ? '' : '&machine_id='.$machine_id));
 }
+
+// Ошибки при расчётах (если есть)
+if(null !== filter_input(INPUT_GET, 'error_message')) {
+    $error_message = filter_input(INPUT_GET, 'error_message');
+}
 ?>
 <!DOCTYPE html>
 <html>

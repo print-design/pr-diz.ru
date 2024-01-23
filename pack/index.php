@@ -12,6 +12,11 @@ $status_id = ORDER_STATUS_PACK_READY;
 if(null !== filter_input(INPUT_GET, 'status_id')) {
     $status_id = filter_input(INPUT_GET, 'status_id');
 }
+
+// Ошибки при расчётах (если есть)
+if(null !== filter_input(INPUT_GET, 'error_message')) {
+    $error_message = filter_input(INPUT_GET, 'error_message');
+}
 ?>
 <!DOCTYPE html>
 <html>
