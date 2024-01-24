@@ -1,4 +1,5 @@
 <?php
+$stream_id = null;
 $stream_name = '';
 $stream_weight = '';
 $stream_length = '';
@@ -8,12 +9,13 @@ $dt_printed = '';
 if(null !== filter_input(INPUT_GET, 'stream_id')) {
     $stream_id = filter_input(INPUT_GET, 'stream_id');
     
-    $sql = "select cs.name, cts.weight, cts.length, cts.printed "
+    $sql = "select cts.id, cs.name, cts.weight, cts.length, cts.printed "
             . "from calculation_take_stream cts "
             . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
             . "where cts.calculation_stream_id = $stream_id and cts.calculation_take_id = (select max(id) from calculation_take where calculation_id = cs.calculation_id)";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
+        $stream_id = $row['id'];
         $stream_name = $row['name'];
         $stream_weight = $row['weight'];
         $stream_length = $row['length'];
@@ -24,12 +26,13 @@ if(null !== filter_input(INPUT_GET, 'stream_id')) {
 elseif(null !== filter_input(INPUT_GET, 'take_stream_id')) {
     $take_stream_id = filter_input(INPUT_GET, 'take_stream_id');
     
-    $sql = "select cs.name, cts.weight, cts.length, cts.printed "
+    $sql = "select cts.id, cs.name, cts.weight, cts.length, cts.printed "
             . "from calculation_take_stream cts "
             . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
             . "where cts.id = $take_stream_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
+        $stream_id = $row['id'];
         $stream_name = $row['name'];
         $stream_weight = $row['weight'];
         $stream_length = $row['length'];
@@ -40,12 +43,13 @@ elseif(null !== filter_input(INPUT_GET, 'take_stream_id')) {
 elseif(null !== filter_input(INPUT_GET, 'not_take_stream_id')) {
     $not_take_stream_id = filter_input(INPUT_GET, 'not_take_stream_id');
     
-    $sql = "select cs.name, cnts.weight, cnts.length, cnts.printed "
+    $sql = "select cnts.id, cs.name, cnts.weight, cnts.length, cnts.printed "
             . "from calculation_not_take_stream cnts "
             . "inner join calculation_stream cs on cnts.calculation_stream_id = cs.id "
             . "where cnts.id = $not_take_stream_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
+        $stream_id = $row['id'];
         $stream_name = $row['name'];
         $stream_weight = $row['weight'];
         $stream_length = $row['length'];
@@ -75,6 +79,15 @@ while($row = $fetcher->Fetch()) {
 if(empty($stream_cutter)) {
     $stream_cutter = "ВЫХОДНОЙ ДЕНЬ";
 }
+
+$number_in_meter = 0; // Этикеток в 1 м. пог.
+    
+if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+    $number_in_meter = $calculation->number_in_raport_pure / $calculation->raport * 1000.0;
+}
+elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
+    $number_in_meter = 1 / $calculation->length * 1000.0;
+}
 ?>
 <div class="d-flex justify-content-start mb-1">
     <div class="mr-2"><img src="<?=APPLICATION ?>/images/logo.svg" style="width: 20px; height: 20px;" class="mt-1" /></div>
@@ -86,6 +99,10 @@ if(empty($stream_cutter)) {
 </div>
 <div class="mb-2"><strong><?=$calculation->customer_id.'-'.$calculation->num_for_customer ?>.</strong> <?=$calculation->customer ?></div>
 <table>
+    <tr>
+        <td>Рулон</td>
+        <td class="pl-1 font-weight-bold"><?= sprintf('%03d', $stream_id) ?></td>
+    </tr>
     <tr>
         <td>Дата</td>
         <td class="pl-1 font-weight-bold"><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y H:i') ?></td>
@@ -103,8 +120,12 @@ if(empty($stream_cutter)) {
         <td class="pl-1 font-weight-bold"><?= rtrim(rtrim(DisplayNumber(floatval($stream_weight), 2), '0'), ',')  ?> кг</td>
     </tr>
     <tr>
-        <td class="pb-2">Метраж</td>
-        <td class="pl-1 pb-2 font-weight-bold"><?= rtrim(rtrim(DisplayNumber(floatval($stream_length), 2), '0'), ',')  ?></td>
+        <td>Метраж</td>
+        <td class="pl-1 font-weight-bold"><?= rtrim(rtrim(DisplayNumber(floatval($stream_length), 2), '0'), ',')  ?></td>
+    </tr>
+    <tr>
+        <td class="pb-2">Кол-во</td>
+        <td class="pl-1 pb-2 font-weight-bold"><?= floor($stream_length * $number_in_meter) ?> шт. &#177;2%</td>
     </tr>
     <tr>
         <td colspan="2" class="font-weight-bold">
@@ -126,7 +147,7 @@ if(empty($stream_cutter)) {
         <td class="pb-2"><?= $stream_cutter.' '.$dt_printed->format('d.m.Y H:i') ?></td>
     </tr>
 </table>
-<div class="mb-3">
+<div class="mb-2">
     Гарантия хранения 12 мес.<br />ТУ 2245-001-218273282-2003
 </div>
 <div class="d-flex justify-content-start">
