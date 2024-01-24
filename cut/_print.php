@@ -130,14 +130,14 @@ elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
     <tr>
         <td colspan="2" class="font-weight-bold">
             <?php
-            echo $calculation->film_1.' '.$calculation->density_1;
+            echo $calculation->film_1.' '.$calculation->thickness_1;
                 
-            if(!empty($calculation->film_2) && !empty($calculation->density_2)) {
-                echo " + ".$calculation->film_2." ".$calculation->density_2;
+            if(!empty($calculation->film_2) && !empty($calculation->thickness_2)) {
+                echo " + ".$calculation->film_2." ".$calculation->thickness_2;
             }
                 
-            if(!empty($calculation->film_3) && !empty($calculation->density_3)) {
-                echo " + ".$calculation->film_3." ".$calculation->density_3;
+            if(!empty($calculation->film_3) && !empty($calculation->thickness_3)) {
+                echo " + ".$calculation->film_3." ".$calculation->thickness_3;
             }
             ?>
         </td>
