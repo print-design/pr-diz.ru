@@ -287,7 +287,6 @@ else $title = $status_titles[1];
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
                             . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities, "
                             . "c.unit, c.work_type_id, u.last_name, u.first_name, c.status_id, c.cut_remove_cause, cr.length_pure_1 as length_total, "
-                            . "(select id from techmap where calculation_id = c.id order by id desc limit 1) techmap_id, "
                             . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "

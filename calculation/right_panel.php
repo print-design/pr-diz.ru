@@ -338,7 +338,7 @@ if(!is_a($calculation_result, CalculationResult::class)) {
                            id="extracharge" 
                            name="extracharge" 
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round($extracharge) ?>" 
+                           value="<?= round($calculation->extracharge) ?>" 
                            required="required"
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
@@ -371,7 +371,7 @@ if(!is_a($calculation_result, CalculationResult::class)) {
         <?php
         $cliche_in_price_display_class = "";
         
-        if($cliche_in_price == 1) {
+        if($calculation->cliche_in_price == 1) {
             $cliche_in_price_display_class = " d-none";
         }
         ?>
@@ -384,7 +384,7 @@ if(!is_a($calculation_result, CalculationResult::class)) {
                            id="extracharge_cliche" 
                            name="extracharge_cliche" 
                            style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round($extracharge_cliche) ?>" 
+                           value="<?= round($calculation->extracharge_cliche) ?>" 
                            required="required" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
@@ -416,7 +416,7 @@ if(!is_a($calculation_result, CalculationResult::class)) {
             <div class="value mb-2"><span id="cost"><?= DisplayNumber(floatval($calculation_result->cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="cost_per_unit"><?= DisplayNumber(floatval($calculation_result->cost_per_unit), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= DisplayNumber(floatval($calculation_result->cliche_cost), 0) ?> &#8381;</div>
-            <div class="value font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($stream_width * $streams_number + 20) + ($ski == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($raport) + 20) ?>&nbsp;мм</div>            
+            <div class="value font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($calculation->stream_width * $calculation->streams_number + 20) + ($calculation->ski_1 == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($calculation->raport) + 20) ?>&nbsp;мм</div>            
         </div>
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
@@ -436,7 +436,7 @@ if(!is_a($calculation_result, CalculationResult::class)) {
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <div class="mt-2">Доп. расходы</div>
-            <div class="value"><?= DisplayNumber(floatval($extra_expense) * floatval($calculation->quantity), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="extra_expense"><?= DisplayNumber(floatval($extra_expense), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value"><?= DisplayNumber(floatval($calculation->extra_expense) * floatval($calculation->quantity), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="extra_expense"><?= DisplayNumber(floatval($calculation->extra_expense), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4"></div>
         <div class="col-4">
