@@ -1,4 +1,4 @@
-<?php if ($status_id == ORDER_STATUS_DRAFT): ?>
+<?php if ($calculation->status_id == ORDER_STATUS_DRAFT): ?>
 <div class="d-flex justify-content-between">
     <div>
         <form method="post" action="details.php?id=<?= filter_input(INPUT_GET, 'id') ?>">
@@ -15,13 +15,13 @@
         </form>
     </div>
 </div>
-<?php elseif($status_id == ORDER_STATUS_TRASH): ?>
+<?php elseif($calculation->status_id == ORDER_STATUS_TRASH): ?>
 <form method="post" action="details.php?id=<?= filter_input(INPUT_GET, 'id') ?>">
     <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
     <input type="hidden" name="status_id" value="<?=ORDER_STATUS_DRAFT ?>" />
     <button type="submit" name="change-status-submit" class="btn btn-outline-dark mt-3" style="width: 200px;">Восстановить</button>
 </form>
-<?php elseif($status_id == ORDER_STATUS_CALCULATION): ?>
+<?php elseif($calculation->status_id == ORDER_STATUS_CALCULATION): ?>
 <div class="d-flex justify-content-between">
     <div>
         <a href="techmap.php<?= BuildQuery('id', $id) ?>" class="btn btn-outline-dark mt-3" style="width: 200px;">Составить тех. карту</a>
@@ -34,7 +34,7 @@
         </form>
     </div>
 </div>
-<?php elseif ($status_id == ORDER_STATUS_WAITING && IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST]))): ?>
+<?php elseif ($calculation->status_id == ORDER_STATUS_WAITING && IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST]))): ?>
 <div class="d-flex justify-content-start">
     <form method="post" action="details.php<?= BuildQuery('id', filter_input(INPUT_GET, 'id')) ?>">
         <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
@@ -47,7 +47,7 @@
         <button type="submit" name="change-status-submit" class="btn btn-outline-dark draft mt-3" style="width: 200px;">Отклонить</button>
     </form>
 </div>
-<?php elseif($status_id == ORDER_STATUS_CONFIRMED): ?>
+<?php elseif($calculation->status_id == ORDER_STATUS_CONFIRMED): ?>
 <div class="d-flex justify-content-between">
     <div>
         <a href="techmap.php<?= BuildQuery('id', $id) ?>" class="btn btn-outline-dark mt-3 mr-2" style="width: 200px;">Посмотреть тех. карту</a>

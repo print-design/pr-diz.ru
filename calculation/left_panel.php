@@ -18,9 +18,9 @@ function GetSkiNameExt($param, $param_width) {
                 <?php if(!empty($last_name) || !empty($first_name)): ?>
             <tr><th>Менеджер</th><td><?=$last_name.(empty($last_name) ? "" : " ").$first_name ?></td></tr>
                 <?php endif; ?>
-            <tr><th>Тип работы</th><td><?=WORK_TYPE_NAMES[$work_type_id] ?></td></tr>
-                <?php if(!empty($quantity) && !empty($unit)): ?>
-            <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($quantity, 2, ",", " "), "0"), ",") ?> <?=$unit == 'kg' ? "кг" : "шт" ?></td></tr>
+            <tr><th>Тип работы</th><td><?=WORK_TYPE_NAMES[$calculation->work_type_id] ?></td></tr>
+                <?php if(!empty($calculation->quantity) && !empty($calculation->unit)): ?>
+            <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($calculation->quantity, 2, ",", " "), "0"), ",") ?> <?=$calculation->unit == 'kg' ? "кг" : "шт" ?></td></tr>
                 <?php endif; ?>
                 <?php if(!empty($printings_number)): ?>
             <tr><th>Тиражей</th><td><?=$printings_number ?></td></tr>
@@ -84,7 +84,7 @@ function GetSkiNameExt($param, $param_width) {
     <div class="col-6">
         <table class="calculation-table">
             <tr><td colspan="2"><h2>Характеристики</h2></td></tr>
-                <?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
+                <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <tr><th>Печатная машина</th><td><?=PRINTER_NAMES[$machine_id] ?></td></tr>
                 <?php
                 function GetInkWithCases($param) {
@@ -114,35 +114,35 @@ function GetSkiNameExt($param, $param_width) {
                 <?php if(!empty($streams_number)): ?>
             <tr><th>Количество ручьев</th><td><?= $streams_number ?></td></tr>
                 <?php endif; ?>
-                <?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
+                <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <tr><th>Рапорт</th><td><?= rtrim(rtrim(number_format($raport, 3, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php if(!empty($number_in_raport)): ?>
             <tr><th>Количество этикеток в рапорте</th><td><?=$number_in_raport ?></td></tr>
                 <?php endif; ?>
                 <?php
-                if($work_type_id == WORK_TYPE_SELF_ADHESIVE):
+                if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE):
                 ?>
-            <tr><th>Фактический зазор</th><td><?= rtrim(rtrim(number_format($gap, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+            <tr><th>Фактический зазор</th><td><?= rtrim(rtrim(number_format($calculation_result->gap, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php
                 $lamination = "нет";
                 if(!empty($lamination1_film_name) || !empty($lamination1_individual_film_name)) $lamination = "1";
                 if(!empty($lamination2_film_name) || !empty($lamination2_individual_film_name)) $lamination = "2";
                 ?>
-                <?php if($work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <tr><th>Количество ламинаций</th><td><?=$lamination ?></td></tr>
                 <?php endif; ?>
                 <?php if(!empty($lamination1_individual_film_name) || !empty($lamination1_film_name)): ?>
             <tr><th>Ширина ламинирующего вала</th><td><?= $lamination_roller_width ?> мм</td></tr>
                 <?php endif; ?>
-            <tr><th>Дополнительные расходы с <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></th><td><?=rtrim(rtrim(number_format($extra_expense, 2, ",", ""), "0"), ",") ?> руб</td></tr>
+            <tr><th>Дополнительные расходы с <?=(empty($calculation->unit) || $calculation->unit == 'kg' ? "кг" : "шт") ?></th><td><?=rtrim(rtrim(number_format($extra_expense, 2, ",", ""), "0"), ",") ?> руб</td></tr>
         </table>
     </div>
 </div>
-<?php if($work_type_id != WORK_TYPE_NOPRINT): ?>
+<?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
 <p class="font-weight-bold mt-3">Красочность: <?=$ink_number." ".GetInkWithCases($ink_number) ?></p>
-<?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+<?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
 <p>Количество форм: Флинт <?=$cliches_count_flint ?>, Кодак <?=$cliches_count_kodak ?>, старых <?=$cliches_count_old ?></p>
 <?php endif; ?>
 
@@ -151,7 +151,7 @@ function GetSkiNameExt($param, $param_width) {
         <th class="ink">Цветовая схема</th>
         <th class="ink">Цвет</th>
         <th class="ink">Запечатка</th>
-        <?php if($work_type_id == WORK_TYPE_PRINT): ?>
+        <?php if($calculation->work_type_id == WORK_TYPE_PRINT): ?>
         <th class="ink">Тип полимера</th>
         <th class="ink">Форма</th>
         <?php endif; ?>
@@ -205,7 +205,7 @@ function GetSkiNameExt($param, $param_width) {
             ?>
         </td>
         <td><?=$$percent_var ?>%</td>
-        <?php if($work_type_id == WORK_TYPE_PRINT): ?>
+        <?php if($calculation->work_type_id == WORK_TYPE_PRINT): ?>
         <td>
             <?php
             switch ($$cliche_var) {
@@ -268,7 +268,7 @@ function GetSkiNameExt($param, $param_width) {
         </form>
     </div>
 </div>
-<?php if($work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+<?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
 <div class="row">
     <div class="col-6"></div>
     <div class="col-6" style="border-top: solid 2px lightgray;">

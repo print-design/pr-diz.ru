@@ -115,12 +115,13 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
+$calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 
-$sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
-        . "rc.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, rc.width_ski, "
+$sql = "select rc.film_variation_id, f.name film_name, fv.thickness thickness, fv.weight weight, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, rc.customers_material, rc.ski, rc.width_ski, "
         . "rc.lamination1_film_variation_id, lam1f.name lamination1_film_name, lam1fv.thickness lamination1_thickness, lam1fv.weight lamination1_weight, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_thickness, rc.lamination1_individual_density, rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
         . "rc.lamination2_film_variation_id, lam2f.name lamination2_film_name, lam2fv.thickness lamination2_thickness, lam2fv.weight lamination2_weight, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-        . "rc.machine_id, rc.laminator_id, rc.streams_number, rc.length, rc.stream_width, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, u.first_name, u.last_name, rc.status_id, "
+        . "rc.machine_id, rc.laminator_id, rc.streams_number, rc.length, rc.stream_width, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, u.first_name, u.last_name, "
         . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
         . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
         . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -128,10 +129,9 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "rc.percent_1, rc.percent_2, rc.percent_3, rc.percent_4, rc.percent_5, rc.percent_6, rc.percent_7, rc.percent_8, "
         . "rc.cliche_1, rc.cliche_2, rc.cliche_3, rc.cliche_4, rc.cliche_5, rc.cliche_6, rc.cliche_7, rc.cliche_8, "
         . "rc.cliche_in_price, rc.cliches_count_flint, rc.cliches_count_kodak, rc.cliches_count_old, rc.extracharge, rc.extracharge_cliche, rc.customer_pays_for_cliche, "
-        . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, extra_expense, "
+        . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense, rc.cut_remove_cause, "
         . "cus.name customer, cus.phone customer_phone, cus.extension customer_extension, cus.email customer_email, cus.person customer_person, "
-        . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer,"
-        . "(select gap from calculation_result where calculation_id = rc.id) gap, tm.id techmap_id, pe.id plan_edition_id "
+        . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = rc.id)) length_cut "
         . "from calculation rc "
         . "left join film_variation fv on rc.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
@@ -141,17 +141,8 @@ $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_t
         . "left join film lam2f on lam2fv.film_id = lam2f.id "
         . "left join user u on rc.manager_id = u.id "
         . "left join customer cus on rc.customer_id = cus.id "
-        . "left join techmap tm on tm.calculation_id = rc.id "
-        . "left join plan_edition pe on pe.calculation_id = rc.id "
         . "where rc.id=$id";
 $row = (new Fetcher($sql))->Fetch();
-
-$date = $row['date'];
-$customer_id = $row['customer_id'];
-$name = $row['name'];
-$unit = $row['unit'];
-$quantity = $row['quantity'];
-$work_type_id = $row['work_type_id'];
 
 $film_variation_id = $row['film_variation_id'];
 $film_name = $row['film_name'];
@@ -203,7 +194,6 @@ $lamination_roller_width = $row['lamination_roller_width'];
 $ink_number = $row['ink_number'];
 $first_name = $row['first_name'];
 $last_name = $row['last_name'];
-$status_id = $row['status_id'];
 
 $new_forms_number = 0;
 
@@ -226,7 +216,7 @@ for($i=1; $i<=$ink_number; $i++) {
     $cliche_var = "cliche_$i";
     $$cliche_var = $row[$cliche_var];
     
-    if($work_type_id == WORK_TYPE_PRINT) {
+    if($calculation->work_type_id == WORK_TYPE_PRINT) {
         if(!empty($$cliche_var) && $$cliche_var != CalculationBase::OLD) {
             $new_forms_number++;
         }
@@ -247,7 +237,9 @@ $knife_in_price = $row['knife_in_price'];
 $customer_pays_for_knife = $row['customer_pays_for_knife'];
 $extra_expense = $row['extra_expense'];
 
-if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+$cut_remove_cause = $row['cut_remove_cause'];
+
+if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $new_forms_number += ($cliches_count_flint + $cliches_count_kodak);
 }
 
@@ -256,12 +248,7 @@ $customer_phone = $row['customer_phone'];
 $customer_extension = $row['customer_extension'];
 $customer_email = $row['customer_email'];
 $customer_person = $row['customer_person'];
-
-$num_for_customer = $row['num_for_customer'];
-$gap = $row['gap'];
-
-$techmap_id = $row['techmap_id'];
-$plan_edition_id = $row['plan_edition_id'];
+$length_cut = $row['length_cut'];
 
 // Если есть ламинация, а ламинатор пустой, то присваиваем ему значение "Сольвент".
 // (В старых расчётах ламинатор может быть не указан, поскольку тогда бессольвента не было.)
@@ -270,7 +257,7 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
 }
 
 // Если статус - "Черновик" или "Сделан  расчёт", то все чекбосы и поля наценки активны
-if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
+if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == ORDER_STATUS_CALCULATION) {
     $disabled_attr = "";
 }
 ?>
@@ -336,7 +323,7 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
     </head>
     <body>
         <?php
-        if(!empty($work_type_id) && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+        if(!empty($calculation->work_type_id) && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             include './right_panel_self_adhesive.php';
         }
         else {
@@ -353,11 +340,11 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
             
             $backlink_get = '';
             
-            if(in_array($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
+            if(in_array($calculation->status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
                 $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_NOT_IN_WORK, 'id');
             }
-            elseif(in_array ($status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH))) {
-                $backlink_get = BuildQueryAddRemove('status', $status_id, 'id');
+            elseif(in_array ($calculation->status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH))) {
+                $backlink_get = BuildQueryAddRemove('status', $calculation->status_id, 'id');
             }
             else {
                 $backlink_get = BuildQueryRemoveArray(array('status', 'id'));
@@ -366,12 +353,12 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
             <a class="btn btn-light backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
-                <h1><?= htmlentities($name) ?></h1>
-                <h2>№<?=$customer_id."-".$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
-                <div id="status" style="border: solid 2px <?=ORDER_STATUS_COLORS[$status_id] ?>; color: <?=ORDER_STATUS_COLORS[$status_id] ?>;">
-                    <i class="<?=ORDER_STATUS_ICONS[$status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
-                </div>
-                <?php include './left_panel.php'; ?>
+                <h1><?= $calculation->name ?></h1>
+                <h2>№<?=$calculation->customer_id."-".$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></h2>
+                <?php
+                include '../include/order_status_details.php';
+                include './left_panel.php';
+                ?>
                 <a href="create.php<?= BuildQuery("mode", "recalc") ?>" class="btn btn-dark mt-5 mr-2 form_button">Пересчитать</a>
             </div>
         </div>

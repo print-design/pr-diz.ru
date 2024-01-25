@@ -124,7 +124,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 width: 100%;
                 padding: 12px;
                 margin-top: 40p;
-                margin-bottom: 40px;
+                margin-bottom: 20px;
                 border-radius: 10px;
                 font-weight: bold;
                 text-align: center; 

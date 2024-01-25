@@ -16,5 +16,9 @@ class CutEdition {
         
         include './_cut_edition_view.php';
     }
+    
+    function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cause) {
+        include '../include/order_status_index.php';
+    }
 }
 ?>

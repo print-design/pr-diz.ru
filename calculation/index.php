@@ -45,6 +45,11 @@ function GetPrintingsWithCases($number) {
     return $result;
 }
 
+// Отображение статуса
+function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cause) {
+    include '../include/order_status_index.php';
+}
+
 // !!!!!! Удаляем все двойные или тройные пробелы в названиях расчётов (иначе будут проблемы в поиске по названию).
 $sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
 $executer = new Executer($sql);
@@ -281,10 +286,12 @@ else $title = $status_titles[1];
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
                             . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities, "
-                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.status_id, "
+                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.status_id, c.cut_remove_cause, cr.length_pure_1 as length_total, "
                             . "(select id from techmap where calculation_id = c.id order by id desc limit 1) techmap_id, "
+                            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
+                            . "left join calculation_result cr on cr.calculation_id = c.id "
                             . "left join customer cus on c.customer_id = cus.id "
                             . "left join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
@@ -303,7 +310,7 @@ else $title = $status_titles[1];
                         <td class="text-right"><?=$quantity ?></td>
                         <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap"><i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$row['status_id']] ?></td>
+                        <td class="text-nowrap"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['length_total'], $row['cut_remove_cause']) ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php

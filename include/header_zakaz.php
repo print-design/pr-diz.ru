@@ -17,6 +17,10 @@ $not_in_work_status = '';
 $draft_status = '';
 $trash_status = '';
 
+if(empty($status_id) && !empty($calculation)) {
+    $status_id = $calculation->status_id;
+} 
+
 if($folder == 'calculation') {
     if($status_id == ORDER_STATUS_TRASH) {
         $trash_status = ' disabled';
