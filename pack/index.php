@@ -17,6 +17,11 @@ if(null !== filter_input(INPUT_GET, 'status_id')) {
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
 }
+
+// Отображение статуса заказа
+function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cause) {
+    include '../include/order_status_index.php';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -105,17 +110,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     <td><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
                     <td><?= DisplayNumber(floatval($row['weight']), 1) ?> кг</td>
                     <td><?=$row['manager'] ?></td>
-                    <td>
-                        <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$row['status_id']] ?>
-                        <?php
-                        if(in_array($row['status_id'], ORDER_STATUSES_WITH_METERS)) {
-                            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($row['length_cut']), 0)." м из ".DisplayNumber(floatval($row['length_pure_1']), 0)."</div>";
-                        }
-                        elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED) {
-                            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$row['cut_remove_cause']."</div>";
-                        }
-                        ?>
-                    </td>
+                    <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['length_pure_1'], $row['cut_remove_cause']); ?></td>
                     <td>
                         <a href="details.php?id=<?=$row['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
                     </td>

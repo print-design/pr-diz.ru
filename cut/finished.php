@@ -193,18 +193,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <h1><?=$calculation->name ?></h1>
                             <div class="name"><?=$calculation->customer ?></div>
                             <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
-                            <div style="background-color: lightgray; padding-left: 10px; padding-right: 15px; padding-top: 2px; border-radius: 10px; margin-top: 15px; margin-bottom: 15px; display: inline-block;">
-                                <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$calculation->status_id] ?>
-                                <?php
-                                if(in_array($calculation->status_id, ORDER_STATUSES_WITH_METERS)) {
-                                    echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval(is_a($calculation, CalculationSelfAdhesive::class) ? $calculation->length_pure : $calculation->length_pure_1), 0);
-                                }
-                                
-                                if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {
-                                    echo " ".$calculation->cut_remove_cause;
-                                }
-                                ?>
-                            </div>
+                            <?php include '../include/order_status_details.php'; ?>
                         </div>
                     </div>
                     <?php include './_table.php'; ?>
