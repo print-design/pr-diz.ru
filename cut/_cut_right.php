@@ -186,14 +186,14 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 <?php
                 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
                     if(empty($calculation->data_gap->gap_stream)) {
-                        echo DisplayNumber(intval($calculation->stream_width), 0)." мм";
+                        echo DisplayNumber(floatval($calculation->stream_width), 0)." мм";
                     }
                     else {
                         echo DisplayNumber(floatval($calculation->stream_width) + floatval($calculation->data_gap->gap_stream), 2)." / ".DisplayNumber(floatval($calculation->data_gap->gap_stream), 2)." мм";
                     }
                 }
                 else {
-                    echo DisplayNumber(intval($calculation->stream_width), 0)." мм";
+                    echo DisplayNumber(floatval($calculation->stream_width), 0)." мм";
                 }
                 ?>
             </td>

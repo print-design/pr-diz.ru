@@ -111,7 +111,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     <table>
                         <tr>
                             <td>Объём заказа</td>
-                            <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
+                            <td><?= DisplayNumber(floatval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation_result->length_pure_1), 0) ?> м</td>
                         </tr>
                         <tr>
                             <td>Менеджер</td>

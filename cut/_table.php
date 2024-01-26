@@ -143,7 +143,7 @@
         $length += $row['length'];
     }
     ?>
-    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(intval($weight), 0) ?> кг, <?= DisplayNumber(intval($length), 0) ?> м<?= $calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", этикеток ".DisplayNumber(floor($length * $number_in_meter), 0)." шт." ?></div>
+    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= DisplayNumber(floatval($weight), 0) ?> кг, <?= DisplayNumber(floatval($length), 0) ?> м<?= $calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", этикеток ".DisplayNumber(floor($length * $number_in_meter), 0)." шт." ?></div>
     <table class="table">
         <tr>
             <th style="border-top-width: 0; font-weight: bold;">Наименование</th>
@@ -186,7 +186,7 @@
         <?php endwhile; ?>
     </table>
     <div class="name">Готовые съёмы</div>
-    <div class="subtitle">Общий метраж съёмов: <?= DisplayNumber(intval($length), 0) ?> м</div>
+    <div class="subtitle">Общий метраж съёмов: <?= DisplayNumber(floatval($length), 0) ?> м</div>
     <?php
     $sql = "select ct.id, ct.timestamp, sum(cts.weight) weight, sum(cts.length) length "
                 . "from calculation_take_stream cts "
@@ -229,7 +229,7 @@
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <a href="javascript: void(0);" class="hide_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= DisplayNumber(intval($take['weight']), 0) ?> кг, <?= DisplayNumber(intval($take['length']), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $number_in_meter), 0)." шт." ?>
+            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= DisplayNumber(floatval($take['weight']), 0) ?> кг, <?= DisplayNumber(floatval($take['length']), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $number_in_meter), 0)." шт." ?>
         </div>
         <table class="table take_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
@@ -297,7 +297,7 @@
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_not_take_table<?=$show_table_class ?>" onclick="javascript: ShowNotTakeTable();"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <a href="javascript: void(0);" class="hide_not_take_table<?=$hide_table_class ?>" onclick="javascript: HideNotTakeTable();"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Рулоны не из съёма</strong> <?= DisplayNumber(intval($total_weight), 0) ?> кг, <?= DisplayNumber(intval($total_length), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($total_length * $number_in_meter), 0)." шт." ?>
+            <strong>Рулоны не из съёма</strong> <?= DisplayNumber(floatval($total_weight), 0) ?> кг, <?= DisplayNumber(floatval($total_length), 0) ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($total_length * $number_in_meter), 0)." шт." ?>
         </div>
         <table class="table not_take_table<?=$hide_table_class ?>" style="border-bottom: 0;">
             <tr>
