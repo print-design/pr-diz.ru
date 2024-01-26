@@ -134,19 +134,16 @@ $calculation_result = CalculationResult::Create($id);
 
 $take_id = null;
 $take_number = null;
-$length_cut = null;
 $printed_streams_count = null;
 
 $sql = "select (select max(id) from calculation_take where calculation_id = c.id) take_id, "
         . "(select count(id) from calculation_take where calculation_id = c.id) take_number, "
-        . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
         . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = c.id)) printed_streams_count "
         . "from calculation c where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $take_id = $row['take_id'];
     $take_number = $row['take_number'];
-    $length_cut = $row['length_cut'];
     $printed_streams_count = $row['printed_streams_count'];
 }
 

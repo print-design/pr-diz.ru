@@ -44,12 +44,10 @@ $last_name = '';
 $first_name = '';
 
 $techmap_date = '';
-$length_cut = '';
 $num_for_customer = '';
 
 $sql = "select c.id, c.date, c.name, c.unit, c.work_type_id, c.status_id, c.cut_remove_cause, c.customer_id, "
         . "cus.name customer, cr.length_pure_1, u.last_name, u.first_name, tm.date techmap_date, "
-        . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -73,7 +71,6 @@ if($row = $fetcher->Fetch()) {
     $first_name = $row['first_name'];
     
     $techmap_date = $row['techmap_date'];
-    $length_cut = $row['length_cut'];
     $num_for_customer = $row['num_for_customer'];
 }
 

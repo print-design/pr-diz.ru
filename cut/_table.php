@@ -185,16 +185,8 @@
         </tr>
         <?php endwhile; ?>
     </table>
-    <?php
-    $total_length = 0;
-    $sql = "select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $total_length = $row[0];
-    }
-    ?>
     <div class="name">Готовые съёмы</div>
-    <div class="subtitle">Общий метраж съёмов: <?= DisplayNumber(intval($total_length), 0) ?> м</div>
+    <div class="subtitle">Общий метраж съёмов: <?= DisplayNumber(intval($length), 0) ?> м</div>
     <?php
     $sql = "select ct.id, ct.timestamp, sum(cts.weight) weight, sum(cts.length) length "
                 . "from calculation_take_stream cts "

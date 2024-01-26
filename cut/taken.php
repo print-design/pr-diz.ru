@@ -65,14 +65,6 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
-$length_cut = null;
-
-$sql = "select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $length_cut = $row['0'];
-}
-
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
