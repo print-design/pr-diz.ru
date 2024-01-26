@@ -168,6 +168,7 @@ class Queue {
                 . "left join plan_edition peprint on peprint.calculation_id = c.id and peprint.work_id = ".WORK_PRINTING." "
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 1)"
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id." and lamination = 1)"
+                . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " and (("
                 . "c.work_type_id = ".WORK_TYPE_PRINT
                 . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
@@ -178,7 +179,6 @@ class Queue {
                 . "c.work_type_id = ".WORK_TYPE_NOPRINT
                 . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
                 . "))"
-                . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " union "
                 . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_id, c.status_date, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
