@@ -320,17 +320,9 @@
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?php
-        if(!empty($this->edition['status_id'])):
-        ?>
-        <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$this->edition['status_id']] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
-        <?php
-        if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
-            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".DisplayNumber(floatval($this->edition['length_cut']), 0)." м из ".DisplayNumber(floatval($this->edition['length_total']), 0)."</div>";
+        if(!empty($this->edition['status_id'])) {
+            $this->ShowOrderStatus($this->edition['status_id'], $this->edition['length_cut'], $this->edition['length_total'], $this->edition['cut_remove_cause']);
         }
-        elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED) {
-            echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$this->edition['cut_remove_cause']."</div>";
-        }
-        endif;
         ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell comment_invisible"<?=$drop ?>>

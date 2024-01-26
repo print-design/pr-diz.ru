@@ -62,7 +62,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
 }
 
 // Берём расчёт из таблицы базы
-if(!is_a($calculation_result, CalculationResult::class)) {
+if(!empty($id) && (empty($calculation_result) || !is_a($calculation_result, CalculationResult::class))) {
     // Новый расчёт
     if(empty($calculation) || !is_a($calculation, Calculation::class)) {
         $calculation = CalculationBase::Create($id);
@@ -318,6 +318,8 @@ if(!is_a($calculation_result, CalculationResult::class)) {
     // ЧИТАЕМ СОХРАНЁННЫЕ РЕЗУЛЬТАТЫ ИЗ БАЗЫ
     $calculation_result = CalculationResult::Create($id);
 }
+
+if(!empty($calculation) && is_a($calculation, Calculation::class)):
 ?>
 <div id="calculation"<?=$calculation_class ?>>
     <div class="d-flex justify-content-between">
@@ -528,3 +530,4 @@ if(!is_a($calculation_result, CalculationResult::class)) {
     <div style="clear:both"></div>
     <?php include 'change_status_buttons.php'; ?>
 </div>
+<?php endif; ?>

@@ -107,7 +107,7 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             <h1><?= $calculation->name ?></h1>
             <h2>№<?=$calculation->customer_id."-".$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></h2>
             <?php
-            include '../include/order_status_print.php';
+            include '../include/order_status_details_print.php';
             include './left_panel.php';
             ?>
         </div>

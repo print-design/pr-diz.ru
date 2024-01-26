@@ -28,5 +28,13 @@ class PlanEdition {
         
         include './_plan_edition_print.php';
     }
+    
+    function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cause) {
+        include '../include/order_status_index.php';
+    }
+    
+    function ShowOrderStatusPrint($status_id, $length_cut, $length_total, $cut_remove_cause) {
+        include '../include/order_status_index_print.php';
+    }
 }
 ?>

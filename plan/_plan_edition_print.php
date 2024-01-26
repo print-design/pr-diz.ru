@@ -164,13 +164,9 @@
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
-        <?= empty($this->edition['status_id']) ? '' : ORDER_STATUS_NAMES[$this->edition['status_id']] ?>
         <?php
-        if(in_array($this->edition['status_id'], ORDER_STATUSES_WITH_METERS)) {
-            echo "<div style='font-size: smaller;'><span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_cut']), 0)."</span> м из <span class='text-nowrap'>".DisplayNumber(floatval($this->edition['length_total']), 0)."</span></div>";
-        }
-        elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED) {
-            echo "<div style='font-size: smaller;'>".$this->edition['cut_remove_cause']."</div>";
+        if(!empty($this->edition['status_id'])) {
+            $this->ShowOrderStatusPrint($this->edition['status_id'], $this->edition['length_cut'], $this->edition['length_total'], $this->edition['cut_remove_cause']);
         }
         ?>
     </td>

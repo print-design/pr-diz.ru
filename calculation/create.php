@@ -3718,6 +3718,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Вычисляем отгрузочную стоимость при других наценках
             function SetExtracharge(param) {
+                <?php if(!empty($id)): ?>
                 extracharge = parseInt(param);
                 
                 if(!isNaN(extracharge) && extracharge > -1) {
@@ -3739,6 +3740,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 alert("Ошибка при редактировании наценки");
                             });
                 }
+                <?php endif; ?>
             }
             
             $('#extracharge').keyup(function(){
@@ -3746,6 +3748,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             function SetExtrachargeCliche(param) {
+                <?php if(!empty($id)): ?>
                 extracharge_cliche = parseInt(param);
                 
                 if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
@@ -3764,6 +3767,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 alert("Ошибка при редактировании наценки ПФ");
                             });
                 }
+                <?php endif; ?>
             }
             
             $('#extracharge_cliche').keyup(function(){
@@ -3772,6 +3776,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Вычисляем наценку по отгрузочной стоимости за единицу
             function SetShippingCostPerUnit(param) {
+                <?php if(!empty($id)): ?>
                 shipping_cost_per_unit = parseFloat(param.replace(',', '.'));
                 
                 if(!isNaN(shipping_cost_per_unit) && shipping_cost_per_unit > -1) {
@@ -3793,6 +3798,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 alert("Ошибка при редактировании отгрузочной стоимость за единицу");
                             });
                 }
+                <?php endif; ?>
             }
             
             $('#input_shipping_cost_per_unit').keyup(function() {
@@ -3801,6 +3807,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Вычисляем наценку на нож
             function SetExtrachargeKnife(param) {
+                <?php if(!empty($id)): ?>
                 extracharge_knife = parseInt(param);
                 
                 if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
@@ -3819,6 +3826,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 alert("Ошибка при редактировании наценки на нож");
                             });
                 }
+                <?php endif; ?>
             }
             
             $('#extracharge_knife').keyup(function(){
@@ -3827,6 +3835,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Пересчитываем по новому значению "Включить ПФ в себестоимость" и "Заказчик платит за ПФ"
             function RecalculateByCliche() {
+                <?php if(!empty($id)): ?>
                 if($('#calculation').hasClass('d-none')) {
                     return;
                 }
@@ -3863,10 +3872,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         .fail(function() {
                             alert('Ошибка при пересчёте по новым значениям Включать ПФ в себестоимость и Заказчик платит за ПФ');
                         });
+                <?php endif; ?>
             }
             
             // Пересчитываем по новому значению "Включить нож в себестоимость" и "Заказчик платит за нож"
             function RecalculateByKnife() {
+                <?php if(!empty($id)): ?>
                 if($('#calculation').hasClass('d-none')) {
                     return;
                 }
@@ -3903,6 +3914,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         .fail(function() {
                             alert('Ошибка при пересчёте по новым значениям Включать ПФ в себестоимость и Заказчик платит за ПФ');
                         });
+                <?php endif; ?>
             }
             
             // Ограничение значения поля "Обрезная ширина" до 1600

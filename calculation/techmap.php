@@ -533,6 +533,16 @@ if(!is_nan($calculation->streams_number)) {
                 background-position-y: 100%;
                 background-repeat: no-repeat;
             }
+            
+            #status {
+                width: 100%;
+                padding: 12px;
+                margin-top: 40p;
+                margin-bottom: 20px;
+                border-radius: 10px;
+                font-weight: bold;
+                text-align: center; 
+            }
         </style>
     </head>
     <body>
@@ -748,9 +758,7 @@ if(!is_nan($calculation->streams_number)) {
             <div class="subtitle">№<?=$calculation->customer_id ?>-<?=$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
             <div class="row">
                 <div class="col-5">
-                    <div style="background-color: lightgray; padding-left: 10px; padding-top: 2px; border-radius: 10px; width: 60%;">
-                        <i class="fas fa-circle" style="font-size: x-small; vertical-align: bottom; padding-bottom: 7px; color: <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>;">&nbsp;&nbsp;</i><?=ORDER_STATUS_NAMES[$calculation->status_id] ?>
-                    </div>
+                    <?php include '../include/order_status_details.php'; ?>
                     <h2 class="mt-2">Остальная информация</h2>
                     <table>
                         <tr>
@@ -763,7 +771,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <th>Название заказа</th>
-                            <td class="text-left"><?=$calculation->name ?></td>
+                            <td class="text-left" style="line-height: 18px;"><?=$calculation->name ?></td>
                         </tr>
                         <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                         <tr>
