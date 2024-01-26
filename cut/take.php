@@ -111,6 +111,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $id = filter_input(INPUT_POST, 'id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
     $cut_remove_cause = addslashes(filter_input(INPUT_POST, 'cut_remove_cause'));
     
     $sql = "update calculation set cut_remove_cause = '$cut_remove_cause' where id = $id";
@@ -124,7 +125,7 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     }
     
     if(empty($error_message)) {
-        header("Location: take.php?id=$id&machine_id=$machine_id");
+        header('Location: '.APPLICATION.'/cut/?machine_id='.$machine_id);
     }
 }
 

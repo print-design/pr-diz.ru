@@ -48,6 +48,7 @@ if(null !== filter_input(INPUT_POST, 'finished_submit')) {
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $id = filter_input(INPUT_POST, 'id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
     $cut_remove_cause = addslashes(filter_input(INPUT_POST, 'cut_remove_cause'));
     
     $sql = "update calculation set cut_remove_cause = '$cut_remove_cause' where id = $id";
@@ -58,6 +59,10 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
         $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_REMOVED." where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        header('Location: '.APPLICATION.'/cut/?machine_id='.$machine_id);
     }
 }
 

@@ -3,6 +3,7 @@
         <div class="modal-content">
             <form method="post">
                 <input type="hidden" name="id" value="<?=$id ?>" />
+                <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                 <div class="modal-header">
                     <p class="font-weight-bold" style="font-size: x-large;">Описание проблемы</p>
                     <button type="button" class="close cut_remove_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
