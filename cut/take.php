@@ -108,6 +108,20 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     }
 }
 
+// Завершение резки
+if(null !== filter_input(INPUT_POST, 'finished_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_FINISHED." where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        header("Location: finished.php?id=$id&machine_id=$machine_id#");
+    }
+}
+
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -303,15 +317,35 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     </div>
                     <div class="d-flex justify-content-xl-start mb-4" id="calculation_streams_bottom" data-id="0" ondragover="DragOverBottom(event);" ondrop="DropBottom(event);">
                         <?php
-                        if($printed_streams_count < $calculation->streams_number) {
-                            $finish_submit_disabled_class = ' disabled';
-                        }
-                        else {
+                        $finish_submit_disabled_class = ' disabled';
+                        
+                        if($printed_streams_count >= $calculation->streams_number) {
                             $finish_submit_disabled_class = '';
                         }
                         ?>
                         <div><a href="taken.php?id=<?=$id ?>&machine_id=<?= $machine_id ?>" class="btn btn-dark pl-4 pr-4 mr-4<?=$finish_submit_disabled_class ?>"><i class="fas fa-check mr-2"></i>Съём закончен</a></div>
-                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <?php
+                        $add_not_take_stream_class = ' disabled';
+                        
+                        if($take_number > 1 || $printed_streams_count >= $calculation->streams_number) {
+                            $add_not_take_stream_class = '';
+                        }
+                        ?>
+                        <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4<?=$add_not_take_stream_class ?>" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
+                        <?php
+                        $finished_class = ' disabled';
+                        
+                        if($printed_streams_count >= $calculation->streams_number) {
+                            $finished_class = '';
+                        }
+                        ?>
+                        <div>
+                            <form method="post">
+                                <input type="hidden" name="id" value="<?=$id ?>" />
+                                <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
+                                <button type="submit" name="finished_submit" class="btn btn-light pl-4 pr-4 mr-4<?=$finished_class ?>"><i class="fas fa-check mr-2"></i>Тираж выполнен</button>
+                            </form>
+                        </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
                     <?php include './_table.php'; ?>

@@ -16,7 +16,7 @@
             $length_cut += $row[0];
         }
 
-        echo ' '.DisplayNumber(floatval($length_cut), 0)." м из ".DisplayNumber(floatval(is_a($calculation, CalculationSelfAdhesive::class) ? $calculation->length_pure : $calculation->length_pure_1), 0);
+        echo ' '.rtrim(rtrim(DisplayNumber(floatval($length_cut), 2), '0'), ',')." м из ".DisplayNumber(floatval(is_a($calculation, CalculationSelfAdhesive::class) ? $calculation->length_pure : $calculation->length_pure_1), 0);
     }
                                 
     if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {
