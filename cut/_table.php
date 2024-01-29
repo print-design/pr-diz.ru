@@ -241,7 +241,9 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <th style="font-weight: bold;">Этикеток</th>
                 <?php endif; ?>
+                <?php if($status_id != ORDER_STATUS_SHIPPED): ?>
                 <th style="font-weight: bold;"></th>
+                <?php endif; ?>
             </tr>
             <?php
             $sql = "select cts.id, cs.name, date_format(cts.printed, '%H:%i') printed, cts.weight, cts.length "
@@ -261,7 +263,9 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
+                <?php if($status_id != ORDER_STATUS_SHIPPED): ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
+                <?php endif; ?>
             </tr>
             <?php endwhile; ?>
         </table>
@@ -309,7 +313,9 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <th style="font-weight: bold;">Этикеток</th>
                 <?php endif; ?>
+                <?php if($status_id != ORDER_STATUS_SHIPPED): ?>
                 <th style="font-weight: bold;"></th>
+                <?php endif; ?>
             </tr>
             <?php foreach($streams as $stream): ?>
             <tr style="border-bottom: 0;">
@@ -321,7 +327,9 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
+                <?php if($status_id != ORDER_STATUS_SHIPPED): ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_not_take_stream" onclick="javascript: $('#not_take_stream_id').val('<?=$stream['id'] ?>'); $('#not_take_stream_name').html('<?=$stream['name'] ?>');" /></a></td>
+                <?php endif; ?>
             </tr>
             <?php endforeach; ?>
         </table>
