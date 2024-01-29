@@ -335,7 +335,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <?php
                         $finished_class = ' disabled';
                         
-                        if($printed_streams_count >= $calculation->streams_number) {
+                        if($take_number > 1 || $printed_streams_count >= $calculation->streams_number) {
                             $finished_class = '';
                         }
                         ?>
