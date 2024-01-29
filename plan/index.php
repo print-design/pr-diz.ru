@@ -307,6 +307,12 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 display: none;
             }
             <?php endif; ?>
+            
+            <?php if(IsInRole(ROLE_NAMES[ROLE_SCHEDULER])): ?>
+            .planner_hidden {
+                display: none;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>

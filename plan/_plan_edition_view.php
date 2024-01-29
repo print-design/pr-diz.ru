@@ -203,7 +203,7 @@
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden"<?=$drop ?>>
         <?= $this->edition['samples_count'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>

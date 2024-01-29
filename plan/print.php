@@ -103,6 +103,12 @@ if(empty($work_id) || empty($machine_id)) {
                 display: none;
             }
             <?php endif; ?>
+            
+            <?php if(IsInRole(ROLE_NAMES[ROLE_SCHEDULER])): ?>
+            .planner_hidden {
+                display: none;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>
