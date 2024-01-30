@@ -5,10 +5,10 @@ $pack_status = '';
 $ship_status = '';
 $shipped_status = '';
 
-if(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIP_READY || $status_id == ORDER_STATUS_SHIP_READY) {
+if(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIP_READY || (!empty($calculation) && $calculation->status_id == ORDER_STATUS_SHIP_READY)) {
     $ship_status = ' disabled';
 }
-elseif(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIPPED || $status_id == ORDER_STATUS_SHIPPED) {
+elseif(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIPPED || (!empty ($calculation) && $calculation->status_id == ORDER_STATUS_SHIPPED)) {
     $shipped_status = ' disabled';
 }
 else {

@@ -14,10 +14,7 @@ if($id === null) {
     header('Location: '.APPLICATION.'/pack/');
 }
 
-// Расчёт
-$calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
-
+// Смена статуса
 if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $status_id = filter_input(INPUT_POST, 'status_id');
@@ -32,49 +29,8 @@ if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
 }
 
 // Получение объекта
-$date = '';
-$name = '';
-$unit = '';
-$work_type_id = '';
-$status_id = '';
-$cut_remove_cause = '';
-
-$customer_id = '';
-$customer = '';
-$length_pure_1 = '';
-$last_name = '';
-$first_name = '';
-
-$techmap_date = '';
-$num_for_customer = '';
-
-$sql = "select c.id, c.date, c.name, c.unit, c.work_type_id, c.status_id, c.cut_remove_cause, c.customer_id, "
-        . "cus.name customer, cr.length_pure_1, u.last_name, u.first_name, tm.date techmap_date, "
-        . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
-        . "from calculation c "
-        . "inner join calculation_result cr on cr.calculation_id = c.id "
-        . "inner join techmap tm on tm.calculation_id = c.id "
-        . "inner join customer cus on c.customer_id = cus.id "
-        . "inner join user u on c.manager_id = u.id "
-        . "where c.id = $id";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $date = $row['date'];
-    $name = $row['name'];
-    $unit = $row['unit'];
-    $work_type_id = $row['work_type_id'];
-    $status_id = $row['status_id'];
-    $cut_remove_cause = $row['cut_remove_cause'];
-    
-    $customer_id = $row['customer_id'];
-    $customer = $row['customer'];
-    $length_pure_1 = $row['length_pure_1'];
-    $last_name = $row['last_name'];
-    $first_name = $row['first_name'];
-    
-    $techmap_date = $row['techmap_date'];
-    $num_for_customer = $row['num_for_customer'];
-}
+$calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
@@ -160,6 +116,13 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     display: none;
                 }
                 
+                .cutter_info {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 20px;
+                    padding-top: 5px;
+                }
+                
                 #status {
                     width: 100%;
                     padding: 12px;
@@ -199,34 +162,34 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             }
             ?>
             <div class="row">
-                <div class="col-4">
-                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if(!empty($status_id) && $status_id != ORDER_STATUS_PACK_READY) echo "?status_id=$status_id"; ?>">К списку</a>
-                    <h1><?=$row['name'] ?></h1>
-                    <div class="name"><?=$row['customer'] ?></div>
-                    <div class="subtitle">№<?=$customer_id.'-'.$num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></div>
-                    <?php include '../include/order_status_details.php'; ?>
-                    <table>
-                        <tr>
-                            <td>Объём заказа</td>
-                            <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($length_pure_1), 0) ?> м</td>
-                        </tr>
-                        <tr>
-                            <td>Менеджер</td>
-                            <td><?=$last_name.' '.$first_name ?></td>
-                        </tr>
-                        <tr>
-                            <td>Тип работы</td>
-                            <td><?=WORK_TYPE_NAMES[$work_type_id] ?></td>
-                        </tr>
-                        <tr>
-                            <td>Карта составлена</td>
-                            <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $techmap_date)->format('d.m.Y H:i') ?></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="row mt-4">
                 <div class="col-8">
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if(!empty($calculation->status_id) && $calculation->status_id != ORDER_STATUS_PACK_READY) echo "?status_id=".$calculation->status_id; ?>">К списку</a>
+                            <h1><?=$calculation->name ?></h1>
+                            <div class="name"><?=$calculation->customer ?></div>
+                            <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
+                            <?php include '../include/order_status_details.php'; ?>
+                            <table>
+                                <tr>
+                                    <td>Объём заказа</td>
+                                    <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м</td>
+                                </tr>
+                                <tr>
+                                    <td>Менеджер</td>
+                                    <td><?=$calculation->last_name.' '.$calculation->first_name ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Тип работы</td>
+                                    <td><?=WORK_TYPE_NAMES[$calculation->work_type_id ] ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Карта составлена</td>
+                                    <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation_result->techmap_date)->format('d.m.Y H:i') ?></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                     <?php
                     $machine_id = null;
                     $sql = "select machine_id from plan_edition where calculation_id = $id and work_id = ".WORK_CUTTING;
@@ -237,7 +200,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     include '../cut/_table.php';
                     ?>
                     <div class="d-flex justify-content-xl-start mt-4">
-                        <?php if($status_id == ORDER_STATUS_PACK_READY): ?>
+                        <?php if($calculation->status_id == ORDER_STATUS_PACK_READY): ?>
                         <div>
                             <form method="post">
                                 <input type="hidden" name="id" value="<?=$id ?>" />
@@ -246,7 +209,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
-                        <?php elseif($status_id == ORDER_STATUS_SHIP_READY && null == filter_input(INPUT_GET, 'waiting')): ?>
+                        <?php elseif($calculation->status_id == ORDER_STATUS_SHIP_READY && null == filter_input(INPUT_GET, 'waiting')): ?>
                         <div>
                             <form method="post">
                                 <input type="hidden" name="id" value="<?=$id ?>" />
@@ -257,6 +220,9 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <?php endif; ?>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><i class="fas fa-download mr-2"></i>Выгрузка</button></div>
                     </div>
+                </div>
+                <div class="col-4">
+                    <?php include '../cut/_cut_right.php'; ?>
                 </div>
             </div>
         </div>
