@@ -1,18 +1,4 @@
 <?php
-// Печать: лицевая, оборотная
-const SIDE_FRONT = 1;
-const SIDE_BACK = 2;
-
-// Бирки: Принт-Дизайн, безликие
-const LABEL_PRINT_DESIGN = 1;
-const LABEL_FACELESS = 2;
-
-// Упаковка: паллетированная, россыпью, европаллет, коробки
-const PACKAGE_PALLETED = 1;
-const PACKAGE_BULK = 2;
-const PACKAGE_EUROPALLET = 3;
-const PACKAGE_BOXES = 4;
-
 // Отходы
 $waste1 = "";
 $waste2 = "";
@@ -96,10 +82,10 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>
                 <?php
                 switch ($calculation_result->side) {
-                    case SIDE_FRONT:
+                    case CalculationResult::SIDE_FRONT:
                         echo 'Лицевая';
                         break;
-                    case SIDE_BACK:
+                    case CalculationResult::SIDE_BACK:
                         echo 'Оборотная';
                         break;
                     default :
@@ -289,10 +275,10 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>
                 <?php
                 switch ($calculation_result->labels) {
-                    case LABEL_PRINT_DESIGN:
+                    case CalculationResult::LABEL_PRINT_DESIGN:
                         echo "Принт-Дизайн";
                         break;
-                    case LABEL_FACELESS:
+                    case CalculationResult::LABEL_FACELESS:
                         echo "Безликие";
                         break;
                     default :
@@ -315,16 +301,16 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>
                 <?php
                 switch ($calculation_result->package) {
-                    case PACKAGE_PALLETED:
+                    case CalculationResult::PACKAGE_PALLETED:
                         echo "Паллетирование";
                         break;
-                    case PACKAGE_BULK:
+                    case CalculationResult::PACKAGE_BULK:
                         echo "Россыпью";
                         break;
-                    case PACKAGE_EUROPALLET:
+                    case CalculationResult::PACKAGE_EUROPALLET:
                         echo "Европаллет";
                         break;
-                    case PACKAGE_BOXES:
+                    case CalculationResult::PACKAGE_BOXES:
                         echo "Коробки";
                         break;
                     default :

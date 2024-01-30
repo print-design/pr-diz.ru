@@ -70,7 +70,7 @@ $sql = "select pe.last_name, pe.first_name "
         . "where date_format(pw.date, '%d-%m-%Y') = '$stream_date' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
 $stream_cutter = '';
 
-if($calculation_result->labels == LABEL_PRINT_DESIGN) {
+if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN) {
     $fetcher = new Fetcher($sql);
 
     while($row = $fetcher->Fetch()) {
@@ -91,7 +91,7 @@ elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
     $number_in_meter = 1 / $calculation->length * 1000.0;
 }
 
-if($calculation_result->labels == LABEL_PRINT_DESIGN):
+if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
 ?>
 <div class="d-flex justify-content-start mb-1">
     <div class="mr-2"><img src="<?=APPLICATION ?>/images/logo.svg" style="width: 20px; height: 20px;" class="mt-1" /></div>
@@ -102,7 +102,7 @@ if($calculation_result->labels == LABEL_PRINT_DESIGN):
     </div>
 </div>
 <?php endif; ?>
-<div class="mb-2"><strong><?=$calculation->customer_id.'-'.$calculation->num_for_customer ?>.</strong> <?=$calculation_result->labels == LABEL_PRINT_DESIGN ? $calculation->customer : '' ?></div>
+<div class="mb-2"><strong><?=$calculation->customer_id.'-'.$calculation->num_for_customer ?>.</strong> <?=$calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN ? $calculation->customer : '' ?></div>
 <table>
     <tr>
         <td>Рулон</td>
@@ -112,7 +112,7 @@ if($calculation_result->labels == LABEL_PRINT_DESIGN):
         <td>Дата</td>
         <td class="pl-1 font-weight-bold"><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y H:i') ?></td>
     </tr>
-    <?php if($calculation_result->labels == LABEL_PRINT_DESIGN): ?>
+    <?php if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN): ?>
     <tr>
         <td>Заказ</td>
         <td class="pl-1 font-weight-bold"><?=$calculation->name ?></td>

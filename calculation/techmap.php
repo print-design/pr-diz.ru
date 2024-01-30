@@ -13,29 +13,6 @@ if(null === filter_input(INPUT_GET, 'id')) {
     header('Location: '.APPLICATION.'/calculation/');
 }
 
-// Печать: лицевая, оборотная
-const SIDE_FRONT = 1;
-const SIDE_BACK = 2;
-
-// Бирки: Принт-Дизайн, безликие
-const LABEL_PRINT_DESIGN = 1;
-const LABEL_FACELESS = 2;
-
-// Упаковка: паллетированная, россыпью, европаллет, коробки
-const PACKAGE_PALLETED = 1;
-const PACKAGE_BULK = 2;
-const PACKAGE_EUROPALLET = 3;
-const PACKAGE_BOXES = 4;
-
-// Значение марки плёнки "другая"
-const INDIVIDUAL = -1;
-
-// Фотометка
-const PHOTOLABEL_LEFT = "left";
-const PHOTOLABEL_RIGHT = "right";
-const PHOTOLABEL_BOTH = "both";
-const PHOTOLABEL_NONE = "none";
-
 // Данные получены из другой тех. карты
 const FROM_OTHER_TECHMAP = "from_other_techmap";
 
@@ -111,7 +88,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
     
     $photolabel = filter_input(INPUT_POST, 'photolabel');
-    if($photolabel != PHOTOLABEL_LEFT && $photolabel != PHOTOLABEL_RIGHT && $photolabel != PHOTOLABEL_BOTH && $photolabel != PHOTOLABEL_NONE) {
+    if($photolabel != CalculationResult::PHOTOLABEL_LEFT && $photolabel != CalculationResult::PHOTOLABEL_RIGHT && $photolabel != CalculationResult::PHOTOLABEL_BOTH && $photolabel != CalculationResult::PHOTOLABEL_NONE) {
         $photolabel_valid = ISINVALID;
         $form_valid = false;
     }
@@ -873,10 +850,10 @@ if(!is_nan($calculation->streams_number)) {
                             <td>
                                 <?php
                                 switch ($side) {
-                                    case SIDE_FRONT:
+                                    case CalculationResult::SIDE_FRONT:
                                         echo 'Лицевая';
                                         break;
-                                    case SIDE_BACK:
+                                    case CalculationResult::SIDE_BACK:
                                         echo 'Оборотная';
                                         break;
                                     default :
@@ -1127,10 +1104,10 @@ if(!is_nan($calculation->streams_number)) {
                             <td>
                                 <?php
                                 switch ($labels) {
-                                    case LABEL_PRINT_DESIGN:
+                                    case CalculationResult::LABEL_PRINT_DESIGN:
                                         echo "Принт-Дизайн";
                                         break;
-                                    case LABEL_FACELESS:
+                                    case CalculationResult::LABEL_FACELESS:
                                         echo "Безликие";
                                         break;
                                     default :
@@ -1153,16 +1130,16 @@ if(!is_nan($calculation->streams_number)) {
                             <td>
                                 <?php
                                 switch ($package) {
-                                    case PACKAGE_PALLETED:
+                                    case CalculationResult::PACKAGE_PALLETED:
                                         echo "Паллетирование";
                                         break;
-                                    case PACKAGE_BULK:
+                                    case CalculationResult::PACKAGE_BULK:
                                         echo "Россыпью";
                                         break;
-                                    case PACKAGE_EUROPALLET:
+                                    case CalculationResult::PACKAGE_EUROPALLET:
                                         echo "Европаллет";
                                         break;
-                                    case PACKAGE_BOXES:
+                                    case CalculationResult::PACKAGE_BOXES:
                                         echo "Коробки";
                                         break;
                                     default :
@@ -1441,9 +1418,9 @@ if(!is_nan($calculation->streams_number)) {
                                 <select id="side" name="side" class="form-control<?=$side_valid ?>" required="required">
                                     <?php if($lamination == "нет"): ?>
                                     <option value="" hidden="hidden">...</option>
-                                    <option value="<?=SIDE_FRONT ?>"<?= $side == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
+                                    <option value="<?= CalculationResult::SIDE_FRONT ?>"<?= $side == 1 ? " selected='selected'" : "" ?>>Лицевая</option>
                                     <?php endif; ?>
-                                    <option value="<?=SIDE_BACK ?>"<?= $side == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
+                                    <option value="<?= CalculationResult::SIDE_BACK ?>"<?= $side == 2 ? " selected='selected'" : "" ?>>Оборотная</option>
                                 </select>
                                 <div class="invalid-feedback">Сторона обязательно</div>
                             </div>
@@ -1489,8 +1466,8 @@ if(!is_nan($calculation->streams_number)) {
                                 <label for="labels">Бирки</label>
                                 <select id="labels" name="labels" class="form-control<?=$labels_valid ?>" required="required">
                                     <option value="" hidden="hidden">...</option>
-                                    <option value="<?=LABEL_PRINT_DESIGN ?>"<?= $labels == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
-                                    <option value="<?=LABEL_FACELESS ?>"<?= $labels == 2 ? " selected='selected'" : "" ?>>Безликие</option>
+                                    <option value="<?= CalculationResult::LABEL_PRINT_DESIGN ?>"<?= $labels == 1 ? " selected='selected'" : "" ?>>Принт-Дизайн</option>
+                                    <option value="<?= CalculationResult::LABEL_FACELESS ?>"<?= $labels == 2 ? " selected='selected'" : "" ?>>Безликие</option>
                                 </select>
                                 <div class="invalid-feedback">Бирки обязательно</div>
                             </div>
@@ -1498,10 +1475,10 @@ if(!is_nan($calculation->streams_number)) {
                                 <label for="package">Упаковка</label>
                                 <select id="package" name="package" class="form-control<?=$package_valid ?>" required="required">
                                     <option value="" hidden="hidden">...</option>
-                                    <option value="<?=PACKAGE_PALLETED ?>"<?= $package == PACKAGE_PALLETED ? " selected='selected'" : "" ?>>Паллетирование</option>
-                                    <option value="<?=PACKAGE_BULK ?>"<?= $package == PACKAGE_BULK ? " selected='selected'" : "" ?>>Россыпью</option>
-                                    <option value="<?=PACKAGE_EUROPALLET ?>"<?= $package == PACKAGE_EUROPALLET ? " selected='selected'" : "" ?>>Европаллет</option>
-                                    <option value="<?=PACKAGE_BOXES ?>"<?= $package == PACKAGE_BOXES ? " selected='selected'" : "" ?>>Коробки</option>
+                                    <option value="<?= CalculationResult::PACKAGE_PALLETED ?>"<?= $package == CalculationResult::PACKAGE_PALLETED ? " selected='selected'" : "" ?>>Паллетирование</option>
+                                    <option value="<?= CalculationResult::PACKAGE_BULK ?>"<?= $package == CalculationResult::PACKAGE_BULK ? " selected='selected'" : "" ?>>Россыпью</option>
+                                    <option value="<?= CalculationResult::PACKAGE_EUROPALLET ?>"<?= $package == CalculationResult::PACKAGE_EUROPALLET ? " selected='selected'" : "" ?>>Европаллет</option>
+                                    <option value="<?= CalculationResult::PACKAGE_BOXES ?>"<?= $package == CalculationResult::PACKAGE_BOXES ? " selected='selected'" : "" ?>>Коробки</option>
                                 </select>
                                 <div class="invalid-feedback">Упаковка обязательно</div>
                             </div>
@@ -1511,10 +1488,10 @@ if(!is_nan($calculation->streams_number)) {
                             <div class="form-group">
                                 <label for="photolabel">Фотометка</label>
                                 <select id="photolabel" name="photolabel" class="form-control<?=$photolabel_valid ?>" required="required">
-                                    <option value="<?=PHOTOLABEL_LEFT ?>"<?=$photolabel == PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
-                                    <option value="<?=PHOTOLABEL_RIGHT ?>"<?=$photolabel == PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
-                                    <option value="<?=PHOTOLABEL_BOTH ?>"<?=$photolabel == PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
-                                    <option value="<?=PHOTOLABEL_NONE ?>"<?=$photolabel == PHOTOLABEL_NONE || (empty($photolabel) && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
+                                    <option value="<?= CalculationResult::PHOTOLABEL_LEFT ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_LEFT ? " selected='selected'" : "" ?>>Левая</option>
+                                    <option value="<?= CalculationResult::PHOTOLABEL_RIGHT ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
+                                    <option value="<?= CalculationResult::PHOTOLABEL_BOTH ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
+                                    <option value="<?= CalculationResult::PHOTOLABEL_NONE ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_NONE || (empty($photolabel) && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
                                 </select>
                                 <div class="invalid-feedback">Расположение фотометки обязательно</div>
                             </div>
@@ -1522,16 +1499,16 @@ if(!is_nan($calculation->streams_number)) {
                                 <?php
                                 $roll_folder = $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left";
                                 switch ($photolabel) {
-                                    case PHOTOLABEL_LEFT:
+                                    case CalculationResult::PHOTOLABEL_LEFT:
                                         $roll_folder = "roll_left";
                                         break;
-                                    case PHOTOLABEL_RIGHT:
+                                    case CalculationResult::PHOTOLABEL_RIGHT:
                                         $roll_folder = "roll_right";
                                         break;
-                                    case PHOTOLABEL_BOTH:
+                                    case CalculationResult::PHOTOLABEL_BOTH:
                                         $roll_folder = "roll_both";
                                         break;
-                                    case PHOTOLABEL_NONE:
+                                    case CalculationResult::PHOTOLABEL_NONE:
                                         $roll_folder = "roll";
                                         break;
                                 }
@@ -1755,17 +1732,17 @@ if(!is_nan($calculation->streams_number)) {
             // Изменение рисунка роликов при выборе фотометки
             $('select#photolabel').change(function() {
                 switch($(this).val()) {
-                    case '<?=PHOTOLABEL_LEFT ?>':
+                    case '<?= CalculationResult::PHOTOLABEL_LEFT ?>':
                         for(var i = 1; i <= 8; i++) {
                             $('img#roll_type_' + i + '_image').attr('src', '../images/roll_left/roll_type_' + i + '.png<?='?'. time() ?>');
                         }
                         break;
-                    case '<?=PHOTOLABEL_RIGHT ?>':
+                    case '<?= CalculationResult::PHOTOLABEL_RIGHT ?>':
                         for(var i = 1; i <= 8; i++) {
                             $('img#roll_type_' + i + '_image').attr('src', '../images/roll_right/roll_type_' + i + '.png<?='?'. time() ?>');
                         }
                         break;
-                    case '<?=PHOTOLABEL_BOTH ?>':
+                    case '<?= CalculationResult::PHOTOLABEL_BOTH ?>':
                         for(var i = 1; i <= 8; i++) {
                             $('img#roll_type_' + i + '_image').attr('src', '../images/roll_both/roll_type_' + i + '.png<?='?'. time() ?>');
                         }

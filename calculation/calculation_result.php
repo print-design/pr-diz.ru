@@ -31,10 +31,7 @@ class CalculationResult {
     public const PACKAGE_BULK = 2;
     public const PACKAGE_EUROPALLET = 3;
     public const PACKAGE_BOXES = 4;
-    
-    // Значение марки плёнки "другая"
-    public const INDIVIDUAL = -1;
-    
+        
     // Фотометка
     public const PHOTOLABEL_LEFT = "left";
     public const PHOTOLABEL_RIGHT = "right";

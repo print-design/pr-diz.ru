@@ -3,29 +3,6 @@ include '../include/topscripts.php';
 include './calculation.php';
 include './calculation_result.php';
 
-// Печать: лицевая, оборотная
-const SIDE_FRONT = 1;
-const SIDE_BACK = 2;
-
-// Бирки: Принт-Дизайн, безликие
-const LABEL_PRINT_DESIGN = 1;
-const LABEL_FACELESS = 2;
-
-// Упаковка: паллетированная, россыпью, европаллет, коробки
-const PACKAGE_PALLETED = 1;
-const PACKAGE_BULK = 2;
-const PACKAGE_EUROPALLET = 3;
-const PACKAGE_BOXES = 4;
-
-// Значение марки плёнки "другая"
-const INDIVIDUAL = -1;
-
-// Фотометка
-const PHOTOLABEL_LEFT = "left";
-const PHOTOLABEL_RIGHT = "right";
-const PHOTOLABEL_BOTH = "both";
-const PHOTOLABEL_NONE = "none";
-
 // Получение коэффициента машины
 function GetMachineCoeff($printer) {
     return $printer == PRINTER_COMIFLEX ? "1.14" : "1.7";
@@ -454,10 +431,10 @@ $current_date_time = date("dmYHis");
                             <td>
                                 <?php
                                 switch ($calculation_result->side) {
-                                    case SIDE_FRONT:
+                                    case CalculationResult::SIDE_FRONT:
                                         echo 'Лицевая';
                                         break;
-                                    case SIDE_BACK:
+                                    case CalculationResult::SIDE_BACK:
                                         echo 'Оборотная';
                                         break;
                                     default :
@@ -801,10 +778,10 @@ $current_date_time = date("dmYHis");
                                     <td>
                                         <?php
                                         switch ($calculation_result->labels) {
-                                            case LABEL_PRINT_DESIGN:
+                                            case CalculationResult::LABEL_PRINT_DESIGN:
                                                 echo "Принт-Дизайн";
                                                 break;
-                                            case LABEL_FACELESS:
+                                            case CalculationResult::LABEL_FACELESS:
                                                 echo "Безликие";
                                                 break;
                                             default :
@@ -827,16 +804,16 @@ $current_date_time = date("dmYHis");
                                     <td>
                                         <?php
                                         switch ($calculation_result->package) {
-                                            case PACKAGE_PALLETED:
+                                            case CalculationResult::PACKAGE_PALLETED:
                                                 echo "Паллетирование";
                                                 break;
-                                            case PACKAGE_BULK:
+                                            case CalculationResult::PACKAGE_BULK:
                                                 echo "Россыпью";
                                                 break;
-                                            case PACKAGE_EUROPALLET:
+                                            case CalculationResult::PACKAGE_EUROPALLET:
                                                 echo "Европаллет";
                                                 break;
-                                            case PACKAGE_BOXES:
+                                            case CalculationResult::PACKAGE_BOXES:
                                                 echo "Коробки";
                                                 break;
                                             default :
@@ -869,16 +846,16 @@ $current_date_time = date("dmYHis");
                 Фотометка:&nbsp;
                 <?php
                 switch ($calculation_result->photolabel) {
-                    case PHOTOLABEL_LEFT:
+                    case CalculationResult::PHOTOLABEL_LEFT:
                         echo "Левая";
                         break;
-                    case PHOTOLABEL_RIGHT:
+                    case CalculationResult::PHOTOLABEL_RIGHT:
                         echo "Правая";
                         break;
-                    case PHOTOLABEL_BOTH:
+                    case CalculationResult::PHOTOLABEL_BOTH:
                         echo "Две фотометки";
                         break;
-                    case PHOTOLABEL_NONE:
+                    case CalculationResult::PHOTOLABEL_NONE:
                         echo "Без фотометки";
                         break;
                     default :
@@ -890,16 +867,16 @@ $current_date_time = date("dmYHis");
             <?php
             $roll_folder = ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
             switch ($calculation_result->photolabel) {
-                case PHOTOLABEL_LEFT:
+                case CalculationResult::PHOTOLABEL_LEFT:
                     $roll_folder = "roll_left";
                     break;
-                case PHOTOLABEL_RIGHT:
+                case CalculationResult::PHOTOLABEL_RIGHT:
                     $roll_folder = "roll_right";
                     break;
-                case PHOTOLABEL_BOTH:
+                case CalculationResult::PHOTOLABEL_BOTH:
                     $roll_folder = "roll_both";
                     break;
-                case PHOTOLABEL_NONE:
+                case CalculationResult::PHOTOLABEL_NONE:
                     $roll_folder = "roll";
                     break;
             }
