@@ -112,15 +112,6 @@
     <div class="name" style="font-size: 33px;"><?=CUTTER_NAMES[$machine_id] ?></div>
     <div class="name">Результаты резки</div>
     <?php
-    $number_in_meter = 0; // Этикеток в 1 м. пог.
-    
-    if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-        $number_in_meter = $calculation->number_in_raport_pure / $calculation->raport * 1000.0;
-    }
-    elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
-        $number_in_meter = 1 / $calculation->length * 1000.0;
-    }
-    
     $bobbins = 0;
     $weight = 0;
     $length = 0;
@@ -143,7 +134,7 @@
         $length += $row['length'];
     }
     ?>
-    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= rtrim(rtrim(DisplayNumber(floatval($weight), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($length), 2), '0'), ',') ?> м<?= $calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", этикеток ".DisplayNumber(floor($length * $number_in_meter), 0)." шт." ?></div>
+    <div class="subtitle">Всего: катушек <?= DisplayNumber(intval($bobbins), 0) ?> шт., <?= rtrim(rtrim(DisplayNumber(floatval($weight), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($length), 2), '0'), ',') ?> м<?= $calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", этикеток ".DisplayNumber(floor($length * $calculation->number_in_meter), 0)." шт." ?></div>
     <table class="table">
         <tr>
             <th style="border-top-width: 0; font-weight: bold;">Наименование</th>
@@ -180,7 +171,7 @@
             <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
             <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
-            <td style="text-align: left;"><?= floor($row['length'] * $number_in_meter) ?> шт.</td>
+            <td style="text-align: left;"><?= floor($row['length'] * $calculation->number_in_meter) ?> шт.</td>
             <?php endif; ?>
         </tr>
         <?php endwhile; ?>
@@ -229,7 +220,7 @@
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <a href="javascript: void(0);" class="hide_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= rtrim(rtrim(DisplayNumber(floatval($take['weight']), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($take['length']), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $number_in_meter), 0)." шт." ?>
+            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= rtrim(rtrim(DisplayNumber(floatval($take['weight']), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($take['length']), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $calculation->number_in_meter), 0)." шт." ?>
         </div>
         <table class="table take_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
@@ -261,7 +252,7 @@
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
-                <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $number_in_meter), 0) ?> шт.</td>
+                <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
                 <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
@@ -301,7 +292,7 @@
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_not_take_table<?=$show_table_class ?>" onclick="javascript: ShowNotTakeTable();"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <a href="javascript: void(0);" class="hide_not_take_table<?=$hide_table_class ?>" onclick="javascript: HideNotTakeTable();"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Рулоны не из съёма</strong> <?= rtrim(rtrim(DisplayNumber(floatval($total_weight), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($total_length), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($total_length * $number_in_meter), 0)." шт." ?>
+            <strong>Рулоны не из съёма</strong> <?= rtrim(rtrim(DisplayNumber(floatval($total_weight), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($total_length), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($total_length * $calculation->number_in_meter), 0)." шт." ?>
         </div>
         <table class="table not_take_table<?=$hide_table_class ?>" style="border-bottom: 0;">
             <tr>
@@ -325,7 +316,7 @@
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
-                <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $number_in_meter), 0) ?> шт.</td>
+                <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
                 <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_not_take_stream" onclick="javascript: $('#not_take_stream_id').val('<?=$stream['id'] ?>'); $('#not_take_stream_name').html('<?=$stream['name'] ?>');" /></a></td>

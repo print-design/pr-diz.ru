@@ -1084,20 +1084,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <td>Этикеток в 1 м. пог.</td>
-                            <td>
-                                <?php
-                                if(empty($calculation->length)) {
-                                    echo "";
-                                }
-                                elseif($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-                                    // Делаем новый расчёт (необходимо для получения параметра "количество этикеток в рапорте чистое")
-                                    echo DisplayNumber(floatval($calculation->number_in_raport_pure) / floatval($calculation->raport) * 1000.0, 4);
-                                }
-                                else {
-                                    echo DisplayNumber(1 / floatval($calculation->length) * 1000, 4);
-                                }
-                                ?>
-                            </td>
+                            <td><?= DisplayNumber($calculation->number_in_meter, 4) ?></td>
                         </tr>
                         <tr>
                             <td>Бирки</td>

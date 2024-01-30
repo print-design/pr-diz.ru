@@ -82,15 +82,6 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN) {
     }
 }
 
-$number_in_meter = 0; // Этикеток в 1 м. пог.
-    
-if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-    $number_in_meter = $calculation->number_in_raport_pure / $calculation->raport * 1000.0;
-}
-elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
-    $number_in_meter = 1 / $calculation->length * 1000.0;
-}
-
 if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
 ?>
 <div class="d-flex justify-content-start mb-1">
@@ -132,7 +123,7 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
     </tr>
     <tr>
         <td class="pb-2">Кол-во</td>
-        <td class="pl-1 pb-2 font-weight-bold"><?= floor($stream_length * $number_in_meter) ?> шт. &#177;2%</td>
+        <td class="pl-1 pb-2 font-weight-bold"><?= floor($stream_length * $calculation->number_in_meter) ?> шт. &#177;2%</td>
     </tr>
     <tr>
         <td colspan="2" class="font-weight-bold">

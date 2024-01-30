@@ -1205,6 +1205,8 @@ class Calculation extends CalculationBase {
     public $film_waste_cost_1, $film_waste_cost_2, $film_waste_cost_3; // Отходы, стоимость
     public $film_waste_weight_1, $film_waste_weight_2, $film_waste_weight_3; // Отходы, масса
     public $total_extra_expense; // Общие дополнительные расходы
+    
+    public $number_in_meter; // Этикеток в 1 м. пог.
 
     // Конструктор
     public function __construct(DataPriladka $data_priladka, 
@@ -1961,6 +1963,13 @@ class Calculation extends CalculationBase {
         $this->film_waste_weight_1 = $this->weight_dirty_1 - $this->weight_pure_1;
         $this->film_waste_weight_2 = $this->weight_dirty_2 - $this->weight_pure_2;
         $this->film_waste_weight_3 = $this->weight_dirty_3 - $this->weight_pure_3; 
+        
+        //***************************
+        // ДОПОЛНИТЕЛЬНО
+        //***************************
+        
+        // Этикеток в 1 м. пог.
+        $this->number_in_meter = 1 / $this->length * 1000;
     }
 }
 
@@ -2047,6 +2056,8 @@ class CalculationSelfAdhesive extends CalculationBase {
     public $total_extra_expense; // Общие дополнительные расходы
     
     public $lengths; // Длины тиражей
+    
+    public $number_in_meter; // Этикеток в 1 м. пог.
 
     public function __construct(DataPriladka $data_priladka, 
             DataPriladka $data_priladka_laminator,
@@ -2533,6 +2544,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         foreach($quantities as $key => $quantity) {
             $this->lengths[$key] = ($length + $this->gap) * $quantities[$key] / $streams_number / 1000;
         }
+        
+        //***************************
+        // ДОПОЛНИТЕЛЬНО
+        //***************************
+        
+        // Этикеток в 1 м. пог.
+        $this->number_in_meter = $this->number_in_raport_pure / $this->raport * 1000;
     }
 }
 ?>
