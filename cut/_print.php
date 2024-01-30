@@ -70,14 +70,16 @@ $sql = "select pe.last_name, pe.first_name "
         . "where date_format(pw.date, '%d-%m-%Y') = '$stream_date' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
 $stream_cutter = '';
 
-$fetcher = new Fetcher($sql);
+if($calculation_result->labels == LABEL_PRINT_DESIGN) {
+    $fetcher = new Fetcher($sql);
 
-while($row = $fetcher->Fetch()) {
-    $stream_cutter .= $row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.');
-}
+    while($row = $fetcher->Fetch()) {
+        $stream_cutter .= $row['last_name'].(mb_strlen($row['first_name']) == 0 ? '' : ' '.mb_substr($row['first_name'], 0, 1).'.');
+    }
 
-if(empty($stream_cutter)) {
-    $stream_cutter = "ВЫХОДНОЙ ДЕНЬ";
+    if(empty($stream_cutter)) {
+        $stream_cutter = "ВЫХОДНОЙ ДЕНЬ";
+    }
 }
 
 $number_in_meter = 0; // Этикеток в 1 м. пог.
@@ -88,6 +90,8 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
 elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
     $number_in_meter = 1 / $calculation->length * 1000.0;
 }
+
+if($calculation_result->labels == LABEL_PRINT_DESIGN):
 ?>
 <div class="d-flex justify-content-start mb-1">
     <div class="mr-2"><img src="<?=APPLICATION ?>/images/logo.svg" style="width: 20px; height: 20px;" class="mt-1" /></div>
@@ -97,7 +101,8 @@ elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
         +7(4822)781-780
     </div>
 </div>
-<div class="mb-2"><strong><?=$calculation->customer_id.'-'.$calculation->num_for_customer ?>.</strong> <?=$calculation->customer ?></div>
+<?php endif; ?>
+<div class="mb-2"><strong><?=$calculation->customer_id.'-'.$calculation->num_for_customer ?>.</strong> <?=$calculation_result->labels == LABEL_PRINT_DESIGN ? $calculation->customer : '' ?></div>
 <table>
     <tr>
         <td>Рулон</td>
@@ -107,10 +112,12 @@ elseif($calculation->work_type_id == WORK_TYPE_PRINT) {
         <td>Дата</td>
         <td class="pl-1 font-weight-bold"><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y H:i') ?></td>
     </tr>
+    <?php if($calculation_result->labels == LABEL_PRINT_DESIGN): ?>
     <tr>
         <td>Заказ</td>
         <td class="pl-1 font-weight-bold"><?=$calculation->name ?></td>
     </tr>
+    <?php endif; ?>
     <tr>
         <td class="pb-2">Ручей</td>
         <td class="pl-1 pb-2 font-weight-bold"><?=$stream_name ?></td>

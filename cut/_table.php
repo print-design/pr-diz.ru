@@ -241,7 +241,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <th style="font-weight: bold;">Этикеток</th>
                 <?php endif; ?>
-                <?php if($status_id != ORDER_STATUS_SHIPPED): ?>
+                <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <th style="font-weight: bold;"></th>
                 <?php endif; ?>
             </tr>
@@ -263,7 +263,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
-                <?php if($status_id != ORDER_STATUS_SHIPPED): ?>
+                <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
                 <?php endif; ?>
             </tr>
