@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include '../calculation/calculation.php';
+include '../calculation/calculation_result.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
@@ -15,6 +16,7 @@ if($id === null) {
 
 // Расчёт
 $calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 
 if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
     $id = filter_input(INPUT_POST, 'id');
