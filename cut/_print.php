@@ -123,7 +123,7 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
     </tr>
     <tr>
         <td class="pb-2">Кол-во</td>
-        <td class="pl-1 pb-2 font-weight-bold"><?= floor($stream_length * $calculation->number_in_meter) ?> шт. &#177;2%</td>
+        <td class="pl-1 pb-2 font-weight-bold"><?= DisplayNumber(floor($stream_length * $calculation->number_in_meter), 0) ?> шт. &#177;2%</td>
     </tr>
     <tr>
         <td colspan="2" class="font-weight-bold">
