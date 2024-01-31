@@ -49,7 +49,6 @@ if(!empty($waste2) && $waste2 != $waste1) $waste = WASTE_KAGAT;
 if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 ?>
 <div class="cutter_info">
-    <div class="subtitle">Хар-ки</div>
     <div class="subtitle">ИНФОРМАЦИЯ ПО ПЕЧАТИ</div>
     <table>
         <tr>
