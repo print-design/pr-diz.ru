@@ -171,7 +171,7 @@
             <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
             <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
-            <td style="text-align: left;"><?= floor($row['length'] * $calculation->number_in_meter) ?> шт.</td>
+            <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
             <?php endif; ?>
         </tr>
         <?php endwhile; ?>
