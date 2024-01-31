@@ -54,19 +54,11 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
     <table>
         <tr>
             <td style="width: 50%;"><?=(empty($calculation->machine_id) ? '' : ' '.PRINTER_NAMES[$calculation->machine_id].' ') ?>Марка мат-ла</td>
-            <td><?=$calculation->film_1 ?></td>
-        </tr>
-        <tr>
-            <td>Толщина</td>
             <td>
-                <?php
-                if(!empty($calculation->thickness_1)) {
-                    echo DisplayNumber(floatval($calculation->thickness_1), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($calculation->density_1), 2), "0").' г/м<sup>2</sup>';
-                }
-                else {
-                    echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
-                }
-                ?>
+                <?=$calculation->film_1 ?>
+                <?php if(!empty($calculation->thickness_1)): ?>
+                <?= DisplayNumber(floatval($calculation->thickness_1), 0) ?> мкм&nbsp;&ndash;&nbsp;<?= rtrim(DisplayNumber(floatval($calculation->density_1), 2), "0") ?> г/м<sup>2</sup>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
@@ -116,19 +108,11 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
         </tr>
         <tr>
             <td>Марка пленки</td>
-            <td><?= $calculation->film_2 ?></td>
-        </tr>
-        <tr>
-            <td>Толщина</td>
             <td>
-                <?php
-                if(!empty($calculation->thickness_2)) {
-                    echo DisplayNumber(floatval($calculation->thickness_2), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($calculation->density_2), 2), "0").' г/м<sup>2</sup>';
-                }
-                else {
-                    echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
-                }
-                ?>
+                <?= $calculation->film_2 ?>
+                <?php if(!empty($calculation->thickness_2)): ?>
+                <?=DisplayNumber(floatval($calculation->thickness_2), 0) ?> мкм&nbsp;&ndash;&nbsp;<?=rtrim(DisplayNumber(floatval($calculation->density_2), 2), "0") ?> г/м<sup>2</sup>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
@@ -140,19 +124,11 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
     <table>
         <tr>
             <td style="width: 50%;">Марка пленки</td>
-            <td><?= $calculation->film_3 ?></td>
-        </tr>
-        <tr>
-            <td>Толщина</td>
             <td>
-                <?php
-                if(!empty($calculation->thickness_3)) {
-                    echo DisplayNumber(floatval($calculation->thickness_3), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(DisplayNumber(floatval($calculation->density_3), 2), "0").' г/м<sup>2</sup>';
-                }
-                else {
-                    echo "0 мкм&nbsp;&ndash;&nbsp;0 г/м<sup>2</sup>";
-                }
-                ?>
+                <?= $calculation->film_3 ?>
+                <?php if(!empty($calculation->thickness_3)): ?>
+                <?=DisplayNumber(floatval($calculation->thickness_3), 0) ?> мкм&nbsp;&ndash;&nbsp;<?=rtrim(DisplayNumber(floatval($calculation->density_3), 2), "0") ?> г/м<sup>2</sup>
+                <?php endif; ?>
             </td>
         </tr>
     </table>
