@@ -67,7 +67,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     // Упаковка
     if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))):
     ?>
-    <a href="<?=APPLICATION ?>/pack/" class="left_bar_item<?=$pack_class ?>" title="Упаковка" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/icons/factory.svg" /></a>
+    <a href="<?=APPLICATION ?>/pack/" class="left_bar_item<?=$pack_class ?>" title="Упаковка" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/icons/loader_machine.svg" /></a>
     <?php
     endif;
     // Админка
