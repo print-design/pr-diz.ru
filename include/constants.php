@@ -53,17 +53,16 @@ const CUTTERS = array(CUTTER_1, CUTTER_2, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTE
 const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_2 => "Резка 2", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;");
 const CUTTER_SPEEDS = array(CUTTER_1 => 35, CUTTER_2 => 35, CUTTER_3 => 35, CUTTER_4 => 80, CUTTER_ATLAS => 35, CUTTER_SOMA => 120);
 
-// Резчики (пользователи)
+// Резчики (пользователи) !!! Пользователя резки Атлас пока удалили !!!
 const CUTTER_USER_1 = "cut1";
 const CUTTER_USER_2 = "cut2";
 const CUTTER_USER_3 = "cut3";
 const CUTTER_USER_1600 = "cut1600";
 const CUTTER_USER_SOMA = "somacut";
-const CUTTER_USER_ATLAS = "atlascut";
 
-const CUTTER_USERS = array(CUTTER_USER_1, CUTTER_USER_2, CUTTER_USER_3, CUTTER_USER_1600, CUTTER_USER_SOMA, CUTTER_USER_ATLAS);
-const CUTTER_USER_IDS = array(CUTTER_USER_1 => CUTTER_1, CUTTER_USER_2 => CUTTER_2, CUTTER_USER_3 => CUTTER_3, CUTTER_USER_1600 => CUTTER_4, CUTTER_USER_SOMA => CUTTER_SOMA, CUTTER_USER_ATLAS => CUTTER_ATLAS);
-const CUTTER_USER_NAMES = array(CUTTER_USER_1 => "Резка 1", CUTTER_USER_2 => "Резка 2", CUTTER_USER_3 => "Резка 3", CUTTER_USER_1600 => "Резка 1600", CUTTER_USER_SOMA => "Резка Сома", CUTTER_USER_ATLAS => "Резка Атлас");
+const CUTTER_USERS = array(CUTTER_USER_1, CUTTER_USER_2, CUTTER_USER_3, CUTTER_USER_1600, CUTTER_USER_SOMA);
+const CUTTER_USER_IDS = array(CUTTER_USER_1 => CUTTER_1, CUTTER_USER_2 => CUTTER_2, CUTTER_USER_3 => CUTTER_3, CUTTER_USER_1600 => CUTTER_4, CUTTER_USER_SOMA => CUTTER_SOMA);
+const CUTTER_USER_NAMES = array(CUTTER_USER_1 => "Резка 1", CUTTER_USER_2 => "Резка 2", CUTTER_USER_3 => "Резка 3", CUTTER_USER_1600 => "Резка 1600", CUTTER_USER_SOMA => "Резка Сома");
 
 // Типы работы
 const WORK_TYPE_NOPRINT = 1;
