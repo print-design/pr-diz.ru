@@ -414,7 +414,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <div class="mt-2">Доп. расходы</div>
-            <div class="value"><?= DisplayNumber(floatval($calculation->extra_expense) * floatval($calculation->quantity), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="extra_expense"><?= DisplayNumber(floatval($calculation->extra_expense), 3) ?></span> &#8381; за <?=(empty($unit) || $unit == 'kg' ? "кг" : "шт") ?></span></div>
+            <div class="value"><?= DisplayNumber(floatval($calculation->extra_expense) * floatval($calculation->quantity), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="extra_expense"><?= DisplayNumber(floatval($calculation->extra_expense), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == CalculationBase::KG ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4"></div>
         <div class="col-4">

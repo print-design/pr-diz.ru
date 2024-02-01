@@ -988,7 +988,7 @@ if(!is_nan($calculation->streams_number)) {
                     <table>
                         <tr>
                             <td>Отгрузка в</td>
-                            <td><?=$calculation->unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                            <td><?=$calculation->unit == CalculationBase::KG ? 'Кг' : 'Шт' ?></td>
                         </tr>
                         <tr>
                             <td>Готовая продукция</td>

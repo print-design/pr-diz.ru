@@ -662,7 +662,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Отгрузка в</td>
-                                    <td><?=$calculation->unit == 'kg' ? 'Кг' : 'Шт' ?></td>
+                                    <td><?=$calculation->unit == CalculationBase::KG ? 'Кг' : 'Шт' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Готовая продукция</td>
