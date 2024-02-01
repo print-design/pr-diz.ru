@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include '../calculation/calculation.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
@@ -19,7 +20,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
 }
 
 // Отображение статуса заказа
-function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cause) {
+function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $cut_remove_cause) {
     include '../include/order_status_index.php';
 }
 ?>
@@ -83,10 +84,14 @@ function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cau
                     <th></th>
                 </tr>
             <?php
-            $sql = "select c.id, ct.time, c.customer_id, e.machine_id, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.status_id, c.cut_remove_cause, "
+            $sql = "select c.id, ct.time, c.customer_id, e.machine_id, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
+                    . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                     . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
+                    . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
                     . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                     . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
+                    . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
+                    . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                     . "(select concat(last_name, ' ', left(first_name, 1), '.') from plan_employee where id = (select employee1_id from plan_workshift1 where work_id = ".WORK_CUTTING." and machine_id = e.machine_id and date = date(ct.time) and shift = 'day')) as day_cutter, "
                     . "(select concat(last_name, ' ', left(first_name, 1), '.') from plan_employee where id = (select employee1_id from plan_workshift1 where work_id = ".WORK_CUTTING." and machine_id = e.machine_id and date = date(ct.time) and shift = 'night')) as night_cutter, "
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
@@ -111,7 +116,7 @@ function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cau
                     <td><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
                     <td><?= DisplayNumber(floatval($row['weight']), 1) ?> кг</td>
                     <td><?=$row['manager'] ?></td>
-                    <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['length_pure_1'], $row['cut_remove_cause']); ?></td>
+                    <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']); ?></td>
                     <td>
                         <a href="details.php?id=<?=$row['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
                     </td>

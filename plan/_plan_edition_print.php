@@ -166,7 +166,7 @@
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?php
         if(!empty($this->edition['status_id'])) {
-            $this->ShowOrderStatusPrint($this->edition['status_id'], $this->edition['length_cut'], $this->edition['length_total'], $this->edition['cut_remove_cause']);
+            $this->ShowOrderStatusPrint($this->edition['status_id'], $this->edition['length_cut'], $this->edition['weight_cut'], $this->edition['quantity_sum'], $this->edition['quantity'], $this->edition['unit'], $this->edition['raport'], $this->edition['length'], $this->edition['gap_raport'], $this->edition['cut_remove_cause']);
         }
         ?>
     </td>

@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include './calculation.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
@@ -46,7 +47,7 @@ function GetPrintingsWithCases($number) {
 }
 
 // Отображение статуса
-function ShowOrderStatus($status_id, $length_cut, $length_total, $cut_remove_cause) {
+function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $cut_remove_cause) {
     include '../include/order_status_index.php';
 }
 
@@ -285,10 +286,14 @@ else $title = $status_titles[1];
                     }
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
+                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length, c.status_id, c.cut_remove_cause, "
                             . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities, "
-                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.status_id, c.cut_remove_cause, cr.length_pure_1 as length_total, "
+                            . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
+                            . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
                             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
+                            . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
+                            . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
                             . "left join calculation_result cr on cr.calculation_id = c.id "
@@ -310,7 +315,7 @@ else $title = $status_titles[1];
                         <td class="text-right"><?=$quantity ?></td>
                         <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['length_total'], $row['cut_remove_cause']) ?></td>
+                        <td class="text-nowrap"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['work_type_id'], $row['cut_remove_cause']) ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
