@@ -39,7 +39,7 @@
             $result_cut = DisplayNumber(floor($length_cut * $calculation->number_in_meter), 0);
         }
 
-        echo " $result_cut ".($calculation->unit == KG ? "кг" : "шт")." из ".DisplayNumber(intval($calculation->quantity), 0);
+        echo " $result_cut из ".DisplayNumber(intval($calculation->quantity), 0)." ".($calculation->unit == KG ? "кг" : "шт");
     }
                                 
     if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {
