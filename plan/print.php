@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include '../calculation/calculation.php';
 include './_plan_timetable.php';
 
 // Авторизация

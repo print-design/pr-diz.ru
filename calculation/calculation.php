@@ -209,10 +209,6 @@ class DataExtracharge {
 
 // Базовый класс для классов расчёта
 class CalculationBase {
-    // Единицы размера тиража
-    const KG = 'kg';
-    const PIECES = 'pieces';
-    
     // Лыжи
     const NO_SKI = 1;
     const STANDARD_SKI = 2;
@@ -579,9 +575,9 @@ class CalculationBase {
     // Получение называния единицы размера тиража
     function GetUnitName($unit) {
         switch ($unit) {
-            case Calculation::KG:
+            case KG:
                 return "кг";
-            case Calculation::PIECES:
+            case PIECES:
                 return "шт";
             default :
                 return "";
@@ -1386,7 +1382,7 @@ class Calculation extends CalculationBase {
         // М2 чистые, м2
         // Считаем только если размер тиража выражен в штуках: длина * ширина ручья * размер тиража
         // Если размер тиража выражен в килограммах, то нам м2 чистые пока не нужны, вычислим их позже
-        if($unit == self::KG) {
+        if($unit == KG) {
             $this->area_pure_start = 0;
         }
         else {
@@ -1396,7 +1392,7 @@ class Calculation extends CalculationBase {
         // Масса тиража, кг
         // Если размер тиража выражен в килограммах, то это и будет масса тиража
         // Если размер тиража выражен в штуках, то считаем: м2 чистые * сумма плотностей всех плёнок
-        if($unit == self::KG) {
+        if($unit == KG) {
             $this->weight = $quantity;
         }
         else {

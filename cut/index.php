@@ -1,7 +1,6 @@
 <?php
 include '../include/topscripts.php';
 include './_cut_timetable.php';
-include '../calculation/calculation.php';
 
 // Авторизация
 if(!IsInRole(CUTTER_USERS) && !IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])) {

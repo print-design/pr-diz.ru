@@ -4,7 +4,7 @@
     if(in_array($calculation->status_id, ORDER_STATUSES_WITH_METERS)) {
         $result_cut = 0;
         
-        if($calculation->unit == CalculationBase::KG) {
+        if($calculation->unit == KG) {
             $weight_cut = 0;
             
             $sql = "select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
@@ -39,7 +39,7 @@
             $result_cut = DisplayNumber(floor($length_cut * $calculation->number_in_meter), 0);
         }
         
-        echo " $result_cut ".($calculation->unit == CalculationBase::KG ? "кг" : "шт")." из ".DisplayNumber(intval($calculation->quantity), 0);
+        echo " $result_cut ".($calculation->unit == KG ? "кг" : "шт")." из ".DisplayNumber(intval($calculation->quantity), 0);
     }
                                 
     if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {

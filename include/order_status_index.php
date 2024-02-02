@@ -2,7 +2,7 @@
 if(!empty($status_id)):
     $result_cut = 0;
 
-if($unit == CalculationBase::KG) {
+if($unit == KG) {
     $result_cut = $weight_cut;
 }
 elseif(empty ($quantity_sum)) {
@@ -17,7 +17,7 @@ else {
 <i class="fas fa-circle" style="color: <?=ORDER_STATUS_COLORS[$status_id] ?>;"></i>&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$status_id] ?>
 <?php
 if(in_array($status_id, ORDER_STATUSES_WITH_METERS)) {
-    echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".rtrim(rtrim(DisplayNumber(floatval($result_cut), 2), '0'), ',').' '.($unit == CalculationBase::KG ? "кг" : "шт")." из ".DisplayNumber(floatval(empty($quantity_sum) ? $quantity : $quantity_sum), 0)."</div>";
+    echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".rtrim(rtrim(DisplayNumber(floatval($result_cut), 2), '0'), ',').' '.($unit == KG ? "кг" : "шт")." из ".DisplayNumber(floatval(empty($quantity_sum) ? $quantity : $quantity_sum), 0)."</div>";
 }
 elseif($status_id == ORDER_STATUS_CUT_REMOVED) {
     echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$cut_remove_cause."</div>";

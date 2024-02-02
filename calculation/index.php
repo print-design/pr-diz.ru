@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include './calculation.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {

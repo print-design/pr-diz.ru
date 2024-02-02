@@ -360,7 +360,7 @@ $current_date_time = date("dmYHis");
             <div id="subtitle">Наименование: <?=$calculation->name ?></div>
             <div class="row" style="display: flex; flex-wrap: wrap;">
                 <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
-                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(intval($quantities_sum), 0)." шт" : DisplayNumber(intval($calculation->quantity), 0).($calculation->unit == CalculationBase::KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(floatval($lengths_sum), 0)." м" : DisplayNumber(floatval($calculation_result->length_pure_1), 0)." м" ?>
+                    <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(intval($quantities_sum), 0)." шт" : DisplayNumber(intval($calculation->quantity), 0).($calculation->unit == KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(floatval($lengths_sum), 0)." м" : DisplayNumber(floatval($calculation_result->length_pure_1), 0)." м" ?>
                 </div>
                 <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
                     <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=WORK_TYPE_NAMES[$calculation->work_type_id] ?>
@@ -662,7 +662,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Отгрузка в</td>
-                                    <td><?=$calculation->unit == CalculationBase::KG ? 'Кг' : 'Шт' ?></td>
+                                    <td><?=$calculation->unit == KG ? 'Кг' : 'Шт' ?></td>
                                 </tr>
                                 <tr>
                                     <td>Готовая продукция</td>

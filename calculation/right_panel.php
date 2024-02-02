@@ -415,7 +415,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
         <div class="col-4 pr-4">
             <h3>Себестоимость</h3>
             <div>Себестоимость</div>
-            <div class="value mb-2"><span id="cost"><?= DisplayNumber(floatval($calculation_result->cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="cost_per_unit"><?= DisplayNumber(floatval($calculation_result->cost_per_unit), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == CalculationBase::KG ? "кг" : "шт") ?></span></div>
+            <div class="value mb-2"><span id="cost"><?= DisplayNumber(floatval($calculation_result->cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="cost_per_unit"><?= DisplayNumber(floatval($calculation_result->cost_per_unit), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == KG ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Себестоимость ПФ</div>
             <div class="value"><?= DisplayNumber(floatval($calculation_result->cliche_cost), 0) ?> &#8381;</div>
             <div class="value font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($calculation->stream_width * $calculation->streams_number + 20) + ($calculation->ski_1 == CalculationBase::NO_SKI ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($calculation->raport) + 20) ?>&nbsp;мм</div>            
@@ -423,14 +423,14 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
         <div class="col-4 pr-4">
             <h3>Отгрузочная стоимость</h3>
             <div>Отгрузочная стоимость</div>
-            <div class="value"><span id="shipping_cost"><?= DisplayNumber(floatval($calculation_result->shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == CalculationBase::KG ? "кг" : "шт") ?></span></div>
+            <div class="value"><span id="shipping_cost"><?= DisplayNumber(floatval($calculation_result->shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == KG ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
             <div class="value"><span id="shipping_cliche_cost"><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost), 0) ?></span> &#8381;</div>
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>
             <div>Прибыль</div>
-            <div class="value mb-2"><span id="income"><?= DisplayNumber(floatval($calculation_result->income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= DisplayNumber(floatval($calculation_result->income_per_unit), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == CalculationBase::KG ? 'кг' : 'шт') ?></span></div>
+            <div class="value mb-2"><span id="income"><?= DisplayNumber(floatval($calculation_result->income), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="income_per_unit"><?= DisplayNumber(floatval($calculation_result->income_per_unit), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == KG ? 'кг' : 'шт') ?></span></div>
             <div class="mt-2">Прибыль ПФ</div>
             <div class="value"><span id="income_cliche"><?= DisplayNumber(floatval($calculation_result->income_cliche), 0) ?></span> &#8381;</div>
         </div>
@@ -438,7 +438,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
     <div class="row text-nowrap">
         <div class="col-4 pr-4">
             <div class="mt-2">Доп. расходы</div>
-            <div class="value"><?= DisplayNumber(floatval($calculation->extra_expense) * floatval($calculation->quantity), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="extra_expense"><?= DisplayNumber(floatval($calculation->extra_expense), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == CalculationBase::KG ? "кг" : "шт") ?></span></div>
+            <div class="value"><?= DisplayNumber(floatval($calculation->extra_expense) * floatval($calculation->quantity), 0) ?> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="extra_expense"><?= DisplayNumber(floatval($calculation->extra_expense), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == KG ? "кг" : "шт") ?></span></div>
         </div>
         <div class="col-4 pr-4"></div>
         <div class="col-4">
