@@ -227,12 +227,12 @@ $current_date_time = date("dmYHis");
             }
             
             table.fotometka tr td {
-                border: solid 1px #dddddd;
                 padding-left: 4px;
                 padding-top: 4px;
                 padding-right: 20px;
                 text-align: right;
                 vertical-align: top;
+                border-bottom: 0;
             }
             
             .photolable {
