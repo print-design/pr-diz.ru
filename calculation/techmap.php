@@ -744,7 +744,7 @@ if(!is_nan($calculation->streams_number)) {
                         </tr>
                         <tr>
                             <th>Заказчик</th>
-                            <td class="text-left"><?=$calculation->customer ?></td>
+                            <td class="text-left" style="line-height: 18px;"><?=$calculation->customer ?></td>
                         </tr>
                         <tr>
                             <th>Название заказа</th>

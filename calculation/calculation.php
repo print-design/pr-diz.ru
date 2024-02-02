@@ -1958,14 +1958,16 @@ class Calculation extends CalculationBase {
         // Отходы плёнки, масса
         $this->film_waste_weight_1 = $this->weight_dirty_1 - $this->weight_pure_1;
         $this->film_waste_weight_2 = $this->weight_dirty_2 - $this->weight_pure_2;
-        $this->film_waste_weight_3 = $this->weight_dirty_3 - $this->weight_pure_3; 
+        $this->film_waste_weight_3 = $this->weight_dirty_3 - $this->weight_pure_3;
         
         //***************************
         // ДОПОЛНИТЕЛЬНО
         //***************************
         
         // Этикеток в 1 м. пог.
-        $this->number_in_meter = 1 / $this->length * 1000;
+        if($this->work_type_id != WORK_TYPE_NOPRINT) {
+            $this->number_in_meter = 1 / $this->length * 1000;
+        }
     }
 }
 

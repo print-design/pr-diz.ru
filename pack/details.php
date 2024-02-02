@@ -104,6 +104,16 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     padding-left: 10px;
                     font-weight: bold;
                 }
+                
+                table.fotometka {
+                    border-collapse: separate;
+                }
+                
+                table.fotometka tr td {
+                    text-align: right;
+                    vertical-align: top;
+                    border-bottom: 0;
+                }
             
                 .calculation_stream {
                     border-radius: 15px;
@@ -163,12 +173,16 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             ?>
             <div class="row">
                 <div class="col-8">
-                    <div class="row mb-4">
+                    <div class="row">
                         <div class="col-6">
                             <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if(!empty($calculation->status_id) && $calculation->status_id != ORDER_STATUS_PACK_READY) echo "?status_id=".$calculation->status_id; ?>">К списку</a>
                             <h1><?=$calculation->name ?></h1>
                             <div class="name"><?=$calculation->customer ?></div>
                             <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-6">
                             <?php include '../include/order_status_details.php'; ?>
                             <table>
                                 <tr>
@@ -186,6 +200,61 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 <tr>
                                     <td>Карта составлена</td>
                                     <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation_result->techmap_date)->format('d.m.Y H:i') ?></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <?php
+                            $roll_folder = ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
+                            switch ($calculation_result->photolabel) {
+                                case CalculationResult::PHOTOLABEL_LEFT:
+                                    $roll_folder = "roll_left";
+                                    break;
+                                case CalculationResult::PHOTOLABEL_RIGHT:
+                                    $roll_folder = "roll_right";
+                                    break;
+                                case CalculationResult::PHOTOLABEL_BOTH:
+                                    $roll_folder = "roll_both";
+                                    break;
+                                case CalculationResult::PHOTOLABEL_NONE:
+                                    $roll_folder = "roll";
+                                    break;
+                            }
+                            ?>
+                            <table class="fotometka">
+                                <tr>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 1 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_1.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 1): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 2 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_2.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 2): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 3 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_3.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 3): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 4 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_4.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 4): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 5 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_5.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 5): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 6 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_6.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 6): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 7 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_7.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 7): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
+                                    <td class="fotometka<?= $calculation_result->roll_type == 8 ? " fotochecked" : "" ?>">
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_8.png<?='?'. time() ?>" />
+                                        <?php if($calculation_result->roll_type == 8): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
