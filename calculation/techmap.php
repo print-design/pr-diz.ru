@@ -40,12 +40,13 @@ $streams_valid = array();
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $id = filter_input(INPUT_POST, 'id');
+    
     if(empty($id)) {
         $error_message == "Не указан ID расчёта";
         $form_valid = false;
     }
     
-    $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+    $calculation = CalculationBase::Create($id);
     
     $techmap_id = filter_input(INPUT_POST, 'techmap_id');
     
@@ -101,7 +102,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     $comment = filter_input(INPUT_POST, 'comment');
     
-    if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+    if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
         // Проверяем, чтобы были заполнены формы для всех красок
         $sql = "select count(distinct cq.id) * c.ink_number - count(cc.id) "
                 . "from calculation_cliche cc "
@@ -121,13 +122,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $sql = "select requirement1, requirement2, requirement3 from calculation where id = $id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $calculation = CalculationBase::Create($id);
         $laminations_number = 0;
-        if($work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+        if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
             $laminations_number = $calculation->laminations_number;
         }
         
-        if(($work_type_id != WORK_TYPE_NOPRINT && empty($row['requirement1'])) || 
+        if(($calculation->work_type_id != WORK_TYPE_NOPRINT && empty($row['requirement1'])) || 
             ($laminations_number > 0 && empty($row['requirement2'])) || 
             ($laminations_number > 1 && empty($row['requirement3']))) {
             $requirement_valid = ISINVALID;
@@ -135,13 +135,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         }
     }
     
-    // Проверяем, чтобы были заполнены наименования ручьёв
+    // Ручьи
     $streams = array();
-    $streams_number = filter_input(INPUT_POST, 'streams_number');
-    $streams_number = intval($streams_number);
     
-    if(!is_nan($streams_number)) {
-        for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
+    // Проверяем, чтобы были заполнены наименования ручьёв
+    if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+        for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             $stream_valid_var = "stream_valid_$stream_i";
             $$stream_valid_var = '';
             
@@ -190,20 +189,22 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
                 $stream_position_ids_names[$position_id_name['position']] = array('id' => $position_id_name['id'], 'name' => $position_id_name['name']);
             }
             
-            for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
-                if(empty($error_message)) {
-                    $sql = "";
-                    $stream_name = addslashes($streams["stream_$stream_i"]);
-                    if(empty($stream_position_ids_names[$stream_i])) {
-                        $sql = "insert into calculation_stream (calculation_id, position, name) values ($id, $stream_i, '$stream_name')";
-                    }
-                    else {
-                        $stream_id = $stream_position_ids_names[$stream_i]['id'];
-                        $sql = "update calculation_stream set name = '$stream_name' where id = $stream_id";
-                    }
+            if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+                for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
+                    if(empty($error_message)) {
+                        $sql = "";
+                        $stream_name = addslashes($streams["stream_$stream_i"]);
+                        if(empty($stream_position_ids_names[$stream_i])) {
+                            $sql = "insert into calculation_stream (calculation_id, position, name) values ($id, $stream_i, '$stream_name')";
+                        }
+                        else {
+                            $stream_id = $stream_position_ids_names[$stream_i]['id'];
+                            $sql = "update calculation_stream set name = '$stream_name' where id = $stream_id";
+                        }
                     
-                    $executer = new Executer($sql);
-                    $error_message = $executer->error;
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
                 }
             }
         }
@@ -416,17 +417,15 @@ foreach($result as $stream_position_name) {
 
 $streams = array();
 
-if(!is_nan($calculation->streams_number)) {
-    for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
-        $stream_var = "stream_$stream_i";
-        $$stream_var = filter_input(INPUT_POST, $stream_var);
+for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
+    $stream_var = "stream_$stream_i";
+    $$stream_var = filter_input(INPUT_POST, $stream_var);
         
-        if(empty($$stream_var) && key_exists($stream_i, $stream_positions_names)) {
-            $$stream_var = $stream_positions_names[$stream_i];
-        }
-        
-        $streams[$stream_var] = $$stream_var;
+    if(empty($$stream_var) && key_exists($stream_i, $stream_positions_names)) {
+        $$stream_var = $stream_positions_names[$stream_i];
     }
+        
+    $streams[$stream_var] = $$stream_var;
 }
 ?>
 <!DOCTYPE html>
@@ -1379,7 +1378,6 @@ if(!is_nan($calculation->streams_number)) {
                 <form class="mt-3" method="post"<?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
                     <input type="hidden" name="scroll" />
                     <input type="hidden" name="id" value="<?= $id ?>" />
-                    <input type="hidden" name="work_type_id" value="<?=$calculation->work_type_id ?>" />
                     <input type="hidden" name="techmap_id" value="<?=$calculation_result->techmap_id ?>" />
                     <div class="row">
                         <div class="col-6">
@@ -1522,10 +1520,10 @@ if(!is_nan($calculation->streams_number)) {
                             <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
                         </div>
                     </div>
+                    <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                     <div class="row">
                         <div class="col-12">
                             <h3>Наименования</h3>
-                            <input type="hidden" name="streams_number" value="<?=$calculation->streams_number ?>" />
                             <?php for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++): ?>
                             <div class="form-group">
                                 <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i ?></label>
@@ -1535,6 +1533,7 @@ if(!is_nan($calculation->streams_number)) {
                             <?php endfor; ?>
                         </div>
                     </div>
+                    <?php endif; ?>
                     <div class="row">
                         <div class="col-6 d-flex justify-content-between mt-3">
                             <div>

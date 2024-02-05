@@ -11,15 +11,18 @@ include '../include/left_bar.php';
             <?php
             else:
             foreach(CUTTERS as $cutter):
-                $disabled = '';
-            if(filter_input(INPUT_GET, 'machine_id') == $cutter) {
-                $disabled = ' disabled';
-            }
+                if($cutter != CUTTER_ATLAS):
+                    $disabled = '';
+                
+                    if(filter_input(INPUT_GET, 'machine_id') == $cutter) {
+                        $disabled = ' disabled';
+                    }
             ?>
             <li class="nav-item">
                 <a class="nav-link<?=$disabled ?>" href="<?=APPLICATION.'/cut/?machine_id='.$cutter ?>"><?=CUTTER_NAMES[$cutter] ?></a>
             </li>
             <?php
+            endif;
             endforeach;
             endif;
             ?>

@@ -815,15 +815,19 @@ $current_date_time = date("dmYHis");
                                 $grabber = new Grabber($sql);
                                 $streams = $grabber->result;
                                 $i = 0;
+                                
+                                if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE):
                                 ?>
-                                <tr>
-                                    <td colspan="2" class="font-weight-bold border-bottom-2 pt-5" style="font-size: 18px; padding-top: 30px; font-weight: 700;">Наименования, <?= count($streams) ?> шт.</td>
-                                </tr>
+                                <tr><td colspan="2" class="font-weight-bold border-bottom-2 pt-5" style="font-size: 18px; padding-top: 30px; font-weight: 700;">Наименования, <?= count($streams) ?> шт.</td></tr>
                                 <?php
                                 foreach($streams as $stream):
                                 ?>
                                 <tr><td colspan="2"><?=(++$i).'. '.$stream['name'] ?></td></tr>
-                                <?php endforeach; ?>
+                                <?php
+                                endforeach;
+                                
+                                endif;
+                                ?>
                             </table>
                         </div>
                     </div>
