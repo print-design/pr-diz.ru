@@ -54,13 +54,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
 $sql = "update calculation set name = replace(name, '  ', ' ') where name like('%  %')";
 $executer = new Executer($sql);
 
-$status_titles = array(1 => "В работе", 2 => "Расчеты", 3 => "Черновики", 4 => "Корзина");
 $status_id = filter_input(INPUT_GET, 'status');
-$ready = filter_input(INPUT_GET, 'ready');
-if($status_id == ORDER_STATUS_TRASH) $title = $status_titles[4];
-elseif($status_id == ORDER_STATUS_DRAFT) $title = $status_titles[3];
-elseif($status_id == ORDER_STATUS_NOT_IN_WORK) $title = $status_titles[2];
-else $title = $status_titles[1];
+if(empty($status_id)) $title = ORDER_STATUS_TITLES[ORDER_STATUS_IN_WORK];
+else $title = ORDER_STATUS_TITLES[$status_id];
 ?>
 <!DOCTYPE html>
 <html>
