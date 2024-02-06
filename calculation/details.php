@@ -227,29 +227,37 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
         include '../include/header_zakaz.php';
         ?>
         <div class="container-fluid">
-            <?php
-            if(!empty($error_message)) {
-                echo "<div class='alert alert-danger'>$error_message</div>";
-            }
-            
-            $backlink_get = '';
-            
-            if(in_array($calculation->status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
-                $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_NOT_IN_WORK, 'id');
-            }
-            elseif(in_array($calculation->status_id, array(ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_PACK_READY, ORDER_STATUS_CUT_REMOVED))) {
-                $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_IN_PRODUCTION, 'id');
-            }
-            elseif(in_array ($calculation->status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED))) {
-                $backlink_get = BuildQueryAddRemove('status', $calculation->status_id, 'id');
-            }
-            else {
-                $backlink_get = BuildQueryRemoveArray(array('status', 'id'));
-            }
-            ?>
-            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">Назад</a>
             <!-- Левая половина -->
             <div id="left_side">
+                <div class="text-nowrap nav2">
+                    <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Расчёт</a>
+                    <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4">Тех. карта</a>
+                    <?php if(in_array($calculation->status_id, ORDER_STATUSES_IN_CUT) || $calculation->status_id == ORDER_STATUS_CUT_REMOVED): ?>
+                    <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4">Результаты</a>
+                    <?php endif; ?>
+                </div>
+                <hr />
+                <?php
+                if(!empty($error_message)) {
+                    echo "<div class='alert alert-danger'>$error_message</div>";
+                }
+            
+                $backlink_get = '';
+            
+                if(in_array($calculation->status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
+                    $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_NOT_IN_WORK, 'id');
+                }
+                elseif(in_array($calculation->status_id, array(ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_PACK_READY, ORDER_STATUS_CUT_REMOVED))) {
+                    $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_IN_PRODUCTION, 'id');
+                }
+                elseif(in_array ($calculation->status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED))) {
+                    $backlink_get = BuildQueryAddRemove('status', $calculation->status_id, 'id');
+                }
+                else {
+                    $backlink_get = BuildQueryRemoveArray(array('status', 'id'));
+                }
+                ?>
+                <a class="btn btn-light backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">К списку</a>
                 <h1><?= $calculation->name ?></h1>
                 <h2>№<?=$calculation->customer_id."-".$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></h2>
                 <?php

@@ -8,7 +8,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
-// Если не указан id, направляем к списку технических карт
+// Если не указан id, направляем к списку
 if(null === filter_input(INPUT_GET, 'id')) {
     header('Location: '.APPLICATION.'/calculation/');
 }
@@ -523,7 +523,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
     </head>
     <body>
         <?php
-        include '../include/header.php';
+        include '../include/header_zakaz.php';
         ?>
         <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
         <div id="set_printings" class="modal fade show">
@@ -693,13 +693,21 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
         </div>
         <?php endif; ?>
         <div class="container-fluid">
+            <div class="text-nowrap nav2">
+                <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4">Расчёт</a>
+                <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Тех. карта</a>
+                <?php if(in_array($calculation->status_id, ORDER_STATUSES_IN_CUT) || $calculation->status_id == ORDER_STATUS_CUT_REMOVED): ?>
+                <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4">Результаты</a>
+                <?php endif; ?>
+            </div>
+            <hr />
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
             <div class="d-flex justify-content-between">
-                <div><a class="btn btn-light backlink" href="details.php<?= BuildQuery('id', $id) ?>">К расчету</a></div>
+                <div><h1><?= empty($calculation_result->techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1></div>
                 <div>
                     <?php
                     if(!empty($calculation_result->techmap_id)):     
@@ -726,12 +734,15 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <div><h1><?= empty($calculation_result->techmap_id) ? "Составление тех. карты" : "Технологическая карта" ?></h1></div>
-                <div><button type="btn" class="btn btn-outline-dark" data-toggle="modal" data-target="#techmapModal">Подгрузить из другого заказа</button></div>
+                <div>
+                    <div class="name">Заказчик: <?=$calculation->customer ?></div>
+                    <div class="name">Наименование: <?=$calculation->name ?></div>
+                    <div class="subtitle">№<?=$calculation->customer_id ?>-<?=$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
+                </div>
+                <div>
+                    <button type="btn" class="btn btn-outline-dark" data-toggle="modal" data-target="#techmapModal">Подгрузить из другого заказа</button>
+                </div>
             </div>
-            <div class="name">Заказчик: <?=$calculation->customer ?></div>
-            <div class="name">Наименование: <?=$calculation->name ?></div>
-            <div class="subtitle">№<?=$calculation->customer_id ?>-<?=$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
             <div class="row">
                 <div class="col-5">
                     <?php include '../include/order_status_details.php'; ?>
