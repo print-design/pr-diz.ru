@@ -220,35 +220,35 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <table class="fotometka">
                                 <tr>
                                     <td class="fotometka<?= $calculation_result->roll_type == 1 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_1.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_1_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 1): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                     <td class="fotometka<?= $calculation_result->roll_type == 2 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_2.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_2_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 2): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                     <td class="fotometka<?= $calculation_result->roll_type == 3 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_3.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_3_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 3): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                     <td class="fotometka<?= $calculation_result->roll_type == 4 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_4.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_4_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 4): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                     <td class="fotometka<?= $calculation_result->roll_type == 5 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_5.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_5_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 5): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                     <td class="fotometka<?= $calculation_result->roll_type == 6 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_6.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_6_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 6): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                     <td class="fotometka<?= $calculation_result->roll_type == 7 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_7.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_7_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 7): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                     <td class="fotometka<?= $calculation_result->roll_type == 8 ? " fotochecked" : "" ?>">
-                                        <img src="../images/<?=$roll_folder ?>/roll_type_8.svg<?='?'. time() ?>" />
+                                        <img src="../images/<?=$roll_folder ?>/roll_type_8_black.svg<?='?'. time() ?>" />
                                         <?php if($calculation_result->roll_type == 8): ?><br /><img src="../images/icons/check.svg" /><?php endif; ?>
                                     </td>
                                 </tr>
