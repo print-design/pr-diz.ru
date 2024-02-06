@@ -87,10 +87,15 @@ else $title = $status_titles[1];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where c.status_id <> ".ORDER_STATUS_CALCULATION." and c.status_id <> ".ORDER_STATUS_TECHMAP." and c.status_id <> ".ORDER_STATUS_DRAFT." and c.status_id <> ".ORDER_STATUS_TRASH;
+                    $where = " where c.status_id not in (".ORDER_STATUS_CALCULATION.", ".ORDER_STATUS_TECHMAP.", ".
+                            ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.", ".
+                            ORDER_STATUS_DRAFT.", ".ORDER_STATUS_TRASH.", ".ORDER_STATUS_SHIPPED.", ".ORDER_STATUS_SHIP_READY.")";
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
-                        $where = " where (c.status_id = ".ORDER_STATUS_CALCULATION." or c.status_id = ".ORDER_STATUS_TECHMAP.")";
+                        $where = " where c.status_id in (".ORDER_STATUS_CALCULATION.", ".ORDER_STATUS_TECHMAP.")";
+                    }
+                    elseif(!empty ($status_id) && $status_id == ORDER_STATUS_IN_PRODUCTION) {
+                        $where = " where c.status_id in (".ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.")";
                     }
                     elseif(!empty($status_id)) {
                         $where = " where c.status_id = $status_id";

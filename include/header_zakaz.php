@@ -12,6 +12,9 @@ if($count > 1) {
     $file = $substrings[$count - 1];
 }
 
+$shipped_status = '';
+$ship_ready_status = '';
+$production_status = '';
 $calculation_status = '';
 $not_in_work_status = '';
 $draft_status = '';
@@ -31,6 +34,15 @@ if($folder == 'calculation') {
     elseif(in_array ($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP, ORDER_STATUS_NOT_IN_WORK))) {
         $not_in_work_status = ' disabled';
     }
+    elseif(in_array($status_id, array(ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_PACK_READY, ORDER_STATUS_CUT_REMOVED, ORDER_STATUS_IN_PRODUCTION))) {
+        $production_status = ' disabled';
+    }
+    elseif($status_id == ORDER_STATUS_SHIP_READY) {
+        $ship_ready_status = ' disabled';
+    }
+    elseif($status_id == ORDER_STATUS_SHIPPED) {
+        $shipped_status = ' disabled';
+    }
     else {
         $calculation_status = ' disabled';
     }
@@ -43,7 +55,16 @@ if($folder == 'calculation') {
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$calculation_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?=  BuildQueryRemoveArray(array("status", "page", "order")) ?>">В работе</a>
+                <a class="nav-link<?=$shipped_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("page", "order")) ?>">Отгружено</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$ship_ready_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("page", "order")) ?>">Ждёт отгрузки</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$production_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_IN_PRODUCTION, array("page", "order")) ?>">Производят</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$calculation_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemoveArray(array("status", "page", "order")) ?>">В работе</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$not_in_work_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_NOT_IN_WORK, array("page", "order")) ?>">Расчеты</a>
