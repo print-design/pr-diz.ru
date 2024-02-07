@@ -505,91 +505,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
         <?php
         include '../include/footer.php';
         ?>
-        <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
         <script>
-            // Скрытие/показ левой панели.
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').addClass('active');
-                $('#sidebarExpand').show();
-                $('.comment_cell').removeClass('comment_invisible');
-            });
-                
-            $('#sidebarExpand').on('click', function() {
-                $('#sidebar').removeClass('active');
-                $('#sidebarExpand').hide();
-                $('.comment_cell').addClass('comment_invisible');
-            });
-                
-            // При показе формы добавления события,
-            // устанавливаем фокус на текстовом поле.
-            $('#add_event').on('shown.bs.modal', function() {
-                $('input:text:visible:first').focus();
-            });
-            
-            function EditComment(ev) {
-                $(ev.target).parents('td').children('.d-flex').children('.comment_pen').addClass('d-none');
-                $(ev.target).parents('td').children('.d-flex').children('.comment_text').addClass('d-none');
-                $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
-                $(ev.target).parents('td').children('.comment_input').children('input').focus();
-                
-                input = $(ev.target).parents('td').children('.comment_input').children('input');
-                input.prop("selectionStart", input.val().length);
-                input.prop("selectionEnd", input.val().length);
-            }
-            
-            function SaveComment(ev, plan_type, id) {
-                text = $(ev.target).val();
-                $(ev.target).val('');
-                $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + text })
-                        .done(function(data) {
-                            $(ev.target).val(data);
-                            $(ev.target).parents('.comment_input').addClass('d-none');
-                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
-                            $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
-                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
-                        })
-                        .fail(function() {
-                            alert('Ошибка при добавлении комментария');
-                        });
-            }
-            
-            function DeleteEvent(event_id) {
-                if(confirm("Действительно удалить?")) {
-                    $.ajax({ dataType: 'JSON', url: "_delete_event.php?event_id=" + event_id })
-                            .done(function(data) {
-                                if(data.error == '') {
-                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                                }
-                                else {
-                                    alert(data.error);
-                                }
-                            })
-                            .fail(function() {
-                                alert("Ошибка при удалении события");
-                            });
-                }
-                
-                $('.timetable_menu').slideUp();
-            }
-            
-            function CountDividedSize(divide_first) {
-                if(divide_first == '') {
-                    $('#divide_rest').text('');
-                }
-                else {
-                    divide_total = $('#divide_total').val();
-                    divide_rest = divide_total - divide_first;
-                    $('#divide_rest').text(Intl.NumberFormat('ru-RU').format(Math.round(divide_rest)) + ' м');
-                   
-                    if(divide_rest > 0) {
-                        $('#divide_rest').removeClass('text-danger');
-                    }
-                    else {
-                        $('#divide_rest').addClass('text-danger');
-                    }
-                }
-            }
-            
             function EnableMenu() {
                 $('.timetable_menu_trigger').click(function() {
                     var menu = $(this).next('.timetable_menu');
@@ -683,6 +599,90 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             }
             
             EnableMenu();
+            
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            // Скрытие/показ левой панели.
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('#sidebarExpand').show();
+                $('.comment_cell').removeClass('comment_invisible');
+            });
+                
+            $('#sidebarExpand').on('click', function() {
+                $('#sidebar').removeClass('active');
+                $('#sidebarExpand').hide();
+                $('.comment_cell').addClass('comment_invisible');
+            });
+                
+            // При показе формы добавления события,
+            // устанавливаем фокус на текстовом поле.
+            $('#add_event').on('shown.bs.modal', function() {
+                $('input:text:visible:first').focus();
+            });
+            
+            function EditComment(ev) {
+                $(ev.target).parents('td').children('.d-flex').children('.comment_pen').addClass('d-none');
+                $(ev.target).parents('td').children('.d-flex').children('.comment_text').addClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').removeClass('d-none');
+                $(ev.target).parents('td').children('.comment_input').children('input').focus();
+                
+                input = $(ev.target).parents('td').children('.comment_input').children('input');
+                input.prop("selectionStart", input.val().length);
+                input.prop("selectionEnd", input.val().length);
+            }
+            
+            function SaveComment(ev, plan_type, id) {
+                text = $(ev.target).val();
+                $(ev.target).val('');
+                $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + text })
+                        .done(function(data) {
+                            $(ev.target).val(data);
+                            $(ev.target).parents('.comment_input').addClass('d-none');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при добавлении комментария');
+                        });
+            }
+            
+            function DeleteEvent(event_id) {
+                if(confirm("Действительно удалить?")) {
+                    $.ajax({ dataType: 'JSON', url: "_delete_event.php?event_id=" + event_id })
+                            .done(function(data) {
+                                if(data.error == '') {
+                                    DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
+                                }
+                                else {
+                                    alert(data.error);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при удалении события");
+                            });
+                }
+                
+                $('.timetable_menu').slideUp();
+            }
+            
+            function CountDividedSize(divide_first) {
+                if(divide_first == '') {
+                    $('#divide_rest').text('');
+                }
+                else {
+                    divide_total = $('#divide_total').val();
+                    divide_rest = divide_total - divide_first;
+                    $('#divide_rest').text(Intl.NumberFormat('ru-RU').format(Math.round(divide_rest)) + ' м');
+                   
+                    if(divide_rest > 0) {
+                        $('#divide_rest').removeClass('text-danger');
+                    }
+                    else {
+                        $('#divide_rest').addClass('text-danger');
+                    }
+                }
+            }
             
             function DrawTimetable(work_id, machine_id, from, to) {
                 $('#timetable').load("_draw_timetable.php?work_id=" + work_id + "&machine_id=" + machine_id + "&from=" + from + "&to=" + to, function() {
@@ -1142,7 +1142,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             ?>
             $('#timetable').animate({ scrollTop: <?=$scroll ?> }, 0);
             <?php endif; ?>
+                
+            <?php endif; ?>
         </script>
-        <?php endif; ?>
     </body>
 </html>
