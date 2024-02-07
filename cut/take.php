@@ -243,6 +243,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     text-align: right;
                     vertical-align: top;
                     border-bottom: 0;
+                    padding: 0;
                 }
             
                 .cutter_info {

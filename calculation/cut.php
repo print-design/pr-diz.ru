@@ -77,6 +77,7 @@ $calculation_result = CalculationResult::Create($id);
                 text-align: right;
                 vertical-align: top;
                 border-bottom: 0;
+                padding: 0;
             }
             
             .calculation_stream {
