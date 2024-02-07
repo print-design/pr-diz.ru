@@ -486,17 +486,7 @@ $current_date_time = date("dmYHis");
                     <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
                     <p class="font-weight-bold" style="font-weight: bold;">Красочность: <?=$calculation->ink_number ?> красок</p>
                     <table class="w-100" style="width: 100%;">
-                        <?php if($calculation->ink_number > 0): ?>
-                        <tr>
-                            <th></th>
-                            <th>Секция</th>
-                            <th>Скотч</th>
-                            <th>Анилокс</th>
-                            <th></th>
-                        </tr>
                         <?php
-                        endif;
-                                                            
                         for($i = 1; $i <= $calculation->ink_number; $i++):
                         $ink_var = "ink_$i";
                         $color_var = "color_$i";
@@ -547,9 +537,6 @@ $current_date_time = date("dmYHis");
                                 }
                                 ?>
                             </td>
-                            <td style="border-left: solid 1px #cccccc; border-right: solid 1px #cccccc;"></td>
-                            <td style="border-right: solid 1px #cccccc;"></td>
-                            <td style="border-right: solid 1px #cccccc;"></td>
                             <td>
                                 <?php
                                 switch ($$cliche_var) {
