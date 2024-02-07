@@ -4,7 +4,7 @@ include './calculation.php';
 include './calculation_result.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -115,8 +115,12 @@ $calculation_result = CalculationResult::Create($id);
         ?>
         <div class="container-fluid">
             <div class="text-nowrap nav2">
+                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
                 <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4">Расчёт</a>
+                <?php endif; ?>
+                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
                 <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4">Тех. карта</a>
+                <?php endif; ?>
                 <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Результаты</a>
             </div>
             <hr />

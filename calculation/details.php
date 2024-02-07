@@ -231,8 +231,10 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             <div id="left_side">
                 <div class="text-nowrap nav2">
                     <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Расчёт</a>
+                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
                     <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4">Тех. карта</a>
-                    <?php if(in_array($calculation->status_id, ORDER_STATUSES_IN_CUT)): ?>
+                    <?php endif; ?>
+                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER])) && in_array($calculation->status_id, ORDER_STATUSES_IN_CUT)): ?>
                     <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4">Результаты</a>
                     <?php endif; ?>
                 </div>

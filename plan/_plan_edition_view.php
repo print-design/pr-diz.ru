@@ -353,9 +353,26 @@
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
         <div class="timetable_menu film_menu text-left">
-            <div class="command mt-1">
+            <div class="command">
                 <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
             </div>
+            <?php if(in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
+            <div class="command mt-1">
+                <a href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>">Результаты</a>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && IsInRole(ROLE_NAMES[ROLE_PACKER])): ?>
+        <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
+        <div class="timetable_menu film_menu text-left">
+            <div class="command">
+                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
+            </div>
+            <?php if(in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
+            <div class="command mt-1">
+                <a href="../pack/details.php?id=<?=$this->edition['calculation_id'] ?>">Результаты</a>
+            </div>
+            <?php endif; ?>
         </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && (IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR])) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId()))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
@@ -366,6 +383,11 @@
             <div class="command mt-1">
                 <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
             </div>
+            <?php if(in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
+            <div class="command mt-1">
+                <a href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>">Результаты</a>
+            </div>
+            <?php endif; ?>
         </div>
         <?php endif; ?>
     </td>

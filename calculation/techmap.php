@@ -694,9 +694,11 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
         <?php endif; ?>
         <div class="container-fluid">
             <div class="text-nowrap nav2">
+                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
                 <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4">Расчёт</a>
+                <?php endif; ?>
                 <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Тех. карта</a>
-                <?php if(in_array($calculation->status_id, ORDER_STATUSES_IN_CUT)): ?>
+                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER])) && in_array($calculation->status_id, ORDER_STATUSES_IN_CUT)): ?>
                 <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4">Результаты</a>
                 <?php endif; ?>
             </div>
