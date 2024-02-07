@@ -301,6 +301,8 @@ $current_date_time = date("dmYHis");
                     bottom: 0px;
                     left: 0px;
                     width: 100%;
+                    padding-left: 10px;
+                    padding-right: 10px;
                 }
                 
                 #placeholder_top {
