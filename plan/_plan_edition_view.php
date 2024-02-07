@@ -351,13 +351,22 @@
             </div>
         </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-        <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>" target="_blank"<?=$drop ?>>
-            <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
-        </a>
+        <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
+        <div class="timetable_menu film_menu text-left">
+            <div class="command mt-1">
+                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
+            </div>
+        </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && (IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR])) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId()))): ?>
-        <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"<?=$drop ?>>
-            <img src="../images/icons/vertical-dots1.svg"<?=$drop ?> />
-        </a>
+        <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
+        <div class="timetable_menu film_menu text-left">
+            <div class="command">
+                <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>">Тех. карта</a>
+            </div>
+            <div class="command mt-1">
+                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
+            </div>
+        </div>
         <?php endif; ?>
     </td>
 </tr>
