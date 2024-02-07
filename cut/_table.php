@@ -215,6 +215,12 @@
         $hide_table_class = "";
         $show_table_class = " d-none";
     }
+    
+    $editable = true;
+    
+    if(mb_substr_count($_SERVER['PHP_SELF'], 'cut.php') == 1) {
+        $editable = false;
+    }
     ?>
     <div style="padding-left: 10px; padding-right: 10px; border: solid 1px #e3e3e3; border-radius: 15px; margin-top: 15px; margin-bottom: 5px;">
         <div style="padding-top: 15px; padding-bottom: 15px;">
@@ -232,7 +238,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <th style="font-weight: bold;">Этикеток</th>
                 <?php endif; ?>
-                <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
+                <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <th style="font-weight: bold;"></th>
                 <?php endif; ?>
             </tr>
@@ -254,7 +260,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
-                <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
+                <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
                 <?php endif; ?>
             </tr>
@@ -304,7 +310,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <th style="font-weight: bold;">Этикеток</th>
                 <?php endif; ?>
-                <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
+                <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <th style="font-weight: bold;"></th>
                 <?php endif; ?>
             </tr>
@@ -318,7 +324,7 @@
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                 <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
-                <?php if($calculation->status_id != ORDER_STATUS_SHIPPED): ?>
+                <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
                 <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_not_take_stream" onclick="javascript: $('#not_take_stream_id').val('<?=$stream['id'] ?>'); $('#not_take_stream_name').html('<?=$stream['name'] ?>');" /></a></td>
                 <?php endif; ?>
             </tr>
