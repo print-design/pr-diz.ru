@@ -109,8 +109,8 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     border-collapse: separate;
                 }
                 
-                table.fotometka tr td {
-                    text-align: right;
+                table.fotometka tr td, table.fotometka tr td:nth-child(2) {
+                    text-align: left;
                     vertical-align: top;
                     border-bottom: 0;
                     padding: 0;

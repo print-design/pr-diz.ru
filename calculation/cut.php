@@ -17,6 +17,18 @@ if(null === filter_input(INPUT_GET, 'id')) {
 $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
+
+$comment = '';
+
+$sql = "select e.comment, pc.comment as continuation_comment "
+        . "from plan_edition e "
+        . "left join plan_continuation pc on pc.plan_edition_id = e.id "
+        . "where e.calculation_id = $id";
+$fetcher = new Fetcher($sql);
+
+if($row = $fetcher->Fetch()) {
+    $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,8 +85,8 @@ $calculation_result = CalculationResult::Create($id);
                 border-collapse: separate;
             }
                 
-            table.fotometka tr td {
-                text-align: right;
+            table.fotometka tr td, table.fotometka tr td:nth-child(2) {
+                text-align: left;
                 vertical-align: top;
                 border-bottom: 0;
                 padding: 0;
@@ -214,6 +226,11 @@ $calculation_result = CalculationResult::Create($id);
                                     </td>
                                 </tr>
                             </table>
+                            <?php
+                            if(!empty($comment)) {
+                                echo "Комментарий: <strong>$comment</strong>";
+                            }
+                            ?>
                         </div>
                     </div>
                     <?php

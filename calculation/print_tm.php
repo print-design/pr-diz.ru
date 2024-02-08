@@ -211,7 +211,7 @@ $current_date_time = date("dmYHis");
                 border-bottom: solid 1px #cccccc;
             }
             
-            tr td:nth-child(2), tr td:nth-child(5) {
+            tr td:nth-child(2) {
                 text-align: right;
                 padding-left: 10px;
                 font-weight: bold;
@@ -230,7 +230,7 @@ $current_date_time = date("dmYHis");
                 padding-left: 4px;
                 padding-top: 4px;
                 padding-right: 20px;
-                text-align: right;
+                text-align: left;
                 vertical-align: top;
                 border-bottom: 0;
             }
