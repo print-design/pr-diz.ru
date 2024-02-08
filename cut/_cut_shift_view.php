@@ -22,4 +22,5 @@
     <td class="<?=$this->shift ?>"></td>
     <td class="<?=$this->shift ?>"></td>
     <td class="<?=$this->shift ?>"></td>
+    <td class="<?=$this->shift ?>"></td>
 </tr>

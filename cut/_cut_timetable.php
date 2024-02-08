@@ -45,7 +45,7 @@ class CutTimetable {
         $button_start = true;
         
         // Тиражи
-        $sql = "select e.id id, e.date, e.shift, ".PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
+        $sql = "select e.id id, e.date, e.shift, ".PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, e.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
                 . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                 . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
                 . "if(isnull(e.worktime_continued), round(cr.length_pure_1), round(cr.length_pure_1) / e.worktime * e.worktime_continued) as length_pure_1, "
@@ -64,7 +64,7 @@ class CutTimetable {
                 . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
-                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.length, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
                 . "0 as gap_raport, "
                 . "0 as quantity_sum, "
                 . "round(cr.length_pure_1) / e.worktime * pc.worktime as length_pure_1, "
@@ -84,7 +84,7 @@ class CutTimetable {
                 . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
-                . "select pp.id, pp.date, pp.shift, ".PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, 0 as quantity, "
+                . "select pp.id, pp.date, pp.shift, ".PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, pp.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, 0 as quantity, "
                 . "0 as gap_raport, "
                 . "0 as quantity_sum, "
                 . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_1, "
@@ -103,7 +103,7 @@ class CutTimetable {
                 . "where pp.in_plan = 1 and pp.work_id = ".WORK_CUTTING." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
-                . "select ppc.id, ppc.date, ppc.shift, ".PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.length, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select ppc.id, ppc.date, ppc.shift, ".PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, ppc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
                 . "0 as gap_raport, "
                 . "0 as quantity_sum, "
                 . "round(pp.length) / pp.worktime * ppc.worktime as length_pure_1, "

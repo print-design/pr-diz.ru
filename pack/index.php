@@ -80,10 +80,11 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th>Масса</th>
                     <th>Менеджер</th>
                     <th>Статус</th>
+                    <th>Комментарий</th>
                     <th></th>
                 </tr>
             <?php
-            $sql = "select c.id, ct.time, c.customer_id, e.machine_id, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
+            $sql = "select c.id, ct.time, c.customer_id, e.machine_id, e.comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
                     . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                     . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
                     . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
@@ -116,6 +117,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?= DisplayNumber(floatval($row['weight']), 1) ?> кг</td>
                     <td><?=$row['manager'] ?></td>
                     <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']); ?></td>
+                    <td><?=$row['comment'] ?></td>
                     <td>
                         <a href="details.php?id=<?=$row['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
                     </td>

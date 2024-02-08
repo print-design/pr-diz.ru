@@ -9,6 +9,7 @@
         <th>Время</th>
         <th>Менеджер</th>
         <th>Статус</th>
+        <th>Комментарий</th>
         <th style="width: 154px;"></th>
     </tr>
     <?php
