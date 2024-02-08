@@ -114,23 +114,23 @@ $calculation_result = CalculationResult::Create($id);
         include '../include/header_zakaz.php';
         ?>
         <div class="container-fluid">
-            <div class="text-nowrap nav2">
-                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
-                <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4">Расчёт</a>
-                <?php endif; ?>
-                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
-                <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4">Тех. карта</a>
-                <?php endif; ?>
-                <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Результаты</a>
-            </div>
-            <hr />
-            <?php
-            if(!empty($error_message)) {
-                echo "<div class='alert alert-danger'>$error_message</div>";
-            }
-            ?>
             <div class="row">
                 <div class="col-8">
+                    <div class="text-nowrap nav2">
+                        <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
+                        <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4">Расчёт</a>
+                        <?php endif; ?>
+                        <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
+                        <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4">Тех. карта</a>
+                        <?php endif; ?>
+                        <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Результаты</a>
+                    </div>
+                    <hr />
+                    <?php
+                    if(!empty($error_message)) {
+                        echo "<div class='alert alert-danger'>$error_message</div>";
+                    }
+                    ?>
                     <div class="row">
                         <div class="col-6">
                             <h1><?=$calculation->name ?></h1>
