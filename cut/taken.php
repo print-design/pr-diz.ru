@@ -75,7 +75,7 @@ $comment = '';
 $sql = "select e.comment, pc.comment as continuation_comment "
         . "from plan_edition e "
         . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-        . "where e.calculation_id = $id";
+        . "where e.work_id = ".WORK_CUTTING." and e.calculation_id = $id";
 $fetcher = new Fetcher($sql);
 
 if($row = $fetcher->Fetch()) {
@@ -284,6 +284,11 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     </td>
                                 </tr>
                             </table>
+                            <?php
+                            if(!empty($comment)) {
+                                echo "Комментарий: <strong>$comment</strong>";
+                            }
+                            ?>
                         </div>
                     </div>
                     <div class="d-flex justify-content-start mb-4 mt-4">

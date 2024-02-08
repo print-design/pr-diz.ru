@@ -155,8 +155,8 @@ $comment = '';
 $sql = "select (select max(id) from calculation_take where calculation_id = c.id) take_id, "
         . "(select count(id) from calculation_take where calculation_id = c.id) take_number, "
         . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = c.id)) printed_streams_count, "
-        . "(select comment from plan_edition where calculation_id = c.id) comment, "
-        . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id)) continuation_comment "
+        . "(select comment from plan_edition where work_id = ".WORK_CUTTING." and calculation_id = c.id limit 1) comment, "
+        . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where work_id = ".WORK_CUTTING." and calculation_id = c.id) limit 1) continuation_comment "
         . "from calculation c where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
@@ -381,6 +381,11 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     </td>
                                 </tr>
                             </table>
+                            <?php
+                            if(!empty($comment)) {
+                                echo "Комментарий: <strong>$comment</strong>";
+                            }
+                            ?>
                         </div>
                     </div>
                     <div class="name">Съём <?=$take_number ?></div>
