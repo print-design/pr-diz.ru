@@ -150,16 +150,20 @@ $calculation_result = CalculationResult::Create($id);
 $take_id = null;
 $take_number = null;
 $printed_streams_count = null;
+$comment = '';
 
 $sql = "select (select max(id) from calculation_take where calculation_id = c.id) take_id, "
         . "(select count(id) from calculation_take where calculation_id = c.id) take_number, "
-        . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = c.id)) printed_streams_count "
+        . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = c.id)) printed_streams_count, "
+        . "(select comment from plan_edition where calculation_id = c.id) comment, "
+        . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id)) continuation_comment "
         . "from calculation c where c.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $take_id = $row['take_id'];
     $take_number = $row['take_number'];
     $printed_streams_count = $row['printed_streams_count'];
+    $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
 }
 
 // Если у данной работы ещё не было сделано ни одного съёма, перенаправляем на страницу начала работы

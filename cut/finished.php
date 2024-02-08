@@ -49,6 +49,18 @@ if(null !== filter_input(INPUT_POST, 'pack_submit')) {
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
+$comment = '';
+
+$sql = "select e.comment, pc.comment as continuation_comment "
+        . "from plan_edition e "
+        . "left join plan_continuation pc on pc.plan_edition_id = e.id "
+        . "where e.calculation_id = $id";
+$fetcher = new Fetcher($sql);
+
+if($row = $fetcher->Fetch()) {
+    $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
+}
+
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
