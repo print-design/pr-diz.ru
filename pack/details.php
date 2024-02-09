@@ -233,6 +233,8 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     $roll_folder = "roll";
                                     break;
                             }
+                            
+                            if($calculation_result->photolabel != CalculationResult::PHOTOLABEL_NOT_FOUND):
                             ?>
                             <table class="fotometka">
                                 <tr>
@@ -271,6 +273,8 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 </tr>
                             </table>
                             <?php
+                            endif;
+                        
                             if(!empty($comment)) {
                                 echo "<p>Комментарий: <strong>$comment</strong></p>";
                             }

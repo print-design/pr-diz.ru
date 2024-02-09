@@ -89,13 +89,14 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
     
     $photolabel = filter_input(INPUT_POST, 'photolabel');
-    if($photolabel != CalculationResult::PHOTOLABEL_LEFT && $photolabel != CalculationResult::PHOTOLABEL_RIGHT && $photolabel != CalculationResult::PHOTOLABEL_BOTH && $photolabel != CalculationResult::PHOTOLABEL_NONE) {
+    if($photolabel != CalculationResult::PHOTOLABEL_LEFT && $photolabel != CalculationResult::PHOTOLABEL_RIGHT && $photolabel != CalculationResult::PHOTOLABEL_BOTH && $photolabel != CalculationResult::PHOTOLABEL_NONE && $photolabel != CalculationResult::PHOTOLABEL_NOT_FOUND) {
         $photolabel_valid = ISINVALID;
         $form_valid = false;
     }
     
     $roll_type = filter_input(INPUT_POST, 'roll_type');
-    if(empty($roll_type)) {
+    if(empty($roll_type)) $roll_type = 0;
+    if(empty($roll_type) && $photolabel != CalculationResult::PHOTOLABEL_NONE && $photolabel != CalculationResult::PHOTOLABEL_NOT_FOUND) {
         $roll_type_valid = ISINVALID;
         $form_valid = false;
     }
@@ -1490,6 +1491,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                     <option value="<?= CalculationResult::PHOTOLABEL_RIGHT ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
                                     <option value="<?= CalculationResult::PHOTOLABEL_BOTH ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
                                     <option value="<?= CalculationResult::PHOTOLABEL_NONE ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_NONE || (empty($photolabel) && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
+                                    <option value="<?= CalculationResult::PHOTOLABEL_NOT_FOUND ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_NOT_FOUND ? " selected='selected'" : "" ?>>Нет нужной фотометки</option>
                                 </select>
                                 <div class="invalid-feedback">Расположение фотометки обязательно</div>
                             </div>
@@ -1510,23 +1512,26 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                         $roll_folder = "roll";
                                         break;
                                 }
+                                
+                                if($photolabel != CalculationResult::PHOTOLABEL_NOT_FOUND):
                                 ?>
                                 <input type="radio" class="form-check-inline" id="roll_type_1" name="roll_type" value="1"<?= $roll_type == 1 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_1" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_1_image" src="../images/<?=$roll_folder ?>/roll_type_1_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_1" id="roll_type_1_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_1_image" src="../images/<?=$roll_folder ?>/roll_type_1_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                                 <input type="radio" class="form-check-inline" id="roll_type_2" name="roll_type" value="2"<?= $roll_type == 2 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_2" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_2_image" src="../images/<?=$roll_folder ?>/roll_type_2_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_2" id="roll_type_2_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_2_image" src="../images/<?=$roll_folder ?>/roll_type_2_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                                 <input type="radio" class="form-check-inline" id="roll_type_3" name="roll_type" value="3"<?= $roll_type == 3 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_3" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_3_image" src="../images/<?=$roll_folder ?>/roll_type_3_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_3" id="roll_type_3_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_3_image" src="../images/<?=$roll_folder ?>/roll_type_3_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                                 <input type="radio" class="form-check-inline" id="roll_type_4" name="roll_type" value="4"<?= $roll_type == 4 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_4" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_4_image" src="../images/<?=$roll_folder ?>/roll_type_4_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_4" id="roll_type_4_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_4_image" src="../images/<?=$roll_folder ?>/roll_type_4_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                                 <input type="radio" class="form-check-inline" id="roll_type_5" name="roll_type" value="5"<?= $roll_type == 5 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_5" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_5_image" src="../images/<?=$roll_folder ?>/roll_type_5_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_5" id="roll_type_5_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_5_image" src="../images/<?=$roll_folder ?>/roll_type_5_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                                 <input type="radio" class="form-check-inline" id="roll_type_6" name="roll_type" value="6"<?= $roll_type == 6 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_6" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_6_image" src="../images/<?=$roll_folder ?>/roll_type_6_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_6" id="roll_type_6_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_6_image" src="../images/<?=$roll_folder ?>/roll_type_6_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                                 <input type="radio" class="form-check-inline" id="roll_type_7" name="roll_type" value="7"<?= $roll_type == 7 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_7" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_7_image" src="../images/<?=$roll_folder ?>/roll_type_7_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_7" id="roll_type_7_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_7_image" src="../images/<?=$roll_folder ?>/roll_type_7_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
                                 <input type="radio" class="form-check-inline" id="roll_type_8" name="roll_type" value="8"<?= $roll_type == 8 ? " checked='checked'" : "" ?> />
-                                <label for="roll_type_8" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_8_image" src="../images/<?=$roll_folder ?>/roll_type_8_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <label for="roll_type_8" id="roll_type_8_label" style="position: relative; padding-bottom: 15px; padding-right: 4px;"><img id="roll_type_8_image" src="../images/<?=$roll_folder ?>/roll_type_8_black.svg<?='?'. time() ?>" style="height: 30px; width: auto;" /></label>
+                                <?php endif; ?>
                             </div>
                             <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Выберите сторону печати</div>
                             <h3>Комментарий</h3>
@@ -1730,25 +1735,43 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             
             // Изменение рисунка роликов при выборе фотометки
             $('select#photolabel').change(function() {
+                $('#roll_type_validation').removeClass('d-block');
+                $('#roll_type_validation').addClass('d-none');
+                
                 switch($(this).val()) {
                     case '<?= CalculationResult::PHOTOLABEL_LEFT ?>':
                         for(var i = 1; i <= 8; i++) {
                             $('img#roll_type_' + i + '_image').attr('src', '../images/roll_left/roll_type_' + i + '_black.svg<?='?'. time() ?>');
+                            $('input#roll_type_' + i).removeClass('d-none');
+                            $('label#roll_type_' + i + '_label').removeClass('d-none');
                         }
                         break;
                     case '<?= CalculationResult::PHOTOLABEL_RIGHT ?>':
                         for(var i = 1; i <= 8; i++) {
                             $('img#roll_type_' + i + '_image').attr('src', '../images/roll_right/roll_type_' + i + '_black.svg<?='?'. time() ?>');
+                            $('input#roll_type_' + i).removeClass('d-none');
+                            $('label#roll_type_' + i + '_label').removeClass('d-none');
                         }
                         break;
                     case '<?= CalculationResult::PHOTOLABEL_BOTH ?>':
                         for(var i = 1; i <= 8; i++) {
                             $('img#roll_type_' + i + '_image').attr('src', '../images/roll_both/roll_type_' + i + '_black.svg<?='?'. time() ?>');
+                            $('input#roll_type_' + i).removeClass('d-none');
+                            $('label#roll_type_' + i + '_label').removeClass('d-none');
+                        }
+                        break;
+                    case '<?= CalculationResult::PHOTOLABEL_NOT_FOUND ?>':
+                        for(var i = 1; i <= 8; i++) {
+                            $('img#roll_type_' + i + '_image').attr('src', '../images/roll/roll_type_' + i + '_black.svg<?='?'. time() ?>');
+                            $('input#roll_type_' + i).addClass('d-none');
+                            $('label#roll_type_' + i + '_label').addClass('d-none');
                         }
                         break;
                     default :
                         for(var i = 1; i <= 8; i++) {
                             $('img#roll_type_' + i + '_image').attr('src', '../images/roll/roll_type_' + i + '_black.svg<?='?'. time() ?>');
+                            $('input#roll_type_' + i).removeClass('d-none');
+                            $('label#roll_type_' + i + '_label').removeClass('d-none');
                         }
                         break;
                 }

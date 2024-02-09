@@ -37,6 +37,7 @@ class CalculationResult {
     public const PHOTOLABEL_RIGHT = "right";
     public const PHOTOLABEL_BOTH = "both";
     public const PHOTOLABEL_NONE = "none";
+    public const PHOTOLABEL_NOT_FOUND = "not_found";
     
     // Данные получены из другой тех. карты
     public const FROM_OTHER_TECHMAP = "from_other_techmap";
