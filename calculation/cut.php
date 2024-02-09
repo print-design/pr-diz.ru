@@ -228,7 +228,7 @@ if($row = $fetcher->Fetch()) {
                             </table>
                             <?php
                             if(!empty($comment)) {
-                                echo "Комментарий: <strong>$comment</strong>";
+                                echo "<p>Комментарий: <strong>$comment</strong></p>";
                             }
                             ?>
                         </div>

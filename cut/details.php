@@ -212,7 +212,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             </table>
                             <?php
                             if(!empty($comment)) {
-                                echo "Комментарий: <strong>$comment</strong>";
+                                echo "<p>Комментарий: <strong>$comment</strong></p>";
                             }
                             ?>
                         </div>
