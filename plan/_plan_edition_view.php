@@ -316,7 +316,7 @@
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
-        <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
+        <?= ($this->edition['type'] == PLAN_TYPE_EVENT || $this->edition['has_continuation']) ? "" : $this->edition['manager'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?php

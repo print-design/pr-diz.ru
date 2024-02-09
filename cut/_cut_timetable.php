@@ -64,7 +64,7 @@ class CutTimetable {
                 . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
-                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
                 . "0 as gap_raport, "
                 . "0 as quantity_sum, "
                 . "round(cr.length_pure_1) / e.worktime * pc.worktime as length_pure_1, "
@@ -103,7 +103,7 @@ class CutTimetable {
                 . "where pp.in_plan = 1 and pp.work_id = ".WORK_CUTTING." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
-                . "select ppc.id, ppc.date, ppc.shift, ".PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, ppc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select ppc.id, ppc.date, ppc.shift, ".PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, ppc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
                 . "0 as gap_raport, "
                 . "0 as quantity_sum, "
                 . "round(pp.length) / pp.worktime * ppc.worktime as length_pure_1, "
@@ -137,7 +137,7 @@ class CutTimetable {
             $row['manager'] = $row['last_name'].' '.mb_substr($row['first_name'], 0, 1).'.';
             
             // Кнопка "Приступить" имеется только в самой верхней работе под статусом "В плане резки".
-            if(($row['status_id'] == ORDER_STATUS_PLAN_CUT) && $button_start) {
+            if(($row['status_id'] == ORDER_STATUS_PLAN_CUT) && !$row['has_continuation'] && $button_start) {
                 $row['button_start'] = true;
                 $button_start = false;
             }

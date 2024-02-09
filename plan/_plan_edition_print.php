@@ -161,7 +161,7 @@
         <?php endif; ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap">
-        <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['manager'] ?>
+        <?= ($this->edition['type'] == PLAN_TYPE_EVENT || $this->edition['has_continuation']) ? "" : $this->edition['manager'] ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?php

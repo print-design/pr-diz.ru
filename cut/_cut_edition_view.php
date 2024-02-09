@@ -48,24 +48,28 @@
         <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?>">
-        <?= $this->edition['manager'] ?>
+        <?= $this->edition['has_continuation'] ? "" : $this->edition['manager'] ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?> text-nowrap">
-        <?php $this->ShowOrderStatus($this->edition['status_id'], $this->edition['length_cut'], $this->edition['weight_cut'], $this->edition['quantity_sum'], $this->edition['quantity'], $this->edition['unit'], $this->edition['raport'], $this->edition['length'], $this->edition['gap_raport'], $this->edition['cut_remove_cause']); ?>
+        <?php
+        if(!$this->edition['has_continuation']) {
+            $this->ShowOrderStatus($this->edition['status_id'], $this->edition['length_cut'], $this->edition['weight_cut'], $this->edition['quantity_sum'], $this->edition['quantity'], $this->edition['unit'], $this->edition['raport'], $this->edition['length'], $this->edition['gap_raport'], $this->edition['cut_remove_cause']); 
+        }
+        ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?>">
-        <?=$this->edition['comment'] ?>
+        <?= $this->edition['comment'] ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?>">
         <?php if($this->edition['status_id'] == ORDER_STATUS_PLAN_CUT && $this->edition['button_start'] && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take): ?>
         <a href="details.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
-        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take): ?>
+        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take && !$this->edition['has_continuation']): ?>
         <a href="take.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
-        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_PRILADKA): ?>
+        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_PRILADKA && !$this->edition['has_continuation']): ?>
         <a href="priladka.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
-        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUTTING): ?>
+        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUTTING && !$this->edition['has_continuation']): ?>
         <a href="take.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
-        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_FINISHED): ?>
+        <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_FINISHED && !$this->edition['has_continuation']): ?>
         <a href="finished.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Продолжить</a>
         <?php endif; ?>
     </td>
