@@ -213,7 +213,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                                     $customer_manager = GetUserId();
                                 }
                                 if(!empty($customer_manager)) {
-                                    $name_where .= " and c.customer_id = $customer";
+                                    $name_where .= " and c.manager_id = $customer_manager";
                                 }
                             }
                             $sql = "select distinct trim(c.name) name from calculation c $name_where order by trim(c.name)";
