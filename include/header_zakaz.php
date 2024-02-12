@@ -31,10 +31,10 @@ if($folder == 'calculation') {
     elseif($status_id == ORDER_STATUS_DRAFT) {
         $draft_status = ' disabled';
     }
-    elseif(in_array ($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP, ORDER_STATUS_NOT_IN_WORK))) {
+    elseif(in_array ($status_id, ORDER_STATUSES_NOT_IN_WORK) || $status_id == ORDER_STATUS_NOT_IN_WORK) {
         $not_in_work_status = ' disabled';
     }
-    elseif(in_array($status_id, array(ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_PACK_READY, ORDER_STATUS_CUT_REMOVED, ORDER_STATUS_IN_PRODUCTION))) {
+    elseif(in_array($status_id, ORDER_STATUSES_IN_PRODUCTION) || $status_id == ORDER_STATUS_IN_PRODUCTION) {
         $production_status = ' disabled';
     }
     elseif($status_id == ORDER_STATUS_SHIP_READY) {

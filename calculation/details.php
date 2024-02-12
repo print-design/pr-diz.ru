@@ -246,10 +246,10 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             
                 $backlink_get = '';
             
-                if(in_array($calculation->status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
+                if(in_array($calculation->status_id, ORDER_STATUSES_NOT_IN_WORK)) {
                     $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_NOT_IN_WORK, 'id');
                 }
-                elseif(in_array($calculation->status_id, array(ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_FINISHED, ORDER_STATUS_PACK_READY, ORDER_STATUS_CUT_REMOVED))) {
+                elseif(in_array($calculation->status_id, ORDER_STATUSES_IN_PRODUCTION)) {
                     $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_IN_PRODUCTION, 'id');
                 }
                 elseif(in_array ($calculation->status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED))) {

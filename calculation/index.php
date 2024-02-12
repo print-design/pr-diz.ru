@@ -83,15 +83,13 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where c.status_id not in (".ORDER_STATUS_CALCULATION.", ".ORDER_STATUS_TECHMAP.", ".
-                            ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_CUT_FINISHED.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.", ".
-                            ORDER_STATUS_DRAFT.", ".ORDER_STATUS_TRASH.", ".ORDER_STATUS_SHIPPED.", ".ORDER_STATUS_SHIP_READY.")";
+                    $where = " where c.status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
-                        $where = " where c.status_id in (".ORDER_STATUS_CALCULATION.", ".ORDER_STATUS_TECHMAP.")";
+                        $where = " where c.status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
                     }
                     elseif(!empty ($status_id) && $status_id == ORDER_STATUS_IN_PRODUCTION) {
-                        $where = " where c.status_id in (".ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_CUT_FINISHED.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.")";
+                        $where = " where c.status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                     }
                     elseif(!empty($status_id)) {
                         $where = " where c.status_id = $status_id";
@@ -203,10 +201,22 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Наименование...</option>
                             <?php
-                            $name_where = "";
+                            if($status_id == ORDER_STATUS_NOT_IN_WORK) {
+                                $name_where = "where c.status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
+                            }
+                            elseif($status_id == ORDER_STATUS_IN_PRODUCTION) {
+                                $name_where = "where c.status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
+                            }
+                            elseif(!empty ($status_id)) {
+                                $name_where = "where c.status_id = $status_id";
+                            }
+                            else {
+                                $name_where = "where c.status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                            }
+                            
                             $customer = filter_input(INPUT_GET, 'customer');
                             if(!empty($customer)) {
-                                $name_where = "where c.customer_id = $customer";
+                                $name_where .= " and c.customer_id = $customer";
                                 
                                 $customer_manager = filter_input(INPUT_GET, 'manager');
                                 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
@@ -216,6 +226,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                                     $name_where .= " and c.manager_id = $customer_manager";
                                 }
                             }
+                            
                             $sql = "select distinct trim(c.name) name from calculation c $name_where order by trim(c.name)";
                             $fetcher = new Fetcher($sql);
                             
