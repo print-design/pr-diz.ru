@@ -84,14 +84,14 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     <?php
                     // Фильтр
                     $where = " where c.status_id not in (".ORDER_STATUS_CALCULATION.", ".ORDER_STATUS_TECHMAP.", ".
-                            ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.", ".
+                            ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_CUT_FINISHED.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.", ".
                             ORDER_STATUS_DRAFT.", ".ORDER_STATUS_TRASH.", ".ORDER_STATUS_SHIPPED.", ".ORDER_STATUS_SHIP_READY.")";
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
                         $where = " where c.status_id in (".ORDER_STATUS_CALCULATION.", ".ORDER_STATUS_TECHMAP.")";
                     }
                     elseif(!empty ($status_id) && $status_id == ORDER_STATUS_IN_PRODUCTION) {
-                        $where = " where c.status_id in (".ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.")";
+                        $where = " where c.status_id in (".ORDER_STATUS_CUT_PRILADKA.", ".ORDER_STATUS_CUTTING.", ".ORDER_STATUS_CUT_FINISHED.", ".ORDER_STATUS_PACK_READY.", ".ORDER_STATUS_CUT_REMOVED.")";
                     }
                     elseif(!empty($status_id)) {
                         $where = " where c.status_id = $status_id";
@@ -182,12 +182,13 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Заказчик...</option>
                             <?php
-                            $customer_where = "where c.status_id <> ".ORDER_STATUS_DRAFT." and c.status_id <> ".ORDER_STATUS_TRASH;
-                            if($status_id == ORDER_STATUS_DRAFT) $customer_where = "where c.status_id = ".ORDER_STATUS_DRAFT;
-                            elseif($status_id == ORDER_STATUS_TRASH) $customer_where = "where c.status_id = ".ORDER_STATUS_TRASH;
-                            $customer_manager = GetUserId();
+                            $customer_where = "";
+                            $customer_manager = filter_input(INPUT_GET, 'manager');
                             if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
-                                $customer_where .= " and c.manager_id = $customer_manager";
+                                $customer_manager = GetUserId();
+                            }
+                            if(!empty($customer_manager)) {
+                                $customer_where .= "where c.manager_id = $customer_manager";
                             }
                             $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id $customer_where order by cus.name";
                             $fetcher = new Fetcher($sql);
@@ -202,15 +203,18 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Наименование...</option>
                             <?php
-                            $name_where = "where c.status_id <> ".ORDER_STATUS_DRAFT." and c.status_id <> ".ORDER_STATUS_TRASH;
-                            if($status_id == ORDER_STATUS_DRAFT) $name_where = "where c.status_id = ".ORDER_STATUS_DRAFT;
-                            elseif($status_id == ORDER_STATUS_TRASH) $name_where = "where c.status_id = ".ORDER_STATUS_TRASH;
-                            $customer_manager = GetUserId();
-                            if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
-                                $name_where .= " and c.manager_id = $customer_manager";
-                            }
+                            $name_where = "";
+                            $customer = filter_input(INPUT_GET, 'customer');
                             if(!empty($customer)) {
-                                $name_where .= " and c.customer_id = $customer";
+                                $name_where = "where c.customer_id = $customer";
+                                
+                                $customer_manager = filter_input(INPUT_GET, 'manager');
+                                if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
+                                    $customer_manager = GetUserId();
+                                }
+                                if(!empty($customer_manager)) {
+                                    $name_where .= " and c.customer_id = $customer";
+                                }
                             }
                             $sql = "select distinct trim(c.name) name from calculation c $name_where order by trim(c.name)";
                             $fetcher = new Fetcher($sql);
