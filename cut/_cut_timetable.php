@@ -64,7 +64,7 @@ class CutTimetable {
                 . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
-                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
                 . "0 as gap_raport, "
                 . "0 as quantity_sum, "
                 . "round(cr.length_pure_1) / e.worktime * pc.worktime as length_pure_1, "
