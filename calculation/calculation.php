@@ -239,9 +239,9 @@ class CalculationBase {
     // Исходные величины для вычислений
     public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
             $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id,
-            $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1,
-            $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2,
-            $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3,
+            $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1,
+            $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2,
+            $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3,
             $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id,
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
@@ -281,6 +281,8 @@ class CalculationBase {
             $density_1, // Основная пленка, плотность, г/м2
             $price_1, // Основная пленка, цена
             $currency_1, // Основная пленка, валюта
+            $eco_price_1, // Основная пленка, экосбор
+            $eco_currency_1, // Основная пленка, валюта экосбора
             $customers_material_1, // Основная плёнка, другая, материал заказчика
             $ski_1, // Основная пленка, лыжи
             $width_ski_1, // Основная пленка, ширина пленки, мм
@@ -290,6 +292,8 @@ class CalculationBase {
             $density_2, // Ламинация 1, плотность, г/м2
             $price_2, // Ламинация 1, цена
             $currency_2, // Ламинация 1, валюта
+            $eco_price_2, // Ламинация 2, цена
+            $eco_currency_2, // Ламинация 2, валюта экосбора
             $customers_material_2, // Ламинация 1, другая, материал заказчика
             $ski_2, // Ламинация 1, лыжи
             $width_ski_2, // Ламинация 1, ширина пленки, мм
@@ -299,6 +303,8 @@ class CalculationBase {
             $density_3, // Ламинация 2, плотность, г/м2
             $price_3, // Ламинация 2, цена
             $currency_3, // Ламинация 2, валюта
+            $eco_price_3, // Ламинация 2, цена
+            $eco_currency_3, // Ламинация 2, валюта экосбора
             $customers_material_3, // Ламинация 2, другая, уд. вес
             $ski_3, // Ламинация 2, лыжи
             $width_ski_3,  // Ламинация 2, ширина пленки, мм
@@ -369,6 +375,8 @@ class CalculationBase {
         $this->density_1 = $density_1; // Основная пленка, плотность, г/м2
         $this->price_1 = $price_1; // Основная пленка, цена
         $this->currency_1 = $currency_1; // Основная пленка, валюта
+        $this->eco_price_1 = $eco_price_1; // Основная пленка, экосбор
+        $this->eco_currency_1 = $eco_currency_1; // Основная пленка, валюта экосбора
         $this->customers_material_1 = $customers_material_1; // Основная плёнка, другая, материал заказчика
         $this->ski_1 = $ski_1; // Основная пленка, лыжи
         $this->width_ski_1 = $width_ski_1; // Основная пленка, ширина пленки, мм
@@ -378,6 +386,8 @@ class CalculationBase {
         $this->density_2 = $density_2; // Ламинация 1, плотность, г/м2
         $this->price_2 = $price_2; // Ламинация 1, цена
         $this->currency_2 = $currency_2; // Ламинация 1, валюта
+        $this->eco_price_2 = $eco_price_2; // Ламинация 2, экосбор
+        $this->eco_currency_2 = $eco_currency_2; // Ламинация 2, валюта экосбора
         $this->customers_material_2 = $customers_material_2; // Ламинация 1, другая, материал заказчика
         $this->ski_2 = $ski_2; // Ламинация 1, лыжи
         $this->width_ski_2 = $width_ski_2; // Ламинация 1, ширина пленки, мм
@@ -387,6 +397,8 @@ class CalculationBase {
         $this->density_3 = $density_3; // Ламинация 2, плотность, г/м2
         $this->price_3 = $price_3; // Ламинация 2, цена
         $this->currency_3 = $currency_3; // Ламинация 2, валюта
+        $this->eco_price_3 = $eco_price_3; // Ламинация 2, экосбор
+        $this->eco_currency_3 = $eco_currency_3; // Ламинация 2, валюта экосбора
         $this->customers_material_3 = $customers_material_3; // Ламинация 2, другая, уд. вес
         $this->ski_3 = $ski_3; // Ламинация 2, лыжи
         $this->width_ski_3 = $width_ski_3;  // Ламинация 2, ширина пленки, мм
@@ -612,6 +624,8 @@ class CalculationBase {
         $density_1 = null; // Основная пленка, плотность, г/м2
         $price_1 = null; // Основная пленка, цена
         $currency_1 = null; // Основная пленка, валюта
+        $eco_price_1 = null; // Основная пленка, экосбор
+        $eco_currency_1 = null; // Основная пленка, валюта экосбора
         $customers_material_1 = null; // Основная плёнка, другая, материал заказчика
         $ski_1 = null; // Основная пленка, лыжи
         $width_ski_1 = null; // Основная пленка, ширина пленки, мм
@@ -621,6 +635,8 @@ class CalculationBase {
         $density_2 = null; // Ламинация 1, плотность, г/м2
         $price_2 = null; // Ламинация 1, цена
         $currency_2 = null; // Ламинация 1, валюта
+        $eco_price_2 = null; // Ламинация 1, цена
+        $eco_currency_2 = null; // Ламинация 1, валюта экосбора
         $customers_material_2 = null; // Ламинация 1, другая, материал заказчика
         $ski_2 = null; // Ламинация 1, лыжи
         $width_ski_2 = null; // Ламинация 1, ширина пленки, мм
@@ -630,6 +646,8 @@ class CalculationBase {
         $density_3 = null; // Ламинация 2, плотность, г/м2
         $price_3 = null; // Ламинация 2, цена
         $currency_3 = null; // Ламинация 2, валюта
+        $eco_price_3 = null; // Ламинация 2, экосбор
+        $eco_currency_3 = null; // Ламинация 2, валюта экосбора
         $customers_material_3 = null; // Ламинация 2, другая, уд. вес
         $ski_3 = null; // Ламинация 2, лыжи
         $width_ski_3 = null;  // Ламинация 2, ширина пленки, мм
@@ -664,13 +682,13 @@ class CalculationBase {
         
         $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
                 . "f.name film, fv.thickness thickness, fv.weight density, "
-                . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
+                . "rc.film_variation_id, rc.price, rc.currency, fp.eco_price eco_price_1, fp.eco_currency eco_currency_1, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
                 . "rc.customers_material, rc.ski, rc.width_ski, "
                 . "lamination1_f.name lamination1_film, lamination1_fv.thickness lamination1_thickness, lamination1_fv.weight lamination1_density, "
-                . "rc.lamination1_film_variation_id, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_thickness, rc.lamination1_individual_density, "
+                . "rc.lamination1_film_variation_id, rc.lamination1_price, rc.lamination1_currency, lamination1_fp.eco_price eco_price_2, lamination1_fp.eco_currency eco_currency_2, rc.lamination1_individual_film_name, rc.lamination1_individual_thickness, rc.lamination1_individual_density, "
                 . "rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
                 . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
-                . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
+                . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, lamination2_fp.eco_price eco_price_3, lamination2_fp.eco_currency eco_currency_3, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
                 . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
                 . "rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, rc.status_id, "
                 . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
@@ -687,10 +705,13 @@ class CalculationBase {
                 . "from calculation rc "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
+                . "left join (select id, eco_price, eco_currency from film_price where id in (select max(id) from film_price group by film_variation_id)) fp on fp.film_variation_id = fv.id "
                 . "left join film_variation lamination1_fv on rc.lamination1_film_variation_id = lamination1_fv.id "
                 . "left join film lamination1_f on lamination1_fv.film_id = lamination1_f.id "
+                . "left join (select id, eco_price, eco_currency from film_price where id in (select max(id) from film_price group by film_variation_id)) lamination1_fp on lamination1_fp.film_variation_id = lamination1_fv.id "
                 . "left join film_variation lamination2_fv on rc.lamination2_film_variation_id = lamination2_fv.id "
                 . "left join film lamination2_f on lamination2_fv.film_id = lamination2_f.id "
+                . "left join (select id, eco_price, eco_currency from film_price where id in (select max(id) from film_price group by film_variation_id)) lamination2_fp on lamination2_fp.film_variation_id = lamination2_fv.id "
                 . "left join customer cus on rc.customer_id = cus.id "
                 . "left join user u on rc.manager_id = u.id "
                 . "where rc.id = $id";
@@ -717,6 +738,8 @@ class CalculationBase {
             }
             $price_1 = $row['price']; // Основная пленка, цена
             $currency_1 = $row['currency']; // Основная пленка, валюта
+            $eco_price_1 = $row['eco_price_1']; // Основная пленка, экосбор
+            $eco_currency_1 = $row['eco_currency_1']; // Основная пленка, валюта экосбора
             $customers_material_1 = $row['customers_material']; // Основная плёнка, другая, материал заказчика
             $ski_1 = $row['ski']; // Основная пленка, лыжи
             $width_ski_1 = $row['width_ski']; // Основная пленка, ширина пленки, мм
@@ -733,6 +756,8 @@ class CalculationBase {
             }
             $price_2 = $row['lamination1_price']; // Ламинация 1, цена
             $currency_2 = $row['lamination1_currency']; // Ламинация 1, валюта
+            $eco_price_2 = $row['eco_price_2']; // Ламинация 2, экосбор
+            $eco_currency_2 = $row['eco_currency_2']; // Ламинация 2, валюта экосбора
             $customers_material_2 = $row['lamination1_customers_material']; // Ламинация 1, другая, материал заказчика
             $ski_2 = $row['lamination1_ski']; // Ламинация 1, лыжи
             $width_ski_2 = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
@@ -749,6 +774,8 @@ class CalculationBase {
             }
             $price_3 = $row['lamination2_price']; // Ламинация 2, цена
             $currency_3 = $row['lamination2_currency']; // Ламинация 2, валюта
+            $eco_price_3 = $row['eco_price_3']; // Ламинация 2, экосбор
+            $eco_currency_3 = $row['eco_currency_3']; // Ламинация 3, валюта экосбора
             $customers_material_3 = $row['lamination2_customers_material']; // Ламинация 2, другая, уд. вес
             $ski_3 = $row['lamination2_ski']; // Ламинация 2, лыжи
             $width_ski_3 = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
@@ -962,6 +989,8 @@ class CalculationBase {
                     $density_1, // Основная пленка, плотность, г/м2
                     $price_1, // Основная пленка, цена
                     $currency_1, // Основная пленка, валюта
+                    $eco_price_1, // Основная пленка, экосбор
+                    $eco_currency_1, // Основная пленка, валюта экосбора
                     $customers_material_1, // Основная плёнка, другая, материал заказчика
                     $ski_1, // Основная пленка, лыжи
                     $width_ski_1, // Основная пленка, ширина пленки, мм
@@ -971,6 +1000,8 @@ class CalculationBase {
                     $density_2, // Ламинация 1, плотность, г/м2
                     $price_2, // Ламинация 1, цена
                     $currency_2, // Ламинация 1, валюта
+                    $eco_price_2, // Ламинация 1, экосбор
+                    $eco_currency_2, // Ламинация 1, валюта экосбора
                     $customers_material_2, // Ламинация 1, другая, материал заказчика
                     $ski_2, // Ламинация 1, лыжи
                     $width_ski_2, // Ламинация 1, ширина пленки, мм
@@ -980,6 +1011,8 @@ class CalculationBase {
                     $density_3, // Ламинация 2, плотность, г/м2
                     $price_3, // Ламинация 2, цена
                     $currency_3, // Ламинация 2, валюта
+                    $eco_price_3, // Ламинация 2, экосбор
+                    $eco_currency_3, // Ламинация 2, валюта экосбора
                     $customers_material_3, // Ламинация 2, другая, уд. вес
                     $ski_3, // Ламинация 2, лыжи
                     $width_ski_3,  // Ламинация 2, ширина пленки, мм
@@ -1051,6 +1084,8 @@ class CalculationBase {
                     $density_1, // Основная пленка, плотность, г/м2
                     $price_1, // Основная пленка, цена
                     $currency_1, // Основная пленка, валюта
+                    $eco_price_1, // Основная пленка, экосбор
+                    $eco_currency_1, // Основная пленка, валюта экосбора
                     $customers_material_1, // Основная плёнка, другая, материал заказчика
                     $ski_1, // Основная пленка, лыжи
                     $width_ski_1, // Основная пленка, ширина пленки, мм
@@ -1060,6 +1095,8 @@ class CalculationBase {
                     $density_2, // Ламинация 1, плотность, г/м2
                     $price_2, // Ламинация 1, цена
                     $currency_2, // Ламинация 1, валюта
+                    $eco_price_2, // Ламинация 1, экосбор
+                    $eco_currency_2, // Ламинация 1, валюта экосбора
                     $customers_material_2, // Ламинация 1, другая, материал заказчика
                     $ski_2, // Ламинация 1, лыжи
                     $width_ski_2, // Ламинация 1, ширина пленки, мм
@@ -1069,6 +1106,8 @@ class CalculationBase {
                     $density_3, // Ламинация 2, плотность, г/м2
                     $price_3, // Ламинация 2, цена
                     $currency_3, // Ламинация 2, валюта
+                    $eco_price_3, // Ламинация 3, экосбор
+                    $eco_currency_3, // Ламинация 3, валюта экосбора
                     $customers_material_3, // Ламинация 2, другая, уд. вес
                     $ski_3, // Ламинация 2, лыжи
                     $width_ski_3,  // Ламинация 2, ширина пленки, мм
@@ -1229,6 +1268,8 @@ class Calculation extends CalculationBase {
             $density_1, // Основная пленка, плотность, г/м2
             $price_1, // Основная пленка, цена
             $currency_1, // Основная пленка, валюта
+            $eco_price_1, // Основная пленка, экосбор
+            $eco_currency_1, // Основная пленка, валюта экосбора
             $customers_material_1, // Основная плёнка, другая, материал заказчика
             $ski_1, // Основная пленка, лыжи
             $width_ski_1, // Основная пленка, ширина пленки, мм
@@ -1238,6 +1279,8 @@ class Calculation extends CalculationBase {
             $density_2, // Ламинация 1, плотность, г/м2
             $price_2, // Ламинация 1, цена
             $currency_2, // Ламинация 1, валюта
+            $eco_price_2, // Ламинация 1, экосбор
+            $eco_currency_2, // Ламинация 1, валюта экосбора
             $customers_material_2, // Ламинация 1, другая, материал заказчика
             $ski_2, // Ламинация 1, лыжи
             $width_ski_2, // Ламинация 1, ширина пленки, мм
@@ -1247,6 +1290,8 @@ class Calculation extends CalculationBase {
             $density_3, // Ламинация 2, плотность, г/м2
             $price_3, // Ламинация 2, цена
             $currency_3, // Ламинация 2, валюта
+            $eco_price_3, // Ламминация 2, экосбор
+            $eco_currency_3, // Ламинация 2, валюта экосбора
             $customers_material_3, // Ламинация 2, другая, уд. вес
             $ski_3, // Ламинация 2, лыжи
             $width_ski_3,  // Ламинация 2, ширина пленки, мм
@@ -1295,9 +1340,9 @@ class Calculation extends CalculationBase {
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
                 $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
-                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
-                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
-                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
+                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
+                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
+                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
                 $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
@@ -2081,6 +2126,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $density_1, // Основная пленка, плотность, г/м2
             $price_1, // Основная пленка, цена
             $currency_1, // Основная пленка, валюта
+            $eco_price_1, // Основная пленка, экосбор
+            $eco_currency_1, // Основная пленка, валюта экосбора
             $customers_material_1, // Основная плёнка, другая, материал заказчика
             $ski_1, // Основная пленка, лыжи
             $width_ski_1, // Основная пленка, ширина пленки, мм
@@ -2090,6 +2137,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $density_2, // Ламинация 1, плотность, г/м2
             $price_2, // Ламинация 1, цена
             $currency_2, // Ламинация 1, валюта
+            $eco_price_2, // Ламинация 1, экосбор
+            $eco_currency_2, // Ламинация 1, валюта экосбора
             $customers_material_2, // Ламинация 1, другая, материал заказчика
             $ski_2, // Ламинация 1, лыжи
             $width_ski_2, // Ламинация 1, ширина пленки, мм
@@ -2099,6 +2148,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $density_3, // Ламинация 2, плотность, г/м2
             $price_3, // Ламинация 2, цена
             $currency_3, // Ламинация 2, валюта
+            $eco_price_3, // Ламинация 2, экосбор
+            $eco_currency_3, // Ламинация 2, валюта экосбора
             $customers_material_3, // Ламинация 2, другая, уд. вес
             $ski_3, // Ламинация 2, лыжи
             $width_ski_3,  // Ламинация 2, ширина пленки, мм
@@ -2147,9 +2198,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
                 $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
-                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $customers_material_1, $ski_1, $width_ski_1, 
-                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $customers_material_2, $ski_2, $width_ski_2, 
-                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $customers_material_3, $ski_3, $width_ski_3, 
+                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
+                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
+                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
                 $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
