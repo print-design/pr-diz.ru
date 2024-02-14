@@ -82,7 +82,7 @@ if(null !== filter_input(INPUT_POST, 'price_submit')) {
         $eco_price = null;
         $eco_currency = '';
     
-        $sql = "select eco_price, eco_currency from film_price where film_variation_id = $film_variation_id order by id limit 1";
+        $sql = "select eco_price, eco_currency from film_price where film_variation_id = $film_variation_id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $eco_price = $row['eco_price'];
@@ -109,7 +109,7 @@ if(null !== filter_input(INPUT_POST, 'eco_price_submit')) {
         $price = 0;
         $currency = CURRENCY_RUB;
         
-        $sql = "select price, currency from film_price where film_variation_id = $film_variation_id order by id limit 1";
+        $sql = "select price, currency from film_price where film_variation_id = $film_variation_id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $price = $row['price'];
@@ -117,6 +117,19 @@ if(null !== filter_input(INPUT_POST, 'eco_price_submit')) {
         }
         
         $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values ($film_variation_id, $price, '$currency', $eco_price, '$eco_currency')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
+// Редактирование экосбора с другого материала
+if(null !== filter_input(INPUT_POST, 'other_price_submit')) {
+    $price_type = filter_input(INPUT_POST, 'price_type');
+    $price = filter_input(INPUT_POST, 'price');
+    $currency = filter_input(INPUT_POST, 'currency');
+    
+    if(!empty($price_type) && !empty($price) && !empty($currency)) {
+        $sql = "insert into other_price (price_type, price, currency) values ($price_type, $price, '$currency')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -263,22 +276,22 @@ while($row = $fetcher->Fetch()) {
             <table class="table">
                 <?php if($show_table_header): ?>
                 <tr>
-                    <th width="50%" style="border-top: 0;">Название пленки</th>
-                    <th width="12%" style="border-top: 0;">Толщина</th>
-                    <th width="12%" style="border-top: 0;">Удельный вес</th>
-                    <th style="border-top: 0;">Цена</th>
+                    <th style="width: 50%; border-top: 0;">Название пленки</th>
+                    <th style="width: 10%; border-top: 0;">Толщина</th>
+                    <th style="width: 10%; border-top: 0;">Удельный вес</th>
+                    <th style="width: 15%; border-top: 0;">Цена</th>
                     <th style="border-top: 0;">Экосбор</th>
                 </tr>
                 <?php
                 endif;
-                $no_border_top = $show_table_header ? '' : " style='border-top: 0;'";
+                $no_border_top = $show_table_header ? '' : " border-top: 0;";
                 foreach($film['film_variations'] as $fv_key => $film_variation):
                 ?>
                 <tr>
-                    <td width="50%"<?=$no_border_top ?>><?=$film['name'] ?></td>
-                    <td width="12%"<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
-                    <td width="12%"<?=$no_border_top ?>><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
-                    <td<?=$no_border_top ?>>
+                    <td style="width: 50%;<?=$no_border_top ?>"><?=$film['name'] ?></td>
+                    <td style="width: 10%;<?=$no_border_top ?>"><?=$film_variation['thickness'] ?> мкм</td>
+                    <td style="width: 10%;<?=$no_border_top ?>"><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
+                    <td style="width: 15%;<?=$no_border_top ?>">
                         <form class="form-inline" method="post">
                             <input type="hidden" name="scroll" />
                             <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
@@ -297,7 +310,7 @@ while($row = $fetcher->Fetch()) {
                             <button class="btn btn-outline-dark d-none" name="price_submit">OK</button>
                         </form>
                     </td>
-                    <td<?=$no_border_top ?>>
+                    <td style="width: auto;<?=$no_border_top ?>">
                         <form class="form-inline" method="post">
                             <input type="hidden" name="scroll" />
                             <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
@@ -325,6 +338,81 @@ while($row = $fetcher->Fetch()) {
             <?php
             endforeach;
             ?>
+            <h2>Другое</h2>
+            <table class="table">
+                <?php
+                $customers_eco_price = null;
+                $customers_eco_currency = '';
+                
+                $sql = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                
+                if($row = $fetcher->Fetch()) {
+                    $customers_eco_price = $row['price'];
+                    $customers_eco_currency = $row['currency'];
+                }
+                ?>
+                <tr>
+                    <td style="width: 50%; border-top: 0;">Сырьё заказчика</td>
+                    <td style="width: 10%; border-top: 0;"></td>
+                    <td style="width: 10%; border-top: 0;"></td>
+                    <td style="width: 15%; border-top: 0;"></td>
+                    <td style="border-top: 0;">
+                        <form class="form-inline" method="post">
+                            <input type="hidden" name="scroll" />
+                            <input type="hidden" name="price_type" value="<?=PRICE_ECO_CUSTOMERS_MATERIAL ?>" />
+                            <div class="input-group">
+                                <input type="text" name="price" class="form-control float-only film-price" placeholder="Экосбор" style="width: 80px;" value="<?=$customers_eco_price ?>" required="required" autocomplete="off" />
+                                <div class="input-group-append">
+                                    <select name="currency" class="film-currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="<?=CURRENCY_RUB ?>"<?=$customers_eco_currency == CURRENCY_RUB ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="<?=CURRENCY_USD ?>"<?=$customers_eco_currency == CURRENCY_USD ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="<?=CURRENCY_EURO ?>"<?=$customers_eco_currency == CURRENCY_EURO ? " selected='selected'" : "" ?>>EUR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-dark d-none" name="other_price_submit">OK</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php
+                $other_eco_price = null;
+                $other_eco_currency = '';
+                
+                $sql = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
+                $fetcher = new Fetcher($sql);
+                
+                if($row = $fetcher->Fetch()) {
+                    $other_eco_price = $row['price'];
+                    $other_eco_currency = $row['currency'];
+                }
+                ?>
+                <tr>
+                    <td style="width: 50%;">Сырьё не из базы данных</td>
+                    <td style="width: 10%;"></td>
+                    <td style="width: 10%;"></td>
+                    <td style="width: 15%;"></td>
+                    <td>
+                        <form class="form-inline" method="post">
+                            <input type="hidden" name="scroll" />
+                            <input type="hidden" name="price_type" value="<?=PRICE_ECO_OTHER_MATERIAL ?>" />
+                            <div class="input-group">
+                                <input type="text" name="price" class="form-control float-only film-price" placeholder="Экосбор" style="width: 80px;" value="<?=$other_eco_price ?>" required="required" autocomplete="off" />
+                                <div class="input-group-append">
+                                    <select name="currency" class="film-currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="<?=CURRENCY_RUB ?>"<?=$other_eco_currency == CURRENCY_RUB ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="<?=CURRENCY_USD ?>"<?=$other_eco_currency == CURRENCY_USD ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="<?=CURRENCY_EURO ?>"<?=$other_eco_currency == CURRENCY_EURO ? " selected='selected'" : "" ?>>EUR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-dark d-none" name="other_price_submit">OK</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
         </div>
         <?php
         include '../include/footer.php';

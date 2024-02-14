@@ -165,6 +165,10 @@ const WASTE_PAPER = "В макулатуру";
 const WASTE_PRESS_FILMS = array("CPP cast", "CPP LA", "HGPL прозрачка", "HMIL.M металл", "HOHL жемчуг", "HWHL белая", "LOBA жемчуг", "LOHM.M", "MGS матовая");
 const WASTE_PAPER_FILM = "Офсет БДМ-7";
 
+// Цена на другое
+const PRICE_ECO_CUSTOMERS_MATERIAL = 1;
+const PRICE_ECO_OTHER_MATERIAL = 2;
+
 // Другое
 const ISINVALID = ' is-invalid';
 ?>
