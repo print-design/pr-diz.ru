@@ -73,23 +73,60 @@ if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
 }
 
 // Редактирование цены за материал
-if(null !== filter_input(INPUT_POST, 'price-submit')) {
+if(null !== filter_input(INPUT_POST, 'price_submit')) {
     $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
     $price = filter_input(INPUT_POST, 'price');
     $currency = filter_input(INPUT_POST, 'currency');
     
     if(!empty($film_variation_id) && !empty($price) && !empty($currency)) {
-        $sql = "insert into film_price (film_variation_id, price, currency) values ($film_variation_id, $price, '$currency')";
+        $eco_price = null;
+        $eco_currency = '';
+    
+        $sql = "select eco_price, eco_currency from film_price where film_variation_id = $film_variation_id order by id limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $eco_price = $row['eco_price'];
+            $eco_currency = $row['eco_currency'];
+        }
+    
+        if(empty($eco_price)) {
+            $eco_price = "NULL";
+        }
+    
+        $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values ($film_variation_id, $price, '$currency', $eco_price, '$eco_currency')";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
+// Редактирование экосбора
+if(null !== filter_input(INPUT_POST, 'eco_price_submit')) {
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $eco_price = filter_input(INPUT_POST, 'eco_price');
+    $eco_currency = filter_input(INPUT_POST, 'eco_currency');
+    
+    if(!empty($film_variation_id) && !empty($eco_price) && !empty($eco_currency)) {
+        $price = 0;
+        $currency = CURRENCY_RUB;
+        
+        $sql = "select price, currency from film_price where film_variation_id = $film_variation_id order by id limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $price = $row['price'];
+            $currency = $row['currency'];
+        }
+        
+        $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values ($film_variation_id, $price, '$currency', $eco_price, '$eco_currency')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
 }
 
 // Получение объекта
-$sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight, fp.price, fp.currency "
+$sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight, fp.price, fp.currency, fp.eco_price, fp.eco_currency "
         . "from film f "
         . "left join film_variation fv on fv.film_id = f.id "
-        . "left join (select film_variation_id, price, currency from film_price where id in (select max(id) from film_price group by film_variation_id)) fp on fp.film_variation_id = fv.id "
+        . "left join (select film_variation_id, price, currency, eco_price, eco_currency from film_price where id in (select max(id) from film_price group by film_variation_id)) fp on fp.film_variation_id = fv.id "
         . "order by f.name, fv.thickness, fv.weight";
 $fetcher = new Fetcher($sql);
 $films = array();
@@ -101,7 +138,7 @@ while($row = $fetcher->Fetch()) {
     
     $film_variation_id = $row['film_variation_id'];
     if(!isset($films[$film_id]['film_variations'][$film_variation_id]) && !empty($row['thickness']) && !empty($row['weight'])) {
-        $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight'], 'price' => $row['price'], 'currency' => $row['currency']);
+        $films[$film_id]['film_variations'][$film_variation_id] = array('thickness' => $row['thickness'], 'weight' => $row['weight'], 'price' => $row['price'], 'currency' => $row['currency'], 'eco_price' => $row['eco_price'], 'eco_currency' => $row['eco_currency']);
     }
 }
 ?>
@@ -227,9 +264,10 @@ while($row = $fetcher->Fetch()) {
                 <?php if($show_table_header): ?>
                 <tr>
                     <th width="50%" style="border-top: 0;">Название пленки</th>
-                    <th width="15%" style="border-top: 0;">Толщина</th>
-                    <th width="15%" style="border-top: 0;">Удельный вес</th>
+                    <th width="12%" style="border-top: 0;">Толщина</th>
+                    <th width="12%" style="border-top: 0;">Удельный вес</th>
                     <th style="border-top: 0;">Цена</th>
+                    <th style="border-top: 0;">Экосбор</th>
                 </tr>
                 <?php
                 endif;
@@ -238,8 +276,8 @@ while($row = $fetcher->Fetch()) {
                 ?>
                 <tr>
                     <td width="50%"<?=$no_border_top ?>><?=$film['name'] ?></td>
-                    <td width="15%"<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
-                    <td width="15%"<?=$no_border_top ?>><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
+                    <td width="12%"<?=$no_border_top ?>><?=$film_variation['thickness'] ?> мкм</td>
+                    <td width="12%"<?=$no_border_top ?>><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
                     <td<?=$no_border_top ?>>
                         <form class="form-inline" method="post">
                             <input type="hidden" name="scroll" />
@@ -250,13 +288,31 @@ while($row = $fetcher->Fetch()) {
                                 <div class="input-group-append">
                                     <select name="currency" class="film-currency" required="required">
                                         <option value="" hidden="">...</option>
-                                        <option value="rub"<?=$film_variation['currency'] == "rub" ? " selected='selected'" : "" ?>>Руб</option>
-                                        <option value="usd"<?=$film_variation['currency'] == "usd" ? " selected='selected'" : "" ?>>USD</option>
-                                        <option value="euro"<?=$film_variation['currency'] == "euro" ? " selected='selected'" : "" ?>>EUR</option>
+                                        <option value="<?=CURRENCY_RUB ?>"<?=$film_variation['currency'] == CURRENCY_RUB ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="<?=CURRENCY_USD ?>"<?=$film_variation['currency'] == CURRENCY_USD ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="<?=CURRENCY_EURO ?>"<?=$film_variation['currency'] == CURRENCY_EURO ? " selected='selected'" : "" ?>>EUR</option>
                                     </select>
                                 </div>
                             </div>
-                            <button class="btn btn-outline-dark d-none" name="price-submit">OK</button>
+                            <button class="btn btn-outline-dark d-none" name="price_submit">OK</button>
+                        </form>
+                    </td>
+                    <td<?=$no_border_top ?>>
+                        <form class="form-inline" method="post">
+                            <input type="hidden" name="scroll" />
+                            <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
+                            <div class="input-group">
+                                <input type="text" name="eco_price" class="form-control float-only film-price" placeholder="Экосбор" style="width: 80px;" value="<?=$film_variation['eco_price'] ?>" data-film-variation-id="<?=$fv_key ?>" required="required" autocomplete="off" />
+                                <div class="input-group-append">
+                                    <select name="eco_currency" class="film-currency" required="required">
+                                        <option value="" hidden="">...</option>
+                                        <option value="<?=CURRENCY_RUB ?>"<?=$film_variation['eco_currency'] == CURRENCY_RUB ? " selected='selected'" : "" ?>>Руб</option>
+                                        <option value="<?=CURRENCY_USD ?>"<?=$film_variation['eco_currency'] == CURRENCY_USD ? " selected='selected'" : "" ?>>USD</option>
+                                        <option value="<?=CURRENCY_EURO ?>"<?=$film_variation['eco_currency'] == CURRENCY_EURO ? " selected='selected'" : "" ?>>EUR</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-dark d-none" name="eco_price_submit">OK</button>
                         </form>
                     </td>
                 </tr>
