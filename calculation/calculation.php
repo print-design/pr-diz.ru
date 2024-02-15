@@ -1683,13 +1683,13 @@ class Calculation extends CalculationBase {
         //****************************************
         
         // Общая стоимость грязная 1, руб
-        $this->film_cost_1 = $this->weight_dirty_1 * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
+        $this->film_cost_1 = ($this->weight_dirty_1 * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro)) + ($this->weight_dirty_1 * $this->eco_price_1 * self::GetCurrencyRate($eco_currency_1, $usd, $euro));
         
         // Общая стоимость грязная 2, руб
-        $this->film_cost_2 = $this->weight_dirty_2 * $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro);
+        $this->film_cost_2 = ($this->weight_dirty_2 * $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro)) + ($this->weight_dirty_2 * $this->eco_price_2 * self::GetCurrencyRate($eco_currency_2, $usd, $euro));
         
         // Общая стоимость грязная 3, руб
-        $this->film_cost_3 = $this->weight_dirty_3 * $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro);
+        $this->film_cost_3 = ($this->weight_dirty_3 * $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro)) + ($this->weight_dirty_3 * $this->eco_price_3 * self::GetCurrencyRate($eco_currency_3, $usd, $euro));
     
         //*****************************************
         // Время - деньги
