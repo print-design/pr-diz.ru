@@ -9,26 +9,29 @@ if(!empty($film_variation_id)) {
     $fetcher = new Fetcher($sql);
             
     if($row = $fetcher->Fetch()) {
-        $price_final = rtrim(rtrim(number_format($row['price'], 2, ",", " "), "0"), ",");
-        $currency_final = "";
-        $currency_local = "";
-        switch($row['currency']) {
-            case 'rub':
-                $currency_final = "руб";
-                $currency_local = "Руб";
-                break;
+        if(!empty($row['price'])) {
+            $price_final = rtrim(rtrim(number_format($row['price'], 2, ",", " "), "0"), ",");
+            $currency_final = "";
+            $currency_local = "";
+            switch($row['currency']) {
+                case CURRENCY_RUB:
+                    $currency_final = "руб";
+                    $currency_local = "Руб";
+                    break;
+                
+                case CURRENCY_USD:
+                    $currency_final = "USD";
+                    $currency_local = "USD";
+                    break;
+                
+                case CURRENCY_EURO:
+                    $currency_final = "EUR";
+                    $currency_local = "EUR";
+                    break;
+            }
             
-            case 'usd':
-                $currency_final = "USD";
-                $currency_local = "USD";
-                break;
-            
-            case 'euro':
-                $currency_final = "EUR";
-                $currency_local = "EUR";
-                break;
+            $result = array("text" => "от $price_final $currency_final", "price" => $row['price'], "currency" => $row['currency'], "currency_local" => $currency_local);
         }
-        $result = array("text" => "от $price_final $currency_final", "price" => $row['price'], "currency" => $row['currency'], "currency_local" => $currency_local);
     }
 }
 

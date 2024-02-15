@@ -106,8 +106,8 @@ if(null !== filter_input(INPUT_POST, 'eco_price_submit')) {
     $eco_currency = filter_input(INPUT_POST, 'eco_currency');
     
     if(!empty($film_variation_id) && !empty($eco_price) && !empty($eco_currency)) {
-        $price = 0;
-        $currency = CURRENCY_RUB;
+        $price = "NULL";
+        $currency = '';
         
         $sql = "select price, currency from film_price where film_variation_id = $film_variation_id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
