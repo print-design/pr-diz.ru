@@ -351,7 +351,7 @@ if($id !== null) {
     $scotch_formula = "";
     $scotch_comment = "";
         
-    for($i = 1; $i <= 8; $i++) {
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
         if(!empty($scotch_formula)) {
             $scotch_formula .= " + ";
         }
@@ -362,12 +362,8 @@ if($id !== null) {
             
         $scotch_formula .= DisplayNumber($calculation->scotch_costs[$i], 5);
         $scotch_comment .= "стоимость скотча цвет $i";
-            
-        $cliche_area = 0;
-            
-        if($i <= $calculation->ink_number) {
-            $cliche_area = $calculation->cliche_area;
-        }
+        
+        $cliche_area = $calculation->cliche_area;
             
         array_push($file_data, array("Стоимость скотча Цвет $i, руб",
             DisplayNumber($calculation->scotch_costs[$i], 5),

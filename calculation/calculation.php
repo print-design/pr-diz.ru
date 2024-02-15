@@ -1867,12 +1867,8 @@ class Calculation extends CalculationBase {
         // Стоимость скотча для каждой краски
         $this->scotch_costs = array();
         
-        for($i=1; $i<=8; $i++) {
-            $cliche_area = 0;
-            
-            if($i <= $ink_number) {
-                $cliche_area = $this->cliche_area;
-            }
+        for($i=1; $i<=$ink_number; $i++) {
+            $cliche_area = $this->cliche_area;
             
             $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro);
         }
@@ -2464,12 +2460,8 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Стоимость скотча для каждой краски
         $this->scotch_costs = array();
         
-        for($i=1; $i<=8; $i++) {
-            $cliche_area = 0;
-            
-            if($i <= $ink_number) {
-                $cliche_area = $this->cliche_area;
-            }
+        for($i=1; $i<=$ink_number; $i++) {
+            $cliche_area = $this->cliche_area;
             
             $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro);
         }
