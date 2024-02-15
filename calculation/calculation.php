@@ -740,6 +740,31 @@ class CalculationBase {
             $customers_material_1 = $row['customers_material']; // Основная плёнка, другая, материал заказчика
             $ski_1 = $row['ski']; // Основная пленка, лыжи
             $width_ski_1 = $row['width_ski']; // Основная пленка, ширина пленки, мм
+            // Получаем сумму и валюту экосбора 1
+            if($customers_material_1 == true) {
+                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $eco_price_1 = $row1['price'];
+                    $eco_currency_1 = $row1['currency'];
+                }
+            }
+            elseif(empty ($row['film_variation_id'])) {
+                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $eco_price_1 = $row1['price'];
+                    $eco_currency_1 = $row1['currency'];
+                }
+            }
+            else {
+                $sql1 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['film_variation_id']." order by id desc limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $eco_price_1 = $row1['eco_price'];
+                    $eco_currency_1 = $row1['eco_currency'];
+                }
+            }
             
             if(!empty($row['lamination1_film_variation_id'])) {
                 $film_2 = $row['lamination1_film']; // Ламинация 1, марка
@@ -758,6 +783,31 @@ class CalculationBase {
             $customers_material_2 = $row['lamination1_customers_material']; // Ламинация 1, другая, материал заказчика
             $ski_2 = $row['lamination1_ski']; // Ламинация 1, лыжи
             $width_ski_2 = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
+            // Получаем сумму и валюту экосбора 2
+            if($customers_material_2 == true) {
+                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
+                $fetcher2 = new Fetcher($sql2);
+                if($row2 = $fetcher2->Fetch()) {
+                    $eco_price_2 = $row2['price'];
+                    $eco_currency_2 = $row2['currency'];
+                }
+            }
+            elseif(empty ($row['lamination1_film_variation_id'])) {
+                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
+                $fetcher2 = new Fetcher($sql2);
+                if($row2 = $fetcher2->Fetch()) {
+                    $eco_price_2 = $row2['price'];
+                    $eco_currency_2 = $row2['currency'];
+                }
+            }
+            else {
+                $sql2 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination1_film_variation_id']." order by id desc limit 1";
+                $fetcher2 = new Fetcher($sql2);
+                if($row2 = $fetcher2->Fetch()) {
+                    $eco_price_2 = $row2['eco_price'];
+                    $eco_currency_2 = $row2['eco_currency'];
+                }
+            }
             
             if(!empty($row['lamination2_film_variation_id'])) {
                 $film_3 = $row['lamination2_film']; // Ламинация 2, марка
@@ -776,6 +826,31 @@ class CalculationBase {
             $customers_material_3 = $row['lamination2_customers_material']; // Ламинация 2, другая, уд. вес
             $ski_3 = $row['lamination2_ski']; // Ламинация 2, лыжи
             $width_ski_3 = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
+            // Получаем сумму и валюту экосбора 2
+            if($customers_material_3 == true) {
+                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
+                $fetcher3 = new Fetcher($sql3);
+                if($row3 = $fetcher3->Fetch()) {
+                    $eco_price_3 = $row3['price'];
+                    $eco_currency_3 = $row3['currency'];
+                }
+            }
+            elseif(empty ($row['lamination2_film_variation_id'])) {
+                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
+                $fetcher3 = new Fetcher($sql3);
+                if($row3 = $fetcher3->Fetch()) {
+                    $eco_price_3 = $row3['price'];
+                    $eco_currency_3 = $row3['currency'];
+                }
+            }
+            else {
+                $sql3 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination2_film_variation_id']." order by id desc limit 1";
+                $fetcher3 = new Fetcher($sql3);
+                if($row3 = $fetcher3->Fetch()) {
+                    $eco_price_3 = $row3['eco_price'];
+                    $eco_currency_3 = $row3['eco_currency'];
+                }
+            }
             
             $machine_id = $row['machine_id'];
             $laminator_id = $row['laminator_id'];
