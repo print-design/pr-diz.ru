@@ -169,13 +169,13 @@ if($id !== null) {
         "м. пог. чистые"));
         
     //*****************************
-    // Себестоимость плёнок
+    // Себестоимость плёнок $this->film_cost = ($this->area_dirty * $this->price_1 * self::GetCurrencyRate($this->currency_1, $usd, $euro)) + ($this->area_dirty * $this->density_1 * $this->eco_price_1 * self::GetCurrencyRate($this->eco_currency_1, $usd, $euro) / 1000);
     //*****************************
         
     array_push($file_data, array("Себестоимость материала грязная (с приладкой), руб",
         DisplayNumber($calculation->film_cost, 5),
-        "|= ".DisplayNumber($calculation->area_dirty, 5)." * ".DisplayNumber($calculation->price_1, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro), 5),
-        "м2 грязные * цена * курс валюты"));
+        "|= (".DisplayNumber($calculation->area_dirty, 5)." * ".DisplayNumber($calculation->price_1, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro), 5).") + (".DisplayNumber($calculation->area_dirty, 5)." * ". DisplayNumber($calculation->density_1, 2)." * ".DisplayNumber($calculation->eco_price_1, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->eco_currency_1, $calculation->usd, $calculation->euro), 5)." / 1000)",
+        "(м2 грязные 1 * цена * курс валюты) + (м2 грязные 1 * уд. вес плёнки 1 * цена из экосбора плёнки 1 * курс валюты / 1000)"));
         
     array_push($file_data, array("", "", "", ""));
         
