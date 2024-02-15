@@ -1447,26 +1447,26 @@ class Calculation extends CalculationBase {
                 
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
-        if(empty($thickness_2)) $thickness_2 = 0;
-        if(empty($density_2)) $density_2 = 0;
-        if(empty($price_2)) $price_2 = 0;
-        if(empty($thickness_3)) $thickness_3 = 0;
-        if(empty($density_3)) $density_3 = 0;
-        if(empty($price_3)) $price_3 = 0;
+        if(empty($this->thickness_2)) $this->thickness_2 = 0;
+        if(empty($this->density_2)) $this->density_2 = 0;
+        if(empty($this->price_2)) $this->price_2 = 0;
+        if(empty($this->thickness_3)) $this->thickness_3 = 0;
+        if(empty($this->density_3)) $this->density_3 = 0;
+        if(empty($this->price_3)) $this->price_3 = 0;
         
         // Если нет рапорта, ширины вала ламинатора или красочности, присваиваем им 0
-        if(empty($raport)) $raport = 0;
-        if(empty($lamination_roller_width)) $lamination_roller_width = 0;
-        if(empty($ink_number)) $ink_number = 0;
+        if(empty($this->raport)) $this->raport = 0;
+        if(empty($this->lamination_roller_width)) $this->lamination_roller_width = 0;
+        if(empty($this->ink_number)) $this->ink_number = 0;
         
         // Определение количества ламинаций
         // Если плёнка 3, толщина 3 и плотность 3 - не пустые, то количество ламинаций - 2
         // Иначе, если плёнка 2, толщина 2 и плотность 2 - не пустые, то количество ламинаций - 1
         // Иначе количество ламинаций - 0
-        if(!empty($film_3) && !empty($thickness_3) && !empty($density_3)) {
+        if(!empty($this->film_3) && !empty($this->thickness_3) && !empty($this->density_3)) {
             $this->laminations_number = 2;
         }
-        elseif(!empty ($film_2) && !empty ($thickness_2) && !empty ($density_2)) {
+        elseif(!empty ($this->film_2) && !empty ($this->thickness_2) && !empty ($this->density_2)) {
             $this->laminations_number = 1;
         }
         else {
@@ -1475,30 +1475,30 @@ class Calculation extends CalculationBase {
         
         // Если тип работы - плёнка без печати, то 
         // машина = пустая, красочность = 0, рапорт = 0
-        if($work_type_id == WORK_TYPE_NOPRINT) {
-            $machine_id = null;
-            $ink_number = 0;
-            $raport = 0;
+        if($this->work_type_id == WORK_TYPE_NOPRINT) {
+            $this->machine_id = null;
+            $this->ink_number = 0;
+            $this->raport = 0;
         }
         
         // Если нет ламинации, то ширина ламинирующего вала = 0, лыжи для плёнки 2 = 0
         if($this->laminations_number == 0) {
-            $lamination_roller_width = 0;
-            $ski_2 = 0;
+            $this->lamination_roller_width = 0;
+            $this->ski_2 = 0;
         }
         
         // Если нет ламинации 2, то лыжи для плёнки 3 = 0
         if($this->laminations_number < 2) {
-            $ski_3 = 0;
+            $this->ski_3 = 0;
         }
         
         // Если материал заказчика, то его цена = 0
-        if($customers_material_1 == true) $price_1 = 0;
-        if($customers_material_2 == true) $price_2 = 0;
-        if($customers_material_3 == true) $price_3 = 0;
+        if($this->customers_material_1 == true) $this->price_1 = 0;
+        if($this->customers_material_2 == true) $this->price_2 = 0;
+        if($this->customers_material_3 == true) $this->price_3 = 0;
         
         // Уравнивующий коэф 1(УК1)=0 когда нет печати,=1 когда есть печать
-        $this->uk1 = $work_type_id == WORK_TYPE_PRINT ? 1 : 0;
+        $this->uk1 = $this->work_type_id == WORK_TYPE_PRINT ? 1 : 0;
         
         // Уравнивующий коэф 2 (УК2)=0 когда нет ламинации 1 , = 1 когда есть ламинация 1
         $this->uk2 = $this->laminations_number > 0 ? 1 : 0;
@@ -1507,48 +1507,48 @@ class Calculation extends CalculationBase {
         $this->uk3 = $this->laminations_number > 1 ? 1 : 0;
         
         // Уравнивающий коэфф. ПФ (УКПФ)=0, когда ПФ не велючен в себестоимость, =1 когда ПФ включен в себестоимость
-        $this->ukpf = $cliche_in_price == 1 ? 1 : 0;
+        $this->ukpf = $this->cliche_in_price == 1 ? 1 : 0;
         
         // Уравнивающий коэфф. ЗаказчикПлатитЗаПФ, когда платит заказчик = 1, когда платим мы = 0
-        $this->ukcuspaypf = $customer_pays_for_cliche == 1 ? 1 : 0;
+        $this->ukcuspaypf = $this->customer_pays_for_cliche == 1 ? 1 : 0;
         
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
         // М2 чистые, м2
         // Считаем только если размер тиража выражен в штуках: длина * ширина ручья * размер тиража
         // Если размер тиража выражен в килограммах, то нам м2 чистые пока не нужны, вычислим их позже
-        if($unit == KG) {
+        if($this->unit == KG) {
             $this->area_pure_start = 0;
         }
         else {
-            $this->area_pure_start = $length * $stream_width * $quantity / 1000000;
+            $this->area_pure_start = $this->length * $this->stream_width * $this->quantity / 1000000;
         }
         
         // Масса тиража, кг
         // Если размер тиража выражен в килограммах, то это и будет масса тиража
         // Если размер тиража выражен в штуках, то считаем: м2 чистые * сумма плотностей всех плёнок
-        if($unit == KG) {
-            $this->weight = $quantity;
+        if($this->unit == KG) {
+            $this->weight = $this->quantity;
         }
         else {
-            $this->weight = $this->area_pure_start * ($density_1 + $density_2 + $density_3) / 1000;
+            $this->weight = $this->area_pure_start * ($this->density_1 + $this->density_2 + $this->density_3) / 1000;
         }
 
         // Ширина материала (начальная) 1, мм
         // Если без лыж: количество ручьёв * ширина ручья
         // Если стандартные лыжи: количество ручьёв * ширина ручья + 20
         // Если нестандартные лыжи: ширина материала вводится вручную
-        switch($ski_1) {
+        switch($this->ski_1) {
             case self::NO_SKI:
-                $this->width_start_1 = $streams_number * $stream_width;
+                $this->width_start_1 = $this->streams_number * $this->stream_width;
                 break;
                 
             case self::STANDARD_SKI:
-                $this->width_start_1 = $streams_number * $stream_width + 20;
+                $this->width_start_1 = $this->streams_number * $this->stream_width + 20;
                 break;
         
             case self::NONSTANDARD_SKI:
-                $this->width_start_1 = $width_ski_1;
+                $this->width_start_1 = $this->width_ski_1;
                 break;
             
             default :
@@ -1557,17 +1557,17 @@ class Calculation extends CalculationBase {
         }
         
         // Ширина материала (начальная) 2, мм
-        switch($ski_2) {
+        switch($this->ski_2) {
             case self::NO_SKI:
-                $this->width_start_2 = $streams_number * $stream_width;
+                $this->width_start_2 = $this->streams_number * $this->stream_width;
                 break;
         
             case self::STANDARD_SKI:
-                $this->width_start_2 = $streams_number * $stream_width + 20;
+                $this->width_start_2 = $this->streams_number * $this->stream_width + 20;
                 break;
         
             case self::NONSTANDARD_SKI:
-                $this->width_start_2 = $width_ski_2;
+                $this->width_start_2 = $this->width_ski_2;
                 break;
             
             default :
@@ -1576,17 +1576,17 @@ class Calculation extends CalculationBase {
         }
         
         // Ширина материала (начальная) 3, мм
-        switch($ski_3) {
+        switch($this->ski_3) {
             case self::NO_SKI:
-                $this->width_start_3 = $streams_number * $stream_width;
+                $this->width_start_3 = $this->streams_number * $this->stream_width;
                 break;
         
             case self::STANDARD_SKI:
-                $this->width_start_3 = $streams_number * $stream_width + 20;
+                $this->width_start_3 = $this->streams_number * $this->stream_width + 20;
                 break;
         
             case self::NONSTANDARD_SKI:
-                $this->width_start_3 = $width_ski_3;
+                $this->width_start_3 = $this->width_ski_3;
                 break;
             
             default :
@@ -1605,43 +1605,43 @@ class Calculation extends CalculationBase {
         
         
         // М2 чистые 1, м2
-        $this->area_pure_1 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3);
+        $this->area_pure_1 = $this->weight * 1000 / ($this->density_1 + $this->density_2 + $this->density_3);
         
         // М2 чистые 2, м2
-        $this->area_pure_2 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3) * $this->uk2;
+        $this->area_pure_2 = $this->weight * 1000 / ($this->density_1 + $this->density_2 + $this->density_3) * $this->uk2;
         
         // М2 чистые 3, м2
-        $this->area_pure_3 = $this->weight * 1000 / ($density_1 + $density_2 + $density_3) * $this->uk3;
+        $this->area_pure_3 = $this->weight * 1000 / ($this->density_1 + $this->density_2 + $this->density_3) * $this->uk3;
         
         
         // М пог чистые 1, м
-        $this->length_pure_start_1 = $this->area_pure_1 / ($streams_number * $stream_width / 1000);
+        $this->length_pure_start_1 = $this->area_pure_1 / ($this->streams_number * $this->stream_width / 1000);
         
         // М пог чистые 2, м
-        $this->length_pure_start_2 = $this->area_pure_2 / ($streams_number * $stream_width / 1000);
+        $this->length_pure_start_2 = $this->area_pure_2 / ($this->streams_number * $this->stream_width / 1000);
         
         // М пог чистые 3, м
-        $this->length_pure_start_3 = $this->area_pure_3 / ($streams_number * $stream_width / 1000);
+        $this->length_pure_start_3 = $this->area_pure_3 / ($this->streams_number * $this->stream_width / 1000);
         
         
         // СтартСтопОтход 1, м
-        $this->waste_length_1 = $data_priladka->waste_percent * $this->length_pure_start_1 / 100;
+        $this->waste_length_1 = $this->data_priladka->waste_percent * $this->length_pure_start_1 / 100;
         
         // СтартСтопОтход 2, м
-        $this->waste_length_2 = $data_priladka_laminator->waste_percent * $this->length_pure_start_2 / 100;
+        $this->waste_length_2 = $this->data_priladka_laminator->waste_percent * $this->length_pure_start_2 / 100;
                 
         // СтартСтопОтход 3, м
-        $this->waste_length_3 = $data_priladka_laminator->waste_percent * $this->length_pure_start_3 / 100;
+        $this->waste_length_3 = $this->data_priladka_laminator->waste_percent * $this->length_pure_start_3 / 100;
         
         
         // М пог грязные 1, м
-        $this->length_dirty_start_1 = $this->length_pure_start_1 + ($ink_number * $data_priladka->length) + ($this->laminations_number * $data_priladka_laminator->length) + $this->waste_length_1;
+        $this->length_dirty_start_1 = $this->length_pure_start_1 + ($this->ink_number * $this->data_priladka->length) + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_1;
         
         // М пог грязные 2, м
-        $this->length_dirty_start_2 = $this->length_pure_start_2 + ($this->laminations_number * $data_priladka_laminator->length) + $this->waste_length_2; 
+        $this->length_dirty_start_2 = $this->length_pure_start_2 + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_2; 
         
         // М пог грязные 3, м
-        $this->length_dirty_start_3 = $this->length_pure_start_3 + ($data_priladka_laminator->length * $this->uk3) + $this->waste_length_3;
+        $this->length_dirty_start_3 = $this->length_pure_start_3 + ($this->data_priladka_laminator->length * $this->uk3) + $this->waste_length_3;
         
         
         // М2 грязные 1, м2
@@ -1658,13 +1658,13 @@ class Calculation extends CalculationBase {
         //****************************************
         
         // Масса плёнки чистая 1
-        $this->weight_pure_1 = $this->length_pure_start_1 * $this->width_1 * $density_1 / 1000000;
+        $this->weight_pure_1 = $this->length_pure_start_1 * $this->width_1 * $this->density_1 / 1000000;
         
         // Масса плёнки чистая 2
-        $this->weight_pure_2 = $this->length_pure_start_2 * $this->width_2 * $density_2 / 1000000;
+        $this->weight_pure_2 = $this->length_pure_start_2 * $this->width_2 * $this->density_2 / 1000000;
         
         // Масса плёнки чистая 3
-        $this->weight_pure_3 = $this->length_pure_start_3 * $this->width_3 * $density_3 / 1000000;
+        $this->weight_pure_3 = $this->length_pure_start_3 * $this->width_3 * $this->density_3 / 1000000;
                 
     
         // Длина пленки чистая 1, м
@@ -1678,13 +1678,13 @@ class Calculation extends CalculationBase {
         
         
         // Масса плёнки грязная 1, кг
-        $this->weight_dirty_1 = $this->area_dirty_1 * $density_1 / 1000;
+        $this->weight_dirty_1 = $this->area_dirty_1 * $this->density_1 / 1000;
         
         // Масса плёнки грязная 2, кг
-        $this->weight_dirty_2 = $this->area_dirty_2 * $density_2 / 1000;
+        $this->weight_dirty_2 = $this->area_dirty_2 * $this->density_2 / 1000;
         
         // Масса плёнки грязная 3, кг
-        $this->weight_dirty_3 = $this->area_dirty_3 * $density_3 / 1000;
+        $this->weight_dirty_3 = $this->area_dirty_3 * $this->density_3 / 1000;
         
         
         // Длина плёнки грязная 1, м
@@ -1701,39 +1701,39 @@ class Calculation extends CalculationBase {
         //****************************************
         
         // Общая стоимость грязная 1, руб
-        $this->film_cost_1 = ($this->weight_dirty_1 * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro)) + ($this->weight_dirty_1 * $this->eco_price_1 * self::GetCurrencyRate($eco_currency_1, $usd, $euro));
+        $this->film_cost_1 = ($this->weight_dirty_1 * $this->price_1 * self::GetCurrencyRate($this->currency_1, $this->usd, $this->euro)) + ($this->weight_dirty_1 * $this->eco_price_1 * self::GetCurrencyRate($this->eco_currency_1, $this->usd, $this->euro));
         
         // Общая стоимость грязная 2, руб
-        $this->film_cost_2 = ($this->weight_dirty_2 * $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro)) + ($this->weight_dirty_2 * $this->eco_price_2 * self::GetCurrencyRate($eco_currency_2, $usd, $euro));
+        $this->film_cost_2 = ($this->weight_dirty_2 * $this->price_2 * self::GetCurrencyRate($this->currency_2, $this->usd, $this->euro)) + ($this->weight_dirty_2 * $this->eco_price_2 * self::GetCurrencyRate($this->eco_currency_2, $this->usd, $this->euro));
         
         // Общая стоимость грязная 3, руб
-        $this->film_cost_3 = ($this->weight_dirty_3 * $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro)) + ($this->weight_dirty_3 * $this->eco_price_3 * self::GetCurrencyRate($eco_currency_3, $usd, $euro));
+        $this->film_cost_3 = ($this->weight_dirty_3 * $this->price_3 * self::GetCurrencyRate($this->currency_3, $this->usd, $this->euro)) + ($this->weight_dirty_3 * $this->eco_price_3 * self::GetCurrencyRate($this->eco_currency_3, $this->usd, $this->euro));
     
         //*****************************************
         // Время - деньги
         //*****************************************
         
         // Время приладки 1, мин
-        $this->priladka_time_1 = $ink_number * $data_priladka->time / 60;
+        $this->priladka_time_1 = $this->ink_number * $this->data_priladka->time / 60;
         
         // Время приладки 2, мин
-        $this->priladka_time_2 = $data_priladka_laminator->time * $this->uk2 / 60;
+        $this->priladka_time_2 = $this->data_priladka_laminator->time * $this->uk2 / 60;
         
         // Время приладки 3, мин
-        $this->priladka_time_3 = $data_priladka_laminator->time * $this->uk3 / 60;
+        $this->priladka_time_3 = $this->data_priladka_laminator->time * $this->uk3 / 60;
         
 
         // Время печати (без приладки) 1, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
-        $this->print_time_1 = $data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $data_machine->speed / 1000 * $this->uk1;
+        $this->print_time_1 = $this->data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $this->data_machine->speed / 1000 * $this->uk1;
         
         // Время ламинации (без приладки) 2, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
-        $this->lamination_time_2 = $data_laminator->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $data_laminator->speed / 1000 * $this->uk2;
+        $this->lamination_time_2 = $this->data_laminator->speed == 0 ? 0 : ($this->length_pure_start_2 + $this->waste_length_2) / $this->data_laminator->speed / 1000 * $this->uk2;
         
         // Время ламинации (без приладки) 3, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
-        $this->lamination_time_3 = $data_laminator->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $data_laminator->speed / 1000 * $this->uk3;
+        $this->lamination_time_3 = $this->data_laminator->speed == 0 ? 0 : ($this->length_pure_start_3 + $this->waste_length_3) / $this->data_laminator->speed / 1000 * $this->uk3;
         
         
         // Общее время выполнения тиража 1, ч
@@ -1747,45 +1747,45 @@ class Calculation extends CalculationBase {
         
         
         // Стоимость выполнения тиража 1, руб
-        $this->work_cost_1 = $this->work_time_1 * $data_machine->price;
+        $this->work_cost_1 = $this->work_time_1 * $this->data_machine->price;
         
         // Стоимость выполнения тиража 2, руб
-        $this->work_cost_2 = $this->work_time_2 * $data_laminator->price;
+        $this->work_cost_2 = $this->work_time_2 * $this->data_laminator->price;
         
         // Стоимость выполнения тиража 3, руб
-        $this->work_cost_3 = $this->work_time_3 * $data_laminator->price;
+        $this->work_cost_3 = $this->work_time_3 * $this->data_laminator->price;
         
         //****************************************
         // Расход краски
         //****************************************
         
         // Площадь запечатки, м2
-        $this->print_area = $this->length_dirty_1 * ($stream_width * $streams_number + 10) / 1000;
+        $this->print_area = $this->length_dirty_1 * ($this->stream_width * $this->streams_number + 10) / 1000;
         
         // Расход КраскаСмеси на 1 кг краски, кг
-        $this->ink_1kg_mix_weight = 1 + $data_ink->solvent_part;
+        $this->ink_1kg_mix_weight = 1 + $this->data_ink->solvent_part;
         
         // Цена 1 кг чистого флексоля 82, руб
-        $this->ink_flexol82_kg_price = $data_ink->solvent_flexol82_price;
+        $this->ink_flexol82_kg_price = $this->data_ink->solvent_flexol82_price;
         
         // Цена 1 кг чистого этоксипропанола, руб
-        $this->ink_etoxypropanol_kg_price = $data_ink->solvent_etoxipropanol_price;
+        $this->ink_etoxypropanol_kg_price = $this->data_ink->solvent_etoxipropanol_price;
         
         // Если печатаем на Комифлекс, то пользуемся флексолем82, иначе - этоксипропанолом
         $ink_solvent_kg_price = 0;
         $ink_solvent_currency = 1;
         
-        if($machine_id == PRINTER_COMIFLEX) {
+        if($this->machine_id == PRINTER_COMIFLEX) {
             $ink_solvent_kg_price = $this->ink_flexol82_kg_price;
-            $ink_solvent_currency = self::GetCurrencyRate($data_ink->solvent_flexol82_currency, $usd, $euro);
+            $ink_solvent_currency = self::GetCurrencyRate($this->data_ink->solvent_flexol82_currency, $this->usd, $this->euro);
         }
         else {
             $ink_solvent_kg_price = $this->ink_etoxypropanol_kg_price;
-            $ink_solvent_currency = self::GetCurrencyRate($data_ink->solvent_etoxipropanol_currency, $usd, $euro);
+            $ink_solvent_currency = self::GetCurrencyRate($this->data_ink->solvent_etoxipropanol_currency, $this->usd, $this->euro);
         }
         
         // М2 испарения растворителя грязная, м2
-        $this->vaporization_area_dirty = $data_machine->width * $this->length_dirty_start_1 / 1000;
+        $this->vaporization_area_dirty = $this->data_machine->width * $this->length_dirty_start_1 / 1000;
         
         // Создаём массив: м2 испарения чистая
         $this->vaporization_areas_pure = array();
@@ -1815,23 +1815,23 @@ class Calculation extends CalculationBase {
         $this->ink_costs_final = array();
         
         // Перебираем все краски и помещаем в каждый из четырёх массивов данные по каждой краске
-        for($i=1; $i<=$ink_number; $i++) {
+        for($i = 1; $i <= $this->ink_number; $i++) {
             $ink = "ink_$i";
             $cmyk = "cmyk_$i";
             $lacquer = "lacquer_$i";
             $percent = "percent_$i";
             
             // Цена 1 кг чистой краски, руб
-            $price = $this->GetInkPrice($$ink, $$cmyk, $$lacquer, $data_ink->c_price, $data_ink->c_currency, $data_ink->m_price, $data_ink->m_currency, $data_ink->y_price, $data_ink->y_currency, $data_ink->k_price, $data_ink->k_currency, $data_ink->panton_price, $data_ink->panton_currency, $data_ink->white_price, $data_ink->white_currency, $data_ink->lacquer_glossy_price, $data_ink->lacquer_glossy_currency, $data_ink->lacquer_matte_price, $data_ink->lacquer_matte_currency);
-            $ink_kg_price = $price->value * self::GetCurrencyRate($price->currency, $usd, $euro);
+            $price = $this->GetInkPrice($$ink, $$cmyk, $$lacquer, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency);
+            $ink_kg_price = $price->value * self::GetCurrencyRate($price->currency, $this->usd, $this->euro);
             $this->ink_kg_prices[$i] = $ink_kg_price;
             
             // Цена 1 кг КраскаСмеси, руб
-            $mix_ink_kg_price = (($ink_kg_price * 1) + ($ink_solvent_kg_price * $data_ink->solvent_part)) / $this->ink_1kg_mix_weight;
+            $mix_ink_kg_price = (($ink_kg_price * 1) + ($ink_solvent_kg_price * $this->data_ink->solvent_part)) / $this->ink_1kg_mix_weight;
             $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
             // Расход КраскаСмеси, кг
-            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $data_ink->c_expense, $data_ink->m_expense, $data_ink->y_expense, $data_ink->k_expense, $data_ink->panton_expense, $data_ink->white_expense, $data_ink->lacquer_glossy_expense, $data_ink->lacquer_matte_expense) * $$percent / 1000 / 100;
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense) * $$percent / 1000 / 100;
             $this->ink_expenses[$i] = $ink_expense;
             
             // Стоимость КраскаСмеси, руб
@@ -1842,7 +1842,7 @@ class Calculation extends CalculationBase {
             $this->vaporization_areas_pure[$i] = $this->vaporization_area_dirty - ($this->print_area * $$percent / 100);
         
             // Расход испарения растворителя, кг
-            $this->vaporization_expenses[$i] = $this->vaporization_areas_pure[$i] * $data_machine->vaporization_expense / 1000;
+            $this->vaporization_expenses[$i] = $this->vaporization_areas_pure[$i] * $this->data_machine->vaporization_expense / 1000;
         
             // Стоимость испарения растворителя, руб
             $this->vaporization_costs[$i] = $this->vaporization_expenses[$i] * $ink_solvent_kg_price * $ink_solvent_currency;
@@ -1851,8 +1851,8 @@ class Calculation extends CalculationBase {
             $this->ink_costs_mix[$i] = $this->ink_costs[$i] + $this->vaporization_costs[$i];
             
             // Стоимость КраскаСмеси финальная, руб
-            if($this->ink_costs_mix[$i] < $data_ink->min_price_per_ink) {
-                $this->ink_costs_final[$i] = floatval($data_ink->min_price_per_ink);
+            if($this->ink_costs_mix[$i] < $this->data_ink->min_price_per_ink) {
+                $this->ink_costs_final[$i] = floatval($this->data_ink->min_price_per_ink);
             }
             else {
                 $this->ink_costs_final[$i] = floatval($this->ink_costs_mix[$i]);
@@ -1864,39 +1864,39 @@ class Calculation extends CalculationBase {
         //********************************************
         
         // Расход КлеяСмеси на 1 кг клея, кг
-        $this->glue_kg_weight = 1 + $data_glue->solvent_part;
+        $this->glue_kg_weight = 1 + $this->data_glue->solvent_part;
         
         // Цена 1 кг чистого клея, руб
-        $this->glue_kg_price = $data_glue->glue_price * self::GetCurrencyRate($data_glue->glue_currency, $usd, $euro);
+        $this->glue_kg_price = $this->data_glue->glue_price * self::GetCurrencyRate($this->data_glue->glue_currency, $this->usd, $this->euro);
         
         // Цена 1 кг чистого растворителя для клея, руб
-        $this->glue_solvent_kg_price = $data_glue->solvent_price * self::GetCurrencyRate($data_glue->solvent_currency, $usd, $euro);
+        $this->glue_solvent_kg_price = $this->data_glue->solvent_price * self::GetCurrencyRate($this->data_glue->solvent_currency, $this->usd, $this->euro);
         
         // Цена 1 кг КлеяСмеси, руб
-        $this->mix_glue_kg_price = ((1 * $this->glue_kg_price) + ($data_glue->solvent_part * $this->glue_solvent_kg_price)) / $this->glue_kg_weight;
+        $this->mix_glue_kg_price = ((1 * $this->glue_kg_price) + ($this->data_glue->solvent_part * $this->glue_solvent_kg_price)) / $this->glue_kg_weight;
         
         // Площадь заклейки 2, м2
-        $this->glue_area2 = $this->length_dirty_2 * $lamination_roller_width / 1000;
+        $this->glue_area2 = $this->length_dirty_2 * $this->lamination_roller_width / 1000;
         
         // Площадь заклейки 3, м2
-        $this->glue_area3 = $this->length_dirty_3 * $lamination_roller_width / 1000;
+        $this->glue_area3 = $this->length_dirty_3 * $this->lamination_roller_width / 1000;
         
         // Расход КлеяСмеси 2, кг
         // Если название плёнки начинается на "Pet", то используем расход краски для ламинации ПЭТ
-        if((strlen($film_1) > 3 && substr($film_1, 0, 3) == "Pet") || (strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet")) {
-            $this->glue_expense2 = $this->glue_area2 * $data_glue->glue_expense_pet / 1000;
+        if((strlen($this->film_1) > 3 && substr($this->film_1, 0, 3) == "Pet") || (strlen($this->film_2) > 3 && substr($this->film_2, 0, 3) == "Pet")) {
+            $this->glue_expense2 = $this->glue_area2 * $this->data_glue->glue_expense_pet / 1000;
         }
         else {
-            $this->glue_expense2 = $this->glue_area2 * $data_glue->glue_expense / 1000;
+            $this->glue_expense2 = $this->glue_area2 * $this->data_glue->glue_expense / 1000;
         }
         
         // Расход КлеяСмеси 3, кг
         // Если название плёнки начинается на "Pet", то используем расход краски для ламинации ПЭТ
-        if((strlen($film_2) > 3 && substr($film_2, 0, 3) == "Pet") || (strlen($film_3) > 3 && substr($film_3, 0, 3) == "Pet")) {
-            $this->glue_expense3 = $this->glue_area3 * $data_glue->glue_expense_pet / 1000;
+        if((strlen($this->film_2) > 3 && substr($this->film_2, 0, 3) == "Pet") || (strlen($this->film_3) > 3 && substr($this->film_3, 0, 3) == "Pet")) {
+            $this->glue_expense3 = $this->glue_area3 * $this->data_glue->glue_expense_pet / 1000;
         }
         else {
-            $this->glue_expense3 = $this->glue_area3 * $data_glue->glue_expense / 1000;
+            $this->glue_expense3 = $this->glue_area3 * $this->data_glue->glue_expense / 1000;
         }
         
         // Стоимость КлеяСмеси 2, руб
@@ -1910,10 +1910,10 @@ class Calculation extends CalculationBase {
         //***********************************
         
         // Высота форм, м
-        $this->cliche_height = ($raport + 20) / 1000;
+        $this->cliche_height = ($this->raport + 20) / 1000;
         
         // Ширина форм, м
-        $this->cliche_width = ($streams_number * $stream_width + 20 + ((!empty($ski_1) && $ski_1 == self::NO_SKI) ? 0 : 20)) / 1000;
+        $this->cliche_width = ($this->streams_number * $this->stream_width + 20 + ((!empty($this->ski_1) && $this->ski_1 == self::NO_SKI) ? 0 : 20)) / 1000;
         
         // Площадь форм, м2
         $this->cliche_area = $this->cliche_height * $this->cliche_width;
@@ -1925,7 +1925,7 @@ class Calculation extends CalculationBase {
         $this->cliche_new_number = 0;
         
         // Перебираем все формы, определяем стоимость каждой, помещаем эту величину в массив
-        for($i=1; $i<=$ink_number; $i++) {
+        for($i = 1; $i <= $this->ink_number; $i++) {
             $cliche = "cliche_$i";
             
             // Если форма не старая, то количество новых форм увеличиваем на 1
@@ -1938,18 +1938,18 @@ class Calculation extends CalculationBase {
             
             switch ($$cliche) {
                 case self::FLINT:
-                    $cliche_sm_price = $data_cliche->flint_price;
-                    $cliche_currency = $data_cliche->flint_currency;
+                    $cliche_sm_price = $this->data_cliche->flint_price;
+                    $cliche_currency = $this->data_cliche->flint_currency;
                     break;
                 
                 case self::KODAK:
-                    $cliche_sm_price = $data_cliche->kodak_price;
-                    $cliche_currency = $data_cliche->kodak_currency;
+                    $cliche_sm_price = $this->data_cliche->kodak_price;
+                    $cliche_currency = $this->data_cliche->kodak_currency;
                     break;
             }
             
             // Стоимость формы, руб
-            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $usd, $euro);
+            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $this->usd, $this->euro);
             $this->cliche_costs[$i] = $cliche_cost;
         }
         
@@ -1960,10 +1960,8 @@ class Calculation extends CalculationBase {
         // Стоимость скотча для каждой краски
         $this->scotch_costs = array();
         
-        for($i=1; $i<=$ink_number; $i++) {
-            $cliche_area = $this->cliche_area;
-            
-            $this->scotch_costs[$i] = $cliche_area * $data_cliche->scotch_price * self::GetCurrencyRate($data_cliche->scotch_currency, $usd, $euro);
+        for($i = 1; $i <= $this->ink_number; $i++) {
+            $this->scotch_costs[$i] = $this->cliche_area * $this->data_cliche->scotch_price * self::GetCurrencyRate($this->data_cliche->scotch_currency, $this->usd, $this->euro);
         }
         
         // Общая себестоимость скотча
@@ -1975,14 +1973,11 @@ class Calculation extends CalculationBase {
         
         // Если имеющаяся наценка не пустая, оставляем её
         // Если пустая, вычисляем
-        if(!empty($extracharge)) { // !!!! Значение 0.000 не считается EMPTY
-            $this->extracharge = $extracharge;
-        }
-        else {
+        if(empty($this->extracharge)) { // !!!! Значение 0.000 не считается EMPTY
             $this->extracharge = 0;
             $ech_type = 0;
             
-            if($work_type_id == WORK_TYPE_NOPRINT) {
+            if($this->work_type_id == WORK_TYPE_NOPRINT) {
                 $ech_type = ET_NOPRINT;
             }
             elseif($this->laminations_number == 0) {
@@ -1995,15 +1990,14 @@ class Calculation extends CalculationBase {
                 $ech_type = ET_PRINT_2_LAMINATIONS;
             }
             
-            foreach($data_extracharge as $item) {
+            foreach($this->data_extracharge as $item) {
                 if($item->ech_type == $ech_type && round($this->weight) >= $item->min_weight && (round($this->weight) <= $item->max_weight || empty($item->max_weight))) {
                     $this->extracharge = $item->value;
                 }
             }
         }
         
-        // Наценка на ПФ
-        $this->extracharge_cliche = $extracharge_cliche;
+        // Наценка на ПФ $this->extracharge_cliche
         
         // Если УКПФ = 1 (то есть, ПФ включены в себестоимость), то наценка на ПФ всегда 0
         if($this->ukpf == 1) {
@@ -2023,14 +2017,14 @@ class Calculation extends CalculationBase {
         // Общая стоимость всех КраскаСмеси
         $this->ink_cost = 0;
         
-        for($i=1; $i<=$ink_number; $i++) {
+        for($i = 1; $i <= $this->ink_number; $i++) {
             $this->ink_cost += $this->ink_costs_final[$i];
         }
         
         // Общий расход всех КраскаСмеси
         $this->ink_expense = 0;
         
-        for($i=1; $i<=$ink_number; $i++) {
+        for($i = 1; $i <= $this->ink_number; $i++) {
             $this->ink_expense += $this->ink_expenses[$i];
         }
         
@@ -2040,7 +2034,7 @@ class Calculation extends CalculationBase {
         // Себестоимость ПФ
         $this->cliche_cost = 0;
         
-        for($i=1; $i<=$ink_number; $i++) {
+        for($i = 1; $i <= $this->ink_number; $i++) {
             $this->cliche_cost += $this->cliche_costs[$i];
         }
         
@@ -2051,20 +2045,20 @@ class Calculation extends CalculationBase {
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
         
         // Себестоимость
-        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf) + $this->scotch_cost + ($quantity * $extra_expense);
+        $this->cost = $this->film_cost + $this->work_cost + $this->ink_cost + $this->glue_cost + ($this->cliche_cost * $this->ukpf) + $this->scotch_cost + ($this->quantity * $this->extra_expense);
         
         // Себестоимость за единицу
-        $this->cost_per_unit = $this->cost / $quantity;
+        $this->cost_per_unit = $this->cost / $this->quantity;
         
         // Отгрузочная стоимость
         $this->shipping_cost = $this->cost * (1 + ($this->extracharge / 100));
         
         // Отгрузочная стоимость за единицу
-        $this->shipping_cost_per_unit = $this->shipping_cost / $quantity;
+        $this->shipping_cost_per_unit = $this->shipping_cost / $this->quantity;
         
         if($this->extracharge != 0) {
             // !!!! Корректируем отгрузочную стоимость, чтобы она точно равнялась стоимости за единицу (округлённой до 3), умноженной на размер тиража
-            $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $quantity;
+            $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $this->quantity;
         }
         
         // Прибыль
@@ -2077,14 +2071,14 @@ class Calculation extends CalculationBase {
         $this->total_weight_dirty = $this->weight_dirty_1 + $this->weight_dirty_2 + $this->weight_dirty_3;
         
         // Стоимость плёнки на единицу
-        $this->film_cost_per_unit_1 = $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
-        $this->film_cost_per_unit_2 = $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro);
-        $this->film_cost_per_unit_3 = $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro);
+        $this->film_cost_per_unit_1 = $this->price_1 * self::GetCurrencyRate($this->currency_1, $this->usd, $this->euro);
+        $this->film_cost_per_unit_2 = $this->price_2 * self::GetCurrencyRate($this->currency_2, $this->usd, $this->euro);
+        $this->film_cost_per_unit_3 = $this->price_3 * self::GetCurrencyRate($this->currency_3, $this->usd, $this->euro);
         
         // Отходы плёнки, стоимость
-        $this->film_waste_cost_1 = ($this->weight_dirty_1 - $this->weight_pure_1) * $price_1 * self::GetCurrencyRate($currency_1, $usd, $euro);
-        $this->film_waste_cost_2 = ($this->weight_dirty_2 - $this->weight_pure_2) * $price_2 * self::GetCurrencyRate($currency_2, $usd, $euro);
-        $this->film_waste_cost_3 = ($this->weight_dirty_3 - $this->weight_pure_3) * $price_3 * self::GetCurrencyRate($currency_3, $usd, $euro);
+        $this->film_waste_cost_1 = ($this->weight_dirty_1 - $this->weight_pure_1) * $this->price_1 * self::GetCurrencyRate($this->currency_1, $this->usd, $this->euro);
+        $this->film_waste_cost_2 = ($this->weight_dirty_2 - $this->weight_pure_2) * $this->price_2 * self::GetCurrencyRate($this->currency_2, $this->usd, $this->euro);
+        $this->film_waste_cost_3 = ($this->weight_dirty_3 - $this->weight_pure_3) * $this->price_3 * self::GetCurrencyRate($this->currency_3, $this->usd, $this->euro);
         
         // Отходы плёнки, масса
         $this->film_waste_weight_1 = $this->weight_dirty_1 - $this->weight_pure_1;
@@ -2619,7 +2613,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         $this->income_cliche = ($this->shipping_cliche_cost - $this->cliche_cost) * (($this->ukpf - 1) / -1);
         
         // Себестоимость ножа
-        $this->knife_cost = $knife;
+        $this->knife_cost = $this->knife;
         
         // Отгрузочная стоимость ножа
         $this->shipping_knife_cost = $this->knife_cost * (1 + ($this->extracharge_knife / 100)) * $this->ukcuspayknife * (($this->ukknife - 1) / -1);
