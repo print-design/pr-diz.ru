@@ -114,7 +114,8 @@ function GetSkiNameExt($param, $param_width) {
                 <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE && $calculation->laminations_number > 0): ?>
             <tr><th>Ширина ламинирующего вала</th><td><?= $calculation->lamination_roller_width ?> мм</td></tr>
                 <?php endif; ?>
-            <tr><th>Дополнительные расходы с <?=(empty($calculation->unit) || $calculation->unit == 'kg' ? "кг" : "шт") ?></th><td><?=rtrim(rtrim(number_format($calculation->extra_expense, 2, ",", ""), "0"), ",") ?> руб</td></tr>
+            <tr><th>Доп. расходы с <?=(empty($calculation->unit) || $calculation->unit == 'kg' ? "кг" : "шт") ?></th><td><?=rtrim(rtrim(number_format($calculation->extra_expense, 2, ",", ""), "0"), ",") ?> руб</td></tr>
+            <tr><th>Экосбор с 1 кг</th><td><?=DisplayNumber((($calculation->eco_price_1 * $calculation->GetCurrencyRate($calculation->eco_currency_1, $calculation->usd, $calculation->euro)) + ($calculation->eco_price_2 * $calculation->GetCurrencyRate($calculation->eco_currency_2, $calculation->usd, $calculation->euro)) + ($calculation->eco_price_3 * $calculation->GetCurrencyRate($calculation->eco_currency_3, $calculation->usd, $calculation->euro))) / ((empty($calculation->laminations_number) ? 0 : $calculation->laminations_number) + 1), 2) ?> руб</td></tr>
         </table>
     </div>
 </div>
