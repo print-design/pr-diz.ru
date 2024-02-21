@@ -611,13 +611,13 @@ if($id !== null) {
         
     array_push($file_data, array("Высота форм, м",
         DisplayNumber($calculation->cliche_height, 5),
-        "|= ".DisplayNumber($calculation->raport, 5)." + 20",
-        "(рапорт + 20мм) / 1000"));
+        "|= (".DisplayNumber($calculation->raport, 5)." + 20) / 1000",
+        "(рапорт + 20 мм) / 1000"));
         
     array_push($file_data, array("Ширина форм, м",
         DisplayNumber($calculation->cliche_width, 5),
-        "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20) + ".((!empty($calculation->ski_1) && $calculation->ski_1 == Calculation::NO_SKI) ? 0 : 20),
-        "((кол-во ручьёв * ширина ручьёв + 20 мм), если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000"));
+        "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == Calculation::NO_SKI) ? 0 : 20).") / 1000",
+        "((кол-во ручьёв * ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000"));
         
     array_push($file_data, array("Площадь форм, м2",
         DisplayNumber($calculation->cliche_area, 5),
