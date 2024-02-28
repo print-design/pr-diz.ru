@@ -1491,7 +1491,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                     <option value="<?= CalculationResult::PHOTOLABEL_RIGHT ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_RIGHT ? " selected='selected'" : "" ?>>Правая</option>
                                     <option value="<?= CalculationResult::PHOTOLABEL_BOTH ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_BOTH ? " selected='selected'" : "" ?>>Две фотометки</option>
                                     <option value="<?= CalculationResult::PHOTOLABEL_NONE ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_NONE || (empty($photolabel) && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) ? " selected='selected'" : "" ?>>Без фотометки</option>
-                                    <option value="<?= CalculationResult::PHOTOLABEL_NOT_FOUND ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_NOT_FOUND ? " selected='selected'" : "" ?>>Нет нужной фотометки</option>
+                                    <option value="<?= CalculationResult::PHOTOLABEL_NOT_FOUND ?>"<?=$photolabel == CalculationResult::PHOTOLABEL_NOT_FOUND ? " selected='selected'" : "" ?>>Нет нужной намотки</option>
                                 </select>
                                 <div class="invalid-feedback">Расположение фотометки обязательно</div>
                             </div>

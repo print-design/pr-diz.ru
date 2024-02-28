@@ -838,7 +838,7 @@ $current_date_time = date("dmYHis");
                                     echo "Без фотометки";
                                     break;
                                 case CalculationResult::PHOTOLABEL_NOT_FOUND:
-                                    echo "Нет нужной фотометки";
+                                    echo "Нет нужной намотки";
                                     break;
                                 default :
                                     echo ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Без фотометки" : "Левая");
