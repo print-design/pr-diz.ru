@@ -209,6 +209,12 @@
         $take_first_name = $row['first_name'];
     }
     
+    $cutter = "ВЫХОДНОЙ ДЕНЬ";
+    
+    if(!empty($take_last_name) && !empty($take_first_name)) {
+        $cutter = $take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ';
+    }
+    
     $hide_table_class = " d-none";
     $show_table_class = "";
     if(filter_input(INPUT_GET, 'take_id') == $take['id']) {
@@ -226,7 +232,7 @@
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <a href="javascript: void(0);" class="hide_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ' ?></strong> <?= rtrim(rtrim(DisplayNumber(floatval($take['weight']), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($take['length']), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $calculation->number_in_meter), 0)." шт." ?>
+            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$cutter ?>,</strong> <?= rtrim(rtrim(DisplayNumber(floatval($take['weight']), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($take['length']), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $calculation->number_in_meter), 0)." шт." ?>
         </div>
         <table class="table take_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
