@@ -3209,6 +3209,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('.no-print-only').addClass('d-none');
                     $('.no-print-only').removeAttr('required');
                     
+                    // Скрываем поля "только с ламинацией"
+                    $('.lam-only').addClass('d-none');
+                    $('.lam-only').removeAttr('required');
+                    
                     // Скрываем все поля, касающиеся ламинации
                     $('#form_lamination_1 select').val('');
                     $('#form_lamination_1 input').val('');
