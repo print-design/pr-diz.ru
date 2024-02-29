@@ -39,14 +39,14 @@ if($pager_pages_count > 1) {
                 echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
             }
             
-            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript: void(0);'>...</a></li>";
             $pager_get_params[PAGE] = $pager_pages_count;
             echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>".$pager_pages_count."</a>";
         }
         elseif ($pager_page >= $min_tail_page + 2) {
             $pager_get_params[PAGE] = 1;
             echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>1</a>";
-            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript: void(0);'>...</a></li>";
             for($i = $min_tail_page; $i <= $pager_pages_count; $i++) {
                 $pager_get_params[PAGE] = $i;
                 $disabled = "";
@@ -57,7 +57,7 @@ if($pager_pages_count > 1) {
         else {
             $pager_get_params[PAGE] = 1;
             echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>1</a>";
-            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript: void(0);'>...</a></li>";
             
             $floor = floor(LINKS_VISIBLE / 2);
             $min_page = $pager_page - $floor;
@@ -69,7 +69,7 @@ if($pager_pages_count > 1) {
                 echo "<li class='page-item".$disabled."'><a class='page-link' href='?".http_build_query($pager_get_params)."'>".$i."</a></li>";
             }
             
-            echo "<li class='page-item disabled'><a class='page-link' href='javascript:void(0);'>...</a></li>";
+            echo "<li class='page-item disabled'><a class='page-link' href='javascript: void(0);'>...</a></li>";
             $pager_get_params[PAGE] = $pager_pages_count;
             echo "<li class='page-item'><a class='page-link' href='?". http_build_query($pager_get_params)."'>".$pager_pages_count."</a>";
         }

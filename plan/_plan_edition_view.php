@@ -347,7 +347,7 @@
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
         <div class="timetable_menu text-left">
             <div class="command">
-                <button type="button" class="btn btn-link h-25" style="font-size: 14px;" onclick="javascript: DeleteEvent(<?=$this->edition['calculation_id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
+                <button type="button" class="btn btn-link h-25" style="font-size: 14px;" onclick="javascript: event.preventDefault(); DeleteEvent(<?=$this->edition['calculation_id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
             </div>
         </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>

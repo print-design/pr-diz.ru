@@ -937,7 +937,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_1">
                                     <form class="requirement_form form-inline">
                                         <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_1" data-id="<?=$id ?>" data-i="1"><?=$calculation->requirement1 ?></textarea>
-                                        <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 1);">OK</a>
+                                        <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: event.preventDefault(); SaveRequirement(<?=$id ?>, 1);">OK</a>
                                     </form>
                                 </div>
                             </td>
@@ -988,7 +988,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_2">
                                     <form class="requirement_form form-inline">
                                         <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_2" data-id="<?=$id ?>" data-i="2"><?=$calculation->requirement2 ?></textarea>
-                                        <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 2);">OK</a>
+                                        <a class="btn btn-outline-dark" href="javascsript: void(0);" onclick="javascript: event.preventDefault(); SaveRequirement(<?=$id ?>, 2);">OK</a>
                                     </form>
                                 </div>
                             </td>
@@ -1280,7 +1280,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <div class="edit_requirement_form d-none" id="edit_requirement_form_3">
                                     <form class="requirement_form form-inline">
                                         <textarea rows="3" class="requirement_input" name="requirement" id="requirement_input_3" data-id="<?=$id ?>" data-i="3"><?=$calculation->requirement3 ?></textarea>
-                                        <a class="btn btn-outline-dark form-control" href="javascsript: void(0);" onclick="javascript: SaveRequirement(<?=$id ?>, 3);">OK</a>
+                                        <a class="btn btn-outline-dark form-control" href="javascsript: void(0);" onclick="javascript: event.preventDefault(); SaveRequirement(<?=$id ?>, 3);">OK</a>
                                     </form>
                                 </div>
                             </td>

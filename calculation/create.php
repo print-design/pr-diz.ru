@@ -1455,7 +1455,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <div class="row no-print-only print-only d-none">
                             <div class="col-6">
                                 <div id="show_lamination_1">
-                                    <button type="button" class="btn btn-light" onclick="javascript: ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                    <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault(); ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -1476,7 +1476,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     }
                                     ?>
                                     <div class="<?=$hide_lamination1_class ?>" id="hide_lamination_1">
-                                        <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: HideLamination1();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
+                                        <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: event.preventDefault(); HideLamination1();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
                                     </div>
                                 </div>
                             </div>
@@ -1666,7 +1666,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="row">
                                 <div class="col-6">
                                     <div id="show_lamination_2">
-                                        <button type="button" class="btn btn-light" onclick="javascript: ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
+                                        <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault(); ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                     </div> 
                                 </div>
                                 <div class="col-6"></div>
@@ -1678,7 +1678,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <p class="font-weight-bold">Ламинация 2</p>
                                     </div>
                                     <div class="p-0">
-                                        <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: HideLamination2();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
+                                        <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: event.preventDefault(); HideLamination2();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
                                     </div>
                                 </div>
                                 <div class="row">

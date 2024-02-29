@@ -487,14 +487,14 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
     <div id="show_costs">
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
-                <button type="button" class="btn btn-light" onclick="javascript: ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
+                <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault(); ShowCosts();"><i class="fa fa-chevron-down"></i>&nbsp;Показать расходы</button>
             </div>
         </div>
     </div>
     <div id="costs" class="d-none">
         <div class="row text-nowrap">
             <div class="col-4 pr-4">
-                <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
+                <button type="button" class="btn btn-light" id="hide_costs" onclick="javascript: event.preventDefault(); HideCosts();"><i class="fa fa-chevron-up"></i>&nbsp;Скрыть расходы</button>
                 <h2 class="mt-2">Расходы</h2>
             </div>
             <div class="col-4 pr-4" style="border-left: solid 2px #ced4da;"></div>

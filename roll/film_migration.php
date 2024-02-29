@@ -49,7 +49,7 @@ if($row = $fetcher->Fetch()) {
             <h1>Миграция (рулоны)</h1>
             <div id="progress"><?=$ok_count ?> из <?=$total_count ?></div>
             <br /><br /><br />
-            <button type="button" class="btn btn-lg btn-primary" id="start_btn" onclick="javascript: Start(); $(this).hide();">Запуск</button>
+            <button type="button" class="btn btn-lg btn-primary" id="start_btn" onclick="javascript: event.preventDefault(); Start(); $(this).hide();">Запуск</button>
         </div>
         <?php
         include '../include/footer.php';

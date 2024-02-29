@@ -30,7 +30,7 @@ if($row = $fetcher->Fetch()) {
     </head>
     <body>
         <div style="font-size: 50px; float: left;">
-            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
+            <a href="javascript: void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
         </div>
         <div id="finish_link" style="float: right;">
             <a href="<?=APPLICATION ?>/marker/roll.php" class="btn btn-dark" style="font-size: 20px;">Завершить</a>
