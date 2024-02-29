@@ -311,7 +311,6 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
-                            . "left join calculation_result cr on cr.calculation_id = c.id "
                             . "left join customer cus on c.customer_id = cus.id "
                             . "left join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
