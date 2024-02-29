@@ -7,12 +7,43 @@ if(!LoggedIn()) {
 }
         
 // Получение личных данных
-$row = (new Fetcher("select username, last_name, first_name, email, phone from user where id=".GetUserId()))->Fetch();
-$username = $row['username'];
-$last_name = $row['last_name'];
-$first_name = $row['first_name'];
-$email = $row['email'];
-$phone = $row['phone'];
+$username = '';
+$last_name = '';
+$first_name = '';
+$email = '';
+$phone = '';
+
+$sql = "select username, last_name, first_name, email, phone from user where id=".GetUserId();
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $username = $row['username'];
+    $last_name = $row['last_name'];
+    $first_name = $row['first_name'];
+    $email = $row['email'];
+    $phone = $row['phone'];
+}
+
+if(IsInRole(CUTTER_USERS)) {
+    $current_time = new DateTime();
+    $current_time->setTimezone(new DateTimeZone('Europe/Moscow'));
+    $current_date_format = $current_time->format('d-m-Y');
+    
+    $current_hour = intval($current_time->format('G'));
+    $current_shift = 'day';
+    if($current_hour < 8 || $current_hour > 19) {
+        $current_shift = 'night';
+    }
+    
+    $sql = "select pe.last_name, pe.first_name, pe.phone "
+            . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
+            . "where date_format(pw.date, '%d-%m-%Y') = '$current_date_format' and pw.shift = '$current_shift' and pw.work_id = ".WORK_CUTTING.' and pw.machine_id = '. GetUserId();
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $last_name = $row['last_name'];
+        $first_name = $row['first_name'];
+        $phone = $row['phone'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,6 +96,7 @@ $phone = $row['phone'];
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_cut.php';
         ?>
     </body>
 </html>
