@@ -283,7 +283,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <form method="post">
                                 <input type="hidden" name="id" value="<?=$id ?>" />
                                 <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
-                                <button type="submit" name="pack_submit" class="btn btn-dark pl-4 pr-4 mr-4">Завершить</button>
+                                <button type="submit" name="pack_submit" class="btn btn-dark pl-4 pr-4 mr-4">Тираж выполнен</button>
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
