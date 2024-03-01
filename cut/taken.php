@@ -31,20 +31,6 @@ if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
     }
 }
 
-// Завершение резки
-if(null !== filter_input(INPUT_POST, 'finished_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_FINISHED." where id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        header("Location: finished.php?id=$id&machine_id=$machine_id#");
-    }
-}
-
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -304,13 +290,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             </form>
                         </div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#add_not_take_stream"><i class="fas fa-plus mr-2"></i>Добавить рулон не из съёма</button></div>
-                        <div>
-                            <form method="post">
-                                <input type="hidden" name="id" value="<?=$id ?>" />
-                                <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
-                                <button type="submit" name="finished_submit" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Тираж выполнен</button>
-                            </form>
-                        </div>
+                        <div><a href="finished.php?id=<?=$id ?>&machine_id=<?=$machine_id ?>" class="btn btn-light pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Тираж выполнен</a></div>
                         <div><button type="button" class="btn btn-light pl-4 pr-4 mr-4" data-toggle="modal" data-target="#cut_remove"><img src="../images/icons/error_circle.svg" class="mr-2" />Возникла проблема</button></div>
                     </div>
                     <?php include './_table.php'; ?>

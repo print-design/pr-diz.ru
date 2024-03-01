@@ -15,22 +15,6 @@ if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
-// Возвращение к съёмам
-$error_message = '';
-
-if(null !== filter_input(INPUT_POST, 'back_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING." where id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        header("Location: take.php?id=$id&machine_id=$machine_id");
-    }
-}
-
 // Готовность к упаковке
 if(null !== filter_input(INPUT_POST, 'pack_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -198,11 +182,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             ?>
             <div class="row">
                 <div class="col-8">
-                    <form method="post">
-                        <input type="hidden" name="id" value="<?=$id ?>" />
-                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
-                        <button type="submit" class="btn btn-light backlink" name="back_submit">Вернуться к резке</button>
-                    </form>
+                    <a class="btn btn-light backlink" href="take.php?id=<?=$id ?>&machine_id=<?=$machine_id ?>">Вернуться к резке</a>
                     <div class="row">
                         <div class="col-6">
                             <h1><?=$calculation->name ?></h1>
