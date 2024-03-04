@@ -418,7 +418,7 @@ class CalculationBase {
         $this->color_1 = $color_1; $this->color_2 = $color_2; $this->color_3 = $color_3; $this->color_4 = $color_4; $this->color_5 = $color_5; $this->color_6 = $color_6; $this->color_7 = $color_7; $this->color_8 = $color_8; // Номер пантона
         $this->cmyk_1 = $cmyk_1; $this->cmyk_2 = $cmyk_2; $this->cmyk_3 = $cmyk_3; $this->cmyk_4 = $cmyk_4; $this->cmyk_5 = $cmyk_5; $this->cmyk_6 = $cmyk_6; $this->cmyk_7 = $cmyk_7; $this->cmyk_8 = $cmyk_8; // Тип CMYK (cyan, magenda, yellow, kontur)
         $this->lacquer_1 = $lacquer_1; $this->lacquer_2 = $lacquer_2; $this->lacquer_3 = $lacquer_3; $this->lacquer_4 = $lacquer_4; $this->lacquer_5 = $lacquer_5; $this->lacquer_6 = $lacquer_6; $this->lacquer_7 = $lacquer_7; $this->lacquer_8 = $lacquer_8; // Тип лака (глянцевый, матовый)
-        $this->percent_1 = $percent_1; $this->percent_2 = $percent_2; $this->percent_3 = $percent_3; $this->percent_4 = $percent_4; $this->percent_5 = $percent_5; $percent_6 = $percent_6; $this->percent_7 = $percent_7; $this->percent_8 = $percent_8; // Процент данной краски
+        $this->percent_1 = $percent_1; $this->percent_2 = $percent_2; $this->percent_3 = $percent_3; $this->percent_4 = $percent_4; $this->percent_5 = $percent_5; $this->percent_6 = $percent_6; $this->percent_7 = $percent_7; $this->percent_8 = $percent_8; // Процент данной краски
         $this->cliche_1 = $cliche_1; $this->cliche_2 = $cliche_2; $this->cliche_3 = $cliche_3; $this->cliche_4 = $cliche_4; $this->cliche_5 = $cliche_5; $this->cliche_6 = $cliche_6; $this->cliche_7 = $cliche_7; $this->cliche_8 = $cliche_8; // Форма (старая, Флинт, Кодак)
         
         $this->cliche_in_price = $cliche_in_price; // Включить ПФ в себестоимость
