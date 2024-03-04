@@ -750,7 +750,7 @@ class CalculationBase {
                     $eco_currency_1 = $row1['currency'];
                 }
             }
-            elseif(empty ($row['film_variation_id'])) {
+            elseif(!empty ($row['individual_film_name'])) {
                 $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
                 $fetcher1 = new Fetcher($sql1);
                 if($row1 = $fetcher1->Fetch()) {
@@ -758,7 +758,7 @@ class CalculationBase {
                     $eco_currency_1 = $row1['currency'];
                 }
             }
-            else {
+            elseif(!empty ($row['film_variation_id'])) {
                 $sql1 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['film_variation_id']." order by id desc limit 1";
                 $fetcher1 = new Fetcher($sql1);
                 if($row1 = $fetcher1->Fetch()) {
@@ -766,8 +766,7 @@ class CalculationBase {
                     $eco_currency_1 = $row1['eco_currency'];
                 }
             }
-            
-            if(empty($eco_price_1)) {
+            else {
                 $eco_price_1 = 0;
                 $eco_currency_1 = CURRENCY_RUB;
             }
@@ -799,7 +798,7 @@ class CalculationBase {
                     $eco_currency_2 = $row2['currency'];
                 }
             }
-            elseif(empty ($row['lamination1_film_variation_id'])) {
+            elseif(!empty ($row['lamination1_individual_film_name'])) {
                 $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
                 $fetcher2 = new Fetcher($sql2);
                 if($row2 = $fetcher2->Fetch()) {
@@ -807,7 +806,7 @@ class CalculationBase {
                     $eco_currency_2 = $row2['currency'];
                 }
             }
-            else {
+            elseif(!empty ($row['lamination1_film_variation_id'])) {
                 $sql2 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination1_film_variation_id']." order by id desc limit 1";
                 $fetcher2 = new Fetcher($sql2);
                 if($row2 = $fetcher2->Fetch()) {
@@ -815,8 +814,7 @@ class CalculationBase {
                     $eco_currency_2 = $row2['eco_currency'];
                 }
             }
-            
-            if(empty($eco_price_2)) {
+            else {
                 $eco_price_2 = 0;
                 $eco_currency_2 = CURRENCY_RUB;
             }
@@ -839,7 +837,7 @@ class CalculationBase {
             $ski_3 = $row['lamination2_ski']; // Ламинация 2, лыжи
             $width_ski_3 = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
             
-            // Получаем сумму и валюту экосбора 2
+            // Получаем сумму и валюту экосбора 3
             if($customers_material_3 == true) {
                 $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
                 $fetcher3 = new Fetcher($sql3);
@@ -848,7 +846,7 @@ class CalculationBase {
                     $eco_currency_3 = $row3['currency'];
                 }
             }
-            elseif(empty ($row['lamination2_film_variation_id'])) {
+            elseif(!empty ($row['lamination2_individual_film_name'])) {
                 $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
                 $fetcher3 = new Fetcher($sql3);
                 if($row3 = $fetcher3->Fetch()) {
@@ -856,7 +854,7 @@ class CalculationBase {
                     $eco_currency_3 = $row3['currency'];
                 }
             }
-            else {
+            elseif(!empty ($row['lamination2_film_variation_id'])) {
                 $sql3 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination2_film_variation_id']." order by id desc limit 1";
                 $fetcher3 = new Fetcher($sql3);
                 if($row3 = $fetcher3->Fetch()) {
@@ -864,8 +862,7 @@ class CalculationBase {
                     $eco_currency_3 = $row3['eco_currency'];
                 }
             }
-            
-            if(empty($eco_price_3)) {
+            else {
                 $eco_price_3 = 0;
                 $eco_currency_3 = CURRENCY_RUB;
             }
