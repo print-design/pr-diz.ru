@@ -73,7 +73,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             <table class="table typography">
                 <tr>
                     <th>Дата<i class='fas fa-arrow-down ml-2' style="color: #BBBBBB;"></i></th>
-                    <th>Резчик</th>
                     <th>№</th>
                     <th>Заказ</th>
                     <th>Метраж</th>
@@ -92,8 +91,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
                     . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                     . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
-                    . "(select concat(last_name, ' ', left(first_name, 1), '.') from plan_employee where id = (select employee1_id from plan_workshift1 where work_id = ".WORK_CUTTING." and machine_id = e.machine_id and date = date(ct.time) and shift = 'day')) as day_cutter, "
-                    . "(select concat(last_name, ' ', left(first_name, 1), '.') from plan_employee where id = (select employee1_id from plan_workshift1 where work_id = ".WORK_CUTTING." and machine_id = e.machine_id and date = date(ct.time) and shift = 'night')) as night_cutter, "
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                     . "from calculation c "
                     . "inner join plan_edition e on e.calculation_id = c.id "
@@ -107,11 +104,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
-            $hour = $datetime->format('G');
             ?>
                 <tr>
                     <td><?=$datetime->format('d.m') ?><br /><span style="font-size: smaller;"><?=$datetime->format('H:i') ?></span></td>
-                    <td><?=($hour < 8 || $hour > 19) ? $row['night_cutter'] : $row['day_cutter'] ?></td>
                     <td><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                     <td><?=$row['calculation'] ?><br /><span style="font-size: smaller;"><?=$row['customer'] ?></span></td>
                     <td><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
