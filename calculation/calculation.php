@@ -743,7 +743,7 @@ class CalculationBase {
             
             // Получаем сумму и валюту экосбора 1
             if($customers_material_1 == true) {
-                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
+                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." and date <= '$date' order by id desc limit 1";
                 $fetcher1 = new Fetcher($sql1);
                 if($row1 = $fetcher1->Fetch()) {
                     $eco_price_1 = $row1['price'];
@@ -751,7 +751,7 @@ class CalculationBase {
                 }
             }
             elseif(!empty ($row['individual_film_name'])) {
-                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
+                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." and date <= '$date' order by id desc limit 1";
                 $fetcher1 = new Fetcher($sql1);
                 if($row1 = $fetcher1->Fetch()) {
                     $eco_price_1 = $row1['price'];
@@ -759,7 +759,7 @@ class CalculationBase {
                 }
             }
             elseif(!empty ($row['film_variation_id'])) {
-                $sql1 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['film_variation_id']." order by id desc limit 1";
+                $sql1 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['film_variation_id']." and date <= '$date' order by id desc limit 1";
                 $fetcher1 = new Fetcher($sql1);
                 if($row1 = $fetcher1->Fetch()) {
                     $eco_price_1 = $row1['eco_price'];
@@ -791,7 +791,7 @@ class CalculationBase {
             
             // Получаем сумму и валюту экосбора 2
             if($customers_material_2 == true) {
-                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
+                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." and date <= '$date' order by id desc limit 1";
                 $fetcher2 = new Fetcher($sql2);
                 if($row2 = $fetcher2->Fetch()) {
                     $eco_price_2 = $row2['price'];
@@ -799,7 +799,7 @@ class CalculationBase {
                 }
             }
             elseif(!empty ($row['lamination1_individual_film_name'])) {
-                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
+                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." and date <= '$date' order by id desc limit 1";
                 $fetcher2 = new Fetcher($sql2);
                 if($row2 = $fetcher2->Fetch()) {
                     $eco_price_2 = $row2['price'];
@@ -807,7 +807,7 @@ class CalculationBase {
                 }
             }
             elseif(!empty ($row['lamination1_film_variation_id'])) {
-                $sql2 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination1_film_variation_id']." order by id desc limit 1";
+                $sql2 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination1_film_variation_id']." and date <= '$date' order by id desc limit 1";
                 $fetcher2 = new Fetcher($sql2);
                 if($row2 = $fetcher2->Fetch()) {
                     $eco_price_2 = $row2['eco_price'];
@@ -839,7 +839,7 @@ class CalculationBase {
             
             // Получаем сумму и валюту экосбора 3
             if($customers_material_3 == true) {
-                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
+                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." and date <= '$date' order by id desc limit 1";
                 $fetcher3 = new Fetcher($sql3);
                 if($row3 = $fetcher3->Fetch()) {
                     $eco_price_3 = $row3['price'];
@@ -847,7 +847,7 @@ class CalculationBase {
                 }
             }
             elseif(!empty ($row['lamination2_individual_film_name'])) {
-                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
+                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." and date <= '$date' order by id desc limit 1";
                 $fetcher3 = new Fetcher($sql3);
                 if($row3 = $fetcher3->Fetch()) {
                     $eco_price_3 = $row3['price'];
@@ -855,7 +855,7 @@ class CalculationBase {
                 }
             }
             elseif(!empty ($row['lamination2_film_variation_id'])) {
-                $sql3 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination2_film_variation_id']." order by id desc limit 1";
+                $sql3 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination2_film_variation_id']." and date <= '$date' order by id desc limit 1";
                 $fetcher3 = new Fetcher($sql3);
                 if($row3 = $fetcher3->Fetch()) {
                     $eco_price_3 = $row3['eco_price'];
