@@ -116,6 +116,10 @@ if(null !== filter_input(INPUT_POST, 'eco_price_submit')) {
             $currency = $row['currency'];
         }
         
+        if($price == null) {
+            $price = "NULL";
+        }
+        
         $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values ($film_variation_id, $price, '$currency', $eco_price, '$eco_currency')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
