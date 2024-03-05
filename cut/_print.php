@@ -87,9 +87,8 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
 <div class="d-flex justify-content-start mb-1">
     <div class="mr-2"><img src="<?=APPLICATION ?>/images/logo.svg" style="width: 20px; height: 20px;" class="mt-1" /></div>
     <div>
-        <strong>ООО Принт-Дизайн</strong><br />
+        <strong>ООО Принт-Дизайн</strong><span style="margin-left: 10px; font-size: small;">+7(4822)781-780</span><br />
         170006, г. Тверь, ул. Учительская д. 54<br />
-        +7(4822)781-780
     </div>
 </div>
 <?php endif; ?>
