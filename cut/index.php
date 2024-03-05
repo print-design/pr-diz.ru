@@ -23,6 +23,21 @@ if(empty($machine_id)) {
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
 }
+
+//*******************************************************************
+// Добавление наименования ручьёв в тех резках, где они не именованы.
+$today = date('Y-m-d');
+$sql = "select id, name, streams_number from calculation where (id in "
+        . "(select calculation_id from plan_edition where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id) "
+        . "or id in "
+        . "(select calculation_id from plan_edition where id in (select plan_edition_id from plan_continuation where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id))) "
+        . "and id not in (select calculation_id from calculation_stream)";
+$grabber = new Grabber($sql);
+$slits = $grabber->result;
+foreach ($slits as $slit) {
+    //echo $slit['id'].' -- '.$slit['name'].' --- '.$slit['streams_number']."<br />";
+}
+//*******************************************************************
 ?>
 <!DOCTYPE html>
 <html>

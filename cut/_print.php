@@ -95,7 +95,7 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
 <div class="mb-2"><strong><?=$calculation->customer_id.'-'.$calculation->num_for_customer ?>.</strong> <?=$calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN ? $calculation->customer : '' ?></div>
 <table>
     <tr>
-        <td style="width: 60px;">Рулон</td>
+        <td style="width: 50px;">Рулон</td>
         <td class="pl-1 font-weight-bold"><?= sprintf('%03d', $stream_id) ?></td>
     </tr>
     <tr>
