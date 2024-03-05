@@ -321,10 +321,10 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
         <div class="print_only">
             <?php if(false): ?>
             <div class="pagebreak"><?php include './_print.php'; ?></div>
-            <div><?php include './_print.php'; ?></div>
+            <div><?php include '../cut/_print.php'; ?></div>
             <?php endif; ?>
-            <div style="position: absolute; top: 0; left: 0;"><?php include './_print.php'; ?></div>
-            <div style="position: absolute; top: 400px; left: 0;"><?php include './_print.php'; ?></div>
+            <div style="position: absolute; top: 0; left: 0;"><?php include '../cut/_print.php'; ?></div>
+            <div style="position: absolute; top: 400px; left: 0;"><?php include '../cut/_print.php'; ?></div>
         </div>
         <?php endif; ?>
         <?php
