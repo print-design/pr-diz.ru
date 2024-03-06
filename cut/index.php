@@ -26,16 +26,36 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
 
 //*******************************************************************
 // Добавление наименования ручьёв в тех резках, где они не именованы.
-$today = date('Y-m-d');
-$sql = "select id, name, streams_number from calculation where (id in "
-        . "(select calculation_id from plan_edition where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id) "
-        . "or id in "
-        . "(select calculation_id from plan_edition where id in (select plan_edition_id from plan_continuation where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id))) "
-        . "and id not in (select calculation_id from calculation_stream)";
-$grabber = new Grabber($sql);
-$slits = $grabber->result;
-foreach ($slits as $slit) {
-    //echo $slit['id'].' -- '.$slit['name'].' --- '.$slit['streams_number']."<br />";
+if($machine_id == CUTTER_SOMA) {
+    $today = date('Y-m-d');
+    $sql = "select id, name, streams_number from calculation where (id in "
+            . "(select calculation_id from plan_edition where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id) "
+            . "or id in "
+            . "(select calculation_id from plan_edition where id in (select plan_edition_id from plan_continuation where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id))) "
+            . "and id not in (select calculation_id from calculation_stream)";
+    $grabber = new Grabber($sql);
+    $slits = $grabber->result;
+    foreach ($slits as $slit) {
+        $sql = "select id, position, name from calculation_stream where calculation_id = ".$slit['id'];
+        $grabber = new Grabber($sql);
+        $result = $grabber->result;
+        
+        $stream_position_ids_names = array();
+        
+        foreach ($result as $position_id_name) {
+            $stream_position_ids_names[$position_id_name['position']] = array('id' => $position_id_name['id'], 'name' => $position_id_name['name']);
+        }
+        
+        $streams_number = intval($slit['streams_number']);
+        
+        for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
+            if(empty($stream_position_ids_names[$stream_i])) {
+                $sql = "insert into calculation_stream (calculation_id, position, name) values (".$slit['id'].", $stream_i, 'ручей $stream_i')";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+        }
+    }
 }
 //*******************************************************************
 ?>
