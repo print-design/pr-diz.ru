@@ -193,6 +193,7 @@
         // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
         // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
     $take_date = DateTime::createFromFormat('Y-m-d H:i:s', $take['timestamp']);
+    $take_date->setTimezone(new DateTimeZone('Europe/Moscow'));
     $take_hour = $take_date->format('G');
     $take_shift = 'day';
     $working_take_date = clone $take_date; // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
