@@ -189,11 +189,19 @@
     $take_ordinal = 0;
     
     foreach($takes as $take):
+        // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
+        // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+        // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
     $take_date = DateTime::createFromFormat('Y-m-d H:i:s', $take['timestamp']);
     $take_hour = $take_date->format('G');
     $take_shift = 'day';
-    if($take_hour < 8 || $take_hour > 19) {
+    $working_take_date = clone $take_date; // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
+    if($take_hour > 19 && $take_hour < 24) {
         $take_shift = 'night';
+    }
+    elseif ($take_hour >= 0 && $take_hour < 8) {
+        $take_shift = 'night';
+        $working_take_date->modify("-1 day");
     }
     
     $take_last_name = '';
@@ -201,7 +209,7 @@
     
     $sql = "select pe.last_name, pe.first_name "
             . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-            . "where date_format(pw.date, '%d-%m-%Y') = '".$take_date->format('d-m-Y')."' "
+            . "where date_format(pw.date, '%d-%m-%Y') = '".$working_take_date->format('d-m-Y')."' "
             . "and pw.shift = '$take_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
