@@ -25,11 +25,10 @@ if($row = $fetcher->Fetch()) {
 
 if(IsInRole(CUTTER_USERS)) {
     $current_time = new DateTime();
-    $current_time->setTimezone(new DateTimeZone('Europe/Moscow'));
-    
     $current_hour = intval($current_time->format('G'));
     $current_shift = 'day';
     $working_current_time = clone $current_time;
+    
     if($current_hour > 19 && $current_hour < 24) {
         $current_shift = 'night';
     }
@@ -94,6 +93,12 @@ if(IsInRole(CUTTER_USERS)) {
                             <th>Логин</th>
                             <td><?=$username ?></td>
                         </tr>
+                        <?php if(IsInRole(CUTTER_USERS)): ?>
+                        <tr>
+                            <th>Текущее время</th>
+                            <td><?=$current_time->format('d-m-Y H:i:s') ?></td>
+                        </tr>
+                        <?php endif; ?>
                     </table>
                 </div>
             </div>

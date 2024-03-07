@@ -58,16 +58,22 @@ elseif(null !== filter_input(INPUT_GET, 'not_take_stream_id')) {
     }
 }
             
-$stream_date = $dt_printed->format('d-m-Y');
-$stream_hour = $dt_printed->format('G');
+$stream_date = $dt_printed;
+$stream_hour = $stream_date->format('G');
 $stream_shift = 'day';
-if($stream_hour < 8 || $stream_hour > 19) {
+$working_stream_date = clone $stream_date;
+
+if($stream_hour > 19 && $stream_hour < 24) {
     $stream_shift = 'night';
+}
+elseif ($stream_hour >= 0 && $stream_hour < 8) {
+    $stream_shift = 'night';
+    $working_stream_date->modify("-1 day");
 }
             
 $sql = "select pe.last_name, pe.first_name "
         . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-        . "where date_format(pw.date, '%d-%m-%Y') = '$stream_date' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
+        . "where date_format(pw.date, '%d-%m-%Y') = '".$working_stream_date->format('d-m-Y')."' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id"; echo $stream_hour.$sql;
 $stream_cutter = '';
 
 if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN) {

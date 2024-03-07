@@ -27,7 +27,7 @@ if(null !== filter_input(INPUT_POST, 'edit_take_stream_submit')) {
         $old_length = $row['length'];
         $length = $weight * $old_length / $old_weight;
         
-        $sql = "update calculation_take_stream set weight = $weight, length = $length, printed = now() where id = $id";
+        $sql = "update calculation_take_stream set weight = $weight, length = $length where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
