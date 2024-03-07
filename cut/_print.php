@@ -73,7 +73,7 @@ elseif ($stream_hour >= 0 && $stream_hour < 8) {
             
 $sql = "select pe.last_name, pe.first_name "
         . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-        . "where date_format(pw.date, '%d-%m-%Y') = '".$working_stream_date->format('d-m-Y')."' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id"; echo $stream_hour.$sql;
+        . "where date_format(pw.date, '%d-%m-%Y') = '".$working_stream_date->format('d-m-Y')."' and pw.shift = '$stream_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
 $stream_cutter = '';
 
 if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN) {
