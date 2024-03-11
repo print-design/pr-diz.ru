@@ -15,6 +15,8 @@ if(null !== filter_input(INPUT_POST, 'edit_take_stream_submit')) {
     
     unset($location_get['stream_id']);
     unset($location_get['not_take_stream_id']);
+    unset($location_get['invalid_take']);
+    unset($location_get['invalid_not_take']);
     $location_get['take_stream_id'] = $id;
     $location_get['scroll'] = filter_input(INPUT_POST, 'scroll');
     
@@ -25,6 +27,14 @@ if(null !== filter_input(INPUT_POST, 'edit_take_stream_submit')) {
         $location_get['take_id'] = $row['calculation_take_id'];
         $old_weight = $row['weight'];
         $old_length = $row['length'];
+        
+        if(empty($weight)) {
+            unset($location_get['take_stream_id']);
+            $location_get['invalid_take'] = $row['calculation_take_id'];
+            header('Location: '.$location."?". http_build_query($location_get));
+            exit();
+        }
+        
         $length = $weight * $old_length / $old_weight;
         
         $sql = "update calculation_take_stream set weight = $weight, length = $length where id = $id";

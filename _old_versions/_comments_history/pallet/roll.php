@@ -157,7 +157,7 @@ if(null === $comment) $comment = $row['comment'];
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
-                echo "<div class='alert alert-danger>$error_message</div>";
+                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
             // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",

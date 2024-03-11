@@ -301,7 +301,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
-                echo "<div class='alert alert-danger>$error_message</div>";
+                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
             include '../include/find_camera.php';
