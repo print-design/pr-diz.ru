@@ -1,10 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
 
-if(null !== filter_input(INPUT_GET, 'take_id')) {
-    $take_id = filter_input(INPUT_GET, 'take_id');
-}
-
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 $sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.weight, cts.length, cts.printed, c.stream_width, tm.spool, "
         . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
