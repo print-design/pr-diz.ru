@@ -74,6 +74,10 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         $is_valid = true;
     }
     
+    if($weight == 0 || $length == 0 || $radius == 0) {
+        $is_valid = false;
+    }
+    
     if(!$is_valid) {
         $invalid_stream = $stream_id;
     }
