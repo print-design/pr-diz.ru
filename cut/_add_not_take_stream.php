@@ -17,6 +17,16 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     unset($location_get['stream_id']);
     unset($location_get['take_stream_id']);
     unset($location_get['take_id']);
+    unset($location_get['invalid_take']);
+    unset($location_get['invalid_not_take']);
+    unset($location_get['error_message']);
+    
+    if(empty($weight)) {
+        unset($location_get['not_take_stream_id']);
+        $location_get['invalid_not_take'] = 1;
+        header('Location: '.$location."?".http_build_query($location_get)."&error_message=".urlencode('Невалидные данные'));
+        exit();
+    }
     
     $length = 0;
     

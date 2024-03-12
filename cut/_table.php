@@ -236,11 +236,7 @@
     if(mb_substr_count($_SERVER['PHP_SELF'], 'cut.php') == 1) {
         $editable = false;
     }
-    
-    if(filter_input(INPUT_GET, 'invalid_take') == $take['id']):
     ?>
-    <div class='alert alert-danger'>Невалидные данные</div>
-    <?php endif; ?>
     <div style="padding-left: 10px; padding-right: 10px; border: solid 1px #e3e3e3; border-radius: 15px; margin-top: 15px; margin-bottom: 5px;">
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
@@ -312,11 +308,7 @@
         $hide_table_class = "";
         $show_table_class = " d-none";
     }
-    
-    if(filter_input(INPUT_GET, 'invalid_not_take') == 1):
     ?>
-    <div class='alert alert-danger'>Невалидные данные</div>
-    <?php endif; ?>
     <div style="padding-left: 10px; padding-right: 10px; border: solid 1px #e3e3e3; border-radius: 15px; margin-top: 15px; margin-bottom: 5px;">
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_not_take_table<?=$show_table_class ?>" onclick="javascript: ShowNotTakeTable();"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
