@@ -320,7 +320,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
         <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
         <div class="print_only">
             <?php if(false): ?>
-            <div class="pagebreak"><?php include './_print.php'; ?></div>
+            <div class="pagebreak"><?php include '../cut/_print.php'; ?></div>
             <div><?php include '../cut/_print.php'; ?></div>
             <?php endif; ?>
             <div style="position: absolute; top: 0; left: 0;"><?php include '../cut/_print.php'; ?></div>
