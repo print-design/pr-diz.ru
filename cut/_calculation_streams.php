@@ -2,7 +2,13 @@
 require_once '../include/topscripts.php';
 
 $machine_id = filter_input(INPUT_GET, 'machine_id');
+
+if(empty($take_id)) {
+    $take_id = filter_input(INPUT_GET, 'take_id');
+}
+
 $sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.weight, cts.length, cts.printed, c.stream_width, tm.spool, "
+        . "c.individual_thickness, fv1.thickness thickness1, c.lamination1_individual_thickness, fv2.thickness thickness2, c.lamination2_individual_thickness, fv3.thickness thickness3, "
         . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
         . "from calculation_take ct "
         . "inner join calculation c on ct.calculation_id = c.id "
@@ -26,6 +32,14 @@ while($row = $fetcher->Fetch()):
     $stream_width = $row['stream_width'];
     $spool = $row['spool'];
     
+    $thickness1 = $row['individual_thickness'];
+    if(empty($thickness1)) {
+        $thickness1 = $row['thickness1'];
+    }
+    if(empty($thickness1)) {
+        $thickness1 = 0;
+    }
+    
     $density1 = $row['individual_density'];
     if(empty($density1)) {
         $density1 = $row['density1'];
@@ -34,12 +48,28 @@ while($row = $fetcher->Fetch()):
         $density1 = 0;
     }
     
+    $thickness2 = $row['lamination1_individual_thickness'];
+    if(empty($thickness2)) {
+        $thickness2 = $row['thickness2'];
+    }
+    if(empty($thickness2)) {
+        $thickness2 = 0;
+    }
+    
     $density2 = $row['lamination1_individual_density'];
     if(empty($density2)) {
         $density2 = $row['density2'];
     }
     if(empty($density2)) {
         $density2 = 0;
+    }
+    
+    $thickness3 = $row['lamination2_individual_thickness'];
+    if(empty($thickness3)) {
+        $thickness3 = $row['thickness3'];
+    }
+    if(empty($thickness3)) {
+        $thickness3 = 0;
     }
     
     $density3 = $row['lamination2_individual_density'];
@@ -76,6 +106,9 @@ while($row = $fetcher->Fetch()):
         <input type="hidden" name="machine_id" value="<?= $machine_id ?>" />
         <input type="hidden" name="stream_id" value="<?=$stream_id ?>" />
         <input type="hidden" name="stream_width" value="<?=$stream_width ?>" />
+        <input type="hidden" name="thickness1" value="<?=$thickness1 ?>" />
+        <input type="hidden" name="thickness2" value="<?=$thickness2 ?>" />
+        <input type="hidden" name="thickness3" value="<?=$thickness3 ?>" />
         <input type="hidden" name="density1" value="<?=$density1 ?>" />
         <input type="hidden" name="density2" value="<?=$density2 ?>" />
         <input type="hidden" name="density3" value="<?=$density3 ?>" />

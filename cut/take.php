@@ -27,6 +27,10 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $stream_width = filter_input(INPUT_POST, 'stream_width');
     $spool = filter_input(INPUT_POST, 'spool');
     
+    $thickness1 = floatval(filter_input(INPUT_POST, 'thickness1'));
+    $thickness2 = floatval(filter_input(INPUT_POST, 'thickness2'));
+    $thickness3 = floatval(filter_input(INPUT_POST, 'thickness3'));
+    
     $density1 = floatval(filter_input(INPUT_POST, 'density1'));
     $density2 = floatval(filter_input(INPUT_POST, 'density2'));
     $density3 = floatval(filter_input(INPUT_POST, 'density3'));
@@ -55,12 +59,12 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     // 1,15* (0,1524*R*R+23,1245*R-228,5017) * (20 / (толщина пленка 1 + толщина пленка 2 + толщина пленка 3))
     // <Метраж<1,15* (0,1524*R*R+23,1245*R-228,5017) * (20 / толщина пленка 1 + толщина пленка 2 + толщина пленка 3)
     if($spool == 76) {
-        if(0.85 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($density1 + $density2 + $density3)) < $length && $length < 1.15 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($density1 + $density2 + $density3))) {
+        if(0.85 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3)) < $length && $length < 1.15 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3))) {
             $validation2 = true;
         }
     }
     elseif($spool == 152) {
-        if(0.85 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($density1 + $density2 + $density3)) < $length && $length < 1.15 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($density1 + $density2 + $density3))) {
+        if(0.85 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($thickness1 + $thickness2 + $thickness3)) < $length && $length < 1.15 * (0.1524 * $radius * $radius + 23.1245 * $radius - 228.5017) * (20 / ($thickness1 + $thickness2 + $thickness3))) {
             $validation2 = true;
         }
     }
