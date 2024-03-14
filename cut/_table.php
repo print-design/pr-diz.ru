@@ -179,6 +179,26 @@
     <div class="name">Готовые съёмы</div>
     <div class="subtitle">Общий метраж съёмов: <?= rtrim(rtrim(DisplayNumber(floatval($length), 2), '0'), ',') ?> м</div>
     <?php
+    // Смены и резчики
+    $workers = array();
+    
+    $sql = "select date_format(pw.date, '%d-%m-%Y') date, pw.shift, pe.last_name, pe.first_name "
+            . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
+            . "where pw.date in (select cast(timestamp as date) from calculation_take where calculation_id = $id) "
+            . "and pw.date in (select cast(printed as date) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)) "
+            . "and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id "
+            . "order by date, shift";
+    $fetcher = new Fetcher($sql);
+    while($row = $fetcher->Fetch()) {
+        if(empty($row['last_name']) && empty($row['first_name'])) {
+            $workers[$row['date'].$row['shift']] = "ВЫХОДНОЙ ДЕНЬ";
+        }
+        else {
+            $workers[$row['date'].$row['shift']] = $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.';
+        }
+    }
+    
+    // Съёмы
     $sql = "select ct.id, ct.timestamp, sum(cts.weight) weight, sum(cts.length) length "
                 . "from calculation_take_stream cts "
                 . "left join calculation_take ct on cts.calculation_take_id = ct.id "
@@ -205,23 +225,10 @@
         $working_take_date->modify("-1 day");
     }
     
-    $take_last_name = '';
-    $take_first_name = '';
+    $worker = "ВЫХОДНОЙ ДЕНЬ";
     
-    $sql = "select pe.last_name, pe.first_name "
-            . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-            . "where date_format(pw.date, '%d-%m-%Y') = '".$working_take_date->format('d-m-Y')."' "
-            . "and pw.shift = '$take_shift' and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $take_last_name = $row['last_name'];
-        $take_first_name = $row['first_name'];
-    }
-    
-    $cutter = "ВЫХОДНОЙ ДЕНЬ";
-    
-    if(!empty($take_last_name) && !empty($take_first_name)) {
-        $cutter = $take_last_name.' '. mb_substr($take_first_name, 0, 1).'. ';
+    if(array_key_exists($working_take_date->format('d-m-Y').$take_shift, $workers)) {
+        $worker = $workers[$working_take_date->format('d-m-Y').$take_shift];
     }
     
     $hide_table_class = " d-none";
@@ -241,12 +248,13 @@
         <div style="padding-top: 15px; padding-bottom: 15px;">
             <a href="javascript: void(0);" class="show_table<?=$show_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: ShowTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-down" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
             <a href="javascript: void(0);" class="hide_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" onclick="javascript: HideTakeTable(<?=$take['id'] ?>);"><i class="fa fa-chevron-up" style="color: #EC3A7A; margin-left: 15px; margin-right: 15px;"></i></a>
-            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$cutter ?>,</strong> <?= rtrim(rtrim(DisplayNumber(floatval($take['weight']), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($take['length']), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $calculation->number_in_meter), 0)." шт." ?>
+            <strong>Съём <?=(++$take_ordinal).'. '.$take_date->format('j').' '.mb_substr($months_genitive[$take_date->format('n')], 0, 3).' '.$take_date->format('Y') ?>, <?=$worker ?>,</strong> <?= rtrim(rtrim(DisplayNumber(floatval($take['weight']), 2), '0'), ',') ?> кг, <?= rtrim(rtrim(DisplayNumber(floatval($take['length']), 2), '0'), ',') ?> м<?=$calculation->work_type_id == WORK_TYPE_NOPRINT ? "." : ", ".DisplayNumber(floor($take['length'] * $calculation->number_in_meter), 0)." шт." ?>
         </div>
         <table class="table take_table<?=$hide_table_class ?>" data-id="<?=$take['id'] ?>" style="border-bottom: 0;">
             <tr>
                 <th style="font-weight: bold;">ID</th>
                 <th style="font-weight: bold;">Наименование</th>
+                <th style="font-weight: bold;">Резчик</th>
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
                 <th style="font-weight: bold;">Метраж</th>
@@ -258,18 +266,40 @@
                 <?php endif; ?>
             </tr>
             <?php
-            $sql = "select cts.id, cs.name, date_format(cts.printed, '%H:%i') printed, cts.weight, cts.length "
+            $sql = "select cts.id, cs.name, cts.printed, cts.weight, cts.length "
                     . "from calculation_take_stream cts "
                     . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
                     . "where cts.calculation_take_id = ".$take['id']
                     . " order by cs.position";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
+                $printed = DateTime::createFromFormat('Y-m-d H:i:s', $row['printed']);
+            // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
+            // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+            // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
+            $stream_hour = $printed->format('G');
+            $stream_shift = 'day';
+            $working_printed = clone $printed;  // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
+            
+            if($stream_hour > 19 && $stream_hour < 24) {
+                $stream_shift = 'night';
+            }
+            elseif($stream_hour >= 0 && $stream_hour < 8) {
+                $stream_shift = 'night';
+                $working_printed->modify("-1 day");
+            }
+            
+            $stream_worker = "ВЫХОДНОЙ ДЕНЬ";
+            
+            if(array_key_exists($working_printed->format('d-m-Y').$stream_shift, $workers)) {
+                $stream_worker = $workers[$working_printed->format('d-m-Y').$stream_shift];
+            }
             ?>
             <tr style="border-bottom: 0;">
                 <td style="text-align: left;"><?=$row['id'] ?></td>
                 <td style="text-align: left;"><?=$row['name'] ?></td>
-                <td style="text-align: left;"><?=$row['printed'] ?></td>
+                <td style="text-align: left;"><?=$stream_worker ?></td>
+                <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
