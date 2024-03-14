@@ -184,8 +184,9 @@
     
     $sql = "select date_format(pw.date, '%d-%m-%Y') date, pw.shift, pe.last_name, pe.first_name "
             . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-            . "where pw.date in (select cast(timestamp as date) from calculation_take where calculation_id = $id) "
-            . "and pw.date in (select cast(printed as date) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)) "
+            . "where (pw.date in (select cast(timestamp as date) from calculation_take where calculation_id = $id) "
+            . "or pw.date in (select cast(printed as date) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)) "
+            . "or pw.date in (select cast(printed as date) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id))) "
             . "and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id "
             . "order by date, shift";
     $fetcher = new Fetcher($sql);
@@ -279,7 +280,7 @@
             // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
             $stream_hour = $printed->format('G');
             $stream_shift = 'day';
-            $working_printed = clone $printed;  // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
+            $working_printed = clone $printed; // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
             
             if($stream_hour > 19 && $stream_hour < 24) {
                 $stream_shift = 'night';
@@ -315,7 +316,7 @@
     <?php endforeach; ?>
     <a name="not_take"></a>
     <?php
-    $sql = "select cnts.id, cs.name, date_format(cnts.printed, '%H:%i') printed, cnts.weight, cnts.length "
+    $sql = "select cnts.id, cs.name, cnts.printed, cnts.weight, cnts.length "
             . "from calculation_not_take_stream cnts "
             . "inner join calculation_stream cs on cnts.calculation_stream_id = cs.id "
             . "where cs.calculation_id = $id";
@@ -349,6 +350,7 @@
             <tr>
                 <td style="font-weight: bold;">ID</td>
                 <th style="font-weight: bold;">Наименование</th>
+                <th style="font-weight: bold;">Резчик</th>
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
                 <th style="font-weight: bold;">Метраж</th>
@@ -359,11 +361,35 @@
                 <th style="font-weight: bold;"></th>
                 <?php endif; ?>
             </tr>
-            <?php foreach($streams as $stream): ?>
+            <?php
+            foreach($streams as $stream):
+                $printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream['printed']);
+            // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
+            // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+            // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
+            $stream_hour = $printed->format('G');
+            $stream_shift = 'day';
+            $working_printed = clone $printed; // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
+            
+            if($stream_hour > 19 && $stream_hour < 24) {
+                $stream_shift = 'night';
+            }
+            elseif($stream_hour >= 0 && $stream_hour < 8) {
+                $stream_shift = 'night';
+                $working_printed->modify("-1 day");
+            }
+            
+            $stream_worker = "ВЫХОДНОЙ ДЕНЬ";
+            
+            if(array_key_exists($working_printed->format('d-m-Y').$stream_shift, $workers)) {
+                $stream_worker = $workers[$working_printed->format('d-m-Y').$stream_shift];
+            }
+            ?>
             <tr style="border-bottom: 0;">
                 <td style="text-align: left;"><?=$stream['id'] ?></td>
                 <td style="text-align: left;"><?=$stream['name'] ?></td>
-                <td style="text-align: left;"><?=$stream['printed'] ?></td>
+                <td style="text-align: left;"><?=$stream_worker ?></td>
+                <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>
                 <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
