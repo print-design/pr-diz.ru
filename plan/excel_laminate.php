@@ -98,8 +98,6 @@ if(!empty($work_id) && !empty($machine_id)) {
                 $sheet->setCellValue('J'.$rowindex, 'Разделен');
             }
             else {
-                $sheet->getStyle('F'.$rowindex.':M'.$rowindex)->getNumberFormat()->setFormatCode('#,##0');
-                
                 $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 $sheet->setCellValue('F'.$rowindex, $row['lamination'] == 1 ? $row['weight_pure_2'] : $row['weight_pure_3']);
                 
@@ -114,6 +112,9 @@ if(!empty($work_id) && !empty($machine_id)) {
                 
                 $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 $sheet->setCellValue('J'.$rowindex, $row['lamination'] == 1 ? $row['glue_cost_2'] : $row['glue_cost_3']);
+                
+                $sheet->getStyle('F'.$rowindex.':I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+                $sheet->getStyle('J'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
             }
         }
         

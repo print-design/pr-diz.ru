@@ -42,6 +42,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->getColumnDimension('K')->setAutoSize(true);
         $sheet->getColumnDimension('L')->setAutoSize(true);
         $sheet->getColumnDimension('M')->setAutoSize(true);
+        $sheet->getColumnDimension('N')->setAutoSize(true);
         
         $rowindex = 1;
         
@@ -53,13 +54,14 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->setCellValue('F'.$rowindex, "Объём заказа, кг");
         $sheet->setCellValue('G'.$rowindex, "Метраж");
         $sheet->setCellValue('H'.$rowindex, "Красочность");
-        $sheet->setCellValue('I'.$rowindex, "Расходы на краску");
-        $sheet->setCellValue('J'.$rowindex, "Себестоимость ПФ");
-        $sheet->setCellValue('K'.$rowindex, "Себестоимость");
-        $sheet->setCellValue('L'.$rowindex, "Отгрузочаня стоимость");
-        $sheet->setCellValue('M'.$rowindex, "Итоговая прибыль");
+        $sheet->setCellValue('I'.$rowindex, "Рапорт");
+        $sheet->setCellValue('J'.$rowindex, "Расходы на краску");
+        $sheet->setCellValue('K'.$rowindex, "Себестоимость ПФ");
+        $sheet->setCellValue('L'.$rowindex, "Себестоимость");
+        $sheet->setCellValue('M'.$rowindex, "Отгрузочаня стоимость");
+        $sheet->setCellValue('N'.$rowindex, "Итоговая прибыль");
         
-        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
+        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, c.raport, u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
                 . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
                 . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
@@ -71,7 +73,7 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "where pe.work_id = ".WORK_PRINTING." and pe.machine_id = ".$printer
                 . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
                 . "union "
-                . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, u.first_name, u.last_name, "
+                . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, c.raport, u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
                 . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
                 . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
@@ -117,10 +119,10 @@ if(!empty($work_id) && !empty($machine_id)) {
             
                 $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('M'.$rowindex, 'Разделен');
+                
+                $sheet->getCell('N'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
             }
             else {
-                $sheet->getStyle('F'.$rowindex.':M'.$rowindex)->getNumberFormat()->setFormatCode('#,##0');
-                
                 $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 $sheet->setCellValue('F'.$rowindex, $row['weight_pure_1']);
             
@@ -129,21 +131,27 @@ if(!empty($work_id) && !empty($machine_id)) {
             
                 $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 $sheet->setCellValue('H'.$rowindex, $row["ink_number"]);
-            
+                
                 $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('I'.$rowindex, $row["ink_cost"]);
+                $sheet->setCellValue('I'.$rowindex, $row['raport']);
             
                 $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('J'.$rowindex, $row['cliche_cost']);
+                $sheet->setCellValue('J'.$rowindex, $row["ink_cost"]);
             
                 $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('K'.$rowindex, $row['cost']);
+                $sheet->setCellValue('K'.$rowindex, $row['cliche_cost']);
             
                 $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('L'.$rowindex, $row['shipping_cost']);
+                $sheet->setCellValue('L'.$rowindex, $row['cost']);
             
                 $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('M'.$rowindex, $row['total_income']);
+                $sheet->setCellValue('M'.$rowindex, $row['shipping_cost']);
+            
+                $sheet->getCell('N'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                $sheet->setCellValue('N'.$rowindex, $row['total_income']);
+                
+                $sheet->getStyle('F'.$rowindex.':H'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+                $sheet->getStyle('J'.$rowindex.':N'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
             }
         }
         
