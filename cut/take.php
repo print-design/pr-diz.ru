@@ -512,23 +512,29 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             
             // Автоматическое заполнение метража и радиуса одинаковыми значениями
             
-            $('.length_checkbox').change(function() {
-                if($(this).is(':checked')) {
+            function LengthCheck(ev) {
+                if($(ev.target).is(':checked')) {
                     $('.first_length').addClass('checked_length');
                     $('.not_first_length').val($('.first_length').val());
+                    $('.equal_length').val($('.first_length').val());
                 }
                 else {
                     $('.first_length').removeClass('checked_length');
+                    $('.equal_length').val('');
                 }
-            });
-            
-            /*function SetLengthValues() {
-                $('.not_first_length').val($('.first_length').val());
             }
-            
-            function SetRadiusValues() {
-                $('.not_first_radius').val($('.first_radius').val());
-            }*/
+                
+            function RadiusCheck(ev) {
+                if($(ev.target).is(':checked')) {
+                    $('first_radius').addClass('checked_radius');
+                    $('.not_first_radius').val($('.first_radius').val());
+                    $('.equal_radius').val($('.first_radius').val());
+                }
+                else {
+                    $('.first_radius').removeClass('checked_radius');
+                    $('.equal_radius').val('');
+                }
+            }
             
             <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',

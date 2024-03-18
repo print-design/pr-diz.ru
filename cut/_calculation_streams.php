@@ -35,6 +35,7 @@ foreach($streams as $row):
     $stream_name = $row['name'];
     $stream_weight = $row['weight'];
     $stream_length = $row['length'];
+    $stream_radius = null;
     $stream_printed = $row['printed'];
     $stream_width = $row['stream_width'];
     $spool = $row['spool'];
@@ -90,6 +91,7 @@ foreach($streams as $row):
     if(null !== filter_input(INPUT_POST, 'stream_print_submit') && $stream_id == filter_input(INPUT_POST, 'stream_id')) {
         $stream_weight = filter_input(INPUT_POST, 'weight');
         $stream_length = filter_input(INPUT_POST, 'length');
+        $stream_radius = filter_input(INPUT_POST, 'radius');
     }
     
     $length_class = "not_first_length";
@@ -98,6 +100,18 @@ foreach($streams as $row):
     if($is_first) {
         $length_class = "first_length";
         $radius_class = "first_radius";
+    }
+    
+    $length_checked = "";
+    
+    if(!empty(filter_input(INPUT_POST, 'equal_length'))) {
+        $length_checked = " checked='checked'";
+    }
+    
+    $radius_checked = "";
+    
+    if(!empty(filter_input(INPUT_POST, 'equal_radius'))) {
+        $radius_checked = " checked='checked'";
     }
 ?>
 <div class="calculation_stream" data-id="<?=$stream_id ?>" ondragover="DragOver(event);" ondrop="Drop(event);">
@@ -128,6 +142,8 @@ foreach($streams as $row):
         <input type="hidden" name="density2" value="<?=$density2 ?>" />
         <input type="hidden" name="density3" value="<?=$density3 ?>" />
         <input type="hidden" name="spool" value="<?=$spool ?>" />
+        <input type="hidden" name="equal_length" class="equal_length" />
+        <input type="hidden" name="equal_radius" class="equal_length" />
         <input type="hidden" name="scroll" />
         <div class="row">
             <div class="col-3">
@@ -145,7 +161,7 @@ foreach($streams as $row):
                 <div class="form-group">
                     <label for="length">Метраж</label>
                     <div class="input-group">
-                        <input type="text" class="form-control <?=$length_class ?>" name="length" value="<?=$stream_length ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control <?=$length_class ?>" name="length" value="<?=$stream_length ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="LengthFill(event); KeyUpFloatValue(event);" onchange="LengthFill(event); ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">м</span>
                         </div>
@@ -154,7 +170,7 @@ foreach($streams as $row):
                 <?php if($is_first): ?>
                 <div class="form-check">
                     <label class="form-check-label" style="line-height: 25px;">
-                        <input type="checkbox" class="form-check-input length_checkbox" />Метраж одинаковый
+                        <input type="checkbox"<?=$length_checked ?> class="form-check-input length_checkbox" onchange="LengthCheck(event);" />Метраж одинаковый
                     </label>
                 </div>
                 <?php endif; ?>
@@ -163,7 +179,7 @@ foreach($streams as $row):
                 <div class="form-group">
                     <label for="radius">Радиус от вала</label>
                     <div class="input-group">
-                        <input type="text" class="form-control <?=$radius_class ?>" name="radius" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control <?=$radius_class ?>" name="radius" value="<?=$stream_radius ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="RadiusFill(event); KeyUpFloatValue(event);" onchange="RadiusFill(event); ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">мм</span>
                         </div>
@@ -172,7 +188,7 @@ foreach($streams as $row):
                 <?php if($is_first): ?>
                 <div class="form-check">
                     <label class="form-check-label" style="line-height: 25px;">
-                        <input type="checkbox" class="form-check-input radius_checkbox" />Радиус одинаковый
+                        <input type="checkbox"<?=$radius_checked ?> class="form-check-input radius_checkbox" onchange="RadiusCheck(event);" />Радиус одинаковый
                     </label>
                 </div>
                 <?php endif; ?>
