@@ -124,13 +124,23 @@ foreach($streams as $row):
     
     $length_checked = "";
     
-    if(!empty($equal_length)) {
+    if(empty($equal_length)) {
+        if(null === filter_input(INPUT_POST, 'stream_print_submit')) {
+            $length_checked = " checked='checked'";
+        }
+    }
+    else {
         $length_checked = " checked='checked'";
     }
     
     $radius_checked = "";
     
-    if(!empty($equal_radius)) {
+    if(empty($equal_radius)) {
+        if(null === filter_input(INPUT_POST, 'stream_print_submit')) {
+            $radius_checked = " checked='checked'";
+        }
+    }
+    else {
         $radius_checked = " checked='checked'";
     }
 ?>

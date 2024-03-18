@@ -556,14 +556,14 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             function LengthFill(ev) {
                 if($(ev.target).is('.first_length') && $('.length_checkbox').is(':checked')) {
                     $('.not_first_length').val($(ev.target).val());
-                    $('.equal_length').val('');
+                    $('.equal_length').val($(ev.target).val());
                 }
             }
             
             function RadiusFill(ev) {
                 if($(ev.target).is('.first_radius') && $('.radius_checkbox').is(':checked')) {
                     $('.not_first_radius').val($(ev.target).val());
-                    $('.equal_radius').val('');
+                    $('.equal_radius').val($(ev.target).val());
                 }
             }
             
