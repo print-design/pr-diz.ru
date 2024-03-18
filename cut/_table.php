@@ -187,7 +187,9 @@
             . "where (pw.date in (select cast(timestamp as date) from calculation_take where calculation_id = $id) "
             . "or pw.date = (select cast(min(timestamp) - interval 1 day as date) from calculation_take where calculation_id = $id) "
             . "or pw.date in (select cast(printed as date) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)) "
-            . "or pw.date in (select cast(printed as date) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id))) "
+            . "or pw.date = (select cast(min(printed) - interval 1 day as date) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)) "
+            . "or pw.date in (select cast(printed as date) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)) "
+            . "or pw.date = (select cast(min(printed) - interval 1 day as date) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id))) "
             . "and pw.work_id = ".WORK_CUTTING." and pw.machine_id = $machine_id "
             . "order by date, shift";
     $fetcher = new Fetcher($sql);
