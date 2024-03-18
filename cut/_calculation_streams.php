@@ -20,8 +20,15 @@ $sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.w
         . "left join calculation_take_stream cts on cts.calculation_take_id = ct.id and calculation_stream_id = cs.id "
         . "where ct.id = $take_id "
         . "order by cs.position";
-$fetcher = new Fetcher($sql);
-while($row = $fetcher->Fetch()):
+$grabber = new Grabber($sql);
+$streams = $grabber->result;
+$is_first = false;
+
+if(count($streams) > 0) {
+    $is_first = true;
+}
+
+foreach($streams as $row):
     $take_id = $row['take_id'];
     $calculation_id = $row['calculation_id'];
     $stream_id = $row['stream_id'];
@@ -84,6 +91,14 @@ while($row = $fetcher->Fetch()):
         $stream_weight = filter_input(INPUT_POST, 'weight');
         $stream_length = filter_input(INPUT_POST, 'length');
     }
+    
+    $length_class = "not_first_length";
+    $radius_class = "not_first_radius";
+    
+    if($is_first) {
+        $length_class = "first_length";
+        $radius_class = "first_radius";
+    }
 ?>
 <div class="calculation_stream" data-id="<?=$stream_id ?>" ondragover="DragOver(event);" ondrop="Drop(event);">
     <div class="d-flex justify-content-between mb-3">
@@ -130,23 +145,37 @@ while($row = $fetcher->Fetch()):
                 <div class="form-group">
                     <label for="length">Метраж</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="length" value="<?=$stream_length ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control <?=$length_class ?>" name="length" value="<?=$stream_length ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">м</span>
                         </div>
                     </div>
                 </div>
+                <?php if($is_first): ?>
+                <div class="form-check">
+                    <label class="form-check-label" style="line-height: 25px;">
+                        <input type="checkbox" class="form-check-input length_checkbox" />Метраж одинаковый
+                    </label>
+                </div>
+                <?php endif; ?>
             </div>
             <div class="col-3">
                 <div class="form-group">
                     <label for="radius">Радиус от вала</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="radius" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
+                        <input type="text" class="form-control <?=$radius_class ?>" name="radius" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">мм</span>
                         </div>
                     </div>
                 </div>
+                <?php if($is_first): ?>
+                <div class="form-check">
+                    <label class="form-check-label" style="line-height: 25px;">
+                        <input type="checkbox" class="form-check-input radius_checkbox" />Радиус одинаковый
+                    </label>
+                </div>
+                <?php endif; ?>
             </div>
             <div class="col-3">
                 <div class="form-group">
@@ -157,4 +186,10 @@ while($row = $fetcher->Fetch()):
         </div>
     </form>
 </div>
-<?php endwhile; ?>
+<?php
+if($is_first) {
+    $is_first = false;
+}
+
+endforeach;
+?>

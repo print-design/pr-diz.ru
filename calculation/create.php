@@ -1440,7 +1440,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                             <div class="col-6">
                                 <div class="form-check">
-                                    <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
+                                    <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
                                         <?php
                                         $checked = $customers_material == 1 ? " checked='checked'" : "";
                                         ?>
@@ -1627,7 +1627,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="row">
                                         <div class="col-4">
                                             <div class="form-check">
-                                                <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
+                                                <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
                                                     <?php
                                                     $checked = $lamination1_customers_material == 1 ? " checked='checked'" : "";
                                                     ?>
@@ -1826,7 +1826,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     </div>
                                     <div class="col-6">
                                         <div class="form-check">
-                                            <label class="form-check-label text-nowrap mt-3" style="line-height: 25px;">
+                                            <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
                                                 <?php
                                                 $checked = $lamination2_customers_material == 1 ? " checked='checked'" : "";
                                                 ?>
