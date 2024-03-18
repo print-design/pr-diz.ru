@@ -39,9 +39,9 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $length = floatval(filter_input(INPUT_POST, 'length'));
     $radius = floatval(filter_input(INPUT_POST, 'radius'));
     
-    $is_valid = false;
-    $validation1 = false;
-    $validation2 = false;
+    $is_valid = true;
+    $validation1 = true;
+    $validation2 = true;
     
     // Валидация данных
     // Валидация 1 между инпутами «Масса» и «Метраж» 
@@ -111,7 +111,24 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         if(empty($error_message)) {
-            header("Location: take.php?id=$calculation_id&machine_id=$machine_id&stream_id=$stream_id");
+            $location_get = array();
+            $location_get['id'] = $calculation_id;
+            $location_get['machine_id'] = $machine_id;
+            $location_get['stream_id'] = $stream_id;
+            
+            $equal_length = filter_input(INPUT_POST, 'equal_length');
+            
+            if(!empty($equal_length)) {
+                $location_get['equal_length'] = $equal_length;
+            }
+            
+            $equal_radius = filter_input(INPUT_POST, 'equal_radius');
+            
+            if(!empty($equal_radius)) {
+                $location_get['equal_radius'] = $equal_radius;
+            }
+            
+            header("Location: take.php?". http_build_query($location_get));
         }
     }
 }
@@ -532,6 +549,20 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 }
                 else {
                     $('.first_radius').removeClass('checked_radius');
+                    $('.equal_radius').val('');
+                }
+            }
+            
+            function LengthFill(ev) {
+                if($(ev.target).is('.first_length') && $('.length_checkbox').is(':checked')) {
+                    $('.not_first_length').val($(ev.target).val());
+                    $('.equal_length').val('');
+                }
+            }
+            
+            function RadiusFill(ev) {
+                if($(ev.target).is('.first_radius') && $('.radius_checkbox').is(':checked')) {
+                    $('.not_first_radius').val($(ev.target).val());
                     $('.equal_radius').val('');
                 }
             }
