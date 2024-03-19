@@ -7,7 +7,7 @@ if(empty($take_id)) {
     $take_id = filter_input(INPUT_GET, 'take_id');
 }
 
-$sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.weight, cts.length, cts.printed, c.stream_width, tm.spool, "
+$sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cts.weight, cts.length, cts.radius, cts.printed, c.stream_width, tm.spool, "
         . "c.individual_thickness, fv1.thickness thickness1, c.lamination1_individual_thickness, fv2.thickness thickness2, c.lamination2_individual_thickness, fv3.thickness thickness3, "
         . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
         . "from calculation_take ct "
@@ -35,7 +35,7 @@ foreach($streams as $row):
     $stream_name = $row['name'];
     $stream_weight = $row['weight'];
     $stream_length = $row['length'];
-    $stream_radius = null;
+    $stream_radius = $row['radius'];
     $stream_printed = $row['printed'];
     $stream_width = $row['stream_width'];
     $spool = $row['spool'];
