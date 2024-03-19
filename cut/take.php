@@ -567,6 +567,16 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 }
             }
             
+            if($('.length_checkbox').is(':checked')) {
+                $('.not_first_length').val($('.first_length').val());
+                $('.equal_length').val($('.first_length').val());
+            }
+                
+            if($('.radius_checkbox').is(':checked')) {
+                $('.not_first_radius').val($('.first_radius').val());
+                $('.equal_radius').val($('.first_radius').val());
+            }
+            
             <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                         head = document.head || document.getElementsByTagName('head')[0],
