@@ -46,26 +46,6 @@ foreach($streams as $row):
         $stream_radius = filter_input(INPUT_POST, 'radius');
     }
     
-    $equal_length = filter_input(INPUT_POST, 'equal_length');
-    
-    if(empty($equal_length)) {
-        $equal_length = filter_input(INPUT_GET, 'equal_length');
-    }
-    
-    $equal_radius = filter_input(INPUT_POST, 'equal_radius');
-    
-    if(empty($equal_radius)) {
-        $equal_radius = filter_input(INPUT_GET, 'equal_radius');
-    }
-    
-    if(empty($stream_length)) {
-        $stream_length = $equal_length;
-    }
-    
-    if(empty($stream_radius)) {
-        $stream_radius = $equal_radius;
-    }
-    
     $thickness1 = $row['individual_thickness'];
     if(empty($thickness1)) {
         $thickness1 = $row['thickness1'];
@@ -121,28 +101,6 @@ foreach($streams as $row):
         $length_class = "first_length";
         $radius_class = "first_radius";
     }
-    
-    $length_checked = "";
-    
-    if(empty($equal_length)) {
-        if(null === filter_input(INPUT_POST, 'stream_print_submit')) {
-            $length_checked = " checked='checked'";
-        }
-    }
-    else {
-        $length_checked = " checked='checked'";
-    }
-    
-    $radius_checked = "";
-    
-    if(empty($equal_radius)) {
-        if(null === filter_input(INPUT_POST, 'stream_print_submit')) {
-            $radius_checked = " checked='checked'";
-        }
-    }
-    else {
-        $radius_checked = " checked='checked'";
-    }
 ?>
 <div class="calculation_stream" data-id="<?=$stream_id ?>" ondragover="DragOver(event);" ondrop="Drop(event);">
     <div class="d-flex justify-content-between mb-3">
@@ -172,8 +130,6 @@ foreach($streams as $row):
         <input type="hidden" name="density2" value="<?=$density2 ?>" />
         <input type="hidden" name="density3" value="<?=$density3 ?>" />
         <input type="hidden" name="spool" value="<?=$spool ?>" />
-        <input type="hidden" name="equal_length" value="<?=$equal_length ?>" class="equal_length" />
-        <input type="hidden" name="equal_radius" value="<?=$equal_radius ?>" class="equal_radius" />
         <input type="hidden" name="scroll" />
         <div class="row">
             <div class="col-3">
@@ -200,7 +156,7 @@ foreach($streams as $row):
                 <?php if($is_first): ?>
                 <div class="form-check">
                     <label class="form-check-label" style="line-height: 25px;">
-                        <input type="checkbox"<?=$length_checked ?> class="form-check-input length_checkbox" onchange="LengthCheck(event);" />Метраж одинаковый
+                        <input type="checkbox" checked='checked' class="form-check-input length_checkbox" onchange="LengthCheck(event);" />Метраж одинаковый
                     </label>
                 </div>
                 <?php endif; ?>
@@ -218,7 +174,7 @@ foreach($streams as $row):
                 <?php if($is_first): ?>
                 <div class="form-check">
                     <label class="form-check-label" style="line-height: 25px;">
-                        <input type="checkbox"<?=$radius_checked ?> class="form-check-input radius_checkbox" onchange="RadiusCheck(event);" />Радиус одинаковый
+                        <input type="checkbox" checked='checked' class="form-check-input radius_checkbox" onchange="RadiusCheck(event);" />Радиус одинаковый
                     </label>
                 </div>
                 <?php endif; ?>

@@ -116,18 +116,6 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
             $location_get['machine_id'] = $machine_id;
             $location_get['stream_id'] = $stream_id;
             
-            $equal_length = filter_input(INPUT_POST, 'equal_length');
-            
-            if(!empty($equal_length)) {
-                $location_get['equal_length'] = $equal_length;
-            }
-            
-            $equal_radius = filter_input(INPUT_POST, 'equal_radius');
-            
-            if(!empty($equal_radius)) {
-                $location_get['equal_radius'] = $equal_radius;
-            }
-            
             header("Location: take.php?". http_build_query($location_get));
         }
     }
@@ -532,49 +520,41 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             function LengthCheck(ev) {
                 if($(ev.target).is(':checked')) {
                     $('.first_length').addClass('checked_length');
-                    $('.not_first_length').val($('.first_length').val());
-                    $('.equal_length').val($('.first_length').val());
+                    $(".not_first_length[value='']").val($('.first_length').val());
                 }
                 else {
-                    $('.first_length').removeClass('checked_length');
-                    $('.equal_length').val('');
+                    $(".first_length").removeClass('checked_length');
                 }
             }
                 
             function RadiusCheck(ev) {
                 if($(ev.target).is(':checked')) {
                     $('first_radius').addClass('checked_radius');
-                    $('.not_first_radius').val($('.first_radius').val());
-                    $('.equal_radius').val($('.first_radius').val());
+                    $(".not_first_radius[value='']").val($('.first_radius').val());
                 }
                 else {
                     $('.first_radius').removeClass('checked_radius');
-                    $('.equal_radius').val('');
                 }
             }
             
             function LengthFill(ev) {
                 if($(ev.target).is('.first_length') && $('.length_checkbox').is(':checked')) {
-                    $('.not_first_length').val($(ev.target).val());
-                    $('.equal_length').val($(ev.target).val());
+                    $(".not_first_length[value='']").val($(ev.target).val());
                 }
             }
             
             function RadiusFill(ev) {
                 if($(ev.target).is('.first_radius') && $('.radius_checkbox').is(':checked')) {
-                    $('.not_first_radius').val($(ev.target).val());
-                    $('.equal_radius').val($(ev.target).val());
+                    $(".not_first_radius[value='']").val($(ev.target).val());
                 }
             }
             
             if($('.length_checkbox').is(':checked')) {
-                $('.not_first_length').val($('.first_length').val());
-                $('.equal_length').val($('.first_length').val());
+                $(".not_first_length[value='']").val($('.first_length').val());
             }
                 
             if($('.radius_checkbox').is(':checked')) {
-                $('.not_first_radius').val($('.first_radius').val());
-                $('.equal_radius').val($('.first_radius').val());
+                $(".not_first_radius[value='']").val($('.first_radius').val());
             }
             
             <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
