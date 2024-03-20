@@ -43,6 +43,13 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $validation1 = false;
     $validation2 = false;
     
+    // Чтобы удалить лишний ручей разрешаем вводить вес = 0 (тогда он удалится)
+    if(empty($weight)) {
+        $is_valid = true;
+        $validation1 = true;
+        $validation2 = true;
+    }
+    
     // Валидация данных
     // Валидация 1 между инпутами «Масса» и «Метраж» 
     // 0,9* (метраж*ширину ручья/1000*(удельный вес пленка 1 + удельный вес пленка 2 + удельный вес пленка 3)/1000)
@@ -78,7 +85,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         $is_valid = true;
     }
     
-    if($weight == 0 || $length == 0 || $radius == 0) {
+    if($length == 0 || $radius == 0) {
         $is_valid = false;
     }
     
