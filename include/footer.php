@@ -163,7 +163,9 @@ if(file_exists('find.php')) {
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
         val = parseFloat(val);
-        e.target.value = val;
+        if(!isNaN(val)) {
+            e.target.value = val;
+        }
     }
     
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
