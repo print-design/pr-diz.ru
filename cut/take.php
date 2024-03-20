@@ -39,9 +39,9 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $length = floatval(filter_input(INPUT_POST, 'length'));
     $radius = floatval(filter_input(INPUT_POST, 'radius'));
     
-    $is_valid = true;
-    $validation1 = true;
-    $validation2 = true;
+    $is_valid = false;
+    $validation1 = false;
+    $validation2 = false;
     
     // Валидация данных
     // Валидация 1 между инпутами «Масса» и «Метраж» 
