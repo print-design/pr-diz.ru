@@ -258,11 +258,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                 <tbody>
                     <?php
                     // Сортировка
-                    $orderby = "order by c.to_work_date desc, c.id desc";
-                    
-                    if(array_key_exists('status', $_REQUEST)) {
-                        $orderby = "order by c.id desc";
-                    }
+                    $orderby = "order by c.status_date desc, c.id desc";
                     
                     if(array_key_exists('order', $_REQUEST)) {
                         switch ($_REQUEST['order']) {

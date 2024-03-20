@@ -211,6 +211,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         }
         
         if(empty($error_message)) {
+            // При установлении этого статуса расчёт в другой раздел не переходит, поэтому менять status_date не надо
+            // (в разделах сортировка по status_date)
             $sql = "update calculation set status_id = ".ORDER_STATUS_TECHMAP." where id = $id and status_id = ".ORDER_STATUS_CALCULATION;
             $executer = new Executer($sql);
             $error_message = $executer->error;
@@ -223,6 +225,7 @@ if(null !== filter_input(INPUT_POST, 'plan_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
     if(!empty($id)) {
+        // При постановке в план расчёт переходит в другой раздел, поэтому меняется status_date
         $sql = "update calculation set status_id = ".ORDER_STATUS_WAITING.", status_date = now(), to_work_date = now() where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
@@ -244,6 +247,7 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
+            // При возвращении в статус "сделан расчёт" нет перехода в другой раздел, поэтому status_date остаётся прежним
             $sql = "update calculation set status_id = ".ORDER_STATUS_CALCULATION." where id = $id";
             $executer = new Executer($sql);
             $error_message = $executer->error;

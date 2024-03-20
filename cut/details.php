@@ -20,7 +20,8 @@ if(null !== filter_input(INPUT_POST, 'start_cut_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_PRILADKA." where id = $id";
+    // При установке статуса "Приладка на резке" происходит переход в раздел "Производят"
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_PRILADKA.", status_date = now() where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     

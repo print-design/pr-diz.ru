@@ -105,6 +105,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         if(empty($error_message)) {
+            // При установке статуса "Режется нет перехода в другой раздел"
             $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING." where id = $id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
@@ -132,6 +133,7 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $error_message = $executer->error;
     
     if(empty($error_message)) {
+        // При установке статуса "Снято с резки" нет перехода в другой раздел
         $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_REMOVED." where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;

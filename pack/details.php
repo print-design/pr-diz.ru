@@ -19,7 +19,8 @@ if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $status_id = filter_input(INPUT_POST, 'status_id');
     
-    $sql = "update calculation set status_id = $status_id where id = $id";
+    // При смене статусов между "Готово к упаковке", "Ждёт отгрузки" и "Отгружено" всегда происходит переход в другой раздел
+    $sql = "update calculation set status_id = $status_id, status_date = now() where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     
