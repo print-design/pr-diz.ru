@@ -45,9 +45,9 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     
     // Чтобы удалить лишний ручей разрешаем вводить вес = 0 (тогда он удалится)
     if(empty($weight)) {
-        $is_valid = true;
-        $validation1 = true;
-        $validation2 = true;
+        $is_valid = false;
+        $validation1 = false;
+        $validation2 = false;
     }
     
     // Валидация данных
@@ -66,7 +66,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     // 1,15* (0,1524*R*R+23,1245*R-228,5017) * (20 / (толщина пленка 1 + толщина пленка 2 + толщина пленка 3))
     // <Метраж<1,15* (0,1524*R*R+23,1245*R-228,5017) * (20 / толщина пленка 1 + толщина пленка 2 + толщина пленка 3)
     if($spool == 76) {
-        if(0.85 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3)) < $length && $length < 1.15 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3))) {
+        if(0.85 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3)) <= $length && $length <= 1.15 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3))) {
             $validation2 = true;
         }
     }
@@ -83,10 +83,6 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
 
     if($validation1 && $validation2) {
         $is_valid = true;
-    }
-    
-    if($length == 0 || $radius == 0) {
-        $is_valid = false;
     }
     
     if(!$is_valid) {
