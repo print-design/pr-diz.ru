@@ -45,9 +45,9 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     
     // Чтобы удалить лишний ручей разрешаем вводить вес = 0 (тогда он удалится)
     if(empty($weight)) {
-        $is_valid = false;
-        $validation1 = false;
-        $validation2 = false;
+        $is_valid = 0;
+        $validation1 = 0;
+        $validation2 = 0;
     }
     
     // Валидация данных
