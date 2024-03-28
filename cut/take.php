@@ -54,7 +54,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     // Валидация 1 между инпутами «Масса» и «Метраж» 
     // 0,9* (метраж*ширину ручья/1000*(удельный вес пленка 1 + удельный вес пленка 2 + удельный вес пленка 3)/1000)
     // <Масса катушки < 1,1* (метраж*ширину ручья/1000*(удельный вес пленка 1 + удельный вес пленка 2 + удельный вес пленка 3)/1000)
-    if(0.9 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000) < $weight && $weight < 1.1 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000)) {
+    if(0.9 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000) <= $weight && $weight <= 1.1 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000)) {
         $validation1 = true;
     }
     
@@ -66,7 +66,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     // 1,15* (0,1524*R*R+23,1245*R-228,5017) * (20 / (толщина пленка 1 + толщина пленка 2 + толщина пленка 3))
     // <Метраж<1,15* (0,1524*R*R+23,1245*R-228,5017) * (20 / толщина пленка 1 + толщина пленка 2 + толщина пленка 3)
     if($spool == 76) {
-        if(0.85 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3)) <= $length && $length <= 1.15 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3))) {
+        if(0.85 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3)) < $length && $length < 1.15 * (0.15 * $radius * $radius + 11.3961 * $radius - 176.4427) * (20 / ($thickness1 + $thickness2 + $thickness3))) {
             $validation2 = true;
         }
     }
