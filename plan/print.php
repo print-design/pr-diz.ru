@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include './_plan_timetable.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_PACKER]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -104,8 +104,14 @@ if(empty($work_id) || empty($machine_id)) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(ROLE_NAMES[ROLE_SCHEDULER])): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_COLORIST]))): ?>
             .planner_hidden {
+                display: none;
+            }
+            <?php endif; ?>
+            
+            <?php if(IsInRole(ROLE_NAMES[ROLE_COLORIST])): ?>
+            .colorist_hidden {
                 display: none;
             }
             <?php endif; ?>

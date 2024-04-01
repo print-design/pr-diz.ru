@@ -64,7 +64,7 @@
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden">
         <?= $this->edition['samples_count'] ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden storekeeper_hidden">
@@ -170,7 +170,7 @@
         }
         ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?>">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> colorist_hidden">
         <?=$this->edition['comment'] ?>
     </td>
 </tr>

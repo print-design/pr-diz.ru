@@ -26,7 +26,7 @@
     <td class="<?=$top.' '.$this->shift ?>"></td>
     <td class="<?=$top.' '.$this->shift ?>"></td>
     <td class="<?=$top.' '.$this->shift ?> storekeeper_hidden"></td>
-    <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden planner_hidden"></td>
+    <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden"></td>
@@ -36,5 +36,5 @@
     <td class="<?=$top.' '.$this->shift ?> not_storekeeper_hidden cutting_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?>"></td>
     <td class="<?=$top.' '.$this->shift ?>"></td>
-    <td class="<?=$top.' '.$this->shift ?>"></td>
+    <td class="<?=$top.' '.$this->shift ?> colorist_hidden"></td>
 </tr>

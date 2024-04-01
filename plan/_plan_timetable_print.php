@@ -6,7 +6,7 @@
         <th>№</th>
         <th>Заказ</th>
         <th class="storekeeper_hidden">Метраж</th>
-        <th class="cutting_hidden lamination_hidden storekeeper_hidden planner_hidden">Кол-во образцов</th>
+        <th class="cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden">Кол-во образцов</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden">Вал</th>
         <th class="cutting_hidden text-nowrap">Лам-й</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden">Краски</th>
@@ -16,7 +16,7 @@
         <th class="not_storekeeper_hidden cutting_hidden">Ширина <span class="text-nowrap">мат-ла</span></th>
         <th>Менеджер</th>
         <th>Статус</th>
-        <th>Комментарий</th>
+        <th class="colorist_hidden">Комментарий</th>
     </tr>
     <?php
     foreach($this->plan_dates as $plan_date) {

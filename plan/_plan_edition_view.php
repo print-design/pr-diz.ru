@@ -203,7 +203,7 @@
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['samples_count'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
@@ -325,7 +325,7 @@
         }
         ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell comment_invisible"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell comment_invisible colorist_hidden"<?=$drop ?>>
         <div class="d-flex justify-content-start">
             <div class="pr-2 comment_pen foredit">
                 <a href="javascript: void(0);" onclick="EditComment(event);">
