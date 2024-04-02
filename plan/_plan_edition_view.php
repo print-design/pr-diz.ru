@@ -362,7 +362,7 @@
             </div>
             <?php endif; ?>
         </div>
-        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(ROLE_NAMES[ROLE_PACKER])): ?>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
         <div class="timetable_menu film_menu text-left">
             <div class="command">
