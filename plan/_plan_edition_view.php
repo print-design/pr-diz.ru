@@ -362,7 +362,7 @@
             </div>
             <?php endif; ?>
         </div>
-        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))): ?>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(ROLE_NAMES[ROLE_PACKER])): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
         <div class="timetable_menu film_menu text-left">
             <div class="command">
@@ -388,6 +388,13 @@
                 <a href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>">Результаты</a>
             </div>
             <?php endif; ?>
+        </div>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(ROLE_NAMES[ROLE_COLORIST])): ?>
+        <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
+        <div class="timetable_menu film_menu text-left">
+            <div class="command mt-1">
+                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
+            </div>
         </div>
         <?php endif; ?>
     </td>
