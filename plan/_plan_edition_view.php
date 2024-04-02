@@ -216,9 +216,50 @@
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline not_colorist_hidden"<?=$drop ?>>
-        <?php if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']): ?>
-        <?= "COLORSS" ?>
-        <?php endif; ?>
+        <?php
+        $color_lines = array();
+        
+        if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']) {
+            for($i = 1; $i <= 8; $i++) {
+                switch($this->edition['ink_'.$i]) {
+                    case INK_CMYK:
+                        switch($this->edition['cmyk_'.$i]) {
+                            case CMYK_CYAN:
+                                array_push($color_lines, "<span class='text-nowrap'>Cyan - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case CMYK_MAGENDA:
+                                array_push($color_lines, "<span class='text-nowrap'>Magenda - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case CMYK_YELLOW:
+                                array_push($color_lines, "<span class='text-nowrap'>Yellow - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case CMYK_KONTUR:
+                                array_push($color_lines, "<span class='text-nowrap'>Kontur - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                        }
+                        break;
+                    case INK_PANTON:
+                        array_push($color_lines, "<span class='text-nowrap'>P".$this->edition['color_'.$i]." - ".$this->edition['percent_'.$i]."%</span>");
+                        break;
+                    case INK_WHITE:
+                        array_push($color_lines, "<span class='text-nowrap'>Белая - ".$this->edition['percent_'.$i]."%</span>");
+                        break;
+                    case INK_LACQUER:
+                        switch($this->edition['lacquer_'.$i]) {
+                            case LACQUER_GLOSSY:
+                                array_push($color_lines, "<span class='text-nowrap'>Лак глянцевый - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case LACQUER_MATTE:
+                                array_push($color_lines, "<span class='text-nowrap'>Лак матовый - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+        
+        echo implode('<br />', $color_lines);
+        ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline storekeeper_hidden colorist_hidden"<?=$drop ?>>
         <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>

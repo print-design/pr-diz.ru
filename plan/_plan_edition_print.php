@@ -77,9 +77,15 @@
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> not_colorist_hidden">
-        <?php if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']): ?>
-        <?= "COLORSS" ?>
-        <?php endif; ?>
+        <?php
+        $color_lines = array();
+        
+        if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']) {
+            //if()
+        }
+        
+        echo implode('<br />', $color_lines);
+        ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> storekeeper_hidden colorist_hidden">
         <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>

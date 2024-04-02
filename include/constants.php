@@ -27,6 +27,33 @@ const CURRENCY_RUB = "rub";
 const CURRENCY_USD = "usd";
 const CURRENCY_EURO = "euro";
 
+// Лыжи
+const SKI_NO = 1;
+const SKI_STANDARD = 2;
+const SKI_NONSTANDARD = 3;
+    
+// Краски
+const INK_CMYK = "cmyk";
+const INK_PANTON = "panton";
+const INK_WHITE = "white";
+const INK_LACQUER = "lacquer";
+    
+// CMYK
+const CMYK_CYAN = "cyan";
+const CMYK_MAGENDA = "magenta";
+const CMYK_YELLOW = "yellow";
+const CMYK_KONTUR = "kontur";
+    
+// Лак
+const LACQUER_GLOSSY = "glossy";
+const LACQUER_MATTE = "matte";
+    
+// Формы
+const CLICHE_OLD = "old";
+const CLICHE_FLINT = "flint";
+const CLICHE_KODAK = "kodak";
+const CLICHE_REPEAT = "repeat";
+
 // Печатные машины
 const PRINTER_ZBS_1 = 1;
 const PRINTER_ZBS_2 = 2;
