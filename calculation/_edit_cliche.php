@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include './calculation.php';
 
 $printing_id = filter_input(INPUT_GET, 'printing_id');
 $sequence = filter_input(INPUT_GET, 'sequence');
