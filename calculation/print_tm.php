@@ -116,13 +116,13 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
         $repeats[$row['calculation_quantity_id']][$row['sequence']] = $row['repeat_from'];
         
         switch ($row['name']) {
-            case CalculationBase::FLINT:
+            case CLICHE_FLINT:
                 $cliches_used_flint++;
                 break;
-            case CalculationBase::KODAK:
+            case CLICHE_KODAK:
                 $cliches_used_kodak++;
                 break;
-            case CalculationBase::OLD:
+            case CLICHE_OLD:
                 $cliches_used_old++;
                 break;
         }
@@ -501,34 +501,34 @@ $current_date_time = date("dmYHis");
                             <td>
                                 <?php
                                 switch ($$ink_var) {
-                                    case CalculationBase::CMYK:
+                                    case INK_CMYK:
                                         switch ($$cmyk_var) {
-                                            case CalculationBase::CYAN:
+                                            case CMYK_CYAN:
                                                 echo "Cyan";
                                                 break;
-                                            case CalculationBase::MAGENDA:
+                                            case CMYK_MAGENDA:
                                                 echo "Magenda";
                                                 break;
-                                            case CalculationBase::YELLOW:
+                                            case CMYK_YELLOW:
                                                 echo "Yellow";
                                                 break;
-                                            case CalculationBase::KONTUR:
+                                            case CMYK_KONTUR:
                                                 echo "Kontur";
                                                 break;
                                         }
                                         break;
-                                    case CalculationBase::PANTON:
+                                    case INK_PANTON:
                                         echo "P".$$color_var;
                                         break;
-                                    case CalculationBase::WHITE;
+                                    case INK_WHITE;
                                         echo "Белая";
                                         break;
-                                    case CalculationBase::LACQUER;
+                                    case INK_LACQUER;
                                         switch($$lacquer_var) {
-                                            case CalculationBase::LACQUER_GLOSSY:
+                                            case LACQUER_GLOSSY:
                                                 echo 'Лак глянцевый';
                                                 break;
-                                            case CalculationBase::LACQUER_MATTE:
+                                            case LACQUER_MATTE:
                                                 echo 'Лак матовый';
                                                 break;
                                             default :
@@ -542,13 +542,13 @@ $current_date_time = date("dmYHis");
                             <td>
                                 <?php
                                 switch ($$cliche_var) {
-                                    case CalculationBase::OLD:
+                                    case CLICHE_OLD:
                                         echo "Старая";
                                         break;
-                                    case CalculationBase::FLINT:
+                                    case CLICHE_FLINT:
                                         echo "Новая Flint $machine_coeff";
                                         break;
-                                    case CalculationBase::KODAK:
+                                    case CLICHE_KODAK:
                                         echo "Новая Kodak $machine_coeff";
                                         break;
                                 }
@@ -946,34 +946,34 @@ $current_date_time = date("dmYHis");
                             <td>
                                 <?php
                                 switch($$ink_var) {
-                                    case CalculationBase::CMYK:
+                                    case INK_CMYK:
                                         switch ($$cmyk_var) {
-                                            case CalculationBase::CYAN:
+                                            case CMYK_CYAN:
                                                 echo 'Cyan';
                                                 break;
-                                            case CalculationBase::MAGENDA:
+                                            case CMYK_MAGENDA:
                                                 echo 'Magenda';
                                                 break;
-                                            case CalculationBase::YELLOW:
+                                            case CMYK_YELLOW:
                                                 echo 'Yellow';
                                                 break;
-                                            case CalculationBase::KONTUR:
+                                            case CMYK_KONTUR:
                                                 echo 'Kontur';
                                                 break;
                                         }
                                         break;
-                                    case CalculationBase::PANTON:
+                                    case INK_PANTON:
                                         echo "P".$$color_var;
                                         break;
-                                    case CalculationBase::WHITE:
+                                    case INK_WHITE:
                                         echo 'Белая';
                                         break;
-                                    case CalculationBase::LACQUER:
+                                    case INK_LACQUER:
                                         switch($$lacquer_var) {
-                                            case CalculationBase::LACQUER_GLOSSY:
+                                            case LACQUER_GLOSSY:
                                                 echo 'Лак глянцевый';
                                                 break;
-                                            case CalculationBase::LACQUER_MATTE:
+                                            case LACQUER_MATTE:
                                                 echo 'Лак матовый';
                                                 break;
                                             default :
@@ -991,16 +991,16 @@ $current_date_time = date("dmYHis");
                                 }
                                 else {
                                     switch ($cliches[$printing['id']][$i]) {
-                                        case CalculationBase::FLINT:
+                                        case CLICHE_FLINT:
                                             echo "Новая Flint $machine_coeff";
                                             break;
-                                        case CalculationBase::KODAK:
+                                        case CLICHE_KODAK:
                                             echo "Новая Kodak $machine_coeff";
                                             break;
-                                        case CalculationBase::OLD:
+                                        case CLICHE_OLD:
                                             echo "Старая";
                                             break;
-                                        case CalculationBase::REPEAT:
+                                        case CLICHE_REPEAT:
                                             echo "Повт. исп. с тир. ".$repeats[$printing['id']][$i];
                                             break;
                                     }

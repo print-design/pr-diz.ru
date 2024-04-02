@@ -395,13 +395,13 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
         $repeats[$row['calculation_quantity_id']][$row['sequence']] = $row['repeat_from'];
         
         switch ($row['name']) {
-            case CalculationBase::FLINT:
+            case CLICHE_FLINT:
                 $cliches_used_flint++;
                 break;
-            case CalculationBase::KODAK:
+            case CLICHE_KODAK:
                 $cliches_used_kodak++;
                 break;
-            case CalculationBase::OLD:
+            case CLICHE_OLD:
                 $cliches_used_old++;
                 break;
         }
@@ -571,7 +571,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         
                         $cliche_width_style = " w-100";
                         $repeat_display_style = " d-none";
-                        if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::REPEAT) {
+                        if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CLICHE_REPEAT) {
                             $cliche_width_style = " w-50";
                             $repeat_display_style = "";
                         }
@@ -581,34 +581,34 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <label for="select_cliche_<?=$printing['id'] ?>_<?=$i ?>">
                                     <?php
                                     switch($$ink_var) {
-                                        case CalculationBase::CMYK:
+                                        case INK_CMYK:
                                             switch ($$cmyk_var) {
-                                                case CalculationBase::CYAN:
+                                                case CMYK_CYAN:
                                                     echo 'Cyan';
                                                     break;
-                                                case CalculationBase::MAGENDA:
+                                                case CMYK_MAGENDA:
                                                     echo 'Magenda';
                                                     break;
-                                                case CalculationBase::YELLOW:
+                                                case CMYK_YELLOW:
                                                     echo 'Yellow';
                                                     break;
-                                                case CalculationBase::KONTUR:
+                                                case CMYK_KONTUR:
                                                     echo 'Kontur';
                                                     break;
                                             }
                                             break;
-                                        case CalculationBase::PANTON:
+                                        case INK_PANTON:
                                             echo 'Pantone '.$$color_var;
                                             break;
-                                        case CalculationBase::WHITE:
+                                        case INK_WHITE:
                                             echo 'Белая';
                                             break;
-                                        case CalculationBase::LACQUER: 
+                                        case INK_LACQUER:
                                             switch ($$lacquer_var) {
-                                                case CalculationBase::LACQUER_GLOSSY:
+                                                case LACQUER_GLOSSY:
                                                     echo 'Лак глянцевый';
                                                     break;
-                                                case CalculationBase::LACQUER_MATTE:
+                                                case LACQUER_MATTE:
                                                     echo 'Лак матовый';
                                                     break;
                                                 default :
@@ -623,19 +623,19 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                     <?php
                                     // Если для этой краски назначена конкретная форма, то она выбрана в списке
                                     $flint_selected = '';
-                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::FLINT) {
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CLICHE_FLINT) {
                                         $flint_selected = " selected='selected'";
                                     }
                                     $kodak_selected = '';
-                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::KODAK) {
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CLICHE_KODAK) {
                                         $kodak_selected = " selected='selected'";
                                     }
                                     $old_selected = '';
-                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::OLD) {
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CLICHE_OLD) {
                                         $old_selected = " selected='selected'";
                                     }
                                     $repeat_selected = '';
-                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CalculationBase::REPEAT) {
+                                    if(!empty($cliches[$printing['id']][$i]) && $cliches[$printing['id']][$i] == CLICHE_REPEAT) {
                                         $repeat_selected = " selected='selected'";
                                     }
                                 
@@ -657,10 +657,10 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                     }
                                     ?>
                                     <option value="">Ждем данные</option>
-                                    <option class="option_flint" id="option_flint_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
-                                    <option class="option_kodak" id="option_kodak_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
-                                    <option class="option_old" id="option_old_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
-                                    <option class="option_repeat" id="option_repeat_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CalculationBase::REPEAT ?>"<?=$repeat_selected ?><?=$repeat_hidden ?>>Повторное использование</option>
+                                    <option class="option_flint" id="option_flint_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CLICHE_FLINT ?>"<?=$flint_selected ?><?=$flint_hidden ?>>Новая Flint <?=$machine_coeff ?></option>
+                                    <option class="option_kodak" id="option_kodak_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CLICHE_KODAK ?>"<?=$kodak_selected ?><?=$kodak_hidden ?>>Новая Kodak <?=$machine_coeff ?></option>
+                                    <option class="option_old" id="option_old_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CLICHE_OLD ?>"<?=$old_selected ?><?=$old_hidden ?>>Старая</option>
+                                    <option class="option_repeat" id="option_repeat_<?=$printing['id'] ?>_<?=$i ?>" value="<?= CLICHE_REPEAT ?>"<?=$repeat_selected ?><?=$repeat_hidden ?>>Повторное использование</option>
                                 </select>
                             </div>
                             <div class="form-group pl-2 w-50<?=$repeat_display_style ?>">
@@ -1175,34 +1175,34 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <div class="color_label d-inline" id="color_label_<?=$i ?>">
                                 <?php
                                 switch ($$ink_var) {
-                                    case CalculationBase::CMYK:
+                                    case INK_CMYK:
                                         switch ($$cmyk_var) {
-                                            case CalculationBase::CYAN:
+                                            case CMYK_CYAN:
                                                 echo "Cyan";
                                                 break;
-                                            case CalculationBase::MAGENDA:
+                                            case CMYK_MAGENDA:
                                                 echo "Magenda";
                                                 break;
-                                            case CalculationBase::YELLOW:
+                                            case CMYK_YELLOW:
                                                 echo "Yellow";
                                                 break;
-                                            case CalculationBase::KONTUR:
+                                            case CMYK_KONTUR:
                                                 echo "Kontur";
                                                 break;
                                         }
                                         break;
-                                    case CalculationBase::PANTON:
+                                    case INK_PANTON:
                                         echo "P".$$color_var;
                                         break;
-                                    case CalculationBase::WHITE;
+                                    case INK_WHITE;
                                         echo "Белая";
                                         break;
-                                    case CalculationBase::LACQUER;
+                                    case INK_LACQUER;
                                         switch ($$lacquer_var) {
-                                            case CalculationBase::LACQUER_GLOSSY:
+                                            case LACQUER_GLOSSY:
                                                 echo 'Лак глянцевый';
                                                 break;
-                                            case CalculationBase::LACQUER_MATTE:
+                                            case LACQUER_MATTE:
                                                 echo 'Лак матовый';
                                                 break;
                                             default :
@@ -1214,7 +1214,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 ?>
                                 </div>
                                 <?php
-                                if($$ink_var == CalculationBase::PANTON):
+                                if($$ink_var == INK_PANTON):
                                 ?>
                                 <div class="edit_panton_link d-inline" id="edit_panton_link_<?=$i ?>"><a class="edit_panton" href="javascript: void(0);" onclick="javascript: EditPanton(<?=$i ?>);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
                                 <div class="edit_panton_form d-none" id="edit_panton_form_<?=$i ?>">
@@ -1233,13 +1233,13 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             <td>
                                 <?php
                                 switch ($$cliche_var) {
-                                    case CalculationBase::OLD:
+                                    case CLICHE_OLD:
                                         echo "Старая";
                                         break;
-                                    case CalculationBase::FLINT:
+                                    case CLICHE_FLINT:
                                         echo "Новая Flint $machine_coeff";
                                         break;
-                                    case CalculationBase::KODAK:
+                                    case CLICHE_KODAK:
                                         echo "Новая Kodak $machine_coeff";
                                         break;
                                 }
@@ -1321,34 +1321,34 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             <td>
                                 <?php
                                 switch($$ink_var) {
-                                    case CalculationBase::CMYK:
+                                    case INK_CMYK:
                                         switch ($$cmyk_var) {
-                                            case CalculationBase::CYAN:
+                                            case CMYK_CYAN:
                                                 echo 'Cyan';
                                                 break;
-                                            case CalculationBase::MAGENDA:
+                                            case CMYK_MAGENDA:
                                                 echo 'Magenda';
                                                 break;
-                                            case CalculationBase::YELLOW:
+                                            case CMYK_YELLOW:
                                                 echo 'Yellow';
                                                 break;
-                                            case CalculationBase::KONTUR:
+                                            case CMYK_KONTUR:
                                                 echo 'Kontur';
                                                 break;
                                         }
                                         break;
-                                    case CalculationBase::PANTON:
+                                    case INK_PANTON:
                                         echo "P".$$color_var;
                                         break;
-                                    case CalculationBase::WHITE:
+                                    case INK_WHITE:
                                         echo 'Белая';
                                         break;
-                                    case CalculationBase::LACQUER:
+                                    case INK_LACQUER:
                                         switch ($$lacquer_var) {
-                                            case CalculationBase::LACQUER_GLOSSY:
+                                            case LACQUER_GLOSSY:
                                                 echo 'Лак глянцевый';
                                                 break;
-                                            case CalculationBase::LACQUER_MATTE:
+                                            case LACQUER_MATTE:
                                                 echo 'Лак матовый';
                                                 break;
                                             default :
@@ -1366,16 +1366,16 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 }
                                 else {
                                     switch ($cliches[$printing['id']][$i]) {
-                                        case CalculationBase::FLINT:
+                                        case CLICHE_FLINT:
                                             echo "Новая Flint $machine_coeff";
                                             break;
-                                        case CalculationBase::KODAK:
+                                        case CLICHE_KODAK:
                                             echo "Новая Kodak $machine_coeff";
                                             break;
-                                        case CalculationBase::OLD:
+                                        case CLICHE_OLD:
                                             echo "Старая";
                                             break;
-                                        case CalculationBase::REPEAT:
+                                        case CLICHE_REPEAT:
                                             echo "Повт. исп. с тир. ".$repeats[$printing['id']][$i];
                                             break;
                                     }
@@ -1915,7 +1915,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             
             // Обработка выбора формы
             $('.select_cliche').change(function() {
-                if($(this).val() == '<?= CalculationBase::REPEAT ?>') {
+                if($(this).val() == '<?= CLICHE_REPEAT ?>') {
                     $(this).parent().removeClass('w-100');
                     $(this).parent().addClass('w-50');
                     $(this).parent().next().removeClass('d-none');
@@ -1934,16 +1934,16 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             else {
                                 var cliche = '';
                                 switch(data.cliche) {
-                                    case '<?= CalculationBase::FLINT ?>':
+                                    case '<?= CLICHE_FLINT ?>':
                                         cliche = 'Новая Flint ' + data.machine_coeff;
                                         break;
-                                    case '<?= CalculationBase::KODAK ?>':
+                                    case '<?= CLICHE_KODAK ?>':
                                         cliche = 'Новая Kodak ' + data.machine_coeff;
                                         break;
-                                    case '<?= CalculationBase::OLD ?>':
+                                    case '<?= CLICHE_OLD ?>':
                                         cliche = 'Старая';
                                         break;
-                                    case '<?= CalculationBase::REPEAT ?>':
+                                    case '<?= CLICHE_REPEAT ?>':
                                         cliche = 'Повт. исп. с тир. ' + $('select#repeat_from_' + data.printing_id + '_' + data.sequence).val();
                                         break;
                                     default :

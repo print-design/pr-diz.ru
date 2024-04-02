@@ -30,7 +30,7 @@ if($id !== null) {
     array_push($file_data, array("Толщина", DisplayNumber($calculation->thickness_1, 5), "", ""));
     array_push($file_data, array("Плотность", DisplayNumber($calculation->density_1, 5), "", ""));
     array_push($file_data, array("Лыжи", $calculation->GetSkiName($calculation->ski_1), "", ""));
-    if($calculation->ski_1 == CalculationBase::NONSTANDARD_SKI) array_push ($file_data, array("Ширина материала, мм", DisplayNumber ($calculation->width_ski_1, 5), "", ""));
+    if($calculation->ski_1 == SKI_NONSTANDARD) array_push ($file_data, array("Ширина материала, мм", DisplayNumber ($calculation->width_ski_1, 5), "", ""));
     if($calculation->customers_material_1 == true) array_push ($file_data, array("Материал заказчика", "", "", ""));
     else array_push ($file_data, array("Цена", DisplayNumber ($calculation->price_1, 5)." ".$calculation->GetCurrencyName ($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CURRENCY_EURO ? " (".DisplayNumber ($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
     array_push($file_data, array("Экосбор", DisplayNumber($calculation->eco_price_1, 5)." ".$calculation->GetCurrencyName($calculation->eco_currency_1).($calculation->eco_currency_1 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_1 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_1 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
@@ -77,8 +77,8 @@ if($id !== null) {
     // Результаты вычислений
     array_push($file_data, array("Ширина материала (начальная), мм",
         DisplayNumber($calculation->width_start, 5),
-        $calculation->ski_1 == CalculationBase::NONSTANDARD_SKI ? "|= ".DisplayNumber($calculation->width_ski_1, 5) : "|= ($calculation->streams_number * (".DisplayNumber($calculation->stream_width, 5)." + ".DisplayNumber($calculation->data_gap->gap_stream, 5).")) + (".DisplayNumber($calculation->data_gap->ski, 5)." * 2)",
-        $calculation->ski_1 == CalculationBase::NONSTANDARD_SKI ? "вводится вручную" : "(количество ручьёв * (ширина этикетки + ЗазорРучей)) + (ширина одной лыжи * 2)"));
+        $calculation->ski_1 == SKI_NONSTANDARD ? "|= ".DisplayNumber($calculation->width_ski_1, 5) : "|= ($calculation->streams_number * (".DisplayNumber($calculation->stream_width, 5)." + ".DisplayNumber($calculation->data_gap->gap_stream, 5).")) + (".DisplayNumber($calculation->data_gap->ski, 5)." * 2)",
+        $calculation->ski_1 == SKI_NONSTANDARD ? "вводится вручную" : "(количество ручьёв * (ширина этикетки + ЗазорРучей)) + (ширина одной лыжи * 2)"));
     
     array_push($file_data, array("Ширина материала (кратная 5), мм",
         DisplayNumber($calculation->width_mat, 5),
@@ -246,7 +246,7 @@ if($id !== null) {
         $percent = "percent_$i";
             
         // Поскольку в самоклейке лак используется без растворителя, для лака используем другой расчёт
-        if(get_object_vars($calculation)[$ink] == CalculationBase::LACQUER) {
+        if(get_object_vars($calculation)[$ink] == INK_LACQUER) {
             array_push($file_data, array("Цена 1 кг чистой краски $i, руб",
                 DisplayNumber($calculation->ink_kg_prices[$i], 5),
                 "|= ".DisplayNumber($calculation->data_ink->self_adhesive_laquer_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->data_ink->self_adhesive_laquer_currency, $calculation->usd, $calculation->euro), 5),

@@ -1,9 +1,9 @@
 <?php
 function GetSkiNameExt($param, $param_width) {
     switch ($param) {
-        case CalculationBase::STANDARD_SKI:
+        case SKI_STANDARD:
             return "Стандартные лыжи";
-        case CalculationBase::NONSTANDARD_SKI:
+        case SKI_NONSTANDARD:
             return "Ширина $param_width мм";
         default :
             return 'Без лыж';
@@ -148,16 +148,16 @@ function GetSkiNameExt($param, $param_width) {
         <td>
             <?php
             switch ($$ink_var) {
-                case CalculationBase::CMYK:
+                case INK_CMYK:
                     echo "CMYK";
                     break;
-                case CalculationBase::PANTON:
+                case INK_PANTON:
                     echo 'Пантон';
                     break;
-                case CalculationBase::LACQUER:
+                case INK_LACQUER:
                     echo 'Лак';
                     break;
-                case CalculationBase::WHITE:
+                case INK_WHITE:
                     echo 'Белый';
                     break;
             }
@@ -165,18 +165,18 @@ function GetSkiNameExt($param, $param_width) {
         </td>
         <td>
             <?php
-            if($$ink_var == CalculationBase::CMYK) {
+            if($$ink_var == INK_CMYK) {
                 echo $$cmyk_var;
             }
-            elseif($$ink_var == CalculationBase::PANTON) {
+            elseif($$ink_var == INK_PANTON) {
                 echo 'P'.$$color_var;
             }
-            elseif($$ink_var == CalculationBase::LACQUER) {
+            elseif($$ink_var == INK_LACQUER) {
                 switch ($$lacquer_var) {
-                    case CalculationBase::LACQUER_GLOSSY:
+                    case LACQUER_GLOSSY:
                         echo 'глянцевый';
                         break;
-                    case CalculationBase::LACQUER_MATTE:
+                    case LACQUER_MATTE:
                         echo 'матовый';
                         break;
                 }
@@ -188,10 +188,10 @@ function GetSkiNameExt($param, $param_width) {
         <td>
             <?php
             switch ($$cliche_var) {
-                case CalculationBase::FLINT:
+                case CLICHE_FLINT:
                     echo 'Флинт';
                     break;
-                case CalculationBase::KODAK;
+                case CLICHE_KODAK;
                     echo 'Кодак';
                     break;
             }
@@ -200,7 +200,7 @@ function GetSkiNameExt($param, $param_width) {
         <td>
             <?php
             switch ($$cliche_var) {
-                case CalculationBase::OLD:
+                case CLICHE_OLD:
                     echo 'Старая';
                     break;
                 default :

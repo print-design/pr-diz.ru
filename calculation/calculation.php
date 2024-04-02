@@ -209,33 +209,6 @@ class DataExtracharge {
 
 // Базовый класс для классов расчёта
 class CalculationBase {
-    // Лыжи
-    const NO_SKI = 1;
-    const STANDARD_SKI = 2;
-    const NONSTANDARD_SKI = 3;
-    
-    // Краски
-    const CMYK = "cmyk";
-    const PANTON = "panton";
-    const WHITE = "white";
-    const LACQUER = "lacquer";
-    
-    // CMYK
-    const CYAN = "cyan";
-    const MAGENDA = "magenta";
-    const YELLOW = "yellow";
-    const KONTUR = "kontur";
-    
-    // Лак
-    const LACQUER_GLOSSY = "glossy";
-    const LACQUER_MATTE = "matte";
-    
-    // Формы
-    const OLD = "old";
-    const FLINT = "flint";
-    const KODAK = "kodak";
-    const REPEAT = "repeat";
-    
     // Исходные величины для вычислений
     public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
             $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id,
@@ -463,33 +436,33 @@ class CalculationBase {
     // Получение цены на краску
     function GetInkPrice($ink, $cmyk, $lacquer, $c_price, $c_currency, $m_price, $m_currency, $y_price, $y_currency, $k_price, $k_currency, $panton_price, $panton_currency, $white_price, $white_currency, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_matte_price, $lacquer_matte_currency) {
         switch ($ink) {
-            case self::CMYK:
+            case INK_CMYK:
                 switch ($cmyk) {
-                    case self::CYAN:
+                    case CMYK_CYAN:
                         return new DataPrice($c_price, $c_currency);
                         
-                    case self::MAGENDA:
+                    case CMYK_MAGENDA:
                         return new DataPrice($m_price, $m_currency);
                         
-                    case self::YELLOW:
+                    case CMYK_YELLOW:
                         return new DataPrice($y_price, $y_currency);
                         
-                    case self::KONTUR:
+                    case CMYK_KONTUR:
                         return new DataPrice($k_price, $k_currency);
                         
                     default :
                         return null;
                 }
                 
-            case self::PANTON:
+            case INK_PANTON:
                 return new DataPrice($panton_price, $panton_currency);
                 
-            case self::WHITE:
+            case INK_WHITE:
                 return new DataPrice($white_price, $white_currency);
                 
-            case self::LACQUER:
+            case INK_LACQUER:
                 switch ($lacquer) {
-                    case self::LACQUER_MATTE:
+                    case LACQUER_MATTE:
                         return new DataPrice($lacquer_matte_price, $lacquer_matte_currency);
                         
                     default :
@@ -504,29 +477,29 @@ class CalculationBase {
     // Получение расхода краски
     function GetInkExpense($ink, $cmyk, $lacquer, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_glossy_expense, $lacquer_matte_expense) {
         switch ($ink) {
-            case self::CMYK:
+            case INK_CMYK:
                 switch ($cmyk) {
-                    case self::CYAN:
+                    case CMYK_CYAN:
                         return $c_expense;
                         
-                    case self::MAGENDA:
+                    case CMYK_MAGENDA:
                         return $m_expense;
                         
-                    case self::YELLOW:
+                    case CMYK_YELLOW:
                         return $y_expense;
                         
-                    case self::KONTUR:
+                    case CMYK_KONTUR:
                         return $k_expense;
                 }
-            case self::PANTON:
+            case INK_PANTON:
                 return $panton_expense;
                 
-            case self::WHITE:
+            case INK_WHITE:
                 return $white_expense;
                 
-            case self::LACQUER:
+            case INK_LACQUER:
                 switch($lacquer) {
-                    case self::LACQUER_MATTE:
+                    case LACQUER_MATTE:
                         return $lacquer_matte_expense;
                         
                     default :
@@ -541,11 +514,11 @@ class CalculationBase {
     // Получение типа лыж
     function GetSkiName($ski) {
         switch ($ski) {
-            case Calculation::NO_SKI:
+            case SKI_NO:
                 return "Без лыж";
-            case Calculation::STANDARD_SKI:
+            case SKI_STANDARD:
                 return "Стандартные лыжи";
-            case Calculation::NONSTANDARD_SKI:
+            case SKI_NONSTANDARD:
                 return "Нестандартные лыжи";
             default :
                 return "Неизвестно";
@@ -555,13 +528,13 @@ class CalculationBase {
     // Получение имени краски
     function GetInkName($ink) {
         switch ($ink) {
-            case Calculation::CMYK:
+            case INK_CMYK:
                 return "CMYK";
-            case Calculation::PANTON:
+            case INK_PANTON:
                 return "Пантон";
-            case Calculation::WHITE:
+            case INK_WHITE:
                 return "Белая";
-            case Calculation::LACQUER:
+            case INK_LACQUER:
                 return "Лак";
             default :
                 return "Неизвестная";
@@ -571,11 +544,11 @@ class CalculationBase {
     // Получения типа формы
     function GetClicheName($cliche) {
         switch ($cliche) {
-            case Calculation::OLD:
+            case CLICHE_OLD:
                 return "старая";
-            case Calculation::FLINT:
+            case CLICHE_FLINT:
                 return "новая Флинт";
-            case Calculation::KODAK:
+            case CLICHE_KODAK:
                 return "новая Кодак";
             case Calculation::TVER:
                 return "новая Тверь";
@@ -1536,15 +1509,15 @@ class Calculation extends CalculationBase {
         // Если стандартные лыжи: количество ручьёв * ширина ручья + 20
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch($this->ski_1) {
-            case self::NO_SKI:
+            case SKI_NO:
                 $this->width_start_1 = $this->streams_number * $this->stream_width;
                 break;
                 
-            case self::STANDARD_SKI:
+            case SKI_STANDARD:
                 $this->width_start_1 = $this->streams_number * $this->stream_width + 20;
                 break;
         
-            case self::NONSTANDARD_SKI:
+            case SKI_NONSTANDARD:
                 $this->width_start_1 = $this->width_ski_1;
                 break;
             
@@ -1555,15 +1528,15 @@ class Calculation extends CalculationBase {
         
         // Ширина материала (начальная) 2, мм
         switch($this->ski_2) {
-            case self::NO_SKI:
+            case SKI_NO:
                 $this->width_start_2 = $this->streams_number * $this->stream_width;
                 break;
         
-            case self::STANDARD_SKI:
+            case SKI_STANDARD:
                 $this->width_start_2 = $this->streams_number * $this->stream_width + 20;
                 break;
         
-            case self::NONSTANDARD_SKI:
+            case SKI_NONSTANDARD:
                 $this->width_start_2 = $this->width_ski_2;
                 break;
             
@@ -1574,15 +1547,15 @@ class Calculation extends CalculationBase {
         
         // Ширина материала (начальная) 3, мм
         switch($this->ski_3) {
-            case self::NO_SKI:
+            case SKI_NO:
                 $this->width_start_3 = $this->streams_number * $this->stream_width;
                 break;
         
-            case self::STANDARD_SKI:
+            case SKI_STANDARD:
                 $this->width_start_3 = $this->streams_number * $this->stream_width + 20;
                 break;
         
-            case self::NONSTANDARD_SKI:
+            case SKI_NONSTANDARD:
                 $this->width_start_3 = $this->width_ski_3;
                 break;
             
@@ -1910,7 +1883,7 @@ class Calculation extends CalculationBase {
         $this->cliche_height = ($this->raport + 20) / 1000;
         
         // Ширина форм, м
-        $this->cliche_width = ($this->streams_number * $this->stream_width + 20 + ((!empty($this->ski_1) && $this->ski_1 == self::NO_SKI) ? 0 : 20)) / 1000;
+        $this->cliche_width = ($this->streams_number * $this->stream_width + 20 + ((!empty($this->ski_1) && $this->ski_1 == SKI_NO) ? 0 : 20)) / 1000;
         
         // Площадь форм, м2
         $this->cliche_area = $this->cliche_height * $this->cliche_width;
@@ -1926,7 +1899,7 @@ class Calculation extends CalculationBase {
             $cliche = "cliche_$i";
             
             // Если форма не старая, то количество новых форм увеличиваем на 1
-            if(!empty($$cliche) && $$cliche != self::OLD) {
+            if(!empty($$cliche) && $$cliche != CLICHE_OLD) {
                 $this->cliche_new_number += 1;
             }
             
@@ -1934,12 +1907,12 @@ class Calculation extends CalculationBase {
             $cliche_currency = "";
             
             switch ($$cliche) {
-                case self::FLINT:
+                case CLICHE_FLINT:
                     $cliche_sm_price = $this->data_cliche->flint_price;
                     $cliche_currency = $this->data_cliche->flint_currency;
                     break;
                 
-                case self::KODAK:
+                case CLICHE_KODAK:
                     $cliche_sm_price = $this->data_cliche->kodak_price;
                     $cliche_currency = $this->data_cliche->kodak_currency;
                     break;
@@ -2317,11 +2290,11 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Если стадартные лыжи: (количество ручьёв * (ширина ручья + расстояние между ручьями)) + (ширина одной лыжи * 2)
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch ($this->ski_1) {
-            case self::STANDARD_SKI:
+            case SKI_STANDARD:
                 $this->width_start = ($this->streams_number * ($this->stream_width + $this->data_gap->gap_stream)) + ($this->data_gap->ski * 2);
                 break;
             
-            case self::NONSTANDARD_SKI:
+            case SKI_NONSTANDARD:
                 $this->width_start = $this->width_ski_1;
                 break;
             
@@ -2462,7 +2435,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $percent = "percent_$i";
             
             // Поскольку в самоклейке лак используется без растворителя, для лака используем другой расчёт
-            if($$ink == CalculationBase::LACQUER) {
+            if($$ink == INK_LACQUER) {
                 // Цена 1 кг чистой краски, руб
                 $ink_kg_price = $this->data_ink->self_adhesive_laquer_price * self::GetCurrencyRate($this->data_ink->self_adhesive_laquer_currency, $this->usd, $this->euro);
                 $this->ink_kg_prices[$i] = $ink_kg_price;

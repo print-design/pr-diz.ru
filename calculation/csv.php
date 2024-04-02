@@ -32,7 +32,7 @@ if($id !== null) {
     array_push($file_data, array("Толщина 1, мкм", $calculation->thickness_1, "", ""));
     array_push($file_data, array("Плотность 1, г/м2", DisplayNumber($calculation->density_1, 5), "", ""));
     array_push($file_data, array("Лыжи 1", $calculation->GetSkiName($calculation->ski_1), "", ""));
-    if($calculation->ski_1 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 1, мм", DisplayNumber ($calculation->width_ski_1, 5), "", ""));
+    if($calculation->ski_1 == SKI_NONSTANDARD) array_push ($file_data, array("Ширина плёнки 1, мм", DisplayNumber ($calculation->width_ski_1, 5), "", ""));
     if($calculation->customers_material_1 == true) array_push ($file_data, array("Материал заказчика 1", "", "", ""));
     else array_push ($file_data, array("Цена 1", DisplayNumber ($calculation->price_1, 5)." ". $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (". DisplayNumber ($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CURRENCY_EURO ? " (". DisplayNumber ($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
     array_push($file_data, array("Экосбор 1", DisplayNumber($calculation->eco_price_1, 5)." ".$calculation->GetCurrencyName($calculation->eco_currency_1).($calculation->eco_currency_1 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_1 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_1 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
@@ -42,7 +42,7 @@ if($id !== null) {
         array_push($file_data, array("Толщина 2, мкм", $calculation->thickness_2, "", ""));
         array_push($file_data, array("Плотность 2, г/м2", DisplayNumber($calculation->density_2, 5), "", ""));
         array_push($file_data, array("Лыжи 2", $calculation->GetSkiName($calculation->ski_2), "", ""));
-        if($calculation->ski_2 == Calculation::NONSTANDARD_SKI) array_push($file_data, array("Ширина пленки 2, мм", DisplayNumber ($calculation->width_ski_2, 5), "", ""));
+        if($calculation->ski_2 == SKI_NONSTANDARD) array_push($file_data, array("Ширина пленки 2, мм", DisplayNumber ($calculation->width_ski_2, 5), "", ""));
         if($calculation->customers_material_2 == true) array_push ($file_data, array("Материал заказчика 2", "", "", ""));
         else array_push ($file_data, array("Цена 2", DisplayNumber ($calculation->price_2, 5)." ". $calculation->GetCurrencyName($calculation->currency_2).($calculation->currency_2 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_2 * $calculation->usd, 5)." руб)" : "").($calculation->currency_2 == CURRENCY_EURO ? " (".DisplayNumber ($calculation->price_2 * $calculation->euro, 5)." руб)" : ""), "", ""));
         array_push($file_data, array("Экосбор 2", DisplayNumber($calculation->eco_price_2, 5)." ".$calculation->GetCurrencyName($calculation->eco_currency_2).($calculation->eco_currency_2 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_2 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_2 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_2 * $calculation->euro, 5)." руб)" : ""), "", ""));
@@ -53,7 +53,7 @@ if($id !== null) {
         array_push($file_data, array("Толщина 3, мкм", $calculation->thickness_3, "", ""));
         array_push($file_data, array("Плотность 3, г/м2", DisplayNumber($calculation->density_3, 5), "", ""));
         array_push($file_data, array("Лыжи 3", $calculation->GetSkiName($calculation->ski_3), "", ""));
-        if($calculation->ski_3 == Calculation::NONSTANDARD_SKI) array_push ($file_data, array("Ширина плёнки 3, мм", DisplayNumber ($calculation->width_ski_3, 5), "", ""));
+        if($calculation->ski_3 == SKI_NONSTANDARD) array_push ($file_data, array("Ширина плёнки 3, мм", DisplayNumber ($calculation->width_ski_3, 5), "", ""));
         if($calculation->customers_material_3 == true) array_push ($file_data, array("Материал заказчика (лам 2)", "", "", ""));
         else array_push ($file_data, array("Цена 3", DisplayNumber ($calculation->price_3, 5)." ". $calculation->GetCurrencyName($calculation->currency_3).($calculation->currency_3 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_3 * $calculation->usd, 5)." руб)" : "").($calculation->currency_3 == CURRENCY_EURO ? " (".DisplayNumber ($calculation->price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
         array_push($file_data, array("Экосбор 3", DisplayNumber($calculation->eco_price_3, 5)." ".$calculation->GetCurrencyName($calculation->eco_currency_3).($calculation->eco_currency_3 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_3 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_3 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
@@ -136,15 +136,15 @@ if($id !== null) {
     $width_1_formula = "";
         
     switch ($calculation->ski_1) {
-        case Calculation::NO_SKI:
+        case SKI_NO:
             $calculation->width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
             break;
             
-        case Calculation::STANDARD_SKI:
+        case SKI_STANDARD:
             $calculation->width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
             break;
             
-        case Calculation::NONSTANDARD_SKI:
+        case SKI_NONSTANDARD:
             $calculation->width_1_formula = "|= ".DisplayNumber($calculation->width_ski_1, 5);
             break;
     }
@@ -156,15 +156,15 @@ if($id !== null) {
         
     $calculation->width_2_formula = "";
     switch ($calculation->ski_2) {
-        case Calculation::NO_SKI:
+        case SKI_NO:
             $calculation->width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
             break;
             
-        case Calculation::STANDARD_SKI:
+        case SKI_STANDARD:
             $calculation->width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
             break;
             
-        case Calculation::NONSTANDARD_SKI:
+        case SKI_NONSTANDARD:
             $calculation->width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
             break;
     }
@@ -176,15 +176,15 @@ if($id !== null) {
         
     $calculation->width_3_formula = "";
     switch ($calculation->ski_3) {
-        case Calculation::NO_SKI:
+        case SKI_NO:
             $calculation->width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
             break;
             
-        case Calculation::STANDARD_SKI:
+        case SKI_STANDARD:
             $calculation->width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
             break;
             
-        case Calculation::NONSTANDARD_SKI:
+        case SKI_NONSTANDARD:
             $calculation->width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
             break;
     }
@@ -616,7 +616,7 @@ if($id !== null) {
         
     array_push($file_data, array("Ширина форм, м",
         DisplayNumber($calculation->cliche_width, 5),
-        "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == Calculation::NO_SKI) ? 0 : 20).") / 1000",
+        "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000",
         "((кол-во ручьёв * ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000"));
         
     array_push($file_data, array("Площадь форм, м2",
@@ -634,12 +634,12 @@ if($id !== null) {
         $cliche_currency = "";
             
         switch (get_object_vars($calculation)[$cliche]) {
-            case Calculation::FLINT:
+            case CLICHE_FLINT:
                 $cliche_sm_price = $calculation->data_cliche->flint_price;
                 $cliche_currency = $calculation->data_cliche->flint_currency;
                 break;
                 
-            case Calculation::KODAK:
+            case CLICHE_KODAK:
                 $cliche_sm_price = $calculation->data_cliche->kodak_price;
                 $cliche_currency = $calculation->data_cliche->kodak_currency;
                 break;

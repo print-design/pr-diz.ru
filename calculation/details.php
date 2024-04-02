@@ -140,7 +140,7 @@ for($i=1; $i<=$calculation->ink_number; $i++) {
     $$cliche_var = $calculation->$cliche_var;
     
     if($calculation->work_type_id == WORK_TYPE_PRINT) {
-        if(!empty($$cliche_var) && $$cliche_var != CalculationBase::OLD) {
+        if(!empty($$cliche_var) && $$cliche_var != CLICHE_OLD) {
             $new_forms_number++;
         }
     }

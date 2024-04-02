@@ -21,7 +21,7 @@ if(empty($error_message)) {
         if(empty($cliche)) {
             $sql = "delete from calculation_cliche where id = $id";
         }
-        elseif($cliche == CalculationBase::REPEAT) {
+        elseif($cliche == CLICHE_REPEAT) {
             $sql = "update calculation_cliche set name = '$cliche', repeat_from = $repeat_from where id = $id";
         }
         else {
@@ -40,7 +40,7 @@ if(empty($error_message)) {
 }
 
 if(empty($error_message)) {
-    $sql = "select(select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::FLINT."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) flint_used, (select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::KODAK."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) kodak_used, (select count(id) FROM calculation_cliche WHERE name = '".CalculationBase::OLD."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) old_used";
+    $sql = "select(select count(id) FROM calculation_cliche WHERE name = '".CLICHE_FLINT."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) flint_used, (select count(id) FROM calculation_cliche WHERE name = '".CLICHE_KODAK."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) kodak_used, (select count(id) FROM calculation_cliche WHERE name = '".CLICHE_OLD."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) old_used";
     $fetcher = new Fetcher($sql);
     $error_message = $fetcher->error;
     
