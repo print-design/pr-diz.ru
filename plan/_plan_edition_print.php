@@ -81,7 +81,42 @@
         $color_lines = array();
         
         if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']) {
-            //if()
+            for($i = 1; $i <= 8; $i++) {
+                switch($this->edition['ink_'.$i]) {
+                    case INK_CMYK:
+                        switch($this->edition['cmyk_'.$i]) {
+                            case CMYK_CYAN:
+                                array_push($color_lines, "<span class='text-nowrap'>Cyan - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case CMYK_MAGENDA:
+                                array_push($color_lines, "<span class='text-nowrap'>Magenda - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case CMYK_YELLOW:
+                                array_push($color_lines, "<span class='text-nowrap'>Yellow - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case CMYK_KONTUR:
+                                array_push($color_lines, "<span class='text-nowrap'>Kontur - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                        }
+                        break;
+                    case INK_PANTON:
+                        array_push($color_lines, "<span class='text-nowrap'>P".$this->edition['color_'.$i]." - ".$this->edition['percent_'.$i]."%</span>");
+                        break;
+                    case INK_WHITE:
+                        array_push($color_lines, "<span class='text-nowrap'>Белая - ".$this->edition['percent_'.$i]."%</span>");
+                        break;
+                    case INK_LACQUER:
+                        switch($this->edition['lacquer_'.$i]) {
+                            case LACQUER_GLOSSY:
+                                array_push($color_lines, "<span class='text-nowrap'>Лак глянцевый - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                            case LACQUER_MATTE:
+                                array_push($color_lines, "<span class='text-nowrap'>Лак матовый - ".$this->edition['percent_'.$i]."%</span>");
+                                break;
+                        }
+                        break;
+                }
+            }
         }
         
         echo implode('<br />', $color_lines);
