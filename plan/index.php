@@ -318,6 +318,10 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             .colorist_hidden {
                 display: none;
             }
+            <?php else: ?>
+            .not_colorist_hidden {
+                display: none;
+            }
             <?php endif; ?>
         </style>
     </head>

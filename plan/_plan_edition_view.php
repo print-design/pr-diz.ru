@@ -215,6 +215,11 @@
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline not_colorist_hidden"<?=$drop ?>>
+        <?php if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']): ?>
+        <?= "COLORSS" ?>
+        <?php endif; ?>
+    </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline storekeeper_hidden colorist_hidden"<?=$drop ?>>
         <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>
     </td>

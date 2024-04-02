@@ -76,6 +76,11 @@
     <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden storekeeper_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['ink_number'] ?>
     </td>
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> not_colorist_hidden">
+        <?php if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']): ?>
+        <?= "COLORSS" ?>
+        <?php endif; ?>
+    </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> storekeeper_hidden colorist_hidden">
         <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>
     </td>

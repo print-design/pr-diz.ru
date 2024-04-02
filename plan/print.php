@@ -114,6 +114,10 @@ if(empty($work_id) || empty($machine_id)) {
             .colorist_hidden {
                 display: none;
             }
+            <?php else: ?>
+            .not_colorist_hidden {
+                display: none;
+            }
             <?php endif; ?>
         </style>
     </head>
