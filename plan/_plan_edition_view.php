@@ -217,7 +217,7 @@
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline not_colorist_hidden"<?=$drop ?>>
         <?php
-        $print_area = $this->edition['length_dirty_1'] * ($this->edition['stream_width'] * $this->edition['streams_number'] + 10) / 1000;
+        $print_area = $this->edition['length_dirty_1_total'] * ($this->edition['stream_width'] * $this->edition['streams_number'] + 10) / 1000;
         $color_lines = array();
         
         if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation']) {
