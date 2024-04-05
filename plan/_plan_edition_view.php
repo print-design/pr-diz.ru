@@ -228,34 +228,41 @@
                             case CMYK_CYAN:
                                 $ink_expense = $this->plan_shift->timetable->ink_expenses[CMYK_CYAN];
                                 $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                                array_push($color_lines, "<span class='text-nowrap'>Cyan - ".DisplayNumber($color_weight, 2)." кг</span>");
+                                array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square ".$this->plan_shift->shift."'></i> Cyan - ".DisplayNumber($color_weight, 2)." кг</span>");
                                 break;
                             case CMYK_MAGENDA:
                                 $ink_expense = $this->plan_shift->timetable->ink_expenses[CMYK_MAGENDA];
                                 $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                                array_push($color_lines, "<span class='text-nowrap'>Magenda - ".DisplayNumber($color_weight, 2)." кг</span>");
+                                array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square ".$this->plan_shift->shift."'></i> Magenda - ".DisplayNumber($color_weight, 2)." кг</span>");
                                 break;
                             case CMYK_YELLOW:
                                 $ink_expense = $this->plan_shift->timetable->ink_expenses[CMYK_YELLOW];
                                 $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                                array_push($color_lines, "<span class='text-nowrap'>Yellow - ".DisplayNumber($color_weight, 2)." кг</span>");
+                                array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square ".$this->plan_shift->shift."'></i> Yellow - ".DisplayNumber($color_weight, 2)." кг</span>");
                                 break;
                             case CMYK_KONTUR:
                                 $ink_expense = $this->plan_shift->timetable->ink_expenses[CMYK_KONTUR];
                                 $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                                array_push($color_lines, "<span class='text-nowrap'>Kontur - ".DisplayNumber($color_weight, 2)." кг</span>");
+                                array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square ".$this->plan_shift->shift."'></i> Kontur - ".DisplayNumber($color_weight, 2)." кг</span>");
                                 break;
                         }
                         break;
                     case INK_PANTON:
                         $ink_expense = $this->plan_shift->timetable->ink_expenses[INK_PANTON];
                         $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                        array_push($color_lines, "<span class='text-nowrap'>P".$this->edition['color_'.$i]." - ".DisplayNumber($color_weight, 2)." кг</span>");
+                        $ink_class = " ".$this->plan_shift->shift;
+                        $ink_style = "";
+                        $color = GetColorByPanton($this->edition['color_'.$i]);
+                        if($color) {
+                            $ink_class = '';
+                            $ink_style = " style='color: $color;'";
+                        }
+                        array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square$ink_class'$ink_style></i> P".$this->edition['color_'.$i]." - ".DisplayNumber($color_weight, 2)." кг</span>");
                         break;
                     case INK_WHITE:
                         $ink_expense = $this->plan_shift->timetable->ink_expenses[INK_WHITE];
                         $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                        array_push($color_lines, "<span class='text-nowrap'>Белая - ".DisplayNumber($color_weight, 2)." кг</span>");
+                        array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square ".$this->plan_shift->shift."'></i> Белая - ".DisplayNumber($color_weight, 2)." кг</span>");
                         break;
                     case INK_LACQUER:
                         switch($this->edition['lacquer_'.$i]) {
@@ -265,7 +272,7 @@
                                     $ink_expense = $this->plan_shift->timetable->ink_expenses[WORK_TYPE_SELF_ADHESIVE];
                                 }
                                 $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                                array_push($color_lines, "<span class='text-nowrap'>Лак глянцевый - ".DisplayNumber($color_weight, 2)." кг</span>");
+                                array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square ".$this->plan_shift->shift."'></i> Лак глянцевый - ".DisplayNumber($color_weight, 2)." кг</span>");
                                 break;
                             case LACQUER_MATTE:
                                 $ink_expense = $this->plan_shift->timetable->ink_expenses[LACQUER_MATTE];
@@ -273,7 +280,7 @@
                                     $ink_expense = $this->plan_shift->timetable->ink_expenses[WORK_TYPE_SELF_ADHESIVE];
                                 }
                                 $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
-                                array_push($color_lines, "<span class='text-nowrap'>Лак матовый - ".DisplayNumber($color_weight, 2)." кг</span>");
+                                array_push($color_lines, "<span class='text-nowrap'><i class='fas fa-square ".$this->plan_shift->shift."'></i> Лак матовый - ".DisplayNumber($color_weight, 2)." кг</span>");
                                 break;
                         }
                         break;

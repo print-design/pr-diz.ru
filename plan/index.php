@@ -272,6 +272,15 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 background-color: rgba(0,0,0,0);
             }
             
+            /* Окраска квадратиков перед цветами */
+            i.day {
+                color: white;
+            }
+            
+            i.night {
+                color: #F0F1FA;
+            }
+            
             <?php if($work_id == WORK_CUTTING): ?>
             .cutting_hidden {
                 display: none;

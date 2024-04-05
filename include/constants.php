@@ -198,4 +198,8 @@ const PRICE_ECO_OTHER_MATERIAL = 2;
 
 // Другое
 const ISINVALID = ' is-invalid';
+
+// Пантоны
+const PANTONS = array(100 => "#FCEA76", 
+    101 => "#FCE85F");
 ?>
