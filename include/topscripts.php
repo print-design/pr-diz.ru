@@ -247,14 +247,6 @@ function Array2Csv(array &$array, $titles) {
     return ob_get_clean();
 }
 
-function GetColorByPanton($panton) {
-    if(key_exists($panton, PANTONS)) {
-        return PANTONS[$panton];
-    }
-    
-    return false;
-}
-
 // Классы
 class Executer {
     public $error = '';
