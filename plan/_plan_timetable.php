@@ -1,5 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
+require_once '../include/panton.php';
 require_once './_plan_date.php';
 
 class PlanTimetable {

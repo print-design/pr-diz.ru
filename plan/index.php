@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include '../include/panton.php';
 include './_queue.php';
 include './_plan_timetable.php';
 
