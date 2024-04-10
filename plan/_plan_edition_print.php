@@ -160,7 +160,7 @@
     <td class="<?=$top.' '.$this->plan_shift->shift ?> not_storekeeper_hidden">
         <?php
         if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)) {
-            echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic'>".$this->edition['requirement1']."</div>";
+            echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic' style='width: 300px;'>".$this->edition['requirement1']."</div>";
             
             $film_name = $this->edition['film_name'];
             $thickness = $this->edition['thickness'];
@@ -174,7 +174,7 @@
         }
         elseif($this->edition['type'] != PLAN_TYPE_EVENT && $this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 1) {
             if($this->edition['work_type_id'] == WORK_TYPE_NOPRINT) {
-                echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic'>".$this->edition['requirement1']."</div>";
+                echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic' style='width: 300px;'>".$this->edition['requirement1']."</div>";
             
                 $film_name = $this->edition['film_name'];
                 $thickness = $this->edition['thickness'];
@@ -187,7 +187,7 @@
                 echo $film_name."&nbsp;&nbsp;&nbsp;".$thickness."<br />+<br />";
             }
             
-            echo empty($this->edition['requirement2']) ? '' : "<div class='font-italic'>".$this->edition['requirement2']."</div>";
+            echo empty($this->edition['requirement2']) ? '' : "<div class='font-italic' style='width: 300px;'>".$this->edition['requirement2']."</div>";
             
             $lamination1_film_name = $this->edition['lamination1_film_name'];
             $lamination1_thickness = $this->edition['lamination1_thickness'];
@@ -204,7 +204,7 @@
                 echo "1 прогон<br />+<br />";
             }
             
-            echo empty($this->edition['requirement3']) ? '' : "<div class='font-italic'>".$this->edition['requirement3']."</div>";
+            echo empty($this->edition['requirement3']) ? '' : "<div class='font-italic' style='width: 300px;'>".$this->edition['requirement3']."</div>";
             
             $lamination2_film_name = $this->edition['lamination2_film_name'];
             $lamination2_thickness = $this->edition['lamination2_thickness'];
