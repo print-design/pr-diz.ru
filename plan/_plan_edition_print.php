@@ -158,7 +158,6 @@
         <?php endif; ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> not_storekeeper_hidden">
-        <div class="text-nowrap">
         <?php
         if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)) {
             echo empty($this->edition['requirement1']) ? '' : "<div class='font-italic'>".$this->edition['requirement1']."</div>";
@@ -218,7 +217,6 @@
             echo $lamination2_film_name."&nbsp;&nbsp;&nbsp;".$lamination2_thickness;
         }
         ?>
-        </div>
     </td>
     <td class="<?=$top." ".$this->plan_shift->shift ?> not_storekeeper_hidden cutting_hidden">
         <?php if($this->edition['type'] != PLAN_TYPE_EVENT && ($this->plan_shift->timetable->work_id == WORK_PRINTING || $this->plan_shift->timetable->work_id == WORK_CUTTING)): ?>
