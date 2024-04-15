@@ -54,7 +54,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     // Валидация 1 между инпутами «Масса» и «Метраж» 
     // 0,9* (метраж*ширину ручья/1000*(удельный вес пленка 1 + удельный вес пленка 2 + удельный вес пленка 3)/1000)
     // <Масса катушки < 1,1* (метраж*ширину ручья/1000*(удельный вес пленка 1 + удельный вес пленка 2 + удельный вес пленка 3)/1000)
-    if(0.9 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000) <= $weight && $weight <= 1.1 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000)) {
+    if(0.85 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000) <= $weight && $weight <= 1.15 * ($length * $stream_width / 1000 * ($density1 + $density2 + $density3) / 1000)) {
         $validation1 = true;
     }
     
