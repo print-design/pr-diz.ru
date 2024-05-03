@@ -12,13 +12,32 @@
                     <p class="font-weight-bold" style="font-size: x-large;" id="take_stream_name"></p>
                     <button type="button" class="close edit_take_stream_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
+                <div class="modal-body row">
+                    <div class="form-group col-4">
                         <label for="weight">Масса катушки</label>
                         <div class="input-group">
-                            <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" autocomplete="off" />
+                            <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" autocomplete="off" onkeyup="javascript: CutCalculate($(this));" onchange="javascript: CutCalculate($(this));" />
                             <div class="input-group-append">
                                 <span class="input-group-text">кг</span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="length" />
+                    <div class="form-group col-4">
+                        <label for="length">Метраж</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="take_stream_length" disabled="disabled" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">м</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="radius">Радиус от вала</label>
+                        <div class="input-group">
+                            <input type="text" name="radius" class="form-control float-only" id="take_stream_radius" required="required" autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">мм</span>
                             </div>
                         </div>
                     </div>

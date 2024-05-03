@@ -1,4 +1,3 @@
-
 <script>
     function ShowTakeTable(id) {
         $('a.show_table[data-id=' + id + ']').addClass('d-none');
