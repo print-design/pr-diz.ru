@@ -14,20 +14,29 @@
         thickness_1 = <?=$calculation->thickness_1 ?>;
         thickness_2 = <?=$calculation->thickness_2 ?>;
         thickness_3 = <?=$calculation->thickness_3 ?>;
-        alert(length);
-        /*
-         * 
-         * Если 76 шпуля
-0,85* (0,15*R*R+11,3961*R-176,4427)*(20/(толщина пленка 1 + толщина пленка2 + толщина пленка 3))
-<Метраж катушки<1,15* (0,15*R*R+11,3961*R-176,4427) *(20/(толщина пленка 1 + толщина пленка2 + толщина пленка 3))
-Если 152 шпуля
-1,15* (0,1524*R*R+23,1245*R-228,5017) *(20/(толщина пленка 1 + толщина пленка2 + толщина пленка 3))<Метраж<1,15* (0,1524*R*R+23,1245*R-228,5017)*(20/(толщина пленка 1 + толщина пленка2 + толщина пленка 3))
-
-
-         * 
-         */
         
-        $('#edit_take_stream_alert').removeClass('d-none');
-        return false;
+        result = false;
+        
+        if(spool == 76) {
+            if(0.85 * (0.15 * radius * radius + 11.3961 * radius - 176.4427) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.15 * radius * radius + 11.3961 * radius - 176.4427) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
+                result = true;
+            }
+        }
+        else if(spool == 152) {
+            if(1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
+                $validation2 = true;
+            }
+        }
+        else {
+            if(length > 0 && radius > 0) {
+                result = true;
+            }
+        }
+        
+        if(!result) {
+            $('#edit_take_stream_alert').removeClass('d-none');
+        }
+        
+        return result;
     }
 </script>

@@ -16,7 +16,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="edit_take_stream_alert" class="alert alert-danger d-none">
-                        Масса не соответствует радиусу
+                        Метраж не соответствует радиусу
                     </div>
                     <div class="row">
                         <div class="form-group col-4">
