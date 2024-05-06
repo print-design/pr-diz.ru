@@ -48,7 +48,10 @@
             
     $('#add_not_take_stream').on('hidden.bs.modal', function() {
         $('select#calculation_stream_id').val('');
-        $('input#weight').val('');
+        $('input#add_not_take_stream_weight').val('');
+        $('input#add_not_take_stream_length').val('');
+        $('input#add_not_take_stream_radius').val('');
+        $('#add_not_take_stream_alert').addClass('d-none');
     });
     
     $('#edit_not_take_stream').on('shown.bs.modal', function() {

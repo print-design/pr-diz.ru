@@ -15,6 +15,22 @@
         input.parent().parent().next().next().find('input[type=text]').val((weight * (old_length / old_weight)).toFixed(2));
     }
     
+    function ANTCutCalculate(input) {
+        if(input.val() !== '' && input.val() !== 0 && $('select#calculation_stream_id').val() !== '' && $('select#calculation_stream_id').val() !== 0) {
+            weight = input.val().replace(',', '.');
+            sum_weight = $('#add_not_take_stream_sum_weight').val();
+            sum_length = $('#add_not_take_stream_sum_length').val();
+            input.parent().parent().next().val(weight * (sum_length / sum_weight));
+            input.parent().parent().next().next().find('input[type=text]').val((weight * (sum_length / sum_weight)).toFixed(2));
+        }
+    }
+    
+    function ANTStreamSelect(select) {
+        $('#add_not_take_stream_sum_weight').val($('#sum_weight_stream_' + select.val()).val());
+        $('#add_not_take_stream_sum_length').val($('#sum_length_stream_' + select.val()).val());
+        ANTCutCalculate($('#add_not_take_stream_weight'));
+    }
+    
     function IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3) {
         result = false;
         

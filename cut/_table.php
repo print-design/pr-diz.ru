@@ -63,6 +63,8 @@
             <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php">
                 <input type="hidden" name="id" value="<?=$id ?>" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
+                <input type="hidden" name="add_not_take_stream_sum_weight" id="add_not_take_stream_sum_weight" />
+                <input type="hidden" name="add_not_take_stream_sum_length" id="add_not_take_stream_sum_length" />
                 <?php foreach($_GET as $get_key => $get_value): ?>
                 <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
                 <?php endforeach; ?>
@@ -71,9 +73,12 @@
                     <button type="button" class="close edit_take_stream_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
                 </div>
                 <div class="modal-body">
+                    <div id="add_not_take_stream_alert" class="alert alert-danger d-none">
+                        Метраж не соответствует радиусу
+                    </div>
                     <div class="form-group">
                         <label for="calculation_stream_id">Наименование</label>
-                        <select name="calculation_stream_id" id="calculation_stream_id" class="form-control" required="required">
+                        <select name="calculation_stream_id" id="calculation_stream_id" class="form-control" required="required" onchange="javascript: ANTStreamSelect($(this));">
                             <option value="" hidden="hidden">...</option>
                             <?php
                             $sql = "select id, name from calculation_stream where calculation_id = $id";
@@ -84,12 +89,33 @@
                             <?php endwhile; ?>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="weight">Масса катушки</label>
-                        <div class="input-group">
-                            <input type="text" name="weight" id="weight" class="form-control float-only" required="required" autocomplete="off" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">кг</span>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label for="weight">Масса катушки</label>
+                            <div class="input-group">
+                                <input type="text" name="weight" id="add_not_take_stream_weight" class="form-control float-only" required="required" autocomplete="off" onkeyup="javascript: $('#add_not_take_stream_alert').addClass('d-none'); ANTCutCalculate($(this));" onchange="javascript: $('#add_not_take_stream_alert').addClass('d-none'); ANTCutCalculate($(this));" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">кг</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="length" />
+                        <div class="form-group col-4">
+                            <label for="length">Метраж</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="add_not_take_stream_length" disabled="disabled" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">м</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="radius">Радиус от вала</label>
+                            <div class="input-group">
+                                <input type="text" name="radius" class="form-control float-only" id="add_not_take_stream_radius" required="required" autocomplete="off" onkeyup="javascript: $('#add_not_take_stream_alert').addClass('d-none');" onchange="javascript: $('#add_not_take_stream_alert').addClass('d-none');" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">мм</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -222,8 +248,8 @@
         <tr>
             <td style="text-align: left;"><?=$row['name'] ?></td>
             <td style="text-align: left;"><?=$row['bobbins'] ?></td>
-            <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
-            <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
+            <td style="text-align: left;"><input type="hidden" id="sum_weight_stream_<?=$row['id'] ?>" value="<?=$row['weight'] ?>" /><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
+            <td style="text-align: left;"><input type="hidden" id="sum_length_stream_<?=$row['id'] ?>" value="<?=$row['length'] ?>" /><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
             <?php endif; ?>
