@@ -37,6 +37,8 @@
             
     $('#edit_take_stream').on('hidden.bs.modal', function() {
         $('input#take_stream_weight').val('');
+        $('input#take_stream_length').val('');
+        $('input#take_stream_radius').val('');
     });
             
     $('#add_not_take_stream').on('shown.bs.modal', function() {
