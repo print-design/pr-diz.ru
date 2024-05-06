@@ -108,8 +108,8 @@
             <form method="post" action="<?=APPLICATION ?>/cut/_edit_not_take_stream.php" onsubmit="javascript: return NTCutValidate();">
                 <input type="hidden" name="id" id="not_take_stream_id" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
-                <input type="hidden" name="not_take_stream_old_weight" id="take_stream_old_weight" />
-                <input type="hidden" name="not_take_stream_old_length" id="take_stream_old_length" />
+                <input type="hidden" name="not_take_stream_old_weight" id="not_take_stream_old_weight" />
+                <input type="hidden" name="not_take_stream_old_length" id="not_take_stream_old_length" />
                 <?php foreach ($_GET as $get_key => $get_value): ?>
                 <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
                 <?php endforeach; ?>
@@ -364,7 +364,7 @@
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
                 <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
-                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>'); $('#take_stream_old_weight').val('<?=$row['weight'] ?>'); $('#take_stream_old_length').val('<?=$row['length'] ?>');" /></a></td>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>'); $('#take_stream_old_weight').val('<?=$row['weight'] ?>'); $('#take_stream_old_length').val('<?=$row['length'] ?>');"><img src="../images/icons/edit1.svg" /></a></td>
                 <?php endif; ?>
             </tr>
             <?php endwhile; ?>
@@ -453,7 +453,7 @@
                 <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
                 <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
-                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_not_take_stream" onclick="javascript: $('#not_take_stream_id').val('<?=$stream['id'] ?>'); $('#not_take_stream_name').html('<?=$stream['name'] ?>'); $('#not_take_stream_old_weight').val('<?=$row['weight'] ?>'); $('#not_take_stream_old_length').val('<?=$row['length'] ?>');" /></a></td>
+                <td style="text-align: left;" data-toggle="modal" data-target="#edit_not_take_stream" onclick="javascript: $('#not_take_stream_id').val('<?=$stream['id'] ?>'); $('#not_take_stream_name').html('<?=$stream['name'] ?>'); $('#not_take_stream_old_weight').val('<?=$stream['weight'] ?>'); $('#not_take_stream_old_length').val('<?=$stream['length'] ?>');"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" /></a></td>
                 <?php endif; ?>
             </tr>
             <?php endforeach; ?>
