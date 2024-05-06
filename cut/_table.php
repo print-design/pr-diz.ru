@@ -60,7 +60,7 @@
 <div id="add_not_take_stream" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php">
+            <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php" onsubmit="javascript: return ANTCutValidate();">
                 <input type="hidden" name="id" value="<?=$id ?>" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
                 <input type="hidden" name="add_not_take_stream_sum_weight" id="add_not_take_stream_sum_weight" />

@@ -20,8 +20,15 @@
             weight = input.val().replace(',', '.');
             sum_weight = $('#add_not_take_stream_sum_weight').val();
             sum_length = $('#add_not_take_stream_sum_length').val();
-            input.parent().parent().next().val(weight * (sum_length / sum_weight));
-            input.parent().parent().next().next().find('input[type=text]').val((weight * (sum_length / sum_weight)).toFixed(2));
+            
+            if(sum_weight == 0 || sum_length == 0) {
+                input.parent().parent().next().val(0);
+                input.parent().parent().next().next().find('input[type=text]').val(0);
+            }
+            else {
+                input.parent().parent().next().val(weight * (sum_length / sum_weight));
+                input.parent().parent().next().next().find('input[type=text]').val((weight * (sum_length / sum_weight)).toFixed(2));
+            }
         }
     }
     
@@ -82,6 +89,23 @@
         
         if(!result) {
             $('#edit_not_take_stream_alert').removeClass('d-none');
+        }
+        
+        return result;
+    }
+    
+    function ANTCutValidate() {
+        radius = $('#add_not_take_stream_radius').val().replace(',', '.');
+        length = $('#add_not_take_stream_radius').val();
+        spool = <?=$calculation_result->spool ?>;
+        thickness_1 = <?=$calculation->thickness_1 ?>;
+        thickness_2 = <?=$calculation->thickness_2 ?>;
+        thickness_3 = <?=$calculation->thickness_3 ?>;
+        
+        result = IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3);
+        
+        if(!result) {
+            $('#add_not_take_stream_alert').removeClass('d-none');
         }
         
         return result;

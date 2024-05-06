@@ -5,6 +5,7 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $calculation_stream_id = filter_input(INPUT_POST, 'calculation_stream_id');
     $weight = filter_input(INPUT_POST, 'weight');
+    $length = filter_input(INPUT_POST, 'length');
     $location = filter_input(INPUT_POST, 'php_self');
     $location_get = array();
     
@@ -26,18 +27,6 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
         $location_get['invalid_not_take'] = 1;
         header('Location: '.$location."?".http_build_query($location_get)."&error_message=".urlencode('Невалидные данные'));
         exit();
-    }
-    
-    $length = 0;
-    
-    $sql = "select sum(weight) weight, sum(length) length from calculation_take_stream "
-            . "where calculation_stream_id = $calculation_stream_id "
-            . "and calculation_take_id in (select id from calculation_take where calculation_id = $id)";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        if($row['weight'] != 0) {
-            $length = $weight * ($row['length'] / $row['weight']);
-        }
     }
     
     // Если не было сделано ни одного съёма, то нет исходных данных, по которым рассчитывать длину нового ролика.
