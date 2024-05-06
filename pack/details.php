@@ -364,7 +364,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 $('input#take_stream_weight').val('');
                 $('input#take_stream_length').val('');
                 $('input#take_stream_radius').val('');
-                $('#edit_not_take_stream_alert').addClass('d-none');
+                $('#edit_take_stream_alert').addClass('d-none');
             });
             
             $('#add_not_take_stream').on('shown.bs.modal', function() {
@@ -382,6 +382,9 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             
             $('#edit_not_take_stream').on('hidden.bs.modal', function() {
                 $('input#not_take_stream_weight').val('');
+                $('input#not_take_stream_length').val('');
+                $('input#not_take_stream_radius').val('');
+                $('#edit_not_take_stream_alert').addClass('d-none');
             });
                 
             <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>

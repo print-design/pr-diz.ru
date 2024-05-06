@@ -57,6 +57,9 @@
             
     $('#edit_not_take_stream').on('hidden.bs.modal', function() {
         $('input#not_take_stream_weight').val('');
+        $('input#not_take_stream_length').val('');
+        $('input#not_take_stream_radius').val('');
+        $('#edit_not_take_stream_alert').addClass('d-none');
     });
     
     <?php if(IsInRole(CUTTER_USERS)): ?>

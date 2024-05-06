@@ -7,14 +7,15 @@
         input.parent().parent().next().next().find('input[type=text]').val((weight * (old_length / old_weight)).toFixed(2));
     }
     
-    function CutValidate() {
-        radius = $('#take_stream_radius').val().replace(',', '.');
-        length = $('#take_stream_length').val();
-        spool = <?=$calculation_result->spool ?>;
-        thickness_1 = <?=$calculation->thickness_1 ?>;
-        thickness_2 = <?=$calculation->thickness_2 ?>;
-        thickness_3 = <?=$calculation->thickness_3 ?>;
-        
+    function NTCutCalculate(input) {
+        weight = input.val().replace(',', '.');
+        old_weight = $('#not_take_stream_old_weight').val();
+        old_length = $('#not_take_stream_old_length').val();
+        input.parent().parent().next().val(weight * (old_length / old_weight));
+        input.parent().parent().next().next().find('input[type=text]').val((weight * (old_length / old_weight)).toFixed(2));
+    }
+    
+    function IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3) {
         result = false;
         
         if(spool == 76) {
@@ -33,8 +34,38 @@
             }
         }
         
+        return result;
+    }
+    
+    function CutValidate() {
+        radius = $('#take_stream_radius').val().replace(',', '.');
+        length = $('#take_stream_length').val();
+        spool = <?=$calculation_result->spool ?>;
+        thickness_1 = <?=$calculation->thickness_1 ?>;
+        thickness_2 = <?=$calculation->thickness_2 ?>;
+        thickness_3 = <?=$calculation->thickness_3 ?>;
+        
+        result = IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3);
+        
         if(!result) {
             $('#edit_take_stream_alert').removeClass('d-none');
+        }
+        
+        return result;
+    }
+    
+    function NTCutValidate() {
+        radius = $('#not_take_stream_radius').val().replace(',', '.');
+        length = $('#not_take_stream_length').val();
+        spool = <?=$calculation_result->spool ?>;
+        thickness_1 = <?=$calculation->thickness_1 ?>;
+        thickness_2 = <?=$calculation->thickness_2 ?>;
+        thickness_3 = <?=$calculation->thickness_3 ?>;
+        
+        result = IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3);
+        
+        if(!result) {
+            $('#edit_not_take_stream_alert').removeClass('d-none');
         }
         
         return result;
