@@ -364,6 +364,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 $('input#take_stream_weight').val('');
                 $('input#take_stream_length').val('');
                 $('input#take_stream_radius').val('');
+                $('#edit_not_take_stream_alert').addClass('d-none');
             });
             
             $('#add_not_take_stream').on('shown.bs.modal', function() {

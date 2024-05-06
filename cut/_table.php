@@ -1,10 +1,12 @@
 <div id="edit_take_stream" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="<?=APPLICATION ?>/cut/_edit_take_stream.php">
+            <form method="post" action="<?=APPLICATION ?>/cut/_edit_take_stream.php" onsubmit="javascript: return CutValidate();">
                 <input type="hidden" name="id" id="take_stream_id" />
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
+                <input type="hidden" name="take_stream_old_weight" id="take_stream_old_weight" />
+                <input type="hidden" name="take_stream_old_length" id="take_stream_old_length" />
                 <?php foreach ($_GET as $get_key => $get_value): ?>
                 <input type="hidden" name="get_<?=$get_key ?>" value="<?=$get_value ?>" />
                 <?php endforeach; ?>
@@ -12,32 +14,37 @@
                     <p class="font-weight-bold" style="font-size: x-large;" id="take_stream_name"></p>
                     <button type="button" class="close edit_take_stream_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
                 </div>
-                <div class="modal-body row">
-                    <div class="form-group col-4">
-                        <label for="weight">Масса катушки</label>
-                        <div class="input-group">
-                            <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" autocomplete="off" onkeyup="javascript: CutCalculate($(this));" onchange="javascript: CutCalculate($(this));" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">кг</span>
+                <div class="modal-body">
+                    <div id="edit_take_stream_alert" class="alert alert-danger d-none">
+                        Масса не соответствует радиусу
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label for="weight">Масса катушки</label>
+                            <div class="input-group">
+                                <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" autocomplete="off" onkeyup="javascript: $('#edit_take_stream_alert').addClass('d-none'); CutCalculate($(this));" onchange="javascript: $('#edit_take_stream_alert').addClass('d-none'); CutCalculate($(this));" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">кг</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <input type="hidden" name="length" />
-                    <div class="form-group col-4">
-                        <label for="length">Метраж</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="take_stream_length" disabled="disabled" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">м</span>
+                        <input type="hidden" name="length" />
+                        <div class="form-group col-4">
+                            <label for="length">Метраж</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="take_stream_length" disabled="disabled" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">м</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group col-4">
-                        <label for="radius">Радиус от вала</label>
-                        <div class="input-group">
-                            <input type="text" name="radius" class="form-control float-only" id="take_stream_radius" required="required" autocomplete="off" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">мм</span>
+                        <div class="form-group col-4">
+                            <label for="radius">Радиус от вала</label>
+                            <div class="input-group">
+                                <input type="text" name="radius" class="form-control float-only" id="take_stream_radius" required="required" autocomplete="off" onkeyup="javascript: $('#edit_take_stream_alert').addClass('d-none');" onchange="javascript: $('#edit_take_stream_alert').addClass('d-none');" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">мм</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -329,7 +336,7 @@
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
                 <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
-                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>');" /></a></td>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать"><img src="../images/icons/edit1.svg" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?=$row['name'] ?>'); $('#take_stream_old_weight').val('<?=$row['weight'] ?>'); $('#take_stream_old_length').val('<?=$row['length'] ?>');" /></a></td>
                 <?php endif; ?>
             </tr>
             <?php endwhile; ?>
