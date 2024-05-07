@@ -35,6 +35,7 @@
     function ANTStreamSelect(select) {
         $('#add_not_take_stream_sum_weight').val($('#sum_weight_stream_' + select.val()).val());
         $('#add_not_take_stream_sum_length').val($('#sum_length_stream_' + select.val()).val());
+        $('#add_not_take_stream_alert').addClass('d-none');
         ANTCutCalculate($('#add_not_take_stream_weight'));
     }
     
