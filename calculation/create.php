@@ -3406,29 +3406,41 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#solvent_no').parent().parent().removeClass('d-none');
             }
             
-            // Обрабатываем выбор сольвентного или бессольвентного ламинатора
-            $('#solvent_yes').click(function() {
-                $.ajax({ url: "_laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENT ?>" })
+            // Заполнение списка валов ламинации
+            function GetLaminationRollers() {
+                laminator_id = 0;
+                if($('#solvent_yes').is(':checked')) {
+                    laminator_id = <?=LAMINATOR_SOLVENT ?>;
+                }
+                else if($('#solvent_no').is(':checked')) {
+                    laminator_id = <?=LAMINATOR_SOLVENTLESS ?>;
+                }
+                
+                min_width = 0;
+                stream_width = $('#stream_width').val();
+                streams_number = $('#streams_number').val();
+                if(stream_width !== "" && streams_number !== "" && stream_width !== 0 && streams_number !== 0) {
+                    min_width = stream_width * streams_number;
+                }
+                
+                $.ajax({ url: "_laminator_roller.php?laminator_id=" + laminator_id + "&min_width=" + min_width })
                         .done(function(data) {
+                            $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
                             $('#lamination_roller_width').html(data);
-                            SelectLaminatorRoller();
                             SetLaminationRollerWidthOnChange();
                         })
                         .fail(function() {
                             alert('Ошибка при заполнении ширин ламинирующего вала');
                         });
+            }
+            
+            // Обрабатываем выбор сольвентного или бессольвентного ламинатора
+            $('#solvent_yes').click(function() {
+                GetLaminationRollers();
             });
             
             $('#solvent_no').click(function() {
-                $.ajax({ url: "_laminator_roller.php?laminator_id=<?= LAMINATOR_SOLVENTLESS ?>" })
-                        .done(function(data) {
-                            $('#lamination_roller_width').html(data);
-                            SelectLaminatorRoller();
-                            SetLaminationRollerWidthOnChange();
-                        })
-                        .fail(function() {
-                            alert('Ошибка при заполнении ширин ламинирующего вала');
-                        });
+                GetLaminationRollers();
             });
             
             // При выборе значения "Ввести вручную" в списке ширин ламинирующего вала, скрываем список и показываем текстовое поле
@@ -3992,12 +4004,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('input#streams_number').keyup(function() {
-                SelectLaminatorRoller();
+                GetLaminationRollers();
             });
     
             $('input#streams_number').change(function(){
                 ChangeLimitIntValue($(this), 50);
-                SelectLaminatorRoller();
             });
             
             // Ограничение значения поля "Ширина ручья" до 4 цифр
@@ -4008,12 +4019,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('input#stream_width').keyup(function() {
-                SelectLaminatorRoller();
+                GetLaminationRollers();
             });
             
             $('input#stream_width').change(function(){
                 ChangeLimitIntValue($(this), 9999);
-                SelectLaminatorRoller();
             });
             
             // Ограничение значения поля "пантон"

@@ -2,16 +2,29 @@
 include '../include/topscripts.php';
 
 $laminator_id = filter_input(INPUT_GET, 'laminator_id');
+$min_width = filter_input(INPUT_GET, 'min_width');
 
-echo "<option value='' hidden='hidden'>Ширина ламинирующего вала...</option>";
+$sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 ";
 
-$sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 order by value";
-$fetcher = new Fetcher($sql);
-while($row = $fetcher->Fetch()):
+if(!empty($min_width)) {
+    $sql .= "and value >= $min_width ";
+}
+
+$sql .= "order by value";
+
+$grabber = new Grabber($sql);
+$result = $grabber->result;
+
+if(count($result) == 0):
 ?>
-<option><?=$row[0] ?></option>
+<option value="" hidden="hidden">Нет вала</option>
+<?php else: ?>
+<option value='' hidden='hidden'>Ширина ламинирующего вала...</option>
+<?php foreach ($result as $row): ?>
+<option><?=$row['value'] ?></option>
 <?php
-endwhile;
+endforeach;
+endif;
 ?>
 <option disabled="disabled">-</option>
 <option value="-1">Ввести вручную...</option>
