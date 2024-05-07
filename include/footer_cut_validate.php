@@ -48,7 +48,7 @@
         }
         else if(spool == 152) {
             if(1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
-                $validation2 = true;
+                result = true;
             }
         }
         else {
@@ -96,7 +96,7 @@
     
     function ANTCutValidate() {
         radius = $('#add_not_take_stream_radius').val().replace(',', '.');
-        length = $('#add_not_take_stream_radius').val();
+        length = $('#add_not_take_stream_length').val();
         spool = <?=$calculation_result->spool ?>;
         thickness_1 = <?=$calculation->thickness_1 ?>;
         thickness_2 = <?=$calculation->thickness_2 ?>;
