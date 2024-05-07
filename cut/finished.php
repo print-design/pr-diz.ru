@@ -287,6 +287,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
         <?php endif; ?>
         <?php
         include '../include/footer.php';
+        include '../include/footer_cut_validate.php';
         include '../include/footer_cut.php';
         ?>
         <script>

@@ -254,6 +254,8 @@ if($row = $fetcher->Fetch()) {
         </div>
         <?php
         include '../include/footer.php';
+        include '../include/footer_cut_validate.php';
+        include '../include/footer_cut.php';
         ?>
         <script>
             function ShowTakeTable(id) {
