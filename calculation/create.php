@@ -2046,7 +2046,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             $sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 ";
                                             if(!empty($stream_width) && !empty($streams_number)) {
                                                 $min_width = $stream_width * $streams_number;
-                                                $sql .= "and value >= $min_width ";
+                                                $sql .= "and value >= $min_width + 5 and value <= $min_width + 12 ";
                                             }
                                             if(!empty($lamination_roller_width)) {
                                                 $sql .= "union select value from norm_laminator_roller where laminator_id = $laminator_id and active = 0 and value = $lamination_roller_width ";

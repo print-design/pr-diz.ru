@@ -7,7 +7,7 @@ $min_width = filter_input(INPUT_GET, 'min_width');
 $sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 ";
 
 if(!empty($min_width)) {
-    $sql .= "and value >= $min_width ";
+    $sql .= "and value >= $min_width + 5 and value <= $min_width + 12 ";
 }
 
 $sql .= "order by value";
