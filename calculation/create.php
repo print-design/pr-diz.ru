@@ -3429,7 +3429,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 
                 $.ajax({ url: "_laminator_roller.php?laminator_id=" + laminator_id + "&min_width=" + min_width })
                         .done(function(data) {
-                            $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
+                            $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only' required='required'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
                             $('#lamination_roller_width').html(data);
                             SetLaminationRollerWidthOnChange();
                         })
@@ -3476,7 +3476,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $(this).val(val);
                     
                     if((e.which == 8 || e.which == 46) && val == '') {
-                        $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
+                        $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only' required='required'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
                         if($('#solvent_yes').is(':checked')) {
                             $('#solvent_yes').click();
                         }
