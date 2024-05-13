@@ -1493,7 +1493,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback">Ширина пленки обязательно</div>
                                 </div>
                                 <?php if(!empty($width_ski_valid)): ?>
-                                <div class="text-danger" id="width_ski_message">Ширина плёнки меньше, чем кол-во ручьёв * ширину ручья</div>
+                                <div class="text-danger" id="width_ski_message">Узкая плёнка</div>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -1707,7 +1707,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <div class="invalid-feedback">Ширина пленки обязательно</div>
                                     </div>
                                     <?php if(!empty($lamination1_width_ski_valid)): ?>
-                                    <div class="text-danger" id="lamination1_width_ski_message">Ширина плёнки меньше, чем кол-во ручьёв * ширину ручья</div>
+                                    <div class="text-danger" id="lamination1_width_ski_message">Узкая плёнка</div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -1885,7 +1885,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <div class="invalid-feedback">Ширина пленки обязательно</div>
                                         </div>
                                         <?php if(!empty($lamination2_width_ski_valid)): ?>
-                                        <div class="text-danger" id="lamination2_width_ski_message">Ширина плёнки меньше, чем кол-во ручьёв * ширину ручья</div>
+                                        <div class="text-danger" id="lamination2_width_ski_message">Узкая плёнка</div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
