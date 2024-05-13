@@ -347,6 +347,7 @@ if(file_exists('find.php')) {
     
     $('button[type=submit]').click(function () {
         if(submit_clicked) {
+            submit_clicked = false;
             return false;
         }
         else {
