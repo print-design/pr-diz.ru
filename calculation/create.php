@@ -80,8 +80,13 @@ $individual_film_name_valid = '';
 $individual_thickness_valid = '';
 $individual_density_valid = '';
 
+$width_ski_valid = '';
+
 $lamination1_price_valid = '';
+$lamination1_width_ski_valid = '';
+
 $lamination2_price_valid = '';
+$lamination2_width_ski_valid = '';
 
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
@@ -183,6 +188,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
+    if(!empty(filter_input(INPUT_POST, 'width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+        $width_ski = filter_input(INPUT_POST, 'width_ski');
+        $stream_width = filter_input(INPUT_POST, 'stream_width');
+        $streams_number = filter_input(INPUT_POST, 'streams_number');
+        
+        if($width_ski < $stream_width * $streams_number) {
+            $width_ski_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
     // ЛАМИНАЦИЯ 1
     // Валидация цен ламинации 1 - они должны быть не меньше минимальных
     $lamination1_price_min = filter_input(INPUT_POST, 'lamination1_price_min');
@@ -198,6 +214,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
+    if(!empty(filter_input(INPUT_POST, 'lamination1_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski');
+        $stream_width = filter_input(INPUT_POST, 'stream_width');
+        $streams_number = filter_input(INPUT_POST, 'streams_number');
+        
+        if($lamination1_width_ski < $stream_width * $streams_number) {
+            $lamination1_width_ski_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
     // ЛАМИНАЦИЯ 2
     // Валидация цен ламинации 2 - они должны быть не меньше минимальных
     $lamination2_price_min = filter_input(INPUT_POST, 'lamination2_price_min');
@@ -209,6 +236,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         if($fPrice < $fPriceMin) {
             $lamination2_price_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
+    if(!empty(filter_input(INPUT_POST, 'lamination2_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
+        $stream_width = filter_input(INPUT_POST, 'stream_width');
+        $streams_number = filter_input(INPUT_POST, 'streams_number');
+        
+        if($lamination2_width_ski < $stream_width * $streams_number) {
+            $lamination2_width_ski_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -1451,9 +1489,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="width_ski" id="for_width_ski">Ширина пленки, мм</label>
-                                    <input name="width_ski" id="width_ski" type="text" class="form-control int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" />
+                                    <input name="width_ski" id="width_ski" type="text" class="form-control int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#width_ski_message').hide();" />
                                     <div class="invalid-feedback">Ширина пленки обязательно</div>
                                 </div>
+                                <?php if(!empty($width_ski_valid)): ?>
+                                <div class="text-danger" id="width_ski_message">Ширина плёнки меньше, чем кол-во ручьёв * ширину ручья</div>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="row no-print-only print-only d-none">
@@ -1662,9 +1703,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_width_ski" id="for_lamination1_width_ski">Ширина пленки, мм</label>
-                                        <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control int-only" value="<?=$lamination1_width_ski ?>" placeholder="Ширина пленки" />
+                                        <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control int-only" value="<?=$lamination1_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination1_width_ski_message').hide();" />
                                         <div class="invalid-feedback">Ширина пленки обязательно</div>
                                     </div>
+                                    <?php if(!empty($lamination1_width_ski_valid)): ?>
+                                    <div class="text-danger" id="lamination1_width_ski_message">Ширина плёнки меньше, чем кол-во ручьёв * ширину ручья</div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="row">
@@ -1837,9 +1881,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_width_ski" id="for_lamination2_width_ski">Ширина пленки, мм</label>
-                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control int-only" value="<?=$lamination2_width_ski ?>" placeholder="Ширина пленки" />
+                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control int-only" value="<?=$lamination2_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination2_width_ski_message').hide();" />
                                             <div class="invalid-feedback">Ширина пленки обязательно</div>
                                         </div>
+                                        <?php if(!empty($lamination2_width_ski_valid)): ?>
+                                        <div class="text-danger" id="lamination2_width_ski_message">Ширина плёнки меньше, чем кол-во ручьёв * ширину ручья</div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
