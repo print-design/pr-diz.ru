@@ -26,7 +26,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
 
 //*******************************************************************
 // Добавление наименования ручьёв в тех резках, где они не именованы.
-if($machine_id == CUTTER_SOMA) {
+if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
     $today = date('Y-m-d');
     $sql = "select id, name, streams_number from calculation where (id in "
             . "(select calculation_id from plan_edition where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id) "
@@ -125,6 +125,15 @@ if($machine_id == CUTTER_SOMA) {
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $date_from = DateTime::createFromFormat('Y-m-d', $row['date']);
+            }
+            
+            // Для резки 3 работу начинаем только с 15 мая 2024 г.
+            if($machine_id == CUTTER_3) {
+                $start_work_date = new DateTime('2024-05-15 00:00:00');
+                
+                if($date_from < $start_work_date) {
+                    $date_from = $start_work_date;
+                }
             }
             
             $date_to = clone $date_from;
