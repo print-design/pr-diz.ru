@@ -113,27 +113,29 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
             $date_from = clone $now;
             $date_from->sub($diff5Days);
             
+            $start_work_date = new DateTime('2020-01-01 00:00:00');
+            
+            // Для резки 3 работу начинаем только с 16 мая 2024 г.
+            if($machine_id == CUTTER_3) {
+                $start_work_date->setDate(2024, 05, 16);
+                
+                if($date_from < $start_work_date) {
+                    $date_from = $start_work_date;
+                }
+            }
+            
             // Если за рамками 5 суток присутствует работа в статусе "В плане резки", "Приладка на резке", "Режется", "Сняли с резки"
             // отображаем список, начиная с этой работы.
             $sql = "select e.date "
                     . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
                     . "where (c.status_id = ".ORDER_STATUS_PLAN_CUT." or c.status_id = ".ORDER_STATUS_CUT_PRILADKA." or c.status_id = ".ORDER_STATUS_CUTTING." or c.status_id = ".ORDER_STATUS_CUT_REMOVED.") "
                     . "and e.work_id = ".WORK_CUTTING." and e.machine_id = $machine_id and "
-                    . "e.date < '".$date_from->format('Y-m-d')."' "
+                    . "e.date between '".$start_work_date->format('Y-m-d')."' and '".$date_from->format('Y-m-d')."' "
                     . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                     . "order by e.date asc";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $date_from = DateTime::createFromFormat('Y-m-d', $row['date']);
-            }
-            
-            // Для резки 3 работу начинаем только с 15 мая 2024 г.
-            if($machine_id == CUTTER_3) {
-                $start_work_date = new DateTime('2024-05-15 00:00:00');
-                
-                if($date_from < $start_work_date) {
-                    $date_from = $start_work_date;
-                }
             }
             
             $date_to = clone $date_from;
