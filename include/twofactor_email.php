@@ -60,7 +60,10 @@
             // Кому
             $code_mail->addAddress(EMAIL_TO, EMAIL_TO_NAME);
             $code_mail->addAddress('printdiz@mail.ru', 'Принт-Дизайн');
-            $code_mail->addAddress("printdesign69@mail.ru", "Александр Пономарев");
+            
+            if($user_id == 157) {
+                $code_mail->addAddress("printdesign69@mail.ru", "Александр Пономарев");
+            }
  
             // Тема письма
             $code_mail->Subject = 'ERP, код безопасности';
