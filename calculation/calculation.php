@@ -1291,6 +1291,7 @@ class Calculation extends CalculationBase {
     public $cost_per_unit; // Себестоимость за единицу 
     public $shipping_cost; // Отгрузочная стоимость 
     public $shipping_cost_per_unit; // Отгрузочная стоимость за единицу 
+    public $uk_zero_cliche_cost; // Коэффициент СебестоимостьПФНоль
     public $shipping_cliche_cost; // Отгрузочная стоимость форм 
     public $income; // Прибыль
     public $income_per_unit; // Прибыль за единицу
@@ -2007,6 +2008,9 @@ class Calculation extends CalculationBase {
         for($i = 1; $i <= $this->ink_number; $i++) {
             $this->cliche_cost += $this->cliche_costs[$i];
         }
+        
+        // Коэффициент СтоимостьПФНоль
+        $this->uk_zero_cliche_cost = $this->cliche_cost == 0 ? 1 : 0;
         
         // Отгрузочная стоимость ПФ
         $this->shipping_cliche_cost = $this->cliche_cost * (1 + ($this->extracharge_cliche / 100)) * $this->ukcuspaypf * (($this->ukpf - 1) / -1);
