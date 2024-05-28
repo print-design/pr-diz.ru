@@ -417,6 +417,15 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 SetShippingCostPerUnit($(this).val());
             });
             
+            // Вычисляем наценку на ПФ по отгрузочной стоимости ПФ
+            function SetShippingClicheCost(param) {
+                alert('SET_SHIPPING_CLICHE_COST');
+            }
+            
+            $('#input_shipping_cliche_cost').keyup(function() {
+                SetShippingClicheCost($(this).val());
+            });
+            
             // Вычисляем наценку на нож
             function SetExtrachargeKnife(param) {
                 extracharge_knife = parseInt(param);

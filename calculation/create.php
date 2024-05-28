@@ -3879,6 +3879,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 SetShippingCostPerUnit($(this).val());
             });
             
+            // Вычисляем наценку на ПФ по отгрузочной стоимости ПФ
+            function SetShippingClicheCost(param) {
+                alert('SET_SHIPPING_CLICHE_COST');
+            }
+            
+            $('#input_shipping_cliche_cost').keyup(function() {
+                SetShippingClicheCost($(this).val());
+            });
+            
             // Вычисляем наценку на нож
             function SetExtrachargeKnife(param) {
                 <?php if(!empty($id)): ?>
