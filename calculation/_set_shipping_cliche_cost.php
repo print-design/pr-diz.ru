@@ -36,7 +36,7 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge_cliche = (100 * ($shipping_cliche_cost - $cliche_cost) / ($cliche_cost + $uk_costpf))";
+        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge_cliche = (100 * ($shipping_cliche_cost - $cliche_cost) / ($cliche_cost + $uk_costpf)) where c.id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
