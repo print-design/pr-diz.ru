@@ -373,6 +373,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                                 }
                                 else {
                                     $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
+                                    $('#input_shipping_cliche_cost').val(data.input_shipping_cliche_cost);
                                     $('#income_cliche').text(data.income_cliche);
                                     $('#income_total').text(data.income_total);
                                 }
@@ -473,6 +474,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                                 $('#income').text(data.income);
                                 $('#income_per_unit').text(data.income_per_unit);
                                 $('#shipping_cliche_cost').text(data.shipping_cliche_cost);
+                                $('#input_shipping_cliche_cost').val(data.input_shipping_cliche_cost);
                                 $('#income_cliche').text(data.income_cliche);
                                 $('#income_total').text(data.income_total);                                
                             }
