@@ -41,17 +41,13 @@ else {
         $error_message = $executer->error;
     }
     
-    $shipping_cost = 0;
-    $income = 0;
-    $income_per_unit = 0;
+    $income_cliche = 0;
     
     if(empty($error_message)) {
         $calculation = CalculationBase::Create($id);
         
         if($calculation instanceof CalculationBase) {
-            $shipping_cost = $calculation->shipping_cost;
-            $income = $calculation->income;
-            $income_per_unit = $calculation->income_per_unit;
+            $income_cliche = $calculation->income_cliche;
         }
         else {
             $error_message = $calculation;
@@ -59,13 +55,13 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set shipping_cost = $shipping_cost, income = $income, income_per_unit = $income_per_unit where calculation_id = $id";
+        $sql = "update calculation_result set income_cliche = $income_cliche where calculation_id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
-        $sql = "select c.extracharge_cliche, cr.shipping_cliche_cost, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id ";
+        $sql = "select c.extracharge_cliche, cr.shipping_cliche_cost, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id order by cr.id desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
