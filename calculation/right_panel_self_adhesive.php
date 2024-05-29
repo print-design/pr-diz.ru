@@ -310,15 +310,14 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
             $cliche_in_price_display_class = " d-none";
         }
         ?>
-        <div class="mr-4 p-2<?=$cliche_in_price_display_class ?>" id="cliche_in_price_box" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 25px;">
-            <div class="text-nowrap" style="font-size: x-small;">Наценка на ПФ</div>
+        <div class="mr-4<?=$cliche_in_price_display_class ?>" id="cliche_in_price_box">
+            <div class="text-nowrap">Наценка на ПФ</div>
             <form>
-                <input type="hidden" name="id" value="<?=$id ?>" />
-                <div class="input-group">
+                <div class="input-group mb-2">
                     <input type="text" 
                            id="extracharge_cliche" 
                            name="extracharge_cliche" 
-                           style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                           style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                            value="<?= round($calculation->extracharge_cliche) ?>" 
                            required="required" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
@@ -330,6 +329,23 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                         <span class="input-group-text">%</span>
                     </div>
                 </div>
+                <div class="input-group">
+                    <input type="text" 
+                           class="float-only" 
+                           id="input_shipping_cliche_cost" 
+                           name="input_shipping_cliche_cost" 
+                           style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                           value="<?= round(floatval($calculation_result->shipping_cliche_cost), 0) ?>" 
+                           required="required" 
+                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                           onmouseup="javascript: $(this).attr('id', 'input_shipping_cliche_cost'); $(this).attr('name', 'input_shipping_cliche_cost');" 
+                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                           onkeyup="javascript: $(this).attr('id', 'input_shipping_cliche_cost'); $(this).attr('name', 'input_shipping_cliche_cost');" 
+                           onfocusout="javascript: $(this).attr('id', 'input_shipping_cliche_cost'); $(this).attr('name', 'input_shipping_cliche_cost');"<?=$disabled_attr ?> />
+                    <div class="input-group-append" style="height: 28px;">
+                        <span class="input-group-text">&#8381;</span>
+                    </div>
+                </div>
             </form>
         </div>
         <?php
@@ -339,15 +355,14 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
             $knife_in_price_display_class = " d-none";
         }
         ?>
-        <div class="mr-4 p-2<?=$knife_in_price_display_class ?>" id="knife_in_price_box" style="color: gray; border: solid 1px lightgray; border-radius: 10px; height: 60px; width: 100px; margin-top: 25px;">
-            <div class="text-nowrap" style="font-size: x-small;">Наценка на нож</div>
+        <div class="mr-4<?=$knife_in_price_display_class ?>" id="knife_in_price_box">
+            <div class="text-nowrap">Наценка на нож</div>
             <form>
-                <input type="hidden" name="id" value="<?=$id ?>" />
-                <div class="input-group">
+                <div class="input-group mb-2">
                     <input type="text" 
                            id="extracharge_knife" 
                            name="extracharge_knife" 
-                           style="width: 35px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                           style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                            value="<?= round($calculation->extracharge_knife) ?>" 
                            required="required" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
@@ -357,6 +372,23 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                            onfocusout="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" 
+                           class="float-only" 
+                           id="input_shipping_knife_cost" 
+                           name="input_shipping_knife_cost" 
+                           style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
+                           value="<?= round(floatval($calculation_result->shipping_knife_cost), 0) ?>" 
+                           required="required" 
+                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
+                           onmouseup="javascript: $(this).attr('id', 'input_shipping_knife_cost'); $(this).attr('name', 'input_shipping_knife_cost');" 
+                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
+                           onkeyup="javascript: $(this).attr('id', 'input_shipping_knife_cost'); $(this).attr('name', 'input_shipping_knife_cost');" 
+                           onfocusout="javascript: $(this).attr('id', 'input_shipping_knife_cost'); $(this).attr('name', 'input_shipping_knife_cost');"<?=$disabled_attr ?> />
+                    <div class="input-group-append" style="height: 28px;">
+                        <span class="input-group-text">&#8381;</span>
                     </div>
                 </div>
             </form>

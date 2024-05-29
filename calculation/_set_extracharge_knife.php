@@ -45,6 +45,7 @@ else {
         
         if($row = $fetcher->Fetch()) {
             $result['shipping_knife_cost'] = DisplayNumber(floatval($row['shipping_knife_cost']), 0);
+            $result['input_shipping_knife_cost'] = round(floatval($row['shipping_knife_cost']), 0);
             $result['income_knife'] = DisplayNumber(floatval($row['income_knife']), 0);
             $result['income_total'] = DisplayNumber(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
         }

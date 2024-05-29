@@ -3789,7 +3789,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
-            // Вычисляем отгрузочную стоимость при других наценках
+            // Редактируем наценку
             function SetExtracharge(param) {
                 <?php if(!empty($id)): ?>
                 extracharge = parseInt(param);
@@ -3820,6 +3820,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 SetExtracharge($(this).val());
             });
             
+            // Редактируем наценку на ПФ
             function SetExtrachargeCliche(param) {
                 <?php if(!empty($id)): ?>
                 extracharge_cliche = parseInt(param);
@@ -3846,6 +3847,35 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             $('#extracharge_cliche').keyup(function(){
                 SetExtrachargeCliche($(this).val());
+            });
+            
+            // Редактируем наценку на нож
+            function SetExtrachargeKnife(param) {
+                <?php if(!empty($id)): ?>
+                extracharge_knife = parseInt(param);
+                
+                if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
+                            .done(function(data) {
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    $('#shipping_knife_cost').text(data.shipping_knife_cost);
+                                    $('#input_shipping_knife_cost').val(data.input_shipping_knife_cost);
+                                    $('#income_knife').text(data.income_knife);
+                                    $('#income_total').text(data.income_total);
+                                }
+                            })
+                            .fail(function() {
+                                alert("Ошибка при редактировании наценки на нож");
+                            });
+                }
+                <?php endif; ?>
+            }
+            
+            $('#extracharge_knife').keyup(function(){
+                SetExtrachargeKnife($(this).val());
             });
             
             // Вычисляем наценку по отгрузочной стоимости за единицу
@@ -3898,7 +3928,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 }
                             })
                             .fail(function() {
-                                alert("Ошибка при редактировании отгрузочной стоимости за единицу");
+                                alert("Ошибка при редактировании отгрузочной стоимости ПФ");
                             });
                 }
                 <?php endif; ?>
@@ -3908,32 +3938,31 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 SetShippingClicheCost($(this).val());
             });
             
-            // Вычисляем наценку на нож
-            function SetExtrachargeKnife(param) {
-                <?php if(!empty($id)): ?>
-                extracharge_knife = parseInt(param);
+            // Вычисляем наценку на нож по отгрузочной стоимости ножа
+            function SetShippingKnifeCost(param) {
+                shipping_knife_cost = parseFloat(param.replace(',', '.'));
                 
-                if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
+                if(!isNaN(shipping_knife_cost) && shipping_knife_cost > -1) {
+                    $.ajax({ dataType: 'JSON', url: '_set_shipping_knife_cost.php?id=<?=$id ?>&shipping_knife_cost=' + shipping_knife_cost })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
                                 }
                                 else {
+                                    $('#extracharge_knife').val(Math.round(data.extracharge_knife));
                                     $('#shipping_knife_cost').text(data.shipping_knife_cost);
                                     $('#income_knife').text(data.income_knife);
                                     $('#income_total').text(data.income_total);
                                 }
                             })
                             .fail(function() {
-                                alert("Ошибка при редактировании наценки на нож");
+                                alert("Ошибка при редактировании отгрузочной стоимости ножа");
                             });
                 }
-                <?php endif; ?>
             }
             
-            $('#extracharge_knife').keyup(function(){
-                SetExtrachargeKnife($(this).val());
+            $('#input_shipping_knife_cost').keyup(function() {
+                SetShippingKnifeCost($(this).val());
             });
             
             // Пересчитываем по новому значению "Включить ПФ в себестоимость" и "Заказчик платит за ПФ"
@@ -4126,7 +4155,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             // Скрытие расчёта при изменении значения полей
-            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit][id!=input_shipping_cliche_cost][id!=cliche_in_price][id!=customer_pays_for_cliche][id!=knife_in_price][id!=customer_pays_for_knife]").change(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit][id!=input_shipping_cliche_cost][id!=input_shipping_knife_cost][id!=cliche_in_price][id!=customer_pays_for_cliche][id!=knife_in_price][id!=customer_pays_for_knife]").change(function () {
                 HideCalculation();
             });
             
@@ -4134,7 +4163,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 HideCalculation();
             });
             
-            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit][id!=input_shipping_cliche_cost][id!=cliche_in_price][id!=customer_pays_for_cliche][id!=knife_in_price][id!=customer_pays_for_knife]").keydown(function () {
+            $("input[id!=extracharge][id!=extracharge_cliche][id!=extracharge_knife][id!=input_shipping_cost_per_unit][id!=input_shipping_cliche_cost][id!=input_shipping_knife_cost][id!=cliche_in_price][id!=customer_pays_for_cliche][id!=knife_in_price][id!=customer_pays_for_knife]").keydown(function () {
                 HideCalculation();
             });
             
