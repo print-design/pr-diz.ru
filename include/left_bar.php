@@ -58,6 +58,16 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <a href="<?=APPLICATION ?>/plan/" class="left_bar_item<?=$plan_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
+    
+    /*-----------------*/
+    /*ВРЕМЕННО*/
+    if(GetUserId() == CUTTER_SOMA):
+    ?>
+    <a href="<?=APPLICATION ?>/plan/<?= BuildQueryAddRemoveArray("work_id", WORK_CUTTING, array("page", "order")) ?>" class="left_bar_item<?=$plan_class ?>" title="План" data-toggle="tooltip" data-placement="right"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
+    <?php
+    endif;
+    /*ВРЕМЕННО*/
+    
     // Резка
     if(IsInRole(CUTTER_USERS) || IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])):
     ?>

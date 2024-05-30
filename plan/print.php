@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include './_plan_timetable.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST])) && /*ВРЕМЕННО*/ GetUserId() != CUTTER_SOMA) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -78,7 +78,7 @@ if(empty($work_id) || empty($machine_id)) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             .comment_invisible {
                 display: none;
             }
@@ -104,7 +104,7 @@ if(empty($work_id) || empty($machine_id)) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_COLORIST]))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_COLORIST])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             .planner_hidden {
                 display: none;
             }

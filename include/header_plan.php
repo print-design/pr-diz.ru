@@ -11,9 +11,11 @@ include '../include/left_bar.php';
                     $work_class = ' disabled';
                 }
             ?>
+            <?php /*ВРЕМЕННО*/ if(!(GetUserId() == CUTTER_SOMA && $work !== WORK_CUTTING)): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$work_class ?>" href="<?= BuildQueryAddRemove('work_id', $work, 'machine_id') ?>"><?=WORK_NAMES[$work] ?></a>
             </li>
+            <?php /*ВРЕМЕННО*/ endif; ?>
             <?php endforeach; ?>
         </ul>
         <div class="ml-auto"></div>

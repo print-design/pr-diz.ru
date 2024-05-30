@@ -4,7 +4,7 @@ include './_queue.php';
 include './_plan_timetable.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST])) && /*ВРЕМЕННО*/ GetUserId() != CUTTER_SOMA) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -291,7 +291,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             .comment_invisible {
                 display: none;
             }
@@ -317,7 +317,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(ROLE_NAMES[ROLE_SCHEDULER])): ?>
+            <?php if(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             .planner_hidden {
                 display: none;
             }
@@ -619,7 +619,7 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             
             EnableMenu();
             
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             // Скрытие/показ левой панели.
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
@@ -1154,6 +1154,15 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             $('#timetable').on('scroll', function() {
                 $('input[name="scroll"]').val($(this).scrollTop());
             });
+            
+            <?php /*ВРЕМЕННО*/ if(IsInRole(CUTTER_USERS)): ?>
+            function ShowCutterName() {
+                $('span#top_user_name').load("<?=APPLICATION ?>/cut/_get_user.php");
+            }
+    
+            ShowCutterName();
+            setInterval(ShowCutterName, 60000);
+            <?php /*ВРЕМЕННО*/ endif; ?>
             
             <?php
             $scroll = filter_input(INPUT_POST, 'scroll');
