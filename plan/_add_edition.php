@@ -60,31 +60,35 @@ $edition->Shift = $shift;
 if($work_id == WORK_PRINTING) {
     $machine_speed = 0;
     $machine_tuning_time = 0;
+    $machine_waste_percent = 0;
     $sql = "select speed from norm_machine where machine_id = ".$edition->MachineId." order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $machine_speed = $row['speed'];
     }
-    $sql = "select time from norm_priladka where machine_id = ".$edition->MachineId." order by date desc limit 1";
+    $sql = "select time, waste_percent from norm_priladka where machine_id = ".$edition->MachineId." order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $machine_tuning_time = $row['time'];
+        $machine_waste_percent = $row['waste_percent'];
     }
-    $edition->WorkTime = ($ink_number * $machine_tuning_time / 60.0) + ($length_pure_1 / $machine_speed / 1000.0);
+    $edition->WorkTime = ($ink_number * $machine_tuning_time / 60.0) + ($length_pure_1 * (1 + ($machine_waste_percent / 100)) / $machine_speed / 1000.0);
 }
 elseif($work_id == WORK_LAMINATION) {
     $laminator_speed = 0;
     $laminator_tuning_time = 0;
+    $laminator_waste_percent = 0;
     $sql = "select speed from norm_laminator where laminator_id = ".$edition->MachineId." order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $laminator_speed = $row['speed'];
     }
-    $sql = "select time from norm_laminator_priladka where laminator_id = ".$edition->MachineId." order by date desc limit 1";
+    $sql = "select time, waste_percent from norm_laminator_priladka where laminator_id = ".$edition->MachineId." order by date desc limit 1";
     if($row = $fetcher->Fetch()) {
         $laminator_tuning_time = $row['time'];
+        $laminator_waste_percent = $row['waste_percent'];
     }
-    $edition->WorkTime = ($laminator_tuning_time / 60.0) + ($length_pure_1 / $laminator_speed / 1000.0);
+    $edition->WorkTime = ($laminator_tuning_time / 60.0) + ($length_pure_1 * (1 + ($laminator_waste_percent / 100.0)) / $laminator_speed / 1000.0);
 }
 elseif($work_id == WORK_CUTTING) {
     $cutter_time = 0;
