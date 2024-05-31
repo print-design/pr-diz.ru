@@ -20,27 +20,21 @@ class Edition {
 }
 
 // Получаем данные расчёта
-$work_time_1 = '';
-$work_time_2 = '';
-$work_time_3 = '';
-
 $work_type_id = 0;
+$ink_number = 0;
 $length_dirty_1 = 0;
 $length_pure_1 = 0;
 $has_lamination = false;
 $two_laminations = false;
 
-$sql = "select cr.work_time_1, cr.work_time_2, cr.work_time_3, c.work_type_id, cr.length_dirty_1, cr.length_pure_1, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+$sql = "select c.work_type_id, c.ink_number, cr.length_dirty_1, cr.length_pure_1, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
-    $work_time_1 = round($row['work_time_1'], 2);
-    $work_time_2 = round($row['work_time_2'], 2);
-    $work_time_3 = round($row['work_time_3'], 2);
-    
     $work_type_id = $row['work_type_id'];
+    $ink_number = empty($row['ink_number']) ? 0 : $row['ink_number'];
     $length_dirty_1 = $row['length_dirty_1'];
     $length_pure_1 = $row['length_pure_1'];
     
@@ -64,7 +58,33 @@ $edition->Date = $date;
 $edition->Shift = $shift;
 
 if($work_id == WORK_PRINTING) {
-    $edition->WorkTime = $work_time_1;
+    $machine_speed = 0;
+    $machine_tuning_time = 0;
+    $sql = "select speed from norm_machine where machine_id = ".$edition->MachineId." order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $machine_speed = $row['speed'];
+    }
+    $sql = "select time from norm_priladka where machine_id = ".$edition->MachineId." order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $machine_tuning_time = $row['time'];
+    }
+    $edition->WorkTime = ($ink_number * $machine_tuning_time / 60.0) + ($length_pure_1 / $machine_speed / 1000.0);
+}
+elseif($work_id == WORK_LAMINATION) {
+    $laminator_speed = 0;
+    $laminator_tuning_time = 0;
+    $sql = "select speed from norm_laminator where laminator_id = ".$edition->MachineId." order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $laminator_speed = $row['speed'];
+    }
+    $sql = "select time from norm_laminator_priladka where laminator_id = ".$edition->MachineId." order by date desc limit 1";
+    if($row = $fetcher->Fetch()) {
+        $laminator_tuning_time = $row['time'];
+    }
+    $edition->WorkTime = ($laminator_tuning_time / 60.0) + ($length_pure_1 / $laminator_speed / 1000.0);
 }
 elseif($work_id == WORK_CUTTING) {
     $cutter_time = 0;
@@ -77,12 +97,6 @@ elseif($work_id == WORK_CUTTING) {
     }
     
     $edition->WorkTime = ($length_pure_1 / $cutter_speed / 1000.0) + ($cutter_time / 60.0);
-}
-elseif($work_id == WORK_LAMINATION && $lamination == 1) {
-    $edition->WorkTime = $work_time_2;
-}
-elseif($work_id == WORK_LAMINATION && $lamination == 2) {
-    $edition->WorkTime = $work_time_3;
 }
 
 if(empty($before) && $before !== 0 && $before !== '0') {
