@@ -77,7 +77,7 @@ if(!empty($pallet_id)) {
             </tr>
             <tr>
                 <td style="padding-bottom: 10px;">ID</td>
-                <td style="padding-bottom: 10px;"><?="П".$row['pallet_id'] ?></td>
+                <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
                 <td style="padding-bottom: 10px;">Статус</td>
                 <td style="padding-bottom: 10px; font-size: 10px; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?=mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
             </tr>
