@@ -1745,7 +1745,7 @@ class Calculation extends CalculationBase {
         $ink_solvent_kg_price = 0;
         $ink_solvent_currency = 1;
         
-        if($this->machine_id == PRINTER_COMIFLEX) {
+        if($this->machine_id == PRINTER_COMIFLEX || $this->machine_id == PRINTER_SOMA_OPTIMA) {
             $ink_solvent_kg_price = $this->ink_flexol82_kg_price;
             $ink_solvent_currency = self::GetCurrencyRate($this->data_ink->solvent_flexol82_currency, $this->usd, $this->euro);
         }
