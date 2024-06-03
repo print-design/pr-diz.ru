@@ -39,7 +39,10 @@ if(!empty($pallet_id)) {
     $utilized = false;
     $utilized_style = '';
     
+    $index = 0;
+    
     while ($row = $fetcher->Fetch()):
+        $index++;
         
     if($row['utilized'] == 1) {
         $utilized = true;
@@ -55,7 +58,7 @@ if(!empty($pallet_id)) {
         <tbody>
             <tr>
                 <td style="text-align: right; padding-bottom: 10px; padding-right: 10px; width: 20%;"><input type="checkbox" /></td>
-                <td style="padding-bottom: 10px; width: 30%;">Рулон <?=$row['ordinal'] ?></td>
+                <td style="padding-bottom: 10px; width: 30%;">Рулон <?=$index ?></td>
                 <td style="padding-bottom: 10px; width: 17%;"><a href="roll.php<?=$previous_params_string ?>id=<?=$row['id'] ?>"><i class="fas fa-ellipsis-h"></i></a></td>
                 <td style="padding-bottom: 10px;"></td>
             </tr>
@@ -77,7 +80,7 @@ if(!empty($pallet_id)) {
             </tr>
             <tr>
                 <td style="padding-bottom: 10px;">ID</td>
-                <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$row['ordinal'] ?></td>
+                <td style="padding-bottom: 10px;"><?="П".$row['pallet_id']."Р".$index ?></td>
                 <td style="padding-bottom: 10px;">Статус</td>
                 <td style="padding-bottom: 10px; font-size: 10px; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?=mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
             </tr>
