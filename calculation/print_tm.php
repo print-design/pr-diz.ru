@@ -3,11 +3,6 @@ include '../include/topscripts.php';
 include './calculation.php';
 include './calculation_result.php';
 
-// Получение коэффициента машины
-function GetMachineCoeff($printer) {
-    return $printer == PRINTER_COMIFLEX ? "1.14" : "1.7";
-}
-
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
@@ -89,7 +84,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 $machine_coeff = null;
 
 if(!empty($calculation->machine_id)) {
-    $machine_coeff = GetMachineCoeff($calculation->machine_id);
+    $machine_coeff = PRINTER_MACHINE_COEFFICIENTS[$calculation->machine_id];
 }
 
 // Тиражи и формы
@@ -385,7 +380,7 @@ $current_date_time = date("dmYHis");
                             <td>
                                 <?php
                                 if(!empty($calculation->machine_id)) {
-                                    echo mb_stristr(PRINTER_SHORTNAMES[$calculation->machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$calculation->machine_id]);
+                                    echo mb_stristr(PRINTER_SHORTNAMES[$calculation->machine_id], "zbs") ? "ZBS" : PRINTER_NAMES[$calculation->machine_id];
                                 }
                                 ?>
                             </td>

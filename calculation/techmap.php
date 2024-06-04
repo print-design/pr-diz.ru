@@ -16,11 +16,6 @@ if(null === filter_input(INPUT_GET, 'id')) {
 // Данные получены из другой тех. карты
 const FROM_OTHER_TECHMAP = "from_other_techmap";
 
-// Получение коэффициента машины
-function GetMachineCoeff($printer) {
-    return $printer == PRINTER_COMIFLEX ? "1.14" : "1.7";
-}
-
 // Валидация формы
 $form_valid = true;
 $error_message = '';
@@ -370,7 +365,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
 $machine_coeff = null;
 
 if(!empty($calculation->machine_id)) {
-    $machine_coeff = GetMachineCoeff($calculation->machine_id);
+    $machine_coeff = PRINTER_MACHINE_COEFFICIENTS[$calculation->machine_id];
 }
 
 // Тиражи и формы
@@ -807,7 +802,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             <td style="padding-top: 5px;">
                                 <?php
                                 if(!empty($calculation->machine_id)) {
-                                    echo mb_stristr(PRINTER_SHORTNAMES[$calculation->machine_id], "zbs") ? "ZBS" : ucfirst(PRINTER_SHORTNAMES[$calculation->machine_id]);
+                                    echo (mb_stristr(PRINTER_SHORTNAMES[$calculation->machine_id], "zbs") ? "ZBS" : PRINTER_NAMES[$calculation->machine_id]);
                                 }
                                 ?>
                             </td>
