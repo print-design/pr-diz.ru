@@ -2497,6 +2497,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                         </div>
                         <button type="submit" id="create_calculation_submit" name="create_calculation_submit" class="btn btn-dark mt-3<?=$create_calculation_submit_class ?>">Рассчитать</button>
+                        <button type="button" class="d-none" onclick="javascript: $('.d-none').removeClass('d-none');">Показать</button>
                     </form>
                 </div>
             </div>
@@ -3476,9 +3477,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 
                 $.ajax({ url: "_laminator_roller.php?laminator_id=" + laminator_id + "&min_width=" + min_width })
                         .done(function(data) {
-                            $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only' required='required'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
-                            $('#lamination_roller_width').html(data);
-                            SetLaminationRollerWidthOnChange();
+                            // Если есть ламинация (то есть, скрыта кнопка "Добавить ламинацию 1")
+                            if($('#show_lamination_1').hasClass('d-none')) {
+                                $('#lamination_roller_width_control').html("<select id='lamination_roller_width' name='lamination_roller_width' class='form-control lam-only' required='required'><option value='' hidden='hidden'>Ширина ламинирующего вала...</option></select>");
+                                $('#lamination_roller_width').html(data);
+                                SetLaminationRollerWidthOnChange();
+                            }
                         })
                         .fail(function() {
                             alert('Ошибка при заполнении ширин ламинирующего вала');
