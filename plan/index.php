@@ -79,7 +79,7 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
     
     // Получаем общие метраж и время по нужному расчёту
     if(empty($error_message)) {
-        $sql = "select cr.length_dirty_1, cr.work_time_1, cr.length_dirty_2, cr.work_time_2, cr.length_dirty_3, cr.work_time_3 "
+        $sql = "select c.ink_number, cr.length_dirty_1, cr.length_pure_1, cr.length_dirty_2, cr.length_pure_2, cr.length_dirty_3, cr.length_pure_3 "
                 . "from calculation_result cr "
                 . "inner join calculation c on cr.calculation_id = c.id "
                 . "where c.id = $calculation_id";
@@ -88,18 +88,45 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
         if($row = $fetcher->Fetch()) {
             if($work_id == WORK_PRINTING) {
                 $length_total = $row['length_dirty_1'];
-                $worktime_total = $row['work_time_1'];
+                $length_pure_1 = $row['length_pure_1'];
+                $ink_number = $row['ink_number'];
+                $machine_speed = 0;
+                $machine_tuning_time = 0;
+                $machine_waste_percent = 0;
+                $sql1 = "select speed from norm_machine where machine_id = $machine_id order by date desc limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $machine_speed = $row1['speed'];
+                }
+                $sql1 = "select time, waste_percent from norm_priladka where machine_id = $machine_id order by date desc limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $machine_tuning_time = $row1['time'];
+                    $machine_waste_percent = $row1['waste_percent'];
+                }
+                $worktime_total = ($ink_number * $machine_tuning_time / 60.0) + ($length_pure_1 * (1 + ($machine_waste_percent / 100.0)) / $machine_speed / 1000.0);
             }
             elseif($work_id == WORK_CUTTING) {
                 $length_total = $row['length_dirty_1'];
-                $worktime_total = $length_total / CUTTER_SPEEDS[$machine_id] / 60;
+                $length_pure_1 = $row['length_pure_1'];
+                $cutter_speed = 0;
+                $cutter_time = 0;
+                $sql1 = "select time, speed from norm_cutter where cutter_id = $machine_id order by date desc limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $cutter_time = floatval($row1['time']);
+                    $cutter_speed = floatval($row1['speed']);
+                }
+                $worktime_total = ($length_pure_1 / $cutter_speed / 1000.0) + ($cutter_time / 60.0);
             }
             elseif($work_id == WORK_LAMINATION && $lamination == 1) {
                 $length_total = $row['length_dirty_2'];
+                $length_pure_2 = $row['length_pure_2'];
                 $worktime_total = $row['work_time_2'];
             }
             elseif($work_id == WORK_LAMINATION && $lamination == 2) {
                 $length_total = $row['length_dirty_3'];
+                $length_pure_3 = $row['length_pure_3'];
                 $worktime_total = $row['work_time_3'];
             }
         }

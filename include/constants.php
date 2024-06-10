@@ -86,7 +86,6 @@ const CUTTER_ZTM_1 = 5;
 
 const CUTTERS = array(CUTTER_1, CUTTER_2, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS, CUTTER_ZTM_1);
 const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_2 => "Резка 2", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;", CUTTER_ZTM_1 => "ZTM 1");
-const CUTTER_SPEEDS = array(CUTTER_1 => 35, CUTTER_2 => 35, CUTTER_3 => 35, CUTTER_4 => 80, CUTTER_ATLAS => 35, CUTTER_SOMA => 120, CUTTER_ZTM_1 => 35);
 
 // Резчики (пользователи) !!! Пользователя резки Атлас пока удалили !!!
 const CUTTER_USER_1 = "cut1";
