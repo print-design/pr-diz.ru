@@ -122,12 +122,36 @@ if(null !== filter_input(INPUT_POST, 'divide_submit')) {
             elseif($work_id == WORK_LAMINATION && $lamination == 1) {
                 $length_total = $row['length_dirty_2'];
                 $length_pure_2 = $row['length_pure_2'];
-                $worktime_total = $row['work_time_2'];
+                $laminator_speed = 0;
+                $laminator_tuning_time = 0;
+                $laminator_waste_percent = 0;
+                $sql1 = "select speed from norm_laminator where laminator_id = $machine_id order by date limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $laminator_speed = $row1['speed'];
+                }
+                $sql1 = "select time, waste_percent from norm_laminator_priladka where laminator_id = $machine_id order by date desc limit 1";
+                if($row1 = $fetcher1->Fetch()) {
+                    $laminator_tuning_time = $row1['time'];
+                    $laminator_waste_percent - $row1['waste_percent'];
+                }
+                $worktime_total = ($laminator_tuning_time / 60.0) + ($length_pure_2 * (1 + ($laminator_waste_percent / 100.0)) / $laminator_speed / 1000.0);
             }
             elseif($work_id == WORK_LAMINATION && $lamination == 2) {
                 $length_total = $row['length_dirty_3'];
                 $length_pure_3 = $row['length_pure_3'];
-                $worktime_total = $row['work_time_3'];
+                $sql1 = "select speed from norm_laminator where laminator_id = $machine_id order by date limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $laminator_speed = $row1['speed'];
+                }
+                $sql1 = "select time, waste_percent from norm_laminator_priladka where laminator_id = $machine_id order by date desc limit 1";
+                $fetcher1 = new Fetcher($sql1);
+                if($row1 = $fetcher1->Fetch()) {
+                    $laminator_tuning_time = $row1['time'];
+                    $laminator_waste_percent = $row1['waste_percent'];
+                }
+                $worktime_total = ($laminator_tuning_time / 60.0) + ($length_pure_3 * (1 + ($laminator_waste_percent / 100.0)) / $laminator_speed / 1000.0);
             }
         }
     
