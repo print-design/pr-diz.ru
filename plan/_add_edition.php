@@ -23,6 +23,8 @@ class Edition {
 $work_type_id = 0;
 $ink_number = 0;
 $length_pure_1 = 0;
+$length_pure_2 = 0;
+$length_pure_3 = 0;
 $has_lamination = false;
 $two_laminations = false;
 
