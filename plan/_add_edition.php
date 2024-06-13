@@ -22,12 +22,11 @@ class Edition {
 // Получаем данные расчёта
 $work_type_id = 0;
 $ink_number = 0;
-$length_dirty_1 = 0;
 $length_pure_1 = 0;
 $has_lamination = false;
 $two_laminations = false;
 
-$sql = "select c.work_type_id, c.ink_number, cr.length_dirty_1, cr.length_pure_1, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+$sql = "select c.work_type_id, c.ink_number, cr.length_pure_1, cr.length_pure_2, cr.length_pure_3, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
@@ -35,8 +34,9 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $work_type_id = $row['work_type_id'];
     $ink_number = empty($row['ink_number']) ? 0 : $row['ink_number'];
-    $length_dirty_1 = $row['length_dirty_1'];
     $length_pure_1 = $row['length_pure_1'];
+    $length_pure_2 = $row['length_pure_2'];
+    $length_pure_3 = $row['length_pure_3'];
     
     if(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
         $has_lamination = true;
@@ -75,6 +75,10 @@ if($work_id == WORK_PRINTING) {
     $edition->WorkTime = ($ink_number * $machine_tuning_time / 60.0) + ($length_pure_1 * (1 + ($machine_waste_percent / 100)) / $machine_speed / 1000.0);
 }
 elseif($work_id == WORK_LAMINATION) {
+    $length_pure = $length_pure_2;
+    if($two_laminations) {
+        $length_pure = $length_pure_3;
+    }
     $laminator_speed = 0;
     $laminator_tuning_time = 0;
     $laminator_waste_percent = 0;
@@ -88,7 +92,7 @@ elseif($work_id == WORK_LAMINATION) {
         $laminator_tuning_time = $row['time'];
         $laminator_waste_percent = $row['waste_percent'];
     }
-    $edition->WorkTime = ($laminator_tuning_time / 60.0) + ($length_pure_1 * (1 + ($laminator_waste_percent / 100.0)) / $laminator_speed / 1000.0);
+    $edition->WorkTime = ($laminator_tuning_time / 60.0) + ($length_pure * (1 + ($laminator_waste_percent / 100.0)) / $laminator_speed / 1000.0);
 }
 elseif($work_id == WORK_CUTTING) {
     $cutter_time = 0;
