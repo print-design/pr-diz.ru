@@ -278,7 +278,7 @@ $total_weight = $row[0];
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['length'] ?> м</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?=$row['supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'] : 'Р'.$row['id']) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'].'Р'.$row['ordinal'] : 'Р'.$row['id']) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?= mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="storekeeper">
