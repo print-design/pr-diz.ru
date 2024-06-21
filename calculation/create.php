@@ -2016,7 +2016,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                 $selected = " selected='selected'";
                                             }
                                             ?>
-                                            <option<?=$selected ?>><?=$row['value'] ?></option>
+                                            <option<?=$selected ?>><?= floatval($row['value']) ?></option>
                                             <?php
                                             endforeach;
                                             ?>
