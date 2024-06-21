@@ -2111,7 +2111,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                 }
                                             }
                                         
-                                            if($in_list):
+                                            if($in_list || empty($lamination_roller_width)):
                                             ?>
                                             <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                                 <?php
@@ -2126,16 +2126,16 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                 <?php
                                                 endforeach;
                                                 ?>
+                                                <?php else: ?>
+                                                <option value="" hidden="hidden">Нет вала</option>
+                                                <?php endif; ?>
                                                 <option disabled="disabled">-</option>
                                                 <option value="-1">Добавить вручную...</option>
-                                                <?php endif; ?>
                                             </select>
+                                            <?php else: ?>
+                                            <input type='text' id='lamination_roller_width' name='lamination_roller_width' placeholder='Ширина ламинирующего вала, мм' value="<?=$lamination_roller_width ?>" class='form-control int-only lam-only' required='required' />
+                                            <?php endif; ?>
                                         <?php else: ?>
-                                        <input type='text' id='lamination_roller_width' name='lamination_roller_width' placeholder='Ширина ламинирующего вала, мм' value="<?=$lamination_roller_width ?>" class='form-control int-only lam-only' required='required' />
-                                        <?php
-                                        endif;
-                                        else:
-                                        ?>
                                         <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                             <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
                                         </select>
