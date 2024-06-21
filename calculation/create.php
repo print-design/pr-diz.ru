@@ -2115,7 +2115,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             ?>
                                             <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                                 <?php
-                                                if(!empty($lamination_roller_widths) && !empty($lamination_roller_width)):
+                                                if(!empty($lamination_roller_widths) && array_count_values($lamination_roller_widths) > 0):
+                                                ?>
+                                                <option value='' hidden='hidden'>Ширина ламинирующего вала...</option>
+                                                <?php
                                                 foreach($lamination_roller_widths as $row):
                                                     $selected = "";
                                                     if($row['value'] == $lamination_roller_width) { 
