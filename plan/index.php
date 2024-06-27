@@ -1102,8 +1102,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                 $('#queue').removeClass('droppable');
                             }
                         })
-                        .fail(function() {
-                            alert('Ошибка при добавлении тиража в план' + error);
+                        .fail(function(add_data) {
+                            alert('Ошибка при добавлении тиража в план ' + add_data.error);
                         });
                 }
                 else if(type == 'event') {
@@ -1120,8 +1120,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                 $('#queue').removeClass('droppable');
                             }
                         })
-                        .fail(function() {
-                            alert('Ошибка при добавлении события в план' + error);
+                        .fail(function(add_data) {
+                            alert('Ошибка при добавлении события в план ' + add_data.error);
                         });
                 }
                 else if(type == 'part') {
@@ -1138,8 +1138,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                 $('#queue').removeClass('droppable');
                             }
                         })
-                        .fail(function() {
-                            alert('Ошибка при добавлении разделённого тиража в план');
+                        .fail(function(add_data) {
+                            alert('Ошибка при добавлении разделённого тиража в план ' + add_data.error);
                         });
                 }
                 else if(type == 'timetableedition') {
@@ -1157,8 +1157,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                 $('#queue').removeClass('droppable');
                             }
                         })
-                        .fail(function() {
-                            alert('Ошибка при добавлении тиража в план');
+                        .fail(function(add_data) {
+                            alert('Ошибка при добавлении тиража в план ' + add_data.error);
                         });
                 }
                 else if(type == 'timetableevent') {
@@ -1175,8 +1175,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                 $('#queue').removeClass('droppable');
                             }
                         })
-                        .fail(function() {
-                            alert('Ошибка при добавлении события в план');
+                        .fail(function(add_data) {
+                            alert('Ошибка при добавлении события в план ' + add_data.error);
                         });
                 }
                 else if(type == 'timetablepart') {
@@ -1193,8 +1193,8 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                                 $('#queue').removeClass('droppable');
                             }
                         })
-                        .fail(function() {
-                            alert("Ошибка при добавлении разделённого тиража в план");
+                        .fail(function(add_data) {
+                            alert("Ошибка при добавлении разделённого тиража в план " + add_data.error);
                         });
                 }
                 else {
