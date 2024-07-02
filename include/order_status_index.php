@@ -6,11 +6,17 @@ if($unit == KG) {
     $result_cut = $weight_cut;
 }
 elseif(empty ($quantity_sum)) {
-    $number_in_meter = 1 / $length * 1000;
+    $number_in_meter = 0;
+    if($length > 0) {
+        $number_in_meter = 1 / $length * 1000;
+    }
     $result_cut = floor($length_cut * $number_in_meter);
 }
 else {
-    $number_in_meter = floor($raport / ($length + $gap_raport)) / $raport * 1000;
+    $number_in_meter = 0;
+    if($length > 0 && $raport > 0) {
+        $number_in_meter = floor($raport / ($length + $gap_raport)) / $raport * 1000;
+    }
     $result_cut = floor($length_cut * $number_in_meter);
 }
 ?>

@@ -188,7 +188,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(!empty(filter_input(INPUT_POST, 'width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+    if(filter_input(INPUT_POST, 'ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $width_ski = filter_input(INPUT_POST, 'width_ski');
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
@@ -214,7 +214,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(!empty(filter_input(INPUT_POST, 'lamination1_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+    if(filter_input(INPUT_POST, 'lamination1_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination1_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski');
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
@@ -240,7 +240,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(!empty(filter_input(INPUT_POST, 'lamination2_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+    if(filter_input(INPUT_POST, 'lamination2_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination2_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
