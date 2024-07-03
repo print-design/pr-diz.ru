@@ -25,7 +25,7 @@
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> border-right" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
+    <td class="<?=$this->plan_shift->shift ?> border-right text-nowrap" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
         <?php
         $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
         

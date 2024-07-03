@@ -6,7 +6,7 @@
     </td>
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?>"><?=($this->shift == 'day' ? 'День' : 'Ночь') ?></td>
-    <td class="<?=$top.' '.$this->shift ?> border-right">
+    <td class="<?=$top.' '.$this->shift ?> border-right text-nowrap">
         <?php
         $key = $this->timetable->work_id.'_'.$this->timetable->machine_id.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
         if(array_key_exists($key, $this->timetable->workshifts1)) {
