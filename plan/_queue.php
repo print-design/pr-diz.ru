@@ -25,26 +25,26 @@ class Queue {
     }
     
     private function ShowPrint() {
-        $str_raports = '';
-        $colorfulness = 0;
-        
-        // Если эта машина ZBS1, ZBS2, ZBS3, получаем список валов и красочность
-        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
-            $sql = "select value from raport where active = 1 and machine_id = ".$this->machine_id;
-            $grabber = new Grabber($sql);
-            $result = $grabber->result;
-            $raports = array();
-            foreach($result as $item) {
-                array_push($raports, $item['value']);
-            }
-            
-            $str_raports = implode(', ', $raports);
-            $colorfulness = PRINTER_COLORFULLNESSES[$this->machine_id];
+        // Получаем список валов и красочность для текущей машины
+        $sql = "select value from raport where active = 1 and machine_id = ".$this->machine_id;
+        $grabber = new Grabber($sql);
+        $result = $grabber->result;
+        $raports = array();
+        foreach($result as $item) {
+            array_push($raports, $item['value']);
         }
         
-        // Если эта машина ZBS1, ZBS2, ZBS3, 
-        // то добавляем сюда расчёты для других машин (из списка ZBS1, ZBS2, ZBS2),
-        // у которых вал присутствует в списке валов для этой машины
+        if(count($raports) == 0) {
+            array_push($raports, 0);
+        }
+            
+        $str_raports = implode(', ', $raports);
+        $colorfulness = PRINTER_COLORFULLNESSES[$this->machine_id];
+        
+        // В список расчётов для каждой машины
+        // добавляем также расчёты для других машин,
+        // у которых есть вал, указанный в данном заказе,
+        // и красочность не меньше, чем красочность заказа
         $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, '' customer, 0 length, 0 ink_number, 0.0 raport, 0 as status_id, now() as status_date, "
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
@@ -66,15 +66,9 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where pp.in_plan = 0 "
-                . "and pp.work_id = ".$this->work_id;
-        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
-            $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
-            $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
-        }
-        else {
-            $sql .= " and c.machine_id = ".$this->machine_id;
-        }
-        $sql .= " union "
+                . "and pp.work_id = ".$this->work_id
+                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")"
+                . " union "
                 . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_id, c.status_date, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
@@ -87,16 +81,9 @@ class Queue {
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id.")"
                 . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id.")"
                 . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
-                . " and c.status_id = ".ORDER_STATUS_CONFIRMED;
-        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_ZBS_1 || $this->machine_id == PRINTER_ZBS_2 || $this->machine_id == PRINTER_ZBS_3)) {
-            $zbs_machines = PRINTER_ZBS_1.", ".PRINTER_ZBS_2.", ".PRINTER_ZBS_3;
-            $sql .= " and ((c.machine_id in ($zbs_machines) and c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
-        }
-        else {
-            $sql .= " and c.machine_id = ".$this->machine_id;
-        }
-        
-        $sql .= " order by position, status_date";
+                . " and c.status_id = ".ORDER_STATUS_CONFIRMED
+                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")"
+                . " order by position, status_date";
         $fetcher = new Fetcher($sql);
                     
         while($row = $fetcher->Fetch()) {
