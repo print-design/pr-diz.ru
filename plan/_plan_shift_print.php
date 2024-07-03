@@ -14,7 +14,7 @@
             echo "<span class='text-nowrap'>".$employee['last_name'].' '.$employee['first_name']."</span>";
         }
         
-        if($this->timetable->work_id == WORK_PRINTING && $this->timetable->machine_id == PRINTER_COMIFLEX) {
+        if($this->timetable->work_id == WORK_PRINTING && ($this->timetable->machine_id == PRINTER_COMIFLEX || $this->timetable->machine_id == PRINTER_SOMA_OPTIMA)) {
             if(array_key_exists($key, $this->timetable->workshifts2)) {
                 echo '<br />';
                 $employee = $this->timetable->employees[$this->timetable->workshifts2[$key]];

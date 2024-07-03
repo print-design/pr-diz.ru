@@ -34,7 +34,7 @@
             echo $employee['last_name'].' '.$employee['first_name'];
         endif;
         
-        if($this->timetable->work_id == WORK_PRINTING && $this->timetable->machine_id == PRINTER_COMIFLEX):
+        if($this->timetable->work_id == WORK_PRINTING && ($this->timetable->machine_id == PRINTER_COMIFLEX || $this->timetable->machine_id == PRINTER_SOMA_OPTIMA)):
         if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA):
         ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-work-id="<?=$this->timetable->work_id ?>" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->timetable->dateTo->format('Y-m-d') ?>">

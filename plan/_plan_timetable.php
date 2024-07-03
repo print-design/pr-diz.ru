@@ -40,7 +40,7 @@ class PlanTimetable {
         }
         
         // Работники2
-        if($this->work_id == WORK_PRINTING && $this->machine_id == PRINTER_COMIFLEX) {
+        if($this->work_id == WORK_PRINTING && ($this->machine_id == PRINTER_COMIFLEX || $this->machine_id == PRINTER_SOMA_OPTIMA)) {
             $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                     . "from plan_workshift2 ws "
                     . "left join plan_employee e on ws.employee2_id = e.id "
