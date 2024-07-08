@@ -124,6 +124,15 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
                 }
             }
             
+            // Для резки ZTM1 работу начинаем с 8 июня 2024 г.
+            if($machine_id == CUTTER_ZTM_1) {
+                $start_work_date->setDate(2024, 7, 8);
+                
+                if($date_from < $start_work_date) {
+                    $date_from = $start_work_date;
+                }
+            }
+            
             // Если за рамками 5 суток присутствует работа в статусе "В плане резки", "Приладка на резке", "Режется", "Сняли с резки"
             // отображаем список, начиная с этой работы.
             $sql = "select e.date "
