@@ -47,7 +47,7 @@
     <td class="<?=$this->cut_shift->shift ?>">
         <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>
     </td>
-    <td class="<?=$this->cut_shift->shift ?>">
+    <td class="<?=$this->cut_shift->shift ?> text-nowrap">
         <?= $this->edition['has_continuation'] ? "" : $this->edition['manager'] ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?> text-nowrap">
