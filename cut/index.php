@@ -117,7 +117,7 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
             
             // Для резки 3 работу начинаем только с 16 мая 2024 г.
             if($machine_id == CUTTER_3) {
-                $start_work_date->setDate(2024, 05, 16);
+                $start_work_date->setDate(2024, 5, 16);
                 
                 if($date_from < $start_work_date) {
                     $date_from = $start_work_date;
