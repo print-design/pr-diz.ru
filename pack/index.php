@@ -109,9 +109,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?=$datetime->format('d.m') ?><br /><span style="font-size: smaller;"><?=$datetime->format('H:i') ?></span></td>
                     <td><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                     <td><?=$row['calculation'] ?><br /><span style="font-size: smaller;"><?=$row['customer'] ?></span></td>
-                    <td><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
-                    <td><?= DisplayNumber(floatval($row['weight']), 1) ?> кг</td>
-                    <td><?=$row['manager'] ?></td>
+                    <td class="text-nowrap"><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
+                    <td class="text-nowrap"><?= DisplayNumber(floatval($row['weight']), 1) ?> кг</td>
+                    <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']); ?></td>
                     <td><?= trim($row['comment'].' '.$row['continuation_comment'], ' ') ?></td>
                     <td>
