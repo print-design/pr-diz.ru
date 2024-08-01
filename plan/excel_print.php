@@ -67,7 +67,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->setCellValue('P'.$rowindex, "Отгрузочная стоимость");
         $sheet->setCellValue('Q'.$rowindex, "Итоговая прибыль");
         
-        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, c.raport, c.streams_number * c.stream_width width, "
+        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, c.raport, c.streams_number * c.stream_width width, c.ski, c.width_ski, "
                 . "f.name film, fv.thickness, "
                 . "u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
@@ -83,7 +83,7 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "where pe.work_id = ".WORK_PRINTING." and pe.machine_id = ".$printer
                 . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
                 . "union "
-                . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, c.raport, c.streams_number * c.stream_width width, "
+                . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, c.raport, c.streams_number * c.stream_width width, c.ski, c.width_ski, "
                 . "f.name film, fv.thickness, "
                 . "u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
@@ -166,7 +166,15 @@ if(!empty($work_id) && !empty($machine_id)) {
                 $sheet->setCellValue('K'.$rowindex, $row['thickness']);
                 
                 $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('L'.$rowindex, $row['width']);
+                if($row['ski'] == SKI_NONSTANDARD) {
+                    $sheet->setCellValue('L'.$rowindex, $row['width_ski']);
+                }
+                elseif ($row['ski'] == SKI_NO) {
+                    $sheet->setCellValue('L'.$rowindex, $row['width']);
+                }
+                else {
+                    $sheet->setCellValue('L'.$rowindex, $row['width'] + 20);
+                }
             
                 $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
                 $sheet->setCellValue('M'.$rowindex, $row["ink_cost"]);
