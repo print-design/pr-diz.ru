@@ -333,13 +333,36 @@ if(file_exists('find.php')) {
     });
     
     // Всплывающая подсказка
-    $(function() {
-        $("a.left_bar_item").tooltip({
-            position: {
-                my: "left center",
-                at: "right+10 center"
-            }
-        });
+    $(".ui_tooltip.left").tooltip({
+        position: {
+            my: "right center",
+            at: "left-10 center"
+        },
+        tooltipClass: "left"
+    });
+    
+    $(".ui_tooltip.right").tooltip({
+        position: {
+            my: "left center",
+            at: "right+10 center"
+        },
+        tooltipClass: "right"
+    });
+    
+    $(".ui_tooltip.top").tooltip({
+        position: {
+            my: "center bottom",
+            at: "center top-10"
+        },
+        tooltipClass: "top"
+    });
+    
+    $(".ui_tooltip.bottom").tooltip({
+        position: {
+            my: "center top",
+            at: "center bottom+10"
+        },
+        tooltipClass: "bottom"
     });
     
     // Защита от двойного нажатия
