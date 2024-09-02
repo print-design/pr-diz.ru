@@ -100,7 +100,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
                     . "left join plan_continuation pc on pc.plan_edition_id = e.id "
                     . "where c.status_id = $status_id and e.work_id = ".WORK_CUTTING
-                    . " order by ct.time asc limit $pager_skip, $pager_take";
+                    . " order by ct.time desc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
