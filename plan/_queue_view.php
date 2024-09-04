@@ -12,8 +12,17 @@
             </div>
         </div>
         <div>
-            <div class="d-flex justify-content-end" style="padding-top: 10px;">
-                <div style="position: relative;">
+            <div class="d-flex justify-content-end">
+                <?php if($row['queue_top'] == 1): ?>
+                <div class="mr-1">
+                    <form method="post">
+                        <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
+                        <input type="hidden" name="scroll" />
+                        <button type="submit" class="btn btn-link ui_tooltip right" title="Открепить заказ" name="unpin_submit"><img src="../images/icons/unpin.svg" /></button>
+                    </form>
+                </div>
+                <?php endif; ?>
+                <div style="position: relative; padding-top: 10px;">
                     <a class="black queue_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" /></a>
                     <div class="queue_menu text-left">
                         <div>
@@ -47,7 +56,7 @@
                         </form>
                     </div>
                 </div>
-                <div style="padding-left: 10px;"><img src="../images/icons/right-arrow.svg" /></div>
+                <div style="padding-left: 10px; padding-top: 10px;"><img src="../images/icons/right-arrow.svg" /></div>
             </div>
         </div>
     </div>

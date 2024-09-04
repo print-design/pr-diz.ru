@@ -208,6 +208,15 @@ if(null !== filter_input(INPUT_POST, 'pin_submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
+
+// Отмена закрепления заказа в верхней части очереди
+if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
+    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
+    
+    $sql = "update calculation set queue_top = 0 where id = $calculation_id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
 ?>
 <!DOCTYPE html>
 <html>
