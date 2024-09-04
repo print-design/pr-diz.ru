@@ -32,6 +32,14 @@
                             </form>
                             <?php endif; ?>
                         </div>
+                        <div class="command">
+                            <form method="post">
+                                <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
+                                <input type="hidden" name="work_id" value="<?=$this->work_id ?>" />
+                                <input type="hidden" name="scroll" />
+                                <button type="submit" class="btn btn-link h-25" name="pin_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/pin.svg" /></div>Закрепить наверху</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div style="padding-left: 10px;"><img src="../images/icons/right-arrow.svg" /></div>
