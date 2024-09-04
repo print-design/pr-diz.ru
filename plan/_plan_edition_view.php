@@ -95,17 +95,17 @@
     }
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline fordrag"<?=$drop ?>>
-        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT) && /*ВРЕМЕННО*/ !(in_array(GetUserId(), CUTTERS) && $this->edition['status_id'] != ORDER_STATUS_CUT_REMOVED)): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
         <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
-        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT) && /*ВРЕМЕННО*/ !(in_array(GetUserId(), CUTTERS) && $this->edition['status_id'] != ORDER_STATUS_CUT_REMOVED)): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
         <div draggable="true" ondragstart="DragTimetablePart(event);" data-id="<?=$this->edition['id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>
-        <?php if($this->edition['type'] == PLAN_TYPE_EVENT && /*ВРЕМЕННО*/ !in_array(GetUserId(), CUTTERS)): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
         <div draggable="true" ondragstart="DragTimetableEvent(event);" data-id="<?=$this->edition['id'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
