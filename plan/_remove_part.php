@@ -5,7 +5,7 @@ $part_id = filter_input(INPUT_GET, 'part_id');
 $work_id = filter_input(INPUT_GET, 'work_id');
 $error = '';
 
-// Получаем данные по расчёту
+// Получаем данные по расчёту.
 $calculation_id = null;
 $work_type_id = 0;
 $has_lamination = false;
@@ -90,14 +90,14 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION) {
     }
 }
 
-// Устанавливаем признак "не в плане"
+// Устанавливаем признак "не в плане".
 if(empty($error)) {
     $sql = "update plan_part set in_plan = 0, machine_id = null, date = null, shift = null, position = null where id = $part_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 
-// Меняем статусы
+// Меняем статусы и закрепляем наверху очереди.
 if(empty($error) && $work_id == WORK_PRINTING) {
     // 1. Тип работы "печать".
     // Если половинки этого заказа есть вне плана в разделах "ламинация" и "резка", удаляем их.
@@ -106,7 +106,7 @@ if(empty($error) && $work_id == WORK_PRINTING) {
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED.", queue_top = 1 where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
@@ -118,7 +118,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TY
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED.", queue_top = 1 where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
@@ -130,35 +130,35 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TY
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT.", queue_top = 1 where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == WORK_TYPE_NOPRINT) {
     // 6. Тип работы "резка", ламинации нет, тип заказа "плёнка без печати".
     // Статус устанавливаем "ожидание постановки в план".
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_CONFIRMED.", queue_top = 1 where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == WORK_TYPE_PRINT) {
     // 7. Тип работы "резка", ламинации нет, тип заказа "плёнка с печатью".
     // Статус устанавливаем "в плане печати".
-    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT.", queue_top = 1 where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && $has_lamination) {
     // 8. Тип работы "резка", ламинация есть.
     // Статус устанавливаем "в плане ламинации".
-    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE.", queue_top = 1 where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     // 9. Тип работы "резка", тип заказа "самоклеящиеся материалы".
     // Статус устанавливаем "в плане печати".
-    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT." where id = $calculation_id";
+    $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_PRINT.", queue_top = 1 where id = $calculation_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
