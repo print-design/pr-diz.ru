@@ -16,8 +16,12 @@
                 <div style="position: relative;">
                     <a class="black queue_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" /></a>
                     <div class="queue_menu text-left">
-                        <div class="command">
-                            <a class="btn btn-link h-25" style="font-size: 14px;" href="../calculation/<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? "print_tm" : "techmap" ?>.php?id=<?=$row['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? " target='_blank'" : "" ?>><div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее</a>
+                        <div>
+                            <a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? "print_tm" : "techmap" ?>.php?id=<?=$row['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? " target='_blank'" : "" ?>>
+                                <div class="command">
+                                    <div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее
+                                </div>
+                            </a>
                         </div>
                         <div class="command d-none">
                             <?php if($row['type'] == PLAN_TYPE_EDITION): ?>
@@ -32,14 +36,16 @@
                             </form>
                             <?php endif; ?>
                         </div>
-                        <div class="command">
-                            <form method="post">
+                        <form method="post">
                                 <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
                                 <input type="hidden" name="work_id" value="<?=$this->work_id ?>" />
                                 <input type="hidden" name="scroll" />
-                                <button type="submit" class="btn btn-link h-25" name="pin_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/pin.svg" /></div>Закрепить наверху</button>
+                                <button type="submit" class="btn btn-link h-25" name="pin_submit" style="font-size: 14px;">
+                                    <div class="command">
+                                    <div style="display: inline; padding-right: 10px;"><img src="../images/icons/pin.svg" /></div>Закрепить наверху
+                                    </div>
+                                </button>
                             </form>
-                        </div>
                     </div>
                 </div>
                 <div style="padding-left: 10px;"><img src="../images/icons/right-arrow.svg" /></div>

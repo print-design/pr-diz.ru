@@ -298,8 +298,6 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
                 top: 80%;
                 right: 0;
                 border: solid 1px #A1A4B1;
-                padding-left: 13px;
-                padding-right: 13px;
                 padding-top: 10px;
                 padding-bottom: 10px;
                 background-color: white;
@@ -311,6 +309,10 @@ if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
             .film_menu .command {
                 padding-top: 3px;
                 padding-bottom: 3px;
+            }
+            
+            .timetable_menu button:hover, .timetable_menu a:hover, .queue_menu button:hover, .queue_menu a:hover {
+                background-color: #FBEDF2;
             }
             
             /* Кнопка "Продолжать" */

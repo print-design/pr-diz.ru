@@ -426,49 +426,33 @@
         </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && (IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_STOREKEEPER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA)): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
-        <div class="timetable_menu film_menu text-left">
-            <div class="command">
-                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
-            </div>
+        <div class="timetable_menu text-left">
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Распечатать тех. карту</div></a></div>
             <?php if(in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
-            <div class="command mt-1">
-                <a href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>">Результаты</a>
-            </div>
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Результаты</div></a></div>
             <?php endif; ?>
         </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(ROLE_NAMES[ROLE_PACKER])): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
-        <div class="timetable_menu film_menu text-left">
-            <div class="command">
-                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
-            </div>
+        <div class="timetable_menu text-left">
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Распечатать тех. карту</div></a></div>
             <?php if(in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
-            <div class="command mt-1">
-                <a href="../pack/details.php?id=<?=$this->edition['calculation_id'] ?>">Результаты</a>
-            </div>
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../pack/details.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Результаты</div></a></div>
             <?php endif; ?>
         </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && (IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR])) || (IsInRole(ROLE_NAMES[ROLE_MANAGER]) && $this->edition['manager_id'] == GetUserId()))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
-        <div class="timetable_menu film_menu text-left">
-            <div class="command">
-                <a href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>">Тех. карта</a>
-            </div>
-            <div class="command mt-1">
-                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
-            </div>
+        <div class="timetable_menu text-left">
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/techmap.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Тех. карта</div></a></div>
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Распечатать тех. карту</div></a></div>
             <?php if(in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
-            <div class="command mt-1">
-                <a href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>">Результаты</a>
-            </div>
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Результаты</div></a></div>
             <?php endif; ?>
         </div>
         <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(ROLE_NAMES[ROLE_COLORIST])): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
-        <div class="timetable_menu film_menu text-left">
-            <div class="command mt-1">
-                <a href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>">Распечатать тех. карту</a>
-            </div>
+        <div class="timetable_menu text-left">
+            <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Распечатать тех. карту</div></a></div>
         </div>
         <?php endif; ?>
     </td>
