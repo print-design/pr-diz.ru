@@ -364,7 +364,7 @@ while ($row = $fetcher->Fetch()) {
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
             ?>
-                if(films.get(<?=$row['id'] ?>) == undefined) {
+                if(films.get(<?=$row['id'] ?>) === undefined) {
                     films.set(<?=$row['id'] ?>, [<?=$row['thickness'] ?>, <?=$row['weight'] ?>]);
                 }
             <?php endwhile; ?>
@@ -381,7 +381,7 @@ while ($row = $fetcher->Fetch()) {
                 length = $('#length').val().replaceAll(/\D/g, '');
                 
                 if(!isNaN(spool) && !isNaN(film_variation_id) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && film_variation_id != '' && radius != '' && width != '') {
+                        && spool !== '' && film_variation_id !== '' && radius !== '' && width !== '') {
                     thickness = films.get(parseInt(film_variation_id))[0];
                     density = films.get(parseInt(film_variation_id))[1];
                     
@@ -396,7 +396,7 @@ while ($row = $fetcher->Fetch()) {
                         width = $('#stream_' + i).val();
                 
                         if(!isNaN(length) && !isNaN(film_variation_id) && !isNaN(width) 
-                                && length != '' && film_variation_id != '' && width != '') {
+                                && length !== '' && film_variation_id !== '' && width !== '') {
                             density = films.get(parseInt(film_variation_id))[1];
                             weight = GetFilmWeightByLengthWidth(length, width, density);
                             $('#net_weight_' + i).val(weight.toFixed(2));
@@ -405,7 +405,7 @@ while ($row = $fetcher->Fetch()) {
                 }
                 
                 // Меняем видимость кнопок "Следующий исх. рулон" и "След. намотка"
-                if(length == '' && radius == '') {
+                if(length === '' && radius === '') {
                     $('.next_source').removeClass('disabled');
                     $('.next_wind').addClass('disabled');
                 }

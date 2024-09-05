@@ -8,7 +8,7 @@
     }
 
     function SetClearVisibility(obj) {
-        if(obj.val() == '') {
+        if(obj.val() === '') {
             $('button#clear').addClass('d-none');
         }
         else {

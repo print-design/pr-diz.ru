@@ -357,7 +357,7 @@ if($row = $fetcher->Fetch()) {
                 radius = $('#radius').val();
                 
                 if(!isNaN(spool) && !isNaN(film_variation_id) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && film_variation_id != '' && radius != '' && width != '') {
+                        && spool !== '' && film_variation_id !== '' && radius !== '' && width !== '') {
                     thickness = films.get(parseInt(film_variation_id))[0];
                     density = films.get(parseInt(film_variation_id))[1];
                     

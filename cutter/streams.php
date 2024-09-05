@@ -233,7 +233,7 @@ while($row = $fetcher->Fetch()) {
                 $('.comment_group').addClass('d-none');
                 $('.comment_group input').removeAttr('required');
                 
-                if(streams_count != '') {
+                if(streams_count !== '') {
                     iStreamsCount = parseInt(streams_count);
                     iMaxCount = parseInt($('#streams_count').attr('data-max'));
                     

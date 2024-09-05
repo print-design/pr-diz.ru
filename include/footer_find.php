@@ -24,12 +24,12 @@
         for(i=0; i<getparams.length; i++) {
             var keyvalues = getparams[i].split('=');
             
-            if(keyvalues[0] == 'find') {
+            if(keyvalues[0] === 'find') {
                 hasfind = true;
             }
         }
         
-        if(!hasfind && $('input#find').val() == '') {
+        if(!hasfind && $('input#find').val() === '') {
             $('#find-group').removeClass('w-100');
             $('#find-form').removeClass('w-100');
             $('#find-append').removeClass('d-none');

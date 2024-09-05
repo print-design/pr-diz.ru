@@ -53,7 +53,7 @@
             
     // Загрузка списка марок пленки
     $('#supplier_id').change(function(){
-        if($(this).val() == "") {
+        if($(this).val() === "") {
             $('#film_id').html("<option value=''>Выберите марку</option>");
         }
         else {
@@ -70,7 +70,7 @@
     
     // Загрузка списка толщин
     $('#film_id').change(function(){
-        if($(this).val() == "") {
+        if($(this).val() === "") {
             $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
         }
         else {
@@ -88,7 +88,7 @@
     function KeyUpLimitIntValue(textbox, max) {
         val = textbox.val().replace(/[^\d]/g, '');
         
-        if(val != null && val != '' && !isNaN(val) && parseInt(val) > max) {
+        if(val !== null && val !== '' && !isNaN(val) && parseInt(val) > max) {
             textbox.addClass('is-invalid');
         }
         else {

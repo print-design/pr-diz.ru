@@ -398,7 +398,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
             // Заполнение информации о заказчике
             $('a.customer').click(function(e) {
                 var customer_id = $(e.target).attr('data-customer-id');
-                if(customer_id != null) {
+                if(customer_id !== null) {
                     $.ajax({ url: "_customer.php?id=" + customer_id })
                             .done(function(data) {
                                 $('#customerModal .modal-dialog .modal-content').html(data);

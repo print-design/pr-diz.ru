@@ -235,7 +235,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
         <script>
             // Загрузка списка толщин
             $('#film_id').change(function(){
-                if($(this).val() == "") {
+                if($(this).val() === "") {
                     $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
@@ -271,7 +271,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
             ?>
-            if(films.get(<?=$row['id'] ?>) == undefined) {
+            if(films.get(<?=$row['id'] ?>) === undefined) {
                 films.set(<?=$row['id'] ?>, [<?=$row['thickness'] ?>, <?=$row['weight'] ?>]);
             }
             <?php endwhile; ?>
@@ -284,7 +284,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                 radius = $('#radius').val();
                 
                 if(!isNaN(spool) && !isNaN(film_variation_id) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && film_variation_id != '' && radius != '' && width != '') {
+                        && spool !== '' && film_variation_id !== '' && radius !== '' && width !== '') {
                     thickness = films.get(parseInt(film_variation_id))[0];
                     density = films.get(parseInt(film_variation_id))[1];
                     

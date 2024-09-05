@@ -21,7 +21,7 @@
             sum_weight = $('#add_not_take_stream_sum_weight').val();
             sum_length = $('#add_not_take_stream_sum_length').val();
             
-            if(sum_weight == 0 || sum_length == 0) {
+            if(sum_weight === 0 || sum_length === 0) {
                 input.parent().parent().next().val(0);
                 input.parent().parent().next().next().find('input[type=text]').val(0);
             }
@@ -42,12 +42,12 @@
     function IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3) {
         result = false;
         
-        if(spool == 76) {
+        if(spool === 76) {
             if(0.85 * (0.15 * radius * radius + 11.3961 * radius - 176.4427) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.15 * radius * radius + 11.3961 * radius - 176.4427) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
                 result = true;
             }
         }
-        else if(spool == 152) {
+        else if(spool === 152) {
             if(1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
                 result = true;
             }

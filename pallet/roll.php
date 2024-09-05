@@ -383,7 +383,7 @@ if(null === $comment) $comment = $row['comment'];
         include '../include/footer.php';
         ?>
         <script>
-            if($('.is-invalid').first() != null) {
+            if($('.is-invalid').first() !== null) {
                 $('.is-invalid').first().focus();
             }
         </script>

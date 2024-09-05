@@ -18,12 +18,12 @@ if(file_exists('find.php')) {
 <script>
     // Отправка формы по нажатию Enter
     $('input').keypress(function(e) {
-        if(e.which == 10 || e.which == 13) {
+        if(e.which === 10 || e.which === 13) {
             $(e.target).focusout();
          
             submit_btn = $(e.target.form).find("button[type='submit']");
                 
-            if(submit_btn == null) {
+            if(submit_btn === null) {
                 this.form.submit();
             }
             else {
@@ -100,7 +100,7 @@ if(file_exists('find.php')) {
     });
     
     $('.no-latin').keypress(function(e) {
-        if(e.which != 10 && e.which != 13) {
+        if(e.which !== 10 && e.which !== 13) {
             if(/[a-zA-Z]/.test(e.key)) {
                 $(this).next('.invalid-feedback').text('Переключите раскладку');
                 $(this).next('.invalid-feedback').show();
@@ -127,7 +127,7 @@ if(file_exists('find.php')) {
     
     // Фильтрация ввода (другой способ)
     function KeyDownIntValue(e) {
-        if(e.which != 8 && e.which != 9 && e.which != 46 && e.which != 37 && e.which != 39) {
+        if(e.which !== 8 && e.which !== 9 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
             return /\d/.test(e.key);
         }
     }
@@ -141,7 +141,7 @@ if(file_exists('find.php')) {
     }
     
     function KeyDownFloatValue(e) {
-        if(e.which != 8 && e.which != 9 && e.which != 46 && e.which != 37 && e.which != 39) {
+        if(e.which !== 8 && e.which !== 9 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
             if(!/[\.\,\d]/.test(e.key)) {
                 return false;
             }
@@ -171,7 +171,7 @@ if(file_exists('find.php')) {
     // Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
     // Обработка изменения нажатия клавиш
     function KeyDownLimitIntValue(textbox, e, max) {
-        if(e.which != 8 && e.which != 9 && e.which != 46 && e.which != 37 && e.which != 39) {
+        if(e.which !== 8 && e.which !== 9 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
             if(/\D/.test(e.key)) {
                 return false;
             }
@@ -185,7 +185,7 @@ if(file_exists('find.php')) {
             newvalue = newvalue.replace(/\D/g, ''); // целое число может быть разбито на разряды
             var iNewValue = parseInt(newvalue);
             
-            if(iNewValue == null || iNewValue < 1 || iNewValue > max) {
+            if(iNewValue === null || iNewValue < 1 || iNewValue > max) {
                 return false;
             }
         }
@@ -198,7 +198,7 @@ if(file_exists('find.php')) {
     function KeyUpLimitIntValue(textbox, max) {
         val = textbox.val().replace(/[^\d]/g, '');
         
-        if(val != null && val != '' && !isNaN(val) && parseInt(val) > max) {
+        if(val !== null && val !== '' && !isNaN(val) && parseInt(val) > max) {
             textbox.addClass('is-invalid');
         }
         else {
@@ -234,7 +234,7 @@ if(file_exists('find.php')) {
     // Ограничение значений для полей с числовыми значениями (проценты и т. д.)
     // Обработка изменения нажатия клавиш
     function KeyDownLimitFloatValue(textbox, e, max) {
-        if(e.which != 8 && e.which != 46 && e.which != 37 && e.which != 39) {
+        if(e.which !== 8 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
             if(!/[\.\,\d]/.test(e.key)) {
                 return false;
             }
@@ -251,7 +251,7 @@ if(file_exists('find.php')) {
             var newvalue = textStart + e.key + textEnd;
             var fNewValue = parseFloat(newvalue);
             
-            if(fNewValue == null || fNewValue < 1 || fNewValue > max) {
+            if(fNewValue === null || fNewValue < 1 || fNewValue > max) {
                 return false;
             }
         }

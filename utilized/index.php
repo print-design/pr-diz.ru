@@ -431,12 +431,12 @@ $total_weight = $row[0];
                 text = $(ev.target).val();
                 $(ev.target).val('');
                 ajax_path = "";
-                if(type == 'pallet_roll') {
+                if(type === 'pallet_roll') {
                     ajax_path = "../pallet/_edit_comment.php?id=" + pallet_id;
                     comment_text_class = '.comment_text_' + type + '_' + pallet_id;
                     comment_input_class = '.comment_input_' + type + '_' + pallet_id;
                 }
-                else if(type == 'roll') {
+                else if(type === 'roll') {
                     ajax_path = "../roll/_edit_comment.php?id=" + id;
                     comment_text_class = '.comment_text_' + type + '_' + id;
                     comment_input_class = '.comment_input_' + type + '_' + id;
@@ -466,7 +466,7 @@ $total_weight = $row[0];
                 step: 1,
                 value: <?=$slider_value ?>,
                 slide: function(event, ui) {
-                    if(ui.value == '') {
+                    if(ui.value === '') {
                         $("#thickness").val('');
                     }
                     else {
@@ -476,7 +476,7 @@ $total_weight = $row[0];
             });
             
             $('#film_id').change(function(){
-                if($(this).val() == '') {
+                if($(this).val() === '') {
                     $('#width_slider_values').html("<div class='p-1'>все</div>");
                     $("#slider").slider({
                         range: false,
@@ -502,7 +502,7 @@ $total_weight = $row[0];
                                     step: 1,
                                     value: 0,
                                     slide: function(event, ui) {
-                                        if(ui.value == '') {
+                                        if(ui.value === '') {
                                             $("#thickness").val('');
                                         }
                                         else {

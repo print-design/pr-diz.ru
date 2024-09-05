@@ -1726,7 +1726,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             
             // Редактируем пантоны
             $('.color_input').keydown(function(e) {
-                if(e.which == 13) {
+                if(e.which === 13) {
                     e.preventDefault();
                     SavePanton($(this).attr('data-id'), $(this).attr('data-i'));
                 }
@@ -1843,14 +1843,14 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             function SaveRequirement(id, i) {
                 var val = $('#requirement_input_' + i).val();
                 
-                if(val == '') {
+                if(val === '') {
                     $('#requirement_input_' + i).focus();
                     return false;
                 }
             
                 $.ajax({ url: "_edit_requirement.php?id=" + id + "&i=" + i + "&value=" + val })
                         .done(function(data) {
-                            if(data == '') {
+                            if(data === '') {
                                 $('#requirement_label_' + i).text('Ждем данные');
                             }
                             else {
@@ -1910,7 +1910,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             
             // Обработка выбора формы
             $('.select_cliche').change(function() {
-                if($(this).val() == '<?= CLICHE_REPEAT ?>') {
+                if($(this).val() === '<?= CLICHE_REPEAT ?>') {
                     $(this).parent().removeClass('w-100');
                     $(this).parent().addClass('w-50');
                     $(this).parent().next().removeClass('d-none');
@@ -1923,7 +1923,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                 
                 $.ajax({ dataType: 'JSON', url: '_edit_cliche.php?printing_id=' + $(this).attr('data-printing-id') + '&sequence=' + $(this).attr('data-sequence') + '&cliche=' + $(this).val() + '&machine_coeff=<?=$machine_coeff ?>&repeat_from=' + $('select#repeat_from_' + $(this).attr('data-printing-id') + '_' + $(this).attr('data-sequence')).val() })
                         .done(function(data) {
-                            if(data.error != '') {
+                            if(data.error !== '') {
                                 alert(data.error);
                             }
                             else {
@@ -2003,7 +2003,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             $('.repeat_from').change(function() {
                 $.ajax({ dataType: 'JSON', url: '_edit_repeat.php?printing_id=' + $(this).attr('data-printing-id') + '&sequence=' + $(this).attr('data-sequence') + '&repeat_from=' + $(this).val() })
                         .done(function(data) {
-                            if(data.error != '') {
+                            if(data.error !== '') {
                                 alert(data.error);
                             }
                             else {

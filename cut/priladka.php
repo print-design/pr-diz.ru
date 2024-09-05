@@ -153,7 +153,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             #status {
                 width: 100%;
                 padding: 12px;
-                margin-top: 40p;
+                margin-top: 40px;
                 margin-bottom: 20px;
                 border-radius: 10px;
                 font-weight: bold;

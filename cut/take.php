@@ -481,10 +481,10 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 source_id = ev.dataTransfer.getData('source_id');
                 target_id = $(ev.target).closest('.calculation_stream').attr('data-id');
                 
-                if(!isNaN(source_id) && !isNaN(target_id) && source_id != target_id) {
+                if(!isNaN(source_id) && !isNaN(target_id) && source_id !== target_id) {
                     $.ajax({ dataType: 'JSON', url: "_drag_streams.php?source_id=" + source_id + "&target_id=" + target_id })
                             .done(function(data) {
-                                if(data.error == '') {
+                                if(data.error === '') {
                                     $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?=$machine_id ?>');
                                 }
                                 else {
@@ -504,7 +504,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 if(!isNaN(source_id)) {
                     $.ajax({ dataType: 'JSON', url: "_drag_to_bottom.php?source_id=" + source_id })
                             .done(function(data) {
-                                if(data.error == '') {
+                                if(data.error === '') {
                                     $('#calculation_streams').load('_calculation_streams.php?take_id=<?=$take_id ?>&machine_id=<?=$machine_id ?>');
                                     $('#calculation_streams_bottom').removeClass('target');
                                 }

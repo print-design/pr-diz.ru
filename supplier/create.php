@@ -206,16 +206,16 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                     var tblrows = $('#variations-table').find("tr");
                     var tblrnumber = tblrows.length;
                     
-                    if(tblrnumber == 1) {
+                    if(tblrnumber === 1) {
                         $('#variations-table').hide();
                     }
                 }
             }
             
             $('#add-brand-link').click(function(){
-                var empties = $('#add-brand-form input').filter(function(){return $(this).val() == ''});
+                var empties = $('#add-brand-form input').filter(function(){return $(this).val() === '';});
                 if(empties.length > 0) {
-                    $('#add-brand-form').find('input').filter(function(){return $(this).val() == ''}).first().focus();
+                    $('#add-brand-form').find('input').filter(function(){return $(this).val() === '';}).first().focus();
                 }
                 else {
                     // Показ таблицы
@@ -232,7 +232,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                     var tblrow = '<tr>' + 
                             '<td>' + film_brand + '<input type="hidden" id="film_brand_' + rowscount + '" name="film_brand_' + rowscount + '" value="' + film_brand + '" /></td>' + 
                             '<td class="text-right">' + thickness + '<input type="hidden" id="thickness_' + rowscount + '" name="thickness_' + rowscount + '" value="' + thickness + '" /></td>' + 
-                            '<td class="text-right">' + weight + '<input type="hidden" id="weight_' + rowscount + '" name="weight_' + rowscount + '" value="' + weight + '" /></td>'
+                            '<td class="text-right">' + weight + '<input type="hidden" id="weight_' + rowscount + '" name="weight_' + rowscount + '" value="' + weight + '" /></td>';
                             '</tr>';
                     $('#variations-table').append(tblrow);
                     

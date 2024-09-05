@@ -2590,6 +2590,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#btn_quantities').removeAttr('disabled');
             }
             
+            // При открытии окна создания заказчика устанавливаем фокус на первом поле.
+            $('#new_customer').on('shown.bs.modal', function() {
+                $('input:text:visible:first').focus();
+            });
+            
             // Открытие модального окна со списком заказов
             $('#btn_quantities').click(function(){
                 num = $('#printings_number').val();

@@ -365,7 +365,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         ?>
         <script>
             $('#supplier_id').change(function(){
-                if($(this).val() == "") {
+                if($(this).val() === "") {
                     $('#film_id').html("<option value=''>Выберите марку</option>");
                 }
                 else {
@@ -381,7 +381,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 });
                 
             $('#film_id').change(function(){
-                if($(this).val() == "") {
+                if($(this).val() === "") {
                     $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
@@ -395,7 +395,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 }
             });
             
-            if($('.is-invalid').first() != null) {
+            if($('.is-invalid').first() !== null) {
                 $('.is-invalid').first().focus();
             }
             
@@ -444,7 +444,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
             $('#equal_rolls').change(function(e) {
                 if(!e.target.checked) {
                     var rolls_number = $('#rolls_number').val();
-                    if(rolls_number != '') {
+                    if(rolls_number !== '') {
                         var num_val = parseInt(rolls_number);
                         
                         for(var i=1; i<=num_val; i++) {
@@ -458,10 +458,10 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                     var length = $('#length').val();
                     var rolls_number = $('#rolls_number').val();
                     
-                    if(rolls_number != '') {
+                    if(rolls_number !== '') {
                         var num_val = parseInt(rolls_number);
                         
-                        if(net_weight != ''&& !isNaN(net_weight)) {
+                        if(net_weight !== ''&& !isNaN(net_weight)) {
                             var num_weight = parseFloat(net_weight);
                                 
                             for(var i=1; i<=num_val; i++) {
@@ -475,7 +475,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             }
                         }
                         
-                        if(length != '' && !isNaN(length)) {
+                        if(length !== '' && !isNaN(length)) {
                             var num_length = parseFloat(length);
                             
                             for(var i=1; i<=num_val; i++) {

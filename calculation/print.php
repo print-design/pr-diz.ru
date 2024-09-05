@@ -83,7 +83,7 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             #status {
                 width: 100%;
                 padding: 6px;
-                margin-top: 10p;
+                margin-top: 10px;
                 margin-bottom: 10px;
                 border-radius: 8px;
                 font-weight: bold;

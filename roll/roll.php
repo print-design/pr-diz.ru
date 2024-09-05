@@ -550,7 +550,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
         include '../include/footer.php';
         ?>
         <script>
-            if($('.is-invalid').first() != null) {
+            if($('.is-invalid').first() !== null) {
                 $('.is-invalid').first().focus();
             }
             
@@ -562,7 +562,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
             ?>
-            if(films.get(<?= $row['film_id'] ?>) == undefined) {
+            if(films.get(<?= $row['film_id'] ?>) === undefined) {
                 films.set(<?= $row['film_id'] ?>, new Map());
             }
             films.get(<?= $row['film_id'] ?>).set(<?= $row['id'] ?>, [<?=$row['thickness'] ?>, <?= $row['weight'] ?>]);
@@ -577,7 +577,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                 width = $('#width').val();
                 film_variation_id = $('#film_variation_id').val();
                 
-                if(!isNaN(length) && !isNaN(width) && !isNaN(film_variation_id) && length != '' && width != '' && film_variation_id != '') {
+                if(!isNaN(length) && !isNaN(width) && !isNaN(film_variation_id) && length !== '' && width !== '' && film_variation_id !== '') {
                     thickness = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[0];
                     density = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[1];
                     weight = GetFilmWeightByLengthWidth(length, width, density);

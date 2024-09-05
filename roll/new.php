@@ -341,7 +341,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
         ?>
         <script>
             $('#supplier_id').change(function(){
-                if($(this).val() == "") {
+                if($(this).val() === "") {
                     $('#film_id').html("<option value=''>Выберите марку</option>");
                 }
                 else {
@@ -357,7 +357,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             });
             
             $('#film_id').change(function(){
-                if($(this).val() == "") {
+                if($(this).val() === "") {
                     $('#film_variation_id').html("<option value=''>Выберите толщину</option>");
                 }
                 else {
@@ -371,7 +371,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 }
             });
             
-            if($('#caclulate_by_radius').prop('checked') == true) {
+            if($('#caclulate_by_radius').prop('checked') === true) {
                 $('#controls-for-calculation').show();
                 $('#length').prop('disabled', true);
                 $('#net_weight').prop('disabled', true);
@@ -403,7 +403,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             $fetcher = new Fetcher($sql);
             while ($row = $fetcher->Fetch()):
             ?>
-                if(films.get(<?=$row['film_id'] ?>) == undefined) {
+                if(films.get(<?=$row['film_id'] ?>) === undefined) {
                     films.set(<?=$row['film_id'] ?>, new Map());
                 }
                 
@@ -425,7 +425,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 width = $('#width').val();
                 
                 if(!isNaN(spool) && !isNaN(film_variation_id) && !isNaN(radius) && !isNaN(width) 
-                        && spool != '' && film_variation_id != '' && radius != '' && width != '') {
+                        && spool !== '' && film_variation_id !== '' && radius !== '' && width !== '') {
                     thickness = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[0];
                     density = films.get(parseInt($('#film_id').val())).get(parseInt(film_variation_id))[1];
                     
@@ -463,7 +463,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             endif;
             ?>
                 
-            if($('.is-invalid').first() != null) {
+            if($('.is-invalid').first() !== null) {
                 $('.is-invalid').first().focus();
             }
         </script>

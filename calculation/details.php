@@ -289,7 +289,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             
             // Ограничение значений наценки
             $('#extracharge').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
+                if(($(e.target).val() === 0 || $(e.target).val() === '' || $(e.target).prop('selectionStart') !== $(e.target).prop('selectionEnd')) && e.key === 0) {
                     return true;
                 }
                 else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
@@ -298,7 +298,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             });
             
             $('#extracharge_cliche').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
+                if(($(e.target).val() === 0 || $(e.target).val() === '' || $(e.target).prop('selectionStart') !== $(e.target).prop('selectionEnd')) && e.key === 0) {
                     return true;
                 }
                 else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
@@ -307,7 +307,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             });
             
             $('#extracharge_knife').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
+                if(($(e.target).val() === 0 || $(e.target).val() === '' || $(e.target).prop('selectionStart') !== $(e.target).prop('selectionEnd')) && e.key === 0) {
                     return true;
                 }
                 else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
@@ -340,7 +340,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 if(!isNaN(extracharge) && extracharge > -1) {
                     $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?>&extracharge=' + extracharge })
                             .done(function(data) {
-                                if(data.error != '') {
+                                if(data.error !== '') {
                                     alert(data.error);
                                 }
                                 else {
@@ -369,7 +369,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
                     $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&extracharge_cliche=" + extracharge_cliche })
                             .done(function(data) {
-                                if(data.error != '') {
+                                if(data.error !== '') {
                                     alert(data.error);
                                 }
                                 else {
@@ -396,7 +396,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
                     $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
                             .done(function(data) {
-                                if(data.error != '') {
+                                if(data.error !== '') {
                                     alert(data.error);
                                 }
                                 else {
@@ -423,7 +423,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 if(!isNaN(shipping_cost_per_unit) && shipping_cost_per_unit > -1) {
                     $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
                             .done(function(data) {
-                                if(data.error != '') {
+                                if(data.error !== '') {
                                     alert(data.error);
                                 }
                                 else {
@@ -452,7 +452,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 if(!isNaN(shipping_cliche_cost) && shipping_cliche_cost > -1) {
                     $.ajax({ dataType: 'JSON', url: '_set_shipping_cliche_cost.php?id=<?=$id ?>&shipping_cliche_cost=' + shipping_cliche_cost })
                             .done(function(data) {
-                                if(data.error != '') {
+                                if(data.error !== '') {
                                     alert(data.error);
                                 }
                                 else {
@@ -479,7 +479,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 if(!isNaN(shipping_knife_cost) && shipping_knife_cost > -1) {
                     $.ajax({ dataType: 'JSON', url: '_set_shipping_knife_cost.php?id=<?=$id ?>&shipping_knife_cost=' + shipping_knife_cost })
                             .done(function(data) {
-                                if(data.error != '') {
+                                if(data.error !== '') {
                                     alert(data.error);
                                 }
                                 else {
@@ -510,11 +510,11 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 
                 $.ajax({ dataType: 'JSON', url: '_recalculate_by_cliche.php?id=<?=$id ?>&cliche_in_price=' + cliche_in_price + '&customer_pays_for_cliche=' + customer_pays_for_cliche })
                         .done(function(data) {
-                            if(data.error != '') {
+                            if(data.error !== '') {
                                 alert(data.error);
                             }
                             else {
-                                if(data.cliche_in_price == 1) {
+                                if(data.cliche_in_price === 1) {
                                     $('#cliche_in_price_box').addClass('d-none');
                                 }
                                 else {
@@ -551,11 +551,11 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 
                 $.ajax({ dataType: 'JSON', url: '_recalculate_by_knife.php?id=<?=$id ?>&knife_in_price=' + knife_in_price + '&customer_pays_for_knife=' + customer_pays_for_knife })
                         .done(function(data) {
-                            if(data.error != '') {
+                            if(data.error !== '') {
                                 alert(data.error);
                             }
                             else {
-                                if(data.knife_in_price == 1) {
+                                if(data.knife_in_price === 1) {
                                     $('#knife_in_price_box').addClass('d-none');
                                 }
                                 else {

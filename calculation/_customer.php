@@ -204,7 +204,7 @@ endif;
     function OKCustomerPhone(id) {
         $.ajax({ dataType: 'JSON', url: "_customer_edit.php?id=" + id + "&phone=" + encodeURIComponent($('#customer_card_phone_input').val()) + "&extension=" + $('#customer_card_extension_input').val() })
                 .done(function(data) {
-                    $('#customer_card_phone_value').text(data.phone + (data.extension.length == 0 ? "" : " (доп. " + data.extension + ")"));
+                    $('#customer_card_phone_value').text(data.phone + (data.extension.length === 0 ? "" : " (доп. " + data.extension + ")"));
                     $('#customer_card_phone_value').attr('data-phone', data.phone);
                     $('#customer_card_phone_value').attr('data-extension', data.extension);
                     CancelCustomerPhone();

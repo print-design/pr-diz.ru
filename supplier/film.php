@@ -425,7 +425,7 @@ while($row = $fetcher->Fetch()) {
             // Если в списке плёнок выбрано "новая плёнка", 
             // скрываем форму добавления вариации.
             $('select#film_id').change(function() {
-                if($(this).val() == '+') {
+                if($(this).val() === '+') {
                     $('#create_film_variation').modal('hide');
                 }
             });
@@ -441,7 +441,7 @@ while($row = $fetcher->Fetch()) {
             // если значение плёнки было выбрано "Новая плёнка",
             // показываем форму добавленния плёнки.
             $('#create_film_variation').on('hidden.bs.modal', function() {
-                if($('select#film_id').val() == '+') {
+                if($('select#film_id').val() === '+') {
                     $('#create_film').modal('show');
                 }
                 
@@ -459,7 +459,7 @@ while($row = $fetcher->Fetch()) {
             // При показе формы добавления вариации,
             // устанавливаем фокус на первом текстовом поле.
             $('#create_film_variation').on('shown.bs.modal', function() {
-                if($('select#film_id').val() != '') {
+                if($('select#film_id').val() !== '') {
                     $('input:text:visible:first').focus();
                 }
             });

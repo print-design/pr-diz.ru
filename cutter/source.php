@@ -297,7 +297,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             // Показываем кнопку очистки поля
             // а также либо кнопку "Далее" либо кнопку "Добавить в базу"
             function SetClearVisibility(obj) {
-                if(obj.val() == '') {
+                if(obj.val() === '') {
                     $('button#clear').addClass('d-none');
                     $('.next-submit').addClass('disabled');
                     $('.create-submit').removeClass('disabled');

@@ -330,7 +330,7 @@ $total_weight = $row[0];
                 step: 1,
                 value: <?=$slider_value ?>,
                 slide: function(event, ui) {
-                    if(ui.value == '') {
+                    if(ui.value === '') {
                         $("#thickness").val('');
                     }
                     else {
@@ -340,7 +340,7 @@ $total_weight = $row[0];
             });
             
             $('#film_brand_name').change(function(){
-                if($(this).val() == '') {
+                if($(this).val() === '') {
                     $('#width_slider_values').html("<div class='p-1'>все</div>");
                     $("#slider").slider({
                         range: false,
@@ -366,7 +366,7 @@ $total_weight = $row[0];
                                     step: 1,
                                     value: 0,
                                     slide: function(event, ui) {
-                                        if(ui.value == '') {
+                                        if(ui.value === '') {
                                             $("#thickness").val('');
                                         }
                                         else {
@@ -419,7 +419,7 @@ $total_weight = $row[0];
             $('tr.pallet_tr').click(function(){
                 var pallet_id = $(this).attr('data-pallet-id');
                 var getstring = $(this).attr('data-get');
-                if(pallet_id != null) {
+                if(pallet_id !== null) {
                     $.ajax({ url: "_pallet_rolls.php?id=" + pallet_id + "&getstring=" + getstring })
                             .done(function(data) {
                                 $('#rollsModal .modal-dialog .modal-content').html(data);

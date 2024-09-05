@@ -55,7 +55,7 @@
     function KeyUpLimitIntValue(textbox, max) {
         val = textbox.val().replace(/[^\d]/g, '');
         
-        if(val != null && val != '' && !isNaN(val) && parseInt(val) > max) {
+        if(val !== null && val !== '' && !isNaN(val) && parseInt(val) > max) {
             textbox.addClass('is-invalid');
         }
         else {
