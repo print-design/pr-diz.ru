@@ -987,6 +987,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 background: gray;
                 border-color: gray;
             }
+            
+            ul.ui-autocomplete {
+                z-index: 1100;
+            }
         </style>
     </head>
     <body>
@@ -1016,14 +1020,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <input type="text" 
                                        id="customer_name" 
                                        name="customer_name" 
-                                       class="form-control" 
+                                       class="form-control customer_names" 
                                        placeholder="Название компании" 
-                                       required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'customer_name'); $(this).attr('name', 'customer_name'); $(this).attr('placeholder', 'Название компании');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'customer_name'); $(this).attr('name', 'customer_name'); $(this).attr('placeholder', 'Название компании');" 
-                                       onfocusout="javascript: $(this).attr('id', 'customer_name'); $(this).attr('name', 'customer_name'); $(this).attr('placeholder', 'Название компании');" />
+                                       required="required" />
                                 <div class="invalid-feedback">Название компании обязательно</div>
                             </div>
                             <div class="form-group">
@@ -2590,9 +2589,39 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#btn_quantities').removeAttr('disabled');
             }
             
+            // Автозаполнение названий заказчика при открытии окна заказчика.
+            function CustomerNamesAutocomplete() {
+                var customer_names = [
+                    <?php
+                    $customer_names = array();
+                    $sql = "select name from customer order by name";
+                    $fetcher = new Fetcher($sql);
+                    while($row = $fetcher->Fetch()) {
+                        array_push($customer_names, "'". addslashes($row['name'])."'");
+                    }
+                    
+                    echo implode(",", $customer_names);
+                    ?>
+                ];
+                $("input.customer_names").autocomplete({
+                    source: customer_names
+                });
+            }
+            
+            CustomerNamesAutocomplete();
+            
             // При открытии окна создания заказчика устанавливаем фокус на первом поле.
             $('#new_customer').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();
+            });
+            
+            // При закрытии окна очищаем все текстовые поля.
+            $('#new_customer').on('hidden.bs.modal', function() {
+                $('input[name=customer_name]').val('');
+                $('input[name=customer_person]').val('');
+                $('input[name=customer_phone]').val('');
+                $('input[name=customer_extension]').val('');
+                $('input[name=customer_email]').val('');
             });
             
             // Открытие модального окна со списком заказов
