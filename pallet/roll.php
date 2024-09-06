@@ -163,6 +163,7 @@ if(null === $comment) $comment = $row['comment'];
             <?php else: ?>
             <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pallet/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php endif; ?>
+            <a class="btn btn-light ml-4 mb-2 mt-1" href="roll_history.php<?= BuildQuery('id', $id) ?>"><i class="fas fa-history"></i>&nbsp;&nbsp;&nbsp;История</a>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне из паллета № <?="П".$pallet_id."Р".$ordinal ?> от <?= $date ?></h1>
             <?php if(!empty($time) && $time != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
