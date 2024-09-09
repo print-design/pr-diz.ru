@@ -38,7 +38,7 @@ elseif($folder == 'rational_cut') {
 // Если он сработан, то выделяем пункт меню "Сработанная плёнка",
 // Если он раскроен, то выделяем пункт меню "Раскроили"
 // Иначе выделяем пункт меню "Рулоны"
-if($folder == 'roll' && ($file == 'roll.php' || $file == 'history.php')) {
+if($folder == 'roll' && $file == 'roll.php') {
     if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED) {
         $rolls_status = '';
         $cut_sources_status = '';
@@ -55,7 +55,7 @@ if($folder == 'roll' && ($file == 'roll.php' || $file == 'history.php')) {
 // Если паллет сработан, то выделяем пункт меню "Сработанная плёнка",
 // Если он раскроен, то выделяем пункт меню "Раскроили"
 // Иначе выделяем пункт меню "Паллеты".
-if($folder == 'pallet' && ($file == 'roll.php' || $file == 'roll_history.php')) {
+if($folder == 'pallet' && $file == 'roll.php') {
     if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED) {
         $pallets_status = '';
         $cut_sources_status = '';

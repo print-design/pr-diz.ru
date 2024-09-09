@@ -212,7 +212,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
             <?php else: ?>
             <a class="btn btn-light backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
             <?php endif; ?>
-            <a class="btn btn-light ml-4 mb-2 mt-1" href="history.php<?= BuildQuery('id', $id) ?>"><i class="fas fa-history"></i>&nbsp;&nbsp;&nbsp;История</a>
+            <button class="btn btn-light ml-4 mb-2 mt-1" data-toggle="modal" data-target="#history"><i class="fas fa-history"></i>&nbsp;&nbsp;&nbsp;История</button>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
             <?php if(!empty($time) && $time != '00:00'): ?>
             <div>Время добавления: <?=$time ?></div>
@@ -546,6 +546,15 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     </div>
                 </div>
             </form>
+        </div>
+        <!-- История -->
+        <div class="modal fixed-left fade" id="history" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 25px; padding-right: 25px; padding-top: 25px; width: 521px; overflow-y: auto;">
+                    <h2>История перемещения</h2>
+                    <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 10px; top: 10px; z-index: 2000;"><img src="../images/icons/close_modal_red.svg" /></button>
+                </div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
