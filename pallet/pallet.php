@@ -375,6 +375,18 @@ if(null === $comment) $comment = $row['comment'];
                 <div class="modal-content" style="padding-left: 25px; padding-right: 25px; padding-top: 25px; width: 521px; overflow-y: auto;">
                     <h2>История перемещения</h2>
                     <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 10px; top: 10px; z-index: 2000;"><img src="../images/icons/close_modal_red.svg" /></button>
+                    <table class="table">
+                        <?php
+                        $sql = "select u.last_name, left(u.first_name, 1) first_name, date_format(pch.date, '%d.%m.%Y %H:%i') date, pch.cell "
+                                . "from pallet_cell_history pch "
+                                . "inner join user u on pch.user_id = u.id "
+                                . "where pch.pallet_id = ". filter_input(INPUT_GET, 'id');
+                        $fetcher = new Fetcher($sql);
+                        while($row = $fetcher->Fetch()):
+                        ?>
+                        <tr><td><?=$row['last_name'].' '.$row['first_name'].'.' ?></td><td><?=$row['date'] ?></td><td>Ячейка: <?=$row['cell'] ?></td></tr>
+                        <?php endwhile; ?>
+                    </table>
                 </div>
             </div>
         </div>

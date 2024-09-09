@@ -65,7 +65,7 @@ if($row = $fetcher->Fetch()) {
                             }
                         })
                         .fail(function() {
-                            $('$progress').text("Ошибка");
+                            $('#progress').text("Ошибка");
                         });
             }
         </script>
