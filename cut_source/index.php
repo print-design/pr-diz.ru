@@ -92,12 +92,12 @@ if(mb_strlen($find) > 1) {
 
 if(!empty($find)) {
     if(($findhead == 'п' || $findhead == 'П') && is_numeric($findtrim)) {
-        $wherefindpallet .= " and p.id='$findtrim'";
+        $wherefindpallet .= " and p.id = '$findtrim'";
         $wherefindroll .= " and false";
     }
     elseif(($findhead == 'р' || $findhead == 'Р') && is_numeric ($findtrim)) {
         $wherefindpallet .= " and false";
-        $wherefindroll .= " and r.id='$findtrim'";
+        $wherefindroll .= " and r.id = '$findtrim'";
     }
     else {
         $wherefindpallet .= " and false";
@@ -218,6 +218,7 @@ $total_weight = $row[0];
                             . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                            . "left join (select * from pallet_cell_history where id in (select max(id) from pallet_cell_history group by pallet_id)) pch on pch.pallet_id = p.id "
                             . "$wherefindpallet)"
                             . "+"
                             . "(select count(r.id) total_count "
@@ -226,6 +227,7 @@ $total_weight = $row[0];
                             . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                            . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
                             . "$wherefindroll)";
                     
                     $fetcher = new Fetcher($sql);
@@ -241,7 +243,7 @@ $total_weight = $row[0];
                     }
                     
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
-                            . "p.width width, fv.thickness thickness, fv.weight density, p.cell cell, pr.weight net_weight, pr.length length, "
+                            . "p.width width, fv.thickness thickness, fv.weight density, pch.cell cell, pr.weight net_weight, pr.length length, "
                             . "s.name supplier, "
                             . "prsh.status_id status_id, p.comment comment "
                             . "from pallet_roll pr "
@@ -250,10 +252,11 @@ $total_weight = $row[0];
                             . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                            . "left join (select * from pallet_cell_history where id in (select max(id) from pallet_cell_history group by pallet_id)) pch on pch.pallet_id = p.id "
                             . "$wherefindpallet "
                             . "union "
                             . "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
-                            . "r.width width, fv.thickness thickness, fv.weight density, r.cell cell, r.net_weight net_weight, r.length length, "
+                            . "r.width width, fv.thickness thickness, fv.weight density, rch.cell cell, r.net_weight net_weight, r.length length, "
                             . "s.name supplier, "
                             . "rsh.status_id status_id, r.comment comment "
                             . "from roll r "
@@ -261,6 +264,7 @@ $total_weight = $row[0];
                             . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                            . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
                             . "$wherefindroll "
                             . "order by ".$orderby."timestamp desc limit $pager_skip, $pager_take";
                     

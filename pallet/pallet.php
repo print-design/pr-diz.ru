@@ -96,12 +96,24 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
+        // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
+        $sql = "select cell from pallet_cell_history where pallet_id = $id order by id desc limit 1";
+        $row = (new Fetcher($sql))->Fetch();
+        $cell = filter_input(INPUT_POST, 'cell');
+        
+        if((!$row || $row['cell'] != $cell) && !empty($cell)) {
+            $user_id = GetUserId();
+            
+            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ($id, '$cell', $user_id)";
+            $error_message = (new Executer($sql))->error;
+        }
+        
         if(empty($error_message)) {
             $sql = "";
             
             // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql = "update pallet set cell = '$cell', comment = '$comment' where id = $id";
+                $sql = "update pallet set comment = '$comment' where id = $id";
             }
             else {
                 $sql = "update pallet set comment = concat(comment, ' ', '$comment') where id = $id";
@@ -122,7 +134,7 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i'
         . "(select film_id from film_variation where id = p.film_variation_id) film_id, "
         . "(select sum(pr1.weight) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) net_weight, "
         . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number, "
-        . "p.cell, "
+        . "(select cell from pallet_cell_history where pallet_id = p.id order by id desc limit 0, 1) cell, "
         . "p.comment "
         . "from pallet p inner join user u on p.storekeeper_id = u.id "
         . "where p.id=$id";

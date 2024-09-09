@@ -63,7 +63,7 @@ if(mb_strlen($find) > 1) {
 
 if(!empty($find)) {
     if(($findhead == 'р' || $findhead == 'Р') && is_numeric($findtrim)) {
-        $where .= " and r.id='$findtrim'";
+        $where .= " and r.id = '$findtrim'";
     }
     else {
         $where .= " and false";
@@ -167,7 +167,7 @@ $total_weight = $row['total_weight'];
                     $orderby = "";
                     
                     if(array_key_exists('order', $_REQUEST)) {
-                        $orderby = "r.cell asc, ";
+                        $orderby = "rch.cell asc, ";
                     }
                     
                     // Выборка
@@ -182,6 +182,7 @@ $total_weight = $row['total_weight'];
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join user u on r.storekeeper_id = u.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                            . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
                             . $where;
                     $fetcher = new Fetcher($sql);
                     
@@ -190,7 +191,7 @@ $total_weight = $row['total_weight'];
                     }
                     
                     $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, f.name film, fv.thickness, fv.weight density, r.width, r.net_weight, r.length, "
-                            . "s.name supplier, r.cell, u.first_name, u.last_name, "
+                            . "s.name supplier, rch.cell, u.first_name, u.last_name, "
                             . "rsh.status_id status_id, r.comment "
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
@@ -198,6 +199,7 @@ $total_weight = $row['total_weight'];
                             . "left join supplier s on r.supplier_id = s.id "
                             . "left join user u on r.storekeeper_id = u.id "
                             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                            . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
                             . "$where "
                             . "order by ".$orderby."r.id desc limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
@@ -229,7 +231,7 @@ $total_weight = $row['total_weight'];
                                 <input type="text" 
                                        class="form-control" 
                                        value="<?= htmlentities($row['comment']) ?>" 
-                                       onkeydown="if(event.key == 'Enter') { SaveComment(event, <?=$row['id'] ?>); }" 
+                                       onkeydown="if(event.key === 'Enter') { SaveComment(event, <?=$row['id'] ?>); }" 
                                        onfocusout="SaveComment(event, <?=$row['id'] ?>);" />
                             </div>
                         </td>

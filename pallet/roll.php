@@ -27,6 +27,18 @@ $cell_valid = '';
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
+    // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
+    $sql = "select cell from pallet_cell_history where pallet_id = (select pallet_id from pallet_roll where id = $id) order by id desc limit 1";
+    $row = (new Fetcher($sql))->Fetch();
+    $cell = filter_input(INPUT_POST, 'cell');
+            
+    if((!$row || $row['cell'] != $cell) && !empty($cell)) {
+        $user_id = GetUserId();
+            
+        $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ((select pallet_id from pallet_roll where id = $id), '$cell', $user_id)";
+        $error_message = (new Executer($sql))->error;
+    }
+    
     // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
     $sql = "select status_id from pallet_roll_status_history where pallet_roll_id=$id order by id desc limit 1";
     $row = (new Fetcher($sql))->Fetch();
@@ -57,7 +69,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             $sql = "";
             
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql .= "update pallet set cell = '$cell', comment = '$comment' where id = $pallet_id";
+                $sql .= "update pallet set comment = '$comment' where id = $pallet_id";
             }
             else {
                 $sql .= "update pallet set comment = concat(comment, ' ', '$comment') where id = $pallet_id";
@@ -84,7 +96,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i') time, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, p.film_variation_id, p.width, pr.length, "
         . "(select film_id from film_variation where id = p.film_variation_id) film_id, "
-        . "pr.weight, pr.pallet_id, pr.ordinal, p.cell, "
+        . "pr.weight, pr.pallet_id, pr.ordinal, (select cell from pallet_cell_history where pallet_id = p.id order by id desc limit 0, 1) cell, "
         . "prsh.status_id status_id, DATE_FORMAT(prsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(prsh.date, '%H.%i') status_time, "
         . "p.comment "
         . "from pallet p "

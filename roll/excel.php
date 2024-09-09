@@ -33,7 +33,7 @@ $sheet->setCellValue('I'.$rowindex, "№ ячейки");
 $sheet->setCellValue('J'.$rowindex, "Комментарий");
 
 $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, f.name film, fv.thickness, r.width, r.net_weight, r.length, "
-        . "s.name supplier, r.cell, r.comment "
+        . "s.name supplier, (select cell from roll_cell_history where roll_id = r.id order by id desc limit 0, 1) cell, r.comment "
         . "from roll r "
         . "left join film_variation fv on r.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
@@ -96,7 +96,7 @@ $sql = "select p.id, DATE_FORMAT(p.date, '%d.%m.%Y') date, f.name film, fv.thick
         . "s.name supplier, "
         . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number_free, "
         . "(select count(pr1.id) from pallet_roll pr1 where pr1.pallet_id = p.id) rolls_number_total, "
-        . "p.cell, p.comment "
+        . "(select cell from pallet_cell_history where pallet_id = p.id order by id desc limit 0, 1) cell, p.comment "
         . "from pallet p "
         . "left join film_variation fv on p.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "

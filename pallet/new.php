@@ -157,12 +157,18 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
-        $sql = "insert into pallet (supplier_id, film_variation_id, width, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, $film_variation_id, $width, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into pallet (supplier_id, film_variation_id, width, comment, storekeeper_id) "
+                . "values ($supplier_id, $film_variation_id, $width, '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $pallet_id = $executer->insert_id;
         $user_id = GetUserId();
+        
+        if(empty($error_message)) {
+            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ($pallet_id, '$cell', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         if(empty($error_message)) {
             // Заполнение роликов этого паллета
@@ -177,10 +183,10 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 $error_message = $executer->error;
                 $roll_number++;
             }
-            
-            if(empty($error_message)) {
-                header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
-            }
+        }
+        
+        if(empty($error_message)) {
+            header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
         }
     }
 }

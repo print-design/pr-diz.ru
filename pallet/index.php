@@ -59,7 +59,7 @@ if(mb_strlen($find) > 1) {
 
 if(!empty($find)) {
     if(($findhead == 'п' || $findhead == 'П') && is_numeric($findtrim)) {
-        $where .= " and p.id='$findtrim'";
+        $where .= " and p.id = '$findtrim'";
     }
     else {
         $where .= " and false";
@@ -69,11 +69,11 @@ if(!empty($find)) {
 // Получение общей массы паллетов
 $sql = "select sum(pr.weight) total_weight "
         . "from pallet_roll pr "
-        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
         . "left join pallet p on pr.pallet_id = p.id "
         . "left join film_variation fv on p.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
-        . "where (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE
+        . "where (((select status_id from pallet_roll_status_history where pallet_roll_id = pr.id order by id desc limit 0, 1) = ".ROLL_STATUS_FREE
+        . " or (select count(id) from pallet_roll_status_history where pallet_roll_id = pr.id) = 0)"
         . ") and $where";
 
 $row = (new Fetcher($sql))->Fetch();
@@ -165,7 +165,7 @@ $total_weight = $row[0];
                     $orderby = "";
                     
                     if(array_key_exists('order', $_REQUEST)) {
-                        $orderby = "p.cell asc, ";
+                        $orderby = "cell asc, ";
                     }
                     
                     // Выборка
@@ -178,7 +178,7 @@ $total_weight = $row[0];
                             . "left join film_variation fv on p.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
                             . "left join supplier s on p.supplier_id = s.id "
-                            . "left join user u on p.storekeeper_id = u.id "
+                            . "left join user u on p.storekeeper_id = u.id  "
                             . $where;
                     $fetcher = new Fetcher($sql);
                     
@@ -196,7 +196,8 @@ $total_weight = $row[0];
                             . "s.name supplier, "
                             . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")) rolls_number, "
                             . "(select count(pr1.id) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and prsh1.status_id <> ".ROLL_STATUS_FREE.") absent_rolls_number, "
-                            . "p.cell, u.first_name, u.last_name, "
+                            . "(select cell from pallet_cell_history where pallet_id = p.id order by id desc limit 0, 1) cell, "
+                            . "u.first_name, u.last_name, "
                             . "p.comment "
                             . "from pallet p "
                             . "left join film_variation fv on p.film_variation_id = fv.id "
@@ -239,7 +240,7 @@ $total_weight = $row[0];
                                 <input type="text" 
                                        class="form-control" 
                                        value="<?= htmlentities($row['comment']) ?>" 
-                                       onkeydown="if(event.key == 'Enter') { SaveComment(event, <?=$row['id'] ?>); }" 
+                                       onkeydown="if(event.key === 'Enter') { SaveComment(event, <?=$row['id'] ?>); }" 
                                        onfocusout="SaveComment(event, <?=$row['id'] ?>);" />
                             </div>
                         </td>

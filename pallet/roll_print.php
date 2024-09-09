@@ -9,7 +9,7 @@ if(empty($id)) {
 
 // Получение данных
 $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_name, u.first_name, p.supplier_id, s.name supplier, "
-        . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, p.cell, ifnull(prsh.status_id, ".ROLL_STATUS_FREE.") status_id, "
+        . "p.film_variation_id, f.name film, p.width, fv.thickness, fv.weight, ifnull(prsh.status_id, ".ROLL_STATUS_FREE.") status_id, "
         . "p.comment, pr.id pallet_roll_id, pr.pallet_id pallet_roll_pallet_id, pr.weight pallet_roll_weight, pr.length pallet_roll_length, pr.ordinal pallet_roll_ordinal "
         . "from pallet p "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
@@ -31,7 +31,6 @@ $film = $row['film'];
 $width = $row['width'];
 $thickness = $row['thickness'];
 $ud_ves = $row['weight'];
-$cell = $row['cell'];
 $status = ROLL_STATUS_NAMES[$row['status_id']];
 $comment = $row['comment'];
 $pallet_roll_id = $row['pallet_roll_id'];

@@ -95,8 +95,20 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     
     if($form_valid) {
+        // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
+        $sql = "select cell from roll_cell_history where roll_id = $id order by id desc limit 1";
+        $row = (new Fetcher($sql))->Fetch();
+        $cell = filter_input(INPUT_POST, 'cell');
+        
+        if((!$row || $row['cell'] != $cell) && !empty($cell)) {
+            $user_id = GetUserId();
+            
+            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($id, '$cell', $user_id)";
+            $error_message = (new Executer($sql))->error;
+        }
+        
         // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
-        $sql = "select status_id from roll_status_history where roll_id=$id order by id desc limit 1";
+        $sql = "select status_id from roll_status_history where roll_id = $id order by id desc limit 1";
         $row = (new Fetcher($sql))->Fetch();
         $status_id = filter_input(INPUT_POST, 'status_id');
         
@@ -112,7 +124,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             
             // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql = "update roll set cell = '$cell', comment = '$comment' where id = $id";
+                $sql = "update roll set comment = '$comment' where id = $id";
             }
             else {
                 $sql = "update roll set comment = concat(comment, ' ', '$comment') where id = $id";
@@ -138,12 +150,13 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 // Получение данных
 $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i') time, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, r.width, r.film_variation_id, r.length, "
         . "(select film_id from film_variation where id = r.film_variation_id) film_id, "
-        . "r.net_weight, r.cell, "
+        . "r.net_weight, rch.cell, "
         . "rsh.status_id status_id, DATE_FORMAT(rsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(rsh.date, '%H.%i') status_time, "
         . "r.comment, r.cut_wind_id, r.cutting_wind_id "
         . "from roll r "
         . "inner join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+        . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
         . "where r.id = $id";
 
 $row = (new Fetcher($sql))->Fetch();
