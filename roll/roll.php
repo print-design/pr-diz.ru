@@ -144,7 +144,7 @@ $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i'
         . "from roll r "
         . "inner join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-        . "where r.id=$id";
+        . "where r.id = $id";
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];

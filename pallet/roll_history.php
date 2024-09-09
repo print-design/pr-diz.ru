@@ -18,14 +18,19 @@ if(empty($id)) {
 }
 
 // Получение данных
-$pallet_id = 0;
-$ordinal = 0;
+$pallet_id = null;
+$ordinal = null;
+$status_id = null;
 
-$sql = "select pallet_id, ordinal from pallet_roll where id = $id";
+$sql = "select pr.pallet_id, pr.ordinal, prsh.status_id status_id "
+        . "from pallet_roll pr "
+        . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+        . "where pr.id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $pallet_id = $row['pallet_id'];
     $ordinal = $row['ordinal'];
+    $status_id = $row['status_id'];
 }
 ?>
 <!DOCTYPE html>

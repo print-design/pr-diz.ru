@@ -16,6 +16,17 @@ $id = filter_input(INPUT_GET, 'id');
 if(empty($id)) {
     header('Location: '.APPLICATION.'/roll/');
 }
+
+$status_id = null;
+
+$sql = "select rsh.status_id status_id "
+        . "from roll r "
+        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+        . "where r.id = $id";
+$fetcher = new Fetcher($sql);
+while ($row = $fetcher->Fetch()) {
+    $status_id = $row['status_id'];
+}
 ?>
 <!DOCTYPE html>
 <html>

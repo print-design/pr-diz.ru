@@ -91,7 +91,7 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i'
         . "inner join user u on p.storekeeper_id = u.id "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-        . "where pr.id=$id";
+        . "where pr.id = $id";
 
 $row = (new Fetcher($sql))->Fetch();
 $date = $row['date'];
