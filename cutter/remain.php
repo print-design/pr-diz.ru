@@ -144,11 +144,18 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $cell = "Цех";
     $comment = addslashes(filter_input(INPUT_POST, 'comment'));
             
-    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
-            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id')";
+    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
+            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$comment', '$user_id')";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     $roll_id = $executer->insert_id;
+    
+    // Устанавливаем этому ролику ячейку "Цех"
+    if(empty($error_message)) {
+        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($roll_id, '$cell', $user_id)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
             
     // Устанавливаем этому ролику статус "Свободный"
     if(empty($error_message)) {

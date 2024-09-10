@@ -77,12 +77,19 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     
     if($form_valid) {
         // Создаём новый рулон
-        $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id) "
-                . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$storekeeper_id')";
+        $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
+                . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$comment', '$storekeeper_id')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;
         $is_from_pallet = 0;
+        
+        // Устанавливаем ему ячейку "Цех"
+        if(empty($error_message)) {
+            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($roll_id, '$cell', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         // Устанавливаем ему статус "Свободный"
         if(empty($error_message)) {

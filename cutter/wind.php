@@ -133,17 +133,24 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         
         // Создание рулона на каждый ручей
         if(empty($error_message)) {
-            for($i=1; $i<=19; $i++) {
+            for($i = 1; $i <= 19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
-                    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, cell, comment, storekeeper_id, cutting_wind_id) "
-                            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$cell', '$comment', '$user_id', $cutting_wind_id)";
+                    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id, cutting_wind_id) "
+                            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$comment', '$user_id', $cutting_wind_id)";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
                     $insert_id = $executer->insert_id;
+                    
+                    // Заполнение истории ячеек
+                    if(empty($error_message)) {
+                        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($insert_id, '$cell', $user_id)";
+                        $executer = new Executer($sql);
+                        $error_message = $executer->error;
+                    }
                     
                     // Заполнение истории статусов
                     if(empty($error_message)) {

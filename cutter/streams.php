@@ -26,7 +26,7 @@ $error_message = '';
 
 $streams_count_valid = '';
 
-for($i=1; $i<=19; $i++) {
+for($i = 1; $i <= 19; $i++) {
     $stream_message = 'stream_'.$i.'_valid';
     $$stream_message = 'Ширина ручья обязательно';
     $stream_valid_name = 'stream_'.$i.'_valid';
@@ -45,7 +45,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
-    for($i=1; $i<=$streams_count; $i++) {
+    for($i = 1; $i <= $streams_count; $i++) {
         if(empty(filter_input(INPUT_POST, 'stream_'.$i))) {
             $stream_valid_name = 'stream_'.$i.'_valid';
             $$stream_valid_name = ISINVALID;
@@ -74,7 +74,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     
     $streams_widths_sum = 0;
     
-    for($i=1; $i<=19; $i++) {
+    for($i = 1; $i <= $streams_count; $i++) {
         if(null !== filter_input(INPUT_POST, 'stream_'.$i)) {
             $stream = 'stream_'.$i;
             $$stream = filter_input(INPUT_POST, $stream);
@@ -91,7 +91,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     
     // Сумма ширин ручьёв должна быть равна ширине исходной плёнки
     if($streams_widths_sum != $width) {
-        for($i=1; $i<19; $i++) {
+        for($i = 1; $i < 19; $i++) {
             if(null !== filter_input(INPUT_POST, 'stream_'.$i)) {
                 $stream_valid_name = 'stream_'.$i.'_valid';
                 $$stream_valid_name = ISINVALID;
@@ -108,7 +108,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $error_message = $executer->error;
     
         if(empty($error_message)) {
-            for($i=1; $i<=$streams_count; $i++) {
+            for($i = 1; $i <= $streams_count; $i++) {
                 if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
