@@ -23,6 +23,7 @@ $comment_valid = '';
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $cell = addslashes(filter_input(INPUT_POST, 'cell'));
+    $user_id = GetUserId();
     
     if(empty($cell)) {
         $cell_valid = ISINVALID;
@@ -30,9 +31,19 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     }
     
     if($form_valid) {
-        $sql = "update pallet set cell='$cell' where id=$id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
+        // Проверяем, совпадают ячейки или нет
+        $old_cell = null;
+        $sql = "select cell from pallet_cell_history where pallet_id = $id order by id desc";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $old_cell = $row['cell'];
+        }
+        
+        if($cell != $old_cell) {
+            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ($id, '$cell', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         if(empty($error_message)) {
             if(empty(filter_input(INPUT_GET, 'link'))) {
@@ -59,7 +70,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     if(!empty($old_comment)) $comment = $old_comment.' '.$comment;
     
     if($form_valid) {
-        $sql = "update pallet set comment='$comment' where id=$id";
+        $sql = "update pallet set comment = '$comment' where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
@@ -106,7 +117,8 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, p.comment, "
+                    . "(select cell from pallet_cell_history where pallet_id = p.id order by id desc limit 0,1) cell, "
                     . "(select sum(pr1.length) from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
                     . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                     . ") length, "

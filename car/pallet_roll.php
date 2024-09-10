@@ -29,7 +29,8 @@ if(empty($id)) {
         ?>
         <div class="container-fluid">
             <?php
-            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, pr.weight, pr.length, p.cell, p.comment, "
+            $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, pr.weight, pr.length, p.comment, "
+                    . "(select cell from pallet_cell_history where pallet_id = p.id order by id desc limit 0, 1) cell, "
                     . "p.id pallet_id, pr.ordinal "
                     . "from pallet_roll pr "
                     . "inner join pallet p on pr.pallet_id = p.id "

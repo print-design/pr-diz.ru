@@ -23,6 +23,7 @@ $comment_valid = '';
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $cell = addslashes(filter_input(INPUT_POST, 'cell'));
+    $user_id = GetUserId();
     
     if(empty($cell)) {
         $cell_valid = ISINVALID;
@@ -30,9 +31,20 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     }
     
     if($form_valid) {
-        $sql = "update roll set cell='$cell' where id=$id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
+        // Проверяем, изменилось значение или нет.
+        $old_cell = null;
+        $sql = "select cell from roll_cell_history where roll_id = $id order by id desc";
+        $fetcher = new Fetcher($sql);
+        $error_message = $fetcher->error;
+        if($row = $fetcher->Fetch()) {
+            $old_cell = $row['cell'];
+        }
+        
+        if($cell != $old_cell) {
+            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($id, '$cell', $user_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         if(empty($error_message)) {
             if(empty(filter_input(INPUT_GET, 'link'))) {
@@ -59,7 +71,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     if(!empty($old_comment)) $comment = $old_comment.' '.$comment;
     
     if($form_valid) {
-        $sql = "update roll set comment='$comment' where id=$id";
+        $sql = "update roll set comment = '$comment' where id = $id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
@@ -106,12 +118,13 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             
-            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, f.name film, r.width, fv.thickness, r.net_weight, r.length, r.cell, r.comment "
+            $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, s.name supplier, f.name film, r.width, fv.thickness, r.net_weight, r.length, rch.cell, r.comment "
                     . "from roll r "
                     . "inner join supplier s on r.supplier_id=s.id "
                     . "inner join film_variation fv on r.film_variation_id=fv.id "
                     . "inner join film f on fv.film_id = f.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                    . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
                     . "where r.id=$id"
                     . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")");
             $fetcher = new Fetcher($sql);

@@ -24,6 +24,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $pallet_id = filter_input(INPUT_POST, 'pallet_id');
     $cell = addslashes(filter_input(INPUT_POST, 'cell'));
+    $user_id = GetUserId();
     
     if(empty($cell)) {
         $cell_valid = ISINVALID;
@@ -31,9 +32,19 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     }
     
     if($form_valid) {
-        $sql = "update pallet set cell='$cell' where id=$pallet_id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
+        // Проверяем, совпадают ячейки или нет
+        $old_cell = null;
+        $sql = "select cell from pallet_cell_history where pallet_id = $pallet_id order by id desc";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $old_cell = $row['cell'];
+        }
+        
+        if($cell != $old_cell) {
+            $sql = "update pallet set cell='$cell' where id=$pallet_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         if(empty($error_message)) {
             if(empty(filter_input(INPUT_GET, 'link'))) {
