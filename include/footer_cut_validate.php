@@ -3,16 +3,30 @@
         weight = input.val().replace(',', '.');
         old_weight = $('#take_stream_old_weight').val();
         old_length = $('#take_stream_old_length').val();
-        input.parent().parent().next().val(weight * (old_length / old_weight));
-        input.parent().parent().next().next().find('input[type=text]').val((weight * (old_length / old_weight)).toFixed(2));
+        
+        result = 0;
+        
+        if(old_weight > 0) {
+            result = weight * (old_length / old_weight);
+        }
+        
+        input.parent().parent().next().val(result);
+        input.parent().parent().next().next().find('input[type=text]').val(result.toFixed(2));
     }
     
     function NTCutCalculate(input) {
         weight = input.val().replace(',', '.');
         old_weight = $('#not_take_stream_old_weight').val();
         old_length = $('#not_take_stream_old_length').val();
-        input.parent().parent().next().val(weight * (old_length / old_weight));
-        input.parent().parent().next().next().find('input[type=text]').val((weight * (old_length / old_weight)).toFixed(2));
+        
+        result = 0;
+        
+        if(old_weight > 0) {
+            result = weight * (old_length / old_weight);
+        }
+        
+        input.parent().parent().next().val(result);
+        input.parent().parent().next().next().find('input[type=text]').val(result.toFixed(2));
     }
     
     function ANTCutCalculate(input) {
@@ -42,13 +56,18 @@
     function IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3) {
         result = false;
         
+        // Если брак, то ставим нулевые значения (двойной == правильно!).
+        if(length == 0 && radius == 0) {
+            return true;
+        }
+        
         if(spool === 76) {
             if(0.85 * (0.15 * radius * radius + 11.3961 * radius - 176.4427) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.15 * radius * radius + 11.3961 * radius - 176.4427) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
                 result = true;
             }
         }
         else if(spool === 152) {
-            if(1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
+            if(0.85 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3)) < length && length < 1.15 * (0.1524 * radius * radius + 23.1245 * radius - 228.5017) * (20 / (thickness_1 + thickness_2 + thickness_3))) {
                 result = true;
             }
         }
