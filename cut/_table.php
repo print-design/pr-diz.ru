@@ -50,8 +50,8 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="justify-content: flex-start;">
-                    <button type="submit" class="btn btn-dark" id="edit_take_stream_submit" name="edit_take_stream_submit"><img src="../images/icons/print_light.svg" class="mr-2" />Распечатать бирку</button>
-                    <button type="button" class="btn btn-light" id="edit_take_stream_dismiss" data-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-dark w-50" id="edit_take_stream_submit" name="edit_take_stream_submit"><img src="../images/icons/print_light.svg" class="mr-2" />Распечатать бирку</button>
+                    <button type="button" class="btn btn-light w-50" id="edit_take_stream_dismiss" data-dismiss="modal">Отмена</button>
                 </div>
             </form>
         </div>
