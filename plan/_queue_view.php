@@ -45,6 +45,7 @@
                             </form>
                             <?php endif; ?>
                         </div>
+                        <?php if($row['queue_top'] == 0): ?>
                         <form method="post">
                             <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
                             <input type="hidden" name="scroll" />
@@ -54,6 +55,7 @@
                                 </div>
                             </button>
                         </form>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div style="padding-left: 10px; padding-top: 10px;"><img src="../images/icons/right-arrow.svg" /></div>
