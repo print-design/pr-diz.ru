@@ -115,7 +115,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']); ?></td>
                     <td><?= trim($row['comment'].' '.$row['continuation_comment'], ' ') ?></td>
                     <td>
-                        <a href="details.php?id=<?=$row['id'] ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
+                        <a href="details.php<?= BuildQuery('id', $row['id']) ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
                     </td>
                 </tr>
             <?php
