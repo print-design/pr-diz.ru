@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -67,7 +67,7 @@ while($row = $fetcher->Fetch()) {
                     <h1>Сотрудники</h1>
                 </div>
                 <div>
-                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD]))): ?>
                     <a href="plan_employees_create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить сотрудника</a>
                     <?php endif; ?>
                 </div>
@@ -95,7 +95,8 @@ while($row = $fetcher->Fetch()) {
                     <td style="width: 35%;<?=$no_border_top ?>"><?=$employee['first_name'] ?></td>
                     <td style="width: auto;<?=$no_border_top ?>"><?=$employee['phone'] ?></td>
                     <td class="text-right switch" style="width: 80px;<?=$no_border_top ?>">
-                        <?php if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $role == PLAN_ROLE_LAMINATE)): ?>
+                        <?php if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $role == PLAN_ROLE_LAMINATE) 
+                                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $role != PLAN_ROLE_LAMINATE)): ?>
                         <input type="checkbox" data-id="<?=$employee['id'] ?>"<?=$employee['active'] ? " checked='checked'" : "" ?> />
                         <?php endif; ?>
                     </td>

@@ -19,7 +19,9 @@ class PlanDate {
         $day_editions_count = (count($this->day_editions) > 0 ? count($this->day_editions) : 1);
         $night_editions_count = (count($this->night_editions) > 0 ? count($this->night_editions) : 1);
         
-        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) {
+        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
+                && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->timetable->work_id == WORK_LAMINATION) 
+                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->timetable->work_id != WORK_LAMINATION)) {
             $day_editions_count = (count($this->day_editions) > 0 && end($this->day_editions)['has_continuation']) ? count($this->day_editions) : count($this->day_editions) + 1;
             $night_editions_count = (count($this->night_editions) > 0 && end($this->night_editions)['has_continuation']) ? count($this->night_editions) : count($this->night_editions) + 1;            
         }

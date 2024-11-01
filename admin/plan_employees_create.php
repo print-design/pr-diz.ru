@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 
@@ -86,7 +86,8 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                             foreach(PLAN_ROLES as $role):
                                 $selected = '';
                                 if(filter_input(INPUT_POST, 'role_id') == $role) $selected = " selected='selected'";
-                            if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $role == ROLE_LAM_HEAD)):
+                            if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $role == PLAN_ROLE_LAMINATE) 
+                                    && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $role != PLAN_ROLE_LAMINATE)):
                             ?>
                             <option value="<?=$role ?>"<?=$selected ?>><?=PLAN_ROLE_NAMES[$role] ?></option>
                             <?php

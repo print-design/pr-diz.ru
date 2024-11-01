@@ -60,7 +60,7 @@ elseif($folder == 'admin') {
                 <a class="nav-link<?=$currency_class ?>" href="<?=APPLICATION ?>/admin/currency.php">Курсы валют</a>
             </li>
             <?php endif; ?>
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER]))): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD]))): ?>
             <li class="nav-item">
                 <a class="nav-link<?=$plan_class ?>" href="<?=APPLICATION ?>/admin/plan_employees.php">План</a>
             </li>
