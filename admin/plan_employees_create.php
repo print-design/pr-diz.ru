@@ -86,9 +86,13 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                             foreach(PLAN_ROLES as $role):
                                 $selected = '';
                                 if(filter_input(INPUT_POST, 'role_id') == $role) $selected = " selected='selected'";
+                            if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $role == ROLE_LAM_HEAD)):
                             ?>
                             <option value="<?=$role ?>"<?=$selected ?>><?=PLAN_ROLE_NAMES[$role] ?></option>
-                            <?php endforeach; ?>
+                            <?php
+                            endif;
+                            endforeach;
+                            ?>
                         </select>
                     </div>
                     <div class="row">

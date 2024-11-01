@@ -568,7 +568,9 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                             <?php if(!empty(filter_input(INPUT_GET, 'from')) || !empty(filter_input(INPUT_GET, 'to'))): ?>
                             <a href="?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
+                            <?php if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $work_id == WORK_LAMINATION)): ?>
                             <button type="button" class="btn btn-light foredit ml-2" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                            <?php endif; ?>
                             <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
                             <?php if($work_id == WORK_PRINTING && $machine_id != PRINTER_ATLAS): ?>
                             <a class="btn btn-light ml-2" href="excel_print.php?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&from=<?= filter_input(INPUT_GET, 'from') ?>&to=<?= filter_input(INPUT_GET, 'to') ?>">Выгрузка&nbsp;&nbsp;&nbsp;<i class="fas fa-file-download"></i></a>
