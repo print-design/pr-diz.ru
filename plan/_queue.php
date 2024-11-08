@@ -1,5 +1,6 @@
 <?php
 require_once '../include/topscripts.php';
+require_once './_functions.php';
 
 class Queue {
     private $work_id = null;
@@ -105,20 +106,20 @@ class Queue {
     }
     
     private function ShowLaminate() {
-        $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, 0 as work_type_id, '' customer, 0 length, 0 ink_number, 0.0 raport, 0 as status_id, now() as status_date, 0 as queue_top, "
+        $sql = "select ".PLAN_TYPE_EVENT." as type, 1 as position, id, 0 as calculation_id, text calculation, 0 as work_type_id, '' customer, 0 length, 0 ink_number, 0.0 raport, 0 lamination_roller_width, 0 as status_id, now() as status_date, 0 as queue_top, "
                 . "'' film_name, 0 thickness, '' individual_film_name, 0 individual_thickness, "
                 . "0 lamination1_film_variation_id, '' lamination1_film_name, 0 lamination1_thickness, '' lamination1_individual_film_name, 0 lamination1_individual_thickness, "
                 . "0 lamination2_film_variation_id, '' lamination2_film_name, 0 lamination2_thickness, '' lamination2_individual_film_name, 0 lamination2_individual_thickness, "
-                . "0 as lamination, "
+                . "0 as lamination, 0 as width_1, 0 as width_2, 0 as width_3, "
                 . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position "
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
-                . "select ".PLAN_TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, pp.length, c.ink_number, c.raport, c.status_id, c.status_date, c.queue_top, "
+                . "select ".PLAN_TYPE_PART." as type, 2 as position, pp.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, pp.length, c.ink_number, c.raport, c.lamination_roller_width, c.status_id, c.status_date, c.queue_top, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
-                . "pp.lamination, "
+                . "pp.lamination, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, null as print_date, '' as print_shift, 0 as print_position "
                 . "from plan_part pp "
                 . "inner join calculation c on pp.calculation_id = c.id "
@@ -134,11 +135,11 @@ class Queue {
                 . "where pp.in_plan = 0 "
                 . "and pp.work_id = ".$this->work_id
                 . " union "
-                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.status_id, c.status_date, c.queue_top, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.lamination_roller_width, c.status_id, c.status_date, c.queue_top, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
-                . "1 as lamination, "
+                . "1 as lamination, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
                 . "if(isnull(peprintpart.date), peprint.date, peprintpart.date) as print_date, if(isnull(peprintpart.date), peprint.shift, peprintpart.shift) as print_shift, if(isnull(peprintpart.date), peprint.position, peprintpart.position) as print_position "
                 . "from calculation c "
@@ -167,11 +168,11 @@ class Queue {
                 . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT
                 . "))"
                 . " union "
-                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.status_id, c.status_date, c.queue_top, "
+                . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.lamination_roller_width, c.status_id, c.status_date, c.queue_top, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
                 . "c.lamination1_film_variation_id, f1.name lamination1_film_name, fv1.thickness lamination1_thickness, c.lamination1_individual_film_name, c.lamination1_individual_thickness, "
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
-                . "2 as lamination, "
+                . "2 as lamination, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
                 . "if(isnull(peprintpart.date), peprint.date, peprintpart.date) as print_date, if(isnull(peprintpart.date), peprint.shift, peprintpart.shift) as print_shift, if(isnull(peprintpart.date), peprint.position, peprintpart.position) as print_position "
                 . "from calculation c "

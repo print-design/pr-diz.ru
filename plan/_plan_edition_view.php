@@ -222,6 +222,17 @@
         </div>
         <?php endif; ?>
     </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline not_lam_head_hidden"<?=$drop ?>>
+        <?php
+        if($this->edition['type'] != PLAN_TYPE_EVENT):
+        $films_strings = GetFilmsString($this->edition['lamination'], $this->edition['film_name'], $this->edition['thickness'], $this->edition['individual_film_name'], $this->edition['individual_thickness'], $this->edition['width_1'], 
+                $this->edition['lamination1_film_name'], $this->edition['lamination1_thickness'], $this->edition['lamination1_individual_film_name'], $this->edition['lamination1_individual_thickness'], $this->edition['width_2'], 
+                $this->edition['lamination2_film_name'], $this->edition['lamination2_thickness'], $this->edition['lamination2_individual_film_name'], $this->edition['lamination2_individual_thickness'], $this->edition['width_3']);
+        ?>
+        <span class="text-nowrap"><?=$films_strings[0] ?></span> <span class="text-nowrap"><?=$films_strings[1] ?></span> <span class="text-nowrap"><?=$films_strings[2] ?></span>
+        <?php endif; ?>
+    </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline not_lam_head_hidden"<?=$drop ?>><?=$this->edition['lamination_roller_width'] ?></td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['samples_count'] ?>
     </td>

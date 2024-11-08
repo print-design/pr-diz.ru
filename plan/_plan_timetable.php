@@ -2,6 +2,7 @@
 require_once '../include/topscripts.php';
 require_once '../include/panton.php';
 require_once './_plan_date.php';
+require_once './_functions.php';
 
 class PlanTimetable {
     public $dateFrom;
@@ -60,7 +61,7 @@ class PlanTimetable {
         }
         
         // Тиражи
-        $sql = "select e.id id, e.date, e.shift, ".PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.length, c.stream_width, c.streams_number, c.ink_number, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
+        $sql = "select e.id id, e.date, e.shift, ".PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.id calculation_id, c.name calculation, c.raport, c.lamination_roller_width, c.length, c.stream_width, c.streams_number, c.ink_number, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
                 . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                 . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
                 . "if(isnull(e.worktime_continued), round(cr.length_pure_1), round(cr.length_pure_1) / e.worktime * e.worktime_continued) as length_pure_1, "
@@ -98,7 +99,7 @@ class PlanTimetable {
                 . "left join film f2 on fv2.film_id = f2.id "
                 . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
-                . "select ev.id, ev.date, ev.shift, ".PLAN_TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as length, 0 as stream_width, 0 as streams_number, 0 as ink_number, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select ev.id, ev.date, ev.shift, ".PLAN_TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as lamination_roller_width, 0 as length, 0 as stream_width, 0 as streams_number, 0 as ink_number, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
                 . "0 as quantity_sum, "
                 . "0 as gap_raport, "
                 . "0 as length_pure_1, "
@@ -123,7 +124,7 @@ class PlanTimetable {
                 . "0 as weight_cut "
                 . "from plan_event ev where ev.in_plan = 1 and ev.work_id = ".$this->work_id." and ev.machine_id = ".$this->machine_id." and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and ev.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
-                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.length, c.stream_width, c.streams_number, c.ink_number, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
+                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.lamination_roller_width, c.length, c.stream_width, c.streams_number, c.ink_number, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
                 . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                 . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
                 . "round(cr.length_pure_1) / e.worktime * pc.worktime as length_pure_1, "
@@ -162,7 +163,7 @@ class PlanTimetable {
                 . "left join film f2 on fv2.film_id = f2.id "
                 . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
-                . "select pp.id, pp.date, pp.shift, ".PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.length, c.stream_width, c.streams_number, c.ink_number, c.status_id, c.cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select pp.id, pp.date, pp.shift, ".PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.id calculation_id, c.name calculation, c.raport, c.lamination_roller_width, c.length, c.stream_width, c.streams_number, c.ink_number, c.status_id, c.cut_remove_cause, '' as unit, 0 as quantity, "
                 . "0 as quantity_sum, "
                 . "0 as gap_raport, "
                 . "if(isnull(pp.worktime_continued), round(pp.length), round(pp.length) / pp.worktime * pp.worktime_continued) as length_pure_1, "
@@ -200,7 +201,7 @@ class PlanTimetable {
                 . "left join film f2 on fv2.film_id = f2.id "
                 . "where pp.in_plan = 1 and pp.work_id = ".$this->work_id." and pp.machine_id = ".$this->machine_id." and pp.date >= '".$this->dateFrom->format('Y-m-d')."' and pp.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
-                . "select ppc.id, ppc.date, ppc.shift, ".PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.length, c.stream_width, c.streams_number, c.ink_number, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
+                . "select ppc.id, ppc.date, ppc.shift, ".PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.lamination_roller_width, c.length, c.stream_width, c.streams_number, c.ink_number, 0 as status_id, '' as cut_remove_cause, '' as unit, 0 as quantity, "
                 . "0 as quantity_sum, "
                 . "0 as gap_raport, "
                 . "round(pp.length) / pp.worktime * ppc.worktime as length_pure_1, "

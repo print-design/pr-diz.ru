@@ -6,6 +6,8 @@
         <th>№</th>
         <th>Заказ</th>
         <th class="storekeeper_hidden">Метраж</th>
+        <th class="not_lam_head_hidden">Марка мат-ла</th>
+        <th class="not_lam_head_hidden">Лам. вал</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden">Кол-во образцов</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden">Вал</th>
         <th class="cutting_hidden text-nowrap">Лам-й</th>

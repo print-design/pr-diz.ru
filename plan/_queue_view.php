@@ -62,49 +62,28 @@
             </div>
         </div>
     </div>
-    <?php
-    if($this->work_id == WORK_LAMINATION):
-        $films_string = '';
-    
-    if($row['lamination'] == 1) {
-        $film_name = $row['film_name'];
-        $thickness = $row['thickness'];
-        
-        if(empty($film_name)) {
-            $film_name = $row['individual_film_name'];
-            $thickness = $row['individual_thickness'];
-        }
-        
-        $lamination1_film_name = $row['lamination1_film_name'];
-        $lamination1_thickness = $row['lamination1_thickness'];
-        
-        if(empty($lamination1_film_name)) {
-            $lamination1_film_name = $row['lamination1_individual_film_name'];
-            $lamination1_thickness = $row['lamination1_individual_thickness'];
-        }
-        
-        $films_string = $film_name.' '.$thickness.' + '.$lamination1_film_name.' '.$lamination1_thickness;
-    }
-    elseif($row['lamination'] == 2) {
-        $lamination2_film_name = $row['lamination2_film_name'];
-        $lamination2_thickness = $row['lamination2_thickness'];
-        
-        if(empty($lamination2_film_name)) {
-            $lamination2_film_name = $row['lamination2_individual_film_name'];
-            $lamination2_thickness = $row['lamination2_individual_thickness'];
-        }
-        
-        $films_string = "1 прогон + $lamination2_film_name $lamination2_thickness";
-    }
-    ?>
-    <div class="mb-2"><?=$films_string ?></div>
+    <?php if($this->work_id == WORK_LAMINATION): ?>
+    <div class="mb-2">
+        <?php
+        $films_strings = GetFilmsString($row["lamination"], $row["film_name"], $row["thickness"], $row["individual_film_name"], $row["individual_thickness"], $row['width_1'], 
+                $row["lamination1_film_name"], $row["lamination1_thickness"], $row["lamination1_individual_film_name"], $row["lamination1_individual_thickness"], $row['width_2'], 
+                $row["lamination2_film_name"], $row["lamination2_thickness"], $row["lamination2_individual_film_name"], $row["lamination2_individual_thickness"], $row['width_3']);
+        ?>
+        <span class="text-nowrap"><?=$films_strings[0] ?></span> <span class="text-nowrap"><?=$films_strings[1] ?></span> <span class="text-nowrap"><?=$films_strings[2] ?></span>
+    </div>
     <?php endif; ?>
     <div class="row">
         <div class="col-6"><strong>Метраж:</strong> <?= DisplayNumber(intval($row['length']), 0) ?></div>
         <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
     </div>
     <div class="row">
-        <div class="col-6"><strong>Ламинации:</strong> <?= ($this->work_id == WORK_LAMINATION ? ($laminations_number == 2 ? $row['lamination']." прогон" : $laminations_number) : $laminations_number) ?></div>
+        <div class="col-6">
+            <strong>Ламинации:</strong> <?= ($this->work_id == WORK_LAMINATION ? ($laminations_number == 2 ? $row['lamination']." прогон" : $laminations_number) : $laminations_number) ?>
+            <?php if($this->work_id == WORK_LAMINATION): ?>
+            <br />
+            <strong>Лам вал:</strong> <?=$row['lamination_roller_width'] ?>
+            <?php endif; ?>
+        </div>
         <div class="col-6">
             <?php if($this->work_id == WORK_LAMINATION): ?>
             <strong>Тип работы:</strong> <span class="text-nowrap"><?= WORK_TYPE_NAMES[$row['work_type_id']] ?></span>
