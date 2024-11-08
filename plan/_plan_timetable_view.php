@@ -3,7 +3,9 @@
         <th>Дата</th>
         <th>Смена</th>
         <th><?= PLAN_ROLE_NAMES[WORK_PLAN_ROLES[$this->work_id]] ?></th>
-        <th class="fordrag"></th>
+        <?php if($this->editable): ?>
+        <th></th>
+        <?php endif; ?>
         <th>№</th>
         <th>Заказ</th>
         <th class="storekeeper_hidden">Метраж</th>
@@ -18,7 +20,13 @@
         <th class="not_storekeeper_hidden cutting_hidden">Ширина <span class="text-nowrap">мат-ла</span></th>
         <th>Менеджер</th>
         <th>Статус</th>
-        <th class="comment_cell comment_invisible colorist_hidden">Комментарий</th>
+        <?php
+        $comment_invisible_class = "";
+        if($this->editable) {
+            $comment_invisible_class = " comment_invisible";
+        }
+        ?>
+        <th class="comment_cell<?=$comment_invisible_class ?> colorist_hidden">Комментарий</th>
         <th></th>
     </tr>
     <?php

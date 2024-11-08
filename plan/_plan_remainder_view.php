@@ -1,5 +1,7 @@
 <tr data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-id="" data-position="">
-    <td class="<?=$this->shift ?> showdropline fordrag" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <?php if($this->timetable->editable): ?>
+    <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <?php endif; ?>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline storekeeper_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
@@ -14,6 +16,12 @@
     <td class="<?=$this->shift ?> showdropline not_storekeeper_hidden cutting_hidden"></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
-    <td class="<?=$this->shift ?> showdropline comment_cell comment_invisible colorist_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
+    <?php
+    $comment_invisible_class = "";
+    if($this->timetable->editable) {
+        $comment_invisible_class = " comment_invisible";
+    }
+    ?>
+    <td class="<?=$this->shift ?> showdropline comment_cell<?=$comment_invisible_class ?> colorist_hidden" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
     <td class="<?=$this->shift ?> showdropline text-right" ondrop="DropTimetable(event);" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'></td>
 </tr>

@@ -305,11 +305,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 background-color: lightcyan;
             }
             
-            table.typography tr th.fordrag, table.typography tr td.fordrag {
-                padding-left: 3px;
-                padding-right: 3px;
-            }
-            
             /* Выпадающее меню в таблице */
             .timetable_menu, .queue_menu {
                 position: absolute;
@@ -362,23 +357,9 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             }
             <?php endif; ?>
             
-            <?php if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
-                    && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $work_id == WORK_LAMINATION) 
-                    && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $work_id != WORK_LAMINATION)): ?>
             .comment_invisible {
                 display: none;
             }
-            .notforedit {
-                display: none;
-            }
-            <?php else: ?>
-            th.fordrag, td.fordrag {
-                display: none;
-            }
-            .foredit {
-                display: none;
-            }
-            <?php endif; ?>
             
             <?php if(IsInRole(ROLE_NAMES[ROLE_STOREKEEPER])): ?>
             .storekeeper_hidden {
@@ -390,7 +371,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_COLORIST])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             .planner_hidden {
                 display: none;
             }
@@ -519,7 +500,16 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             }
             ?>
             <div class="wrapper" style="position: absolute; top: 100px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
-                <nav id="sidebar" class="foredit">
+                <?php
+                $date_from = null;
+                $date_to = null;
+                GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+                        
+                $timetable = new PlanTimetable($work_id, $machine_id, $date_from, $date_to);
+                
+                if($timetable->editable):
+                ?>
+                <nav id="sidebar">
                     <div id="sidebar_toggle_button">
                         <button type="button" id="sidebarCollapse" class="btn btn-link"><img src="../images/icons/collapse.png" style="margin-right: 8px;" />Скрыть</button>
                     </div>
@@ -531,6 +521,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                         ?>
                     </div>
                 </nav>
+                <?php endif; ?>
                 <div id="content" style="width: 100%; position: relative;">
                     <div class="d-flex justify-content-between pr-3">
                         <div class="d-flex justify-content-start">
@@ -570,8 +561,8 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                             <?php if(!empty(filter_input(INPUT_GET, 'from')) || !empty(filter_input(INPUT_GET, 'to'))): ?>
                             <a href="?work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>" class="btn btn-light">Сбросить</a>
                             <?php endif; ?>
-                            <?php if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $work_id == WORK_LAMINATION)): ?>
-                            <button type="button" class="btn btn-light foredit ml-2" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
+                            <?php if($timetable->editable): ?>
+                            <button type="button" class="btn btn-light ml-2" data-toggle="modal" data-target="#add_event"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Добавить событие</button>
                             <?php endif; ?>
                             <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
                             <?php if($work_id == WORK_PRINTING && $machine_id != PRINTER_ATLAS): ?>
@@ -584,14 +575,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                         </div>
                     </div>
                     <div id="timetable" style="overflow: auto; position: absolute; top: 40px; bottom: 0; left: 0; right: 0; padding: 5px;">
-                        <?php
-                        $date_from = null;
-                        $date_to = null;
-                        GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
-                        
-                        $timetable = new PlanTimetable($work_id, $machine_id, $date_from, $date_to);
-                        $timetable->Show();
-                        ?>
+                        <?php $timetable->Show(); ?>
                     </div>
                 </div>
             </div>

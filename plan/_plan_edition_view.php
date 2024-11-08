@@ -7,22 +7,18 @@
     <?php endif; ?>
     <?php if($this->edition_key == 0): ?>
     <td class="<?=$this->plan_shift->shift ?>" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
-        <?php if(!$this->plan_shift->includes_continuation): ?>
-        <div class="foredit">
-            <a href="javascript: void(0);" onclick="javascript: MoveUp(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
-                <img src="../images/icons/up_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
-            </a>
-        </div>
+        <?php if($this->plan_shift->timetable->editable && !$this->plan_shift->includes_continuation): ?>
+        <a href="javascript: void(0);" onclick="javascript: MoveUp(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
+            <img src="../images/icons/up_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
+        </a>
         <?php endif; ?>
         <div style="display: block; white-space: nowrap;">
-            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: block;"><?= DisplayNumber($this->plan_shift->shift_worktime, 2) ?> ч.</div>
+            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic mb-2" style="display: block;"><?= DisplayNumber($this->plan_shift->shift_worktime, 2) ?> ч.</div>
         </div>
-        <?php if(!$this->plan_shift->includes_continuation): ?>
-        <div class="foredit" style="margin-top: 6px;">
-            <a href="javascript: void(0);" onclick="javascript: MoveDown(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
-                <img src="../images/icons/down_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
-            </a>
-        </div>
+        <?php if($this->plan_shift->timetable->editable && !$this->plan_shift->includes_continuation): ?>
+        <a href="javascript: void(0);" onclick="javascript: MoveDown(event);" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>">
+            <img src="../images/icons/down_arrow.png" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" />
+        </a>
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> border-right text-nowrap" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
@@ -93,8 +89,10 @@
             $drop = "";
         }
     }
+    
+    if($this->plan_shift->timetable->editable):
     ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline fordrag"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
         <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
@@ -111,6 +109,7 @@
         </div>
         <?php endif; ?>
     </td>
+    <?php endif; ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?php
         if(!empty($this->edition['customer_id']) && !empty($this->edition['num_for_customer'])) {
@@ -141,62 +140,82 @@
             <div>
                 <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <?php if($this->plan_shift->shift_worktime > 12 && $this->plan_shift->is_last && $this->edition['type'] == PLAN_TYPE_PART && !$this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_EDITION && $this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue active">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
-                    <i class="fas fa-chevron-down notforedit"></i>
+                    <?php else: ?>
+                    <i class="fas fa-chevron-down"></i>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_PART && $this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue active">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemovePartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
-                    <i class="fas fa-chevron-down notforedit"></i>
+                    <?php else: ?>
+                    <i class="fas fa-chevron-down"></i>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
-                <?php if($this->edition['type'] == PLAN_TYPE_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
+                <?php if($this->edition['worktime'] > 12 && $this->edition['type'] == PLAN_TYPE_CONTINUATION && !$this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
-                <?php if($this->edition['type'] == PLAN_TYPE_PART_CONTINUATION && !$this->edition['has_continuation'] && $this->edition['worktime'] > 12): ?>
+                <?php if($this->edition['worktime'] > 12 && $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION && !$this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="AddChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_CONTINUATION && $this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue active">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
-                    <i class="fas fa-chevron-down notforedit"></i>
+                    <?php else: ?>
+                    <i class="fas fa-chevron-down"></i>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <?php if($this->edition['type'] == PLAN_TYPE_PART_CONTINUATION && $this->edition['has_continuation']): ?>
                 <div class="btn-group-toggle ml-1" data-toggle="buttons">
-                    <label class="btn btn-light btn-edition-continue active foredit">
+                    <?php if($this->plan_shift->timetable->editable): ?>
+                    <label class="btn btn-light btn-edition-continue active">
                         <input type="checkbox" style="height: 10px; width: 10px;" checked autocomplete="off" onchange="RemoveChildPartContinuation(<?=$this->edition['id'] ?>)"><i class="fas fa-chevron-down"></i>
                     </label>
-                    <i class="fas fa-chevron-down notforedit"></i>
+                    <?php else: ?>
+                    <i class="fas fa-chevron-down"></i>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
             </div>
@@ -399,13 +418,21 @@
         }
         ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell comment_invisible colorist_hidden"<?=$drop ?>>
+    <?php
+    $comment_invisible_class = "";
+    if($this->plan_shift->timetable->editable) {
+        $comment_invisible_class = " comment_invisible";
+    }
+    ?>
+    <td class="<?=$this->plan_shift->shift ?> showdropline comment_cell<?=$comment_invisible_class ?> colorist_hidden"<?=$drop ?>>
         <div class="d-flex justify-content-start">
-            <div class="pr-2 comment_pen foredit">
+            <?php if($this->plan_shift->timetable->editable): ?>
+            <div class="pr-2 comment_pen">
                 <a href="javascript: void(0);" onclick="EditComment(event);">
                     <image src="../images/icons/edit1.svg" title="Редактировать" />
                 </a>
             </div>
+            <?php endif; ?>
             <div class="comment_text"><?=$this->edition['comment'] ?></div>
         </div>
         <div class="d-none comment_input">
@@ -417,14 +444,14 @@
         </div>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right" style="position:relative;"<?=$drop ?>>
-        <?php if($this->edition['type'] == PLAN_TYPE_EVENT && (IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA)): ?>
+        <?php if($this->edition['type'] == PLAN_TYPE_EVENT && $this->plan_shift->timetable->editable): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>
         <div class="timetable_menu text-left">
             <div class="command">
                 <button type="button" class="btn btn-link h-25" style="font-size: 14px;" onclick="javascript: event.preventDefault(); DeleteEvent(<?=$this->edition['calculation_id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
             </div>
         </div>
-        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && (IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_STOREKEEPER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA)): ?>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && $this->plan_shift->timetable->editable): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
         <div class="timetable_menu text-left">
             <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Распечатать тех. карту</div></a></div>

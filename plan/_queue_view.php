@@ -26,7 +26,7 @@
                     <a class="black queue_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" /></a>
                     <div class="queue_menu text-left">
                         <div>
-                            <a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? "print_tm" : "techmap" ?>.php?id=<?=$row['calculation_id'] ?>"<?= IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? " target='_blank'" : "" ?>>
+                            <a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/<?= IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? "print_tm" : "techmap" ?>.php?id=<?=$row['calculation_id'] ?>"<?= IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA ? " target='_blank'" : "" ?>>
                                 <div class="command">
                                     <div style="display: inline; padding-right: 10px;"><img src="../images/icons/details.svg" /></div>Подробнее
                                 </div>

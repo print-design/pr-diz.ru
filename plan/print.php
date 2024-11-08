@@ -78,21 +78,9 @@ if(empty($work_id) || empty($machine_id)) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             .comment_invisible {
                 display: none;
             }
-            .notforedit {
-                display: none;
-            }
-            <?php else: ?>
-            th.fordrag, td.fordrag {
-                display: none;
-            }
-            .foredit {
-                display: none;
-            }
-            <?php endif; ?>
             
             <?php if(IsInRole(ROLE_NAMES[ROLE_STOREKEEPER])): ?>
             .storekeeper_hidden {
@@ -104,7 +92,7 @@ if(empty($work_id) || empty($machine_id)) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_COLORIST])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_COLORIST])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
             .planner_hidden {
                 display: none;
             }
