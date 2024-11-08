@@ -29,9 +29,7 @@
         <?php
         $key = $this->plan_shift->timetable->work_id.'_'.$this->plan_shift->timetable->machine_id.'_'.$this->plan_shift->date->format('Y-m-d').'_'.$this->plan_shift->shift;
         
-        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
-                && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->plan_shift->timetable->work_id == WORK_LAMINATION) 
-                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->plan_shift->timetable->work_id != WORK_LAMINATION)):
+        if($this->plan_shift->timetable->editable):
         ?>
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control" style="min-width: 100px;" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->plan_shift->timetable->dateTo->format('Y-m-d') ?>">
             <option value="">...</option>
@@ -56,9 +54,7 @@
         endif;
         
         if($this->plan_shift->timetable->work_id == WORK_PRINTING && ($this->plan_shift->timetable->machine_id == PRINTER_COMIFLEX || $this->plan_shift->timetable->machine_id == PRINTER_SOMA_OPTIMA)):
-        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
-                && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->plan_shift->timetable->work_id == WORK_LAMINATION) 
-                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->plan_shift->timetable->work_id != WORK_LAMINATION)):
+        if($this->plan_shift->timetable->editable):
         ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control mt-2" style="min-width: 100px;" data-work-id="<?=$this->plan_shift->timetable->work_id ?>" data-machine-id="<?=$this->plan_shift->timetable->machine_id ?>" data-date="<?=$this->plan_shift->date->format('Y-m-d') ?>" data-shift="<?=$this->plan_shift->shift ?>" data-from="<?=$this->plan_shift->timetable->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->plan_shift->timetable->dateTo->format('Y-m-d') ?>">
             <option value="">...</option>
@@ -90,9 +86,7 @@
     <?php
     $drop = "";
     
-    if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
-            && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->plan_shift->timetable->work_id == WORK_LAMINATION) 
-            && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->plan_shift->timetable->work_id != WORK_LAMINATION)) {
+    if($this->plan_shift->timetable->editable) {
         $drop = " ondrop='DropTimetable(event);' ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'";
         
         if($this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION) {

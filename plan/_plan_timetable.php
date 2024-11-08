@@ -8,6 +8,7 @@ class PlanTimetable {
     public $dateTo;
     public $work_id;
     public $machine_id;
+    public $editable = false;
     public $plan_dates = array();
     public $employees = array();
     public $workshifts1 = array();
@@ -20,6 +21,12 @@ class PlanTimetable {
         $this->machine_id = $machine_id;
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
+                
+        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
+                && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->work_id == WORK_LAMINATION) 
+                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->work_id != WORK_LAMINATION)) {
+            $this->editable = true;
+        }
         
         // Работники
         $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";

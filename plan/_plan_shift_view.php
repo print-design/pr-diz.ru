@@ -10,9 +10,7 @@
         <?php
         $key = $this->timetable->work_id.'_'.$this->timetable->machine_id.'_'.$this->date->format('Y-m-d').'_'.$this->shift;
         
-        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
-                && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->timetable->work_id == WORK_LAMINATION) 
-                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->timetable->work_id != WORK_LAMINATION)):
+        if($this->timetable->editable):
         ?>
         <select onchange="javascript: ChangeEmployee1($(this));" class="form-control small" data-work-id="<?=$this->timetable->work_id ?>" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->timetable->dateTo->format('Y-m-d') ?>">
             <option value="">...</option>
@@ -37,9 +35,7 @@
         endif;
         
         if($this->timetable->work_id == WORK_PRINTING && ($this->timetable->machine_id == PRINTER_COMIFLEX || $this->timetable->machine_id == PRINTER_SOMA_OPTIMA)):
-        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER]), ROLE_NAMES[ROLE_LAM_HEAD]) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
-                && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->timetable->work_id == WORK_LAMINATION) 
-                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->timetable->work_id != WORK_LAMINATION)):
+        if($this->timetable->editable):
         ?>
         <select onchange="javascript: ChangeEmployee2($(this));" class="form-control small mt-2" data-work-id="<?=$this->timetable->work_id ?>" data-machine-id="<?=$this->timetable->machine_id ?>" data-date="<?=$this->date->format('Y-m-d') ?>" data-shift="<?=$this->shift ?>" data-from="<?=$this->timetable->dateFrom->format('Y-m-d') ?>" data-to="<?=$this->timetable->dateTo->format('Y-m-d') ?>">
             <option value="">...</option>

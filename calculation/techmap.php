@@ -4,7 +4,7 @@ include './calculation.php';
 include './calculation_result.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_LAM_HEAD]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 

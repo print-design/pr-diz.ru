@@ -694,9 +694,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             
             EnableMenu();
             
-            <?php if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA)
-                    && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $work_id == WORK_LAMINATION) 
-                    && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $work_id != WORK_LAMINATION)): ?>
+            <?php if($timetable->editable): ?>
             // Скрытие/показ левой панели.
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').addClass('active');
