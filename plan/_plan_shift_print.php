@@ -26,8 +26,10 @@
     <td class="<?=$top.' '.$this->shift ?>"></td>
     <td class="<?=$top.' '.$this->shift ?>"></td>
     <td class="<?=$top.' '.$this->shift ?> storekeeper_hidden"></td>
-    <td class="<?=$top.' '.$this->shift ?> not_lam_head_hidden"></td>
-    <td class="<?=$top.' '.$this->shift ?> not_lam_head_hidden"></td>
+    <?php if(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->timetable->work_id == WORK_LAMINATION): ?>
+    <td class="<?=$top.' '.$this->shift ?>"></td>
+    <td class="<?=$top.' '.$this->shift ?>"></td>
+    <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden"></td>

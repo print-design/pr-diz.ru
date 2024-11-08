@@ -386,12 +386,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 display: none;
             }
             <?php endif; ?>
-            
-            <?php if(!IsInRole(ROLE_NAMES[ROLE_LAM_HEAD])): ?>
-            .not_lam_head_hidden {
-                display: none;
-            }
-            <?php endif; ?>
         </style>
     </head>
     <body>

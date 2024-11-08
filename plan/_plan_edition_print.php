@@ -64,7 +64,8 @@
         </div>
         <?php endif; ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> not_lam_head_hidden">
+    <?php if(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->plan_shift->timetable->work_id == WORK_LAMINATION): ?>
+    <td class="<?=$top.' '.$this->plan_shift->shift ?>">
         <?php
         if($this->edition['type'] != PLAN_TYPE_EVENT):
         $films_strings = GetFilmsString($this->edition['lamination'], $this->edition['film_name'], $this->edition['thickness'], $this->edition['individual_film_name'], $this->edition['individual_thickness'], $this->edition['width_1'], 
@@ -74,7 +75,8 @@
         <span class="text-nowrap"><?=$films_strings[0] ?></span> <span class="text-nowrap"><?=$films_strings[1] ?></span> <span class="text-nowrap"><?=$films_strings[2] ?></span>
         <?php endif; ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> not_lam_head_hidden"><?=$this->edition['lamination_roller_width'] ?></td>
+    <td class="<?=$top.' '.$this->plan_shift->shift ?>"><?=$this->edition['lamination_roller_width'] ?></td>
+    <?php endif; ?>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden">
         <?= $this->edition['samples_count'] ?>
     </td>
