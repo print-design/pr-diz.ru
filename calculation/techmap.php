@@ -1038,6 +1038,9 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                     if(empty($calculation->length)) {
                                         echo 'Нет данных по длине этикетки';
                                     }
+                                    elseif($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+                                        echo DisplayNumber((floatval($winding) * floatval($calculation->raport) / 1000) * floatval($calculation->number_in_raport), 0);
+                                    }
                                     else {
                                         echo DisplayNumber(floatval($winding) * floatval($calculation->length) / 1000, 0);
                                     }
