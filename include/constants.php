@@ -16,8 +16,8 @@ const ROLE_PACKER = 13;
 const ROLES = array(ROLE_ELECTROCARIST, ROLE_STOREKEEPER, ROLE_COLORIST, ROLE_MARKER, ROLE_MANAGER, ROLE_LAM_HEAD, ROLE_SCHEDULER, ROLE_AUDITOR, ROLE_CUTTER, ROLE_MANAGER_SENIOR, ROLE_TECHNOLOGIST, ROLE_PACKER);
 const ROLE_NAMES = array(ROLE_COLORIST => "colorist", ROLE_LAM_HEAD => "lam_head", ROLE_TECHNOLOGIST => "technologist", ROLE_MANAGER => "manager", ROLE_STOREKEEPER => "storekeeper", ROLE_ELECTROCARIST => "electrocarist", ROLE_CUTTER => "cutter", ROLE_MARKER => "marker", ROLE_AUDITOR => "auditor", ROLE_MANAGER_SENIOR => "manager-senior", ROLE_SCHEDULER => "scheduler", ROLE_PACKER => "packer");
 const ROLE_LOCAL_NAMES = array(ROLE_COLORIST => "Колорист", ROLE_LAM_HEAD => "Начальник участка ламинации", ROLE_TECHNOLOGIST => "Технолог", ROLE_MANAGER => "Менеджер", ROLE_STOREKEEPER => "Кладовщик", ROLE_ELECTROCARIST => "Карщик", ROLE_CUTTER => "Резчик раскрой", ROLE_MARKER => "Маркировщик", ROLE_AUDITOR => "Ревизор", ROLE_MANAGER_SENIOR => "Старший менеджер", ROLE_SCHEDULER => "Планировщик", ROLE_PACKER => "Упаковщица");
-const ROLE_TWOFACTOR = array(ROLE_COLORIST => 0, ROLE_LAM_HEAD => 0, ROLE_TECHNOLOGIST => 0, ROLE_MANAGER => 0, ROLE_STOREKEEPER => 0, ROLE_ELECTROCARIST => 0, ROLE_CUTTER => 0, ROLE_MARKER => 0, ROLE_AUDITOR => 0, ROLE_MANAGER_SENIOR => 0, ROLE_SCHEDULER => 0, ROLE_PACKER => 0);
-//const ROLE_TWOFACTOR = array(ROLE_COLORIST => 0, ROLE_LAM_HEAD => 1, ROLE_TECHNOLOGIST => 1, ROLE_MANAGER => 1, ROLE_STOREKEEPER => 1, ROLE_ELECTROCARIST => 0, ROLE_CUTTER => 0, ROLE_MARKER => 0, ROLE_AUDITOR => 0, ROLE_MANAGER_SENIOR => 1, ROLE_SCHEDULER => 0, ROLE_PACKER => 0);
+//const ROLE_TWOFACTOR = array(ROLE_COLORIST => 0, ROLE_LAM_HEAD => 0, ROLE_TECHNOLOGIST => 0, ROLE_MANAGER => 0, ROLE_STOREKEEPER => 0, ROLE_ELECTROCARIST => 0, ROLE_CUTTER => 0, ROLE_MARKER => 0, ROLE_AUDITOR => 0, ROLE_MANAGER_SENIOR => 0, ROLE_SCHEDULER => 0, ROLE_PACKER => 0);
+const ROLE_TWOFACTOR = array(ROLE_COLORIST => 0, ROLE_LAM_HEAD => 1, ROLE_TECHNOLOGIST => 1, ROLE_MANAGER => 1, ROLE_STOREKEEPER => 1, ROLE_ELECTROCARIST => 0, ROLE_CUTTER => 0, ROLE_MARKER => 0, ROLE_AUDITOR => 0, ROLE_MANAGER_SENIOR => 1, ROLE_SCHEDULER => 0, ROLE_PACKER => 0);
 
 // Единицы размера тиража
 const KG = 'kg';
@@ -85,8 +85,8 @@ const CUTTER_ATLAS = 101;
 const CUTTER_SOMA = 102;
 const CUTTER_ZTM_1 = 5;
 
-const CUTTERS = array(CUTTER_1, CUTTER_2, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS, CUTTER_ZTM_1);
-const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_2 => "Резка 2", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;", CUTTER_ZTM_1 => "ZTM 1");
+const CUTTERS = array(CUTTER_1, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS, CUTTER_ZTM_1, CUTTER_2);
+const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_2 => "ZTM 2", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;", CUTTER_ZTM_1 => "ZTM 1");
 
 // Резчики (пользователи) !!! Пользователя резки Атлас пока удалили !!!
 const CUTTER_USER_1 = "cut1";
