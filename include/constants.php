@@ -78,27 +78,27 @@ const LAMINATOR_NAMES = array(LAMINATOR_SOLVENT => 'Ламинатор соль�
 
 // Резки
 const CUTTER_1 = 1;
-const CUTTER_2 = 2;
 const CUTTER_3 = 3;
 const CUTTER_4 = 4;
 const CUTTER_ATLAS = 101;
 const CUTTER_SOMA = 102;
 const CUTTER_ZTM_1 = 5;
+const CUTTER_ZTM_2 = 2;
 
-const CUTTERS = array(CUTTER_1, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS, CUTTER_ZTM_1, CUTTER_2);
-const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_2 => "ZTM 2", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;", CUTTER_ZTM_1 => "ZTM 1");
+const CUTTERS = array(CUTTER_1, CUTTER_3, CUTTER_4, CUTTER_SOMA, CUTTER_ATLAS, CUTTER_ZTM_1, CUTTER_ZTM_2);
+const CUTTER_NAMES = array(CUTTER_1 => "Резка 1", CUTTER_3 => "Резка 3", CUTTER_4 => "Резка 4", CUTTER_ATLAS => "Резка &laquo;Атлас&raquo;", CUTTER_SOMA => "Резка &laquo;Сома&raquo;", CUTTER_ZTM_1 => "ZTM 1", CUTTER_ZTM_2 => "ZTM 2");
 
 // Резчики (пользователи) !!! Пользователя резки Атлас пока удалили !!!
 const CUTTER_USER_1 = "cut1";
-const CUTTER_USER_2 = "cut2";
 const CUTTER_USER_3 = "cut3";
 const CUTTER_USER_1600 = "cut1600";
 const CUTTER_USER_SOMA = "somacut";
 const CUTTER_USER_ZTM_1 = "ztm1";
+const CUTTER_USER_ZTM_2 = "ztm2";
 
-const CUTTER_USERS = array(CUTTER_USER_1, CUTTER_USER_2, CUTTER_USER_3, CUTTER_USER_1600, CUTTER_USER_SOMA, CUTTER_USER_ZTM_1);
-const CUTTER_USER_IDS = array(CUTTER_USER_1 => CUTTER_1, CUTTER_USER_2 => CUTTER_2, CUTTER_USER_3 => CUTTER_3, CUTTER_USER_1600 => CUTTER_4, CUTTER_USER_SOMA => CUTTER_SOMA, CUTTER_USER_ZTM_1 => CUTTER_ZTM_1);
-const CUTTER_USER_NAMES = array(CUTTER_USER_1 => "Резка 1", CUTTER_USER_2 => "Резка 2", CUTTER_USER_3 => "Резка 3", CUTTER_USER_1600 => "Резка 1600", CUTTER_USER_SOMA => "Резка Сома", CUTTER_USER_ZTM_1 => "ZTM 1");
+const CUTTER_USERS = array(CUTTER_USER_1, CUTTER_USER_3, CUTTER_USER_1600, CUTTER_USER_SOMA, CUTTER_USER_ZTM_1, CUTTER_USER_ZTM_2);
+const CUTTER_USER_IDS = array(CUTTER_USER_1 => CUTTER_1, CUTTER_USER_3 => CUTTER_3, CUTTER_USER_1600 => CUTTER_4, CUTTER_USER_SOMA => CUTTER_SOMA, CUTTER_USER_ZTM_1 => CUTTER_ZTM_1, CUTTER_USER_ZTM_2 => CUTTER_ZTM_2);
+const CUTTER_USER_NAMES = array(CUTTER_USER_1 => "Резка 1", CUTTER_USER_3 => "Резка 3", CUTTER_USER_1600 => "Резка 1600", CUTTER_USER_SOMA => "Резка Сома", CUTTER_USER_ZTM_1 => "ZTM 1", CUTTER_USER_ZTM_2 => "ZTM 2");
 
 // Типы работы
 const WORK_TYPE_NOPRINT = 1;

@@ -124,9 +124,18 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
                 }
             }
             
-            // Для резки ZTM1 работу начинаем с 8 июня 2024 г.
+            // Для резки ZTM1 работу начинаем с 8 июля 2024 г.
             if($machine_id == CUTTER_ZTM_1) {
                 $start_work_date->setDate(2024, 7, 8);
+                
+                if($date_from < $start_work_date) {
+                    $date_from = $start_work_date;
+                }
+            }
+            
+            // Для резки ZTM2 работу начинаем с 10 декабря 2024 г.
+            if($machine_id == CUTTER_ZTM_2) {
+                $start_work_date->setDate(2024, 12, 10);
                 
                 if($date_from < $start_work_date) {
                     $date_from = $start_work_date;
