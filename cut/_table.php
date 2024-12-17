@@ -287,7 +287,8 @@
                 . "from calculation_take_stream cts "
                 . "left join calculation_take ct on cts.calculation_take_id = ct.id "
                 . "where ct.calculation_id = $id "
-                . "group by cts.calculation_take_id";
+                . "group by cts.calculation_take_id "
+                . "order by ct.timestamp";
     $grabber = new Grabber($sql);
     $takes = $grabber->result;
     $take_ordinal = 0;
