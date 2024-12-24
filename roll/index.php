@@ -167,7 +167,10 @@ $total_weight = $row['total_weight'];
                     $orderby = "";
                     
                     if(array_key_exists('order', $_REQUEST)) {
-                        $orderby = "rch.cell asc, ";
+                        $orderby = "length(regexp_substr(trim(rch.cell), '^[[:digit:]]')) desc, "
+                                . "cast(regexp_substr(trim(rch.cell), '^[[:digit:]]+') as unsigned) asc, "
+                                . "regexp_substr(rch.cell, '[[:alpha:]]') asc, "
+                                . "cast(regexp_substr(trim(rch.cell), '[[:digit:]]+$') as unsigned) asc, ";
                     }
                     
                     // Выборка
