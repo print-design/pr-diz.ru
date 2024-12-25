@@ -239,10 +239,9 @@ $total_weight = $row[0];
                     $orderby = "";
                     
                     if(array_key_exists('order', $_REQUEST)) {
-                        $orderby = "length(regexp_substr(trim(cell), '^[[:digit:]]')) desc, "
-                                . "cast(regexp_substr(trim(cell), '^[[:digit:]]+') as unsigned) asc, "
-                                . "regexp_substr(cell, '[[:alpha:]]') asc, "
-                                . "cast(regexp_substr(trim(cell), '[[:digit:]]+$') as unsigned) asc, ";
+                        $orderby = "if(cast(trim(cell) as unsigned) > 0, 1, 0) desc, "
+                                . "cast(trim(cell) as unsigned) asc, "
+                                . "trim(cell) collate utf8_general_ci asc, ";
                     }
                     
                     $sql = "select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
