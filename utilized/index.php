@@ -239,8 +239,9 @@ $total_weight = $row[0];
                     $orderby = "";
                     
                     if(array_key_exists('order', $_REQUEST)) {
-                        $orderby = "if(cast(trim(cell) as unsigned) > 0, 1, 0) desc, "
-                                . "cast(trim(cell) as unsigned) asc, "
+                        $orderby = "if(cast(replace(cell, ' ', '') as unsigned) > 0, 1, 0) desc, "
+                                . "substring(replace(cell, ' ', ''), length(cast(replace(cell, ' ', '') as unsigned)) + 1, 1) collate utf8_general_ci asc, "
+                                . "cast(replace(cell, ' ', '') as unsigned) asc, "
                                 . "trim(cell) collate utf8_general_ci asc, ";
                     }
                     
