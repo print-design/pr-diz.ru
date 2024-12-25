@@ -166,11 +166,17 @@ $total_weight = $row[0];
                     
                     if(array_key_exists('order', $_REQUEST)) {
                         $orderby = "if(cast(trim(cell) as unsigned) > 0, 1, 0) desc, "
-                                . "substring(trim(cell), length(convert(cast(trim(cell) as unsigned), char))), "
+                                . "substring(trim(cell), length(cast(trim(cell) as unsigned)) + 1) collate utf8_general_ci asc, "
+                                //. "substring(trim(cell), 2), "
+                                //. "substring(trim(cell), length(cast(trim(cell) as unsigned))), "
+                                //. "substring(trim(cell), 3), "
+                                //. "substring(trim(cell), length(cast(trim(cell) as unsigned))), "
+                                //. "substring(trim(cell), 1), "
+                                //. "substring(trim(cell), length(convert(cast(trim(cell) as unsigned), char))), "
                                 //. "substring(trim(cell), length(convert(12, char))), "
                                 //. "substring(trim(cell), length(cast('cast(trim(cell) as unsigned)' as varchar))), "
-                                . "cast(trim(cell) as unsigned) asc, "
-                                . "trim(cell) collate utf8_general_ci asc, ";
+                                //. "cast(trim(cell) as unsigned) asc, "
+                                //. "trim(cell) collate utf8_general_ci asc, ";
                         /*$orderby = "if(cast(trim(cell) as unsigned) > 0, 1, 0) desc, "
                                 . "substring(trim(cell), 2), "
                                 . "cast(trim(cell) as unsigned) asc, "
