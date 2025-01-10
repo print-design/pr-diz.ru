@@ -25,9 +25,7 @@ class PlanTimetable {
                 
         if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
                 && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->work_id == WORK_LAMINATION) 
-                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->work_id != WORK_LAMINATION) 
-                && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $this->work_id == WORK_PRINTING) 
-                && !(IsInRole(ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]) && $this->work_id != WORK_PRINTING)) {
+                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->work_id != WORK_LAMINATION)) {
             $this->editable = true;
         }
         
