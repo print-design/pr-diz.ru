@@ -53,7 +53,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <?php
     endif;
     // План
-    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))):
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))):
     ?>
     <a href="<?=APPLICATION ?>/plan/" class="left_bar_item ui_tooltip right<?=$plan_class ?>" title="План"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
@@ -85,7 +85,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     ?>
     <a href="<?=APPLICATION ?>/user/" class="left_bar_item ui_tooltip right<?=$admin_class ?>" title="Админка"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
     <?php
-    elseif(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD]))):
+    elseif(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]))):
     ?>
     <a href="<?=APPLICATION ?>/admin/plan_employees.php" class="left_bar_item ui_tooltip right<?=$admin_class ?>" title="Админка"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
     <?php
