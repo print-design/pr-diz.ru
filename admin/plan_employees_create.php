@@ -87,9 +87,7 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                                 $selected = '';
                                 if(filter_input(INPUT_POST, 'role_id') == $role) $selected = " selected='selected'";
                             if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $role == PLAN_ROLE_LAMINATE) 
-                                    && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $role != PLAN_ROLE_LAMINATE) 
-                                    && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && ($role == PLAN_ROLE_PRINT || $role == PLAN_ROLE_ASSISTANT)) 
-                                    && !(IsInRole(ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]) && $role != PLAN_ROLE_PRINT && $role != PLAN_ROLE_ASSISTANT)):
+                                    && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $role != PLAN_ROLE_LAMINATE)):
                             ?>
                             <option value="<?=$role ?>"<?=$selected ?>><?=PLAN_ROLE_NAMES[$role] ?></option>
                             <?php
