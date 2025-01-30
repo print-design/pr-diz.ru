@@ -102,8 +102,8 @@ foreach($streams as $row):
         $radius_class = "first_radius";
     }
 ?>
-<div class="calculation_stream" data-id="<?=$stream_id ?>" ondragover="DragOver(event);" ondrop="Drop(event);">
-    <div class="d-flex justify-content-between mb-3">
+<div class="calculation_stream" data-id="<?=$stream_id ?>" ondragover="DragOver(event);" ondrop="Drop(event);" style="border-radius: 10px; margin-bottom: 3px; padding-top: 5px; padding-bottom: 5px;">
+    <div class="d-flex justify-content-between mb-1">
         <div class="d-flex justify-content-sm-start">
             <div class="mr-3" draggable="true" data-id="<?=$stream_id ?>" ondragstart="DragStart(event);" ondragend="DragEnd();">
                 <img src="../images/icons/double-vertical-dots.svg" draggable="false" />
@@ -135,7 +135,7 @@ foreach($streams as $row):
             <div class="col-3">
                 <div class="form-group">
                     <label for="weight">Масса катушки</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <input type="text" class="form-control" name="weight" value="<?=$stream_weight ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="KeyUpFloatValue(event);" onchange="ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">кг</span>
@@ -146,7 +146,7 @@ foreach($streams as $row):
             <div class="col-3">
                 <div class="form-group">
                     <label for="length">Метраж</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <input type="text" class="form-control <?=$length_class ?>" name="length" value="<?=$stream_length ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="LengthFill(event); KeyUpFloatValue(event);" onchange="LengthFill(event); ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">м</span>
@@ -164,7 +164,7 @@ foreach($streams as $row):
             <div class="col-3">
                 <div class="form-group">
                     <label for="radius">Радиус от вала</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <input type="text" class="form-control <?=$radius_class ?>" name="radius" value="<?=$stream_radius ?>" required="required" autocomplete="off" onkeydown="return KeyDownFloatValue(event);" onkeyup="RadiusFill(event); KeyUpFloatValue(event);" onchange="RadiusFill(event); ChangeFloatValue(event);" />
                         <div class="input-group-append">
                             <span class="input-group-text">мм</span>

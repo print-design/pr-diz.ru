@@ -289,6 +289,13 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 .print_only {
                     display: none;
                 }
+                
+                /* ------------------------------------- */
+                /* Сжатие страницы редактирования ручьёв */
+                .form-group {
+                    margin-bottom: 0;
+                }
+                /* ------------------------------------- */
             }
             
             .modal-content {
