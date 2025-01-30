@@ -129,13 +129,9 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             <div class="row">
                 <div class="col-8">
                     <a class="btn btn-light backlink" href="<?= APPLICATION.'/cut/?machine_id='.$machine_id ?>">К списку резок</a>
-                    <div class="row">
-                        <div class="col-6">
-                            <h1><?= $calculation->name ?></h1>
-                            <div class="name"><?=$calculation->customer ?></div>
-                            <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
-                        </div>
-                    </div>
+                    <h1><?=$calculation->name ?></h1>
+                    <div class="name"><?=$calculation->customer ?></div>
+                    <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
                     <div class="row">
                         <div class="col-6">
                             <table>

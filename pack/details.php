@@ -187,14 +187,10 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             ?>
             <div class="row">
                 <div class="col-8">
-                    <div class="row">
-                        <div class="col-6">
-                            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if(!empty($calculation->status_id) && $calculation->status_id != ORDER_STATUS_PACK_READY) echo BuildQueryRemove('id'); ?>">К списку</a>
-                            <h1><?=$calculation->name ?></h1>
-                            <div class="name"><?=$calculation->customer ?></div>
-                            <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
-                        </div>
-                    </div>
+                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if(!empty($calculation->status_id) && $calculation->status_id != ORDER_STATUS_PACK_READY) echo BuildQueryRemove('id'); ?>">К списку</a>
+                    <h1><?=$calculation->name ?></h1>
+                    <div class="name"><?=$calculation->customer ?></div>
+                    <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
                     <div class="row mb-4">
                         <div class="col-6">
                             <?php include '../include/order_status_details.php'; ?>

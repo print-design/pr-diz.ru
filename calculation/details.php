@@ -260,7 +260,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                 }
                 ?>
                 <a class="btn btn-light backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">К списку</a>
-                <h1><?= $calculation->name ?></h1>
+                <h1><?=$calculation->name ?></h1>
                 <h2>№<?=$calculation->customer_id."-".$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></h2>
                 <?php
                 include '../include/order_status_details.php';
