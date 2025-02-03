@@ -95,8 +95,8 @@ while($row = $fetcher->Fetch()) {
                     <td style="width: 35%;<?=$no_border_top ?>"><?=$employee['first_name'] ?></td>
                     <td style="width: auto;<?=$no_border_top ?>"><?=$employee['phone'] ?></td>
                     <td class="text-right switch" style="width: 80px;<?=$no_border_top ?>">
-                        <?php if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && $role == PLAN_ROLE_LAMINATE) 
-                                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $role != PLAN_ROLE_LAMINATE)): ?>
+                        <?php if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && ($role == PLAN_ROLE_LAMINATE || $role == PLAN_ROLE_CUT)) 
+                                && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $role != PLAN_ROLE_LAMINATE && $role != PLAN_ROLE_CUT)): ?>
                         <input type="checkbox" data-id="<?=$employee['id'] ?>"<?=$employee['active'] ? " checked='checked'" : "" ?> />
                         <?php endif; ?>
                     </td>

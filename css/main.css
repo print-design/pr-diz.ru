@@ -149,9 +149,9 @@ li#nav-user a.dropdown-toggle::after {
 }
 
 #nav-role {
-    position: absolute;
-    top: 25px;
-    left: 0px;
+    position: relative;
+    top: 0;
+    left: 0;
     font-size: smaller;
 }
 
