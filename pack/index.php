@@ -72,7 +72,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             <h1>Готовые резки&nbsp;&nbsp;<span style="font-size: smaller; color: #999999;"><?=$pager_total_count ?></span></h1>
             <table class="table typography">
                 <tr>
-                    <th>Дата<i class='fas fa-arrow-down ml-2' style="color: #BBBBBB;"></i></th>
+                    <th class="text-nowrap">Дата<i class='fas fa-arrow-down ml-2' style="color: #BBBBBB;"></i></th>
                     <th>№</th>
                     <th>Заказ</th>
                     <th>Метраж</th>
