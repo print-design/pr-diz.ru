@@ -105,8 +105,8 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
         <td class="pl-1 font-weight-bold"><?= sprintf('%03d', $stream_id) ?></td>
     </tr>
     <tr>
-        <td>Дата</td>
-        <td class="pl-1 font-weight-bold"><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y H:i') ?></td>
+        <td>Резка</td>
+        <td class="pl-1 font-weight-bold"><?= $stream_cutter.' '.$dt_printed->format('d.m.Y H:i') ?></td>
     </tr>
     <?php if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN): ?>
     <tr>
@@ -142,8 +142,8 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
         </td>
     </tr>
     <tr>
-        <td class="pb-2">Резка</td>
-        <td class="pb-2"><?= $stream_cutter.' '.$dt_printed->format('d.m.Y H:i') ?></td>
+        <td class="pb-2">Дата</td>
+        <td class="pb-2"><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y H:i') ?></td>
     </tr>
 </table>
 <div class="d-flex justify-content-between">

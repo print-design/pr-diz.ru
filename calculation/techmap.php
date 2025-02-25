@@ -1555,7 +1555,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     </div>
                     <?php endif; ?>
                     <div class="row">
-                        <div class="col-6 d-flex justify-content-between mt-3">
+                        <div class="col-6 d-flex justify-content-start mt-3">
                             <div>
                                 <?php
                                 $submit_class = " d-none";
@@ -1567,8 +1567,8 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                     $plan_class = "";
                                 }
                                 ?>
-                                <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
-                                <button type="submit" name="plan_submit" id="plan_submit" class="btn btn-dark draft<?=$plan_class ?>" style="width: 175px;">Поставить в план</button>
+                                <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark mr-4 draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
+                                <button type="submit" name="plan_submit" id="plan_submit" class="btn btn-dark mr-4 draft<?=$plan_class ?>" style="width: 175px;">Поставить в план</button>
                             </div>
                             <div>
                                 <?php
