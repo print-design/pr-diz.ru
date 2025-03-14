@@ -197,7 +197,7 @@
     $length = 0;
     
     // Количество катушек, суммарный вес и суммарная длина роликов из съёмов.
-    $sql = "select count(id) bobbins, sum(weight) weight, sum(length) length from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
+    $sql = "select count(id) bobbins, sum(weight) weight, sum(length) length from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id) and weight > 0 and length > 0";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $bobbins = $row['bobbins'];
@@ -206,7 +206,7 @@
     }
     
     // Количество катушек, суммарный вес и суммарная длина роликов не из съёмов.
-    $sql = "select count(id) bobbins, sum(weight) weight, sum(length) length from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
+    $sql = "select count(id) bobbins, sum(weight) weight, sum(length) length from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id) and weight > 0 and length > 0";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $bobbins += $row['bobbins'];
@@ -227,9 +227,9 @@
         </tr>
         <?php
         $sql = "select cs.id, cs.name, "
-                . "ifnull((select count(id) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
+                . "ifnull((select count(id) from calculation_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
                 . "+ "
-                . "ifnull((select count(id) from calculation_not_take_stream where calculation_stream_id = cs.id), 0) "
+                . "ifnull((select count(id) from calculation_not_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
                 . "bobbins, "
                 . "ifnull((select sum(weight) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
                 . "+ "
