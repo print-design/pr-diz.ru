@@ -148,7 +148,7 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
 </table>
 <div class="d-flex justify-content-between">
     <div class="mb-2" style="font-size: small;">
-        Гарантия хранения 12 мес.<br />ТУ 2245-001-218273282-2003
+        Гарантия хранения 12 мес.<br />ТУ 22.29.21-001-10785166-2025
     </div>
     <div class="d-flex justify-content-end">
         <div class="mr-1 position-relative" style="width: 23px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -93px; left: -23px; width: 150px; clip: rect(93px, 43px, 113px, 23px);" /></div>
