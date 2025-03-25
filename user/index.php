@@ -344,7 +344,7 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
             function AddPoint(sender) {
                 let number = sender.attr('data-number');
                 
-                if(number != previous_point) {
+                if(number !== previous_point) {
                     let figure_val = $('input#graph_key').val();
                     $('input#graph_key').val(figure_val + sender.attr('data-number'));
                     

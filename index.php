@@ -45,6 +45,9 @@ and open the template in the editor.
             ?>
             <h1>Принт-Дизайн</h1>
             <h2>Управление ресурсами предприятия</h2>
+            <?php if(!LoggedIn()): ?>
+            <a href="mobile.php" title="Мобильная версия" class="btn btn-dark" style="height: 12rem; padding: 2rem; font-size: 8rem;"><i class="fas fa-mobile-alt"></i></a>
+            <?php endif; ?>
         </div>
         <?php
         include 'include/footer.php';
