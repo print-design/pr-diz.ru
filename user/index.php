@@ -24,6 +24,7 @@ $user_change_password_confirm_valid = '';
 $user_change_password_confirm_message = '';
 
 $user_change_password_confirm_fio = '';
+$user_graph_key_confirm_fio = '';
 
 if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     if(empty(filter_input(INPUT_POST, "user_change_password_old"))) {
@@ -74,6 +75,34 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
         $error_message = $executer->error;
     }
 }
+
+// Обработка отправки формы - задание графического ключа
+if(null !== filter_input(INPUT_POST, 'user_graph_key_id')) {
+    $graph_key_id = filter_input(INPUT_POST, 'user_graph_key_id');
+    $graph_key = filter_input(INPUT_POST, 'graph_key');
+    
+    // Проверяем, имеется ли такой графический ключ в базе
+    $sql = "select count(id) from user where graph_key = '$graph_key'";
+    $fetcher = new Fetcher($sql);
+    $row = $fetcher->Fetch();
+    if($row[0] > 0) {
+        $form_valid = false;
+    }
+    
+    if($form_valid) {
+        $sql = "update user set graph_key = '$graph_key' where id = $graph_key_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
+// Обработка отправки формы - удаление графического ключа
+if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
+    $user_graph_key_delete_id = filter_input(INPUT_POST, 'user_graph_key_delete_id');
+    $sql = "update user set graph_key = '' where id = $user_graph_key_delete_id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -81,6 +110,44 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
         <?php
         include '../include/head.php';
         ?>
+        <style>
+            .figure-point {
+                border: solid .2rem blue;
+                height: 5.2rem;
+                width: 5.2rem;
+                position: absolute;
+                text-align: center;
+            }
+            
+            .figure-line {
+                background-color: green;
+                border-radius: .5rem;
+            }
+            
+            #figure-area {
+                position: relative;
+                height: 16rem;
+                width: 16rem;
+            }
+            
+            #fp1 { top: 0rem; left: 0rem; }
+            
+            #fp2 { top: 0rem; left: 5rem; }
+            
+            #fp3 { top: 0rem; left: 10rem; }
+            
+            #fp4 { top: 5rem; left: 0rem; }
+            
+            #fp5 { top: 5rem; left: 5rem; }
+            
+            #fp6 { top: 5rem; left: 10rem; }
+            
+            #fp7 { top: 10rem; left: 0rem; }
+            
+            #fp8 { top: 10rem; left: 5rem; }
+            
+            #fp9 { top: 10rem; left: 10rem; }
+        </style>
     </head>
     <body>
         <?php
@@ -121,6 +188,44 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 </div>
             </div>
         </div>
+        <div id="user_graph_key" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">                    
+                    <div class="modal-header">
+                        <div style="font-size: xx-large;">Графический ключ</div>
+                        <button type="button" class="close user_graph_key_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">                        
+                        <div style="font-size: x-large;">Сотрудник: <span id="user_graph_key_fio"><?=$user_graph_key_confirm_fio ?></span></div>
+                        <?php if(null !== filter_input(INPUT_POST, 'user_graph_key_id') && !$form_valid): ?>
+                        <div class='alert alert-danger'>Этот ключ уже задан другому пользователю</div>
+                        <?php endif; ?>
+                        <div id="figure-area" class="mt-3">
+                            <div class="figure-point" id="fp1"><div class="figure-drag" data-number="1" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp2"><div class="figure-drag" data-number="2" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp3"><div class="figure-drag" data-number="3" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp4"><div class="figure-drag" data-number="4" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp5"><div class="figure-drag" data-number="5" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp6"><div class="figure-drag" data-number="6" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp7"><div class="figure-drag" data-number="7" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp8"><div class="figure-drag" data-number="8" style="width: 100%; height: 100%;"></div></div>
+                            <div class="figure-point" id="fp9"><div class="figure-drag" data-number="9" style="width: 100%; height: 100%;"></div></div>
+                        </div>
+                        <form method="post" id="graph_key_form">
+                            <input type="hidden" id="user_graph_key_id" name="user_graph_key_id" value="<?= filter_input(INPUT_POST, 'user_graph_key_id') ?>" />
+                            <input type="hidden" name="graph_key" id="graph_key" />
+                        </form>
+                    </div>
+                    <div class="modal-footer" style="justify-content: flex-start;">
+                        <form method="post" id="graph_key_delete_form">
+                            <input type="hidden" id="user_graph_key_delete_id" name="user_graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'user_graph_key_delete_id') ?>" />
+                            <button type="submit" class="btn btn-primary" id="user_graph_key_delete_submit" name="user_graph_key_delete_submit">Удалить ключ</button>
+                            <button type="button" class="btn user_graph_key_dismiss" data-dismiss="modal">Отменить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid">
             <?php
             if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid && empty($error_message)) {
@@ -149,12 +254,13 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                         <th style="border-top: 0;">E-Mail</th>
                         <th style="border-top: 0;">Телефон</th>
                         <th style="width: 80px; border-top: 0;">Пароль</th>
+                        <th style="border-top: 0;">Граф.<br />ключ</th>
                         <th style="width: 80px; border-top: 0;">Активный</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select id, role_id, first_name, last_name, username, email, phone, active from user order by first_name asc";
+                    $sql = "select id, role_id, first_name, last_name, username, email, phone, active, graph_key from user order by first_name asc";
                     $fetcher = new Fetcher($sql);
                     $error_message = $fetcher->error;
                     
@@ -169,6 +275,11 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                         <td class='text-right'>
                             <button type="button" class="btn btn-link user_change_password_open" data-id="<?=$row['id'] ?>" data-fio="<?=$row['last_name'].' '.$row['first_name'] ?>" data-toggle="modal" data-target="#user_change_password">
                                 <image src='../images/icons/edit.svg' />
+                            </button>
+                        </td>
+                        <td class="text-right">
+                            <button type="button" class="btn btn-link user_graph_key_open" data-id="<?=$row['id'] ?>" data-fio="<?=$row['last_name'].' '.$row['first_name'] ?>" data-graph-key="<?=$row['graph_key'] ?>" data-toggle="modal" data-target="#user_graph_key">
+                                <i class="fas fa-th"<?= empty($row['graph_key']) ? '' : " style='font-size: x-large;'" ?>></i>
                             </button>
                         </td>
                         <td class='text-right switch'>
@@ -199,6 +310,26 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 $('.is-invalid').removeClass('is-invalid');
             });
             
+            // Заполнение данных о пользователе при открытии формы графического ключа
+            $('.user_graph_key_open').click(function() {
+                $('#user_graph_key_id').val($(this).attr('data-id'));
+                $('#user_graph_key_delete_id').val($(this).attr('data-id'));
+                $('#user_graph_key_fio').text($(this).attr('data-fio'));
+                if($(this).attr('data-graph-key').length === 0) {
+                    $('#user_graph_key_delete_submit').addClass('d-none');
+                }
+                $(document).trigger('keydown'); // чтобы обнулить защиту от двойного нажатия
+            });
+            
+            // Удаление данных о пользователе при закрытии формы графического ключа
+            $('.user_graph_key_dismiss').click(function() {
+                $('#user_graph_key_id').val('');
+                $('#user_graph_key_delete_id').val('');
+                $('#user_graph_key_fio').text('');
+                $('#user_graph_key_delete_submit').removeClass('d-none');
+                $('.is-invalid').removeClass('is-invalid');
+            });
+            
             // Активирование / деактивирование пользователя
             $(".switch input[type='checkbox']").change(function() {
                 $.ajax({ url: "_user.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
@@ -207,9 +338,93 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
                 });
             });
             
+            // Рисование графического ключа
+            previous_point = 0;
+            
+            function AddPoint(sender) {
+                let number = sender.attr('data-number');
+                
+                if(number != previous_point) {
+                    let figure_val = $('input#graph_key').val();
+                    $('input#graph_key').val(figure_val + sender.attr('data-number'));
+                    
+                    
+                    let figure_area_top = $('#figure-area').offset().top;
+                    let figure_area_left = $('#figure-area').offset().left;
+                    
+                    let current_width = $('#fp' + number).width();
+                    let current_height = $('#fp' + number).height();
+                    
+                    if(previous_point > 0) {
+                        previous_top = $('#fp' + previous_point).offset().top - figure_area_top + (current_height / 2) - (current_height / 8);
+                        current_top = $('#fp' + number).offset().top - figure_area_top + (current_height / 2) - (current_height / 8);
+                        previous_left = $('#fp' + previous_point).offset().left - figure_area_left + (current_width / 2) - (current_width / 8);
+                        current_left = $('#fp' + number).offset().left - figure_area_left + (current_width / 2) - (current_width / 8);
+                        
+                        line_top = previous_top < current_top ? previous_top : current_top;
+                        line_left = previous_left < current_left ? previous_left : current_left;
+                        line_width = Math.abs(previous_point - number) > 2 ? current_width / 4 : current_width + (current_width / 4);
+                        line_height = Math.abs(previous_point - number) > 2 ? current_height + (current_height / 4) : current_height / 4;
+                        
+                        $('#figure-area').append($("<div class='figure-line' style='position: absolute; " + 
+                                "top: " + line_top + "px;" + 
+                                "left: " + line_left + "px;" + 
+                                "width: " + line_width + "px;" + 
+                                "height: " + line_height + "px;'>"));
+                    }
+                    
+                    previous_point = sender.attr('data-number');
+                }
+            }
+            
+            $(document).ready(function(){
+                $('.figure-drag').on('mousedown', function() {
+                    if(event.which === 1) {
+                        AddPoint($(this));
+                    }
+                });
+                
+                $('.figure-drag').on('mouseenter', function(event) {
+                    if(event.which === 1) {
+                        AddPoint($(this));
+                    }
+                });
+                
+                $('.figure-drag').on('mouseup', function() {
+                    if(event.which === 1) {
+                        $('form#graph_key_form').submit();
+                    }
+                });
+                
+                $('.modal-body').on('mouseup', function() {
+                    if(event.which === 1 && $('form#graph_key_form').length) {
+                        $('form#graph_key_form').submit();
+                    }
+                });
+                
+                current_point = 0;
+                
+                $('.figure-drag').on('touchmove', function(event) {
+                    target = document.elementFromPoint(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+                    if($(target).attr('data-number') !== current_point && $(target).attr('data-number') !== undefined) {
+                        AddPoint($(target));
+                        current_point = $(target).attr('data-number');
+                    }
+                });
+                
+                $('.figure-drag').on('touchend', function() {
+                    $('form#graph_key_form').submit();
+                });
+            });
+            
             // Открытие формы изменения пароля, если изменение пароля не было удачным
             <?php if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && !$form_valid): ?>
             $('#user_change_password').modal('show');
+            <?php endif; ?>
+                
+            // Открытие формы задания графического ключа, если задание ключа не было удачным
+            <?php if(null !== filter_input(INPUT_POST, 'user_graph_key_id') && !$form_valid): ?>
+            $('#user_graph_key').modal('show');
             <?php endif; ?>
         </script>
     </body>
