@@ -24,7 +24,7 @@ $user_change_password_confirm_valid = '';
 $user_change_password_confirm_message = '';
 
 $user_change_password_confirm_fio = '';
-$user_graph_key_confirm_fio = '';
+$graph_key_confirm_fio = '';
 
 if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     if(empty(filter_input(INPUT_POST, "user_change_password_old"))) {
@@ -77,8 +77,8 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
 }
 
 // Обработка отправки формы - задание графического ключа
-if(null !== filter_input(INPUT_POST, 'user_graph_key_id')) {
-    $graph_key_id = filter_input(INPUT_POST, 'user_graph_key_id');
+if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
+    $graph_key_id = filter_input(INPUT_POST, 'graph_key_id');
     $graph_key = filter_input(INPUT_POST, 'graph_key');
     
     // Проверяем, имеется ли такой графический ключ в базе
@@ -97,9 +97,9 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_id')) {
 }
 
 // Обработка отправки формы - удаление графического ключа
-if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
-    $user_graph_key_delete_id = filter_input(INPUT_POST, 'user_graph_key_delete_id');
-    $sql = "update user set graph_key = '' where id = $user_graph_key_delete_id";
+if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
+    $graph_key_delete_id = filter_input(INPUT_POST, 'graph_key_delete_id');
+    $sql = "update user set graph_key = '' where id = $graph_key_delete_id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
@@ -188,16 +188,16 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
                 </div>
             </div>
         </div>
-        <div id="user_graph_key" class="modal fade show">
+        <div id="graph_key_modal" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">                    
                     <div class="modal-header">
                         <div style="font-size: xx-large;">Графический ключ</div>
-                        <button type="button" class="close user_graph_key_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        <button type="button" class="close graph_key_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
-                    <div class="modal-body">                        
-                        <div style="font-size: x-large;">Сотрудник: <span id="user_graph_key_fio"><?=$user_graph_key_confirm_fio ?></span></div>
-                        <?php if(null !== filter_input(INPUT_POST, 'user_graph_key_id') && !$form_valid): ?>
+                    <div class="modal-body graph-key-content">
+                        <div style="font-size: x-large;">Сотрудник: <span id="graph_key_fio"><?=$graph_key_confirm_fio ?></span></div>
+                        <?php if(null !== filter_input(INPUT_POST, 'graph_key_id') && !$form_valid): ?>
                         <div class='alert alert-danger'>Этот ключ уже задан другому пользователю</div>
                         <?php endif; ?>
                         <div id="figure-area" class="mt-3">
@@ -212,15 +212,15 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
                             <div class="figure-point" id="fp9"><div class="figure-drag" data-number="9" style="width: 100%; height: 100%;"></div></div>
                         </div>
                         <form method="post" id="graph_key_form">
-                            <input type="hidden" id="user_graph_key_id" name="user_graph_key_id" value="<?= filter_input(INPUT_POST, 'user_graph_key_id') ?>" />
+                            <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id') ?>" />
                             <input type="hidden" name="graph_key" id="graph_key" />
                         </form>
                     </div>
                     <div class="modal-footer" style="justify-content: flex-start;">
                         <form method="post" id="graph_key_delete_form">
-                            <input type="hidden" id="user_graph_key_delete_id" name="user_graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'user_graph_key_delete_id') ?>" />
-                            <button type="submit" class="btn btn-primary" id="user_graph_key_delete_submit" name="user_graph_key_delete_submit">Удалить ключ</button>
-                            <button type="button" class="btn user_graph_key_dismiss" data-dismiss="modal">Отменить</button>
+                            <input type="hidden" id="graph_key_delete_id" name="graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'graph_key_delete_id') ?>" />
+                            <button type="submit" class="btn btn-primary" id="graph_key_delete_submit" name="graph_key_delete_submit">Удалить ключ</button>
+                            <button type="button" class="btn graph_key_dismiss" data-dismiss="modal">Отменить</button>
                         </form>
                     </div>
                 </div>
@@ -230,6 +230,12 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
             <?php
             if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid && empty($error_message)) {
                 echo "<div class='alert alert-success'>Пароль изменен успешно</div>";
+            }
+            if(null !== filter_input(INPUT_POST, 'graph_key_id') && $form_valid && empty($error_message)) {
+                echo "<div class='alert alert-success'>Графический ключ задан успешно</div>";
+            }
+            if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit') && $form_valid && empty($error_message)) {
+                echo "<div class='alert alert-success'>Графический ключ удалён успешно</div>";
             }
             if(!empty($error_message)) {
                echo "<div class='alert alert-danger'>$error_message</div>";
@@ -278,7 +284,7 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
                             </button>
                         </td>
                         <td class="text-right">
-                            <button type="button" class="btn btn-link user_graph_key_open" data-id="<?=$row['id'] ?>" data-fio="<?=$row['last_name'].' '.$row['first_name'] ?>" data-graph-key="<?=$row['graph_key'] ?>" data-toggle="modal" data-target="#user_graph_key">
+                            <button type="button" class="btn btn-link graph_key_open" data-id="<?=$row['id'] ?>" data-fio="<?=$row['last_name'].' '.$row['first_name'] ?>" data-graph-key="<?=$row['graph_key'] ?>" data-toggle="modal" data-target="#graph_key_modal">
                                 <i class="fas fa-th"<?= empty($row['graph_key']) ? '' : " style='font-size: x-large;'" ?>></i>
                             </button>
                         </td>
@@ -311,22 +317,22 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
             });
             
             // Заполнение данных о пользователе при открытии формы графического ключа
-            $('.user_graph_key_open').click(function() {
-                $('#user_graph_key_id').val($(this).attr('data-id'));
-                $('#user_graph_key_delete_id').val($(this).attr('data-id'));
-                $('#user_graph_key_fio').text($(this).attr('data-fio'));
+            $('.graph_key_open').click(function() {
+                $('#graph_key_id').val($(this).attr('data-id'));
+                $('#graph_key_delete_id').val($(this).attr('data-id'));
+                $('#graph_key_fio').text($(this).attr('data-fio'));
                 if($(this).attr('data-graph-key').length === 0) {
-                    $('#user_graph_key_delete_submit').addClass('d-none');
+                    $('#graph_key_delete_submit').addClass('d-none');
                 }
                 $(document).trigger('keydown'); // чтобы обнулить защиту от двойного нажатия
             });
             
             // Удаление данных о пользователе при закрытии формы графического ключа
-            $('.user_graph_key_dismiss').click(function() {
-                $('#user_graph_key_id').val('');
-                $('#user_graph_key_delete_id').val('');
-                $('#user_graph_key_fio').text('');
-                $('#user_graph_key_delete_submit').removeClass('d-none');
+            $('.graph_key_dismiss').click(function() {
+                $('#graph_key_id').val('');
+                $('#graph_key_delete_id').val('');
+                $('#graph_key_fio').text('');
+                $('#graph_key_delete_submit').removeClass('d-none');
                 $('.is-invalid').removeClass('is-invalid');
             });
             
@@ -396,7 +402,7 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
                     }
                 });
                 
-                $('.modal-body').on('mouseup', function() {
+                $('.graph-key-content').on('mouseup', function() {
                     if(event.which === 1 && $('form#graph_key_form').length) {
                         $('form#graph_key_form').submit();
                     }
@@ -423,8 +429,8 @@ if(null !== filter_input(INPUT_POST, 'user_graph_key_delete_submit')) {
             <?php endif; ?>
                 
             // Открытие формы задания графического ключа, если задание ключа не было удачным
-            <?php if(null !== filter_input(INPUT_POST, 'user_graph_key_id') && !$form_valid): ?>
-            $('#user_graph_key').modal('show');
+            <?php if(null !== filter_input(INPUT_POST, 'graph_key_id') && !$form_valid): ?>
+            $('#graph_key_modal').modal('show');
             <?php endif; ?>
         </script>
     </body>

@@ -105,7 +105,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
             </nav>
         </div>
         <div id="topmost"></div>
-        <div class="container-fluid">
+        <div class="container-fluid graph-key-content">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
@@ -187,7 +187,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
                 }
             });
                 
-            $('.modal-body').on('mouseup', function() {
+            $('.graph-key-content').on('mouseup', function() {
                 if(event.which === 1 && $('form#graph_key_form').length) {
                     $('form#graph_key_form').submit();
                 }
