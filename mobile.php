@@ -105,7 +105,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
             </nav>
         </div>
         <div id="topmost"></div>
-        <div class="container-fluid graph-key-content">
+        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
@@ -172,6 +172,12 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
             $('.figure-drag').on('mousedown', function() {
                 if(event.which === 1) {
                     AddPoint($(this));
+                    
+                    $('body').on('mouseup', function() {
+                        if(event.which === 1 && $('form#graph_key_form').length) {
+                            $('form#graph_key_form').submit();
+                        }
+                    });
                 }
             });
                 
@@ -183,12 +189,6 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
                 
             $('.figure-drag').on('mouseup', function() {
                 if(event.which === 1) {
-                    $('form#graph_key_form').submit();
-                }
-            });
-                
-            $('.graph-key-content').on('mouseup', function() {
-                if(event.which === 1 && $('form#graph_key_form').length) {
                     $('form#graph_key_form').submit();
                 }
             });

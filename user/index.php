@@ -195,7 +195,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                         <div style="font-size: xx-large;">Графический ключ</div>
                         <button type="button" class="close graph_key_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
-                    <div class="modal-body graph-key-content">
+                    <div class="modal-body">
                         <div style="font-size: x-large;">Сотрудник: <span id="graph_key_fio"><?=$graph_key_confirm_fio ?></span></div>
                         <?php if(null !== filter_input(INPUT_POST, 'graph_key_id') && !$form_valid): ?>
                         <div class='alert alert-danger'>Этот ключ уже задан другому пользователю</div>
@@ -387,6 +387,12 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                 $('.figure-drag').on('mousedown', function() {
                     if(event.which === 1) {
                         AddPoint($(this));
+                        
+                        $('body').on('mouseup', function() {
+                            if(event.which === 1 && $('form#graph_key_form').length) {
+                                $('form#graph_key_form').submit();
+                            }
+                        });
                     }
                 });
                 
