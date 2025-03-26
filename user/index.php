@@ -260,7 +260,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                         <th style="border-top: 0;">E-Mail</th>
                         <th style="border-top: 0;">Телефон</th>
                         <th style="width: 80px; border-top: 0;">Пароль</th>
-                        <th style="border-top: 0;">Граф.<br />ключ</th>
+                        <th class="text-center" style="border-top: 0;">Граф.<br />ключ</th>
                         <th style="width: 80px; border-top: 0;">Активный</th>
                     </tr>
                 </thead>
@@ -283,7 +283,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                                 <image src='../images/icons/edit.svg' />
                             </button>
                         </td>
-                        <td class="text-right">
+                        <td class="text-center">
                             <button type="button" class="btn btn-link graph_key_open" data-id="<?=$row['id'] ?>" data-fio="<?=$row['last_name'].' '.$row['first_name'] ?>" data-graph-key="<?=$row['graph_key'] ?>" data-toggle="modal" data-target="#graph_key_modal">
                                 <i class="fas fa-th"<?= empty($row['graph_key']) ? '' : " style='font-size: x-large;'" ?>></i>
                             </button>
