@@ -33,7 +33,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
         setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, '/');
         setcookie(ROLE_LOCAL, $role_local, time() + 60 * 60 * 24 * 100000, '/');
         setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
-        header("Refresh:0");
+        header('Location: '.APPLICATION.'/');
     }
     
     $error_message = "Неверный графический ключ";
