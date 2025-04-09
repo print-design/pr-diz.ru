@@ -168,7 +168,30 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
                 }
             }
             ?>
-            <h1>Список работ "<?= IsInRole(CUTTER_USERS) ? filter_input(INPUT_COOKIE, ROLE_LOCAL) : (empty($machine_id) ? "" : CUTTER_NAMES[$machine_id]) ?>"&nbsp;&nbsp;<span style="font-size: smaller; color: #999999;"><?=$count ?></span></h1>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h1>Список работ "<?= IsInRole(CUTTER_USERS) ? filter_input(INPUT_COOKIE, ROLE_LOCAL) : (empty($machine_id) ? "" : CUTTER_NAMES[$machine_id]) ?>"&nbsp;&nbsp;<span style="font-size: smaller; color: #999999;"><?=$count ?></span></h1>
+                </div>
+                <div>
+                    <form class="form-inline mt-1" method="get" action="excel.php">
+                        <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
+                        <label for="from" style="font-size: larger;">от&nbsp;</label>
+                        <input type="date" 
+                               name="from" 
+                               class="form-control mr-2" 
+                               value="<?=$date_from->format('Y-m-d') ?>" 
+                               style="border: 0; width: 8.5rem;" />
+                        <label for="to" style="font-size: larger;">до&nbsp;</label>
+                        <input type="date" 
+                               name="to" 
+                               class="form-control mr-2" 
+                               value="<?=$date_to->format('Y-m-d') ?>" 
+                               style="border: 0;" />
+                        <button type="submin" class="btn btn-light ml-2" href="exel_print.php?machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>">Выгрузка&nbsp;&nbsp;<i class="fas fa-file-download"></i></button>
+                    </form>
+                    
+                </div>
+            </div>
             <?php
             $timetable->Show();
             endif;
