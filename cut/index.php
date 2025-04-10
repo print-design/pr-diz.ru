@@ -187,9 +187,8 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
                                class="form-control mr-2" 
                                value="<?=$date_to->format('Y-m-d') ?>" 
                                style="border: 0;" />
-                        <button type="submin" class="btn btn-light ml-2" href="exel_print.php?machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>">Выгрузка&nbsp;&nbsp;<i class="fas fa-file-download"></i></button>
+                        <button type="submit" class="btn btn-light ml-2"><i class="fas fa-file-download"></i>&nbsp;&nbsp;Выгрузить</button>
                     </form>
-                    
                 </div>
             </div>
             <?php
