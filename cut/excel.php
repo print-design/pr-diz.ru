@@ -13,15 +13,25 @@ GetDateFromDateTo($from, $to, $date_from, $date_to);
     
 $xls = new PHPExcel();
 $activeSheetIndex = 0;
-    
-foreach(CUTTERS as $cutter) {
+
+const CUTTERS_ALL = 1000;
+$cutters = CUTTERS;
+array_push($cutters, CUTTERS_ALL);
+
+foreach($cutters as $cutter) {
     if($activeSheetIndex > 0) {
         $xls->createSheet();
     }
-        
+    
     $xls->setActiveSheetIndex($activeSheetIndex);
     $sheet = $xls->getActiveSheet();
-    $sheet->setTitle(html_entity_decode(CUTTER_NAMES[$cutter]));
+    
+    if($cutter == CUTTERS_ALL) {
+        $sheet->setTitle("Все");
+    }
+    else {
+        $sheet->setTitle(html_entity_decode(CUTTER_NAMES[$cutter]));
+    }
         
     $sheet->getColumnDimension('A')->setAutoSize(true);
     $sheet->getColumnDimension('B')->setAutoSize(true);
@@ -57,18 +67,17 @@ foreach(CUTTERS as $cutter) {
     // Работники1
     $workshifts = array();
     
-    $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
+    $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.first_name, e.last_name "
             . "from plan_workshift1 ws "
             . "left join plan_employee e on ws.employee1_id = e.id "
-            . "where ws.work_id = ".WORK_CUTTING." and ws.machine_id = ".$cutter
-            . " and ws.date >= '".$date_from->format('Y-m-d')."' and ws.date <= '".$date_to->format('Y-m-d')."'";
+            . "where ws.work_id = ".WORK_CUTTING." and ws.date >= '".$date_from->format('Y-m-d')."' and ws.date <= '".$date_to->format('Y-m-d')."'";
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
-        $workshifts[$row['date'].'_'.$row['shift']] = $row['id'];
+        $workshifts[$row['date'].'_'.$row['shift'].'_'.$row['machine_id']] = $row['id'];
     }
     
     // Тиражи
-    $sql = "select e.id, e.date, e.shift, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
+    $sql = "select e.id, e.date, e.shift, e.machine_id, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -78,10 +87,14 @@ foreach(CUTTERS as $cutter) {
             . "inner join calculation c on e.calculation_id = c.id "
             . "inner join calculation_result cr on cr.calculation_id = c.id "
             . "inner join customer cus on c.customer_id = cus.id "
-            . "where e.work_id = ". WORK_CUTTING." and e.machine_id = ".$cutter." and e.date >= '".$date_from->format('Y-m-d')."' and e.date <= '".$date_to->format('Y-m-d')."' "
+            . "where e.work_id = ". WORK_CUTTING;
+    if($cutter != CUTTERS_ALL) {
+        $sql .= " and e.machine_id = ".$cutter;
+    }
+    $sql .= " and e.date >= '".$date_from->format('Y-m-d')."' and e.date <= '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "union "
-            . "select pc.id, pc.date, pc.shift, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
+            . "select pc.id, pc.date, pc.shift, e.machine_id, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -92,10 +105,14 @@ foreach(CUTTERS as $cutter) {
             . "inner join calculation c on e.calculation_id = c.id "
             . "inner join calculation_result cr on cr.calculation_id = c.id "
             . "inner join customer cus on c.customer_id = cus.id "
-            . "where e.work_id = ". WORK_CUTTING." and e.machine_id = ".$cutter." and pc.date >= '".$date_from->format('Y-m-d')."' and e.date <= '".$date_to->format('Y-m-d')."' "
+            . "where e.work_id = ". WORK_CUTTING;  //if($cutter == 3) { echo $sql; exit(); }
+    if($cutter != CUTTERS_ALL) {
+        $sql .= " and e.machine_id = ".$cutter;
+    }
+    $sql .= " and pc.date >= '".$date_from->format('Y-m-d')."' and e.date <= '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "union "
-            . "select pp.id, pp.date, pp.shift, ". PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
+            . "select pp.id, pp.date, pp.shift, pp.machine_id, ". PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -105,10 +122,14 @@ foreach(CUTTERS as $cutter) {
             . "inner join calculation c on pp.calculation_id = c.id "
             . "inner join calculation_result cr on cr.calculation_id = c.id "
             . "inner join customer cus on c.customer_id = cus.id "
-            . "where pp.in_plan = 1 and pp.work_id = ". WORK_CUTTING." and pp.machine_id = ".$cutter." and pp.date >= '".$date_from->format('Y-d-m')."' and pp.date <= '".$date_to->format('Y-m-d')."' "
+            . "where pp.in_plan = 1 and pp.work_id = ". WORK_CUTTING;
+    if($cutter != CUTTERS_ALL) {
+        $sql .= " and pp.machine_id = ".$cutter;
+    }
+    $sql .= " and pp.date >= '".$date_from->format('Y-d-m')."' and pp.date <= '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "union "
-            . "select ppc.id, ppc.date, ppc.shift, ". PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calcualtion, c.unit, c.streams_number, "
+            . "select ppc.id, ppc.date, ppc.shift, pp.machine_id, ". PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calcualtion, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -119,7 +140,11 @@ foreach(CUTTERS as $cutter) {
             . "inner join calculation c on pp.calculation_id = c.id "
             . "inner join calculation_result cr on cr.calculation_id = c.id "
             . "inner join customer cus on c.customer_id = cus.id "
-            . "where pp.work_id = ". WORK_CUTTING." and pp.machine_id = ".$cutter." and ppc.date >= '".$date_from->format('Y-m-d')."' and ppc.date <= '".$date_to->format('Y-m-d')."' "
+            . "where pp.work_id = ". WORK_CUTTING;
+    if($cutter != CUTTERS_ALL) {
+        $sql .= " and pp.machine_id = ".$cutter;
+    }
+    $sql .= " and ppc.date >= '".$date_from->format('Y-m-d')."' and ppc.date <= '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "order by date, shift, position";
     $fetcher = new Fetcher($sql);
@@ -129,7 +154,7 @@ foreach(CUTTERS as $cutter) {
         $sheet->setCellValue('A'.$rowindex, DateTime::createFromFormat("Y-m-d", $row['date'])->format('d.m.Y'));
         $sheet->setCellValue('B'.$rowindex, $row['shift'] == "day" ? "День" : "Ночь");
         
-        $key = $row['date'].'_'.$row['shift'];
+        $key = $row['date'].'_'.$row['shift'].'_'.$row['machine_id'];
         if(array_key_exists($key, $workshifts)) {
             $employee = $employees[$workshifts[$key]];
             $sheet->setCellValue('C'.$rowindex, $employee['last_name'].' '.$employee['first_name']);
