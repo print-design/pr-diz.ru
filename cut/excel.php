@@ -68,7 +68,7 @@ foreach(CUTTERS as $cutter) {
     }
     
     // Тиражи
-    $sql = "select e.id, e.date, e.shift, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, "
+    $sql = "select e.id, e.date, e.shift, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -81,7 +81,7 @@ foreach(CUTTERS as $cutter) {
             . "where e.work_id = ". WORK_CUTTING." and e.machine_id = ".$cutter." and e.date >= '".$date_from->format('Y-m-d')."' and e.date <= '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "union "
-            . "select pc.id, pc.date, pc.shift, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, "
+            . "select pc.id, pc.date, pc.shift, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -95,7 +95,7 @@ foreach(CUTTERS as $cutter) {
             . "where e.work_id = ". WORK_CUTTING." and e.machine_id = ".$cutter." and pc.date >= '".$date_from->format('Y-m-d')."' and e.date <= '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "union "
-            . "select pp.id, pp.date, pp.shift, ". PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, "
+            . "select pp.id, pp.date, pp.shift, ". PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -108,7 +108,7 @@ foreach(CUTTERS as $cutter) {
             . "where pp.in_plan = 1 and pp.work_id = ". WORK_CUTTING." and pp.machine_id = ".$cutter." and pp.date >= '".$date_from->format('Y-d-m')."' and pp.date <= '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "union "
-            . "select ppc.id, ppc.date, ppc.shift, ". PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calcualtion, c.unit, "
+            . "select ppc.id, ppc.date, ppc.shift, ". PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calcualtion, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
@@ -141,7 +141,12 @@ foreach(CUTTERS as $cutter) {
         $sheet->setCellValue('G'.$rowindex, $row['unit'] == 'kg' ? "Кг" : "Шт");
         $sheet->getStyle('H'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
         if(!$row['has_continuation']) {
-            $sheet->setCellValue('H'.$rowindex, $row['length_cut']);
+            $length_cut = $row['length_cut'];
+            $streams_number = $row['streams_number'];
+            if($length_cut > 0 && $streams_number > 0) {
+                $length_cut = $length_cut / $streams_number;
+            }
+            $sheet->setCellValue('H'.$rowindex, strval($length_cut));
         }
         $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         if(!$row['has_continuation']) {
