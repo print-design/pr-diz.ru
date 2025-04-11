@@ -57,11 +57,13 @@ foreach($cutters as $cutter) {
     
     // Работники
     $employees = array();
+    $employees_sorted = array();
     
     $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
         $employees[$row['id']] = array("first_name" => mb_substr($row['first_name'], 0, 1).'.', "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']);
+        array_push($employees_sorted, $row['id']);
     }
     
     // Работники1
@@ -181,7 +183,33 @@ foreach($cutters as $cutter) {
     
     $activeSheetIndex++;
 }
-    
+
+// Подсчёт всего
+$xls->createSheet();
+$xls->setActiveSheetIndex($activeSheetIndex);
+$sheet = $xls->getActiveSheet();
+$sheet->setTitle("Р");
+
+$sheet->getColumnDimension('A')->setAutoSize(true);
+$sheet->getColumnDimension('B')->setAutoSize(true);
+$sheet->getColumnDimension('C')->setAutoSize(true);
+$sheet->getColumnDimension('D')->setAutoSize(true);
+
+$sheet->setCellValue('A2', "Тариф");
+$sheet->setCellValue('B1', "Тонна");
+$sheet->setCellValue('C1', "Км");
+$sheet->setCellValue('D3', "Итого");
+
+$row_number = 4;
+
+foreach($employees_sorted as $employee_id) {
+    if(key_exists($employee_id, $employees)) {
+        $sheet->setCellValue('A'.$row_number, $employees[$employee_id]['last_name'].' '.$employees[$employee_id]['first_name']);
+        $row_number++;
+    }
+}
+
+// Сохранение
 $filename = "Резчики_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
     
 header('Content-Type: application/vnd.ms-excel');
