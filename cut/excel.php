@@ -78,13 +78,20 @@ foreach($cutters as $cutter) {
         $workshifts[$row['date'].'_'.$row['shift'].'_'.$row['machine_id']] = $row['id'];
     }
     
+    // Начало и окончание смены
+    // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
+    // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+    // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
+    
     // Тиражи
     $sql = "select e.id, e.date, e.shift, e.machine_id, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
-            . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut "
+            . "if(e.shift = 'day'"
+            . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))"
+            . ", 999) length_cut, "
+            . "if(e.shift = 'day'"
+            . ", (select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))"
+            . ", 999) weight_cut "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -98,10 +105,8 @@ foreach($cutters as $cutter) {
             . "union "
             . "select pc.id, pc.date, pc.shift, e.machine_id, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
-            . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut "
+            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
+            . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut "
             . "from plan_continuation pc "
             . "inner join plan_edition e on pc.plan_edition_id = e.id "
             . "inner join calculation c on e.calculation_id = c.id "
@@ -116,10 +121,8 @@ foreach($cutters as $cutter) {
             . "union "
             . "select pp.id, pp.date, pp.shift, pp.machine_id, ". PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
-            . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut "
+            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
+            . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut "
             . "from plan_part pp "
             . "inner join calculation c on pp.calculation_id = c.id "
             . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -133,10 +136,8 @@ foreach($cutters as $cutter) {
             . "union "
             . "select ppc.id, ppc.date, ppc.shift, pp.machine_id, ". PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calcualtion, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
-            . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-            . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut "
+            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
+            . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut "
             . "from plan_part_continuation ppc "
             . "inner join plan_part pp on ppc.plan_part_id = pp.id "
             . "inner join calculation c on pp.calculation_id = c.id "
@@ -167,17 +168,26 @@ foreach($cutters as $cutter) {
         $sheet->setCellValue('F'.$rowindex, $row['calculation'].($row['type'] == PLAN_TYPE_CONTINUATION || $row['type'] == PLAN_TYPE_PART_CONTINUATION ? ' (дорезка)' : ''));
         $sheet->setCellValue('G'.$rowindex, $row['unit'] == 'kg' ? "Кг" : "Шт");
         $sheet->getStyle('H'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
-        if(!$row['has_continuation']) {
-            $length_cut = $row['length_cut'];
-            $streams_number = $row['streams_number'];
-            if($length_cut > 0 && $streams_number > 0) {
-                $length_cut = $length_cut / $streams_number;
-            }
-            $sheet->setCellValue('H'.$rowindex, strval($length_cut));
+        $length_cut = $row['length_cut'];
+        $streams_number = $row['streams_number'];
+        if($length_cut > 0 && $streams_number > 0) {
+            $length_cut = $length_cut / $streams_number;
         }
+        $sheet->setCellValue('H'.$rowindex, strval($length_cut));
         $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        if(!$row['has_continuation']) {
-            $sheet->setCellValue('I'.$rowindex, $row['weight_cut']);
+        $sheet->setCellValue('I'.$rowindex, $row['weight_cut']);
+        
+        // Подсчёт суммы
+        if($cutter == CUTTERS_ALL) {
+            if($row['unit'] == KG) {
+                if(key_exists($key, $workshifts) && key_exists($workshifts[$key], $employees)) {
+                    if(!key_exists(KG, $employees[$workshifts[$key]])) {
+                        $employees[$workshifts[$key]][KG] = 0.0;
+                    }
+                    
+                    $employees[$workshifts[$key]][KG] = floatval($employees[$workshifts[$key]][KG]) + floatval($row['weight_cut']);
+                }
+            }
         }
     }
     
@@ -203,8 +213,14 @@ $sheet->setCellValue('D3', "Итого");
 $row_number = 4;
 
 foreach($employees_sorted as $employee_id) {
-    if(key_exists($employee_id, $employees)) {
+    if(key_exists($employee_id, $employees) && in_array($employee_id, $workshifts)) {
         $sheet->setCellValue('A'.$row_number, $employees[$employee_id]['last_name'].' '.$employees[$employee_id]['first_name']);
+        
+        if(key_exists(KG, $employees[$employee_id])) {
+            $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->setCellValue('B'.$row_number, strval($employees[$employee_id][KG]));
+        }
+        
         $row_number++;
     }
 }
