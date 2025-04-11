@@ -80,15 +80,15 @@ foreach($cutters as $cutter) {
     
     // Начало и окончание смены
     // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
-    // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+    // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 следующего дня - 7:59 следующего дня
     // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
     
     // Тиражи
     $sql = "select e.id, e.date, e.shift, e.machine_id, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "if(e.shift = 'day'"
-            . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id) and printed >= e.date and printed < e.date)"
-            . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))) length_cut, "
+            . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id) and printed >= addtime(e.date, '08:00:0') and printed < addtime(e.date, '20:00:0'))"
+            . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id) and printed >= addtime(e.date, '20:00:0') and printed > addtime(e.date, '20:00:0'))) length_cut, "
             . "if(e.shift = 'day'"
             . ", (select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))"
             . ", (select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))) weight_cut "
@@ -106,7 +106,7 @@ foreach($cutters as $cutter) {
             . "select pc.id, pc.date, pc.shift, e.machine_id, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "if(pc.shift = 'day'"
-            . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))"
+            . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id) and printed >= addtime(pc.date, '08:00:0') and printed < addtime(pc.date, '20:00:0'))"
             . ", (select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))) length_cut, "
             . "if(e.shift = 'day'"
             . ", (select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id))"
