@@ -1,5 +1,7 @@
 <?php
 include '../include/topscripts.php';
+
+const WEEKEND = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,22 +51,31 @@ include '../include/topscripts.php';
                 
             // Смены и резчики
             $workers = array();
-            $worker_names = array(0 => "ВЫХОДНОЙ ДЕНЬ");
+            $worker_names = array(WEEKEND => "ВЫХОДНОЙ ДЕНЬ");
+            $workers_sorted = array();
     
             $sql = "select date_format(pw.date, '%d-%m-%Y') date, pw.shift, pw.machine_id, pe.id employee_id, pe.last_name, pe.first_name "
                     . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
                     . "where pw.date >= '".(clone $date_from)->modify("-1 day")->format('Y-m-d')."' and pw.date <= '".$date_to->format('Y-m-d')."' "
                     . "and pw.work_id = ".WORK_CUTTING." "
-                    . "order by date, shift";
+                    . "order by last_name, first_name, date, shift";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()) {
                 if(empty($row['employee_id'])) {
-                    $workers[$row['date'].$row['shift'].$row['machine_id']] = 0;
+                    $workers[$row['date'].$row['shift'].$row['machine_id']] = WEEKEND;
                 }
                 else {
                     $workers[$row['date'].$row['shift'].$row['machine_id']] = $row['employee_id'];
                     $worker_names[$row['employee_id']] = $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.';
+                    
+                    if(!in_array($row['employee_id'], $workers_sorted)) {
+                        array_push($workers_sorted, $row['employee_id']);
+                    }
                 }
+            }
+            
+            if(in_array(WEEKEND, $workers)) {
+                array_push($workers_sorted, WEEKEND);
             }
             
             $sql = "select cts.id, cts.printed, c.unit, cs.name, e.machine_id "
@@ -96,13 +107,17 @@ include '../include/topscripts.php';
                     $working_printed->modify("-1 day");
                 }
             
-                $stream_worker = "ВЫХОДНОЙ ДЕНЬ";
+                $stream_worker = WEEKEND;
             
                 if(array_key_exists($working_printed->format('d-m-Y').$stream_shift.$take_stream['machine_id'], $workers)) {
                     $stream_worker = $workers[$working_printed->format('d-m-Y').$stream_shift.$take_stream['machine_id']];
                 }
                 
                 echo "<p>".$take_stream['id'].' '.$printed->format('d.m.Y H:i').' '.$take_stream['unit'].' '.$take_stream['name'].' '.CUTTER_NAMES[$take_stream['machine_id']].' '.$worker_names[$stream_worker]."</p>";
+            }
+            
+            foreach($workers_sorted as $worker) {
+                echo $worker_names[$worker]."<br />";
             }
             ?>
             
