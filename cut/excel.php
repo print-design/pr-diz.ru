@@ -78,11 +78,6 @@ foreach($cutters as $cutter) {
         $workshifts[$row['date'].'_'.$row['shift'].'_'.$row['machine_id']] = $row['id'];
     }
     
-    // Начало и окончание смены
-    // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
-    // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 следующего дня - 7:59 следующего дня
-    // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
-    
     // Тиражи
     $sql = "select e.id, e.date, e.shift, e.machine_id, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
