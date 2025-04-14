@@ -83,9 +83,9 @@ foreach($cutters as $cutter) {
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
             . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut, "
-            . "(select sum(worktime) from plan_edition where calculation_id = c.id and worktime_continued is null) "
-            . "+ (select sum(worktime_continued) from plan_edition where calculation_id = c.id) "
-            . "+ (select sum(worktime) from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id)) worktime_cut "
+            . "ifnull((select sum(worktime) from plan_edition where calculation_id = c.id and work_id = 3 and worktime_continued is null), 0) "
+            . "+ ifnull((select sum(worktime_continued) from plan_edition where calculation_id = c.id and work_id = 3), 0) "
+            . "+ ifnull((select sum(worktime) from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = 3)), 0) worktime_cut "
             . "from plan_edition e "
             . "inner join calculation c on e.calculation_id = c.id "
             . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -101,9 +101,9 @@ foreach($cutters as $cutter) {
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
             . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
             . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut, "
-            . "ifnull((select sum(worktime) from plan_edition where calculation_id = c.id and worktime_continued is null), 0) "
-            . "+ ifnull((select sum(worktime_continued) from plan_edition where calculation_id = c.id), 0) "
-            . "+ ifnull((select sum(worktime) from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id)), 0) worktime_cut "
+            . "ifnull((select sum(worktime) from plan_edition where calculation_id = c.id and work_id = 3 and worktime_continued is null), 0) "
+            . "+ ifnull((select sum(worktime_continued) from plan_edition where calculation_id = c.id and work_id = 3), 0) "
+            . "+ ifnull((select sum(worktime) from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = 3)), 0) worktime_cut "
             . "from plan_continuation pc "
             . "inner join plan_edition e on pc.plan_edition_id = e.id "
             . "inner join calculation c on e.calculation_id = c.id "
@@ -172,9 +172,9 @@ foreach($cutters as $cutter) {
         if($length_cut > 0 && $streams_number > 0) {
             $length_cut = $length_cut / $streams_number;
         }
-        $sheet->setCellValue('H'.$rowindex, strval($length_cut));
+        $sheet->setCellValue('H'.$rowindex, strval($length_cut * floatval($row['worktime']) / $row['worktime_cut']));
         $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->setCellValue('I'.$rowindex, $row['weight_cut']);
+        $sheet->setCellValue('I'.$rowindex, strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut'])));
         
         // Подсчёт суммы
         if($cutter == CUTTERS_ALL) {
