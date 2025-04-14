@@ -184,7 +184,7 @@ foreach($cutters as $cutter) {
                         $employees[$workshifts[$key]][KG] = 0.0;
                     }
                     
-                    $employees[$workshifts[$key]][KG] = floatval($employees[$workshifts[$key]][KG]) + floatval($row['weight_cut']);
+                    $employees[$workshifts[$key]][KG] = floatval($employees[$workshifts[$key]][KG]) + (strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut'])));
                 }
             }
         }
