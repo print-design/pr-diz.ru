@@ -71,30 +71,6 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     }
     $max_event = $row[0];
     
-    $sql = "select max(ifnull(position, 0)) from plan_part "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-    $fetcher = new Fetcher($sql);
-    $row = $fetcher->Fetch();
-    if(!$row) {
-        $error = "Ошибка при определении позиции разделённого тиража";
-        echo json_encode(array("error" => $error));
-        exit();
-    }
-    $max_part = $row[0];
-    
-    $sql = "select count(ppc.id) "
-            . "from plan_part_continuation ppc "
-            . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "where pp.work_id = $work_id and pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
-    $fetcher = new Fetcher($sql);
-    $row = $fetcher->Fetch();
-    if(!$row) {
-        $error = "Ошибка при определении позиции разделённого тиража";
-        echo json_encode(array('error' => $error));
-        exit();
-    }
-    $max_part_continuation = $row[0];
-    
     $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }
 else {
@@ -109,16 +85,6 @@ else {
     }
     
     $sql = "update plan_event set position = ifnull(position, 0) + 1 "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
-            . "and position >= $before";
-    $executer = new Executer($sql);
-    $error = $executer->error;
-    if(!empty($error)) {
-        echo json_encode(array('error' => $error));
-        exit();
-    }
-    
-    $sql = "update plan_part set position = ifnull(position, 0) + 1 "
             . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
             . "and position >= $before";
     $executer = new Executer($sql);
@@ -170,31 +136,6 @@ else {
         exit();
     }
     $max_event = $row[0];
-    
-    $sql = "select max(ifnull(position, 0)) from plan_part "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
-            . "and position < $before";
-    $fetcher = new Fetcher($sql);
-    $row = $fetcher->Fetch();
-    if(!$row) {
-        $error = $fetcher->error;
-        echo json_encode(array('error' => $error));
-        exit();
-    }
-    $max_part = $row[0];
-    
-    $sql = "select count(ppc.id) "
-            . "from plan_part_continuation ppc "
-            . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "where pp.work_id = $work_id and pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
-    $fetcher = new Fetcher($sql);
-    $row = $fetcher->Fetch();
-    if(!$row) {
-        $error = "Ошибка при определении позиции разделённого тиража";
-        echo json_encode(array('error' => $error));
-        exit();
-    }
-    $max_part_continuation = $row[0];
     
     $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
 }

@@ -107,29 +107,6 @@ if($row = $fetcher->Fetch()) {
     }
 }
 
-$sql = "select sum(worktime) from plan_part where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $sum_part = $row[0];
-    
-    if(empty($sum_part)) {
-        $sum_part = 0;
-    }
-}
-
-$sql = "select sum(ppc.worktime) "
-        . "from plan_part_continuation ppc "
-        . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-        . "where pp.work_id = $work_id and pp.machine_id = $machine_id and ppc.date = '$date' and ppc.shift = '$shift'";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $sum_part_continuation = $row[0];
-    
-    if(empty($sum_part_continuation)) {
-        $sum_part_continuation = 0;
-    }
-}
-
 $start_time = 12 - $sum_edition - $sum_continuation - $sum_event - $sum_part - $sum_part_continuation;
 
 if($start_time < 0) {
@@ -160,13 +137,7 @@ if($continuation_time > 0) {
             . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
     $executer = new Executer($sql);
     $error = $executer->error;
-    
-    // Увеличиваем position у всех разделённых тиражей данной смены
-    $sql = "update plan_part set position = ifnull(position, 1) + 1 "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
-    $executer = new Executer($sql);
-    $error = $executer->error;
-    
+        
     // Создаём допечатку
     $sql = "insert into plan_continuation (date, shift, plan_edition_id, worktime, has_continuation) "
             . "values ('".$plan_continuation->date."', '".$plan_continuation->shift."', ".$plan_continuation->plan_edition_id.", ".$plan_continuation->worktime.", ".$plan_continuation->has_continuation.")";

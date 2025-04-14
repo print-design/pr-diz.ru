@@ -97,12 +97,6 @@ if($continuation_time > 0) {
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    // Увеличиваем position у всех разделённых тиражей данной смены
-    $sql = "update plan_part set position = ifnull(position, 1) + 1 "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
-    $executer = new Executer($sql);
-    $error = $executer->error;
-    
     // Создаём допечатку
     $sql = "insert into plan_continuation (date, shift, plan_edition_id, worktime, has_continuation) "
             . "values ('".$plan_continuation->date."', '".$plan_continuation->shift."', ".$plan_continuation->plan_edition_id.", ".$plan_continuation->worktime.", ".$plan_continuation->has_continuation.")";

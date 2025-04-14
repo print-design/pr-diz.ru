@@ -23,14 +23,6 @@ switch ($planType) {
         $sql_update = "update plan_continuation set comment = '$text' where id = $id";
         $sql_select = "select comment from plan_continuation where id = $id";
         break;
-    case PLAN_TYPE_PART:
-        $sql_update = "update plan_part set comment = '$text' where id = $id";
-        $sql_select = "select comment from plan_part where id = $id";
-        break;
-    case PLAN_TYPE_PART_CONTINUATION:
-        $sql_update = "update plan_part_continuation set comment = '$text' where id = $id";
-        $sql_select = "select comment from plan_part_continuation where id = $id";
-        break;
 }
 
 $executer = new Executer($sql_update);

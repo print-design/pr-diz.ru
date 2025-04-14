@@ -115,39 +115,6 @@ foreach($cutters as $cutter) {
     }
     $sql .= " and pc.date >= '".$date_from->format('Y-m-d')."' and e.date < '".$date_to->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
-            . "union "
-            . "select pp.id, pp.date, pp.shift, pp.machine_id, ". PLAN_TYPE_PART." as type, if(isnull(pp.worktime_continued), 0, 1) as has_continuation, ifnull(pp.worktime_continued, pp.worktime) worktime, pp.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
-            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
-            . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut, "
-            . "ifnull((select sum(worktime) from plan_edition where calculation_id = c.id and worktime_continued is null), 0) worktime_cut "
-            . "from plan_part pp "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "inner join calculation_result cr on cr.calculation_id = c.id "
-            . "inner join customer cus on c.customer_id = cus.id "
-            . "where pp.in_plan = 1 and pp.work_id = ". WORK_CUTTING;
-    if($cutter != CUTTERS_ALL) {
-        $sql .= " and pp.machine_id = ".$cutter;
-    }
-    $sql .= " and pp.date >= '".$date_from->format('Y-d-m')."' and pp.date < '".$date_to->format('Y-m-d')."' "
-            . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
-            . "union "
-            . "select ppc.id, ppc.date, ppc.shift, pp.machine_id, ". PLAN_TYPE_PART_CONTINUATION." as type, ppc.has_continuation, ppc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calcualtion, c.unit, c.streams_number, "
-            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
-            . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut, "
-            . "ifnull((select sum(worktime) from plan_edition where calculation_id = c.id and worktime_continued is null), 0) worktime_cut "
-            . "from plan_part_continuation ppc "
-            . "inner join plan_part pp on ppc.plan_part_id = pp.id "
-            . "inner join calculation c on pp.calculation_id = c.id "
-            . "inner join calculation_result cr on cr.calculation_id = c.id "
-            . "inner join customer cus on c.customer_id = cus.id "
-            . "where pp.work_id = ". WORK_CUTTING;
-    if($cutter != CUTTERS_ALL) {
-        $sql .= " and pp.machine_id = ".$cutter;
-    }
-    $sql .= " and ppc.date >= '".$date_from->format('Y-m-d')."' and ppc.date < '".$date_to->format('Y-m-d')."' "
-            . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "order by date, shift, position";
     $fetcher = new Fetcher($sql);
     while ($row = $fetcher->Fetch()) {

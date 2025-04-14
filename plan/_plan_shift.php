@@ -76,21 +76,6 @@ class PlanShift {
                             }
                         }
                     }
-                    elseif ($value['type'] == PLAN_TYPE_PART) {
-                        $sql = "update plan_part set position = ifnull(position, 0) + 1 where id = ".$value['id'];
-                        $executer = new Executer($sql);
-                        $error = $executer->error;
-                        
-                        if(empty($error)) {
-                            $sql = "select position from plan_part where id = ".$value['id'];
-                            $fetcher = new Fetcher($sql);
-                            if($row = $fetcher->Fetch()) {
-                                $edition = $value;
-                                $edition['position'] = $row['position'];
-                                $this->editions[$key] = $edition;
-                            }
-                        }
-                    }
                 }
                 
                 $previous_position = $this->editions[$key]['position'];
