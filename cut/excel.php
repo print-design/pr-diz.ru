@@ -172,7 +172,7 @@ foreach($cutters as $cutter) {
         if($length_cut > 0 && $streams_number > 0) {
             $length_cut = $length_cut / $streams_number;
         }
-        $sheet->setCellValue('H'.$rowindex, strval($length_cut * floatval($row['worktime']) / $row['worktime_cut']));
+        $sheet->setCellValue('H'.$rowindex, strval($length_cut * floatval($row['worktime']) / floatval($row['worktime_cut'])));
         $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('I'.$rowindex, strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut'])));
         
@@ -184,7 +184,17 @@ foreach($cutters as $cutter) {
                         $employees[$workshifts[$key]][KG] = 0.0;
                     }
                     
-                    $employees[$workshifts[$key]][KG] = floatval($employees[$workshifts[$key]][KG]) + (strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut'])));
+                    $employees[$workshifts[$key]][KG] = floatval($employees[$workshifts[$key]][KG]) + strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut']));
+                }
+            }
+            
+            if($row['unit'] == PIECES) {
+                if(key_exists($key, $workshifts) && key_exists($workshifts[$key], $employees)) {
+                    if(!key_exists(PIECES, $employees[$workshifts[$key]])) {
+                        $employees[$workshifts[$key]][PIECES] = 0.0;
+                    }
+                    
+                    $employees[$workshifts[$key]][PIECES] = floatval($employees[$workshifts[$key]][PIECES]) + strval($length_cut * floatval($row['worktime']) / floatval($row['worktime_cut']));
                 }
             }
         }
@@ -215,9 +225,14 @@ foreach($employees_sorted as $employee_id) {
     if(key_exists($employee_id, $employees) && in_array($employee_id, $workshifts)) {
         $sheet->setCellValue('A'.$row_number, $employees[$employee_id]['last_name'].' '.$employees[$employee_id]['first_name']);
         
-        if(key_exists(KG, $employees[$employee_id])) {
+        if(key_exists(KG, $employees[$employee_id]) && !empty($employees[$employee_id][KG])) {
             $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
             $sheet->setCellValue('B'.$row_number, strval($employees[$employee_id][KG]));
+        }
+        
+        if(key_exists(PIECES, $employees[$employee_id]) && !empty($employees[$employee_id][PIECES])) {
+            $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+            $sheet->setCellValue('C'.$row_number, strval($employees[$employee_id][PIECES]));
         }
         
         $row_number++;
