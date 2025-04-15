@@ -51,25 +51,13 @@ if(!empty($work_id) && !empty($machine_id)) {
         
         $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.lamination_roller_width, u.first_name, u.last_name, "
                 . "cr.length_pure_2, cr.length_pure_3, cr.weight_pure_2, cr.weight_pure_3, cr.glue_cost_2, cr.glue_cost_3, "
-                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-                . "0 as second_part "
+                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                 . "from plan_edition pe "
                 . "inner join calculation c on pe.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "where pe.work_id = ".WORK_LAMINATION." and pe.machine_id = ".$laminator
                 ." and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
-                . "union "
-                . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.lamination_roller_width, u.first_name, u.last_name, "
-                . "cr.length_pure_2, cr.length_pure_3, cr.weight_pure_2, cr.weight_pure_3, cr.glue_cost_2, cr.glue_cost_3, "
-                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-                . "(select count(id) from plan_part where calculation_id = pp.calculation_id and ((work_id = pp.work_id and machine_id = pp.machine_id and date < pp.date) || (work_id = pp.work_id and machine_id = pp.machine_id and date = pp.date and shift = 'day' and pp.shift = 'night') || (work_id = pp.work_id and machine_id <> pp.machine_id and id < pp.id))) second_part "
-                . "from plan_part pp "
-                . "inner join calculation c on pp.calculation_id = c.id "
-                . "inner join user u on c.manager_id = u.id "
-                . "inner join calculation_result cr on cr.calculation_id = c.id "
-                . "where pp.work_id = ".WORK_LAMINATION." and pp.machine_id = ".$laminator
-                ." and pp.date >= '".$date_from->format('Y/m/d')."' and pp.date <= '".$date_to->format('Y/m/d')."' "
                 . "order by date, shift";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
@@ -81,41 +69,23 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('D'.$rowindex, $row['customer_id']."-".$row['num_for_customer']);
             $sheet->setCellValue('E'.$rowindex, $row['name']);
             
-            if($row['second_part'] > 0) {
-                $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('F'.$rowindex, 'Разделен');
+            $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('F'.$rowindex, $row['lamination'] == 1 ? $row['weight_pure_2'] : $row['weight_pure_3']);
                 
-                $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('G'.$rowindex, 'Разделен');
+            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('G'.$rowindex, $row['lamination'] == 1 ? $row['length_pure_2'] : $row['length_pure_3']);
                 
-                $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('H'.$rowindex, 'Разделен');
+            $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('H'.$rowindex, $row['lamination_roller_width']);
                 
-                $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('I'.$rowindex, 'Разделен');
+            $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('I'.$rowindex, $row['lamination']);
                 
-                $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('J'.$rowindex, 'Разделен');
-            }
-            else {
-                $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('F'.$rowindex, $row['lamination'] == 1 ? $row['weight_pure_2'] : $row['weight_pure_3']);
+            $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('J'.$rowindex, $row['lamination'] == 1 ? $row['glue_cost_2'] : $row['glue_cost_3']);
                 
-                $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('G'.$rowindex, $row['lamination'] == 1 ? $row['length_pure_2'] : $row['length_pure_3']);
-                
-                $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('H'.$rowindex, $row['lamination_roller_width']);
-                
-                $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('I'.$rowindex, $row['lamination']);
-                
-                $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('J'.$rowindex, $row['lamination'] == 1 ? $row['glue_cost_2'] : $row['glue_cost_3']);
-                
-                $sheet->getStyle('F'.$rowindex.':I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
-                $sheet->getStyle('J'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-            }
+            $sheet->getStyle('F'.$rowindex.':I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+            $sheet->getStyle('J'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         }
         
         $activeSheetIndex++;

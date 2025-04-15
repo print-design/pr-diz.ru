@@ -84,7 +84,7 @@ class Queue {
             if($row['type'] == PLAN_TYPE_EVENT) {
                 require './_event_view.php';
             }
-            elseif($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
+            elseif($row['type'] == PLAN_TYPE_EDITION) {
                 require './_queue_view.php';
             }
         }
@@ -106,7 +106,7 @@ class Queue {
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
                 . "1 as lamination, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
-                . "if(isnull(peprintpart.date), peprint.date, peprintpart.date) as print_date, if(isnull(peprintpart.date), peprint.shift, peprintpart.shift) as print_shift, if(isnull(peprintpart.date), peprint.position, peprintpart.position) as print_position "
+                . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -137,7 +137,7 @@ class Queue {
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
                 . "2 as lamination, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
-                . "if(isnull(peprintpart.date), peprint.date, peprintpart.date) as print_date, if(isnull(peprintpart.date), peprint.shift, peprintpart.shift) as print_shift, if(isnull(peprintpart.date), peprint.position, peprintpart.position) as print_position "
+                . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -176,7 +176,7 @@ class Queue {
             if($row['type'] == PLAN_TYPE_EVENT) {
                 require './_event_view.php';
             }
-            elseif($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
+            elseif($row['type'] == PLAN_TYPE_EDITION) {
                 require './_queue_view.php';
             }
         }
@@ -207,18 +207,15 @@ class Queue {
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "0 as lamination, "
                 . "u.first_name, u.last_name, "
-                . "if(isnull(pelam.date) and isnull(pelampart.date), if(isnull(peprintpart.date), peprint.date, peprintpart.date), null) as print_date, if(isnull(pelam.date) and isnull(pelampart.date), if(isnull(peprintpart.date), peprint.shift, peprintpart.shift), null) as print_shift, if(isnull(pelam.date) and isnull(pelampart.date), if(isnull(peprintpart.date), peprint.position, peprintpart.position), null) as print_position, "
-                . "if(isnull(pelampart.date), pelam.date, pelampart.date) as lamination_date, if(isnull(pelampart.date), pelam.shift, pelampart.shift) as lamination_shift, if(isnull(pelampart.date), pelam.position, pelampart.position) as lamination_position "
+                . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position, "
+                . "pelam.date as lamination_date, pelam.shift as lamination_shift, pelam.position as lamination_position "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "left join plan_part peprintpart on peprintpart.calculation_id = c.id and peprintpart.work_id = ".WORK_PRINTING." and peprintpart.in_plan = 1 and (select count(id) from plan_part where calculation_id = peprintpart.calculation_id and work_id = peprintpart.work_id and in_plan = 1 and id < peprintpart.id) = 0 "
                 . "left join plan_edition peprint on peprint.calculation_id = c.id and peprint.work_id = ".WORK_PRINTING." "
-                . "left join plan_part pelampart on pelampart.calculation_id = c.id and pelampart.work_id = ".WORK_LAMINATION." and pelampart.in_plan = 1 and (select count(id) from plan_part where calculation_id = pelampart.calculation_id and work_id = pelampart.work_id and in_plan = 1 and id < pelampart.id) = 0 "
                 . "left join plan_edition pelam on pelam.calculation_id = c.id and pelam.work_id = ".WORK_LAMINATION." and (select count(id) from plan_edition where calculation_id = pelam.calculation_id and work_id = pelam.work_id and id < pelam.id) = 0 "
-                . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id.")"
-                . " and c.id not in (select calculation_id from plan_part where work_id = ".$this->work_id.")";
+                . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id.")";
         if($this->machine_id == CUTTER_ATLAS) {
             $sql .= " and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE
                     . " and c.status_id = ".ORDER_STATUS_PLAN_PRINT;
@@ -257,7 +254,7 @@ class Queue {
             if($row['type'] == PLAN_TYPE_EVENT) {
                 require './_event_view.php';
             }
-            elseif($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
+            elseif($row['type'] == PLAN_TYPE_EDITION) {
                 require './_queue_view.php';
             }
         }

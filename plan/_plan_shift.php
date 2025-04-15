@@ -36,7 +36,7 @@ class PlanShift {
             foreach ($this->editions as $edition) {
                 $this->shift_worktime += $edition['worktime'];
                 
-                if($edition['type'] == PLAN_TYPE_CONTINUATION || $edition['type'] == PLAN_TYPE_PART_CONTINUATION) {
+                if($edition['type'] == PLAN_TYPE_CONTINUATION) {
                     $this->includes_continuation = true;
                 }
             }
@@ -117,7 +117,7 @@ class PlanShift {
             foreach($this->editions as $edition) {
                 $this->shift_worktime += $edition['worktime'];
                 
-                if($edition['type'] == PLAN_TYPE_CONTINUATION || $edition['type'] == PLAN_TYPE_PART_CONTINUATION) {
+                if($edition['type'] == PLAN_TYPE_CONTINUATION) {
                     $this->includes_continuation = true;
                 }
             }

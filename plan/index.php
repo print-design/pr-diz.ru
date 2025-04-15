@@ -57,149 +57,6 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
     $error_message = $executer->error;
 }
 
-// Разделение заказа
-if(null !== filter_input(INPUT_POST, 'divide_submit')) {
-    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
-    $work_id = filter_input(INPUT_POST, 'work_id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $lamination = filter_input(INPUT_POST, 'lamination');
-    $length1 = filter_input(INPUT_POST, 'length1');
-    
-    $length_total = 0;
-    $worktime_total = 0;
-    
-    // Проверяем, что этот заказ ещё не разделён
-    $sql = "select count(id) from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        if($row[0] != 0) {
-            $error_message = "Этот заказ уже разделён";
-        }
-    }
-    
-    // Получаем общие метраж и время по нужному расчёту
-    if(empty($error_message)) {
-        $sql = "select c.ink_number, cr.length_dirty_1, cr.length_pure_1, cr.length_dirty_2, cr.length_pure_2, cr.length_dirty_3, cr.length_pure_3 "
-                . "from calculation_result cr "
-                . "inner join calculation c on cr.calculation_id = c.id "
-                . "where c.id = $calculation_id";
-        $fetcher = new Fetcher($sql);
-        $error_message = $fetcher->error;
-        if($row = $fetcher->Fetch()) {
-            if($work_id == WORK_PRINTING) {
-                $length_total = $row['length_dirty_1'];
-                $length_pure_1 = $row['length_pure_1'];
-                $ink_number = $row['ink_number'];
-                $machine_speed = 0;
-                $machine_tuning_time = 0;
-                $machine_waste_percent = 0;
-                $sql1 = "select speed from norm_machine where machine_id = $machine_id order by date desc limit 1";
-                $fetcher1 = new Fetcher($sql1);
-                if($row1 = $fetcher1->Fetch()) {
-                    $machine_speed = $row1['speed'];
-                }
-                $sql1 = "select time, waste_percent from norm_priladka where machine_id = $machine_id order by date desc limit 1";
-                $fetcher1 = new Fetcher($sql1);
-                if($row1 = $fetcher1->Fetch()) {
-                    $machine_tuning_time = $row1['time'];
-                    $machine_waste_percent = $row1['waste_percent'];
-                }
-                $worktime_total = ($ink_number * $machine_tuning_time / 60.0) + ($length_pure_1 * (1 + ($machine_waste_percent / 100.0)) / $machine_speed / 1000.0);
-            }
-            elseif($work_id == WORK_CUTTING) {
-                $length_total = $row['length_dirty_1'];
-                $length_pure_1 = $row['length_pure_1'];
-                $cutter_speed = 0;
-                $cutter_time = 0;
-                $sql1 = "select time, speed from norm_cutter where cutter_id = $machine_id order by date desc limit 1";
-                $fetcher1 = new Fetcher($sql1);
-                if($row1 = $fetcher1->Fetch()) {
-                    $cutter_time = floatval($row1['time']);
-                    $cutter_speed = floatval($row1['speed']);
-                }
-                $worktime_total = ($length_pure_1 / $cutter_speed / 1000.0) + ($cutter_time / 60.0);
-            }
-            elseif($work_id == WORK_LAMINATION && $lamination == 1) {
-                $length_total = $row['length_dirty_2'];
-                $length_pure_2 = $row['length_pure_2'];
-                $laminator_speed = 0;
-                $laminator_tuning_time = 0;
-                $laminator_waste_percent = 0;
-                $sql1 = "select speed from norm_laminator where laminator_id = $machine_id order by date limit 1";
-                $fetcher1 = new Fetcher($sql1);
-                if($row1 = $fetcher1->Fetch()) {
-                    $laminator_speed = $row1['speed'];
-                }
-                $sql1 = "select time, waste_percent from norm_laminator_priladka where laminator_id = $machine_id order by date desc limit 1";
-                if($row1 = $fetcher1->Fetch()) {
-                    $laminator_tuning_time = $row1['time'];
-                    $laminator_waste_percent - $row1['waste_percent'];
-                }
-                $worktime_total = ($laminator_tuning_time / 60.0) + ($length_pure_2 * (1 + ($laminator_waste_percent / 100.0)) / $laminator_speed / 1000.0);
-            }
-            elseif($work_id == WORK_LAMINATION && $lamination == 2) {
-                $length_total = $row['length_dirty_3'];
-                $length_pure_3 = $row['length_pure_3'];
-                $sql1 = "select speed from norm_laminator where laminator_id = $machine_id order by date limit 1";
-                $fetcher1 = new Fetcher($sql1);
-                if($row1 = $fetcher1->Fetch()) {
-                    $laminator_speed = $row1['speed'];
-                }
-                $sql1 = "select time, waste_percent from norm_laminator_priladka where laminator_id = $machine_id order by date desc limit 1";
-                $fetcher1 = new Fetcher($sql1);
-                if($row1 = $fetcher1->Fetch()) {
-                    $laminator_tuning_time = $row1['time'];
-                    $laminator_waste_percent = $row1['waste_percent'];
-                }
-                $worktime_total = ($laminator_tuning_time / 60.0) + ($length_pure_3 * (1 + ($laminator_waste_percent / 100.0)) / $laminator_speed / 1000.0);
-            }
-        }
-    
-        if($length_total < $length1) {
-            $error_message = "Остаток тиража должен быть больше нуля";
-        }
-    }
-    
-    // Вычисляем размеры половинок после разделения
-    $length2 = $length_total - $length1;
-    
-    // Помещаем данные в базу
-    if(empty($error_message)) {
-        $worktime1 = $worktime_total * $length1 / $length_total;
-        
-        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, work_id, worktime) "
-                . "values ($calculation_id, $lamination, $length1, 0, $work_id, $worktime1)";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-    
-    if(empty($error_message)) {
-        $worktime2 = $worktime_total * $length2 / $length_total;
-        
-        $sql = "insert into plan_part (calculation_id, lamination, length, in_plan, work_id, worktime) "
-                . "values ($calculation_id, $lamination, $length2, 0, $work_id, $worktime2)";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-}
-
-// Отмена разделения заказа
-if(null !== filter_input(INPUT_POST, 'undivide_submit')) {
-    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
-    $work_id = filter_input(INPUT_POST, 'work_id');
-    $lamination = filter_input(INPUT_POST, 'lamination');
-    
-    $sql = "delete from plan_part_continuation where plan_part_id in (select id from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination)";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        $sql = "delete from plan_part where calculation_id = $calculation_id and work_id = $work_id and lamination = $lamination";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-}
-
 // Закрепление заказа в верхней части очереди
 if(null !== filter_input(INPUT_POST, 'pin_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id');
@@ -894,66 +751,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                         });
             }
             
-            function AddPartContinuation(id) {
-                $.ajax({ dataType: 'JSON', url: "_add_part_continuation.php?id=" + id })
-                        .done(function(data) {
-                            if(data.error === '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                            }
-                            else {
-                                alert(data.error);
-                            }
-                        })
-                        .fail(function() {
-                            alert('Ошибка при создании допечатки разделённого тиража');
-                        });
-            }
-            
-            function RemovePartContinuation(id) {
-                $.ajax({ dataType: 'JSON', url: "_remove_part_continuation.php?id=" + id })
-                        .done(function(data) {
-                            if(data.error === '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                            }
-                            else {
-                                alert(data.error);
-                            }
-                        })
-                        .fail(function() {
-                            alert('Ошибка при удалении допечатки разделённого тиража');
-                        });
-            }
-            
-            function AddChildPartContinuation(id) {
-                $.ajax({ dataType: 'JSON', url: "_add_child_part_continuation.php?id=" + id })
-                        .done(function(data) {
-                            if(data.error === '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                            }
-                            else {
-                                alert(data.error);
-                            }
-                        })
-                        .fail(function() {
-                            alert('Ошибка при создании допечатки разделённого тиража');
-                        });
-            }
-            
-            function RemoveChildPartContinuation(id) {
-                $.ajax({ dataType: 'JSON', url: "_remove_child_part_continuation.php?id=" + id })
-                        .done(function(data) {
-                            if(data.error === '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                            }
-                            else {
-                                alert(data.error);
-                            }
-                        })
-                        .fail(function() {
-                            alert('Ошибка при удалении допечатки разделённого тиража');
-                        });
-            }
-            
             var dragqueue = false;
             
             function DragEdition(ev) {
@@ -969,13 +766,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 ev.dataTransfer.setData("type", "event");
             }
             
-            function DragPart(ev) {
-                dragqueue = true;
-                ev.dataTransfer.setData("part_id", $(ev.target).attr("data-id"));
-                ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
-                ev.dataTransfer.setData("type", "part");
-            }
-            
             function DragTimetableEdition(ev) {
                 ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
                 ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
@@ -985,12 +775,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             function DragTimetableEvent(ev) {
                 ev.dataTransfer.setData("event_id", $(ev.target).attr("data-id"));
                 ev.dataTransfer.setData("type", "timetableevent");
-            }
-            
-            function DragTimetablePart(ev) {
-                ev.dataTransfer.setData("part_id", $(ev.target).attr("data-id"));
-                ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
-                ev.dataTransfer.setData("type", "timetablepart");
             }
             
             function DragOverQueue(ev) {
@@ -1065,24 +849,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                                 alert('Ошибка при удалении события из плана');
                             });
                 }
-                else if(type === 'timetablepart') {
-                    var part_id = ev.dataTransfer.getData('part_id');
-                    
-                    $.ajax({ dataType: 'JSON', url: "_remove_part.php?part_id=" + part_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
-                        .done(function(remove_data) {
-                            if(remove_data.error === '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                            }
-                            else {
-                                alert(remove_data.error);
-                                $('td').removeClass('target');
-                                $('#queue').removeClass('droppable');
-                            }
-                        })
-                        .fail(function() {
-                            alert('Ошибка при удалении разделённого тиража из плана');
-                        });
-                }
         
                 $('#queue').removeClass('droppable');
             }
@@ -1132,24 +898,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                             alert('Ошибка при добавлении события в план ' + add_data.error);
                         });
                 }
-                else if(type === 'part') {
-                    var part_id = ev.dataTransfer.getData('part_id');
-                    
-                    $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
-                        .done(function(add_data) {
-                            if(add_data.error === '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                            }
-                            else {
-                                alert(add_data.error);
-                                $('td').removeClass('target');
-                                $('#queue').removeClass('droppable');
-                            }
-                        })
-                        .fail(function(add_data) {
-                            alert('Ошибка при добавлении разделённого тиража в план ' + add_data.error);
-                        });
-                }
                 else if(type === 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     var lamination = ev.dataTransfer.getData('lamination');
@@ -1185,24 +933,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                         })
                         .fail(function(add_data) {
                             alert('Ошибка при добавлении события в план ' + add_data.error);
-                        });
-                }
-                else if(type === 'timetablepart') {
-                    var part_id = ev.dataTransfer.getData('part_id');
-                    
-                    $.ajax({ dataType: 'JSON', url: "_add_part.php?part_id=" + part_id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
-                        .done(function(add_data) {
-                            if(add_data.error === '') {
-                                DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
-                            }
-                            else {
-                                alert(add_data.error);
-                                $('td').removeClass('target');
-                                $('#queue').removeClass('droppable');
-                            }
-                        })
-                        .fail(function(add_data) {
-                            alert("Ошибка при добавлении разделённого тиража в план " + add_data.error);
                         });
                 }
                 else {

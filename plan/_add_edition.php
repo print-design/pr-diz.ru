@@ -113,8 +113,6 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_edition = 0;
     $max_continuation = 0;
     $max_event = 0;
-    $max_part = 0;
-    $max_part_continuation = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
             . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
@@ -151,7 +149,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     }
     $max_event = $row[0];
     
-    $edition->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
+    $edition->Position = max($max_edition, $max_continuation, $max_event) + 1;
 }
 else {
     $sql = "update plan_edition set position = ifnull(position, 0) + 1 "
@@ -177,8 +175,6 @@ else {
     $max_edition = 0;
     $max_continuation = 0;
     $max_event = 0;
-    $max_part = 0;
-    $max_part_continuation = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
             . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
@@ -218,7 +214,7 @@ else {
     }
     $max_event = $row[0];
     
-    $edition->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
+    $edition->Position = max($max_edition, $max_continuation, $max_event) + 1;
 }
 
 $plan_edition_id = 0;
@@ -259,10 +255,7 @@ else {
         // 3. Тип работы "ламинация", ламинации две.
         // Статус устанавливаем "в плане ламинации":
         // - два тиража,
-        // - один тираж и половинки второго тиража.
         $editions_count = 0;
-        $parts_in_plan = 0;
-        $parts_not_in_plan = 0;
         
         $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
         $fetcher = new Fetcher($sql);
@@ -270,8 +263,7 @@ else {
             $editions_count = $row[0];
         }
         
-        if($editions_count == 2 
-                || ($editions_count == 1 && $parts_in_plan > 0 && $parts_not_in_plan == 0)) {
+        if($editions_count == 2) {
             $sql = "update calculation set status_id = ".ORDER_STATUS_PLAN_LAMINATE." where id = $calculation_id";
             $executer = new Executer($sql);
             $error = $executer->error;

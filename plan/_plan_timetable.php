@@ -202,10 +202,10 @@ class PlanTimetable {
                     $AN = (3.744 * pow($thickness, 2)) - (488.4578 * $thickness) + 19401;
                 }
                 
-                if($row['type'] == PLAN_TYPE_EDITION || $row['type'] == PLAN_TYPE_PART) {
+                if($row['type'] == PLAN_TYPE_EDITION) {
                     $row['samples_count'] = ceil(($row['length_pure_1'] / $AN) + 1);
                 }
-                elseif($row['type'] == PLAN_TYPE_CONTINUATION || $row['type'] == PLAN_TYPE_PART_CONTINUATION) {
+                elseif($row['type'] == PLAN_TYPE_CONTINUATION) {
                     $row['samples_count'] = floor(($row['length_pure_1'] / $AN) + 1);
                 }
             }

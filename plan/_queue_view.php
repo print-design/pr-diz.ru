@@ -3,8 +3,6 @@
         <div class="d-flex justify-content-start">
             <?php if($row['type'] == PLAN_TYPE_EDITION): ?>
             <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
-            <?php elseif ($row['type'] == PLAN_TYPE_PART): ?>
-            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" draggable="true" ondragstart="DragPart(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
             <?php endif; ?>
             <div>
                 <div style="font-weight: bold; font-size: large; line-height: 1.4rem; margin-bottom: 0.5rem;"><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
@@ -35,14 +33,6 @@
                         <div class="command d-none">
                             <?php if($row['type'] == PLAN_TYPE_EDITION): ?>
                             <button type="button" class="btn btn-link h-25 btn_divide" style="font-size: 14px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Разделить</button>
-                            <?php elseif($row['type'] == PLAN_TYPE_PART): ?>
-                            <form method="post">
-                                <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
-                                <input type="hidden" name="work_id" value="<?=$this->work_id ?>" />
-                                <input type="hidden" name="lamination" value="<?=$row['lamination'] ?>" />
-                                <input type="hidden" name="scroll" />
-                                <button type="submit" class="btn btn-link h-25" name="undivide_submit" style="font-size: 14px;"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/divide.svg" /></div>Отменить разделение</button>
-                            </form>
                             <?php endif; ?>
                         </div>
                         <?php if($row['queue_top'] == 0): ?>

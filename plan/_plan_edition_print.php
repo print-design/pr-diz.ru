@@ -54,7 +54,7 @@
                 <?php elseif($this->plan_shift->timetable->work_id == WORK_LAMINATION && $this->edition['lamination'] == 2): ?>
                 <div class="text-nowrap"><?= DisplayNumber(floatval($this->edition['length_pure_3']), 0) ?></div>
                 <?php endif; ?>
-                <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION ? ' '.WORK_CONTINUATIONS[$this->plan_shift->timetable->work_id] : '' ?>
+                <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION ? ' '.WORK_CONTINUATIONS[$this->plan_shift->timetable->work_id] : '' ?>
             </div>
             <div>
                 <?php if($this->edition['has_continuation']): ?>

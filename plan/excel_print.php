@@ -76,8 +76,7 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
                 . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
-                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-                . "0 as second_part "
+                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                 . "from plan_edition pe "
                 . "inner join calculation c on pe.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
@@ -86,22 +85,6 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "inner join film f on fv.film_id = f.id "
                 . "where pe.work_id = ".WORK_PRINTING." and pe.machine_id = ".$printer
                 . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
-                . "union "
-                . "select pp.date, pp.shift, pp.lamination, c.name, c.customer_id, c.ink_number, c.raport, c.streams_number, c.stream_width, c.streams_number * c.stream_width width, c.ski, c.width_ski, "
-                . "f.name film, fv.thickness, "
-                . "u.first_name, u.last_name, "
-                . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
-                . "cr.income + cr.income_cliche + cr.income_knife as total_income, "
-                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-                . "(select count(id) from plan_part where calculation_id = pp.calculation_id and ((work_id = pp.work_id and machine_id = pp.machine_id and date < pp.date) || (work_id = pp.work_id and machine_id = pp.machine_id and date = pp.date and shift = 'day' and pp.shift = 'night') || (work_id = pp.work_id and machine_id <> pp.machine_id and id < pp.id))) second_part "
-                . "from plan_part pp "
-                . "inner join calculation c on pp.calculation_id = c.id "
-                . "inner join user u on c.manager_id = u.id "
-                . "inner join calculation_result cr on cr.calculation_id = c.id "
-                . "inner join film_variation fv on c.film_variation_id = fv.id "
-                . "inner join film f on fv.film_id = f.id "
-                . "where pp.work_id = ".WORK_PRINTING." and pp.machine_id = ".$printer
-                . " and pp.date >= '".$date_from->format('Y/m/d')."' and pp.date <= '".$date_to->format('Y/m/d')."' "
                 . "order by date, shift";
         $fetcher = new Fetcher($sql);
         while($row = $fetcher->Fetch()) {
@@ -113,105 +96,60 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('D'.$rowindex, $row['customer_id']."-".$row["num_for_customer"]);
             $sheet->setCellValue('E'.$rowindex, $row['name']);
             
-            if($row['second_part'] > 0) {
-                $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('F'.$rowindex, 'Разделен');
+            $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('F'.$rowindex, $row['weight_pure_1']);
             
-                $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('G'.$rowindex, 'Разделен');
+            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
             
-                $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('H'.$rowindex, 'Разделен');
-            
-                $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('I'.$rowindex, 'Разделен');
-            
-                $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('J'.$rowindex, 'Разделен');
-            
-                $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('K'.$rowindex, 'Разделен');
-            
-                $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('L'.$rowindex, 'Разделен');
-            
-                $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('M'.$rowindex, 'Разделен');
+            $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('H'.$rowindex, $row["ink_number"]);
                 
-                $sheet->getCell('N'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('N'.$rowindex, 'Разделен');
+            $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('I'.$rowindex, $row['raport']);
                 
-                $sheet->getCell('O'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('O'.$rowindex, 'Разделен');
+            $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+            $sheet->setCellValue('J'.$rowindex, $row['film']);
                 
-                $sheet->getCell('P'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('P'.$rowindex, 'Разделен');
+            $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('K'.$rowindex, $row['thickness']);
                 
-                $sheet->getCell('Q'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('Q'.$rowindex, 'Разделен');
-                
-                $sheet->getCell('R'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('R'.$rowindex, 'Разделен');
-                
-                $sheet->getCell('S'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('S'.$rowindex, 'Разделен');
+            $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            if($row['ski'] == SKI_NONSTANDARD) {
+                $sheet->setCellValue('L'.$rowindex, $row['width_ski']);
+            }
+            elseif ($row['ski'] == SKI_NO) {
+                $sheet->setCellValue('L'.$rowindex, $row['width']);
             }
             else {
-                $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('F'.$rowindex, $row['weight_pure_1']);
-            
-                $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
-            
-                $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('H'.$rowindex, $row["ink_number"]);
-                
-                $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('I'.$rowindex, $row['raport']);
-                
-                $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('J'.$rowindex, $row['film']);
-                
-                $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('K'.$rowindex, $row['thickness']);
-                
-                $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                if($row['ski'] == SKI_NONSTANDARD) {
-                    $sheet->setCellValue('L'.$rowindex, $row['width_ski']);
-                }
-                elseif ($row['ski'] == SKI_NO) {
-                    $sheet->setCellValue('L'.$rowindex, $row['width']);
-                }
-                else {
-                    $sheet->setCellValue('L'.$rowindex, $row['width'] + 20);
-                }
-                
-                $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('M'.$rowindex, $row['streams_number']);
-                
-                $sheet->getCell('N'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('N'.$rowindex, $row['stream_width']);
-            
-                $sheet->getCell('O'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('O'.$rowindex, $row['ink_cost']);
-            
-                $sheet->getCell('P'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('P'.$rowindex, $row['cliche_cost']);
-            
-                $sheet->getCell('Q'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('Q'.$rowindex, $row['cost']);
-            
-                $sheet->getCell('R'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('R'.$rowindex, $row['shipping_cost']);
-            
-                $sheet->getCell('S'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                $sheet->setCellValue('S'.$rowindex, $row['total_income']);
-                
-                $sheet->getStyle('F'.$rowindex.':H'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
-                $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-                $sheet->getStyle('K'.$rowindex.':N'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
-                $sheet->getStyle('O'.$rowindex.':S'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+                $sheet->setCellValue('L'.$rowindex, $row['width'] + 20);
             }
+                
+            $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('M'.$rowindex, $row['streams_number']);
+                
+            $sheet->getCell('N'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('N'.$rowindex, $row['stream_width']);
+            
+            $sheet->getCell('O'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('O'.$rowindex, $row['ink_cost']);
+            
+            $sheet->getCell('P'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('P'.$rowindex, $row['cliche_cost']);
+            
+            $sheet->getCell('Q'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('Q'.$rowindex, $row['cost']);
+            
+            $sheet->getCell('R'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('R'.$rowindex, $row['shipping_cost']);
+            
+            $sheet->getCell('S'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('S'.$rowindex, $row['total_income']);
+                
+            $sheet->getStyle('F'.$rowindex.':H'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+            $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->getStyle('K'.$rowindex.':N'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+            $sheet->getStyle('O'.$rowindex.':S'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         }
         
         $activeSheetIndex++;

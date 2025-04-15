@@ -32,8 +32,6 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_edition = 0;
     $max_continuation = 0;
     $max_event = 0;
-    $max_part = 0;
-    $max_part_continuation = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
             . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
@@ -71,7 +69,7 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     }
     $max_event = $row[0];
     
-    $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
+    $event->Position = max($max_edition, $max_continuation, $max_event) + 1;
 }
 else {
     $sql = "update plan_edition set position = ifnull(position, 0) + 1 "
@@ -97,8 +95,6 @@ else {
     $max_edition = 0;
     $max_continuation = 0;
     $max_event = 0;
-    $max_part = 0;
-    $max_part_continuation = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
             . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
@@ -137,7 +133,7 @@ else {
     }
     $max_event = $row[0];
     
-    $event->Position = max($max_edition, $max_continuation, $max_event, $max_part, $max_part_continuation) + 1;
+    $event->Position = max($max_edition, $max_continuation, $max_event) + 1;
 }
 
 $sql = "update plan_event set in_plan = 1, date = '".$event->Date."', shift = '".$event->Shift."', position = ".$event->Position." where id = $event_id";

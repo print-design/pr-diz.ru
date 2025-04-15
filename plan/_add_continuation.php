@@ -71,8 +71,6 @@ if($row = $fetcher->Fetch()) {
 $sum_edition = 0;
 $sum_continuation = 0;
 $sum_event = 0;
-$sum_part = 0;
-$sum_part_continuation = 0;
 
 $sql = "select sum(worktime) from plan_edition where id <> $id and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
 $fetcher = new Fetcher($sql);
@@ -107,7 +105,7 @@ if($row = $fetcher->Fetch()) {
     }
 }
 
-$start_time = 12 - $sum_edition - $sum_continuation - $sum_event - $sum_part - $sum_part_continuation;
+$start_time = 12 - $sum_edition - $sum_continuation - $sum_event;
 
 if($start_time < 0) {
     $start_time = 0;

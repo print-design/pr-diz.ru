@@ -35,7 +35,7 @@
                 <div class="text-nowrap">
                     <?= DisplayNumber(floatval($this->edition['length_pure_1']), 0) ?>
                 </div>
-                <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION || $this->edition['type'] == PLAN_TYPE_PART_CONTINUATION ? ' '.WORK_CONTINUATIONS[WORK_CUTTING] : '' ?>
+                <?= $this->edition['type'] == PLAN_TYPE_CONTINUATION ? ' '.WORK_CONTINUATIONS[WORK_CUTTING] : '' ?>
             </div>
             <div>
                 <?php if($this->edition['has_continuation']): ?>
