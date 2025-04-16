@@ -151,7 +151,7 @@ foreach($cutters as $cutter) {
                         $employees[$workshifts[$key]][KG] = 0.0;
                     }
                     
-                    $employees[$workshifts[$key]][KG] = floatval($employees[$workshifts[$key]][KG]) + strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut']));
+                    $employees[$workshifts[$key]][KG] = floatval($employees[$workshifts[$key]][KG]) + (strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut'])) / 1000);
                 }
             }
             
@@ -161,7 +161,7 @@ foreach($cutters as $cutter) {
                         $employees[$workshifts[$key]][PIECES] = 0.0;
                     }
                     
-                    $employees[$workshifts[$key]][PIECES] = floatval($employees[$workshifts[$key]][PIECES]) + strval($length_cut * floatval($row['worktime']) / floatval($row['worktime_cut']));
+                    $employees[$workshifts[$key]][PIECES] = floatval($employees[$workshifts[$key]][PIECES]) + (strval($length_cut * floatval($row['worktime']) / floatval($row['worktime_cut'])) / 1000);
                 }
             }
         }
@@ -181,9 +181,13 @@ $sheet->getColumnDimension('B')->setAutoSize(true);
 $sheet->getColumnDimension('C')->setAutoSize(true);
 $sheet->getColumnDimension('D')->setAutoSize(true);
 
-$sheet->setCellValue('A2', "Тариф");
 $sheet->setCellValue('B1', "Тонна");
 $sheet->setCellValue('C1', "Км");
+$sheet->setCellValue('A2', "Тариф");
+$sheet->getStyle('B2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+$sheet->setCellValue('B2', '0');
+$sheet->getStyle('C2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+$sheet->setCellValue('C2', '0');
 $sheet->setCellValue('D3', "Итого");
 
 $row_number = 4;
@@ -198,9 +202,12 @@ foreach($employees_sorted as $employee_id) {
         }
         
         if(key_exists(PIECES, $employees[$employee_id]) && !empty($employees[$employee_id][PIECES])) {
-            $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+            $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
             $sheet->setCellValue('C'.$row_number, strval($employees[$employee_id][PIECES]));
         }
+        
+        $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->setCellValue('D'.$row_number, '=PRODUCT(B2,B'.$row_number.')+PRODUCT(C2,C'.$row_number.')');
         
         $row_number++;
     }
