@@ -189,7 +189,7 @@ class Queue {
                 . "0 as lamination, "
                 . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position, null as lamination_date, '' as lamination_shift, 0 as lamination_position "
                 . "from plan_event "
-                . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
+                . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id;
                 
         if($this->machine_id == CUTTER_ATLAS) {
             $sql .= " and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE;
