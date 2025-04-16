@@ -174,21 +174,21 @@ foreach($cutters as $cutter) {
 $xls->createSheet();
 $xls->setActiveSheetIndex($activeSheetIndex);
 $sheet = $xls->getActiveSheet();
-$sheet->setTitle("Р");
+$sheet->setTitle("₽");
 
 $sheet->getColumnDimension('A')->setAutoSize(true);
 $sheet->getColumnDimension('B')->setAutoSize(true);
 $sheet->getColumnDimension('C')->setAutoSize(true);
 $sheet->getColumnDimension('D')->setAutoSize(true);
 
-$sheet->setCellValue('B1', "Тонна");
-$sheet->setCellValue('C1', "Км");
+$sheet->setCellValue('B1', "Тонна ₽");
+$sheet->setCellValue('C1', "Км ₽");
 $sheet->setCellValue('A2', "Тариф");
 $sheet->getStyle('B2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 $sheet->setCellValue('B2', '0');
 $sheet->getStyle('C2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 $sheet->setCellValue('C2', '0');
-$sheet->setCellValue('D3', "Итого");
+$sheet->setCellValue('D3', "Итого ₽");
 
 $row_number = 4;
 
