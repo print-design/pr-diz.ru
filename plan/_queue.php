@@ -190,17 +190,6 @@ class Queue {
                 . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position, null as lamination_date, '' as lamination_shift, 0 as lamination_position "
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id;
-                
-        if($this->machine_id == CUTTER_ATLAS) {
-            $sql .= " and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE;
-        }
-        else {
-            $sql .= " and "
-                    . "(c.work_type_id = ".WORK_TYPE_PRINT
-                    . " or "
-                    . "c.work_type_id = ".WORK_TYPE_NOPRINT
-                    . ")";
-        }
         $sql .= " union "
                 . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.status_id, c.status_date, c.queue_top, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
