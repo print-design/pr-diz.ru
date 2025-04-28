@@ -56,6 +56,17 @@ if($row = $fetcher->Fetch()) {
     $min_percent = $row['min_percent'];
 }
 
+$machine_width = null;
+
+$machine_id = filter_input(INPUT_POST, 'machine_id');
+if(!empty($machine_id)) {
+    $sql = "select width from norm_machine where machine_id = $machine_id order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $machine_width = $row['width'];
+    }
+}
+
 // Значение марки плёнки "другая"
 const INDIVIDUAL = -1;
 
@@ -81,12 +92,15 @@ $individual_thickness_valid = '';
 $individual_density_valid = '';
 
 $width_ski_valid = '';
+$width_machine_valid = '';
 
 $lamination1_price_valid = '';
 $lamination1_width_ski_valid = '';
+$lamination1_width_machine_valid = '';
 
 $lamination2_price_valid = '';
 $lamination2_width_ski_valid = '';
+$lamination2_width_machine_valid = '';
 
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
@@ -193,8 +207,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
         
+        // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
         if($width_ski < $stream_width * $streams_number) {
             $width_ski_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
+        if(!empty($machine_width) && $width_ski > $machine_width) {
+            $width_machine_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -219,8 +240,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
         
+        // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
         if($lamination1_width_ski < $stream_width * $streams_number) {
             $lamination1_width_ski_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
+        if(!empty($machine_width) && $lamination1_width_ski > $machine_width) {
+            $lamination1_width_machine_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -245,8 +273,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $stream_width = filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
         
+        // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
         if($lamination2_width_ski < $stream_width * $streams_number) {
             $lamination2_width_ski_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
+        if(!empty($machine_width) && $lamination2_width_ski > $machine_width) {
+            $lamination2_width_machine_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -1488,11 +1523,16 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="width_ski" id="for_width_ski">Ширина пленки, мм</label>
-                                    <input name="width_ski" id="width_ski" type="text" class="form-control int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#width_ski_message').hide();" />
+                                    <input name="width_ski" id="width_ski" type="text" class="form-control int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#width_ski_message').hide(); $('#width_machine_message').hide();" />
                                     <div class="invalid-feedback">Ширина пленки обязательно</div>
                                 </div>
                                 <?php if(!empty($width_ski_valid)): ?>
                                 <div class="text-danger" id="width_ski_message">Узкая плёнка</div>
+                                <?php
+                                endif;
+                                if(!empty($width_machine_valid)):
+                                ?>
+                                <div class="text-danger" id="width_machine_message">Материал шире оборудования</div>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -1702,11 +1742,16 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="lamination1_width_ski" id="for_lamination1_width_ski">Ширина пленки, мм</label>
-                                        <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control int-only" value="<?=$lamination1_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination1_width_ski_message').hide();" />
+                                        <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control int-only" value="<?=$lamination1_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination1_width_ski_message').hide(); $('#lamination1_width_machine_message').hide();" />
                                         <div class="invalid-feedback">Ширина пленки обязательно</div>
                                     </div>
                                     <?php if(!empty($lamination1_width_ski_valid)): ?>
                                     <div class="text-danger" id="lamination1_width_ski_message">Узкая плёнка</div>
+                                    <?php
+                                    endif;
+                                    if(!empty($lamination1_width_machine_valid)):
+                                    ?>
+                                    <div class="text-danger" id="lamination1_width_machine_message">Материал шире оборудования</div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -1880,11 +1925,16 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="lamination2_width_ski" id="for_lamination2_width_ski">Ширина пленки, мм</label>
-                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control int-only" value="<?=$lamination2_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination2_width_ski_message').hide();" />
+                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control int-only" value="<?=$lamination2_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination2_width_ski_message').hide(); $('#lamination2_width_machine_message').hide();" />
                                             <div class="invalid-feedback">Ширина пленки обязательно</div>
                                         </div>
                                         <?php if(!empty($lamination2_width_ski_valid)): ?>
                                         <div class="text-danger" id="lamination2_width_ski_message">Узкая плёнка</div>
+                                        <?php
+                                        endif;
+                                        if(!empty($lamination2_width_machine_valid)):
+                                        ?>
+                                        <div class="text-danger" id="lamination2_width_machine_message">Материал шире оборудования</div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
