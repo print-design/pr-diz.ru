@@ -204,7 +204,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     if(filter_input(INPUT_POST, 'ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $width_ski = filter_input(INPUT_POST, 'width_ski');
-        $stream_width = filter_input(INPUT_POST, 'stream_width');
+        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
         
         // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
@@ -237,7 +238,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     if(filter_input(INPUT_POST, 'lamination1_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination1_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski');
-        $stream_width = filter_input(INPUT_POST, 'stream_width');
+        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
         
         // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
@@ -270,7 +272,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     if(filter_input(INPUT_POST, 'lamination2_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination2_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
-        $stream_width = filter_input(INPUT_POST, 'stream_width');
+        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
         $streams_number = filter_input(INPUT_POST, 'streams_number');
         
         // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
@@ -735,18 +738,12 @@ if($machine_id === null && isset($row['machine_id'])) {
     $machine_id = $row['machine_id'];
 }
 
-$length = filter_input(INPUT_POST, 'length');
-if(empty($length)) {
-    $length = filter_input(INPUT_POST, 'length_2');
-}
+$length = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length');
 if(empty($length) && isset($row['length'])) {
     $length = $row['length'];
 }
 
-$stream_width = filter_input(INPUT_POST, 'stream_width');
-if(empty($stream_width)) {
-    $stream_width = filter_input(INPUT_POST, 'stream_width_2');
-}
+$stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
 if(empty($stream_width) && isset($row['stream_width'])) {
     $stream_width = $row['stream_width'];
 }
@@ -756,10 +753,7 @@ if($raport === null && isset($row['raport'])) {
     $raport = $row['raport'];
 }
 
-$number_in_raport = filter_input(INPUT_POST, 'number_in_raport');
-if(empty($number_in_raport)) {
-    $number_in_raport = filter_input(INPUT_POST, 'number_in_raport_2');
-}
+$number_in_raport = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport');
 if(empty($number_in_raport) && isset($row['number_in_raport'])) {
     $number_in_raport = $row['number_in_raport'];
 }
