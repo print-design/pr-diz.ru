@@ -10,7 +10,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
     $graph_key_id = filter_input(INPUT_POST, 'graph_key_id');
     $graph_key = filter_input(INPUT_POST, 'graph_key');
     
-    $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where graph_key = '$graph_key'";
+    $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where graph_key = password('$graph_key')";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $user_id = $row['id'];

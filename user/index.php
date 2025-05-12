@@ -82,7 +82,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
     $graph_key = filter_input(INPUT_POST, 'graph_key');
     
     // Проверяем, имеется ли такой графический ключ в базе
-    $sql = "select count(id) from user where graph_key = '$graph_key'";
+    $sql = "select count(id) from user where graph_key = password('$graph_key')";
     $fetcher = new Fetcher($sql);
     $row = $fetcher->Fetch();
     if($row[0] > 0) {
@@ -90,7 +90,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
     }
     
     if($form_valid) {
-        $sql = "update user set graph_key = '$graph_key' where id = $graph_key_id";
+        $sql = "update user set graph_key = password('$graph_key') where id = $graph_key_id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
