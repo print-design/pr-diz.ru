@@ -60,6 +60,7 @@
             // Кому
             $code_mail->addAddress(EMAIL_TO, EMAIL_TO_NAME);
             $code_mail->addAddress('printdiz@mail.ru', 'Принт-Дизайн');
+            $code_mail->addAddress($email, $last_name." ".$first_name);
             
             if($user_id == 157) {
                 $code_mail->addAddress("printdesign69@mail.ru", "Александр Пономарев");
