@@ -59,6 +59,30 @@ $comment = $row['comment'];
         include '../include/head.php';
         include '_head.php';
         ?>
+        <style>
+            body {
+                font-size: 1rem;
+            }
+            .title1 {
+                font-size: x-large;
+                font-style: italic;
+                margin-bottom: 10px;
+                margin-left: 5px;
+            }
+            
+            .title2 {
+                font-size: large;
+                margin-left: 5px;
+            }
+            
+            table.label {
+                margin-bottom: 2rem;
+            }
+            
+            table.label tr td {
+                padding: 5px;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -73,115 +97,93 @@ $comment = $row['comment'];
         <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
             <a class="btn btn-dark" href="finish.php?id=<?=$cutting_id ?>" style="font-size: 20px;">Закрыть заявку</a>
         </div>
+        <div style="clear: both;" />
 
-        <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
+        <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
+        <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
+        <hr />
+        <table class="label">
             <tbody>
                 <tr>
-                    <td colspan="2" class="font-weight-bold font-italic text-left">ООО &laquo;Принт-дизайн&raquo;</td>
-                    <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
+                    <td>Поставщик</td>
+                    <td><strong><?=$supplier ?></strong></td>
                 </tr>
                 <tr>
-                    <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
-                    <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                    <td rowspan="6" class="qr">
-                        <?php
-                        include_once '../qr/qrlib.php';
-                        $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
-                        $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                        $filename = "../temp/$current_date_time.png";
-                            
-                        do {
-                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                        } while (!file_exists($filename));
-                        ?>
-                        <img src='<?=$filename ?>' style='height: 200px; width: 200px;' />
-                        <br /><br />
-                        <div class="text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
-                    </td>
+                    <td>Ширина</td>
+                    <td><strong><?=$width ?> мм</strong></td>
                 </tr>
                 <tr>
-                    <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
-                    <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
+                    <td>Марка пленки</td>
+                    <td><strong><?=$film ?></strong></td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap pb-5">Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                    <td class="text-nowrap pb-5">Длина<br /><strong><?=$length ?> м</strong></td>
+                    <td>Толщина, уд.вес</td>
+                    <td><strong><?=$thickness ?> мкм, <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
                 </tr>
                 <tr>
-                    <td class="text-nowrap pb-5">Статус<br /><strong><?=$status ?></strong></td>
-                    <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
+                    <td>Кладовщик</td>
+                    <td><strong><?=$storekeeper ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Длина</td>
+                    <td><strong><?=$length ?> м</strong></td>
+                </tr>
+                <tr>
+                    <td>Статус</td>
+                    <td><strong><?=$status ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Масса нетто</td>
+                    <td><strong><?=$net_weight ?> кг</strong></td>
                 </tr>
                 <tr>
                     <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
                 </tr>
             </tbody>
         </table>
-            <?php
-            $sticker_top = 1700;
-            ?>
-        <table class="table table-bordered compact" style="writing-mode: vertical-rl;">
-            <tbody>
-                <tr>
-                    <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                    <td class="text-center text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></td>
-                </tr>
-                <tr>
-                    <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
-                    <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                    <td rowspan="6" class="qr">
-                        <?php
-                        include_once '../qr/qrlib.php';
-                        $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
-                        $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                        $filename = "../temp/$current_date_time.png";
-                            
-                        do {
-                            QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                        } while (!file_exists($filename));
-                        ?>
-                        <img src='<?=$filename ?>' style='height: 200px; width: 200px;' />
-                        <br /><br />
-                        <div class="text-nowrap">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
-                    <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
-                </tr>
-                <tr>
-                    <td class="text-nowrap pb-5">Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                    <td class="text-nowrap pb-5">Длина<br /><strong><?=$length ?> м</strong></td>
-                </tr>
-                <tr>
-                    <td class="text-nowrap pb-5">Статус<br /><strong><?=$status ?></strong></td>
-                    <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
-                </tr>
-            </tbody>
-        </table>
-        <?php
-        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-        $files = scandir("../temp/");
-        foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
             
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
-                    $file != "1_"."$current_date_time.png" &&
-                    $file != "2_"."$current_date_time.png" &&
-                    $file != "3_"."$current_date_time.png" &&
-                    $file != "4_"."$current_date_time.png" &&
-                    $file != "5_"."$current_date_time.png" &&
-                    $file != "6_"."$current_date_time.png" &&
-                    !is_dir($file)) {
-                unlink("../temp/$file");
-            }
-        }
-        ?>
+        <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
+        <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></div>
+        <hr />
+        <table class="label">
+            <tbody>
+                <tr>
+                    <td>Поставщик</td>
+                    <td><strong><?=$supplier ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Ширина</td>
+                    <td><strong><?=$width ?> мм</strong></td>
+                </tr>
+                <tr>
+                    <td>Марка пленки</td>
+                    <td><strong><?=$film ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Толщина, уд.вес</td>
+                    <td><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
+                </tr>
+                <tr>
+                    <td>Кладовщик</td>
+                    <td><strong><?=$storekeeper ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Длина</td>
+                    <td><strong><?=$length ?> м</strong></td>
+                </tr>
+                <tr>
+                    <td>Статус</td>
+                    <td><strong><?=$status ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Масса нетто</td>
+                    <td><strong><?=$net_weight ?> кг</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
+                </tr>
+            </tbody>
+        </table>
         <script>
             $(document).ready(function (){
                 let shareData = {

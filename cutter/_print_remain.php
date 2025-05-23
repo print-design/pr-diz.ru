@@ -47,53 +47,52 @@ $current_date_time = date("dmYHis");
         ?>
         <style>
             table.print tr td {
-                font-size: 42px;
-                line-height: 48px;
-                vertical-align: top;
+                font-size: 4rem;
+                line-height: 4rem;
                 white-space: pre-wrap;
-                padding: 0;
-                padding-right: 10px;
+                padding: 10px;
+                vertical-align: top;
             }
         </style>
     </head>
-    <body class="print">
-        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
-            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
+    <body>
+        <div style="position: absolute; top: <?=$sticker_top ?>px;">
+            <p style="font-size: 4.2rem;" class="font-italic"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></p>
+            <p style="font-size: 4rem;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></p>
+            <hr />
+            <table class="print">
                 <tbody>
                     <tr>
-                        <td colspan="2" class="font-weight-bold font-italic text-left">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
+                        <td>Поставщик</td>
+                        <td><strong><?=$supplier ?></strong></td>
                     </tr>
                     <tr>
-                        <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
-                        <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                        <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
-                            <?php
-                            include_once '../qr/qrlib.php';
-                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
-                            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $filename = "../temp/$current_date_time.png";
-                            
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
-                            ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
-                            <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
-                        </td>
+                        <td>Ширина</td>
+                        <td><strong><?=$width ?> мм</strong></td>
                     </tr>
                     <tr>
-                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
-                        <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
+                        <td>Марка пленки</td>
+                        <td><strong><?=$film ?></strong></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                        <td class="text-nowrap pb-5">Длина<br /><strong><?=$length ?> м</strong></td>
+                        <td>Толщина, уд.вес</td>
+                        <td><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Статус<br /><strong><?=$status ?></strong></td>
-                        <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
+                        <td>Кладовщик</td>
+                        <td><strong><?=$storekeeper ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Длина</td>
+                        <td><strong><?=$length ?> м</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Статус</td>
+                        <td><strong><?=$status ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Масса нетто</td>
+                        <td><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
@@ -103,46 +102,46 @@ $current_date_time = date("dmYHis");
         </div>
         
         <?php
-        $sticker_top = 1700;
+        $sticker_top = 1515;
         ?>
         
-        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
-            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl;">
+        <div style="position: absolute; top: <?=$sticker_top ?>px;">
+            <p style="font-size: 4.2rem;" class="font-italic"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></p>
+            <p style="font-size: 4rem;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></p>
+            <hr />
+            <table class="print">
                 <tbody>
                     <tr>
-                        <td colspan="2" class="font-weight-bold font-italic text-center">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></td>
+                        <td>Поставщик</td>
+                        <td><strong><?=$supplier ?></strong></td>
                     </tr>
                     <tr>
-                        <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
-                        <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                        <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
-                            <?php
-                            include_once '../qr/qrlib.php';
-                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
-                            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $filename = "../temp/$current_date_time.png";
-                            
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
-                            ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
-                            <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
-                        </td>
+                        <td>Ширина</td>
+                        <td><strong><?=$width ?> мм</strong></td>
                     </tr>
                     <tr>
-                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
-                        <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
+                        <td>Марка пленки</td>
+                        <td><strong><?=$film ?></strong></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                        <td class="text-nowrap pb-5">Длина<br /><strong><?=$length ?> м</strong></td>
+                        <td>Толщина, уд.вес</td>
+                        <td><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Статус<br /><strong><?=$status ?></strong></td>
-                        <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
+                        <td>Кладовщик</td>
+                        <td><strong><?=$storekeeper ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Длина</td>
+                        <td><strong><?=$length ?> м</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Статус</td>
+                        <td><strong><?=$status ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Масса нетто</td>
+                        <td><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
@@ -150,26 +149,5 @@ $current_date_time = date("dmYHis");
                 </tbody>
             </table>
         </div>
-        <?php
-        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-        $files = scandir("../temp/");
-        foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
-            
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
-                    $file != "1_"."$current_date_time.png" &&
-                    $file != "2_"."$current_date_time.png" &&
-                    $file != "3_"."$current_date_time.png" &&
-                    $file != "4_"."$current_date_time.png" &&
-                    $file != "5_"."$current_date_time.png" &&
-                    $file != "6_"."$current_date_time.png" &&
-                    !is_dir($file)) {
-                unlink("../temp/$file");
-            }
-        }
-        ?>
     </body>
 </html>

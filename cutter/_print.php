@@ -26,16 +26,15 @@ if($row = $fetcher->Fetch()) {
         ?>
         <style>
             table.print tr td {
-                font-size: 42px;
-                line-height: 48px;
-                vertical-align: top;
+                font-size: 4rem;
+                line-height: 4rem;
                 white-space: pre-wrap;
-                padding: 0;
-                padding-right: 10px;
+                padding: 10px;
+                vertical-align: top;
             }
         </style>
     </head>
-    <body class="print">
+    <body>
         <?php
         // Получение данных
         $sql = "select r.id, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.storekeeper_id, u.last_name, u.first_name, r.supplier_id, s.name supplier, "
@@ -79,7 +78,7 @@ if($row = $fetcher->Fetch()) {
                 break;
             
             case 2:
-                $sticker_top = 1700;
+                $sticker_top = 1515;
                 break;
                 
             case 3:
@@ -156,43 +155,43 @@ if($row = $fetcher->Fetch()) {
                 break;
         }
         ?>
-        <div class="w-100" style="height: 1400px; position: absolute; top: <?=$sticker_top ?>px;">
-            <table class="table table-bordered print w-100" style="writing-mode: vertical-rl; margin-top: 30px;">
+        <div style="position: absolute; top: <?=$sticker_top ?>px;">
+            <p style="font-size: 4.2rem;" class="font-italic"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></p>
+            <p style="font-size: 4rem;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></p>
+            <hr />
+            <table class="print">
                 <tbody>
                     <tr>
-                        <td colspan="2" class="font-weight-bold font-italic text-left">ООО &laquo;Принт-дизайн&raquo;</td>
-                        <td class="text-center text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></td>
+                        <td>Поставщик</td>
+                        <td><strong><?=$supplier ?></strong></td>
                     </tr>
                     <tr>
-                        <td>Поставщик<br /><strong><?=$supplier ?></strong></td>
-                        <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
-                        <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
-                            <?php
-                            include_once '../qr/qrlib.php';
-                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
-                            $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $filename = "../temp/".$current_roll."_".$current_date_time.".png";
-                            
-                            do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
-                            ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
-                            <br /><br />
-                            <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
-                        </td>
+                        <td>Ширина</td>
+                        <td><strong><?=$width ?> мм</strong></td>
                     </tr>
                     <tr>
-                        <td class="pb-5">Марка пленки<br /><strong><?=$film ?></strong></td>
-                        <td class="text-nowrap pb-5">Толщина, уд.вес<br /><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
+                        <td>Марка пленки</td>
+                        <td><strong><?=$film ?></strong></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Кладовщик<br /><strong><?=$storekeeper ?></strong></td>
-                        <td class="text-nowrap pb-5">Длина<br /><strong><?=$length ?> м</strong></td>
+                        <td>Толщина, уд.вес</td>
+                        <td><span class="text-nowrap font-weight-bold"><?=$thickness ?> мкм, <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></span></td>
                     </tr>
                     <tr>
-                        <td class="text-nowrap pb-5">Статус<br /><strong><?=$status ?></strong></td>
-                        <td class="text-nowrap pb-5">Масса нетто<br /><strong><?=$net_weight ?> кг</strong></td>
+                        <td>Кладовщик</td>
+                        <td><strong><?=$storekeeper ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Длина</td>
+                        <td><strong><?=$length ?> м</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Статус</td>
+                        <td><strong><?=$status ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Масса нетто</td>
+                        <td><strong><?=$net_weight ?> кг</strong></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
@@ -200,41 +199,6 @@ if($row = $fetcher->Fetch()) {
                 </tbody>
             </table>
         </div>        
-        <?php
-        endwhile;
-        
-        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-        $files = scandir("../temp/");
-        foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
-            
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
-                    $file != "1_"."$current_date_time.png" &&
-                    $file != "2_"."$current_date_time.png" &&
-                    $file != "3_"."$current_date_time.png" &&
-                    $file != "4_"."$current_date_time.png" &&
-                    $file != "5_"."$current_date_time.png" &&
-                    $file != "6_"."$current_date_time.png" &&
-                    $file != "7_"."$current_date_time.png" &&
-                    $file != "8_"."$current_date_time.png" &&
-                    $file != "9_"."$current_date_time.png" &&
-                    $file != "10_"."$current_date_time.png" &&
-                    $file != "11_"."$current_date_time.png" &&
-                    $file != "12_"."$current_date_time.png" &&
-                    $file != "13_"."$current_date_time.png" &&
-                    $file != "14_"."$current_date_time.png" &&
-                    $file != "15_"."$current_date_time.png" &&
-                    $file != "16_"."$current_date_time.png" &&
-                    $file != "17_"."$current_date_time.png" &&
-                    $file != "18_"."$current_date_time.png" &&
-                    $file != "19_"."$current_date_time.png" &&
-                    !is_dir($file)) {
-                unlink("../temp/$file");
-            }
-        }
-        ?>
+        <?php endwhile; ?>
     </body>
 </html>
