@@ -200,15 +200,6 @@ $comment = $row['comment'];
         </table>
         <script>
             $(document).ready(function (){
-                let shareData = {
-                    url: '<?=APPLICATION ?>/cutter/_print_remain.php?id=<?=$id ?>'
-                };
-        
-                const sharelink = document.getElementById("sharelink");
-                sharelink.addEventListener('click', () => {
-                    navigator.share(shareData)
-                });
-        
                 setTimeout(function() { 
                     document.getElementById('new_wind_link').removeAttribute('class');
                     document.cookie = '<?='remain_id'.$id ?>=1; Path=/;';
