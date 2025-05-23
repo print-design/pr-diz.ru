@@ -82,6 +82,18 @@ $comment = $row['comment'];
             table.label tr td {
                 padding: 5px;
             }
+            
+            @media print {
+                .screen-only, #new_wind_link {
+                    display: none;
+                }
+            }
+            
+            @media screen {
+                .print-only {
+                    display: none;
+                }
+            }
         </style>
     </head>
     <body>
@@ -91,11 +103,13 @@ $comment = $row['comment'];
             $class_attr = "";
         }
         ?>
-        <div style="font-size: 50px; float: left;">
-            <a href="javascript:void(0);" id="sharelink"><i class="fas fa-share-alt"></i></a>
-        </div>
-        <div id="new_wind_link"<?=$class_attr ?> style="float: right;">
-            <a class="btn btn-dark" href="finish.php?id=<?=$cutting_id ?>" style="font-size: 20px;">Закрыть заявку</a>
+        <div class="screen-only d-flex justify-content-between">
+            <div class="screen-only" style="font-size: 50px;">
+                <a href="?print=1" class="btn btn-dark"><i class="fa fa-print"></i></a>
+            </div>
+            <div id="new_wind_link"<?=$class_attr ?>>
+                <a href="wind.php" class="btn btn-dark" style="font-size: 20px;">Новая намотка</a>
+            </div>
         </div>
         <div style="clear: both;" />
 
@@ -200,6 +214,25 @@ $comment = $row['comment'];
                     document.cookie = '<?='remain_id'.$id ?>=1; Path=/;';
                 }, 30000);
             });
+            
+            <?php if(filter_input(INPUT_GET, 'print') == 1): ?>
+                var css = '@page { size: portrait; margin: 2mm; }',
+                        head = document.head || document.getElementsByTagName('head')[0],
+                        style = document.createElement('style');
+            
+                style.type = 'text/css';
+                style.media = 'print';
+            
+                if (style.styleSheet){
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(document.createTextNode(css));
+                }
+            
+                head.appendChild(style);
+            
+                window.print();
+            <?php endif; ?>
         </script>
     </body>
 </html>
