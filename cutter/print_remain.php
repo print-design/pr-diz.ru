@@ -108,7 +108,7 @@ $comment = $row['comment'];
                 <a href="?print=1" class="btn btn-dark"><i class="fa fa-print"></i></a>
             </div>
             <div id="new_wind_link"<?=$class_attr ?>>
-                <a href="wind.php" class="btn btn-dark" style="font-size: 20px;">Новая намотка</a>
+                <a class="btn btn-dark" href="finish.php?id=<?=$cutting_id ?>" style="font-size: 20px;">Закрыть заявку</a>
             </div>
         </div>
         <div style="clear: both;" />
