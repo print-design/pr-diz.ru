@@ -153,7 +153,7 @@ $comment = $row['comment'];
             </table>
         </div>
             
-        <div style="position: absolute; top: 255px;">
+        <div style="position: absolute; top: 270px;">
             <div style="border-bottom: solid 1px lightgray;">
                 <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
                 <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></div>

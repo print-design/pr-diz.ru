@@ -136,79 +136,77 @@ elseif (empty ($last_wind)) {
                 break;
             
             case 2:
-                $sticker_top = 255;
+                $sticker_top = 270;
                 break;
             
-            // Остальные расстояния надо проверить
-            
             case 3:
-                $sticker_top = 3300;
+                $sticker_top = 540;
                 break;
             
             case 4:
-                $sticker_top = 4950;
+                $sticker_top = 810;
                 break;
             
             case 5:
-                $sticker_top = 6600;
+                $sticker_top = 1080;
                 break;
             
             case 6:
-                $sticker_top = 8200;
+                $sticker_top = 1350;
                 break;
             
             case 7:
-                $sticker_top = 9900;
+                $sticker_top = 1620;
                 break;
             
             case 8:
-                $sticker_top = 11500;
+                $sticker_top = 1890;
                 break;
             
             case 9:
-                $sticker_top = 13150;
+                $sticker_top = 2160;
                 break;
             
             case 10:
-                $sticker_top = 14800;
+                $sticker_top = 2430;
                 break;
             
             case 11:
-                $sticker_top = 16450;
+                $sticker_top = 2700;
                 break;
             
             case 12:
-                $sticker_top = 18100;
+                $sticker_top = 2970;
                 break;
             
             case 13:
-                $sticker_top = 19750;
+                $sticker_top = 3240;
                 break;
             
             case 14:
-                $sticker_top = 21400;
+                $sticker_top = 3510;
                 break;
             
             case 15:
-                $sticker_top = 23050;
+                $sticker_top = 3780;
                 break;
             
             case 16:
-                $sticker_top = 24700;
+                $sticker_top = 4050;
                 break;
             
             case 17:
-                $sticker_top = 26350;
+                $sticker_top = 4320;
                 break;
             
             case 18:
-                $sticker_top = 28000;
+                $sticker_top = 4590;
                 break;
             
             case 19:
-                $sticker_top = 29650;
+                $sticker_top = 4860;
                 break;
-            
+
             default :
                 break;
         }
