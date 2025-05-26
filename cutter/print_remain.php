@@ -60,27 +60,21 @@ $comment = $row['comment'];
         include '_head.php';
         ?>
         <style>
-            body {
-                font-size: 1rem;
-            }
             .title1 {
-                font-size: x-large;
+                font-size: 12px;
                 font-style: italic;
-                margin-bottom: 10px;
                 margin-left: 5px;
             }
             
             .title2 {
-                font-size: large;
+                font-size: 12px;
                 margin-left: 5px;
             }
             
-            table.label {
-                margin-bottom: 2rem;
-            }
-            
             table.label tr td {
-                padding: 5px;
+                height: 16px;
+                font-size: 10px;
+                padding-left: 5px;
             }
             
             @media print {
@@ -104,100 +98,106 @@ $comment = $row['comment'];
         }
         ?>
         <div class="screen-only d-flex justify-content-between">
-            <div class="screen-only" style="font-size: 50px;">
+            <div class="screen-only" style="font-size: 50px; z-index: 10;">
                 <a href="?print=1" class="btn btn-dark"><i class="fa fa-print"></i></a>
             </div>
             <div id="new_wind_link"<?=$class_attr ?>>
-                <a class="btn btn-dark" href="finish.php?id=<?=$cutting_id ?>" style="font-size: 20px;">Закрыть заявку</a>
+                <a class="btn btn-dark" href="finish.php?id=<?=$cutting_id ?>" style="font-size: 20px; z-index: 10;">Закрыть заявку</a>
             </div>
         </div>
         <div style="clear: both;" />
 
-        <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
-        <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
-        <hr />
-        <table class="label">
-            <tbody>
-                <tr>
-                    <td>Поставщик</td>
-                    <td><strong><?=$supplier ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Ширина</td>
-                    <td><strong><?=$width ?> мм</strong></td>
-                </tr>
-                <tr>
-                    <td>Марка пленки</td>
-                    <td><strong><?=$film ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Толщина, уд.вес</td>
-                    <td><strong><?=$thickness ?> мкм, <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
-                </tr>
-                <tr>
-                    <td>Кладовщик</td>
-                    <td><strong><?=$storekeeper ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Длина</td>
-                    <td><strong><?=$length ?> м</strong></td>
-                </tr>
-                <tr>
-                    <td>Статус</td>
-                    <td><strong><?=$status ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Масса нетто</td>
-                    <td><strong><?=$net_weight ?> кг</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="position: absolute; top: 0px;">
+            <div style="border-bottom: solid 1px lightgray;">
+                <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
+                <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
+            </div>
+            <table class="label">
+                <tbody>
+                    <tr>
+                        <td>Поставщик</td>
+                        <td><strong><?=$supplier ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Ширина</td>
+                        <td><strong><?=$width ?> мм</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Марка пленки</td>
+                        <td><strong><?=$film ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Толщина, уд.вес</td>
+                        <td><strong><?=$thickness ?> мкм, <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Кладовщик</td>
+                        <td><strong><?=$storekeeper ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Длина</td>
+                        <td><strong><?=$length ?> м</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Статус</td>
+                        <td><strong><?=$status ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Масса нетто</td>
+                        <td><strong><?=$net_weight ?> кг</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
             
-        <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
-        <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></div>
-        <hr />
-        <table class="label">
-            <tbody>
-                <tr>
-                    <td>Поставщик</td>
-                    <td><strong><?=$supplier ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Ширина</td>
-                    <td><strong><?=$width ?> мм</strong></td>
-                </tr>
-                <tr>
-                    <td>Марка пленки</td>
-                    <td><strong><?=$film ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Толщина, уд.вес</td>
-                    <td><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
-                </tr>
-                <tr>
-                    <td>Кладовщик</td>
-                    <td><strong><?=$storekeeper ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Длина</td>
-                    <td><strong><?=$length ?> м</strong></td>
-                </tr>
-                <tr>
-                    <td>Статус</td>
-                    <td><strong><?=$status ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Масса нетто</td>
-                    <td><strong><?=$net_weight ?> кг</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="position: absolute; top: 255px;">
+            <div style="border-bottom: solid 1px lightgray;">
+                <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
+                <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?= $date ?></div>
+            </div>
+            <table class="label">
+                <tbody>
+                    <tr>
+                        <td>Поставщик</td>
+                        <td><strong><?=$supplier ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Ширина</td>
+                        <td><strong><?=$width ?> мм</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Марка пленки</td>
+                        <td><strong><?=$film ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Толщина, уд.вес</td>
+                        <td><strong><?=$thickness ?> мкм,<br /> <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Кладовщик</td>
+                        <td><strong><?=$storekeeper ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Длина</td>
+                        <td><strong><?=$length ?> м</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Статус</td>
+                        <td><strong><?=$status ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Масса нетто</td>
+                        <td><strong><?=$net_weight ?> кг</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <script>
             $(document).ready(function (){
                 setTimeout(function() { 

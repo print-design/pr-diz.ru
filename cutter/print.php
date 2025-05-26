@@ -47,27 +47,21 @@ elseif (empty ($last_wind)) {
         include '_head.php';
         ?>
         <style>
-            body {
-                font-size: 1rem;
-            }
             .title1 {
-                font-size: x-large;
+                font-size: 12px;
                 font-style: italic;
-                margin-bottom: 10px;
                 margin-left: 5px;
             }
             
             .title2 {
-                font-size: large;
+                font-size: 12px;
                 margin-left: 5px;
             }
             
-            table.label {
-                margin-bottom: 2rem;
-            }
-            
             table.label tr td {
-                padding: 5px;
+                height: 16px;
+                font-size: 10px;
+                padding-left: 5px;
             }
             
             @media print {
@@ -91,11 +85,11 @@ elseif (empty ($last_wind)) {
         }
         ?>
         <div class="screen-only d-flex justify-content-between">
-            <div class="screen-only" style="font-size: 50px;">
+            <div class="screen-only" style="font-size: 50px; z-index: 10;">
                 <a href="?print=1" class="btn btn-dark"><i class="fa fa-print"></i></a>
             </div>
             <div id="new_wind_link"<?=$class_attr ?>>
-                <a href="wind.php" class="btn btn-dark" style="font-size: 20px;">Новая намотка</a>
+                <a href="wind.php" class="btn btn-dark" style="font-size: 20px; z-index: 10;">Новая намотка</a>
             </div>
         </div>
         <div style="clear: both;" />
@@ -134,49 +128,136 @@ elseif (empty ($last_wind)) {
         $comment = $row['comment'];
                 
         $current_roll++;
+        $sticker_top = 0;
+        
+        switch($current_roll) {
+            case 1:
+                $sticker_top = 0;
+                break;
+            
+            case 2:
+                $sticker_top = 255;
+                break;
+            
+            // Остальные расстояния надо проверить
+            
+            case 3:
+                $sticker_top = 3300;
+                break;
+            
+            case 4:
+                $sticker_top = 4950;
+                break;
+            
+            case 5:
+                $sticker_top = 6600;
+                break;
+            
+            case 6:
+                $sticker_top = 8200;
+                break;
+            
+            case 7:
+                $sticker_top = 9900;
+                break;
+            
+            case 8:
+                $sticker_top = 11500;
+                break;
+            
+            case 9:
+                $sticker_top = 13150;
+                break;
+            
+            case 10:
+                $sticker_top = 14800;
+                break;
+            
+            case 11:
+                $sticker_top = 16450;
+                break;
+            
+            case 12:
+                $sticker_top = 18100;
+                break;
+            
+            case 13:
+                $sticker_top = 19750;
+                break;
+            
+            case 14:
+                $sticker_top = 21400;
+                break;
+            
+            case 15:
+                $sticker_top = 23050;
+                break;
+            
+            case 16:
+                $sticker_top = 24700;
+                break;
+            
+            case 17:
+                $sticker_top = 26350;
+                break;
+            
+            case 18:
+                $sticker_top = 28000;
+                break;
+            
+            case 19:
+                $sticker_top = 29650;
+                break;
+            
+            default :
+                break;
+        }
         ?>
-        <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
-        <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
-        <hr />
-        <table class="label">
-            <tbody>
-                <tr>
-                    <td>Поставщик</td>
-                    <td><strong><?=$supplier ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Ширина</td>
-                    <td><strong><?=$width ?> мм</strong></td>
-                </tr>
-                <tr>
-                    <td>Марка пленки</td>
-                    <td><strong><?=$film ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Толщина, уд.вес</td>
-                    <td><strong><?=$thickness ?> мкм, <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
-                </tr>
-                <tr>
-                    <td>Кладовщик</td>
-                    <td><strong><?=$storekeeper ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Длина</td>
-                    <td><strong><?=$length ?> м</strong></td>
-                </tr>
-                <tr>
-                    <td>Статус</td>
-                    <td><strong><?=$status ?></strong></td>
-                </tr>
-                <tr>
-                    <td>Масса нетто</td>
-                    <td><strong><?=$net_weight ?> кг</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="position: absolute; top: <?=$sticker_top ?>px;">
+            <div style="border-bottom: solid 1px lightgray;">
+                <div class="title1"><strong>ООО &laquo;Принт-дизайн&raquo;</strong></div>
+                <div class="title2">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
+            </div>
+            <table class="label">
+                <tbody>
+                    <tr>
+                        <td>Поставщик</td>
+                        <td><strong><?=$supplier ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Ширина</td>
+                        <td><strong><?=$width ?> мм</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Марка пленки</td>
+                        <td><strong><?=$film ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Толщина, уд.вес</td>
+                        <td><strong><?=$thickness ?> мкм, <?=$ud_ves ?> г/м<sup style="top: 2px;">2</sup></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Кладовщик</td>
+                        <td><strong><?=$storekeeper ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Длина</td>
+                        <td><strong><?=$length ?> м</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Статус</td>
+                        <td><strong><?=$status ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td>Масса нетто</td>
+                        <td><strong><?=$net_weight ?> кг</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="white-space: normal;">Комментарий<br /><strong><?= $comment ?></strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <?php endwhile; ?>
         <script>
             $(document).ready(function (){
