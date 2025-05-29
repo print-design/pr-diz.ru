@@ -36,6 +36,11 @@ for($i = 1; $i <= 19; $i++) {
     $$comment_message = 'Комментарий к ручью обязательно';
     $comment_valid_name = 'comment_'.$i.'_valid';
     $$comment_valid_name = '';
+    
+    $cell_message = 'cell_'.$i.'_valid';
+    $$cell_message = 'Ячейка обязательно';
+    $cell_valid_name = 'cell_'.$i.'_valid';
+    $$cell_valid_name = '';
 }
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
@@ -61,6 +66,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $$comment_message = "Комментарий к ручью $i обязательно";
             $form_valid = false;
         }
+        
+        if(empty(filter_input(INPUT_POST, 'cell_'.$i))) {
+            $cell_valid_name = 'cell_'.$i.'_valid';
+            $$cell_valid_name = ISINVALID;
+            $cell_message = 'cell_'.$i.'_valid';
+            $$cell_message = "Ячейка для ручья $i обязательно";
+            $form_valid = false;
+        }
     }
     
     $cutting_id = filter_input(INPUT_POST, 'cutting_id');
@@ -80,6 +93,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             $$stream = filter_input(INPUT_POST, $stream);
             $comment = 'comment_'.$i;
             $$comment = filter_input(INPUT_POST, $comment);
+            $cell = 'cell_'.$i;
+            $$cell = filter_input(INPUT_POST, $cell);
             if(empty($$stream)) {
                 $stream_valid = 'stream_'.$i.'_valid';
             }
@@ -112,7 +127,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
-                    $sql = "insert into cutting_stream (cutting_id, width, comment) values ($cutting_id, $width, '$comment')";
+                    $cell = addslashes(filter_input(INPUT_POST, 'cell_'.$i));
+                    $sql = "insert into cutting_stream (cutting_id, width, comment, cell) values ($cutting_id, $width, '$comment', '$cell')";
                     $executer = new Executer($sql);
                     $error_message = $executer->error;
                     $insert_id = $executer->insert_id;
@@ -127,7 +143,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 // Получение объекта
-$sql = "select width, comment from cutting_stream where cutting_id = $cutting_id";
+$sql = "select width, comment, cell from cutting_stream where cutting_id = $cutting_id";
 $fetcher = new Fetcher($sql);
 $i = 0;
 while($row = $fetcher->Fetch()) {
@@ -135,6 +151,8 @@ while($row = $fetcher->Fetch()) {
     $$stream_name = $row['width'];
     $comment_name = "comment_$i";
     $$comment_name = $row['comment'];
+    $cell_name = "cell_$i";
+    $$cell_name = $row['cell'];
 }
 ?>
 <!DOCTYPE html>
@@ -193,10 +211,16 @@ while($row = $fetcher->Fetch()) {
                     $comment_valid_name = 'comment_'.$i.'_valid';
                     $comment_group_display_class = ' d-none';
                     $comment_message = 'comment_'.$i.'_message';
+                    
+                    $cell_name = "cell_$i";
+                    $cell_valid_name = 'cell_'.$i.'_valid';
+                    $cell_group_display_class = ' d-none';
+                    $cell_message = 'cell_'.$i.'_message';
                 
                     if(null !== $streams_count && intval($streams_count) >= intval($i)) {
                         $stream_group_display_class = '';
                         $comment_group_display_class = '';
+                        $cell_group_display_class = '';
                     }
                     ?>
                 <div class="form-group stream_group<?=$stream_group_display_class ?>" id="stream_<?=$i ?>_group">
@@ -210,6 +234,10 @@ while($row = $fetcher->Fetch()) {
                 <div class="form-group comment_group<?=$comment_group_display_class ?>" id="comment_<?=$i ?>_group">
                     <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control<?=$$comment_valid_name ?>" value="<?= isset($$comment_name) ? urldecode(htmlentities($$comment_name)) : '' ?>" placeholder="Комментарий" autocomplete="off" />
                     <div class="invalid-feedback"><?=$$comment_message ?></div>
+                </div>
+                <div class="form-group cell_group<?=$cell_group_display_class ?>" id="cell_<?=$i ?>_group">
+                    <input type="text" id="cell_<?=$i ?>" name="cell_<?=$i ?>" class="form-control<?=$$cell_valid_name ?>" value="<?= isset($$cell_name) ? urldecode(htmlentities($$cell_name)) : '' ?>" placeholder="Ячейка" autocomplete="off" />
+                    <div class="invalid-feedback"><?=$$cell_message ?></div>
                 </div>
                     <?php endfor; ?>
                 <div class="form-group">
@@ -232,6 +260,8 @@ while($row = $fetcher->Fetch()) {
                 $('.stream_group .input-group input').removeAttr('required');
                 $('.comment_group').addClass('d-none');
                 $('.comment_group input').removeAttr('required');
+                $('.cell_group').addClass('d-none');
+                $('.cell_group input').removeAttr('required');
                 
                 if(streams_count !== '') {
                     iStreamsCount = parseInt(streams_count);
@@ -245,8 +275,10 @@ while($row = $fetcher->Fetch()) {
                         for(i=1; i<=iStreamsCount; i++) {
                             $('#stream_' + i + '_group').removeClass('d-none');
                             $('#comment_' + i + '_group').removeClass('d-none');
+                            $('#cell_' + i + '_group').removeClass('d-none');
                             $('#stream_' + i + '_group .input-group input').attr('required', 'required');
                             $('#comment_' + i + '_group input').attr('required', 'required');
+                            $('#cell_' + i + '_group input').attr('required', 'required');
                         }
                     }
                 }
