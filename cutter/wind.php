@@ -109,7 +109,6 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     if($form_valid) {
         // Создание намотки
         $net_weight = filter_input(INPUT_POST, 'net_weight');
-        $cell = "Цех";
         
         $sql = "insert into cutting_wind (cutting_source_id, length, radius) values ($last_source, $length, $radius)";
         $executer = new Executer($sql);
@@ -137,6 +136,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                 if(key_exists('stream_'.$i, $_POST)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
                     $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
+                    $cell = addslashes(filter_input(INPUT_POST, 'cell_'.$i));
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
                     $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id, cutting_wind_id) "
@@ -241,7 +241,7 @@ if($row = $fetcher->Fetch()) {
     $winds_count = $row['winds_count'];
 }
 
-$sql = "select width, comment from cutting_stream where cutting_id=$cutting_id order by id";
+$sql = "select width, comment, cell from cutting_stream where cutting_id=$cutting_id order by id";
 $fetcher = new Fetcher($sql);
 $i = 0;
 while ($row = $fetcher->Fetch()) {
@@ -249,6 +249,8 @@ while ($row = $fetcher->Fetch()) {
     $$stream = $row['width'];
     $comment = 'comment_'.$i;
     $$comment = $row['comment'];
+    $cell = 'cell_'.$i;
+    $$cell = $row['cell'];
 }
 ?>
 <!DOCTYPE html>
@@ -317,10 +319,12 @@ while ($row = $fetcher->Fetch()) {
                     for($i=1; $i<=19; $i++):
                     $stream = 'stream_'.$i;
                     $comment = 'comment_'.$i;
+                    $cell = 'cell_'.$i;
                     if(isset($$stream)):
                     ?>
                 <input type="hidden" id="stream_<?=$i ?>" name="stream_<?=$i ?>" value="<?=$$stream ?>" />
                 <input type="hidden" id="comment_<?=$i ?>" name="comment_<?=$i ?>" value="<?= htmlspecialchars($$comment) ?>" />
+                <input type="hidden" id="cell_<?=$i ?>" name="cell_<?=$i ?>" value="<?= htmlspecialchars($$cell) ?>" />
                 <input type="hidden" id="net_weight_<?=$i ?>" name="net_weight_<?=$i ?>" />
                     <?php
                     endif;
