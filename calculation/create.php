@@ -2876,6 +2876,23 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#knife_in_price').prop('checked', false);
                     $('#customer_pays_for_knife').prop('checked', true);
                 }
+                
+                // Изменяем видимость "Разная ширина ручьёв"
+                if($(this).val() == <?= WORK_TYPE_SELF_ADHESIVE ?>) {
+                    $('#stream_width').removeAttr('disabled');
+                    $('#stream_widths_many').prop('checked', false);
+                    $('#stream_widths_many_wrapper').addClass('d-none');
+                    $('#stream_widths_many_row').html('');
+                    $('#stream_widths_many_row').addClass('d-none');
+                }
+                else {
+                    streams_number = Number($('#streams_number').val());
+                    if(Number.isInteger(streams_number) && streams_number > 1) {
+                        $('#stream_widths_many_wrapper').removeClass('d-none');
+                        $('#stream_widths_many_row').removeClass('d-none');
+                        ShowStreamWidthsMany();
+                    }
+                }
             });
             
             // Заполняем список машин
@@ -4241,9 +4258,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 // Скрываем / показываем флажок "Разный размер ручьёв"
                 streams_number = Number($(this).val());
                 if(Number.isInteger(streams_number) && streams_number > 1) {
-                    $('#stream_widths_many_wrapper').removeClass('d-none');
-                    $('#stream_widths_many_row').removeClass('d-none');
-                    ShowStreamWidthsMany();
+                    if($('#work_type_id').val() != <?= WORK_TYPE_SELF_ADHESIVE ?>) {
+                        $('#stream_widths_many_wrapper').removeClass('d-none');
+                        $('#stream_widths_many_row').removeClass('d-none');
+                        ShowStreamWidthsMany();
+                    }
                 }
                 else {
                     $('#stream_width').removeAttr('disabled');
