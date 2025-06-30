@@ -1934,26 +1934,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <!-- Ширина ручья -->
-                            <div class="col-6 no-print-only print-only d-none">
-                                <div class="form-group">
-                                    <label for="stream_width">Ширина ручья, мм</label>
-                                    <input type="text" 
-                                           id="stream_width" 
-                                           name="stream_width" 
-                                           class="form-control float-only no-print-only print-only d-none" 
-                                           required="required" 
-                                           placeholder="Ширина ручья, мм" 
-                                           value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
-                                    <div class="invalid-feedback">Ширина ручья обязательно</div>
-                                </div>
-                            </div>
+                        <p id="film_title" class="d-none no-print-only print-only self-adhesive-only"><span class="font-weight-bold">Ручьи</span></p>
+                        <div class="row">
                             <!-- Ширина этикетки -->
                             <div class="col-6 self-adhesive-only d-none">
                                 <div class="form-group">
@@ -2190,7 +2172,38 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <!-- Ширина ручья -->
+                            <div class="col-6 no-print-only print-only d-none">
+                                <div class="form-group">
+                                    <label for="stream_width">Ширина ручья, мм</label>
+                                    <input type="text" 
+                                           id="stream_width" 
+                                           name="stream_width" 
+                                           class="form-control float-only no-print-only print-only d-none" 
+                                           required="required" 
+                                           placeholder="Ширина ручья, мм" 
+                                           value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
+                                    <div class="invalid-feedback">Ширина ручья обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Разная ширина ручьёв -->
+                            <div class="col-6 no-print-only print-only d-none">
+                                <div class="form-check mt-4">
+                                    <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
+                                        <input type="checkbox" class="form-check-input" id="stream_widths_many" name="stream_widths_many" value="on">Разная ширина ручьёв
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- Ширины ручьёв -->
+                        </div>
                         <!-- Количество красок (для самоклейки возможно 0) -->
+                        <p id="film_title" class="d-none print-only self-adhesive-only"><span class="font-weight-bold">Краска</span></p>
                         <div class="print-only self-adhesive-only d-none">
                             <div class="row">
                                 <?php
@@ -2469,6 +2482,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             ?>
                         </div>
                         <!-- Самая нижняя часть формы -->
+                        <p id="film_title"><span class="font-weight-bold">Дополнительно</span></p>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
@@ -3626,6 +3640,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             }
             
             SetLaminationRollerWidthHandler();
+            
+            // Обработка изменения значения флажка "Разная ширина ручьёв"
+            $('#stream_widths_many').change(StreamWidthsManyChange);
+            
+            function StreamWidthsManyChange() {
+                alert('OK');
+            }
             
             // Считаем длину этикетки (рапорт / количество этикеток в рапорте)
             function CountLength() {
