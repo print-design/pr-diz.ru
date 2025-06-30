@@ -2193,7 +2193,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Разная ширина ручьёв -->
-                            <div class="col-6 no-print-only print-only d-none">
+                            <div class="col-6 d-none" id="stream_widths_many_wrapper">
                                 <div class="form-check mt-4">
                                     <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
                                         <input type="checkbox" class="form-check-input" id="stream_widths_many" name="stream_widths_many" value="on">Разная ширина ручьёв
@@ -3642,10 +3642,17 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             SetLaminationRollerWidthHandler();
             
             // Обработка изменения значения флажка "Разная ширина ручьёв"
-            $('#stream_widths_many').change(StreamWidthsManyChange);
+            $('#stream_widths_many').change(function(e) {
+                StreamWidthsManyChange(e.target);
+            });
             
-            function StreamWidthsManyChange() {
-                alert('OK');
+            function StreamWidthsManyChange(target) {
+                if($(target).is(':checked')) {
+                    $('#stream_width').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#stream_width').removeAttr('disabled');
+                }
             }
             
             // Считаем длину этикетки (рапорт / количество этикеток в рапорте)
@@ -4222,6 +4229,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             $('input#streams_number').keyup(function() {
                 GetLaminationRollers();
+                
+                // Скрываем / показываем флажок "Разный размер ручьёв"
+                streams_number = Number($(this).val());
+                if(Number.isInteger(streams_number) && streams_number > 1) {
+                    $('#stream_widths_many_wrapper').removeClass('d-none');
+                }
+                else {
+                    $('#stream_widths_many_wrapper').addClass('d-none');
+                }
             });
     
             $('input#streams_number').change(function(){
