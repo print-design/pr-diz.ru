@@ -2202,6 +2202,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                             <!-- Ширины ручьёв -->
                         </div>
+                        <div class="row d-none" id="stream_widths_many_row"></div>
                         <!-- Количество красок (для самоклейки возможно 0) -->
                         <p id="film_title" class="d-none print-only self-adhesive-only"><span class="font-weight-bold">Краска</span></p>
                         <div class="print-only self-adhesive-only d-none">
@@ -3643,15 +3644,22 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Обработка изменения значения флажка "Разная ширина ручьёв"
             $('#stream_widths_many').change(function(e) {
-                StreamWidthsManyChange(e.target);
-            });
-            
-            function StreamWidthsManyChange(target) {
-                if($(target).is(':checked')) {
+                if($(e.target).is(':checked')) {
                     $('#stream_width').attr('disabled', 'disabled');
+                    $('#stream_widths_many_row').removeClass('d-none');
+                    ShowStreamWidthsMany();
                 }
                 else {
                     $('#stream_width').removeAttr('disabled');
+                    $('#stream_widths_many_row').html('');
+                    $('#stream_widths_many_row').addClass('d-none');
+                }
+            });
+            
+            // Показ полей с разными ширинами ручьёв
+            function ShowStreamWidthsMany() {
+                if($('#stream_widths_many').is(':checked')) {
+                    $('#stream_widths_many_row').html("<div class='col-6'>MANY</div>");
                 }
             }
             
@@ -4234,9 +4242,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 streams_number = Number($(this).val());
                 if(Number.isInteger(streams_number) && streams_number > 1) {
                     $('#stream_widths_many_wrapper').removeClass('d-none');
+                    $('#stream_widths_many_row').removeClass('d-none');
+                    ShowStreamWidthsMany();
                 }
                 else {
+                    $('#stream_width').removeAttr('disabled');
+                    $('#stream_widths_many').prop('checked', false);
                     $('#stream_widths_many_wrapper').addClass('d-none');
+                    $('#stream_widths_many_row').html('');
+                    $('#stream_widths_many_row').addClass('d-none');
                 }
             });
     
