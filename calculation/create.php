@@ -3676,6 +3676,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Показ полей с разными ширинами ручьёв
             function ShowStreamWidthsMany() {
                 if($('#stream_widths_many').is(':checked')) {
+                    $('#stream_widths_many_row').html('');
                     var streams_number = parseInt($('#streams_number').val());
                     
                     for(i = 1; i <= streams_number; i++) {
