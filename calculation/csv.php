@@ -58,8 +58,16 @@ if($id !== null) {
         else array_push ($file_data, array("Цена 3", DisplayNumber ($calculation->price_3, 5)." ". $calculation->GetCurrencyName($calculation->currency_3).($calculation->currency_3 == CURRENCY_USD ? " (".DisplayNumber ($calculation->price_3 * $calculation->usd, 5)." руб)" : "").($calculation->currency_3 == CURRENCY_EURO ? " (".DisplayNumber ($calculation->price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
         array_push($file_data, array("Экосбор 3", DisplayNumber($calculation->eco_price_3, 5)." ".$calculation->GetCurrencyName($calculation->eco_currency_3).($calculation->eco_currency_3 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_3 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_3 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_3 * $calculation->euro, 5)." руб)" : ""), "", ""));
     }
-        
-    array_push($file_data, array("Ширина ручья, мм", $calculation->stream_width, "", ""));
+    
+    if(empty($calculation->stream_width)) {
+        foreach($calculation->stream_widths as $key => $value) {
+            array_push($file_data, array("Ширина ручья $key, мм", $value, "", ""));
+        }
+    }
+    else {
+        array_push($file_data, array("Ширина ручья, мм", $calculation->stream_width, "", ""));
+    }
+    
     array_push($file_data, array("Количество ручьёв", $calculation->streams_number, "", ""));
         
     if(!empty($calculation->machine_id)) {
@@ -121,12 +129,20 @@ if($id !== null) {
     array_push($file_data, array("УК2", $calculation->uk2, "", "нет ламинации - 0, есть ламинация - 1"));
     array_push($file_data, array("УК3", $calculation->uk3, "", "нет второй ламинации - 0, есть вторая ламинация - 1"));
     array_push($file_data, array("УКПФ", $calculation->ukpf, "", "ПФ не включен в себестоимость - 0, ПФ включен в себестоимость - 1"));
-        
+    
     // Результаты вычислений
-    array_push($file_data, array("М2 чистые, м2",
-        DisplayNumber($calculation->area_pure_start, 5),
-        $calculation->unit == KG ? "" : "|= ".DisplayNumber($calculation->length, 5)." * ".DisplayNumber($calculation->stream_width, 5)." * ".DisplayNumber($calculation->quantity, 5)." / 1000000",
-        $calculation->unit == KG ? "Считается только при размере тиража в штуках" : "длина этикетки * ширина ручья * количество штук / 1 000 000"));
+    if(empty($calculation->stream_width)) {
+        array_push($file_data, array("М2 чистые, м2", 
+            DisplayNumber($calculation->area_pure_start, 5), 
+            $calculation->unit == KG ? "" : "|= ".DisplayNumber($calculation->length, 5)." * (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / ".DisplayNumber($calculation->streams_number, 5).") * ".DisplayNumber($calculation->quantity, 5)." / 1000000",
+            $calculation->unit == KG ? "Считается только при размере тиража в штуках" : "длина этикетки * (суммарная ширина ручьёв / кол-во ручьёв) * кол-во штук / 1 000 000"));
+    }
+    else {
+        array_push($file_data, array("М2 чистые, м2",
+            DisplayNumber($calculation->area_pure_start, 5),
+            $calculation->unit == KG ? "" : "|= ".DisplayNumber($calculation->length, 5)." * ".DisplayNumber($calculation->stream_width, 5)." * ".DisplayNumber($calculation->quantity, 5)." / 1000000",
+            $calculation->unit == KG ? "Считается только при размере тиража в штуках" : "длина этикетки * ширина ручья * количество штук / 1 000 000"));
+    }
         
     array_push($file_data, array("Масса тиража, кг", 
         DisplayNumber($calculation->weight, 5),
@@ -134,65 +150,132 @@ if($id !== null) {
         $calculation->unit == KG ? "размер тиража в кг" : "м2 чистые * (уд. вес 1 + уд. вес 2 + уд. вес 3) / 1000"));
         
     $width_1_formula = "";
+    
+    if(empty($calculation->stream_width)) {
+        switch ($calculation->ski_1) {
+            case SKI_NO:
+                $width_1_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
+                break;
+            
+            case SKI_STANDARD:
+                $width_1_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
+                break;
+            
+            case SKI_NONSTANDARD:
+                $width_1_formula = "|= ".DisplayNumber($calculation->width_ski_1, 5);
+        }
         
-    switch ($calculation->ski_1) {
-        case SKI_NO:
-            $calculation->width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
-            break;
+        array_push($file_data, array("Ширина материала (начальная) 1, мм", DisplayNumber($calculation->width_start_1, 5),
+            $width_1_formula,
+            "без лыж 1: суммарная ширина ручьёв, стандартные лыжи 1: суммарная ширина ручьёв + 20, нестандартные лыжи 1: вводится вручную"));
+    }
+    else {
+        switch ($calculation->ski_1) {
+            case SKI_NO:
+                $width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
+                break;
             
-        case SKI_STANDARD:
-            $calculation->width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
-            break;
+            case SKI_STANDARD:
+                $width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
+                break;
             
-        case SKI_NONSTANDARD:
-            $calculation->width_1_formula = "|= ".DisplayNumber($calculation->width_ski_1, 5);
-            break;
+            case SKI_NONSTANDARD:
+                $width_1_formula = "|= ".DisplayNumber($calculation->width_ski_1, 5);
+                break;
+        }
+        
+        array_push($file_data, array("Ширина материала (начальная) 1, мм",
+            DisplayNumber($calculation->width_start_1, 5),
+            $width_1_formula,
+            "без лыж 1: количество ручьёв * ширина ручья, стандартные лыжи 1: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 1: вводится вручную"));
     }
         
-    array_push($file_data, array("Ширина материала (начальная) 1, мм",
-        DisplayNumber($calculation->width_start_1, 5),
-        $calculation->width_1_formula,
-        "без лыж 1: количество ручьёв * ширина ручья, стандартные лыжи 1: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 1: вводится вручную"));
+    $width_2_formula = "";
+    
+    if(empty($calculation->stream_width)) {
+        switch ($calculation->ski_2) {
+            case SKI_NO:
+                $width_2_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
+                break;
+            
+            case SKI_STANDARD:
+                $width_2_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
+                break;
+            
+            case SKI_NONSTANDARD:
+                $width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
+                break;
+        }
         
-    $calculation->width_2_formula = "";
-    switch ($calculation->ski_2) {
-        case SKI_NO:
-            $calculation->width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
-            break;
+        array_push($file_data, array("Ширина материала (начальная) 2, мм", 
+            DisplayNumber($calculation->width_start_2, 5),
+            $width_2_formula,
+            "без лыж 2: суммарная ширина ручьёв, стандартные лыжи 2: стандартная ширина ручьёв + 20 мм, нестандартные лыжи 2: вводится вручную"));
+    }
+    else {
+        switch ($calculation->ski_2) {
+            case SKI_NO:
+                $width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
+                break;
             
-        case SKI_STANDARD:
-            $calculation->width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
-            break;
+            case SKI_STANDARD:
+                $width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
+                break;
             
-        case SKI_NONSTANDARD:
-            $calculation->width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
-            break;
+            case SKI_NONSTANDARD:
+                $width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
+                break;
+            
+        }
+        
+        array_push($file_data, array("Ширина материала (начальная) 2, мм",
+            DisplayNumber($calculation->width_start_2, 5),
+            $width_2_formula,
+            "без лыж 2: количество ручьёв * ширина ручья, стандартные лыжи 2: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 2: вводится вручную"));
     }
         
-    array_push($file_data, array("Ширина материала (начальная) 2, мм",
-        DisplayNumber($calculation->width_start_2, 5),
-        $calculation->width_2_formula,
-        "без лыж 2: количество ручьёв * ширина ручья, стандартные лыжи 2: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 2: вводится вручную"));
+    $width_3_formula = "";
+    
+    if(empty($calculation->stream_width)) {
+        switch ($calculation->ski_3) {
+            case SKI_NO:
+                $width_3_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
+                break;
+            
+            case SKI_STANDARD:
+                $width_3_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
+                break;
+            
+            case SKI_NONSTANDARD:
+                $width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
+                break;
+        }
         
-    $calculation->width_3_formula = "";
-    switch ($calculation->ski_3) {
-        case SKI_NO:
-            $calculation->width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
-            break;
-            
-        case SKI_STANDARD:
-            $calculation->width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
-            break;
-            
-        case SKI_NONSTANDARD:
-            $calculation->width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
-            break;
+        array_push($file_data, array("Ширина материала (начальная) 3, мм",
+            DisplayNumber($calculation->width_start_3, 5),
+            $width_3_formula,
+            "без лыж 3: суммарная ширина ручьёв, стандартные лыжи 3: суммарная ширина ручьёв + 20 мм, нестандартные лыжи 3: вводится вручную"));
     }
+    else {
+        switch ($calculation->ski_3) {
+            case SKI_NO:
+                $width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
+                break;
+            
+            case SKI_STANDARD:
+                $width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
+                break;
+            
+            case SKI_NONSTANDARD:
+                $width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
+                break;
+        }
         
-    array_push($file_data, array("Ширина материала (начальная) 3, мм",
-        DisplayNumber($calculation->width_start_3, 5),
-        $calculation->width_3_formula,
-        "без лыж 3: количество ручьёв * ширина ручья, стандартные лыжи 3: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 3: вводится вручную"));
+        array_push($file_data, array("Ширина материала (начальная) 3, мм",
+            DisplayNumber($calculation->width_start_3, 5),
+            $width_3_formula,
+            "без лыж 3: количество ручьёв * ширина ручья, стандартные лыжи 3: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 3: вводится вручную"));
+    }
     
     array_push($file_data, array("Ширина материала (кратная 5) 1, мм",
         DisplayNumber($calculation->width_1, 5),
@@ -223,21 +306,44 @@ if($id !== null) {
         DisplayNumber($calculation->area_pure_3, 5),
         "|= ".DisplayNumber($calculation->weight, 5)." * 1000 / (".DisplayNumber($calculation->density_1, 5)." + ".DisplayNumber($calculation->density_2, 5)." + ".DisplayNumber($calculation->density_3, 5).") * ".$calculation->uk3,
         "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК3"));
-        
-    array_push($file_data, array("М пог чистые 1, м",
-        DisplayNumber($calculation->length_pure_start_1, 5),
-        "|= ".DisplayNumber($calculation->area_pure_1, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
-        "м2 чистые 1 / (количество ручьёв * ширина ручья / 1000)"));
-        
-    array_push($file_data, array("М пог чистые 2, м",
-        DisplayNumber($calculation->length_pure_start_2, 5),
-        "|= ".DisplayNumber($calculation->area_pure_2, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
-        "м2 чистые 2 / (количество ручьёв * ширина ручья / 1000)"));
-        
-    array_push($file_data, array("М пог чистые 2, м",
-        DisplayNumber($calculation->length_pure_start_3, 5),
-        "|= ".DisplayNumber($calculation->area_pure_3, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
-        "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)"));
+    
+    if(empty($calculation->stream_width)) {
+        array_push($file_data, array("М пог чистые 1, м", 
+            DisplayNumber($calculation->length_pure_start_1, 5), 
+            "!= ".DisplayNumber($calculation->area_pure_1, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / 1000)",
+            "м2 чистые 1 / (суммарная ширина ручьёв / 1000)"));
+    }
+    else {
+        array_push($file_data, array("М пог чистые 1, м",
+            DisplayNumber($calculation->length_pure_start_1, 5),
+            "|= ".DisplayNumber($calculation->area_pure_1, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
+            "м2 чистые 1 / (количество ручьёв * ширина ручья / 1000)"));
+    }
+    
+    if(empty($calculation->stream_width)) {
+        array_push($file_data, array("М пог чистые 2, м",
+            DisplayNumber($calculation->length_pure_start_2, 5),
+            "|= ".DisplayNumber($calculation->area_pure_2, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / 1000)",
+            "м2 чистые 2 / (суммарная ширина ручьёв / 1000)"));
+    }
+    else {
+        array_push($file_data, array("М пог чистые 2, м",
+            DisplayNumber($calculation->length_pure_start_2, 5),
+            "|= ".DisplayNumber($calculation->area_pure_2, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
+            "м2 чистые 2 / (количество ручьёв * ширина ручья / 1000)"));
+    }
+    
+    if(empty($calculation->stream_width)) {
+        array_push($file_data, array("М пог чистые 2, м", DisplayNumber($calculation->length_pure_start_3, 5),
+            "|= ".DisplayNumber($calculation->area_pure_3, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." /1000)",
+            "м2 чистые 3 / (суммарная ширина ручьёв / 1000)"));
+    }
+    else {
+        array_push($file_data, array("М пог чистые 2, м",
+            DisplayNumber($calculation->length_pure_start_3, 5),
+            "|= ".DisplayNumber($calculation->area_pure_3, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
+            "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)"));
+    }
         
     array_push($file_data, array("СтартСтопОтход 1",
         DisplayNumber($calculation->waste_length_1, 5),
@@ -438,11 +544,19 @@ if($id !== null) {
     //****************************************
     // Расход краски
     //****************************************
-        
-    array_push($file_data, array("Площадь запечатки, м2",
-        DisplayNumber($calculation->print_area, 5),
-        "|= ".DisplayNumber($calculation->length_dirty_1, 5)." * (".DisplayNumber($calculation->stream_width, 5)." * ".DisplayNumber($calculation->streams_number, 5)." + 10) / 1000",
-        "м пог грязные 1 * (ширина ручья * кол-во ручьёв + 10 мм) / 1000"));
+    
+    if(empty($calculation->stream_width)) {
+        array_push($file_data, array("Площадь запечатки, м2",
+            DisplayNumber($calculation->print_area, 5),
+            "|= ".DisplayNumber($calculation->length_dirty_1, 5)." * (".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 10) / 1000",
+            "м пог грязные 1 * (суммарная ширина ручьёв + 10 мм) / 1000"));
+    }
+    else {
+        array_push($file_data, array("Площадь запечатки, м2",
+            DisplayNumber($calculation->print_area, 5),
+            "|= ".DisplayNumber($calculation->length_dirty_1, 5)." * (".DisplayNumber($calculation->stream_width, 5)." * ".DisplayNumber($calculation->streams_number, 5)." + 10) / 1000",
+            "м пог грязные 1 * (ширина ручья * кол-во ручьёв + 10 мм) / 1000"));
+    }
         
     array_push($file_data, array("Расход КраскаСмеси на 1 кг краски, кг",
         DisplayNumber($calculation->ink_1kg_mix_weight, 5),
@@ -613,11 +727,19 @@ if($id !== null) {
         DisplayNumber($calculation->cliche_height, 5),
         "|= (".DisplayNumber($calculation->raport, 5)." + 20) / 1000",
         "(рапорт + 20 мм) / 1000"));
-        
-    array_push($file_data, array("Ширина форм, м",
-        DisplayNumber($calculation->cliche_width, 5),
-        "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000",
-        "((кол-во ручьёв * ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000"));
+    
+    if(empty($calculation->stream_width)) {
+        array_push($file_data, array("Ширина форм, м",
+            DisplayNumber($calculation->cliche_width, 5),
+            "|= (".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000",
+            "(суммарная ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000"));
+    }
+    else {
+        array_push($file_data, array("Ширина форм, м",
+            DisplayNumber($calculation->cliche_width, 5),
+            "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000",
+            "(кол-во ручьёв * ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000"));
+    }
         
     array_push($file_data, array("Площадь форм, м2",
         DisplayNumber($calculation->cliche_area, 5),
