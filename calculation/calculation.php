@@ -215,7 +215,7 @@ class CalculationBase {
             $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1,
             $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2,
             $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3,
-            $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id,
+            $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id,
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
             $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
@@ -286,6 +286,7 @@ class CalculationBase {
             $laminator_id, // ID ламинатора
             $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
+            array $stream_widths, // Ширины ручья, мм, если они неодинаковые
             $streams_number, // Количество ручьёв
             $raport, // Рапорт
             $number_in_raport, // Количество этикеток в рапорте
@@ -380,6 +381,7 @@ class CalculationBase {
         $this->laminator_id = $laminator_id; // ID ламинатора
         $this->length = $length; // Длина этикетки, мм
         $this->stream_width = $stream_width; // Ширина ручья, мм
+        $this->stream_widths = $stream_widths; // Ширины ручьёв, мм, если они неодинаковые
         $this->streams_number = $streams_number; // Количество ручьёв
         $this->raport = $raport; // Рапорт
         $this->number_in_raport = $number_in_raport; // Кол-во этикеток в рапорте
@@ -929,6 +931,18 @@ class CalculationBase {
             }
         }
         
+        // Ширины ручьёв
+        $stream_widths = array();
+        
+        if(empty($stream_width)) {
+            $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
+            $fetcher = new Fetcher($sql);
+            
+            while ($row = $fetcher->Fetch()) {
+                $stream_widths[$row['stream_number']] = $row['width'];
+            }
+        }
+        
         // ПОЛУЧЕНИЕ НОРМ
         $data_priladka = new DataPriladka(null, null, null, null);
         $data_priladka_laminator = new DataPriladka(null, null, null, null);
@@ -1081,6 +1095,7 @@ class CalculationBase {
                     $laminator_id, // ID ламинатора
                     $length, // Длина этикетки, мм
                     $stream_width, // Ширина ручья, мм
+                    $stream_widths, // Ширины ручьёв, мм, если они неодинаковые
                     $streams_number, // Количество ручьёв
                     $raport, // Рапорт
                     $number_in_raport, // Кол-во этикеток в рапорте
@@ -1176,6 +1191,7 @@ class CalculationBase {
                     $laminator_id, // ID ламинатора
                     $length, // Длина этикетки, мм
                     $stream_width, // Ширина ручья, мм
+                    $stream_widths, // Ширины ручьёв, мм, если они неодинаковые
                     $streams_number, // Количество ручьёв
                     $raport, // Рапорт
                     $number_in_raport, // Кол-во этикеток в рапорте
@@ -1360,6 +1376,7 @@ class Calculation extends CalculationBase {
             $laminator_id, // ID ламинатора
             $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
+            array $stream_widths, // Ширины ручьёв, мм, если они неодинаковые
             $streams_number, // Количество ручьёв
             $raport, // Рапорт
             $number_in_raport, // Кол-во этикеток в рапорте
@@ -1403,7 +1420,7 @@ class Calculation extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
+                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
@@ -1485,10 +1502,14 @@ class Calculation extends CalculationBase {
         // НИЖЕ НАЧИНАЕТСЯ ВЫЧИСЛЕНИЕ
         
         // М2 чистые, м2
-        // Считаем только если размер тиража выражен в штуках: длина * ширина ручья * размер тиража
+        // Считаем только если размер тиража выражен в штуках: длина * ширина ручья * размер тиража 
+        // (если ширины ручья неодинаковые, то длина * сумма ширин / кол-во ручьёв * размер тиража)
         // Если размер тиража выражен в килограммах, то нам м2 чистые пока не нужны, вычислим их позже
         if($this->unit == KG) {
             $this->area_pure_start = 0;
+        }
+        else if(empty ($this->stream_width)) {
+            $this->area_pure_start = $this->length * (array_sum($this->stream_widths) / $this->streams_number) * $this->quantity / 1000000;
         }
         else {
             $this->area_pure_start = $this->length * $this->stream_width * $this->quantity / 1000000;
@@ -1505,16 +1526,26 @@ class Calculation extends CalculationBase {
         }
 
         // Ширина материала (начальная) 1, мм
-        // Если без лыж: количество ручьёв * ширина ручья
-        // Если стандартные лыжи: количество ручьёв * ширина ручья + 20
+        // Если без лыж: количество ручьёв * ширина ручья (если ширина ручьёв неодинаковая, то сумма ширин ручьёв)
+        // Если стандартные лыжи: количество ручьёв * ширина ручья + 20 (если ширина ручьёв неодинаковая, то сумма ширин ручьёв + 20)
         // Если нестандартные лыжи: ширина материала вводится вручную
         switch($this->ski_1) {
             case SKI_NO:
-                $this->width_start_1 = $this->streams_number * $this->stream_width;
+                if(empty($this->stream_width)) {
+                    $this->width_start_1 = array_sum($this->stream_widths);
+                }
+                else {
+                    $this->width_start_1 = $this->streams_number * $this->stream_width;
+                }
                 break;
                 
             case SKI_STANDARD:
-                $this->width_start_1 = $this->streams_number * $this->stream_width + 20;
+                if(empty($this->stream_width)) {
+                    $this->width_start_1 = array_sum($this->stream_widths) + 20;
+                }
+                else {
+                    $this->width_start_1 = $this->streams_number * $this->stream_width + 20;
+                }
                 break;
         
             case SKI_NONSTANDARD:
@@ -1529,11 +1560,21 @@ class Calculation extends CalculationBase {
         // Ширина материала (начальная) 2, мм
         switch($this->ski_2) {
             case SKI_NO:
-                $this->width_start_2 = $this->streams_number * $this->stream_width;
+                if(empty($this->stream_width)) {
+                    $this->width_start_2 = array_sum($this->stream_widths);
+                }
+                else {
+                    $this->width_start_2 = $this->streams_number * $this->stream_width;
+                }
                 break;
         
             case SKI_STANDARD:
-                $this->width_start_2 = $this->streams_number * $this->stream_width + 20;
+                if(empty($this->stream_width)) {
+                    $this->width_start_2 = array_sum($this->stream_widths) + 20;
+                }
+                else {
+                    $this->width_start_2 = $this->streams_number * $this->stream_width + 20;
+                }
                 break;
         
             case SKI_NONSTANDARD:
@@ -1548,11 +1589,21 @@ class Calculation extends CalculationBase {
         // Ширина материала (начальная) 3, мм
         switch($this->ski_3) {
             case SKI_NO:
-                $this->width_start_3 = $this->streams_number * $this->stream_width;
+                if(empty($this->stream_width)) {
+                    $this->width_start_3 = array_sum($this->stream_widths);
+                }
+                else {
+                    $this->width_start_3 = $this->streams_number * $this->stream_width;
+                }
                 break;
         
             case SKI_STANDARD:
-                $this->width_start_3 = $this->streams_number * $this->stream_width + 20;
+                if(empty($this->stream_width)) {
+                    $this->width_start_3 = array_sum($this->stream_widths) + 20;
+                }
+                else {
+                    $this->width_start_3 = $this->streams_number * $this->stream_width + 20;
+                }
                 break;
         
             case SKI_NONSTANDARD:
@@ -1585,13 +1636,28 @@ class Calculation extends CalculationBase {
         
         
         // М пог чистые 1, м
-        $this->length_pure_start_1 = $this->area_pure_1 / ($this->streams_number * $this->stream_width / 1000);
+        if(empty($this->stream_width)) {
+            $this->length_pure_start_1 = $this->area_pure_1 / (array_sum($this->stream_widths) / 1000);
+        }
+        else {
+            $this->length_pure_start_1 = $this->area_pure_1 / ($this->streams_number * $this->stream_width / 1000);
+        }
         
         // М пог чистые 2, м
-        $this->length_pure_start_2 = $this->area_pure_2 / ($this->streams_number * $this->stream_width / 1000);
+        if(empty($this->stream_width)) {
+            $this->length_pure_start_2 = $this->area_pure_2 / (array_sum($this->stream_widths) / 1000);
+        }
+        else {
+            $this->length_pure_start_2 = $this->area_pure_2 / ($this->streams_number * $this->stream_width / 1000);
+        }
         
         // М пог чистые 3, м
-        $this->length_pure_start_3 = $this->area_pure_3 / ($this->streams_number * $this->stream_width / 1000);
+        if(empty($this->stream_width)) {
+            $this->length_pure_start_3 = $this->area_pure_3 / (array_sum($this->stream_widths) / 1000);
+        }
+        else {
+            $this->length_pure_start_3 = $this->area_pure_3 / ($this->streams_number * $this->stream_width / 1000);
+        }
         
         
         // СтартСтопОтход 1, м
@@ -1730,7 +1796,12 @@ class Calculation extends CalculationBase {
         //****************************************
         
         // Площадь запечатки, м2
-        $this->print_area = $this->length_dirty_1 * ($this->stream_width * $this->streams_number + 10) / 1000;
+        if(empty($this->stream_width)) {
+            $this->print_area = $this->length_dirty_1 * (array_sum($this->stream_widths) + 10) / 1000;
+        }
+        else {
+            $this->print_area = $this->length_dirty_1 * ($this->stream_width * $this->streams_number + 10) / 1000;
+        }
         
         // Расход КраскаСмеси на 1 кг краски, кг
         $this->ink_1kg_mix_weight = 1 + $this->data_ink->solvent_part;
@@ -1883,7 +1954,12 @@ class Calculation extends CalculationBase {
         $this->cliche_height = ($this->raport + 20) / 1000;
         
         // Ширина форм, м
-        $this->cliche_width = ($this->streams_number * $this->stream_width + 20 + ((!empty($this->ski_1) && $this->ski_1 == SKI_NO) ? 0 : 20)) / 1000;
+        if(empty($this->stream_width)) {
+            $this->cliche_width = (array_sum($this->stream_widths) + 20 + ((!empty($this->ski_1) && $this->ski_1 == SKI_NO) ? 0 : 20)) / 1000;
+        }
+        else {
+            $this->cliche_width = ($this->streams_number * $this->stream_width + 20 + ((!empty($this->ski_1) && $this->ski_1 == SKI_NO) ? 0 : 20)) / 1000;
+        }
         
         // Площадь форм, м2
         $this->cliche_area = $this->cliche_height * $this->cliche_width;
@@ -2208,6 +2284,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $laminator_id, // ID ламинатора
             $length, // Длина этикетки, мм
             $stream_width, // Ширина ручья, мм
+            array $stream_widths, // Ширины ручьёв, мм, если они неодинаковые
             $streams_number, // Количество ручьёв
             $raport, // Рапорт
             $number_in_raport, // Кол-во этикеток в рапорте
@@ -2251,7 +2328,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine_id, $laminator_id, $length, $stream_width, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
+                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
