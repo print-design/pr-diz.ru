@@ -3676,7 +3676,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Показ полей с разными ширинами ручьёв
             function ShowStreamWidthsMany() {
                 if($('#stream_widths_many').is(':checked')) {
-                    $('#stream_widths_many_row').html("<div class='col-6'>MANY</div>");
+                    var streams_number = parseInt($('#streams_number').val());
+                    
+                    for(i = 1; i <= streams_number; i++) {
+                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control' id='stream_width_" + i + "' name='stream_width_" + i + "' required='required' /></div></div>");
+                        $('#stream_widths_many_row').append(stream_width);
+                    }
                 }
             }
             
