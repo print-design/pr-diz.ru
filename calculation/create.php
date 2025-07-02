@@ -496,6 +496,23 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
+        // Если разная ширина ручьёв, заполняем таблицу ширин ручьёв
+        if(empty($error_message) && $work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+            $sci = 1;
+            $stream_width_var = "stream_width_$sci";
+            
+            while (filter_input(INPUT_POST, $stream_width_var) !== null) {
+                $$stream_width_var = filter_input(INPUT_POST, $stream_width_var);
+                
+                $sql = "insert into calculation_stream_width (calculation_id, stream_number, width) values($insert_id, $sci, ".$$stream_width_var.")";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+                
+                $sci++;
+                $stream_width_var = "stream_width_$sci";
+            }
+        }
+        
         if(empty($error_message)) {
             header('Location: create.php?id='.$insert_id);
         }
