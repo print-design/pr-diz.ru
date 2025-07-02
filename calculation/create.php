@@ -4268,9 +4268,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             }
             
-            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 50
+            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 16
             $('input#streams_number').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 50)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 16)) {
                     return false;
                 }
             });
@@ -4297,7 +4297,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
     
             $('input#streams_number').change(function(){
-                ChangeLimitIntValue($(this), 50);
+                ChangeLimitIntValue($(this), 16);
             });
             
             // Ограничение значения поля "Ширина ручья" до 4 цифр
