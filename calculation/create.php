@@ -202,16 +202,39 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(filter_input(INPUT_POST, 'ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
-        $width_ski = filter_input(INPUT_POST, 'width_ski');
-        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
-        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
-        $streams_number = filter_input(INPUT_POST, 'streams_number');
+    $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+    $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
+    $streams_number = filter_input(INPUT_POST, 'streams_number');
+    $stream_widths = array();
+    
+    // Если тип работы - не самоклейка, а ширина ручья пустая, то должен быть список ширин ручьёв каждого ручья
+    if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
+        $sci = 1;
+        $stream_width_var = "stream_width_$sci";
         
-        // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
-        if($width_ski < $stream_width * $streams_number) {
-            $width_ski_valid = ISINVALID;
-            $form_valid = false;
+        while (filter_input(INPUT_POST, $stream_width_var) !== null) {
+            $stream_widths[$sci] = filter_input(INPUT_POST, $stream_width_var);
+            $sci++;
+            $stream_width_var = "stream_width_$sci";
+        }
+    }
+    
+    if(filter_input(INPUT_POST, 'ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_ski')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+        $width_ski = filter_input(INPUT_POST, 'width_ski');
+        
+        if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
+            // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
+            if($width_ski < array_sum($stream_widths)) {
+                $width_ski_valid = ISINVALID;
+                $form_valid = false;
+            }
+        }
+        else {
+            // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
+            if($width_ski < $stream_width * $streams_number) {
+                $width_ski_valid = ISINVALID;
+                $form_valid = false;
+            }
         }
         
         // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
@@ -236,16 +259,22 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(filter_input(INPUT_POST, 'lamination1_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination1_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+    if(filter_input(INPUT_POST, 'lamination1_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination1_width_ski')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski');
-        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
-        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
-        $streams_number = filter_input(INPUT_POST, 'streams_number');
         
-        // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
-        if($lamination1_width_ski < $stream_width * $streams_number) {
-            $lamination1_width_ski_valid = ISINVALID;
-            $form_valid = false;
+        if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
+            // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
+            if($lamination1_width_ski < array_sum($stream_widths)) {
+                $lamination1_width_ski_valid = ISINVALID;
+                $form_valid = false;
+            }
+        }
+        else {
+            // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
+            if($lamination1_width_ski < $stream_width * $streams_number) {
+                $lamination1_width_ski_valid = ISINVALID;
+                $form_valid = false;
+            }
         }
         
         // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
@@ -270,16 +299,22 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(filter_input(INPUT_POST, 'lamination2_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination2_width_ski')) && !empty(filter_input(INPUT_POST, 'stream_width')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+    if(filter_input(INPUT_POST, 'lamination2_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination2_width_ski')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
         $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
-        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
-        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
-        $streams_number = filter_input(INPUT_POST, 'streams_number');
         
-        // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
-        if($lamination2_width_ski < $stream_width * $streams_number) {
-            $lamination2_width_ski_valid = ISINVALID;
-            $form_valid = false;
+        if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
+            // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
+            if($lamination2_width_ski < array_sum($stream_widths)) {
+                $lamination2_width_ski_valid = ISINVALID;
+                $form_valid = false;
+            }
+        }
+        else {
+            // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
+            if($lamination2_width_ski < $stream_width * $streams_number) {
+                $lamination2_width_ski_valid = ISINVALID;
+                $form_valid = false;
+            }
         }
         
         // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
@@ -497,7 +532,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Если разная ширина ручьёв, заполняем таблицу ширин ручьёв
-        if(empty($error_message) && $work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+        if(empty($error_message) && $work_type_id != WORK_TYPE_SELF_ADHESIVE && $stream_width == "NULL") {
             $sci = 1;
             $stream_width_var = "stream_width_$sci";
             
