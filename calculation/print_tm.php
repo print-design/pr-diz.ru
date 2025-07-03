@@ -811,8 +811,15 @@ $current_date_time = date("dmYHis");
                                 <tr><td colspan="2" class="font-weight-bold border-bottom-2 pt-5" style="font-size: 18px; padding-top: 30px; font-weight: 700;">Наименования, <?= count($streams) ?> шт.</td></tr>
                                 <?php
                                 foreach($streams as $stream):
+                                    $i++;
                                 ?>
-                                <tr><td colspan="2"><?=(++$i).'. '.$stream['name'].(count($calculation->stream_widths) > 0 && key_exists($i, $calculation->stream_widths) ? " (".$calculation->stream_widths[$i]." мм)" : "") ?></td></tr>
+                                <tr>
+                                    <?php if(count($calculation->stream_widths) > 0 && key_exists($i, $calculation->stream_widths)): ?>
+                                    <td><?=$i.'. '.$stream['name'] ?></td><td><?=$calculation->stream_widths[$i] ?> мм</td>
+                                    <?php else: ?>
+                                    <td colspan="2"><?=$i.'. '.$stream['name'] ?></td>
+                                    <?php endif; ?>
+                                </tr>
                                 <?php
                                 endforeach;
                                 
