@@ -1088,7 +1088,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                     echo 'Нет данных по ширине мат-ла';
                                 }
                                 elseif($winding_unit == 'kg') {
-                                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width ?? (array_sum($calculation->stream_widths) / $calculation->streams_number))) - 200, 0)." м";
+                                    echo DisplayNumber((floatval($winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width ?? (max($calculation->stream_widths) / $calculation->streams_number))) - 200, 0)." м";
                                 }
                                 else {
                                     echo 'Нет';
