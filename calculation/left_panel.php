@@ -93,6 +93,8 @@ function GetSkiNameExt($param, $param_width) {
                 <?php endif; ?>
                 <?php if(!empty($calculation->stream_width)): ?>
             <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($calculation->stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+                <?php else: ?>
+            <tr><th>Ширина ручья</th><td>Разная ≈ <?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php if(!empty($calculation->streams_number)): ?>
             <tr><th>Количество ручьев</th><td><?= $calculation->streams_number ?></td></tr>
