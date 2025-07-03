@@ -1549,7 +1549,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             <h3>Наименования</h3>
                             <?php for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++): ?>
                             <div class="form-group">
-                                <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i ?></label>
+                                <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i.(count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? ": ".$calculation->stream_widths[$stream_i]." мм" : "") ?></label>
                                 <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
                                 <div class="invalid-feedback">Наименование обязательно</div>
                             </div>

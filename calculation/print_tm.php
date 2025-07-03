@@ -812,7 +812,7 @@ $current_date_time = date("dmYHis");
                                 <?php
                                 foreach($streams as $stream):
                                 ?>
-                                <tr><td colspan="2"><?=(++$i).'. '.$stream['name'] ?></td></tr>
+                                <tr><td colspan="2"><?=(++$i).'. '.$stream['name'].(count($calculation->stream_widths) > 0 && key_exists($i, $calculation->stream_widths) ? " (".$calculation->stream_widths[$i]." мм)" : "") ?></td></tr>
                                 <?php
                                 endforeach;
                                 
