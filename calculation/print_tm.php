@@ -664,6 +664,9 @@ $current_date_time = date("dmYHis");
                                                 echo DisplayNumber(floatval($calculation->stream_width) + floatval($calculation->data_gap->gap_stream), 2)." / ".DisplayNumber(floatval($calculation->data_gap->gap_stream), 2)." мм";
                                             }
                                         }
+                                        else if (empty ($calculation->stream_width)) {
+                                            echo "Разная";
+                                        }
                                         else {
                                             echo DisplayNumber(intval($calculation->stream_width), 0)." мм";
                                         }
@@ -731,7 +734,7 @@ $current_date_time = date("dmYHis");
                                             echo 'Нет данных по ширине мат-ла';
                                         }
                                         elseif($calculation_result->winding_unit == 'kg') {
-                                            echo DisplayNumber((floatval($calculation_result->winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width)) - 200, 0)." м";
+                                            echo DisplayNumber((floatval($calculation_result->winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width ?? (array_sum($calculation->stream_widths) / $calculation->streams_number))) - 200, 0)." м";
                                         }
                                         else {
                                             echo 'Нет';
