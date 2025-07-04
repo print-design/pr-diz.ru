@@ -133,6 +133,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     // Ручьи
     $streams = array();
+    $stream_widths = array();
     
     // Проверяем, чтобы были заполнены наименования ручьёв
     if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
@@ -143,6 +144,9 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
             $stream_var = "stream_$stream_i";
             $$stream_var = filter_input(INPUT_POST, "stream_$stream_i");
             
+            $stream_width_var = "stream_width_$stream_i";
+            $$stream_width_var = filter_input(INPUT_POST, "stream_width_$stream_i");
+            
             if(empty($$stream_var)) {
                 $$stream_valid_var = ISINVALID;
                 $form_valid = false;
@@ -150,6 +154,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
             
             $streams[$stream_var] = $$stream_var;
             $streams_valid[$stream_valid_var] = $$stream_valid_var;
+            
+            $stream_widths[$stream_width_var] = $$stream_width_var;
         }
     }
     
@@ -190,12 +196,13 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
                     if(empty($error_message)) {
                         $sql = "";
                         $stream_name = addslashes($streams["stream_$stream_i"]);
+                        $stream_width = $stream_widths["stream_width_$stream_i"];
                         if(empty($stream_position_ids_names[$stream_i])) {
-                            $sql = "insert into calculation_stream (calculation_id, position, name) values ($id, $stream_i, '$stream_name')";
+                            $sql = "insert into calculation_stream (calculation_id, position, name, width) values ($id, $stream_i, '$stream_name', $stream_width)";
                         }
                         else {
                             $stream_id = $stream_position_ids_names[$stream_i]['id'];
-                            $sql = "update calculation_stream set name = '$stream_name' where id = $stream_id";
+                            $sql = "update calculation_stream set name = '$stream_name', width = $stream_width where id = $stream_id";
                         }
                     
                         $executer = new Executer($sql);
@@ -1553,6 +1560,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
                                 <div class="invalid-feedback">Наименование обязательно</div>
                             </div>
+                            <div><input type="hidden" name="stream_width_<?=$stream_i ?>" value="<?=count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? $calculation->stream_widths[$stream_i] : $calculation->stream_width ?>" /></div>
                             <?php endfor; ?>
                         </div>
                     </div>
