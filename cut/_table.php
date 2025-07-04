@@ -218,6 +218,7 @@
     <table class="table">
         <tr>
             <th style="border-top-width: 0; font-weight: bold;">Наименование</th>
+            <th style="border-top-width: 0; font-weight: bold;">Ширина ручья</th>
             <th style="border-top-width: 0; font-weight: bold;">Катушек</th>
             <th style="border-top-width: 0; font-weight: bold;">Масса</th>
             <th style="border-top-width: 0; font-weight: bold;">Метраж</th>
@@ -226,7 +227,7 @@
             <?php endif; ?>
         </tr>
         <?php
-        $sql = "select cs.id, cs.name, "
+        $sql = "select cs.id, cs.name, cs.width, "
                 . "ifnull((select count(id) from calculation_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
                 . "+ "
                 . "ifnull((select count(id) from calculation_not_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
@@ -247,6 +248,7 @@
         ?>
         <tr>
             <td style="text-align: left;"><?=$row['name'] ?></td>
+            <td style="text-align: left;"><?=$row['width'] ?> мм</td>
             <td style="text-align: left;"><?=$row['bobbins'] ?></td>
             <td style="text-align: left;"><input type="hidden" id="sum_weight_stream_<?=$row['id'] ?>" value="<?=$row['weight'] ?>" /><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
             <td style="text-align: left;"><input type="hidden" id="sum_length_stream_<?=$row['id'] ?>" value="<?=$row['length'] ?>" /><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
@@ -339,6 +341,7 @@
             <tr>
                 <th style="font-weight: bold;">ID</th>
                 <th style="font-weight: bold;">Наименование</th>
+                <th style="font-weight: bold;">Ширина ручья</th>
                 <th style="font-weight: bold;">Резчик</th>
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
@@ -351,7 +354,7 @@
                 <?php endif; ?>
             </tr>
             <?php
-            $sql = "select cts.id, cs.name, cts.printed, cts.weight, cts.length "
+            $sql = "select cts.id, cs.name, cs.width, cts.printed, cts.weight, cts.length "
                     . "from calculation_take_stream cts "
                     . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
                     . "where cts.calculation_take_id = ".$take['id']
@@ -383,6 +386,7 @@
             <tr style="border-bottom: 0;">
                 <td style="text-align: left;"><?=$row['id'] ?></td>
                 <td style="text-align: left;"><?=$row['name'] ?></td>
+                <td style="text-align: left;"><?=$row['width'] ?> мм</td>
                 <td style="text-align: left;"><?=$stream_worker ?></td>
                 <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
