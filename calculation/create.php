@@ -814,8 +814,8 @@ if($work_type_id != WORK_TYPE_SELF_ADHESIVE && !empty($streams_number)) {
     if(count($stream_widths) == 0) {
         $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
         $fetcher = new Fetcher($sql);
-        while($row = $fetcher->Fetch()) {
-            $stream_widths[intval($row['stream_number'])] = intval($row['width']);
+        while($stream_widths_row = $fetcher->Fetch()) {
+            $stream_widths[intval($stream_widths_row['stream_number'])] = intval($stream_widths_row['width']);
         }
     }
 }
@@ -2212,7 +2212,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             ?>
                                             <select id="lamination_roller_width" name="lamination_roller_width" class="form-control lam-only d-none">
                                                 <?php
-                                                if(!empty($lamination_roller_widths) && array_count_values($lamination_roller_widths) > 0):
+                                                if(!empty($lamination_roller_widths) && count($lamination_roller_widths) > 0):
                                                 ?>
                                                 <option value='' hidden='hidden'>Ширина ламинирующего вала...</option>
                                                 <?php
