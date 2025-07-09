@@ -102,6 +102,8 @@ $lamination2_price_valid = '';
 $lamination2_width_ski_valid = '';
 $lamination2_width_machine_valid = '';
 
+$raport_valid = '';
+
 // Переменные для валидации цвета, CMYK и процента
 for($i=1; $i<=8; $i++) {
     $ink_valid_var = 'ink_'.$i.'_valid';
@@ -324,10 +326,18 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
+    // Проверка валидности рапорта
+    if($work_type_id != WORK_TYPE_NOPRINT) {
+        if(null == filter_input(INPUT_POST, 'raport')) {
+            $raport_valid = ISINVALID;
+            $form_valid = false;
+        }
+    }
+    
     // Проверка валидности цвета, CMYK и процента
     $ink_number = filter_input(INPUT_POST, 'ink_number');
     
-    for($i=1; $i<=8; $i++) {
+    for($i = 1; $i <= 8; $i++) {
         if(!empty($ink_number) && is_numeric($ink_number) && $i <= $ink_number) {
             $ink_var = "ink_".$i;
             $$ink_var = filter_input(INPUT_POST, 'ink_'.$i);
@@ -2102,14 +2112,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                 }
                                             }
                                             
-                                            if($in_list):
+                                            if($in_list || empty($raport)):
                                             ?>
-                                        <select id="raport" name="raport" class="form-control print-only self-adhesive-only">
+                                        <select id="raport" name="raport" class="form-control print-only self-adhesive-only<?=$raport_valid ?>">
+                                            <option value="" hidden="hidden">Рапорт...</option>
                                             <?php
-                                            if(!empty($raports) && !empty($raport)):
+                                            if(!empty($raports)):
                                                 foreach($raports as $row):
                                                 $selected = "";
-                                            if($row['value'] == $raport) {
+                                            if(!empty($raport) && $row['value'] == $raport) {
                                                 $selected = " selected='selected'";
                                             }
                                             ?>
@@ -2126,11 +2137,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <?php
                                             endif;
                                             else:
-                                                ?>
+                                            ?>
                                         <select id="raport" name="raport" class="form-control print-only self-adhesive-only d-none">
                                             <option value="" hidden="hidden">Рапорт...</option>
                                         </select>
                                         <?php endif; ?>
+                                        <div class="invalid-feedback">Рапорт обязательно</div>
                                     </div>
                                 </div>
                             </div>
@@ -2141,7 +2153,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <select id="number_in_raport" name="number_in_raport" class="form-control print-only d-none">
                                         <option value="" hidden="hidden" selected="selected">Кол-во эт. в рапорте...</option>
                                         <?php
-                                        for($i=1; $i<=10; $i++):
+                                        for($i = 1; $i <= 10; $i++):
                                         $selected = "";
                                         if($i == $number_in_raport) $selected = " selected='selected'";
                                         ?>
@@ -2252,7 +2264,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <?php
                                     $disabled_attribute = '';
                                     if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
-                                            (null != filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
+                                            (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
                                         $disabled_attribute = "disabled='disabled' ";
                                     }
                                     ?>
@@ -2276,7 +2288,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             $stream_widths_many_visible_class = " d-none";
                             $stream_widths_many_checked = "";
                             if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
-                                    (null != filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
+                                    (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
                                 $stream_widths_many_visible_class = '';
                                 $stream_widths_many_checked = " checked='checked'";
                             }
@@ -2293,7 +2305,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <?php
                         $stream_widths_many_row_visible_class = " d-none";
                         if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
-                                (null != filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
+                                (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
                             $stream_widths_many_row_visible_class = '';
                         }
                         ?>
@@ -3783,10 +3795,21 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#stream_widths_many_row').html('');
                     var streams_number = parseInt($('#streams_number').val());
                     
+                    <?php
+                    if(count($stream_widths) > 0):
+                        foreach($stream_widths as $key => $value):
+                    ?>
+                    stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' /></div></div>");
+                    $('#stream_widths_many_row').append(stream_width);
+                    <?php
+                    endforeach;
+                    else:
+                    ?>
                     for(i = 1; i <= streams_number; i++) {
-                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control' id='stream_width_" + i + "' name='stream_width_" + i + "' required='required' /></div></div>");
+                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' /></div></div>");
                         $('#stream_widths_many_row').append(stream_width);
                     }
+                    <?php endif; ?>
                 }
             }
             
