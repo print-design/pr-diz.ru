@@ -3049,6 +3049,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function() {
                 $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
+                
+                if($('#work_type_id').val() != <?= WORK_TYPE_NOPRINT ?>) {
+                    $('#raport').attr('required', 'required');
+                }
+                
                 SetRaportOnChange();
                 
                 if($(this).val() == "") {
