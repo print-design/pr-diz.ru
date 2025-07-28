@@ -502,12 +502,12 @@ if($id !== null) {
     array_push($file_data, array("Время ламинации (без приладки) 2, ч",
         DisplayNumber($calculation->lamination_time_2, 5),
         $calculation->data_laminator->speed == 0 ? "|= 0" : "|= (".DisplayNumber($calculation->length_pure_start_2, 5)." + ".DisplayNumber($calculation->waste_length_2, 5).") / ".DisplayNumber($calculation->data_laminator->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk2, 0),
-        $calculation->data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора /1000 * УК2"));
+        $calculation->data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 2 + СтартСтопОтход 2) / скорость работы ламинатора /1000 * УК2"));
         
     array_push($file_data, array("Время ламинации (без приладки) 3, ч",
         DisplayNumber($calculation->lamination_time_3, 5),
         $calculation->data_laminator->speed == 0 ? "|= 0" :"|= (".DisplayNumber($calculation->length_pure_start_3, 5)." + ".DisplayNumber($calculation->waste_length_3, 5).") / ".DisplayNumber($calculation->data_laminator->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk3, 0),
-        $calculation->data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы ламинатора / 1000 * УК3"));
+        $calculation->data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 3 + СтартСтопОтход 3) / скорость работы ламинатора / 1000 * УК3"));
         
     array_push($file_data, array("Общее время выполнения тиража 1, ч",
         DisplayNumber($calculation->work_time_1, 5),
