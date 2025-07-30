@@ -451,7 +451,11 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
+                            <?php if(!empty($calculation->stream_width)): ?>
                             <td><?=$calculation->stream_width.(empty($calculation->stream_width) ? "" : " мм") ?></td>
+                            <?php else: ?>
+                            <td style="white-space: nowrap;">Разная ≈ <?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",") ?> мм</td>
+                            <?php endif; ?>
                         </tr>
                         <tr>
                             <td>Длина этикетки</td>
