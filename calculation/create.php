@@ -2287,10 +2287,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <?php
                             $stream_widths_many_visible_class = " d-none";
                             $stream_widths_many_checked = "";
-                            if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
-                                    (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
-                                $stream_widths_many_visible_class = '';
-                                $stream_widths_many_checked = " checked='checked'";
+                            if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE) || 
+                                    (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE)) {
+                                if($streams_number > 1) {
+                                    $stream_widths_many_visible_class = '';
+                                    
+                                    if(empty($stream_width)) {
+                                        $stream_widths_many_checked = " checked='checked'";
+                                    }
+                                }
                             }
                             ?>
                             <div class="col-6<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
