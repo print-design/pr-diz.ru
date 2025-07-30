@@ -153,6 +153,7 @@ if(file_exists('find.php')) {
     }
     
     function KeyUpFloatValue(e) {
+        val = e.target.value;
         val = val.replace(',', '.');
         val = val.replace(/[^\.\d]/g, '');
         e.target.value = val;

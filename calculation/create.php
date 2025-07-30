@@ -2314,7 +2314,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="stream_width_<?=$key ?>">Ширина ручья <?=$key ?>, мм</label>
-                                    <input type="text" class="form-control" id="stream_width_<?=$key ?>" name="stream_width_<?=$key ?>" value="<?=$value ?>" required="required" />
+                                    <input type="text" class="form-control float-only" id="stream_width_<?=$key ?>" name="stream_width_<?=$key ?>" value="<?=$value ?>" required="required" />
                                 </div>
                             </div>
                             <?php endforeach; ?>
@@ -3804,14 +3804,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     if(count($stream_widths) > 0):
                         foreach($stream_widths as $key => $value):
                     ?>
-                    stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' /></div></div>");
+                    stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
                     $('#stream_widths_many_row').append(stream_width);
                     <?php
                     endforeach;
                     else:
                     ?>
                     for(i = 1; i <= streams_number; i++) {
-                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' /></div></div>");
+                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
                         $('#stream_widths_many_row').append(stream_width);
                     }
                     <?php endif; ?>
