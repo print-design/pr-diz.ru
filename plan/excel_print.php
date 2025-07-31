@@ -8,6 +8,12 @@ $machine_id = filter_input(INPUT_GET, 'machine_id');
 $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
 
+const LATIN_LETTERS = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
+    "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", 
+    "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", 
+    "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", 
+    "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI");
+
 if(!empty($work_id) && !empty($machine_id)) {
     $date_from = null;
     $date_to = null;
@@ -220,6 +226,30 @@ if(!empty($work_id) && !empty($machine_id)) {
             
             $sheet->setCellValue('H'.$rowindex, '');
         }
+        
+        $sql = "select distinct pe.last_name, pe.first_name "
+                . "from plan_workshift1 pw "
+                . "inner join plan_employee pe on pw.employee1_id = pe.id "
+                . "where pw.work_id = ". WORK_TYPE_PRINT." and pw.machine_id = ".$printer
+                . " and pw.date >= '".$date_from->format('Y/m/d')."' and pw.date <= '".$date_to->format('Y/m/d')."' "
+                . "order by pe.last_name, pe.first_name"; echo $sql;
+        $fetcher = new Fetcher($sql);
+        /*SELECT distinct pe.last_name, pe.first_name 
+                FROM plan_workshift1 pw 
+                inner join plan_employee pe on pw.employee1_id = pe.id 
+                where pw.work_id = 1 and pw.date >= '2025/07/04' and pw.date <= '2025/10/04' order by pe.last_name, pe.first_name*/
+        while($row = $fetcher->Fetch()) {
+            echo $row['last_name'].' '.$row['first_name']."<br />";
+        }
+        //$grabber = new Grabber($sql);
+        //$employees1 = $grabber->result;
+        /*$fetcher = new Fetcher($sql);
+        foreach (LATIN_LETTERS as $latin_letter) { echo LATIN_LETTERS[2];
+            if($row = $fetcher->Fetch()) { echo $row['last_name'];
+                $sheet->getColumnDimension($latin_letter)->setAutoSize(true);
+                $sheet->setCellValue($latin_letter.'1', $row['last_name'].' '.$row['first_name']);
+            } echo "<br />";
+        }*/ exit();
         
         $activeSheetIndex++;
     }
