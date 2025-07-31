@@ -2319,7 +2319,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="stream_width_<?=$key ?>">Ширина ручья <?=$key ?>, мм</label>
-                                    <input type="text" class="form-control float-only" id="stream_width_<?=$key ?>" name="stream_width_<?=$key ?>" value="<?=$value ?>" required="required" />
+                                    <input type="text" class="form-control float-only stream_width_of_many" id="stream_width_<?=$key ?>" name="stream_width_<?=$key ?>" value="<?=$value ?>" required="required" />
                                 </div>
                             </div>
                             <?php endforeach; ?>
@@ -3708,10 +3708,24 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 
                 min_width = 0;
-                stream_width = $('#stream_width').val();
-                streams_number = $('#streams_number').val();
-                if(stream_width !== "" && streams_number !== "" && stream_width !== 0 && streams_number !== 0) {
-                    min_width = stream_width * streams_number;
+                
+                if($('#stream_widths_many').is(':checked')) {
+                    // Если ручьи разные
+                    // Iterate over each input element with the class 'stream_width_of_many'
+                    $('.stream_width_of_many').each(function() {
+                        // Parse the value of the current input field as a float
+                        var current_value = parseFloat($(this).val());
+                        // Add the parsed value to the min_width
+                        min_width += isNaN(current_value) ? 0 : current_value;
+                    });
+                }
+                else {
+                    // Если ручьи одинаковые
+                    stream_width = $('#stream_width').val();
+                    streams_number = $('#streams_number').val();
+                    if(stream_width !== "" && streams_number !== "" && stream_width !== 0 && streams_number !== 0) {
+                        min_width = stream_width * streams_number;
+                    }
                 }
                 
                 $.ajax({ url: "_laminator_roller.php?laminator_id=" + laminator_id + "&min_width=" + min_width })
@@ -3797,6 +3811,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#stream_widths_many_row').html('');
                     $('#stream_widths_many_row').addClass('d-none');
                 }
+                
+                GetLaminationRollers();
             });
             
             // Показ полей с разными ширинами ручьёв
@@ -3809,17 +3825,21 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     if(count($stream_widths) > 0):
                         foreach($stream_widths as $key => $value):
                     ?>
-                    stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
+                    stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
                     $('#stream_widths_many_row').append(stream_width);
                     <?php
                     endforeach;
                     else:
                     ?>
                     for(i = 1; i <= streams_number; i++) {
-                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
+                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
                         $('#stream_widths_many_row').append(stream_width);
                     }
                     <?php endif; ?>
+                    
+                    $('input.stream_width_of_many').keyup(function() {
+                        GetLaminationRollers();
+                    });
                 }
             }
             
@@ -4428,6 +4448,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('input#stream_width').keyup(function() {
+                GetLaminationRollers();
+            });
+            
+            $('input.stream_width_of_many').keyup(function() {
                 GetLaminationRollers();
             });
             
