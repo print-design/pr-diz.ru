@@ -122,7 +122,7 @@ if(!empty($work_id) && !empty($machine_id)) {
                 $sheet->setCellValue('L'.$rowindex, $row['width']);
             }
             else {
-                $sheet->setCellValue('L'.$rowindex, $row['width'] + 20);
+                $sheet->setCellValue('L'.$rowindex, strval($row['width'] + 20));
             }
                 
             $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
