@@ -71,7 +71,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->setCellValue('R'.$rowindex, "Отгрузочная стоимость");
         $sheet->setCellValue('S'.$rowindex, "Итоговая прибыль");
         
-        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.ink_number, c.raport, c.streams_number, c.stream_width, c.streams_number * c.stream_width width, c.ski, c.width_ski, "
+        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.individual_film_name, c.individual_thickness, c.ink_number, c.raport, c.streams_number, c.stream_width, c.streams_number * c.stream_width width, c.ski, c.width_ski, "
                 . "f.name film, fv.thickness, "
                 . "u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
@@ -81,8 +81,8 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "inner join calculation c on pe.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
-                . "inner join film_variation fv on c.film_variation_id = fv.id "
-                . "inner join film f on fv.film_id = f.id "
+                . "left join film_variation fv on c.film_variation_id = fv.id "
+                . "left join film f on fv.film_id = f.id "
                 . "where pe.work_id = ".WORK_PRINTING." and pe.machine_id = ".$printer
                 . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
                 . "order by date, shift";
@@ -109,10 +109,10 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('I'.$rowindex, $row['raport']);
                 
             $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
-            $sheet->setCellValue('J'.$rowindex, $row['film']);
+            $sheet->setCellValue('J'.$rowindex, empty($row['film']) ? $row['individual_film_name'] : $row['film']);
                 
             $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
-            $sheet->setCellValue('K'.$rowindex, $row['thickness']);
+            $sheet->setCellValue('K'.$rowindex, empty($row['thickness']) ? $row['individual_thickness'] : $row['thickness']);
                 
             $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
             if($row['ski'] == SKI_NONSTANDARD) {
@@ -170,6 +170,56 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->setTitle('₽ '.PRINTER_NAMES[$printer]);
         
         // Основная часть
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+        $sheet->getColumnDimension('G')->setAutoSize(true);
+        $sheet->getColumnDimension('H')->setAutoSize(true);
+        
+        $rowindex = 1;
+        
+        $sheet->setCellValue('A'.$rowindex, "Дата");
+        $sheet->setCellValue('B'.$rowindex, "День/Ночь");
+        $sheet->setCellValue('C'.$rowindex, "ID заказа");
+        $sheet->setCellValue('D'.$rowindex, "Наименование заказа");
+        $sheet->setCellValue('E'.$rowindex, "Красочность");
+        $sheet->setCellValue('F'.$rowindex, "Приладил");
+        $sheet->setCellValue('G'.$rowindex, "Метраж заказа");
+        $sheet->setCellValue('H'.$rowindex, "Всего отпечатано");
+        
+        $sql = "select pe.date, pe.shift, c.name, c.customer_id, c.ink_number, cr.length_pure_1, "
+                . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+                . "from plan_edition pe "
+                . "inner join calculation c on pe.calculation_id = c.id "
+                . "inner join user u on c.manager_id = u.id "
+                . "inner join calculation_result cr on cr.calculation_id = c.id "
+                . "left join film_variation fv on c.film_variation_id = fv.id "
+                . "left join film f on fv.film_id = f.id "
+                . "where pe.work_id = ". WORK_PRINTING." and pe.machine_id = ".$printer
+                . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
+                . "order by date, shift";
+        $fetcher = new Fetcher($sql);
+        while($row = $fetcher->Fetch()) {
+            $rowindex++;
+            
+            $sheet->setCellValue('A'.$rowindex, DateTime::createFromFormat("Y-m-d", $row['date'])->format('d.m.Y'));
+            $sheet->setCellValue('B'.$rowindex, $row['shift'] == "day" ? "День" : "Ночь");
+            $sheet->setCellValue('C'.$rowindex, $row['customer_id']."-".$row["num_for_customer"]);
+            $sheet->setCellValue('D'.$rowindex, $row['name']);
+            
+            $sheet->getCell('E'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('E'.$rowindex, $row['ink_number']);
+            
+            $sheet->setCellValue('F'.$rowindex, '');
+            
+            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
+            
+            $sheet->setCellValue('H'.$rowindex, '');
+        }
         
         $activeSheetIndex++;
     }
