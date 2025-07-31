@@ -155,6 +155,25 @@ if(!empty($work_id) && !empty($machine_id)) {
         $activeSheetIndex++;
     }
     
+    // Расчёт выработки
+    foreach (PRINTERS as $printer) {
+        if($printer == PRINTER_ATLAS) {
+            break;
+        }
+        
+        if($activeSheetIndex > 0) {
+            $xls->createSheet();
+        }
+        
+        $xls->setActiveSheetIndex($activeSheetIndex);
+        $sheet = $xls->getActiveSheet();
+        $sheet->setTitle('₽ '.PRINTER_NAMES[$printer]);
+        
+        // Основная часть
+        
+        $activeSheetIndex++;
+    }
+    
     $filename = "Печать_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
     
     header('Content-Type: application/vnd.ms-excel');
