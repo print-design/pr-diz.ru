@@ -213,8 +213,12 @@ if(file_exists('find.php')) {
         val = textbox.val().replace(/[^\d]/g, '');
         textbox.val(val);
         
-        if(val === null || val === '' || isNaN(val)) {
+        if(isNaN(val)) {
             alert('Только целое значение от 1 до ' + max);
+            textbox.val('');
+            textbox.focus();
+        }
+        else if(val === null || val === '') {
             textbox.val('');
             textbox.focus();
         }
