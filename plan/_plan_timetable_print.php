@@ -15,7 +15,7 @@
         <th class="cutting_hidden text-nowrap">Лам-й</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden">Кр-ть</th>
         <th class="not_colorist_hidden">Краски</th>
-        <th class="storekeeper_hidden colorist_hidden">Время</th>
+        <th class="d-none">Время</th>
         <th class="not_storekeeper_hidden">Нужно подготовить</th>
         <th class="not_storekeeper_hidden">Марка <span class="text-nowrap">мат-ла</span></th>
         <th class="not_storekeeper_hidden cutting_hidden">Ширина <span class="text-nowrap">мат-ла</span></th>

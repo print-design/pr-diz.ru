@@ -8,7 +8,7 @@
     <?php if($this->edition_key == 0): ?>
     <td class="<?=$top.' '.$this->plan_shift->shift ?>" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
         <div style="display: block; white-space: nowrap;">
-            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic" style="display: block;"><?= DisplayNumber($this->plan_shift->shift_worktime, 2) ?> ч.</div>
+            <?=($this->plan_shift->shift == 'day' ? 'День' : 'Ночь') ?><div class="font-italic d-none" style="display: block;"><?= DisplayNumber($this->plan_shift->shift_worktime, 2) ?> ч.</div>
         </div>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> border-right text-nowrap" rowspan="<?=$this->plan_shift->shift_editions_count ?>">
@@ -158,7 +158,7 @@
         echo implode('<br />', $color_lines);
         ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> storekeeper_hidden colorist_hidden">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> d-none">
         <?= DisplayNumber(floatval($this->edition['worktime']), 2) ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> not_storekeeper_hidden">
