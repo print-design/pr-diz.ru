@@ -196,6 +196,16 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->setCellValue('G'.$rowindex, "Метраж заказа");
         $sheet->setCellValue('H'.$rowindex, "Всего отпечатано");
         
+        $editions_count = 0;
+        
+        $sql = "select count(id) from plan_edition pe "
+                . "where pe.work_id = ". WORK_PRINTING." and pe.machine_id = ".$printer
+                . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."'";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $editions_count = $row[0];
+        }
+        
         $sql = "select pe.date, pe.shift, c.name, c.customer_id, c.ink_number, cr.length_pure_1, "
                 . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                 . "from plan_edition pe "
@@ -240,6 +250,52 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->getColumnDimension(COLUMNS[++$column_id])->setAutoSize(true);
             $sheet->setCellValue(COLUMNS[$column_id].'1', $row['last_name']);
         }
+        
+        // Приладил
+        //$objValidation = new PHPExcel_Cell_DataValidation();
+        //$objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+        //$objValidation->setFormula1('"Modern,Talking,Thomas,Anders,Dieter,Bohlen"');
+        for($i = 1; $i <= $editions_count; $i++) {
+            //$sheet->getCell('F'.($i + 1))->setDataValidation($objValidation);
+            //$sheet->setCellValue('F'.($i + 1), "QWE");
+            //$objValidation = $sheet->getCell('F'.($i + 1))->getDataValidation();
+            //$objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+            //$objValidation->setFormula1('"Да, Нет"');
+            //$objValidation->setErrorTitle('Ошибка выбора');
+        }
+        //$objValidation = $sheet->getCell('F2')->getDataValidation();
+        /*$objValidation = $sheet->getCell("F2")->getDataValidation(); //这一句为要设置数据有效性的单元格<br/>
+$objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
+        ->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
+        ->setAllowBlank(false)
+        ->setShowInputMessage(true)
+        ->setShowErrorMessage(true)
+        ->setShowDropDown(true)
+        ->setErrorTitle('输入的值有误')
+        ->setError('您输入的值不在下拉框列表内.')
+        ->setFormula1('"列表项1,列表项2,列表项3"')
+        ->setPromptTitle('设备类型');*/
+        //$cell = $sheet->getCell('F2');
+        //$validation = $cell->getDataValidation();
+        
+        /*$dataValidation = $sheet->getCell('A1')->getDataValidation();  
+$dataValidation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);  
+$dataValidation->setFormula1('"Да,Нет,Возможно"'); // Задаем список значений через запятую  
+$dataValidation->setErrorTitle('Ошибка выбора');  
+$dataValidation->setError('Выберите значение из списка.');  
+$dataValidation->setPromptTitle('Цвет');  
+$dataValidation->setPrompt('Выберите цвет из списка: Красный, Синий, Зелёный.');  
+``` [2](https://nweb42.com/books/phpspreadsheet/validatsiya-dannyh-v-yachejkah/)*/
+        
+        $validation = new PHPExcel_Cell_DataValidation();
+        $validation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+        $validation->setFormula1('"Да,Нет,Возможно"');
+        $validation->setErrorTitle('Ошибка выбора');
+        $validation->setError('Выберите значение из списка');
+        $validation->setPromptTitle('Печатник');
+        $validation->setPrompt('Выберите печатника');
+        //$sheet->getCell('F2')->setDataValidation($validation);
+        //print_r($validation);        exit();
         
         $activeSheetIndex++;
     }
