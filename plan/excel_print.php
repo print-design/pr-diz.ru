@@ -241,18 +241,6 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue(COLUMNS[$column_id].'1', $row['last_name']);
         }
         
-        $sql = "select distinct pe.last_name "
-                . "from plan_workshift2 pw "
-                . "inner join plan_employee pe on pw.employee2_id = pe.id "
-                . "where pw.work_id = ".WORK_PRINTING." and pw.machine_id = ".$printer
-                . " and pw.date >= '".$date_from->format('Y/m/d')."' and pw.date <= '".$date_to->format('Y/m/d')."' "
-                . "order by pe.last_name";
-        $fetcher = new Fetcher($sql);
-        while($row = $fetcher->Fetch()) {
-            $sheet->getColumnDimension(COLUMNS[++$column_id])->setAutoSize(true);
-            $sheet->setCellValue(COLUMNS[$column_id].'1', $row['last_name']);
-        }
-        
         $activeSheetIndex++;
     }
     
