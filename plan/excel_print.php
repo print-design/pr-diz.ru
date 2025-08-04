@@ -237,8 +237,6 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('H'.$rowindex, '');
         }
         
-        $column_id = 7;
-        
         $sql = "select distinct pe.last_name "
                 . "from plan_workshift1 pw "
                 . "inner join plan_employee pe on pw.employee1_id = pe.id "
@@ -249,10 +247,16 @@ if(!empty($work_id) && !empty($machine_id)) {
         $workers = $grabber->result;
         $workers_string = implode(",", array_column($workers, 'last_name'));
         
+        $column_id = 7;
+        $first_worker_id = $column_id;
+        $first_worker_id++;
+        
         foreach($workers as $worker) {
             $sheet->getColumnDimension(COLUMNS[++$column_id])->setAutoSize(true);
             $sheet->setCellValue(COLUMNS[$column_id].'1', $worker['last_name']);
         }
+        
+        $last_worker_id = $column_id;
         
         // Приладил
         $validation = new PHPExcel_Cell_DataValidation();
@@ -269,7 +273,12 @@ if(!empty($work_id) && !empty($machine_id)) {
         
         $editions_count++;
         for($i = 2; $i <= $editions_count; $i++) {
-            $sheet->getCell("F$i")->setDataValidation($validation);
+            $sheet->getCell('F'.$i)->setDataValidation($validation);
+        }
+        
+        // Всего отпечатано
+        for($i = 2; $i <= $editions_count; $i++) {
+            $sheet->setCellValue('H'.$i, "=SUM(". COLUMNS[$first_worker_id].$i.':'. COLUMNS[$last_worker_id].$i.')');
         }
         
         $activeSheetIndex++;
