@@ -245,82 +245,37 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "where pw.work_id = ". WORK_PRINTING." and pw.machine_id = ".$printer
                 . " and pw.date >= '".$date_from->format('Y/m/d')."' and pw.date <= '".$date_to->format('Y/m/d')."' "
                 . "order by pe.last_name";
-        $fetcher = new Fetcher($sql);
-        while($row = $fetcher->Fetch()) {
+        $grabber = new Grabber($sql);
+        $workers = $grabber->result;
+        $workers_string = implode(",", array_column($workers, 'last_name'));
+        
+        foreach($workers as $worker) {
             $sheet->getColumnDimension(COLUMNS[++$column_id])->setAutoSize(true);
-            $sheet->setCellValue(COLUMNS[$column_id].'1', $row['last_name']);
+            $sheet->setCellValue(COLUMNS[$column_id].'1', $worker['last_name']);
         }
         
         // Приладил
-        //$objValidation = new PHPExcel_Cell_DataValidation();
-        //$objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
-        //$objValidation->setFormula1('"Modern,Talking,Thomas,Anders,Dieter,Bohlen"');
-        for($i = 1; $i <= $editions_count; $i++) {
-            //$sheet->getCell('F'.($i + 1))->setDataValidation($objValidation);
-            //$sheet->setCellValue('F'.($i + 1), "QWE");
-            //$objValidation = $sheet->getCell('F'.($i + 1))->getDataValidation();
-            //$objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
-            //$objValidation->setFormula1('"Да, Нет"');
-            //$objValidation->setErrorTitle('Ошибка выбора');
-        }
-        //$objValidation = $sheet->getCell('F2')->getDataValidation();
-        /*$objValidation = $sheet->getCell("F2")->getDataValidation(); //这一句为要设置数据有效性的单元格<br/>
-$objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST)
-        ->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION)
-        ->setAllowBlank(false)
-        ->setShowInputMessage(true)
-        ->setShowErrorMessage(true)
-        ->setShowDropDown(true)
-        ->setErrorTitle('输入的值有误')
-        ->setError('您输入的值不在下拉框列表内.')
-        ->setFormula1('"列表项1,列表项2,列表项3"')
-        ->setPromptTitle('设备类型');*/
-        //$cell = $sheet->getCell('F2');
-        //$validation = $cell->getDataValidation();
-        
-        /*$dataValidation = $sheet->getCell('A1')->getDataValidation();  
-$dataValidation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);  
-$dataValidation->setFormula1('"Да,Нет,Возможно"'); // Задаем список значений через запятую  
-$dataValidation->setErrorTitle('Ошибка выбора');  
-$dataValidation->setError('Выберите значение из списка.');  
-$dataValidation->setPromptTitle('Цвет');  
-$dataValidation->setPrompt('Выберите цвет из списка: Красный, Синий, Зелёный.');  
-``` [2](https://nweb42.com/books/phpspreadsheet/validatsiya-dannyh-v-yachejkah/)*/
-        
-        //$validation = new PHPExcel_Cell_DataValidation();
-        /*$validation = $sheet->getCell('F2')->getDataValidation();
-        $validation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
-        $validation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_STOP);
-        $validation->setOperator(PHPExcel_Cell_DataValidation::OPERATOR_NOTEQUAL);
-        $validation->setFormula1('"Да,Нет,Возможно"');
-        $validation->setErrorTitle('Ошибка выбора');
-        $validation->setError('Выберите значение из списка');
-        $validation->setPromptTitle('Печатник');
-        $validation->setPrompt('Выберите печатника');*/
-        //$sheet->setDataValidation('F2', $validation);
-        //$sheet->getCell('F2')->setDataValidation($validation);
-        //print_r($validation);        exit();
-        
-        $activeSheetIndex++;
-    }
-    
-    $sheet = $xls->getActiveSheet();
-    $validation = $sheet->getCell('F2')->getDataValidation();
+        $validation = new PHPExcel_Cell_DataValidation();
         $validation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
         $validation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_STOP);
         $validation->setOperator(PHPExcel_Cell_DataValidation::OPERATOR_NOTEQUAL);
         $validation->setShowDropDown(true);
         $validation->setShowErrorMessage(true);
-        $validation->setFormula1('"Да,Нет,Возможно"');
+        $validation->setFormula1('"'.$workers_string.'"');
         $validation->setErrorTitle('Ошибка выбора');
         $validation->setError('Выберите значение из списка');
         $validation->setPromptTitle('Печатник');
         $validation->setPrompt('Выберите печатника');
         
-        /***************************/
+        $editions_count++;
+        for($i = 2; $i <= $editions_count; $i++) {
+            $sheet->getCell("F$i")->setDataValidation($validation);
+        }
+        
+        $activeSheetIndex++;
+    }
     
     $filename = "Печать_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
-    //PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
     
     header('Content-Type: application/vnd.ms-excel');
     header('Content-Disposition: attachment;filename="'.$filename.'"');
