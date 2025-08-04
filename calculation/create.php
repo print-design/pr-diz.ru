@@ -2143,6 +2143,54 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
+                            <!-- Ширина ручья -->
+                            <div class="col-4 no-print-only print-only d-none">
+                                <div class="form-group">
+                                    <label for="stream_width">Ширина ручья, мм</label>
+                                    <?php
+                                    $disabled_attribute = '';
+                                    if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
+                                            (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
+                                        $disabled_attribute = "disabled='disabled' ";
+                                    }
+                                    ?>
+                                    <input type="text" <?=$disabled_attribute ?>
+                                            id="stream_width" 
+                                            name="stream_width" 
+                                            class="form-control float-only no-print-only print-only d-none" 
+                                            required="required" 
+                                            placeholder="Ширина ручья, мм" 
+                                            value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
+                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                            onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
+                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                            onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
+                                            onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
+                                    <div class="invalid-feedback">Ширина ручья обязательно</div>
+                                </div>
+                                <!-- Разная ширина ручьёв -->
+                                <?php
+                                $stream_widths_many_visible_class = "d-none";
+                                $stream_widths_many_checked = "d-block";
+                                if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE) || 
+                                        (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE)) {
+                                    if($streams_number > 1) {
+                                        $stream_widths_many_visible_class = '';
+                                        
+                                        if(empty($stream_width)) {
+                                            $stream_widths_many_checked = " checked='checked'";
+                                        }
+                                    }
+                                }
+                                ?>
+                                <div class="<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
+                                    <div class="form-check mt-1">
+                                        <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
+                                            <input type="checkbox" class="form-check-input" id="stream_widths_many" name="stream_widths_many" value="on"<?=$stream_widths_many_checked ?>>Разная ширина ручьёв
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Количество ручьёв -->
                             <div class="col-4 no-print-only print-only self-adhesive-only d-none">
                                 <div class="form-group">
@@ -2252,56 +2300,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <option value="" hidden="hidden">Ширина ламинирующего вала...</option>
                                         </select>
                                         <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <!-- Ширина ручья -->
-                            <div class="col-4 no-print-only print-only d-none">
-                                <div class="form-group">
-                                    <label for="stream_width">Ширина ручья, мм</label>
-                                    <?php
-                                    $disabled_attribute = '';
-                                    if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
-                                            (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
-                                        $disabled_attribute = "disabled='disabled' ";
-                                    }
-                                    ?>
-                                    <input type="text" <?=$disabled_attribute ?>
-                                           id="stream_width" 
-                                           name="stream_width" 
-                                           class="form-control float-only no-print-only print-only d-none" 
-                                           required="required" 
-                                           placeholder="Ширина ручья, мм" 
-                                           value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
-                                    <div class="invalid-feedback">Ширина ручья обязательно</div>
-                                </div>
-                                <!-- Разная ширина ручьёв -->
-                                <?php
-                                $stream_widths_many_visible_class = "d-none";
-                                $stream_widths_many_checked = "d-block";
-                                if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE) || 
-                                        (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE)) {
-                                    if($streams_number > 1) {
-                                        $stream_widths_many_visible_class = '';
-                                        
-                                        if(empty($stream_width)) {
-                                            $stream_widths_many_checked = " checked='checked'";
-                                        }
-                                    }
-                                }
-                                ?>
-                                <div class="<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
-                                    <div class="form-check mt-1">
-                                        <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
-                                            <input type="checkbox" class="form-check-input" id="stream_widths_many" name="stream_widths_many" value="on"<?=$stream_widths_many_checked ?>>Разная ширина ручьёв
-                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -3821,21 +3819,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#stream_widths_many_row').html('');
                     var streams_number = parseInt($('#streams_number').val());
                     
-                    <?php
-                    if(count($stream_widths) > 0):
-                        foreach($stream_widths as $key => $value):
-                    ?>
-                    stream_width = $("<div class='col-4'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
-                    $('#stream_widths_many_row').append(stream_width);
-                    <?php
-                    endforeach;
-                    else:
-                    ?>
                     for(i = 1; i <= streams_number; i++) {
                         stream_width = $("<div class='col-4'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
                         $('#stream_widths_many_row').append(stream_width);
                     }
-                    <?php endif; ?>
                     
                     $('input.stream_width_of_many').keyup(function() {
                         GetLaminationRollers();
@@ -4408,9 +4395,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             }
             
-            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 16
+            // В поле "количество ручьёв" ограничиваем значения: целые числа от 1 до 15
             $('input#streams_number').keydown(function(e) {
-                if(!KeyDownLimitIntValue($(e.target), e, 16)) {
+                if(!KeyDownLimitIntValue($(e.target), e, 15)) {
                     return false;
                 }
             });
