@@ -2019,7 +2019,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <p id="film_title" class="d-none no-print-only print-only self-adhesive-only"><span class="font-weight-bold">Ручьи</span></p>
                         <div class="row">
                             <!-- Ширина этикетки -->
-                            <div class="col-6 self-adhesive-only d-none">
+                            <div class="col-4 self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width_2">Ширина этикетки, мм</label>
                                     <input type="text" 
@@ -2037,7 +2037,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Длина этикетки -->
-                            <div class="col-6 print-only d-none">
+                            <div class="col-4 print-only d-none">
                                 <div class="form-group">
                                     <label for="length">Длина этикетки, мм</label>
                                     <input type="text" 
@@ -2051,7 +2051,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Длина этикетки (для самоклеящейся бумаги) -->
-                            <div class="col-6 self-adhesive-only d-none">
+                            <div class="col-4 self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="length_2">Длина этикетки, мм</label>
                                     <input type="text" 
@@ -2070,7 +2070,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Количество ручьёв -->
-                            <div class="col-6 no-print-only print-only self-adhesive-only d-none">
+                            <div class="col-4 no-print-only print-only self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="streams_number">Количество ручьев</label>
                                     <input type="text" 
@@ -2089,7 +2089,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Рапорт -->
-                            <div class="col-6 print-only self-adhesive-only d-none">
+                            <div class="col-4 print-only self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="raport">Рапорт</label>
                                     <div id="raport_control">
@@ -2147,7 +2147,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Количество этикеток в рапорте -->
-                            <div class="col-6 print-only d-none">
+                            <div class="col-4 print-only d-none">
                                 <div class="form-group">
                                     <label for="number_in_raport">Количество этикеток в рапорте</label>
                                     <select id="number_in_raport" name="number_in_raport" class="form-control print-only d-none">
@@ -2163,7 +2163,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Количество этикеток в рапорте (для самоклейки) -->
-                            <div class="col-6 self-adhesive-only d-none">
+                            <div class="col-4 self-adhesive-only d-none">
                                 <div class="form-group">
                                     <label for="number_in_raport_2">Количество этикеток в рапорте</label>
                                     <input type="text" 
@@ -2176,7 +2176,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback">Количество этикеток в рапорте обязательно</div>
                                 </div>
                             </div>
-                            <div class="col-6 self-adhesive-only">
+                            <div class="col-4 self-adhesive-only">
                                 <div class="form-group">
                                     <label id="gap_fact">
                                         <?php
@@ -2193,7 +2193,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                             <!-- Ширина ламинирующего вала -->
-                            <div class="col-6 lam-only d-none">
+                            <div class="col-4 lam-only d-none">
                                 <div class="form-group">
                                     <label for="lamination_roller_width">Ширина ламинирующего вала, мм</label>
                                     <div id="lamination_roller_width_control">
@@ -2258,7 +2258,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         </div>
                         <div class="row">
                             <!-- Ширина ручья -->
-                            <div class="col-6 no-print-only print-only d-none">
+                            <div class="col-4 no-print-only print-only d-none">
                                 <div class="form-group">
                                     <label for="stream_width">Ширина ручья, мм</label>
                                     <?php
@@ -2298,7 +2298,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 }
                             }
                             ?>
-                            <div class="col-6<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
+                            <div class="col-4<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
                                 <div class="form-check mt-4">
                                     <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
                                         <input type="checkbox" class="form-check-input" id="stream_widths_many" name="stream_widths_many" value="on"<?=$stream_widths_many_checked ?>>Разная ширина ручьёв
@@ -2316,7 +2316,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         ?>
                         <div class="row<?=$stream_widths_many_row_visible_class ?>" id="stream_widths_many_row">
                             <?php foreach($stream_widths as $key => $value): ?>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="form-group">
                                     <label for="stream_width_<?=$key ?>">Ширина ручья <?=$key ?>, мм</label>
                                     <input type="text" class="form-control float-only stream_width_of_many" id="stream_width_<?=$key ?>" name="stream_width_<?=$key ?>" value="<?=$value ?>" required="required" />
@@ -3825,14 +3825,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     if(count($stream_widths) > 0):
                         foreach($stream_widths as $key => $value):
                     ?>
-                    stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
+                    stream_width = $("<div class='col-4'><div class='form-group'><label for='stream_width_<?=$key ?>'>Ширина ручья <?=$key ?>, мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_<?=$key ?>' name='stream_width_<?=$key ?>' value='<?=$value ?>' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
                     $('#stream_widths_many_row').append(stream_width);
                     <?php
                     endforeach;
                     else:
                     ?>
                     for(i = 1; i <= streams_number; i++) {
-                        stream_width = $("<div class='col-6'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
+                        stream_width = $("<div class='col-4'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
                         $('#stream_widths_many_row').append(stream_width);
                     }
                     <?php endif; ?>
