@@ -287,20 +287,40 @@ $dataValidation->setPromptTitle('Цвет');
 $dataValidation->setPrompt('Выберите цвет из списка: Красный, Синий, Зелёный.');  
 ``` [2](https://nweb42.com/books/phpspreadsheet/validatsiya-dannyh-v-yachejkah/)*/
         
-        $validation = new PHPExcel_Cell_DataValidation();
+        //$validation = new PHPExcel_Cell_DataValidation();
+        /*$validation = $sheet->getCell('F2')->getDataValidation();
         $validation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+        $validation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_STOP);
+        $validation->setOperator(PHPExcel_Cell_DataValidation::OPERATOR_NOTEQUAL);
         $validation->setFormula1('"Да,Нет,Возможно"');
         $validation->setErrorTitle('Ошибка выбора');
         $validation->setError('Выберите значение из списка');
         $validation->setPromptTitle('Печатник');
-        $validation->setPrompt('Выберите печатника');
+        $validation->setPrompt('Выберите печатника');*/
+        //$sheet->setDataValidation('F2', $validation);
         //$sheet->getCell('F2')->setDataValidation($validation);
         //print_r($validation);        exit();
         
         $activeSheetIndex++;
     }
     
+    $sheet = $xls->getActiveSheet();
+    $validation = $sheet->getCell('F2')->getDataValidation();
+        $validation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
+        $validation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_STOP);
+        $validation->setOperator(PHPExcel_Cell_DataValidation::OPERATOR_NOTEQUAL);
+        $validation->setShowDropDown(true);
+        $validation->setShowErrorMessage(true);
+        $validation->setFormula1('"Да,Нет,Возможно"');
+        $validation->setErrorTitle('Ошибка выбора');
+        $validation->setError('Выберите значение из списка');
+        $validation->setPromptTitle('Печатник');
+        $validation->setPrompt('Выберите печатника');
+        
+        /***************************/
+    
     $filename = "Печать_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
+    //PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
     
     header('Content-Type: application/vnd.ms-excel');
     header('Content-Disposition: attachment;filename="'.$filename.'"');
