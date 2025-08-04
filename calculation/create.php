@@ -2075,6 +2075,22 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <div class="invalid-feedback">Рапорт обязательно</div>
                                     </div>
                                 </div>
+                                <div class="self-adhesive-only">
+                                    <div class="form-group">
+                                        <label id="gap_fact">
+                                            <?php
+                                            if(!empty($raport) && !empty($length) && !empty($number_in_raport)) {
+                                                $f_raport = floatval($raport);
+                                                $f_length = floatval($length);
+                                                $f_number_in_raport = floatval($number_in_raport);
+                                                $gap_fact = ($f_raport - ($f_length * $f_number_in_raport)) / $f_number_in_raport;
+                                                $s_gap_fact = DisplayNumber($gap_fact, 2);
+                                                echo "Зазор между этикетками $s_gap_fact мм";
+                                            }
+                                            ?>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                             <!-- Количество этикеток в рапорте -->
                             <div class="col-4 print-only d-none">
@@ -2222,22 +2238,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            placeholder="Количество этикеток в рапорте" 
                                            value="<?= empty($number_in_raport) ? "" : intval($number_in_raport) ?>" />
                                     <div class="invalid-feedback">Количество этикеток в рапорте обязательно</div>
-                                </div>
-                            </div>
-                            <div class="col-4 self-adhesive-only">
-                                <div class="form-group">
-                                    <label id="gap_fact">
-                                        <?php
-                                        if(!empty($raport) && !empty($length) && !empty($number_in_raport)) {
-                                            $f_raport = floatval($raport);
-                                            $f_length = floatval($length);
-                                            $f_number_in_raport = floatval($number_in_raport);
-                                            $gap_fact = ($f_raport - ($f_length * $f_number_in_raport)) / $f_number_in_raport;
-                                            $s_gap_fact = DisplayNumber($gap_fact, 2);
-                                            echo "Зазор между этикетками $s_gap_fact мм";
-                                        }
-                                        ?>
-                                    </label>
                                 </div>
                             </div>
                             <!-- Ширина ламинирующего вала -->
