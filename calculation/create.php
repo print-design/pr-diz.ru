@@ -2108,6 +2108,39 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     </select>
                                 </div>
                             </div>
+                            <!-- Количество этикеток в рапорте (для самоклейки) -->
+                            <div class="col-4 self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="number_in_raport_2">Количество этикеток в рапорте</label>
+                                    <input type="text" 
+                                           readonly="readonly" 
+                                           id="number_in_raport_2" 
+                                           name="number_in_raport_2" 
+                                           class="form-control self-adhesive-only d-none" 
+                                           placeholder="Количество этикеток в рапорте" 
+                                           value="<?= empty($number_in_raport) ? "" : intval($number_in_raport) ?>" />
+                                    <div class="invalid-feedback">Количество этикеток в рапорте обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Длина этикетки (для самоклеящейся бумаги) -->
+                            <div class="col-4 self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="length_2">Длина этикетки, мм</label>
+                                    <input type="text" 
+                                           id="length_2" 
+                                           name="length_2" 
+                                           class="form-control float-only self-adhesive-only d-none" 
+                                           required="required" 
+                                           placeholder="Длина этикетки, мм" 
+                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
+                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
+                                </div>
+                            </div>
                             <!-- Ширина этикетки -->
                             <div class="col-4 self-adhesive-only d-none">
                                 <div class="form-group">
@@ -2137,25 +2170,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            class="form-control print-only d-none" 
                                            placeholder="Длина этикетки, мм" 
                                            value="<?= empty($length) ? "" : floatval($length) ?>" />
-                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
-                                </div>
-                            </div>
-                            <!-- Длина этикетки (для самоклеящейся бумаги) -->
-                            <div class="col-4 self-adhesive-only d-none">
-                                <div class="form-group">
-                                    <label for="length_2">Длина этикетки, мм</label>
-                                    <input type="text" 
-                                           id="length_2" 
-                                           name="length_2" 
-                                           class="form-control float-only self-adhesive-only d-none" 
-                                           required="required" 
-                                           placeholder="Длина этикетки, мм" 
-                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
                                     <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
@@ -2224,20 +2238,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            onkeyup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
                                            onfocusout="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
-                                </div>
-                            </div>
-                            <!-- Количество этикеток в рапорте (для самоклейки) -->
-                            <div class="col-4 self-adhesive-only d-none">
-                                <div class="form-group">
-                                    <label for="number_in_raport_2">Количество этикеток в рапорте</label>
-                                    <input type="text" 
-                                           readonly="readonly" 
-                                           id="number_in_raport_2" 
-                                           name="number_in_raport_2" 
-                                           class="form-control self-adhesive-only d-none" 
-                                           placeholder="Количество этикеток в рапорте" 
-                                           value="<?= empty($number_in_raport) ? "" : intval($number_in_raport) ?>" />
-                                    <div class="invalid-feedback">Количество этикеток в рапорте обязательно</div>
                                 </div>
                             </div>
                             <!-- Ширина ламинирующего вала -->
