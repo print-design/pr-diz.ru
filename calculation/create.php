@@ -2018,76 +2018,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         </div>
                         <p id="film_title" class="d-none no-print-only print-only self-adhesive-only"><span class="font-weight-bold">Ручьи</span></p>
                         <div class="row">
-                            <!-- Ширина этикетки -->
-                            <div class="col-4 self-adhesive-only d-none">
-                                <div class="form-group">
-                                    <label for="stream_width_2">Ширина этикетки, мм</label>
-                                    <input type="text" 
-                                           id="stream_width_2" 
-                                           name="stream_width_2" 
-                                           class="form-control float-only self-adhesive-only d-none" 
-                                           required="required" 
-                                           placeholder="Ширина этикетки, мм" 
-                                           value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" />
-                                </div>
-                            </div>
-                            <!-- Длина этикетки -->
-                            <div class="col-4 print-only d-none">
-                                <div class="form-group">
-                                    <label for="length">Длина этикетки, мм</label>
-                                    <input type="text" 
-                                           readonly="readonly" 
-                                           id="length" 
-                                           name="length" 
-                                           class="form-control print-only d-none" 
-                                           placeholder="Длина этикетки, мм" 
-                                           value="<?= empty($length) ? "" : floatval($length) ?>" />
-                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
-                                </div>
-                            </div>
-                            <!-- Длина этикетки (для самоклеящейся бумаги) -->
-                            <div class="col-4 self-adhesive-only d-none">
-                                <div class="form-group">
-                                    <label for="length_2">Длина этикетки, мм</label>
-                                    <input type="text" 
-                                           id="length_2" 
-                                           name="length_2" 
-                                           class="form-control float-only self-adhesive-only d-none" 
-                                           required="required" 
-                                           placeholder="Длина этикетки, мм" 
-                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
-                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
-                                </div>
-                            </div>
-                            <!-- Количество ручьёв -->
-                            <div class="col-4 no-print-only print-only self-adhesive-only d-none">
-                                <div class="form-group">
-                                    <label for="streams_number">Количество ручьев</label>
-                                    <input type="text" 
-                                           id="streams_number" 
-                                           name="streams_number" 
-                                           class="form-control int-only no-print-only print-only self-adhesive-only d-none" 
-                                           required="required"
-                                           placeholder="Количество ручьев" 
-                                           value="<?=$streams_number ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
-                                           onfocusout="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" />
-                                    <div class="invalid-feedback">Количество ручьев обязательно</div>
-                                </div>
-                            </div>
                             <!-- Рапорт -->
                             <div class="col-4 print-only self-adhesive-only d-none">
                                 <div class="form-group">
@@ -2160,6 +2090,76 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <option<?=$selected ?>><?=$i ?></option>
                                         <?php endfor; ?>
                                     </select>
+                                </div>
+                            </div>
+                            <!-- Ширина этикетки -->
+                            <div class="col-4 self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="stream_width_2">Ширина этикетки, мм</label>
+                                    <input type="text" 
+                                           id="stream_width_2" 
+                                           name="stream_width_2" 
+                                           class="form-control float-only self-adhesive-only d-none" 
+                                           required="required" 
+                                           placeholder="Ширина этикетки, мм" 
+                                           value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" />
+                                </div>
+                            </div>
+                            <!-- Длина этикетки -->
+                            <div class="col-4 print-only d-none">
+                                <div class="form-group">
+                                    <label for="length">Длина этикетки, мм</label>
+                                    <input type="text" 
+                                           readonly="readonly" 
+                                           id="length" 
+                                           name="length" 
+                                           class="form-control print-only d-none" 
+                                           placeholder="Длина этикетки, мм" 
+                                           value="<?= empty($length) ? "" : floatval($length) ?>" />
+                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Длина этикетки (для самоклеящейся бумаги) -->
+                            <div class="col-4 self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="length_2">Длина этикетки, мм</label>
+                                    <input type="text" 
+                                           id="length_2" 
+                                           name="length_2" 
+                                           class="form-control float-only self-adhesive-only d-none" 
+                                           required="required" 
+                                           placeholder="Длина этикетки, мм" 
+                                           value="<?= empty($length) ? "" : floatval($length) ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
+                                           onfocusout="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
+                                    <div class="invalid-feedback">Длина этикетки обязательно</div>
+                                </div>
+                            </div>
+                            <!-- Количество ручьёв -->
+                            <div class="col-4 no-print-only print-only self-adhesive-only d-none">
+                                <div class="form-group">
+                                    <label for="streams_number">Количество ручьев</label>
+                                    <input type="text" 
+                                           id="streams_number" 
+                                           name="streams_number" 
+                                           class="form-control int-only no-print-only print-only self-adhesive-only d-none" 
+                                           required="required"
+                                           placeholder="Количество ручьев" 
+                                           value="<?=$streams_number ?>" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
+                                           onfocusout="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" />
+                                    <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
                             <!-- Количество этикеток в рапорте (для самоклейки) -->
@@ -2282,27 +2282,27 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
                                 </div>
-                            </div>
-                            <!-- Разная ширина ручьёв -->
-                            <?php
-                            $stream_widths_many_visible_class = " d-none";
-                            $stream_widths_many_checked = "";
-                            if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE) || 
-                                    (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE)) {
-                                if($streams_number > 1) {
-                                    $stream_widths_many_visible_class = '';
-                                    
-                                    if(empty($stream_width)) {
-                                        $stream_widths_many_checked = " checked='checked'";
+                                <!-- Разная ширина ручьёв -->
+                                <?php
+                                $stream_widths_many_visible_class = "d-none";
+                                $stream_widths_many_checked = "d-block";
+                                if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE) || 
+                                        (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE)) {
+                                    if($streams_number > 1) {
+                                        $stream_widths_many_visible_class = '';
+                                        
+                                        if(empty($stream_width)) {
+                                            $stream_widths_many_checked = " checked='checked'";
+                                        }
                                     }
                                 }
-                            }
-                            ?>
-                            <div class="col-4<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
-                                <div class="form-check mt-4">
-                                    <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
-                                        <input type="checkbox" class="form-check-input" id="stream_widths_many" name="stream_widths_many" value="on"<?=$stream_widths_many_checked ?>>Разная ширина ручьёв
-                                    </label>
+                                ?>
+                                <div class="<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
+                                    <div class="form-check mt-1">
+                                        <label class="form-check-label text-nowrap mt-2 mb-2" style="line-height: 25px;">
+                                            <input type="checkbox" class="form-check-input" id="stream_widths_many" name="stream_widths_many" value="on"<?=$stream_widths_many_checked ?>>Разная ширина ручьёв
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
