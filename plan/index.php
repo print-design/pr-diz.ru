@@ -288,24 +288,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 </div>
             </div>
         </div>
-        <div id="divide" class="modal fade show">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post">
-                        <div class="modal-header">
-                            <div class="font-weight-bold" style="font-size: x-large;">Разделение заказа</div>
-                            <button type="button" class="close add_event_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A"></i></button>
-                        </div>
-                        <div class="modal-body" id="divide_modal_form">
-                        </div>
-                        <div class="modal-footer" style="justify-content: flex-start;">
-                            <button type="submit" class="btn btn-dark" name="divide_submit" onclick="javascript: if(form.elements.divide_total.value - form.elements.length1.value <= 0) { alert('Остаток тиража должен быть больше нуля'); return false; }">Разделить</button>
-                            <button type="button" class="btn btn-light add_event_dismiss" data-dismiss="modal">Отменить</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <?php
         include '../include/header_plan.php';
         ?>
@@ -461,76 +443,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                     if($(e.target).closest($('.queue_menu')).length || $(e.target).closest($('.queue_menu_trigger')).length) return;
                     $('.queue_menu').slideUp();
                 });
-                
-                // Открытие формы разделения заказа
-                $('.btn_divide').click(function() {
-                    $('.queue_menu').slideUp();
-                    var id = $(this).attr('data-id');
-                    var lamination = $(this).attr('data-lamination');
-                
-                    $.ajax({ url: "_divide_form.php?id=" + id + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&lamination=" + lamination })
-                            .done(function(data) {
-                                $('#divide_modal_form').html(data);
-                                $('#divide').modal('show');
-                                $('input[name="scroll"]').val($('#timetable').scrollTop());
-                            })
-                            .fail(function() {
-                                alert('Ошибка при открытии формы разделения заказа');
-                            });
-                });
-            
-                // При показе формы разделения заказа,
-                // устанавливаем фокус на текстовом поле.
-                // Допускается ввод только чисел.
-                $('#divide').on('shown.bs.modal', function() {
-                    $('input:text:visible:first').focus();
-                    
-                    $('input:text:visible:first').keypress(function(e) {
-                        if(/\D/.test(e.key)) {
-                            return false;
-                        }
-                    });
-                
-                    $('input:text:visible:first').keyup(function() {
-                        var val = $(this).val();
-                        val = val.replaceAll(/\D/g, '');
-                    
-                        if(val === '') {
-                            $(this).val('');
-                        }
-                        else {
-                            val = parseInt(val);
-                        
-                            if($(this).hasClass('int-format')) {
-                                val = Intl.NumberFormat('ru-RU').format(val);
-                            }
-                        
-                            $(this).val(val);
-                        }
-                        
-                        CountDividedSize($(this).val());
-                    });
-                
-                    $('input:text:visible:first').change(function(e) {
-                        var val = $(this).val();
-                        val = val.replace(/[^\d]/g, '');
-                    
-                        if(val === '') {
-                            $(this).val('');
-                        }
-                        else {
-                            val = parseInt(val);
-                        
-                            if($(this).hasClass('int-format')) {
-                                val = Intl.NumberFormat('ru-RU').format(val);
-                            }
-                        
-                            $(this).val(val);
-                        }
-                        
-                        CountDividedSize($(this).val());
-                    });
-                });
             }
             
             EnableMenu();
@@ -599,24 +511,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 }
                 
                 $('.timetable_menu').slideUp();
-            }
-            
-            function CountDividedSize(divide_first) {
-                if(divide_first === '') {
-                    $('#divide_rest').text('');
-                }
-                else {
-                    divide_total = $('#divide_total').val();
-                    divide_rest = divide_total - divide_first;
-                    $('#divide_rest').text(Intl.NumberFormat('ru-RU').format(Math.round(divide_rest)) + ' м');
-                   
-                    if(divide_rest > 0) {
-                        $('#divide_rest').removeClass('text-danger');
-                    }
-                    else {
-                        $('#divide_rest').addClass('text-danger');
-                    }
-                }
             }
             
             function DrawTimetable(work_id, machine_id, from, to) {
