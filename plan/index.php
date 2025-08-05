@@ -515,6 +515,9 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             
             function DrawTimetable(work_id, machine_id, from, to) {
                 $('#timetable').load("_draw_timetable.php?work_id=" + work_id + "&machine_id=" + machine_id + "&from=" + from + "&to=" + to, function() {
+                    if($('#sidebar').hasClass('active')) {
+                        $('.comment_cell').removeClass('comment_invisible');
+                    }
                     $('#queue').load("_draw_queue.php?work_id=" + work_id + "&machine_id=" + machine_id, function() {
                         EnableMenu();
                     });
