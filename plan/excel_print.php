@@ -310,6 +310,49 @@ if(!empty($work_id) && !empty($machine_id)) {
         $activeSheetIndex++;
     }
     
+    // Все ₽
+    if($activeSheetIndex > 0) {
+        $xls->createSheet();
+    }
+    
+    $xls->setActiveSheetIndex($activeSheetIndex);
+    $sheet = $xls->getActiveSheet();
+    $sheet->setTitle('Все ₽');
+    
+    $sheet->getColumnDimension('A')->setAutoSize(true);
+    $sheet->getColumnDimension('B')->setAutoSize(true);
+    $sheet->getColumnDimension('C')->setAutoSize(true);
+    $sheet->getColumnDimension('D')->setAutoSize(true);
+    
+    $sheet->setCellValue('B1', "За наклейку 1 ПФ ₽");
+    $sheet->setCellValue('C1', "За КМ ₽");
+    $sheet->setCellValue('A2', "Тариф →");
+    $sheet->setCellValue('A3', "Печатники ↓");
+    $sheet->getStyle('B2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    $sheet->setCellValue('B2', '0');
+    $sheet->getStyle('C2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    $sheet->setCellValue('C2', '0');
+    $sheet->setCellValue('D3', "Итого ₽");
+    
+    $row_number = 4;
+    
+    $sql = "select distinct pe.last_name, pe.first_name "
+            . "from plan_workshift1 pw "
+            . "inner join plan_employee pe on pw.employee1_id = pe.id "
+            . "where pw.work_id = ". WORK_PRINTING." "
+            . "and pw.date >= '".$date_from->format('Y/m/d')."' and pw.date <= '".$date_to->format('Y/m/d')."' "
+            . "order by pe.last_name, pe.first_name";
+    $fetcher = new Fetcher($sql);
+    while($row = $fetcher->Fetch()) {
+        $sheet->setCellValue('A'.$row_number, $row['last_name'].(empty($row['first_name']) ? '' : ' '. mb_substr($row['first_name'], 0, 1, 'UTF-8').'.'));
+        $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->setCellValue('D'.$row_number, '=PRODUCT(B2,B'.$row_number.')+PRODUCT(C2,C'.$row_number.')');
+        $row_number++;
+    }
+    
+    // Сохранение
     $filename = "Печать_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
     
     header('Content-Type: application/vnd.ms-excel');
