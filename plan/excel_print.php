@@ -281,6 +281,32 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('H'.$i, "=SUM(". COLUMNS[$first_worker_id].$i.':'. COLUMNS[$last_worker_id].$i.')');
         }
         
+        // ₽ за приладку 1 кр ₽↓
+        $sheet->getStyle('F'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('F'.($editions_count + 4), '₽ за приладку 1 кр ₽ ↓');
+        
+        // ₽ за печать 1 км ↓
+        $sheet->getStyle('G'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('G'.($editions_count + 4), '₽ за печать 1 км ↓');
+        
+        // Наклеено форм →
+        $sheet->setCellValue('H'.($editions_count + 2), 'Наклеено форм →');
+        
+        // Отпечатано КМ →
+        $sheet->setCellValue('H'.($editions_count + 3), 'Отпечатано КМ →');
+        
+        // ₽ за КМ →
+        $sheet->getStyle('H'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('H'.($editions_count + 4), '₽ за КМ →');
+        
+        // ₽ за приладку →
+        $sheet->getStyle('H'.($editions_count + 5))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('H'.($editions_count + 5), '₽ за приладку →');
+        
+        // Итого
+        $sheet->getStyle('H'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('H'.($editions_count + 6), 'Итого');
+        
         $activeSheetIndex++;
     }
     
