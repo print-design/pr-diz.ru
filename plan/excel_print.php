@@ -8,6 +8,8 @@ $machine_id = filter_input(INPUT_GET, 'machine_id');
 $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
 
+const FIRST_COLUMN_ID = 7;
+
 const COLUMNS = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", 
     "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", 
@@ -247,7 +249,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $workers = $grabber->result;
         $workers_string = implode(",", array_column($workers, 'last_name'));
         
-        $column_id = 7;
+        $column_id = FIRST_COLUMN_ID;
         $first_worker_id = $column_id;
         $first_worker_id++;
         
@@ -289,8 +291,15 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->getStyle('G'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('G'.($editions_count + 4), '₽ за печать 1 км ↓');
         
-        // Наклеено форм →
-        $sheet->setCellValue('H'.($editions_count + 2), 'Наклеено форм →');
+        // Прилажено красок →
+        $sheet->setCellValue('H'.($editions_count + 2), 'Прилажено красок →');
+        
+        $column_id = FIRST_COLUMN_ID;
+        
+        foreach($workers as $worker) {
+            $sheet->setCellValue('I80', '=СУММЕСЛИ(F2:F78;"Клюев";E2:E78)'); // "=СУММЕСЛИ(F2:F78;"."Белов".";E2:E78)");
+            //$sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 2), '=СУММЕСЛИ(F2:F'.$editions_count.';"'.$worker['last_name'].'";E2:E'.$editions_count.')');
+        }
         
         // Отпечатано КМ →
         $sheet->setCellValue('H'.($editions_count + 3), 'Отпечатано КМ →');
