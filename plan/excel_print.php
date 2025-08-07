@@ -301,8 +301,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $column_id = FIRST_COLUMN_ID;
         
         foreach($workers as $worker) {
-            //$sheet->setCellValue('A160', '=SUMIF(F2:F78,K1,E2:E78)'); // $sheet->getCell('I80')->setDataType(PHPExcel_Cell_DataType::TYPE_STRING); // print_r($sheet->getCell('I80')); exit(); // "=СУММЕСЛИ(F2:F78;"."Белов".";E2:E78)");
-            //$sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 2), '=СУММЕСЛИ(F2:F'.$editions_count.';"'.$worker['last_name'].'";E2:E'.$editions_count.')');
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 2), '=SUMIF(F2:F'.$editions_count.','. COLUMNS[$column_id].'1,E2:E'.$editions_count.')');
         }
         
         // Отпечатано КМ →
