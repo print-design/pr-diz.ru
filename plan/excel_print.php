@@ -1,7 +1,13 @@
 <?php
 include '../include/topscripts.php';
-require_once '../include/PHPExcel.php';
-require_once '../PHPExcel/Writer/Excel5.php';
+require '../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
@@ -21,7 +27,7 @@ if(!empty($work_id) && !empty($machine_id)) {
     $date_to = null;
     GetDateFromDateTo($from, $to, $date_from, $date_to);
     
-    $xls = new PHPExcel();
+    $spreadsheet = new Spreadsheet();
     $activeSheetIndex = 0;
     
     foreach(PRINTERS as $printer) {
@@ -30,11 +36,11 @@ if(!empty($work_id) && !empty($machine_id)) {
         }
         
         if($activeSheetIndex > 0) {
-            $xls->createSheet();
+            $spreadsheet->createSheet();
         }
         
-        $xls->setActiveSheetIndex($activeSheetIndex);
-        $sheet = $xls->getActiveSheet();
+        $spreadsheet->setActiveSheetIndex($activeSheetIndex);
+        $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle(PRINTER_NAMES[$printer]);
         
         $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -58,7 +64,6 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->getColumnDimension('S')->setAutoSize(true);
         
         $rowindex = 1;
-        
         $sheet->setCellValue('A'.$rowindex, "Дата");
         $sheet->setCellValue('B'.$rowindex, "День/Ночь");
         $sheet->setCellValue('C'.$rowindex, "Менеджер");
@@ -104,25 +109,25 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('D'.$rowindex, $row['customer_id']."-".$row["num_for_customer"]);
             $sheet->setCellValue('E'.$rowindex, $row['name']);
             
-            $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('F'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('F'.$rowindex, $row['weight_pure_1']);
             
-            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('G'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
             
-            $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('H'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('H'.$rowindex, $row["ink_number"]);
                 
-            $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('I'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('I'.$rowindex, $row['raport']);
                 
-            $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_STRING);
+            $sheet->getCell('J'.$rowindex)->setDataType(DataType::TYPE_STRING);
             $sheet->setCellValue('J'.$rowindex, empty($row['film']) ? $row['individual_film_name'] : $row['film']);
                 
-            $sheet->getCell('K'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('K'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('K'.$rowindex, empty($row['thickness']) ? $row['individual_thickness'] : $row['thickness']);
                 
-            $sheet->getCell('L'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('L'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             if($row['ski'] == SKI_NONSTANDARD) {
                 $sheet->setCellValue('L'.$rowindex, $row['width_ski']);
             }
@@ -133,31 +138,31 @@ if(!empty($work_id) && !empty($machine_id)) {
                 $sheet->setCellValue('L'.$rowindex, strval($row['width'] + 20));
             }
                 
-            $sheet->getCell('M'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('M'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('M'.$rowindex, $row['streams_number']);
                 
-            $sheet->getCell('N'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('N'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('N'.$rowindex, $row['stream_width']);
             
-            $sheet->getCell('O'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('O'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('O'.$rowindex, $row['ink_cost']);
             
-            $sheet->getCell('P'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('P'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('P'.$rowindex, $row['cliche_cost']);
             
-            $sheet->getCell('Q'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('Q'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('Q'.$rowindex, $row['cost']);
             
-            $sheet->getCell('R'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('R'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('R'.$rowindex, $row['shipping_cost']);
             
-            $sheet->getCell('S'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('S'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('S'.$rowindex, $row['total_income']);
                 
-            $sheet->getStyle('F'.$rowindex.':H'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
-            $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-            $sheet->getStyle('K'.$rowindex.':N'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
-            $sheet->getStyle('O'.$rowindex.':S'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->getStyle('F'.$rowindex.':H'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
+            $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->getStyle('K'.$rowindex.':N'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
+            $sheet->getStyle('O'.$rowindex.':S'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         }
         
         $activeSheetIndex++;
@@ -170,11 +175,11 @@ if(!empty($work_id) && !empty($machine_id)) {
         }
         
         if($activeSheetIndex > 0) {
-            $xls->createSheet();
+            $spreadsheet->createSheet();
         }
         
-        $xls->setActiveSheetIndex($activeSheetIndex);
-        $sheet = $xls->getActiveSheet();
+        $spreadsheet->setActiveSheetIndex($activeSheetIndex);
+        $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('₽ '.PRINTER_NAMES[$printer]);
         
         // Основная часть
@@ -228,12 +233,12 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('C'.$rowindex, $row['customer_id']."-".$row["num_for_customer"]);
             $sheet->setCellValue('D'.$rowindex, $row['name']);
             
-            $sheet->getCell('E'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('E'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('E'.$rowindex, $row['ink_number']);
             
             $sheet->setCellValue('F'.$rowindex, '');
             
-            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('G'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('G'.$rowindex, $row['length_pure_1']);
             
             $sheet->setCellValue('H'.$rowindex, '');
@@ -261,21 +266,20 @@ if(!empty($work_id) && !empty($machine_id)) {
         $last_worker_id = $column_id;
         
         // Приладил
-        $validation = new PHPExcel_Cell_DataValidation();
-        $validation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
-        $validation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_STOP);
-        $validation->setOperator(PHPExcel_Cell_DataValidation::OPERATOR_NOTEQUAL);
-        $validation->setShowDropDown(true);
-        $validation->setShowErrorMessage(true);
-        $validation->setFormula1('"'.$workers_string.'"');
-        $validation->setErrorTitle('Ошибка выбора');
-        $validation->setError('Выберите значение из списка');
-        $validation->setPromptTitle('Печатник');
-        $validation->setPrompt('Выберите печатника');
-        
         $editions_count++;
         for($i = 2; $i <= $editions_count; $i++) {
-            $sheet->getCell('F'.$i)->setDataValidation($validation);
+            $validation = $sheet->getCell('F'.$i)->getDataValidation();
+            $validation->setType(DataValidation::TYPE_LIST );
+            $validation->setErrorStyle(DataValidation::STYLE_INFORMATION );
+            $validation->setAllowBlank(false);
+            $validation->setShowInputMessage(true);
+            $validation->setShowErrorMessage(true);
+            $validation->setShowDropDown(true);
+            $validation->setErrorTitle('Ошибка ввода');
+            $validation->setError('Значение не из списка.');
+            $validation->setPromptTitle('Выберите из списка');
+            $validation->setPrompt('Выберите значение из раскрывающегося списка.');
+            $validation->setFormula1('"'.$workers_string.'"');
         }
         
         // Всего отпечатано
@@ -284,11 +288,11 @@ if(!empty($work_id) && !empty($machine_id)) {
         }
         
         // ₽ за приладку 1 кр ₽↓
-        $sheet->getStyle('F'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->getStyle('F'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('F'.($editions_count + 4), '₽ за приладку 1 кр ₽ ↓');
         
         // ₽ за печать 1 км ↓
-        $sheet->getStyle('G'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->getStyle('G'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('G'.($editions_count + 4), '₽ за печать 1 км ↓');
         
         // Прилажено красок →
@@ -305,15 +309,15 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->setCellValue('H'.($editions_count + 3), 'Отпечатано КМ →');
         
         // ₽ за КМ →
-        $sheet->getStyle('H'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->getStyle('H'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('H'.($editions_count + 4), '₽ за КМ →');
         
         // ₽ за приладку →
-        $sheet->getStyle('H'.($editions_count + 5))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->getStyle('H'.($editions_count + 5))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('H'.($editions_count + 5), '₽ за приладку →');
         
         // Итого
-        $sheet->getStyle('H'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_RIGHT)));
+        $sheet->getStyle('H'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('H'.($editions_count + 6), 'Итого');
         
         $activeSheetIndex++;
@@ -321,11 +325,11 @@ if(!empty($work_id) && !empty($machine_id)) {
     
     // Все ₽
     if($activeSheetIndex > 0) {
-        $xls->createSheet();
+        $spreadsheet->createSheet();
     }
     
-    $xls->setActiveSheetIndex($activeSheetIndex);
-    $sheet = $xls->getActiveSheet();
+    $spreadsheet->setActiveSheetIndex($activeSheetIndex);
+    $sheet = $spreadsheet->getActiveSheet();
     $sheet->setTitle('Все ₽');
     
     $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -337,9 +341,9 @@ if(!empty($work_id) && !empty($machine_id)) {
     $sheet->setCellValue('C1', "За КМ ₽");
     $sheet->setCellValue('A2', "Тариф →");
     $sheet->setCellValue('A3', "Печатники ↓");
-    $sheet->getStyle('B2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    $sheet->getStyle('B2')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
     $sheet->setCellValue('B2', '0');
-    $sheet->getStyle('C2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    $sheet->getStyle('C2')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
     $sheet->setCellValue('C2', '0');
     $sheet->setCellValue('D3', "Итого ₽");
     
@@ -354,21 +358,21 @@ if(!empty($work_id) && !empty($machine_id)) {
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
         $sheet->setCellValue('A'.$row_number, $row['last_name'].(empty($row['first_name']) ? '' : ' '. mb_substr($row['first_name'], 0, 1, 'UTF-8').'.'));
-        $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('D'.$row_number, '=PRODUCT(B2,B'.$row_number.')+PRODUCT(C2,C'.$row_number.')');
         $row_number++;
     }
     
     // Сохранение
-    $filename = "Печать_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
+    $filename = "Печать_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xlsx";
     
-    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="'.$filename.'"');
     header('Cache-Control: max-age=0');
-    $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
-    $objWriter->save('php://output');
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
     exit();
 }
 ?>
