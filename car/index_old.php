@@ -35,7 +35,7 @@ function FindByCell($id) {
 }
 
 if(null !== filter_input(INPUT_POST, 'find-submit')) {
-    $id = trim(filter_input(INPUT_POST, 'id'));
+    $id = trim(filter_input(INPUT_POST, 'id') ?? '');
     
     // Если первый символ р или Р, ищем среди рулонов
     if(mb_substr($id, 0, 1) == "р" || mb_substr($id, 0, 1) == "Р") {

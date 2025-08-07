@@ -51,7 +51,7 @@ if(!empty($width_to)) {
     $where .= " and r.width <= $width_to";
 }
     
-$find = trim(filter_input(INPUT_GET, 'find'));
+$find = trim(filter_input(INPUT_GET, 'find') ?? '');
 $findhead = '';
 $findtrim = '';
 
