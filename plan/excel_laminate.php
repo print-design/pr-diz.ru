@@ -1,7 +1,11 @@
 <?php
 include '../include/topscripts.php';
-require_once '../include/PHPExcel.php';
-require_once '../PHPExcel/Writer/Excel5.php';
+require '../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
@@ -13,16 +17,16 @@ if(!empty($work_id) && !empty($machine_id)) {
     $date_to = null;
     GetDateFromDateTo($from, $to, $date_from, $date_to);
     
-    $xls = new PHPExcel();
+    $spreadsheet = new Spreadsheet();
     $activeSheetIndex = 0;
     
     foreach(LAMINATORS as $laminator) {
         if($activeSheetIndex > 0) {
-            $xls->createSheet();
+            $spreadsheet->createSheet();
         }
         
-        $xls->setActiveSheetIndex($activeSheetIndex);
-        $sheet = $xls->getActiveSheet();
+        $spreadsheet->setActiveSheetIndex($activeSheetIndex);
+        $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle(LAMINATOR_NAMES[$laminator]);
         
         $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -69,35 +73,35 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('D'.$rowindex, $row['customer_id']."-".$row['num_for_customer']);
             $sheet->setCellValue('E'.$rowindex, $row['name']);
             
-            $sheet->getCell('F'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('F'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('F'.$rowindex, $row['lamination'] == 1 ? $row['weight_pure_2'] : $row['weight_pure_3']);
                 
-            $sheet->getCell('G'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('G'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('G'.$rowindex, $row['lamination'] == 1 ? $row['length_pure_2'] : $row['length_pure_3']);
                 
-            $sheet->getCell('H'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('H'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('H'.$rowindex, $row['lamination_roller_width']);
                 
-            $sheet->getCell('I'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('I'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('I'.$rowindex, $row['lamination']);
                 
-            $sheet->getCell('J'.$rowindex)->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $sheet->getCell('J'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
             $sheet->setCellValue('J'.$rowindex, $row['lamination'] == 1 ? $row['glue_cost_2'] : $row['glue_cost_3']);
                 
-            $sheet->getStyle('F'.$rowindex.':I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
-            $sheet->getStyle('J'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->getStyle('F'.$rowindex.':I'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
+            $sheet->getStyle('J'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         }
         
         $activeSheetIndex++;
     }
     
-    $filename = "Ламинация_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
+    $filename = "Ламинация_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xlsx";
     
-    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="'.$filename.'"');
     header('Cache-Control: max-age=0');
-    $objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
-    $objWriter->save('php://output');
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
     exit();
 }
 ?>
