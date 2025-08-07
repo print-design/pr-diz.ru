@@ -327,7 +327,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
             <h1>Расчет</h1>
         </div>
         <div>
-            <a class="btn btn-outline-dark mr-3" style="width: 3rem;" title="Скачать" href="csv.php?id=<?=$id ?>"><i class="fas fa-file-csv"></i></a>
+            <a class="btn btn-outline-dark mr-3" style="width: 3rem;" title="Скачать" href="excel.php?id=<?=$id ?>"><i class="fas fa-file-excel"></i></a>
             <a class="btn btn-outline-dark" target="_blank" style="width: 3rem;" title="Печать" href="print.php?id=<?=$id ?>"><i class="fa fa-print"></i></a>
         </div>
     </div>
