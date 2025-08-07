@@ -1,11 +1,13 @@
 <?php
 include '../include/topscripts.php';
-require_once '../include/PHPExcel.php';
-require_once '../PHPExcel/Writer/Excel5.php';
+require '../vendor/autoload.php';
 
-$xls = new PHPExcel();
-$xls->setActiveSheetIndex(0);
-$sheet = $xls->getActiveSheet();
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+$spreadsheet = new Spreadsheet();
+$spreadsheet->setActiveSheetIndex(0);
+$sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle("Рулоны");
 
 $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -57,9 +59,9 @@ while ($row = $fetcher->Fetch()) {
     $sheet->setCellValue('J'.$rowindex, $row['comment']);
 }
 
-$xls->createSheet();
-$xls->setActiveSheetIndex(1);
-$sheet = $xls->getActiveSheet();
+$spreadsheet->createSheet();
+$spreadsheet->setActiveSheetIndex(1);
+$sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle("Паллеты");
 
 $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -121,13 +123,13 @@ while($row = $fetcher->Fetch()) {
     $sheet->setCellValue('L'.$rowindex, $row['comment']);
 }
 
-$filename = "Склад_".(new DateTime())->format('Y-m-d').".xls";
+$filename = "Склад_".(new DateTime())->format('Y-m-d').".xlsx";
 
-header('Content-Type: application/vnd.ms-excel');
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="'.$filename.'"');
 header('Cache-Control: max-age=0');
-$objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
-$objWriter->save('php://output');
+$writer = new Xlsx($spreadsheet);
+$writer->save('php://output');
 exit();
 ?>
 <html>
