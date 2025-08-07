@@ -1,7 +1,10 @@
 <?php
 include '../include/topscripts.php';
-require_once '../include/PHPExcel.php';
-require_once '../PHPExcel/Writer/Excel5.php';
+require '../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 $from = filter_input(INPUT_GET, 'from');
@@ -11,7 +14,7 @@ $date_from = null;
 $date_to = null;
 GetDateFromDateTo($from, $to, $date_from, $date_to);
     
-$xls = new PHPExcel();
+$spreadsheet = new Spreadsheet();
 $activeSheetIndex = 0;
 
 const CUTTERS_ALL = 1000;
@@ -20,11 +23,11 @@ array_push($cutters, CUTTERS_ALL);
 
 foreach($cutters as $cutter) {
     if($activeSheetIndex > 0) {
-        $xls->createSheet();
+        $spreadsheet->createSheet();
     }
     
-    $xls->setActiveSheetIndex($activeSheetIndex);
-    $sheet = $xls->getActiveSheet();
+    $spreadsheet->setActiveSheetIndex($activeSheetIndex);
+    $sheet = $spreadsheet->getActiveSheet();
     
     if($cutter == CUTTERS_ALL) {
         $sheet->setTitle("Все");
@@ -133,14 +136,14 @@ foreach($cutters as $cutter) {
         $sheet->setCellValue('E'.$rowindex, $row['customer']);
         $sheet->setCellValue('F'.$rowindex, $row['calculation'].($row['type'] == PLAN_TYPE_CONTINUATION ? ' (дорезка)' : ''));
         $sheet->setCellValue('G'.$rowindex, $row['unit'] == 'kg' ? "Кг" : "Шт");
-        $sheet->getStyle('H'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+        $sheet->getStyle('H'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
         $length_cut = $row['length_cut'];
         $streams_number = $row['streams_number'];
         if($length_cut > 0 && $streams_number > 0) {
             $length_cut = $length_cut / $streams_number;
         }
         $sheet->setCellValue('H'.$rowindex, strval($length_cut * floatval($row['worktime']) / floatval($row['worktime_cut'])));
-        $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('I'.$rowindex, strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut'])));
         
         // Подсчёт суммы
@@ -171,9 +174,9 @@ foreach($cutters as $cutter) {
 }
 
 // Подсчёт всего
-$xls->createSheet();
-$xls->setActiveSheetIndex($activeSheetIndex);
-$sheet = $xls->getActiveSheet();
+$spreadsheet->createSheet();
+$spreadsheet->setActiveSheetIndex($activeSheetIndex);
+$sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle("₽");
 
 $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -184,9 +187,9 @@ $sheet->getColumnDimension('D')->setAutoSize(true);
 $sheet->setCellValue('B1', "Тонна ₽");
 $sheet->setCellValue('C1', "Км ₽");
 $sheet->setCellValue('A2', "Тариф");
-$sheet->getStyle('B2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+$sheet->getStyle('B2')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 $sheet->setCellValue('B2', '0');
-$sheet->getStyle('C2')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+$sheet->getStyle('C2')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 $sheet->setCellValue('C2', '0');
 $sheet->setCellValue('D3', "Итого ₽");
 
@@ -197,16 +200,16 @@ foreach($employees_sorted as $employee_id) {
         $sheet->setCellValue('A'.$row_number, $employees[$employee_id]['last_name'].' '.$employees[$employee_id]['first_name']);
         
         if(key_exists(KG, $employees[$employee_id]) && !empty($employees[$employee_id][KG])) {
-            $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
             $sheet->setCellValue('B'.$row_number, strval($employees[$employee_id][KG]));
         }
         
         if(key_exists(PIECES, $employees[$employee_id]) && !empty($employees[$employee_id][PIECES])) {
-            $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
             $sheet->setCellValue('C'.$row_number, strval($employees[$employee_id][PIECES]));
         }
         
-        $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('D'.$row_number, '=PRODUCT(B2,B'.$row_number.')+PRODUCT(C2,C'.$row_number.')');
         
         $row_number++;
@@ -214,13 +217,13 @@ foreach($employees_sorted as $employee_id) {
 }
 
 // Сохранение
-$filename = "Резчики_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xls";
+$filename = "Резчики_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xlsx";
     
-header('Content-Type: application/vnd.ms-excel');
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="'.$filename.'"');
 header('Cache-Control: max-age=0');
-$objWriter = PHPExcel_IOFactory::createWriter($xls, 'Excel5');
-$objWriter->save('php://output');
+$writer = new Xlsx($spreadsheet);
+$writer->save('php://output');
 exit();
 ?>
 <html>
