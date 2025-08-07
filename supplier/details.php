@@ -42,7 +42,7 @@ if(null !== filter_input(INPUT_POST, 'film_brand_create_submit')) {
         $form_valid = false;
     }
     
-    $name = addslashes($name);
+    $name = addslashes($name ?? '');
     $supplier_id = filter_input(INPUT_POST, 'supplier_id');
     
     // Не допускаем повторного создания такой марки для такого поставщика

@@ -22,7 +22,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
     
     if($form_valid) {
         // Сохранение поставщика
-        $name = addslashes($name);
+        $name = addslashes($name ?? '');
         
         $executer = new Executer("insert into supplier (name) values ('$name')");
         $error_message = $executer->error;

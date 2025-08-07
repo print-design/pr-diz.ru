@@ -163,7 +163,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         if(empty($supplier_id)) {
             $supplier_id = "NULL";
         }
-        $comment = addslashes($comment);
+        $comment = addslashes($comment ?? '');
         
         $sql = "";
         

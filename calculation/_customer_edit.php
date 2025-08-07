@@ -7,7 +7,7 @@ $id = filter_input(INPUT_GET, 'id');
 $person = filter_input(INPUT_GET, 'person');
 
 if(null !== $id && null !== $person) {
-    $str_person = addslashes($person);
+    $str_person = addslashes($person ?? '');
     $sql = "update customer set person = '$str_person' where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;

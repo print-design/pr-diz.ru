@@ -35,7 +35,7 @@ if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $cut_remove_cause = addslashes(filter_input(INPUT_POST, 'cut_remove_cause'));
+    $cut_remove_cause = addslashes(filter_input(INPUT_POST, 'cut_remove_cause') ?? '');
     
     $sql = "update calculation set cut_remove_cause = '$cut_remove_cause' where id = $id";
     $executer = new Executer($sql);

@@ -23,7 +23,7 @@ $where = "p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select *
 
 $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
 if(!empty($film_brand_name)) {
-    $film_brand_name = addslashes($film_brand_name);
+    $film_brand_name = addslashes($film_brand_name ?? '');
     $where .= " and fb.name = '$film_brand_name'";
 }
     
@@ -232,7 +232,7 @@ $total_weight = $row[0];
         </div>
         
         <?php
-        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name'));
+        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name') ?? '');
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;

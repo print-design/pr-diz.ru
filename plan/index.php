@@ -40,7 +40,7 @@ if(empty($work_id) || empty($machine_id)) {
 if(null !== filter_input(INPUT_POST, 'add_event_submit')) {
     $work_id = filter_input(INPUT_POST, 'work_id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $text = addslashes(filter_input(INPUT_POST, 'text'));
+    $text = addslashes(filter_input(INPUT_POST, 'text') ?? '');
     $worktime = filter_input(INPUT_POST, 'worktime');
     $in_plan = filter_input(INPUT_POST, 'in_plan');
     

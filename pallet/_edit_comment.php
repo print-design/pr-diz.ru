@@ -2,7 +2,7 @@
 require_once '../include/topscripts.php';
 
 $id = filter_input(INPUT_GET, 'id');
-$text = addslashes(filter_input(INPUT_GET, 'text'));
+$text = addslashes(filter_input(INPUT_GET, 'text') ?? '');
 $error = '';
 $result = '';
 

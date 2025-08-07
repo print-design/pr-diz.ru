@@ -63,7 +63,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             }
         }
         
-        $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+        $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
         
         if($form_valid) {
             $sql = "";

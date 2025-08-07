@@ -44,7 +44,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
         $form_valid = false;
     }
     
-    $cell = addslashes(filter_input(INPUT_POST, 'cell'));
+    $cell = addslashes(filter_input(INPUT_POST, 'cell') ?? '');
     if(empty($cell)) {
         $cell_valid = ISINVALID;
         $form_valid = false;

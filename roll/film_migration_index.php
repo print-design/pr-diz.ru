@@ -21,7 +21,7 @@ $where = "(rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")";
     
 $film_brand_name = filter_input(INPUT_GET, 'film_brand_name');
 if(!empty($film_brand_name)) {
-    $film_brand_name = addslashes($film_brand_name);
+    $film_brand_name = addslashes($film_brand_name ?? '');
     $where .= " and fb.name = '$film_brand_name'";
 }
     
@@ -229,7 +229,7 @@ $total_weight = $row['total_weight'];
         </div>
         
         <?php
-        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name'));
+        $film_brand_name = addslashes(filter_input(INPUT_GET, 'film_brand_name') ?? '');
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;

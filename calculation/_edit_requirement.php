@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 
 $id = filter_input(INPUT_GET, 'id');
 $i = filter_input(INPUT_GET, 'i');
-$value = addslashes(filter_input(INPUT_GET, 'value'));
+$value = addslashes(filter_input(INPUT_GET, 'value') ?? '');
 
 $result = "";
 

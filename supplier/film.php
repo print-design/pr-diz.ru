@@ -18,7 +18,7 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
         $form_valid = false;
     }
     
-    $name = addslashes($name);
+    $name = addslashes($name ?? '');
     $sql = "select count(id) from film where name = '$name'";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {

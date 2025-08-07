@@ -87,7 +87,7 @@ $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
                             
                             do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                                QRcode::png(addslashes($data ?? ''), $filename, $errorCorrectionLevel, 10, 4, true);
                             } while (!file_exists($filename));
                             ?>
                             <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
@@ -140,7 +140,7 @@ $current_date_time = date("dmYHis");
                             $filename = "../temp/$current_date_time.png";
                             
                             do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                                QRcode::png(addslashes($data ?? ''), $filename, $errorCorrectionLevel, 10, 4, true);
                             } while (!file_exists($filename));
                             ?>
                             <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
@@ -251,7 +251,7 @@ $current_date_time = date("dmYHis");
                             $filename = "../temp/".$ordinal."_".$current_date_time.".png";
                             
                             do {
-                                QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 10, 4, true);
+                                QRcode::png(addslashes($data ?? ''), $filename, $errorCorrectionLevel, 10, 4, true);
                             } while (!file_exists($filename));
                             ?>
                             <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />

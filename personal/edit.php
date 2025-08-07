@@ -49,11 +49,11 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
     }
     
     if($form_valid) {
-        $username = addslashes($username);
-        $last_name = addslashes($last_name);
-        $first_name = addslashes($first_name);
-        $email = addslashes($email);
-        $phone = addslashes($phone);
+        $username = addslashes($username ?? '');
+        $last_name = addslashes($last_name ?? '');
+        $first_name = addslashes($first_name ?? '');
+        $email = addslashes($email ?? '');
+        $phone = addslashes($phone ?? '');
         $error_message = (new Executer("update user set username='$username', last_name='$last_name', first_name='$first_name', email='$email', phone='$phone' where id=".GetUserId()))->error;
         
         if(empty($error_message)) {

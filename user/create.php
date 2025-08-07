@@ -63,11 +63,11 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
     }
     
     if($form_valid) {
-        $first_name = addslashes($first_name);
-        $last_name = addslashes($last_name);
-        $email = addslashes($email);
-        $phone = addslashes($phone);
-        $username = addslashes($username);
+        $first_name = addslashes($first_name ?? '');
+        $last_name = addslashes($last_name ?? '');
+        $email = addslashes($email ?? '');
+        $phone = addslashes($phone ?? '');
+        $username = addslashes($username ?? '');
         
         $sql = "select count(id) from user where username = '$username'";
         $fetcher = new Fetcher($sql);

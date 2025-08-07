@@ -15,8 +15,8 @@ $new_customer_id = null;
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
     if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
         $id = filter_input(INPUT_POST, 'id');
-        $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name'));
-        $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person'));
+        $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name') ?? '');
+        $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person') ?? '');
         $customer_phone = filter_input(INPUT_POST, 'customer_phone');
         $customer_extension = filter_input(INPUT_POST, 'customer_extension');
         $customer_email = filter_input(INPUT_POST, 'customer_email');
@@ -384,7 +384,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     if($form_valid) {
         $customer_id = filter_input(INPUT_POST, 'customer_id');
-        $name = addslashes(filter_input(INPUT_POST, 'name'));
+        $name = addslashes(filter_input(INPUT_POST, 'name') ?? '');
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $unit = filter_input(INPUT_POST, 'unit');
         $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = "NULL";
@@ -393,7 +393,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $film_variation_id = filter_input(INPUT_POST, 'film_variation_id'); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
         $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = "NULL";
         $currency = filter_input(INPUT_POST, 'currency');
-        $individual_film_name = addslashes(filter_input(INPUT_POST, 'individual_film_name')); if($film_id != INDIVIDUAL) $individual_film_name = "";
+        $individual_film_name = addslashes(filter_input(INPUT_POST, 'individual_film_name') ?? ''); if($film_id != INDIVIDUAL) $individual_film_name = "";
         $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = "NULL"; if($film_id != INDIVIDUAL) $individual_thickness = "NULL";
         $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = "NULL"; if($film_id != INDIVIDUAL) $individual_density = "NULL";
         $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
@@ -413,7 +413,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id'); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL"; if($lamination1_film_id == INDIVIDUAL) $lamination1_film_variation_id = "NULL";
         $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = "NULL";
         $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
-        $lamination1_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination1_individual_film_name')); if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_film_name = "";
+        $lamination1_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination1_individual_film_name') ?? ''); if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_film_name = "";
         $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL"; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_thickness = "NULL";
         $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL"; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_density = "NULL";
         $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
@@ -433,7 +433,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id'); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL"; if($lamination2_film_id == INDIVIDUAL) $lamination2_film_variation_id = "NULL";
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
-        $lamination2_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination2_individual_film_name')); if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_film_name = "";
+        $lamination2_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination2_individual_film_name') ?? ''); if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_film_name = "";
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_thickness = "NULL";
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = "NULL";
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;

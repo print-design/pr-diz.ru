@@ -152,7 +152,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
         $manager_id = "NULL";
     }
 
-    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
     

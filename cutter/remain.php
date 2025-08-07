@@ -142,7 +142,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $length = filter_input(INPUT_POST, 'length');
     $spool = filter_input(INPUT_POST, 'spool');
     $cell = "Цех";
-    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
             
     $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
             . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$comment', '$user_id')";

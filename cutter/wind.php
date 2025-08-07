@@ -135,8 +135,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             for($i = 1; $i <= 19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
-                    $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i));
-                    $cell = addslashes(filter_input(INPUT_POST, 'cell_'.$i));
+                    $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i) ?? '');
+                    $cell = addslashes(filter_input(INPUT_POST, 'cell_'.$i) ?? '');
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
                     $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id, cutting_wind_id) "

@@ -40,7 +40,7 @@ if(!empty($film)) {
 }
 
 // Получение толщин плёнки для раскрывающегося списка
-$film_name = addslashes(filter_input(INPUT_GET, 'film_name'));
+$film_name = addslashes(filter_input(INPUT_GET, 'film_name') ?? '');
 
 if(!empty($film_name) && !empty($supplier_id)) {
     echo "<option value='' hidden='hidden' selected='selected'>Толщина...</option>";

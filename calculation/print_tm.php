@@ -330,7 +330,7 @@ $current_date_time = date("dmYHis");
                     $filename = "../temp/$current_date_time.png";
                 
                     do {
-                        QRcode::png(addslashes($data), $filename, $errorCorrectionLevel, 3, 0, true);
+                        QRcode::png(addslashes($data ?? ''), $filename, $errorCorrectionLevel, 3, 0, true);
                     } while (!file_exists($filename));
                     ?>
                     <div class="d-inline-block header_qr" style="display: inline-block;"><img src='<?=$filename ?>' /></div>

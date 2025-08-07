@@ -23,7 +23,7 @@ $comment_valid = '';
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $pallet_id = filter_input(INPUT_POST, 'pallet_id');
-    $cell = addslashes(filter_input(INPUT_POST, 'cell'));
+    $cell = addslashes(filter_input(INPUT_POST, 'cell') ?? '');
     $user_id = GetUserId();
     
     if(empty($cell)) {
@@ -61,8 +61,8 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
 if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $pallet_id = filter_input(INPUT_POST, 'pallet_id');
-    $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment'));
-    $comment = addslashes(filter_input(INPUT_POST, 'comment'));
+    $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment') ?? '');
+    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
     
     if(empty($comment)) {
         $comment_valid = ISINVALID;

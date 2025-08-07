@@ -42,9 +42,9 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
     }
     
     if($form_valid) {
-        $first_name = addslashes($first_name);
-        $last_name = addslashes($last_name);
-        $phone = addslashes($phone);
+        $first_name = addslashes($first_name ?? '');
+        $last_name = addslashes($last_name ?? '');
+        $phone = addslashes($phone ?? '');
         
         $sql = "insert into plan_employee (first_name, last_name, role_id, phone) values ('$first_name', '$last_name', $role_id, '$phone')";
         $executer = new Executer($sql);
