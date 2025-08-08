@@ -222,144 +222,130 @@ if(!empty($id)) {
         $sheet->setCellValue("E$rowindex", "без лыж 1: количество ручьёв * ширина ручья, стандартные лыжи 1: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 1: вводится вручную");
     }
         
-    /*$width_2_formula = "";
+    $width_2_formula = "";
+    $width_2_result = "";
     
     if(empty($calculation->stream_width)) {
         switch ($calculation->ski_2) {
             case SKI_NO:
                 $width_2_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
+                $width_2_result = "=".array_sum($calculation->stream_widths);
                 break;
             
             case SKI_STANDARD:
                 $width_2_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
+                $width_2_result = "=".array_sum($calculation->stream_widths);
                 break;
             
             case SKI_NONSTANDARD:
                 $width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
+                $width_2_result = "=".$calculation->width_ski_2;
                 break;
         }
         
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("Ширина материала (начальная) 2, мм", 
-            DisplayNumber($calculation->width_start_2, 5),
-            $width_2_formula,
-            "без лыж 2: суммарная ширина ручьёв, стандартные лыжи 2: стандартная ширина ручьёв + 20 мм, нестандартные лыжи 2: вводится вручную"));
+        $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (начальная) 2, мм");
+        $sheet->setCellValue("B$rowindex", $calculation->width_start_2);
+        $sheet->setCellValue("C$rowindex", $width_2_formula);
+        $sheet->setCellValue("D$rowindex", $width_2_result);
+        $sheet->setCellValue("E$rowindex", "без лыж 2: суммарная ширина ручьёв, стандартные лыжи 2: стандартная ширина ручьёв + 20 мм, нестандартные лыжи 2: вводится вручную");
     }
     else {
         switch ($calculation->ski_2) {
             case SKI_NO:
                 $width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
+                $width_2_result = "=".$calculation->streams_number."*".$calculation->stream_width;
                 break;
             
             case SKI_STANDARD:
                 $width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
+                $width_2_result = "=".$calculation->streams_number."*".$calculation->stream_width."+20";
                 break;
             
             case SKI_NONSTANDARD:
                 $width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
+                $width_2_result = "=".$calculation->width_ski_2;
                 break;
             
         }
         
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("Ширина материала (начальная) 2, мм",
-            DisplayNumber($calculation->width_start_2, 5),
-            $width_2_formula,
-            "без лыж 2: количество ручьёв * ширина ручья, стандартные лыжи 2: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 2: вводится вручную"));
+        $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (начальная) 2, мм");
+        $sheet->setCellValue("B$rowindex", $calculation->width_start_2);
+        $sheet->setCellValue("C$rowindex", $width_2_formula);
+        $sheet->setCellValue("D$rowindex", $width_2_result);
+        $sheet->setCellValue("E$rowindex", "без лыж 2: количество ручьёв * ширина ручья, стандартные лыжи 2: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 2: вводится вручную");
     }
         
     $width_3_formula = "";
+    $width_3_result = "";
     
     if(empty($calculation->stream_width)) {
         switch ($calculation->ski_3) {
             case SKI_NO:
                 $width_3_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
+                $width_3_result = "=".array_sum($calculation->stream_widths);
                 break;
             
             case SKI_STANDARD:
                 $width_3_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
+                $width_3_result = "=".array_sum($calculation->stream_widths)."+20";
                 break;
             
             case SKI_NONSTANDARD:
                 $width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
+                $width_3_result = "=".$calculation->width_ski_3;
                 break;
         }
         
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
+        $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (начальная) 3, мм");
+        $sheet->setCellValue("B$rowindex", $calculation->width_start_3);
+        $sheet->setCellValue("C$rowindex", $width_3_formula);
+        $sheet->setCellValue("D$rowindex", $width_3_result);
         $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("Ширина материала (начальная) 3, мм",
-            DisplayNumber($calculation->width_start_3, 5),
-            $width_3_formula,
-            "без лыж 3: суммарная ширина ручьёв, стандартные лыжи 3: суммарная ширина ручьёв + 20 мм, нестандартные лыжи 3: вводится вручную"));
     }
     else {
         switch ($calculation->ski_3) {
             case SKI_NO:
                 $width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
+                $width_3_result = "=".$calculation->streams_number."*".$calculation->stream_width;
                 break;
             
             case SKI_STANDARD:
                 $width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
+                $width_3_result = "=".$calculation->streams_number."*".$calculation->stream_width."+20";
                 break;
             
             case SKI_NONSTANDARD:
                 $width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
+                $width_3_result = "=".$calculation->width_ski_3;
                 break;
         }
         
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("Ширина материала (начальная) 3, мм",
-            DisplayNumber($calculation->width_start_3, 5),
-            $width_3_formula,
-            "без лыж 3: количество ручьёв * ширина ручья, стандартные лыжи 3: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 3: вводится вручную"));
+        $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (начальная) 3, мм");
+        $sheet->setCellValue("B$rowindex", $calculation->width_start_3);
+        $sheet->setCellValue("C$rowindex", $width_3_formula);
+        $sheet->setCellValue("D$rowindex", $width_3_result);
+        $sheet->setCellValue("E$rowindex", "без лыж 3: количество ручьёв * ширина ручья, стандартные лыжи 3: количество ручьёв * ширина ручья + 20 мм, нестандартные лыжи 3: вводится вручную");
     }
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("Ширина материала (кратная 5) 1, мм",
-        DisplayNumber($calculation->width_1, 5),
-        "|= ОКРВВЕРХ(".DisplayNumber($calculation->width_start_1, 5)." / 5; 1) * 5",
-        "окрвверх(ширина материала начальная 1 / 5) * 5"));
+    $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (кратная 5) 1, мм");
+    $sheet->setCellValue("B$rowindex", $calculation->width_1);
+    $sheet->setCellValue("C$rowindex", "|= ОКРВВЕРХ(".DisplayNumber($calculation->width_start_1, 5)." / 5; 1) * 5");
+    $sheet->setCellValue("D$rowindex", "=CEILING(".$calculation->width_start_1."/5,1)*5");
+    $sheet->setCellValue("E$rowindex", "окрвверх(ширина материала начальная 1 / 5) * 5");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("Ширина материала (кратная 5) 2, мм",
-        DisplayNumber($calculation->width_2, 5),
-        "|= ОКРВВЕРХ(".DisplayNumber($calculation->width_start_2, 5)." / 5; 1) * 5",
-        "окрвверх(ширина материала начальная 2 / 5) * 5"));
+    $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (кратная 5) 2, мм");
+    $sheet->setCellValue("B$rowindex", $calculation->width_2);
+    $sheet->setCellValue("C$rowindex", "|= ОКРВВЕРХ(".DisplayNumber($calculation->width_start_2, 5)." / 5; 1) * 5");
+    $sheet->setCellValue("D$rowindex", "=CEILING(".$calculation->width_start_2."/5,1)*5");
+    $sheet->setCellValue("E$rowindex", "окрвверх(ширина материала начальная 2 / 5) * 5");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("Ширина материала (кратная 5) 3, мм",
-        DisplayNumber($calculation->width_3, 5),
-        "|= ОКРВВЕРХ(".DisplayNumber($calculation->width_start_3, 5)." / 5; 1) * 5",
-        "окрвверх(ширина материала начальная 3 / 5) * 5"));
+    $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (кратная 5) 3, мм");
+    $sheet->setCellValue("B$rowindex", $calculation->width_3);
+    $sheet->setCellValue("C$rowindex", "|= ОКРВВЕРХ(".DisplayNumber($calculation->width_start_3, 5)." / 5; 1) * 5");
+    $sheet->setCellValue("D$rowindex", "=CEILING(".$calculation->width_start_3."/5,1)*5");
+    $sheet->setCellValue("E$rowindex", "окрвверх(ширина материала начальная 3 / 5) * 5");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
+    /*$sheet->setCellValue('A'.(++$rowindex), "");
     $sheet->setCellValue("B$rowindex", $calculation);
     $sheet->setCellValue("C$rowindex", "");
     $sheet->setCellValue("D$rowindex", "");
