@@ -542,6 +542,30 @@ if(!empty($id)) {
     // Общая стоимость плёнок
     //****************************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Общая стоимость грязная 1, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost_1);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->weight_dirty_1, 5)." * ".DisplayNumber($calculation->price_1, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro), 5).") + (".DisplayNumber($calculation->weight_dirty_1, 5)." * ".DisplayNumber($calculation->eco_price_1, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->eco_currency_1, $calculation->usd, $calculation->euro), 5).")");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->weight_dirty_1."*".$calculation->price_1."*".$calculation->GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro).")+(".$calculation->weight_dirty_1."*".$calculation->eco_price_1."*".$calculation->GetCurrencyRate($calculation->eco_currency_1, $calculation->usd, $calculation->euro).")");
+    $sheet->setCellValue("E$rowindex", "(масса пленки грязная 1 * цена плёнки 1 * курс валюты) + (масса пленки грязная 1 * цена из экосбора плёнки 1 * курс валюты)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общая стоимость грязная 2, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost_2);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->weight_dirty_2, 5)." * ".DisplayNumber($calculation->price_2, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->currency_2, $calculation->usd, $calculation->euro), 5).") + (".DisplayNumber($calculation->weight_dirty_2, 5)." * ".DisplayNumber($calculation->eco_price_2, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->eco_currency_2, $calculation->usd, $calculation->euro), 5).")");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->weight_dirty_2."*".$calculation->price_2."*".$calculation->GetCurrencyRate($calculation->currency_2, $calculation->usd, $calculation->euro).")+(".$calculation->weight_dirty_2."*".$calculation->eco_price_2."*".$calculation->GetCurrencyRate($calculation->eco_currency_2, $calculation->usd, $calculation->euro).")");
+    $sheet->setCellValue("E$rowindex", "(масса пленки грязняа 2 * цена плёнки 2 * курс валюты) + (масса пленки грязняа 2 * цена из экосбора плёнки 2 * курс валюты)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общая стоимость грязная 3, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost_3);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->weight_dirty_3, 5)." * ".DisplayNumber($calculation->price_3, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->currency_3, $calculation->usd, $calculation->euro), 5).") + (".DisplayNumber($calculation->weight_dirty_3, 5)." * ".DisplayNumber($calculation->eco_price_3, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->eco_currency_3, $calculation->usd, $calculation->euro), 5).")");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->weight_dirty_3."*".$calculation->price_3."*".$calculation->GetCurrencyRate($calculation->currency_3, $calculation->usd, $calculation->euro).")+(".$calculation->weight_dirty_3."*".$calculation->eco_price_3."*".$calculation->GetCurrencyRate($calculation->eco_currency_3, $calculation->usd, $calculation->euro).")");
+    $sheet->setCellValue("E$rowindex", "(масса пленки грязная 3 * цена плёнки 3 * курс валюты) + (масса пленки грязная 3 * цена из экосбора плёнки 3 * курс валюты)");
+     
+    ++$rowindex;
+        
+    //*****************************************
+    // Время - деньги
+    //*****************************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
