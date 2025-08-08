@@ -466,6 +466,82 @@ if(!empty($id)) {
     // Массы и длины плёнок
     //****************************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Масса плёнки чистая 1");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_pure_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_1, 5)." * ".DisplayNumber($calculation->width_1, 5)." * ".DisplayNumber($calculation->density_1, 5)." / 1000000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_1."*".$calculation->width_1."*".$calculation->density_1."/1000000");
+    $sheet->setCellValue("E$rowindex", "м пог чистые 1 * ширина материала 1 * уд вес 1 / 1000000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Масса плёнки чистая 2");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_pure_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_2, 5)." * ".DisplayNumber($calculation->width_2, 5)." * ".DisplayNumber($calculation->density_2, 5)." / 1000000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_2."*".$calculation->width_2."*".$calculation->density_2."/1000000");
+    $sheet->setCellValue("E$rowindex", "м пог чистые 2 * ширина материала 2 * уд вес 2 / 1000000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Масса плёнки чистая 3");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_pure_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_3, 5)." * ".DisplayNumber($calculation->width_3, 5)." * ".DisplayNumber($calculation->density_3, 5)." / 1000000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_3."*".$calculation->width_3."*".$calculation->density_3."/1000000");
+    $sheet->setCellValue("E$rowindex", "м пог чистые 3 * ширина материала 3 * уд вес 3 / 1000000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина пленки чистая 1, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_pure_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_1, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_1);
+    $sheet->setCellValue("E$rowindex", "м пог чистые 1");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина пленки чистая 2, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_pure_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_2);
+    $sheet->setCellValue("E$rowindex", "м пог чистые 2");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина пленки чистая 3, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_pure_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_3);
+    $sheet->setCellValue("E$rowindex", "м пог чистые 3");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Масса плёнки грязная 1, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_dirty_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_dirty_1, 5)." * ".DisplayNumber($calculation->density_1, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->area_dirty_1."*".$calculation->density_1."/1000");
+    $sheet->setCellValue("E$rowindex", "м2 грязные 1 * уд вес 1 / 1000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Масса плёнки грязная 2, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_dirty_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_dirty_2, 5)." * ".DisplayNumber($calculation->density_2, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->area_dirty_2."*".$calculation->density_2."/1000");
+    $sheet->setCellValue("E$rowindex", "м2 грязные 2 * уд вес 2 / 1000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Масса плёнки грязная 3, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_dirty_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_dirty_3, 5)." * ".DisplayNumber($calculation->density_3, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->area_dirty_3."*".$calculation->density_3."/1000");
+    $sheet->setCellValue("E$rowindex", "м2 грязные 3 * уд вес 3 / 1000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина плёнки грязная 1, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_dirty_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_start_1, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_start_1);
+    $sheet->setCellValue("E$rowindex", "м пог грязные 1");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина плёнки грязная 2, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_dirty_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_start_2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_start_2);
+    $sheet->setCellValue("E$rowindex", "м пог грязные 2");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина плёнки грязная 3, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_dirty_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_start_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_start_3);
+    $sheet->setCellValue("E$rowindex", "м пог грязные 3");
+        
+    //****************************************
+    // Общая стоимость плёнок
+    //****************************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
