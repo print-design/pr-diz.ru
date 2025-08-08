@@ -307,6 +307,12 @@ if(!empty($work_id) && !empty($machine_id)) {
         // Отпечатано КМ →
         $sheet->setCellValue('H'.($editions_count + 3), 'Отпечатано КМ →');
         
+        $column_id = FIRST_COLUMN_ID;
+        
+        foreach ($workers as $worker) {
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 3), '=SUM('. COLUMNS[$column_id].'1:'. COLUMNS[$column_id].$editions_count.')');
+        }
+        
         // ₽ за КМ →
         $sheet->getStyle('H'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('H'.($editions_count + 4), '₽ за КМ →');
