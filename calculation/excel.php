@@ -345,193 +345,122 @@ if(!empty($id)) {
     $sheet->setCellValue("D$rowindex", "=CEILING(".$calculation->width_start_3."/5,1)*5");
     $sheet->setCellValue("E$rowindex", "окрвверх(ширина материала начальная 3 / 5) * 5");
     
-    /*$sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М2 чистые 1, м2",
-        DisplayNumber($calculation->area_pure_1, 5),
-        "|= ".DisplayNumber($calculation->weight, 5)." * 1000 / (".DisplayNumber($calculation->density_1, 5)." + ".DisplayNumber($calculation->density_2, 5)." + ".DisplayNumber($calculation->density_3, 5).")",
-        "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3)"));
+    $sheet->setCellValue('A'.(++$rowindex), "М2 чистые 1, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->area_pure_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight, 5)." * 1000 / (".DisplayNumber($calculation->density_1, 5)." + ".DisplayNumber($calculation->density_2, 5)." + ".DisplayNumber($calculation->density_3, 5).")");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight."*1000/(".$calculation->density_1."+".$calculation->density_2."+".$calculation->density_3.")");
+    $sheet->setCellValue("E$rowindex", "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3)");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М2 чистые 2, м2",
-        DisplayNumber($calculation->area_pure_2, 5),
-        "|= ".DisplayNumber($calculation->weight, 5)." * 1000 / (".DisplayNumber($calculation->density_1, 5)." + ".DisplayNumber($calculation->density_2, 5)." + ".DisplayNumber($calculation->density_3, 5).") * ".$calculation->uk2,
-        "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК2"));
+    $sheet->setCellValue('A'.(++$rowindex), "М2 чистые 2, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->area_pure_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight, 5)." * 1000 / (".DisplayNumber($calculation->density_1, 5)." + ".DisplayNumber($calculation->density_2, 5)." + ".DisplayNumber($calculation->density_3, 5).") * ".$calculation->uk2);
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight."*1000/(".$calculation->density_1."+".$calculation->density_2."+".$calculation->density_3.")*".$calculation->uk2);
+    $sheet->setCellValue("E$rowindex", "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК2");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М2 чистые 3, м2",
-        DisplayNumber($calculation->area_pure_3, 5),
-        "|= ".DisplayNumber($calculation->weight, 5)." * 1000 / (".DisplayNumber($calculation->density_1, 5)." + ".DisplayNumber($calculation->density_2, 5)." + ".DisplayNumber($calculation->density_3, 5).") * ".$calculation->uk3,
-        "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК3"));
+    $sheet->setCellValue('A'.(++$rowindex), "М2 чистые 3, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->area_pure_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight, 5)." * 1000 / (".DisplayNumber($calculation->density_1, 5)." + ".DisplayNumber($calculation->density_2, 5)." + ".DisplayNumber($calculation->density_3, 5).") * ".$calculation->uk3);
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight."*1000/(".$calculation->density_1."+".$calculation->density_2."+".$calculation->density_3.")*".$calculation->uk3);
+    $sheet->setCellValue("E$rowindex", "масса тиража * 1000 / (уд. вес 1 + уд. вес 2 + уд. вес 3) * УК3");
     
     if(empty($calculation->stream_width)) {
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("М пог чистые 1, м", 
-            DisplayNumber($calculation->length_pure_start_1, 5), 
-            "!= ".DisplayNumber($calculation->area_pure_1, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / 1000)",
-            "м2 чистые 1 / (суммарная ширина ручьёв / 1000)"));
+        $sheet->setCellValue('A'.(++$rowindex), "М пог чистые 1, м");
+        $sheet->setCellValue("B$rowindex", $calculation->length_pure_start_1);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_pure_1, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / 1000)");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->area_pure_1."/(".array_sum($calculation->stream_widths)."/1000)");
+        $sheet->setCellValue("E$rowindex", "м2 чистые 1 / (суммарная ширина ручьёв / 1000)");
     }
     else {
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("М пог чистые 1, м",
-            DisplayNumber($calculation->length_pure_start_1, 5),
-            "|= ".DisplayNumber($calculation->area_pure_1, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
-            "м2 чистые 1 / (количество ручьёв * ширина ручья / 1000)"));
+        $sheet->setCellValue('A'.(++$rowindex), "М пог чистые 1, м");
+        $sheet->setCellValue("B$rowindex", $calculation->length_pure_start_1);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_pure_1, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->area_pure_1."/(".$calculation->streams_number."*".$calculation->stream_width."/1000)");
+        $sheet->setCellValue("E$rowindex", "м2 чистые 1 / (количество ручьёв * ширина ручья / 1000)");
     }
     
     if(empty($calculation->stream_width)) {
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("М пог чистые 2, м",
-            DisplayNumber($calculation->length_pure_start_2, 5),
-            "|= ".DisplayNumber($calculation->area_pure_2, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / 1000)",
-            "м2 чистые 2 / (суммарная ширина ручьёв / 1000)"));
+        $sheet->setCellValue('A'.(++$rowindex), "М пог чистые 2, м");
+        $sheet->setCellValue("B$rowindex", $calculation->length_pure_start_2);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_pure_2, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / 1000)");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->area_pure_2."/(".array_sum($calculation->stream_widths)."/1000)");
+        $sheet->setCellValue("E$rowindex", "м2 чистые 2 / (суммарная ширина ручьёв / 1000)");
     }
     else {
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("М пог чистые 2, м",
-            DisplayNumber($calculation->length_pure_start_2, 5),
-            "|= ".DisplayNumber($calculation->area_pure_2, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
-            "м2 чистые 2 / (количество ручьёв * ширина ручья / 1000)"));
+        $sheet->setCellValue('A'.(++$rowindex), "М пог чистые 2, м");
+        $sheet->setCellValue("B$rowindex", $calculation->length_pure_start_2);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_pure_2, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->area_pure_2."/(".$calculation->streams_number."*".$calculation->stream_width."/1000)");
+        $sheet->setCellValue("E$rowindex", "м2 чистые 2 / (количество ручьёв * ширина ручья / 1000)");
     }
     
     if(empty($calculation->stream_width)) {
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("М пог чистые 2, м", DisplayNumber($calculation->length_pure_start_3, 5),
-            "|= ".DisplayNumber($calculation->area_pure_3, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." /1000)",
-            "м2 чистые 3 / (суммарная ширина ручьёв / 1000)"));
+        $sheet->setCellValue('A'.(++$rowindex), "М пог чистые 2, м");
+        $sheet->setCellValue("B$rowindex", $calculation->length_pure_start_3);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_pure_3, 5)." / (".DisplayNumber(array_sum($calculation->stream_widths), 5)." / 1000)");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->area_pure_3."/(".array_sum($calculation->stream_widths)."/1000)");
+        $sheet->setCellValue("E$rowindex", "м2 чистые 3 / (суммарная ширина ручьёв / 1000)");
     }
     else {
-        $sheet->setCellValue('A'.(++$rowindex), "");
-        $sheet->setCellValue("B$rowindex", $calculation);
-        $sheet->setCellValue("C$rowindex", "");
-        $sheet->setCellValue("D$rowindex", "");
-        $sheet->setCellValue("E$rowindex", "");
-        array_push($file_data, array("М пог чистые 2, м",
-            DisplayNumber($calculation->length_pure_start_3, 5),
-            "|= ".DisplayNumber($calculation->area_pure_3, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)",
-            "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)"));
+        $sheet->setCellValue('A'.(++$rowindex), "М пог чистые 2, м");
+        $sheet->setCellValue("B$rowindex", $calculation->length_pure_start_3);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_pure_3, 5)." / (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." / 1000)");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->area_pure_3."/(".$calculation->streams_number."*".$calculation->stream_width."/1000)");
+        $sheet->setCellValue("E$rowindex", "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)");
     }
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("СтартСтопОтход 1",
-        DisplayNumber($calculation->waste_length_1, 5),
-        "|= ".DisplayNumber($calculation->data_priladka->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_1, 5)." / 100",
-        "СтартСтопОтход печати * м пог чистые 1 / 100"));
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 1");
+    $sheet->setCellValue("B$rowindex", $calculation->waste_length_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_1, 5)." / 100");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka->waste_percent."*".$calculation->length_pure_start_1."/100");
+    $sheet->setCellValue("E$rowindex", "СтартСтопОтход печати * м пог чистые 1 / 100");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("СтартСтопОтход 2",
-        DisplayNumber($calculation->waste_length_2, 5),
-        "|= ".DisplayNumber($calculation->data_priladka_laminator->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_2, 5)." / 100",
-        "СтартСтопОтход ламинации * м. пог. чистые 2 / 100"));
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 2");
+    $sheet->setCellValue("B$rowindex", $calculation->waste_length_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka_laminator->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_2, 5)." / 100");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka_laminator->waste_percent."*".$calculation->length_pure_start_2."/100");
+    $sheet->setCellValue("E$rowindex", "СтартСтопОтход ламинации * м. пог. чистые 2 / 100");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("СтартСтопОтход 3",
-        DisplayNumber($calculation->waste_length_3, 5),
-        "|= ".DisplayNumber($calculation->data_priladka_laminator->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_3, 5)." / 100",
-        "СтартСтопОтход ламинации * м. пог. чистые 3 / 100"));
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 3");
+    $sheet->setCellValue("B$rowindex", $calculation->waste_length_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka_laminator->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_3, 5)." / 100");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka_laminator->waste_percent."*".$calculation->length_pure_start_3."/100");
+    $sheet->setCellValue("E$rowindex", "СтартСтопОтход ламинации * м. пог. чистые 3 / 100");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М пог грязные 1",
-        DisplayNumber($calculation->length_dirty_start_1, 5),
-        "|= ".DisplayNumber($calculation->length_pure_start_1, 5)." + (".DisplayNumber($calculation->ink_number, 5)." * ".DisplayNumber($calculation->data_priladka->length, 5).") + (".DisplayNumber($calculation->laminations_number, 5)." * ".DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ".DisplayNumber($calculation->waste_length_1, 5),
-        "м пог чистые 1 + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 1"));
+    $sheet->setCellValue('A'.(++$rowindex), "М пог грязные 1");
+    $sheet->setCellValue("B$rowindex", $calculation->length_dirty_start_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_1, 5)." + (".DisplayNumber($calculation->ink_number, 5)." * ".DisplayNumber($calculation->data_priladka->length, 5).") + (".DisplayNumber($calculation->laminations_number, 5)." * ".DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ".DisplayNumber($calculation->waste_length_1, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_1."+(".$calculation->ink_number."*".$calculation->data_priladka->length.")+(".$calculation->laminations_number."*".$calculation->data_priladka_laminator->length.")+".$calculation->waste_length_1);
+    $sheet->setCellValue("E$rowindex", "м пог чистые 1 + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 1");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М пог грязные 2",
-        DisplayNumber($calculation->length_dirty_start_2, 5),
-        "|= ".DisplayNumber($calculation->length_pure_start_2, 5)." + (".DisplayNumber($calculation->laminations_number, 5)." * ".DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ".DisplayNumber($calculation->waste_length_2, 5),
-        "м пог чистые 2 + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 2"));
+    $sheet->setCellValue('A'.(++$rowindex), "М пог грязные 2");
+    $sheet->setCellValue("B$rowindex", $calculation->length_dirty_start_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_2, 5)." + (".DisplayNumber($calculation->laminations_number, 5)." * ".DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ".DisplayNumber($calculation->waste_length_2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_2."+(".$calculation->laminations_number."*".$calculation->data_priladka_laminator->length.")+".$calculation->waste_length_2);
+    $sheet->setCellValue("E$rowindex", "м пог чистые 2 + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 2");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М пог грязные 3",
-        DisplayNumber($calculation->length_dirty_start_3, 5),
-        "|= ".DisplayNumber($calculation->length_pure_start_3, 5)." + (".DisplayNumber($calculation->data_priladka_laminator->length, 5)." * ".DisplayNumber($calculation->uk3, 0).") + ".DisplayNumber($calculation->waste_length_3, 5),
-        "м пог чистые 3 + (метраж приладки ламинации * УК3) + СтартСтопОтход 3"));
+    $sheet->setCellValue('A'.(++$rowindex), "М пог грязные 3");
+    $sheet->setCellValue("B$rowindex", $calculation->length_dirty_start_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_3, 5)." + (".DisplayNumber($calculation->data_priladka_laminator->length, 5)." * ".DisplayNumber($calculation->uk3, 0).") + ".DisplayNumber($calculation->waste_length_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_3."+(".$calculation->data_priladka_laminator->length."*".$calculation->uk3.")+".$calculation->waste_length_3);
+    $sheet->setCellValue("E$rowindex", "м пог чистые 3 + (метраж приладки ламинации * УК3) + СтартСтопОтход 3");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М2 грязные 1",
-        DisplayNumber($calculation->area_dirty_1, 5),
-        "|= ".DisplayNumber($calculation->length_dirty_start_1, 5)." * ".DisplayNumber($calculation->width_1, 5)." / 1000",
-        "м пог грязные 1 * ширина материала 1 / 1000"));
+    $sheet->setCellValue('A'.(++$rowindex), "М2 грязные 1");
+    $sheet->setCellValue("B$rowindex", $calculation->area_dirty_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_start_1, 5)." * ".DisplayNumber($calculation->width_1, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_start_1."*".$calculation->width_1."/1000");
+    $sheet->setCellValue("E$rowindex", "м пог грязные 1 * ширина материала 1 / 1000");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М2 грязные 2",
-        DisplayNumber($calculation->area_dirty_2, 5),
-        "|= ".DisplayNumber($calculation->length_dirty_start_2, 5)." * ".DisplayNumber($calculation->width_2, 5)." / 1000",
-        "м пог грязные 2 * ширина материала 2 / 1000"));
+    $sheet->setCellValue('A'.(++$rowindex), "М2 грязные 2");
+    $sheet->setCellValue("B$rowindex", $calculation->area_dirty_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_start_2, 5)." * ".DisplayNumber($calculation->width_2, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_start_2."*".$calculation->width_2."/1000");
+    $sheet->setCellValue("E$rowindex", "м пог грязные 2 * ширина материала 2 / 1000");
     
-    $sheet->setCellValue('A'.(++$rowindex), "");
-    $sheet->setCellValue("B$rowindex", $calculation);
-    $sheet->setCellValue("C$rowindex", "");
-    $sheet->setCellValue("D$rowindex", "");
-    $sheet->setCellValue("E$rowindex", "");
-    array_push($file_data, array("М2 грязные 3",
-        DisplayNumber($calculation->area_dirty_3, 5),
-        "|= ".DisplayNumber($calculation->length_dirty_start_3, 5)." * ".DisplayNumber($calculation->width_3, 5)." / 1000",
-        "м пог грязные 3 * ширина материала 3 / 1000"));*/
+    $sheet->setCellValue('A'.(++$rowindex), "М2 грязные 3");
+    $sheet->setCellValue("B$rowindex", $calculation->area_dirty_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_start_3, 5)." * ".DisplayNumber($calculation->width_3, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_start_3."*".$calculation->width_3."/1000");
+    $sheet->setCellValue("E$rowindex", "м пог грязные 3 * ширина материала 3 / 1000");
     
     //****************************************
     // Массы и длины плёнок
