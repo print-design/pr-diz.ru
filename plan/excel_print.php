@@ -317,13 +317,31 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->getStyle('H'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('H'.($editions_count + 4), '₽ за КМ →');
         
+        $column_id = FIRST_COLUMN_ID;
+        
+        foreach ($workers as $worker) {
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 4), "=". COLUMNS[$column_id].($editions_count + 3)."*G". ($editions_count + 5));
+        }
+        
         // ₽ за приладку →
         $sheet->getStyle('H'.($editions_count + 5))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('H'.($editions_count + 5), '₽ за приладку →');
         
+        $column_id = FIRST_COLUMN_ID;
+        
+        foreach ($workers as $worker) {
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 5), "=". COLUMNS[$column_id].($editions_count + 2)."*F".($editions_count + 5));
+        }
+        
         // Итого
         $sheet->getStyle('H'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
         $sheet->setCellValue('H'.($editions_count + 6), 'Итого');
+        
+        $column_id = FIRST_COLUMN_ID;
+        
+        foreach ($workers as $worker) {
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 6), "=". COLUMNS[$column_id].($editions_count + 4)."+". COLUMNS[$column_id].($editions_count + 5));
+        }
         
         $activeSheetIndex++;
     }
