@@ -45,16 +45,16 @@ if(!empty($id)) {
     }
     
     $sheet->setCellValue('A'.(++$rowindex), "Размер тиража"); $sheet->setCellValue("B$rowindex", $calculation->quantity); $sheet->setCellValue("C$rowindex", $calculation->GetUnitName($calculation->unit));
-    /*$sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Марка 1", $calculation->film_1, "", ""));
-    $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Толщина 1, мкм", $calculation->thickness_1, "", ""));
-    $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Плотность 1, г/м2", DisplayNumber($calculation->density_1, 5), "", ""));
-    $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Лыжи 1", $calculation->GetSkiName($calculation->ski_1), "", ""));
-    if($calculation->ski_1 == SKI_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push ($file_data, array("Ширина плёнки 1, мм", DisplayNumber ($calculation->width_ski_1, 5), "", "")); }
-    if($calculation->customers_material_1 == true) { $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push ($file_data, array("Материал заказчика 1", "", "", "")); }
-    else { $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push ($file_data, array("Цена 1", DisplayNumber ($calculation->price_1, 5)." ". $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (". DisplayNumber ($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CURRENCY_EURO ? " (". DisplayNumber ($calculation->price_1 * $calculation->euro, 5)." руб)" : ""), "", "")); }
-    $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Экосбор 1", DisplayNumber($calculation->eco_price_1, 5)." ".$calculation->GetCurrencyName($calculation->eco_currency_1).($calculation->eco_currency_1 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_1 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_1 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_1 * $calculation->euro, 5)." руб)" : ""), "", ""));
+    $sheet->setCellValue('A'.(++$rowindex), "Марка 1"); $sheet->setCellValue("B$rowindex", $calculation->film_1);
+    $sheet->setCellValue('A'.(++$rowindex), "Толщина 1, мкм"); $sheet->setCellValue("B$rowindex", $calculation->thickness_1);
+    $sheet->setCellValue('A'.(++$rowindex), "Плотность 1, г/м2"); $sheet->setCellValue("B$rowindex", $calculation->density_1);
+    $sheet->setCellValue('A'.(++$rowindex), "Лыжи 1"); $sheet->setCellValue("B$rowindex", $calculation->ski_1);
+    if($calculation->ski_1 == SKI_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), "Ширина плёнки 1, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_ski_1); }
+    if($calculation->customers_material_1 == true) { $sheet->setCellValue('A'.(++$rowindex), "Материал заказчика 1"); }
+    else { $sheet->setCellValue('A'.(++$rowindex), "Цена 1"); $sheet->setCellValue("B$rowindex", $calculation->price_1); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (".DisplayNumber($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CURRENCY_EURO ? " (".DisplayNumber($calculation->price_1 * $calculation->euro, 5)." руб)" : "")); }
+    $sheet->setCellValue('A'.(++$rowindex), "Экосбор 1"); $sheet->setCellValue("B$rowindex", $calculation->eco_price_1); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->eco_currency_1).($calculation->eco_currency_1 == CURRENCY_USD ? " (". DisplayNumber($calculation->eco_price_1 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_1 == CURRENCY_EURO ? " (". DisplayNumber($calculation->eco_price_1 * $calculation->euro, 5)." руб)" : ""));
         
-    if($calculation->laminations_number > 0) {
+    /*if($calculation->laminations_number > 0) {
         $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Марка 2", $calculation->film_2, "", ""));
         $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Толщина 2, мкм", $calculation->thickness_2, "", ""));
         $sheet->setCellValue('A'.(++$rowindex), ""); $sheet->setCellValue("B$rowindex", $calculation); array_push($file_data, array("Плотность 2, г/м2", DisplayNumber($calculation->density_2, 5), "", ""));
