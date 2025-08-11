@@ -957,6 +957,199 @@ if(!empty($id)) {
     // Наценка
     //*******************************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Наценка на тираж, %");
+    $sheet->setCellValue("B$rowindex", $calculation->extracharge);
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Наценка на ПФ, %");
+    $sheet->setCellValue("B$rowindex", $calculation->extracharge_cliche);
+    
+    ++$rowindex;
+        
+    //*******************************************
+    // Данные для правой панели
+    //*******************************************
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общая стоимость всех плёнок, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->film_cost_1, 5)." + ".DisplayNumber($calculation->film_cost_2, 5)." + ".DisplayNumber($calculation->film_cost_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->film_cost_1."+".$calculation->film_cost_2."+".$calculation->film_cost_3);
+    $sheet->setCellValue("E$rowindex", "стоимость плёнки грязная 1 + стоимость плёнки грязная 2 + стоимость плёнки грязная 3");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общая стоимость работ, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->work_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_cost_1, 5)." + ".DisplayNumber($calculation->work_cost_2, 5)." + ".DisplayNumber($calculation->work_cost_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->work_cost_1."+".$calculation->work_cost_2."+".$calculation->work_cost_3);
+    $sheet->setCellValue("E$rowindex", "стоимость выполнения тиража 1 + стоимость выполнения тиража 2 + стоимость выполнения тиража 3");
+        
+    $total_ink_cost_formula = "";
+    $total_ink_cost_result = "";
+    $total_ink_expense_formula = "";
+    $total_ink_expense_result = "";
+        
+    for($i=1; $i<=$calculation->ink_number; $i++) {
+        if(!empty($total_ink_cost_formula)) {
+            $total_ink_cost_formula .= " + ";
+            $total_ink_cost_result .= "+";
+        }
+        $total_ink_cost_formula .= DisplayNumber($calculation->ink_costs_final[$i], 5);
+        $total_ink_cost_result .= $calculation->ink_costs_final[$i];
+            
+        if(!empty($total_ink_expense_formula)) {
+            $total_ink_expense_formula .= " + ";
+            $total_ink_expense_result .= "+";
+        }
+        $total_ink_expense_formula .= DisplayNumber($calculation->ink_expenses[$i], 5);
+        $total_ink_expense_result .= $calculation->ink_expenses[$i];
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость краски, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->ink_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".$total_ink_cost_formula);
+    $sheet->setCellValue("D$rowindex", "=".$total_ink_cost_result);
+    $sheet->setCellValue("E$rowindex", "Сумма стоимость всех красок");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Расход краски, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->ink_expense);
+    $sheet->setCellValue("C$rowindex", "|= ".$total_ink_expense_formula);
+    $sheet->setCellValue("D$rowindex", "=".$total_ink_expense_result);
+    $sheet->setCellValue("E$rowindex", "Сумма расход всех красок");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость клея, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->glue_cost2, 5)." + ".DisplayNumber($calculation->glue_cost3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->glue_cost2."+".$calculation->glue_cost3);
+    $sheet->setCellValue("E$rowindex", "стоимость клея 2 + стоимость клея 3");
+        
+    $total_cliche_cost_formula = "";
+    $total_cliche_cost_result = "";
+        
+    for($i=1; $i<=$calculation->ink_number; $i++) {
+        if(!empty($total_cliche_cost_formula)) {
+            $total_cliche_cost_formula .= " + ";
+        }
+        
+        if(!empty($total_cliche_cost_result)) {
+            $total_cliche_cost_result .= "+";
+        }
+        
+        $total_cliche_cost_formula .= DisplayNumber($calculation->cliche_costs[$i], 5);
+        $total_cliche_cost_result .= $calculation->cliche_costs[$i];
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость ПФ, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".$total_cliche_cost_formula);
+    $sheet->setCellValue("D$rowindex", "=".$total_cliche_cost_result);
+    $sheet->setCellValue("E$rowindex", "сумма стоимости всех форм");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->film_cost, 5)." + ".DisplayNumber($calculation->work_cost, 5)." + ".DisplayNumber($calculation->ink_cost, 5)." + ".DisplayNumber($calculation->glue_cost, 5)." + (".DisplayNumber($calculation->cliche_cost, 5)." * ".DisplayNumber($calculation->ukpf, 0).") + ".DisplayNumber($calculation->scotch_cost, 5)." + (".$calculation->quantity." * ".DisplayNumber($calculation->extra_expense, 5).")");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->film_cost."+".$calculation->work_cost."+".$calculation->ink_cost."+".$calculation->glue_cost."+(".$calculation->cliche_cost."*".$calculation->ukpf.")+".$calculation->scotch_cost."+(".$calculation->quantity."*".$calculation->extra_expense.")");
+    $sheet->setCellValue("E$rowindex", "стоимость плёнки + стоимость работы + стоимость краски + стоимость клея + (стоимость форм * УКПФ) + стоимость скотча + (объём заказа, кг/шт * доп. расходы на кг / шт)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость за ". $calculation->GetUnitName($calculation->unit).", руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cost_per_unit);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cost, 5)." / ".DisplayNumber($calculation->quantity, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cost."/".$calculation->quantity);
+    $sheet->setCellValue("E$rowindex", "себестоимость / размер тиража");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отгрузочная стоимость, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->shipping_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cost, 5)." * (1 + (".DisplayNumber($calculation->extracharge, 5)." / 100))");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cost."*(1+(".$calculation->extracharge."/100))");
+    $sheet->setCellValue("E$rowindex", "себестоимость * (1 + (наценка на тираж / 100))");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отгрузочная стоимость за ".$calculation->GetUnitName($calculation->unit).", руб");
+    $sheet->setCellValue("B$rowindex", $calculation->shipping_cost_per_unit);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->shipping_cost, 5)." / ".DisplayNumber($calculation->quantity, 0));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->shipping_cost."/".$calculation->quantity);
+    $sheet->setCellValue("E$rowindex", "отгрузочная стоимость / размер тиража");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Прибыль, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->income);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->shipping_cost, 5)." - ".DisplayNumber($calculation->cost, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->shipping_cost."-".$calculation->cost);
+    $sheet->setCellValue("E$rowindex", "отгрузочная стоимость - себестоимость");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Прибыль за ".$calculation->GetUnitName($calculation->unit).", руб");
+    $sheet->setCellValue("B$rowindex", $calculation->income_per_unit);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->shipping_cost_per_unit, 5)." - ".DisplayNumber($calculation->cost_per_unit, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->shipping_cost_per_unit."-".$calculation->cost_per_unit);
+    $sheet->setCellValue("E$rowindex", "отгрузочная стоимость за ". $calculation->GetUnitName($calculation->unit)." - себестоимость за ". $calculation->GetUnitName($calculation->unit));
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отгрузочная стоимость ПФ, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->shipping_cliche_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_cost, 5)." * (1 + (".DisplayNumber($calculation->extracharge_cliche, 5)." / 100)) * ((".$calculation->ukpf." - 1) / -1)");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_cost."*(1+(".$calculation->extracharge_cliche."/100))*((".$calculation->ukpf."-1)/-1)");
+    $sheet->setCellValue("E$rowindex", "сумма стоимости всех форм * (1 + (наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Прибыль ПФ, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->income_cliche);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->shipping_cliche_cost, 5)." - ".DisplayNumber($calculation->cliche_cost, 5).") * ((".$calculation->ukpf." - 1) / -1)");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->shipping_cliche_cost."-".$calculation->cliche_cost.")*((".$calculation->ukpf."-1)/-1)");
+    $sheet->setCellValue("E$rowindex", "(отгрузочная стоимость ПФ - себестоимость ПФ) * ((КоэфПФ - 1) / -1)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общий вес всех плёнок с приладкой, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->total_weight_dirty);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight_dirty_1, 5)." + ".DisplayNumber($calculation->weight_dirty_2, 5)." + ".DisplayNumber($calculation->weight_dirty_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight_dirty_1."+".$calculation->weight_dirty_2."+".$calculation->weight_dirty_3);
+    $sheet->setCellValue("E$rowindex", "масса плёнки грязная 1 + масса плёнки грязная 2 + масса плёнки грязная 3");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость за кг 1, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost_per_unit_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->price_1, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->price_1."*".CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "цена плёнки 1 * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость за кг 2, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost_per_unit_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->price_2, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_2, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->price_2."*".CalculationBase::GetCurrencyRate($calculation->currency_2, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "цена плёнки 2 * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость за кг 3, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost_per_unit_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->price_3, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_3, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->price_3."*".CalculationBase::GetCurrencyRate($calculation->currency_3, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "цена плёнки 3 * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы 1, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_cost_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->film_waste_weight_1, 5)." * ".DisplayNumber($calculation->price_1, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->film_waste_weight_1."*".$calculation->price_1."*".CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "отходы 1, кг * цена плёнки 1 * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы 2, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_cost_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->film_waste_weight_2, 5)." * ".DisplayNumber($calculation->price_2, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_2, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->film_waste_weight_2."*".$calculation->price_2."*".CalculationBase::GetCurrencyRate($calculation->currency_2, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "отходы 2, кг * цена плёнки 2 * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы 3, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_cost_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->film_waste_weight_3, 5)." * ".DisplayNumber($calculation->price_3, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_3, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->film_waste_weight_3."*".$calculation->price_3."*".CalculationBase::GetCurrencyRate($calculation->currency_3, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "отходы 3, кг * цена плёнки 3 * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы 1, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_weight_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight_dirty_1, 5)." - ".DisplayNumber($calculation->weight_pure_1, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight_dirty_1."-".$calculation->weight_pure_1);
+    $sheet->setCellValue("E$rowindex", "масса плёнки грязная 1 - масса плёнки чистая 1");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы 2, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_weight_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight_dirty_2, 5)." - ".DisplayNumber($calculation->weight_pure_2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight_dirty_2."-".$calculation->weight_pure_2);
+    $sheet->setCellValue("E$rowindex", "масса плёнки грязная 2 - масса плёнки чистая 2");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы 3, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_weight_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight_dirty_3, 5)." - ".DisplayNumber($calculation->weight_pure_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight_dirty_3."-".$calculation->weight_pure_3);
+    $sheet->setCellValue("E$rowindex", "масса плёнки грязная 3 - масса плёнки чистая 3");
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
