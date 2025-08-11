@@ -13,7 +13,7 @@ if(!empty($id)) {
     
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setTitle($calculation->name);
+    $sheet->setTitle("Расчёт");
     
     // Заголовки
     $sheet->getColumnDimension('A')->setAutoSize(true);
