@@ -851,6 +851,70 @@ if(!empty($id)) {
     // Стоимость форм
     //***********************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Высота форм, м");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_height);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->raport, 5)." + 20) / 1000");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->raport."+20)/1000");
+    $sheet->setCellValue("E$rowindex", "(рапорт + 20 мм) / 1000");
+    
+    if(empty($calculation->stream_width)) {
+        $sheet->setCellValue('A'.(++$rowindex), "Ширина форм, м");
+        $sheet->setCellValue("B$rowindex", $calculation->cliche_width);
+        $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000");
+        $sheet->setCellValue("D$rowindex", "=(".array_sum($calculation->stream_widths)."+20+".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).")/1000");
+        $sheet->setCellValue("E$rowindex", "(суммарная ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000");
+    }
+    else {
+        $sheet->setCellValue('A'.(++$rowindex), "Ширина форм, м");
+        $sheet->setCellValue("B$rowindex", $calculation->cliche_width);
+        $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000");
+        $sheet->setCellValue("D$rowindex", "=(".$calculation->streams_number."*".$calculation->stream_width."+20+".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).")/1000");
+        $sheet->setCellValue("E$rowindex", "(кол-во ручьёв * ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000");
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Площадь форм, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_area);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_height, 5)." * ".DisplayNumber($calculation->cliche_width, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_height."*".$calculation->cliche_width);
+    $sheet->setCellValue("E$rowindex", "высота форм * ширина форм");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Количество новых форм");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_new_number);
+    $sheet->setCellValue("C$rowindex", "");
+    $sheet->setCellValue("D$rowindex", "");
+    $sheet->setCellValue("E$rowindex", "");
+        
+    for($i=1; $i<=$calculation->ink_number; $i++) {
+        $cliche = "cliche_$i";
+            
+        $cliche_sm_price = 0;
+        $cliche_currency = "";
+            
+        switch (get_object_vars($calculation)[$cliche]) {
+            case CLICHE_FLINT:
+                $cliche_sm_price = $calculation->data_cliche->flint_price;
+                $cliche_currency = $calculation->data_cliche->flint_currency;
+                break;
+                
+            case CLICHE_KODAK:
+                $cliche_sm_price = $calculation->data_cliche->kodak_price;
+                $cliche_currency = $calculation->data_cliche->kodak_currency;
+                break;
+        }
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Цена формы $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->cliche_costs[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($cliche_sm_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($cliche_currency, $calculation->usd, $calculation->euro), 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$cliche_sm_price."*".$calculation->GetCurrencyRate($cliche_currency, $calculation->usd, $calculation->euro));
+        $sheet->setCellValue("E$rowindex", "площадь формы, м2 * цена формы за 1 м2 * курс валюты");
+    }
+        
+    ++$rowindex;
+        
+    //*******************************************
+    // Стоимость скотча
+    //*******************************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
