@@ -915,6 +915,48 @@ if(!empty($id)) {
     // Стоимость скотча
     //*******************************************
     
+    $scotch_formula = "";
+    $scotch_result = "";
+    $scotch_comment = "";
+        
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
+        if(!empty($scotch_formula)) {
+            $scotch_formula .= " + ";
+        }
+        
+        if(!empty($scotch_result)) {
+            $scotch_result .= "+";
+        }
+            
+        if(!empty($scotch_comment)) {
+            $scotch_comment .= " + ";
+        }
+        
+        $scotch_formula .= DisplayNumber($calculation->scotch_costs[$i], 5);
+        $scotch_result .= $calculation->scotch_costs[$i];
+        $scotch_comment .= "стоимость скотча цвет $i";
+        
+        $cliche_area = $calculation->cliche_area;
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Стоимость скотча Цвет $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->scotch_costs[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($calculation->data_cliche->scotch_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->data_cliche->scotch_currency, $calculation->usd, $calculation->euro), 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$calculation->data_cliche->scotch_price."*".$calculation->GetCurrencyRate($calculation->data_cliche->scotch_currency, $calculation->usd, $calculation->euro));
+        $sheet->setCellValue("E$rowindex", "площадь формы цвет $i, м2 * цена скотча за м2 * курс валюты");
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общая себестоимость скотча, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->scotch_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".$scotch_formula);
+    $sheet->setCellValue("D$rowindex", "=".$scotch_result);
+    $sheet->setCellValue("E$rowindex", $scotch_comment);    
+        
+    ++$rowindex;
+        
+    //*******************************************
+    // Наценка
+    //*******************************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
