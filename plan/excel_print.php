@@ -316,7 +316,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 3), '=SUM('. COLUMNS[$column_id].'2:'. COLUMNS[$column_id].$editions_count.')');
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 3), '=SUM('. COLUMNS[$column_id].'2:'. COLUMNS[$column_id].$editions_count.')/1000');
         }
         
         // ₽ за КМ →
@@ -326,7 +326,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 4), "=". COLUMNS[$column_id].($editions_count + 3)."*G". ($editions_count + 5)."/1000");
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 4), "=". COLUMNS[$column_id].($editions_count + 3)."*G". ($editions_count + 5));
         }
         
         // ₽ за приладку →
