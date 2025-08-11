@@ -146,6 +146,74 @@ if(!empty($id)) {
     // Рассчёт по КГ
     //***************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Метраж приладки одного тиража");
+    $sheet->setCellValue("B$rowindex", $calculation->priladka_printing);
+    $sheet->setCellValue("C$rowindex", "|= (".$calculation->ink_number." * ".DisplayNumber($calculation->data_priladka->length, 5).") + ".DisplayNumber($calculation->data_priladka->stamp, 5));
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->ink_number."*".$calculation->data_priladka->length.")+".$calculation->data_priladka->stamp);
+    $sheet->setCellValue("E$rowindex", "(красочность * метраж приладки 1 краски) + метраж приладки штампа");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "М2 чистые, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->area_pure);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->length, 5)." + ".DisplayNumber($calculation->gap, 5).") * (".DisplayNumber($calculation->stream_width, 5)." + ".DisplayNumber($calculation->data_gap->gap_stream, 5).") * ".DisplayNumber($calculation->quantity, 0)." / 1 000 000");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->length."+".$calculation->gap.")*(".$calculation->stream_width."+".$calculation->data_gap->gap_stream.")*".$calculation->quantity."/1000000");
+    $sheet->setCellValue("E$rowindex", "(длина этикетки чистая + фактический зазор) * (ширина этикетки + ЗазорРучей) * суммарное кол-во этикеток всех тиражей / 1 000 000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "М. пог. чистые, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_pog_pure);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_pure, 5)." / (".DisplayNumber($calculation->width_dirty, 5)." * ".$calculation->streams_number." / 1000)");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->area_pure."/(".$calculation->width_dirty."*".$calculation->streams_number."/1000)");
+    $sheet->setCellValue("E$rowindex", "м2 чистые / (ширина этикетки грязная * кол-во ручьев / 1000)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход, м");
+    $sheet->setCellValue("B$rowindex", $calculation->waste_length);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka->waste_percent, 5)." * ".DisplayNumber($calculation->length_pog_pure, 5)." / 100");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka->waste_percent."*".$calculation->length_pog_pure."/100");
+    $sheet->setCellValue("E$rowindex", "процент отходов на СтартСтоп * м.пог чистые / 100");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "М пог. грязные, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_pog_dirty);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pog_pure, 5)." + (".$calculation->quantities_count." * ".DisplayNumber($calculation->priladka_printing, 5).") + ".DisplayNumber($calculation->waste_length, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pog_pure."+(".$calculation->quantities_count."*".$calculation->priladka_printing.")+".$calculation->waste_length);
+    $sheet->setCellValue("E$rowindex", "м. пог чистые + (количество тиражей * метраж приладки 1 тиража) + СтартСтопОтход");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "М2 грязные, m2");
+    $sheet->setCellValue("B$rowindex", $calculation->area_dirty);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pog_dirty, 5)." * ".DisplayNumber($calculation->width_mat, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pog_dirty."*".$calculation->width_mat."/1000");
+    $sheet->setCellValue("E$rowindex", "м. пог грязные * ширина материала / 1000");
+        
+    //***************************
+    // Массы и длины плёнок
+    //***************************
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Масса материала чистая (без приладки), кг");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_pure);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pog_pure, 5)." * ".DisplayNumber($calculation->width_mat, 5)." * ".DisplayNumber($calculation->density_1, 5)." / 1 000 000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pog_pure."*".$calculation->width_mat."*".$calculation->density_1."/1000000");
+    $sheet->setCellValue("E$rowindex", "м. пог чистые * ширина материала * уд. вес / 1 000 000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина материала чистая, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_pure);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pog_pure, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pog_pure);
+    $sheet->setCellValue("E$rowindex", "м. пог. чистые");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Масса материала грязная (с приладкой), кг");
+    $sheet->setCellValue("B$rowindex", $calculation->weight_dirty);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->area_dirty, 5)." * ".DisplayNumber($calculation->density_1, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->area_dirty."*".$calculation->density_1."/1000");
+    $sheet->setCellValue("E$rowindex", "м2 грязные * удельный вес / 1000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Длина материала грязная, м");
+    $sheet->setCellValue("B$rowindex", $calculation->length_dirty);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pog_dirty, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pog_dirty);
+    $sheet->setCellValue("E$rowindex", "м2 пог. грязные");
+        
+    //*****************************
+    // Себестоимость плёнок $this->film_cost = ($this->area_dirty * $this->price_1 * self::GetCurrencyRate($this->currency_1, $usd, $euro)) + ($this->area_dirty * $this->density_1 * $this->eco_price_1 * self::GetCurrencyRate($this->eco_currency_1, $usd, $euro) / 1000);
+    //*****************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
