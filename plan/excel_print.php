@@ -282,10 +282,16 @@ if(!empty($work_id) && !empty($machine_id)) {
             $validation->setFormula1('"'.$workers_string.'"');
         }
         
+        // Сумма "Метраж заказа"
+        $sheet->setCellValue('G'.$i, "=SUM(G2:G".$editions_count.")");
+        
         // Всего отпечатано
         for($i = 2; $i <= $editions_count; $i++) {
             $sheet->setCellValue('H'.$i, "=SUM(". COLUMNS[$first_worker_id].$i.':'. COLUMNS[$last_worker_id].$i.')');
         }
+        
+        // Сумма "Всего отпечатано"
+        $sheet->setCellValue('H'.$i, "=SUM(H2:H".$editions_count.")");
         
         // ₽ за приладку 1 кр ₽↓
         $sheet->getStyle('F'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
@@ -310,7 +316,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 3), '=SUM('. COLUMNS[$column_id].'1:'. COLUMNS[$column_id].$editions_count.')');
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 3), '=SUM('. COLUMNS[$column_id].'2:'. COLUMNS[$column_id].$editions_count.')');
         }
         
         // ₽ за КМ →
@@ -320,7 +326,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 4), "=". COLUMNS[$column_id].($editions_count + 3)."*G". ($editions_count + 5));
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 4), "=". COLUMNS[$column_id].($editions_count + 3)."*G". ($editions_count + 5)."/1000");
         }
         
         // ₽ за приладку →
