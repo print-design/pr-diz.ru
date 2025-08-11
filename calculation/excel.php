@@ -566,6 +566,84 @@ if(!empty($id)) {
     // Время - деньги
     //*****************************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Время приладки 1, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->priladka_time_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->ink_number, 5)." * ".DisplayNumber($calculation->data_priladka->time, 5)." / 60");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->ink_number."*".$calculation->data_priladka->time."/60");
+    $sheet->setCellValue("E$rowindex", "красочность * время приладки 1 краски / 60");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Время приладки 2, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->priladka_time_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka_laminator->time, 5)." * ".DisplayNumber($calculation->uk2, 0)." / 60");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka_laminator->time."*".$calculation->uk2."/60");
+    $sheet->setCellValue("E$rowindex", "время приладки ламинатора * УК2 / 60");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Время приладки 3, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->priladka_time_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka_laminator->time, 5)." * ".DisplayNumber($calculation->uk3, 0)." / 60");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka_laminator->time."*".$calculation->uk3."/60");
+    $sheet->setCellValue("E$rowindex", "время приладки ламинатора * УК3 / 60");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Время печати (без приладки) 1, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->print_time_1);
+    $sheet->setCellValue("C$rowindex", $calculation->data_machine->speed == 0 ? "|= 0" : "|= (".DisplayNumber($calculation->length_pure_start_1, 5)." + ".DisplayNumber($calculation->waste_length_1, 5).") / ".DisplayNumber($calculation->data_machine->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk1, 0));
+    $sheet->setCellValue("D$rowindex", $calculation->data_machine->speed == 0 ? "=0" : "=(".$calculation->length_pure_start_1."+".$calculation->waste_length_1.")/".$calculation->data_machine->speed."/1000*".$calculation->uk1);
+    $sheet->setCellValue("E$rowindex", $calculation->data_machine->speed == 0 ? "печати нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы машины / 1000 * УК1");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Время ламинации (без приладки) 2, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->lamination_time_2);
+    $sheet->setCellValue("C$rowindex", $calculation->data_laminator->speed == 0 ? "|= 0" : "|= (".DisplayNumber($calculation->length_pure_start_2, 5)." + ".DisplayNumber($calculation->waste_length_2, 5).") / ".DisplayNumber($calculation->data_laminator->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk2, 0));
+    $sheet->setCellValue("D$rowindex", $calculation->data_laminator->speed == 0 ? "=0" : "=(".$calculation->length_pure_start_2."+".$calculation->waste_length_2.")/".$calculation->data_laminator->speed."/1000*".$calculation->uk2);
+    $sheet->setCellValue("E$rowindex", $calculation->data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 2 + СтартСтопОтход 2) / скорость работы ламинатора /1000 * УК2");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Время ламинации (без приладки) 3, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->lamination_time_3);
+    $sheet->setCellValue("C$rowindex", $calculation->data_laminator->speed == 0 ? "|= 0" :"|= (".DisplayNumber($calculation->length_pure_start_3, 5)." + ".DisplayNumber($calculation->waste_length_3, 5).") / ".DisplayNumber($calculation->data_laminator->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk3, 0));
+    $sheet->setCellValue("D$rowindex", $calculation->data_laminator->speed == 0 ? "=0" :"=(".$calculation->length_pure_start_3."+".$calculation->waste_length_3.")/".$calculation->data_laminator->speed."/1000*".$calculation->uk3);
+    $sheet->setCellValue("E$rowindex", $calculation->data_laminator->speed == 0 ? "ламинации нет" : "(м пог чистые 3 + СтартСтопОтход 3) / скорость работы ламинатора / 1000 * УК3");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общее время выполнения тиража 1, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->work_time_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->priladka_time_1, 5)." + ".DisplayNumber($calculation->print_time_1, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->priladka_time_1."+".$calculation->print_time_1);
+    $sheet->setCellValue("E$rowindex", "время приладки 1 + время печати");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общее время выполнения тиража 2, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->work_time_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->priladka_time_2, 5)." + ".DisplayNumber($calculation->lamination_time_2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->priladka_time_2."+".$calculation->lamination_time_2);
+    $sheet->setCellValue("E$rowindex", "время приладки 2 + время ламинации 1");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общее время выполнения тиража 3, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->work_time_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->priladka_time_3, 5)." + ".DisplayNumber($calculation->lamination_time_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->priladka_time_3."+".$calculation->lamination_time_3);
+    $sheet->setCellValue("E$rowindex", "время приладки 3 + время ламинации 2");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость выполнения тиража 1, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->work_cost_1);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_time_1, 5)." * ".DisplayNumber($calculation->data_machine->price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->work_time_1."*".$calculation->data_machine->price);
+    $sheet->setCellValue("E$rowindex", "общее время выполнения 1 * цена работы оборудования 1");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость выполнения тиража 2, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->work_cost_2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_time_2, 5)." * ".DisplayNumber($calculation->data_laminator->price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->work_time_2."*".$calculation->data_laminator->price);
+    $sheet->setCellValue("E$rowindex", "общее время выполнения 2 * цена работы оборудования 2");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость выполнения тиража 3, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->work_cost_3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_time_3, 5)." * ".DisplayNumber($calculation->data_laminator->price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->work_time_3."*".$calculation->data_laminator->price);
+    $sheet->setCellValue("E$rowindex", "общее время выполнения 3 * цена работы оборудования 3");
+    
+    ++$rowindex;
+        
+    //****************************************
+    // Расход краски
+    //****************************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
