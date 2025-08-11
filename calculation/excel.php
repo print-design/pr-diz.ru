@@ -765,6 +765,92 @@ if(!empty($id)) {
     // Расход клея
     //********************************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Расход КлеяСмеси на 1 кг клея, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_kg_weight);
+    $sheet->setCellValue("C$rowindex", "|= 1 + ".DisplayNumber($calculation->data_glue->solvent_part, 5));
+    $sheet->setCellValue("D$rowindex", "=1+".$calculation->data_glue->solvent_part);
+    $sheet->setCellValue("E$rowindex", "1 + расход растворителя на 1 кг клея");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Цена 1 кг чистого клея, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_kg_price);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_glue->glue_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->data_glue->glue_currency, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_glue->glue_price."*".$calculation->GetCurrencyRate($calculation->data_glue->glue_currency, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "цена 1 кг клея * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Цена 1 кг чистого растворителя для клея, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_solvent_kg_price);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_glue->solvent_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->data_glue->solvent_currency, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_glue->solvent_price."*".$calculation->GetCurrencyRate($calculation->data_glue->solvent_currency, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "цена 1 кг растворителя для клея * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Цена 1 кг КлеяСмеси, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->mix_glue_kg_price);
+    $sheet->setCellValue("C$rowindex", "|= ((1 * ".DisplayNumber($calculation->glue_kg_price, 5).") + (".DisplayNumber($calculation->data_glue->solvent_part, 5)." * ".DisplayNumber($calculation->glue_solvent_kg_price, 5).")) / ".DisplayNumber($calculation->glue_kg_weight, 5));
+    $sheet->setCellValue("D$rowindex", "=((1*".$calculation->glue_kg_price.")+(".$calculation->data_glue->solvent_part."*".$calculation->glue_solvent_kg_price."))/".$calculation->glue_kg_weight);
+    $sheet->setCellValue("E$rowindex", "((1 * цена 1 кг чистого клея) + (расход растворителя на 1 кг клея * цена 1 кг чистого растворителя)) / расход КлеяСмеси на 1 кг клея");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Площадь заклейки 2, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_area2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_2, 5)." * ".DisplayNumber($calculation->lamination_roller_width, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_2."*".$calculation->lamination_roller_width."/1000");
+    $sheet->setCellValue("E$rowindex", "м пог грязные 2 * ширина ламинирующего вала / 1000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Площадь заклейки 3, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_area3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_3, 5)." * ".DisplayNumber($calculation->lamination_roller_width, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_3."*".$calculation->lamination_roller_width."/1000");
+    $sheet->setCellValue("E$rowindex", "м пог грязные 3 * ширина ламинирующего вала / 1000");
+        
+    $glue_expense2_formula = DisplayNumber($calculation->glue_area2, 5)." * ".DisplayNumber($calculation->data_glue->glue_expense, 5)." / 1000";
+    $glue_expense2_result = $calculation->glue_area2."*".$calculation->data_glue->glue_expense."/1000";
+    $glue_expense2_comment = "площадь заклейки 2 * расход КлеяСмеси в 1 м2 / 1000";
+        
+    if((strlen($calculation->film_1) > 3 && substr($calculation->film_1, 0, 3) == "Pet") || (strlen($calculation->film_2) > 3 && substr($calculation->film_2, 0, 3) == "Pet")) {
+        $glue_expense2_formula = DisplayNumber($calculation->glue_area2, 5)." * ".DisplayNumber($calculation->data_glue->glue_expense_pet, 5)." / 1000";
+        $glue_expense2_result = $calculation->glue_area2."*".$calculation->data_glue->glue_expense_pet."/1000";
+        $glue_expense2_comment = "площадь заклейки 2 * расход КлеяСмеси для ПЭТ в 1 м2 / 1000";
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Расход КлеяСмеси 2, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_expense2);
+    $sheet->setCellValue("C$rowindex", "|= ".$glue_expense2_formula);
+    $sheet->setCellValue("D$rowindex", "=".$glue_expense2_result);
+    $sheet->setCellValue("E$rowindex", $glue_expense2_comment);
+        
+    $glue_expense3_formula = DisplayNumber($calculation->glue_area3, 5)." * ".DisplayNumber($calculation->data_glue->glue_expense, 5)." / 1000";
+    $glue_expense3_result = $calculation->glue_area3."*".$calculation->data_glue->glue_expense."/1000";
+    $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси в 1 м2 / 1000";
+    
+    if((strlen($calculation->film_2) > 3 && substr($calculation->film_2, 0, 3) == "Pet") || (strlen($calculation->film_3) > 3 && substr($calculation->film_3, 0, 3) == "Pet")) {
+        $glue_expense3_formula = DisplayNumber($calculation->glue_area3, 5)." * ".DisplayNumber($calculation->data_glue->glue_expense_pet, 5)." / 1000";
+        $glue_expense3_result = $calculation->glue_area3."*".$calculation->data_glue->glue_expense_pet."/1000";
+        $glue_expense3_comment = "площадь заклейки 3 * расход КлеяСмеси для ПЭТ в 1 м2 / 1000";
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Расход КлеяСмеси 3, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_expense3);
+    $sheet->setCellValue("C$rowindex", "|= ".$glue_expense3_formula);
+    $sheet->setCellValue("D$rowindex", "=".$glue_expense3_result);
+    $sheet->setCellValue("E$rowindex", $glue_expense3_comment);
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость КлеяСмеси 2, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_cost2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->glue_expense2, 5)." * ".DisplayNumber($calculation->mix_glue_kg_price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->glue_expense2."*".$calculation->mix_glue_kg_price);
+    $sheet->setCellValue("E$rowindex", "расход КлеяСмеси 2 * цена 1 кг КлеяСмеси");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость КлеяСмеси 3, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->glue_cost3);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->glue_expense3, 5)." * ".DisplayNumber($calculation->mix_glue_kg_price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->glue_expense3."*".$calculation->mix_glue_kg_price);
+    $sheet->setCellValue("E$rowindex", "расход КлеяСмеси 3 * цена 1 кг КлеяСмеси");
+        
+    ++$rowindex;
+        
+    //***********************************
+    // Стоимость форм
+    //***********************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
