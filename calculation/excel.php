@@ -644,6 +644,127 @@ if(!empty($id)) {
     // Расход краски
     //****************************************
     
+    if(empty($calculation->stream_width)) {
+        $sheet->setCellValue('A'.(++$rowindex), "Площадь запечатки, м2");
+        $sheet->setCellValue("B$rowindex", $calculation->print_area);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_1, 5)." * (".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 10) / 1000");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_1."*(".array_sum($calculation->stream_widths)."+10)/1000");
+        $sheet->setCellValue("E$rowindex", "м пог грязные 1 * (суммарная ширина ручьёв + 10 мм) / 1000");
+    }
+    else {
+        $sheet->setCellValue('A'.(++$rowindex), "Площадь запечатки, м2");
+        $sheet->setCellValue("B$rowindex", $calculation->print_area);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_dirty_1, 5)." * (".DisplayNumber($calculation->stream_width, 5)." * ".DisplayNumber($calculation->streams_number, 5)." + 10) / 1000");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->length_dirty_1."*(".$calculation->stream_width."*".$calculation->streams_number."+10)/1000");
+        $sheet->setCellValue("E$rowindex", "м пог грязные 1 * (ширина ручья * кол-во ручьёв + 10 мм) / 1000");
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Расход КраскаСмеси на 1 кг краски, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->ink_1kg_mix_weight);
+    $sheet->setCellValue("C$rowindex", "|= 1 + ".DisplayNumber($calculation->data_ink->solvent_part, 5));
+    $sheet->setCellValue("D$rowindex", "=1+".$calculation->data_ink->solvent_part);
+    $sheet->setCellValue("E$rowindex", "1 + расход растворителя на 1 кг краски");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Цена 1 кг чистого флексоля 82, ".$calculation->GetCurrencyName($calculation->data_ink->solvent_flexol82_currency));
+    $sheet->setCellValue("B$rowindex", $calculation->ink_flexol82_kg_price);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_ink->solvent_flexol82_price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_ink->solvent_flexol82_price);
+    $sheet->setCellValue("E$rowindex", "цена 1 кг флексоля 82, ".$calculation->GetCurrencyName($calculation->data_ink->solvent_flexol82_currency));
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Цена 1 кг чистого этоксипропанола, ".$calculation->GetCurrencyName($calculation->data_ink->solvent_etoxipropanol_currency));
+    $sheet->setCellValue("B$rowindex", $calculation->ink_etoxypropanol_kg_price);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_ink->solvent_etoxipropanol_price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_ink->solvent_etoxipropanol_price);
+    $sheet->setCellValue("E$rowindex", "цена 1 кг этоксипропанола, ".$calculation->GetCurrencyName($calculation->data_ink->solvent_etoxipropanol_currency));
+        
+    $ink_solvent_kg_price = 0;
+    $ink_solvent_currency = 1;
+            
+    if($calculation->machine_id == PRINTER_COMIFLEX || $calculation->machine_id == PRINTER_SOMA_OPTIMA) {
+        $ink_solvent_kg_price = $calculation->ink_flexol82_kg_price;
+        $ink_solvent_currency = $calculation->GetCurrencyRate($calculation->data_ink->solvent_flexol82_currency, $calculation->usd, $calculation->euro);
+    }
+    else {
+        $ink_solvent_kg_price = $calculation->ink_etoxypropanol_kg_price;
+        $ink_solvent_currency = $calculation->GetCurrencyRate($calculation->data_ink->solvent_etoxipropanol_currency, $calculation->usd, $calculation->euro);
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "М2 испарения растворителя грязная, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->vaporization_area_dirty);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_machine->width, 0)." * ".DisplayNumber($calculation->length_dirty_start_1, 5)." / 1000");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->data_machine->width."*".$calculation->length_dirty_start_1."/1000");
+    $sheet->setCellValue("E$rowindex", "Ширина машины * м. пог грязные / 1000");
+
+    ++$rowindex;
+    
+    for($i=1; $i<=$calculation->ink_number; $i++) {
+        $ink = "ink_$i";
+        $cmyk = "cmyk_$i";
+        $lacquer = "lacquer_$i";
+        $percent = "percent_$i";
+        $price = $calculation->GetInkPrice(get_object_vars($calculation)[$ink], get_object_vars($calculation)[$cmyk], get_object_vars($calculation)[$lacquer], $calculation->data_ink->c_price, $calculation->data_ink->c_currency, $calculation->data_ink->m_price, $calculation->data_ink->m_currency, $calculation->data_ink->y_price, $calculation->data_ink->y_currency, $calculation->data_ink->k_price, $calculation->data_ink->k_currency, $calculation->data_ink->panton_price, $calculation->data_ink->panton_currency, $calculation->data_ink->white_price, $calculation->data_ink->white_currency, $calculation->data_ink->lacquer_glossy_price, $calculation->data_ink->lacquer_glossy_currency, $calculation->data_ink->lacquer_matte_price, $calculation->data_ink->lacquer_matte_currency);
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Цена 1 кг чистой краски $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->ink_kg_prices[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($price->value, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($price->currency, $calculation->usd, $calculation->euro), 5));
+        $sheet->setCellValue("D$rowindex", "=".$price->value."*".$calculation->GetCurrencyRate($price->currency, $calculation->usd, $calculation->euro));
+        $sheet->setCellValue("E$rowindex", "цена 1 кг чистой краски $i * курс валюты");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Цена 1 кг КраскаСмеси $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->mix_ink_kg_prices[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ((".DisplayNumber($calculation->ink_kg_prices[$i], 5)." * 1) + (".DisplayNumber($ink_solvent_kg_price, 5)." * ".DisplayNumber($calculation->data_ink->solvent_part, 5).")) / ".DisplayNumber($calculation->ink_1kg_mix_weight, 5));
+        $sheet->setCellValue("D$rowindex", "=((".$calculation->ink_kg_prices[$i]."*1)+(".$ink_solvent_kg_price."*".$calculation->data_ink->solvent_part."))/".$calculation->ink_1kg_mix_weight);
+        $sheet->setCellValue("E$rowindex", "((цена 1 кг чистой краски $i * 1) + (цена 1 кг чистого растворителя * расход растворителя на 1 кг краски)) / расход КраскаСмеси на 1 кг краски");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Расход КраскаСмеси $i, кг");
+        $sheet->setCellValue("B$rowindex", $calculation->ink_expenses[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->print_area, 5)." * ".DisplayNumber($calculation->GetInkExpense(get_object_vars($calculation)[$ink], get_object_vars($calculation)[$cmyk], get_object_vars($calculation)[$lacquer], $calculation->data_ink->c_expense, $calculation->data_ink->m_expense, $calculation->data_ink->y_expense, $calculation->data_ink->k_expense, $calculation->data_ink->panton_expense, $calculation->data_ink->white_expense, $calculation->data_ink->lacquer_glossy_expense, $calculation->data_ink->lacquer_matte_expense), 5)." * ".DisplayNumber(get_object_vars($calculation)[$percent], 5)." / 1000 / 100");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->print_area."*".$calculation->GetInkExpense(get_object_vars($calculation)[$ink], get_object_vars($calculation)[$cmyk], get_object_vars($calculation)[$lacquer], $calculation->data_ink->c_expense, $calculation->data_ink->m_expense, $calculation->data_ink->y_expense, $calculation->data_ink->k_expense, $calculation->data_ink->panton_expense, $calculation->data_ink->white_expense, $calculation->data_ink->lacquer_glossy_expense, $calculation->data_ink->lacquer_matte_expense)."*".get_object_vars($calculation)[$percent]."/1000/100");
+        $sheet->setCellValue("E$rowindex", "площадь запечатки * расход КраскаСмеси за 1 м2 * процент краски $i / 1000 / 100");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Стоимость КраскаСмеси $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->ink_costs[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->mix_ink_kg_prices[$i], 5)." * ".DisplayNumber($calculation->ink_expenses[$i], 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->mix_ink_kg_prices[$i]."*".$calculation->ink_expenses[$i]);
+        $sheet->setCellValue("E$rowindex", "Расход КраскаСмеси $i * цена 1 кг КраскаСмеси $i");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "М2 испарения растворителя чистая КраскаСмеси $i, м2");
+        $sheet->setCellValue("B$rowindex", $calculation->vaporization_areas_pure[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->vaporization_area_dirty, 5)." - (".DisplayNumber($calculation->print_area, 5)." * ".DisplayNumber(get_object_vars($calculation)[$percent], 5)." / 100)");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->vaporization_area_dirty."-(".$calculation->print_area."*".get_object_vars($calculation)[$percent]."/100)");
+        $sheet->setCellValue("E$rowindex", "М2 испарения растворителя грязное - (М2 запечатки * процент запечатки / 100)");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Расход испарения растворителя КраскаСмеси $i, кг");
+        $sheet->setCellValue("B$rowindex", $calculation->vaporization_expenses[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->vaporization_areas_pure[$i], 5)." * ".DisplayNumber($calculation->data_machine->vaporization_expense, 5)." / 1000");
+        $sheet->setCellValue("D$rowindex", "=".$calculation->vaporization_areas_pure[$i]."*".$calculation->data_machine->vaporization_expense."/1000");
+        $sheet->setCellValue("E$rowindex", "М2 испарения растворителя чистое * расход Растворителя на испарения (г/м2) / 1000");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Стоимость испарения растворителя КраскаСмеси $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->vaporization_costs[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->vaporization_expenses[$i], 5)." * ".DisplayNumber($ink_solvent_kg_price, 5)." * ".DisplayNumber($ink_solvent_currency, 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->vaporization_expenses[$i]."*".$ink_solvent_kg_price."*".$ink_solvent_currency);
+        $sheet->setCellValue("E$rowindex", "Расход испарения растворителя КГ * стоимость растворителя за КГ * валюту");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Расход (краска + растворитель на одну краску) КраскаСмеси $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->ink_costs_mix[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->ink_costs[$i], 5)." + ".DisplayNumber($calculation->vaporization_costs[$i], 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->ink_costs[$i]."+".$calculation->vaporization_costs[$i]);
+        $sheet->setCellValue("E$rowindex", "Стоимость КраскаСмеси на тираж, ₽ + Стоимость испарения растворителя, ₽");
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Стоимость КраскаСмеси $i финальная, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->ink_costs_final[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ЕСЛИ(".DisplayNumber($calculation->ink_costs_mix[$i], 5)." < ".DisplayNumber($calculation->data_ink->min_price_per_ink, 5)." ; ".DisplayNumber($calculation->data_ink->min_price_per_ink, 5)." ; ".DisplayNumber($calculation->ink_costs_mix[$i], 5).")");
+        $sheet->setCellValue("D$rowindex", "=IF(".$calculation->ink_costs_mix[$i]."<".$calculation->data_ink->min_price_per_ink.",".$calculation->data_ink->min_price_per_ink.",".$calculation->ink_costs_mix[$i].")");
+        $sheet->setCellValue("E$rowindex", "Если расход (краска + растворитель на одну краску) меньше, чем мин. стоимость 1 цвета, то мин. стоимость 1 цвета, иначе - Расход (краска + растворитель на одну краску)");
+    }
+
+    ++$rowindex;
+        
+    //********************************************
+    // Расход клея
+    //********************************************
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
