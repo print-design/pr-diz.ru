@@ -168,6 +168,9 @@ if(!empty($work_id) && !empty($machine_id)) {
         $activeSheetIndex++;
     }
     
+    // Количество заказов на каждуюу машину
+    $editions_count_by_machine = array();
+    
     // Расчёт выработки
     foreach (PRINTERS as $printer) {
         if($printer == PRINTER_ATLAS) {
@@ -265,8 +268,10 @@ if(!empty($work_id) && !empty($machine_id)) {
         
         $last_worker_id = $column_id;
         
-        // Приладил
         $editions_count++;
+        $editions_count_by_machine[$printer] = $editions_count;
+        
+        // Приладил
         for($i = 2; $i <= $editions_count; $i++) {
             $validation = $sheet->getCell('F'.$i)->getDataValidation();
             $validation->setType(DataValidation::TYPE_LIST );
@@ -385,8 +390,13 @@ if(!empty($work_id) && !empty($machine_id)) {
         //$sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         
         $priladka_array = array();
-        array_push($priladka_array, 'COUNTIF(A1:A10,"Губезов Р.")');
-        array_push($priladka_array, "COUNTIF('₽ Comiflex'!B2:B20,\"День\")");
+        foreach(PRINTERS as $printer) {
+            if($printer == PRINTER_ATLAS) {
+                break;
+            }
+            
+            array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!F2:F".$editions_count_by_machine[$printer].",A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!E2:E".$editions_count_by_machine[$printer].")");
+        }
         $priladka_string = implode('+', $priladka_array);
         $priladka_string = '='.$priladka_string;
         
