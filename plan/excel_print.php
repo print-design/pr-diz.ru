@@ -387,8 +387,7 @@ if(!empty($work_id) && !empty($machine_id)) {
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
         $sheet->setCellValue('A'.$row_number, $row['name']);
-        //$sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        
+        //$sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);        
         $priladka_array = array();
         foreach(PRINTERS as $printer) {
             if($printer == PRINTER_ATLAS) {
@@ -401,8 +400,16 @@ if(!empty($work_id) && !empty($machine_id)) {
         $priladka_string = '='.$priladka_string;
         
         $sheet->setCellValue('B'.$row_number, $priladka_string);
-        $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        //$sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $km_array = array();
+        foreach(PRINTERS as $printer) {
+            if($printer == PRINTER_ATLAS) {
+                break;
+            }
+            
+            array_push($km_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers)]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 4).":". COLUMNS[FIRST_COLUMN_ID + count($workers)].($editions_count_by_machine[$printer] + 4));
+        }
+        //$sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('D'.$row_number, '=B'.$row_number.'+C'.$row_number);
         $row_number++;
     }
