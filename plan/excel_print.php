@@ -368,15 +368,10 @@ if(!empty($work_id) && !empty($machine_id)) {
     
     $sheet->setCellValue('B1', "За наклейку 1 ПФ ₽");
     $sheet->setCellValue('C1', "За КМ ₽");
-    $sheet->setCellValue('A2', "Тариф →");
-    $sheet->setCellValue('A3', "Печатники ↓");
-    $sheet->getStyle('B2')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-    $sheet->setCellValue('B2', '0');
-    $sheet->getStyle('C2')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-    $sheet->setCellValue('C2', '0');
-    $sheet->setCellValue('D3', "Итого ₽");
+    $sheet->setCellValue('A2', "Печатники ↓");
+    $sheet->setCellValue('D2', "Итого ₽");
     
-    $row_number = 4;
+    $row_number = 3;
     
     $sql = "select distinct pe.last_name, pe.first_name "
             . "from plan_workshift1 pw "
@@ -390,7 +385,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->setCellValue('D'.$row_number, '=PRODUCT(B2,B'.$row_number.')+PRODUCT(C2,C'.$row_number.')');
+        $sheet->setCellValue('D'.$row_number, '=B'.$row_number.'+C'.$row_number);
         $row_number++;
     }
     
