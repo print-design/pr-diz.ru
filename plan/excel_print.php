@@ -366,7 +366,7 @@ if(!empty($work_id) && !empty($machine_id)) {
     $sheet->getColumnDimension('C')->setAutoSize(true);
     $sheet->getColumnDimension('D')->setAutoSize(true);
     
-    $sheet->setCellValue('B1', "За наклейку 1 ПФ ₽");
+    $sheet->setCellValue('B1', "За приладку ₽");
     $sheet->setCellValue('C1', "За КМ ₽");
     $sheet->setCellValue('A2', "Печатники ↓");
     $sheet->setCellValue('D2', "Итого ₽");
@@ -382,7 +382,15 @@ if(!empty($work_id) && !empty($machine_id)) {
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
         $sheet->setCellValue('A'.$row_number, $row['name']);
-        $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        //$sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        
+        $priladka_array = array();
+        array_push($priladka_array, 'COUNTIF(A1:A10,"Губезов Р.")');
+        array_push($priladka_array, "COUNTIF('₽ Comiflex'!B2:B20,\"День\")");
+        $priladka_string = implode('+', $priladka_array);
+        $priladka_string = '='.$priladka_string;
+        
+        $sheet->setCellValue('B'.$row_number, $priladka_string);
         $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('D'.$row_number, '=B'.$row_number.'+C'.$row_number);
