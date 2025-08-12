@@ -244,15 +244,15 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('H'.$rowindex, '');
         }
         
-        $sql = "select distinct pe.last_name "
+        $sql = "select distinct concat(pe.last_name, ' ', substring(pe.first_name, 1, 1), '.') name "
                 . "from plan_workshift1 pw "
                 . "inner join plan_employee pe on pw.employee1_id = pe.id "
                 . "where pw.work_id = ". WORK_PRINTING." and pw.machine_id = ".$printer
                 . " and pw.date >= '".$date_from->format('Y/m/d')."' and pw.date <= '".$date_to->format('Y/m/d')."' "
-                . "order by pe.last_name";
+                . "order by pe.last_name, pe.first_name";
         $grabber = new Grabber($sql);
         $workers = $grabber->result;
-        $workers_string = implode(",", array_column($workers, 'last_name'));
+        $workers_string = implode(",", array_column($workers, 'name'));
         
         $column_id = FIRST_COLUMN_ID;
         $first_worker_id = $column_id;
@@ -260,7 +260,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         
         foreach($workers as $worker) {
             $sheet->getColumnDimension(COLUMNS[++$column_id])->setAutoSize(true);
-            $sheet->setCellValue(COLUMNS[$column_id].'1', $worker['last_name']);
+            $sheet->setCellValue(COLUMNS[$column_id].'1', $worker['name']);
         }
         
         $last_worker_id = $column_id;
@@ -373,7 +373,7 @@ if(!empty($work_id) && !empty($machine_id)) {
     
     $row_number = 3;
     
-    $sql = "select distinct pe.last_name, pe.first_name "
+    $sql = "select distinct concat(pe.last_name, ' ', substring(pe.first_name, 1, 1), '.') name "
             . "from plan_workshift1 pw "
             . "inner join plan_employee pe on pw.employee1_id = pe.id "
             . "where pw.work_id = ". WORK_PRINTING." "
@@ -381,7 +381,7 @@ if(!empty($work_id) && !empty($machine_id)) {
             . "order by pe.last_name, pe.first_name";
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
-        $sheet->setCellValue('A'.$row_number, $row['last_name'].(empty($row['first_name']) ? '' : ' '. mb_substr($row['first_name'], 0, 1, 'UTF-8').'.'));
+        $sheet->setCellValue('A'.$row_number, $row['name']);
         $sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle('C'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
