@@ -395,7 +395,7 @@ if(!empty($work_id) && !empty($machine_id)) {
                 break;
             }
             
-            array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!F2:F".$editions_count_by_machine[$printer].",A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!E2:E".$editions_count_by_machine[$printer].")");
+            array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!F2:F".$editions_count_by_machine[$printer].",A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!E2:E".$editions_count_by_machine[$printer].")*'₽ ". PRINTER_NAMES[$printer]."'!F".$editions_count_by_machine[$printer]+5);
         }
         $priladka_string = implode('+', $priladka_array);
         $priladka_string = '='.$priladka_string;
