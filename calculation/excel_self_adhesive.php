@@ -365,6 +365,260 @@ if(!empty($id)) {
     // Стоимость форм
     //***********************************
     
+    $sheet->setCellValue('A'.(++$rowindex), "Высота форм, м");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_height);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->raport, 5)." + 20) / 1000");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->raport."+20)/1000");
+    $sheet->setCellValue("E$rowindex", "(рапорт + 20мм) / 1000");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Ширина форм, м");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_width);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->width_dirty, 5)." + 20 + 20) / 1000");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->streams_number."*".$calculation->width_dirty."+20+20)/1000");
+    $sheet->setCellValue("E$rowindex", "(кол-во ручьёв * ширина этикетки грязная + 20 мм + 20 мм) / 1000 (для самоклейки без лыж не бывает)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Площадь форм, м2");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_area);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_height, 5)." * ".DisplayNumber($calculation->cliche_width, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_height."*".$calculation->cliche_width);
+    $sheet->setCellValue("E$rowindex", "высота форм * ширина форм");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость 1 формы Флинт, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_flint_price);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($calculation->data_cliche->flint_price, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->data_cliche->flint_currency, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$calculation->data_cliche->flint_price."*".CalculationBase::GetCurrencyRate($calculation->data_cliche->flint_currency, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "площадь формы * стоимиость формы Флинт * валюта");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость 1 формы Кодак, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_kodak_price);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($calculation->data_cliche->kodak_price, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->data_cliche->kodak_currency, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$calculation->data_cliche->kodak_price."*".CalculationBase::GetCurrencyRate($calculation->data_cliche->kodak_currency, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "площадь формы * стоимость формы Кодак * валюта");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость всех форм Флинт, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_all_flint_price);
+    $sheet->setCellValue("C$rowindex", "|= ".$calculation->cliches_count_flint." * ".DisplayNumber($calculation->cliche_flint_price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliches_count_flint."*".$calculation->cliche_flint_price);
+    $sheet->setCellValue("E$rowindex", "количество форм Флинт * себестоимость 1 формы Флинт");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость всех форм Кодак, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_all_kodak_price);
+    $sheet->setCellValue("C$rowindex", "|= ".$calculation->cliches_count_kodak." * ".DisplayNumber($calculation->cliche_kodak_price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliches_count_kodak."*".$calculation->cliche_kodak_price);
+    $sheet->setCellValue("E$rowindex", "количество форм Кодак * себестоимость 1 формы Кодак");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Количество новых форм");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_new_number);
+    $sheet->setCellValue("C$rowindex", "|= ".$calculation->cliches_count_flint." + ".$calculation->cliches_count_kodak);
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliches_count_flint."+".$calculation->cliches_count_kodak);
+    $sheet->setCellValue("E$rowindex", "количество форм Флинт + количество форм Кодак");
+        
+    ++$rowindex;
+        
+    //*******************************************
+    // Стоимость скотча
+    //*******************************************
+    
+    $scotch_formula = "";
+    $scotch_result = "";
+    $scotch_comment = "";
+        
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
+        if(!empty($scotch_formula)) {
+            $scotch_formula .= " + ";
+        }
+        
+        if(!empty($scotch_result)) {
+            $scotch_result .= "+";
+        }
+            
+        if(!empty($scotch_comment)) {
+            $scotch_comment .= " + ";
+        }
+            
+        $scotch_formula .= DisplayNumber($calculation->scotch_costs[$i], 5);
+        $scotch_result .= $calculation->scotch_costs[$i];
+        $scotch_comment .= "стоимость скотча цвет $i";
+        
+        $cliche_area = $calculation->cliche_area;
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Стоимость скотча Цвет $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->scotch_costs[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($calculation->data_cliche->scotch_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->data_cliche->scotch_currency, $calculation->usd, $calculation->euro), 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$calculation->data_cliche->scotch_price."*".$calculation->GetCurrencyRate($calculation->data_cliche->scotch_currency, $calculation->usd, $calculation->euro));
+        $sheet->setCellValue("E$rowindex", "площадь формы цвет $i, м2 * цена скотча за м2 * курс валюты");
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общая себестоимость скотча, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->scotch_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".$scotch_formula);
+    $sheet->setCellValue("D$rowindex", "=".$scotch_result);
+    $sheet->setCellValue("E$rowindex", $scotch_comment);
+        
+    ++$rowindex;
+        
+    //*******************************************
+    // Наценка
+    //*******************************************
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Наценка на тираж, %"); $sheet->setCellValue("B$rowindex", $calculation->extracharge);
+    $sheet->setCellValue('A'.(++$rowindex), "Наценка на ПФ, %"); $sheet->setCellValue("B$rowindex", $calculation->extracharge_cliche); $sheet->setCellValue("E$rowindex", "Если УКПФ = 1, то наценка на ПФ всегда 0");
+    $sheet->setCellValue('A'.(++$rowindex), "Наценка на нож, %"); $sheet->setCellValue("B$rowindex", $calculation->extracharge_knife); $sheet->setCellValue("E$rowindex", "Если УКНОЖ = 1, то наценка на нож всегда 0");
+    
+    ++$rowindex;
+        
+    //*******************************************
+    // Данные для правой панели
+    //*******************************************
+        
+    $total_ink_cost_formula = "";
+    $total_ink_cost_result = "";
+    $total_ink_expense_formula = "";
+    $total_ink_expense_result = "";
+        
+    for($i=1; $i<=$calculation->ink_number; $i++) {
+        if(!empty($total_ink_cost_formula)) {
+            $total_ink_cost_formula .= " + ";
+        }
+        $total_ink_cost_formula .= DisplayNumber($calculation->ink_costs_final[$i], 5);
+        
+        if(!empty($total_ink_cost_result)) {
+            $total_ink_cost_result .= "+";
+        }
+        $total_ink_cost_result .= $calculation->ink_costs_final[$i];
+            
+        if(!empty($total_ink_expense_formula)) {
+            $total_ink_expense_formula .= " + ";
+        }
+        $total_ink_expense_formula .= DisplayNumber($calculation->ink_expenses[$i], 5);
+        
+        if(!empty($total_ink_expense_result)) {
+            $total_ink_expense_result .= "+";
+        }
+        $total_ink_expense_result .= $calculation->ink_expenses[$i];
+    }
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость краски, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->ink_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".$total_ink_cost_formula);
+    $sheet->setCellValue("D$rowindex", "=".$total_ink_cost_result);
+    $sheet->setCellValue("E$rowindex", "Сумма стоимость всех красок");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Расход краски, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->ink_expense);
+    $sheet->setCellValue("C$rowindex", "|= ".$total_ink_expense_formula);
+    $sheet->setCellValue("D$rowindex", "=".$total_ink_expense_result);
+    $sheet->setCellValue("E$rowindex", "Сумма расход всех красок");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->film_cost, 5)." + ".DisplayNumber($calculation->work_cost, 5)." + ".DisplayNumber($calculation->ink_cost, 5)." + (".DisplayNumber($calculation->cliche_cost, 5)." * ".DisplayNumber($calculation->ukpf, 0).") + (".DisplayNumber($calculation->knife_cost, 5)." * ".DisplayNumber($calculation->ukknife, 0).") + ".DisplayNumber($calculation->scotch_cost, 5)." + (".DisplayNumber($calculation->extra_expense, 5)." * ".$calculation->quantity.")");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->film_cost."+".$calculation->work_cost."+".$calculation->ink_cost."+(".$calculation->cliche_cost."*".$calculation->ukpf.")+(".$calculation->knife_cost."*".$calculation->ukknife.")+".$calculation->scotch_cost."+(".$calculation->extra_expense."*".$calculation->quantity.")");
+    $sheet->setCellValue("E$rowindex", "стоимость материала + стоимость работы + стоимость краски + (стоимость форм * УКПФ) + (стоимость ножа * УКНОЖ) + стоимость скотча + (доп. расходы на кг / шт * объём заказа, кг/шт)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость за шт, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cost_per_unit);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cost, 5)." / ".DisplayNumber($calculation->quantity, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cost."/".$calculation->quantity);
+    $sheet->setCellValue("E$rowindex", "себестоимость / суммарное кол-во этикеток всех тиражей");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость форм, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->cliche_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_all_flint_price, 5)." + ".DisplayNumber($calculation->cliche_all_kodak_price, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_all_flint_price."+".$calculation->cliche_all_kodak_price);
+    $sheet->setCellValue("E$rowindex", "себестоимость всех форм Флинт + себестоимость всех форм Кодак");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Себестоимость ножа, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->knife_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->knife, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->knife);
+    $sheet->setCellValue("E$rowindex", "вводится пользователем");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отгрузочная стоимость, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->shipping_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cost, 5)." * (1 + (".DisplayNumber($calculation->extracharge, 5)." / 100))");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cost."*(1+(".$calculation->extracharge."/100))");
+    $sheet->setCellValue("E$rowindex", "себестоимость * (1 + (наценка на тираж / 100))");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отгрузочная стоимость за шт, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->shipping_cost_per_unit);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->shipping_cost, 5)." / ".DisplayNumber($calculation->quantity, 0));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->shipping_cost."/".$calculation->quantity);
+    $sheet->setCellValue("E$rowindex", "отгрузочная стоимость / суммарное кол-во этикеток всех тиражей");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отгрузочная стоимость ПФ, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->shipping_cliche_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_cost, 5)." * (1 + (".DisplayNumber($calculation->extracharge_cliche, 5)." / 100)) * ".$calculation->ukcuspaypf." * ((".$calculation->ukpf." - 1) / -1)");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_cost."*(1+(".$calculation->extracharge_cliche."/100))*".$calculation->ukcuspaypf."*((".$calculation->ukpf."-1)/-1)");
+    $sheet->setCellValue("E$rowindex", "сумма стоимости всех форм * (1 + (наценка на ПФ / 100)) * CusPayPF * ((КоэфПФ - 1) / -1)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отгрузочная стоимость ножа, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->shipping_knife_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->knife_cost, 5)." * (1 + (".DisplayNumber($calculation->extracharge_knife, 5)." / 100)) * ".$calculation->ukcuspayknife." * ((".$calculation->ukknife." - 1) / -1)");
+    $sheet->setCellValue("D$rowindex", "=".$calculation->knife_cost."*(1+(".$calculation->extracharge_knife."/100))*".$calculation->ukcuspayknife."*((".$calculation->ukknife."-1)/-1)");
+    $sheet->setCellValue("E$rowindex", "себестоимость ножа * (1 + (наценка на нож / 100)) * CusPayKnife * ((КоэфНож - 1) / -1)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Прибыль, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->income);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->shipping_cost, 5)." - ".DisplayNumber($calculation->cost, 5).")");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->shipping_cost."-".$calculation->cost.")");
+    $sheet->setCellValue("E$rowindex", "(отгрузочная стоимость - себестоимость)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Прибыль за шт, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->income_per_unit);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->shipping_cost_per_unit, 5)." - ".DisplayNumber($calculation->cost_per_unit, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->shipping_cost_per_unit."-".$calculation->cost_per_unit);
+    $sheet->setCellValue("E$rowindex", "отгрузочная стоимость за шт - себестоимость за шт");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Прибыль ПФ, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->income_cliche);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->shipping_cliche_cost, 5)." - ".DisplayNumber($calculation->cliche_cost, 5).") * ((".$calculation->ukpf." - 1) / -1)");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->shipping_cliche_cost."-".$calculation->cliche_cost.")*((".$calculation->ukpf."-1)/-1)");
+    $sheet->setCellValue("E$rowindex", "(отгрузочная стоимость ПФ - себестоимость ПФ) * ((КоэфПФ - 1) / -1)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Прибыль на нож, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->income_knife);
+    $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->shipping_knife_cost, 5)." - ".DisplayNumber($calculation->knife_cost, 5).") * ((".$calculation->ukknife." - 1) / -1)");
+    $sheet->setCellValue("D$rowindex", "=(".$calculation->shipping_knife_cost."-".$calculation->knife_cost.")*((".$calculation->ukknife."-1)/-1)");
+    $sheet->setCellValue("E$rowindex", "(отгрузочная стоимость ножа - себестоимость ножа) * ((КоэфНож - 1) / -1)");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Общий вес всех материала с приладкой, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->total_weight_dirty);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight_dirty, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight_dirty);
+    $sheet->setCellValue("E$rowindex", "масса материала грязная");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость за м2 1, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_cost_per_unit);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->price_1, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->price_1."*".CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "цена материала * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_cost);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->film_waste_weight, 5)." * ".DisplayNumber($calculation->price_1, 5)." * ".DisplayNumber(CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro), 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->film_waste_weight."*".$calculation->price_1."*".CalculationBase::GetCurrencyRate($calculation->currency_1, $calculation->usd, $calculation->euro));
+    $sheet->setCellValue("E$rowindex", "отходы, кг * цена материала * курс валюты");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Отходы, кг");
+    $sheet->setCellValue("B$rowindex", $calculation->film_waste_weight);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->weight_dirty, 5)." - ".DisplayNumber($calculation->weight_pure, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->weight_dirty."-".$calculation->weight_pure);
+    $sheet->setCellValue("E$rowindex", "масса материала грязная - масса материала чистая");
+        
+    ++$rowindex;
+        
+    $i = 1;
+        
+    foreach($calculation->quantities as $key => $quantity) {
+        $sheet->setCellValue('A'.(++$rowindex), "Длина тиража $i, м");
+        $sheet->setCellValue("B$rowindex", $calculation->lengths[$key]);
+        $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber(intval($calculation->length), 5)." + ".DisplayNumber($calculation->gap, 5).") * ".DisplayNumber(intval($calculation->quantities[$key]), 0)." / $calculation->streams_number / 1000");
+        $sheet->setCellValue("D$rowindex", "=(".$calculation->length."+".$calculation->gap.")*".$calculation->quantities[$key]."/".$calculation->streams_number."/1000");
+        $sheet->setCellValue("E$rowindex", "(длина этикетки + фактический зазор) * кол-во этикеток этого тиража / кол-во ручьёв / 1000");
+        $i++;
+    }
+    
     // Сохранение
     $filename = DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y').' '.str_replace(',', '_', $calculation->name).".xlsx";
     
