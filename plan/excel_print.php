@@ -171,6 +171,9 @@ if(!empty($work_id) && !empty($machine_id)) {
     // Количество заказов на каждуюу машину
     $editions_count_by_machine = array();
     
+    // Списки печатников на каждую машину
+    $workers_by_machine = array();
+    
     // Расчёт выработки
     foreach (PRINTERS as $printer) {
         if($printer == PRINTER_ATLAS) {
@@ -269,7 +272,6 @@ if(!empty($work_id) && !empty($machine_id)) {
         $last_worker_id = $column_id;
         
         $editions_count++;
-        $editions_count_by_machine[$printer] = $editions_count;
         
         // Приладил
         for($i = 2; $i <= $editions_count; $i++) {
@@ -354,6 +356,9 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 6), "=". COLUMNS[$column_id].($editions_count + 4)."+". COLUMNS[$column_id].($editions_count + 5));
         }
         
+        $editions_count_by_machine[$printer] = $editions_count;
+        $workers_by_machine[$printer] = $workers;
+        
         $activeSheetIndex++;
     }
     
@@ -394,7 +399,8 @@ if(!empty($work_id) && !empty($machine_id)) {
                 break;
             }
             
-            array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!F2:F".$editions_count_by_machine[$printer].",A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!E2:E".$editions_count_by_machine[$printer].")*'₽ ". PRINTER_NAMES[$printer]."'!F".$editions_count_by_machine[$printer]+5);
+            //array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!F2:F".$editions_count_by_machine[$printer].",A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!E2:E".$editions_count_by_machine[$printer].")*'₽ ". PRINTER_NAMES[$printer]."'!F".$editions_count_by_machine[$printer]+5);
+            array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 5).":". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])].($editions_count_by_machine[$printer] + 5).")");
         }
         $priladka_string = implode('+', $priladka_array);
         $priladka_string = '='.$priladka_string;
@@ -407,8 +413,11 @@ if(!empty($work_id) && !empty($machine_id)) {
                 break;
             }
             
-            array_push($km_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers)]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 4).":". COLUMNS[FIRST_COLUMN_ID + count($workers)].($editions_count_by_machine[$printer] + 4));
+            array_push($km_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 4).":". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])].($editions_count_by_machine[$printer] + 4).")");
         }
+        $km_string = implode('+', $km_array);
+        $km_string = '='.$km_string;
+        $sheet->setCellValue('C'.$row_number, $km_string);
         //$sheet->getStyle('D'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('D'.$row_number, '=B'.$row_number.'+C'.$row_number);
         $row_number++;
