@@ -304,60 +304,60 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->mergeCells('I'.($editions_count + 1).':L'.($editions_count + 1));
         $sheet->setCellValue('H'.$i, "=SUM(H2:H".$editions_count.")/1000");
         
-        // ₽ за приладку 1 кр ₽↓
-        $sheet->getStyle('F'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
-        $sheet->setCellValue('F'.($editions_count + 6), '₽ за приладку 1 кр ₽ ↓');
-        
-        // ₽ за печать 1 км ↓
-        $sheet->getStyle('G'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
-        $sheet->setCellValue('G'.($editions_count + 6), '₽ за печать 1 км ↓');
-        
         // Прилажено красок →
-        $sheet->setCellValue('H'.($editions_count + 4), 'Прилажено красок →');
+        $sheet->setCellValue('H'.($editions_count + 2), 'Прилажено красок →');
         
         $column_id = FIRST_COLUMN_ID;
         
         foreach($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 4), '=SUMIF(F2:F'.$editions_count.','. COLUMNS[$column_id].'1,E2:E'.$editions_count.')');
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 2), '=SUMIF(F2:F'.$editions_count.','. COLUMNS[$column_id].'1,E2:E'.$editions_count.')');
         }
         
         // Отпечатано КМ →
-        $sheet->setCellValue('H'.($editions_count + 5), 'Отпечатано КМ →');
+        $sheet->setCellValue('H'.($editions_count + 3), 'Отпечатано КМ →');
         
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 5), '=SUM('. COLUMNS[$column_id].'2:'. COLUMNS[$column_id].$editions_count.')/1000');
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 3), '=SUM('. COLUMNS[$column_id].'2:'. COLUMNS[$column_id].$editions_count.')/1000');
         }
         
+        // ₽ за приладку 1 кр ₽↓
+        $sheet->getStyle('F'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('F'.($editions_count + 4), '₽ за приладку 1 кр ₽ ↓');
+        
+        // ₽ за печать 1 км ↓
+        $sheet->getStyle('G'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('G'.($editions_count + 4), '₽ за печать 1 км ↓');
+        
         // ₽ за КМ →
-        $sheet->getStyle('H'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
-        $sheet->setCellValue('H'.($editions_count + 6), '₽ за КМ →');
+        $sheet->getStyle('H'.($editions_count + 4))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('H'.($editions_count + 4), '₽ за КМ →');
         
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 6), "=". COLUMNS[$column_id].($editions_count + 5)."*G". ($editions_count + 7));
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 4), "=". COLUMNS[$column_id].($editions_count + 3)."*G". ($editions_count + 5));
         }
         
         // ₽ за приладку →
-        $sheet->getStyle('H'.($editions_count + 7))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
-        $sheet->setCellValue('H'.($editions_count + 7), '₽ за приладку →');
+        $sheet->getStyle('H'.($editions_count + 5))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('H'.($editions_count + 5), '₽ за приладку →');
         
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 7), "=". COLUMNS[$column_id].($editions_count + 4)."*F".($editions_count + 7));
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 5), "=". COLUMNS[$column_id].($editions_count + 2)."*F".($editions_count + 5));
         }
         
         // Итого
-        $sheet->getStyle('H'.($editions_count + 8))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
-        $sheet->setCellValue('H'.($editions_count + 8), 'Итого');
+        $sheet->getStyle('H'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('H'.($editions_count + 6), 'Итого');
         
         $column_id = FIRST_COLUMN_ID;
         
         foreach ($workers as $worker) {
-            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 8), "=". COLUMNS[$column_id].($editions_count + 6)."+". COLUMNS[$column_id].($editions_count + 7));
+            $sheet->setCellValue(COLUMNS[++$column_id].($editions_count + 6), "=". COLUMNS[$column_id].($editions_count + 4)."+". COLUMNS[$column_id].($editions_count + 5));
         }
         
         $editions_count_by_machine[$printer] = $editions_count;
@@ -404,7 +404,7 @@ if(!empty($work_id) && !empty($machine_id)) {
             }
             
             //array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!F2:F".$editions_count_by_machine[$printer].",A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!E2:E".$editions_count_by_machine[$printer].")*'₽ ". PRINTER_NAMES[$printer]."'!F".$editions_count_by_machine[$printer]+5);
-            array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 7).":". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])].($editions_count_by_machine[$printer] + 7).")");
+            array_push($priladka_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 5).":". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])].($editions_count_by_machine[$printer] + 5).")");
         }
         $priladka_string = implode('+', $priladka_array);
         $priladka_string = '='.$priladka_string;
@@ -417,7 +417,7 @@ if(!empty($work_id) && !empty($machine_id)) {
                 break;
             }
             
-            array_push($km_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 6).":". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])].($editions_count_by_machine[$printer] + 6).")");
+            array_push($km_array, "SUMIF('₽ ". PRINTER_NAMES[$printer]."'!I1:". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])]."1,A".$row_number.",'₽ ". PRINTER_NAMES[$printer]."'!I".($editions_count_by_machine[$printer] + 4).":". COLUMNS[FIRST_COLUMN_ID + count($workers_by_machine[$printer])].($editions_count_by_machine[$printer] + 4).")");
         }
         $km_string = implode('+', $km_array);
         $km_string = '='.$km_string;
