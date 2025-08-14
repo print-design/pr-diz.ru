@@ -289,18 +289,20 @@ if(!empty($work_id) && !empty($machine_id)) {
             $validation->setFormula1('"'.$workers_string.'"');
         }
         
-        // Сумма "Метраж заказа"
-        $sheet->setCellValue('G'.$i, "=SUM(G2:G".$editions_count.")");
+        // Сумма КМ →
+        $sheet->getStyle('F'.($editions_count + 1))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
+        $sheet->setCellValue('F'.($editions_count + 1), 'Сумма КМ →');
+        $sheet->setCellValue('G'.($editions_count + 1), "=SUM(G2:G".$editions_count.")/1000");
         
         // Всего отпечатано
         for($i = 2; $i <= $editions_count; $i++) {
             $sheet->setCellValue('H'.$i, "=SUM(". COLUMNS[$first_worker_id].$i.':'. COLUMNS[$last_worker_id].$i.')');
         }
         
-        // Сумма "Всего отпечатано"
-        $sheet->setCellValue('H'.$i, "=SUM(H2:H".$editions_count.")");
-        
-        // ЗДЕСЬ НОВОЕ
+        // ← Фактически отпечатана сумма км
+        $sheet->setCellValue('I'.($editions_count + 1), '← Фактически отпечатана сумма км');
+        $sheet->mergeCells('I'.($editions_count + 1).':L'.($editions_count + 1));
+        $sheet->setCellValue('H'.$i, "=SUM(H2:H".$editions_count.")/1000");
         
         // ₽ за приладку 1 кр ₽↓
         $sheet->getStyle('F'.($editions_count + 6))->applyFromArray(array('alignment' => array('horizontal' => Alignment::HORIZONTAL_RIGHT)));
