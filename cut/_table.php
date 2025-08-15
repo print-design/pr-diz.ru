@@ -390,7 +390,7 @@
                 <td style="text-align: left;"><?=$row['name'] ?></td>
                 <td style="text-align: left;"><?=$row['width'] ?> мм</td>
                 <td style="text-align: left;"><?=$stream_worker ?></td>
-                <td style="text-align: left;"><?=$row['last_name'].' '.(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'.') ?></td>
+                <td style="text-align: left;"><?=$row['last_name'].' '.(empty($row['first_name']) ? '' : mb_substr($row['first_name'], 0, 1).'.') ?></td>
                 <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
@@ -482,7 +482,7 @@
                 <td style="text-align: left;"><?=$stream['id'] ?></td>
                 <td style="text-align: left;"><?=$stream['name'] ?></td>
                 <td style="text-align: left;"><?=$stream_worker ?></td>
-                <td style="text-align: left;"><?=$row['last_name'].' '.(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'.') ?></td>
+                <td style="text-align: left;"><?=$row['last_name'].' '.(empty($row['first_name']) ? '' : mb_substr($row['first_name'], 0, 1).'.') ?></td>
                 <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>
