@@ -26,6 +26,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $stream_id = filter_input(INPUT_POST, 'stream_id');
     $stream_width = filter_input(INPUT_POST, 'stream_width');
     $spool = filter_input(INPUT_POST, 'spool');
+    $employee_id = filter_input(INPUT_POST, 'employee_id');
     
     $thickness1 = floatval(filter_input(INPUT_POST, 'thickness1'));
     $thickness2 = floatval(filter_input(INPUT_POST, 'thickness2'));
@@ -97,12 +98,12 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         if(empty($take_stream_id)) {
-            $sql = "insert into calculation_take_stream (calculation_take_id, calculation_stream_id, weight, length, radius, printed) values($take_id, $stream_id, $weight, $length, $radius, now())";
+            $sql = "insert into calculation_take_stream (calculation_take_id, calculation_stream_id, weight, length, radius, printed, plan_employee_id) values($take_id, $stream_id, $weight, $length, $radius, now(), $employee_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
         else {
-            $sql = "update calculation_take_stream set weight = $weight, length = $length, radius = $radius, printed = now() where id = $take_stream_id";
+            $sql = "update calculation_take_stream set weight = $weight, length = $length, radius = $radius, printed = now(), plan_employee_id = $employee_id where id = $take_stream_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }

@@ -343,6 +343,7 @@
                 <th style="font-weight: bold;">Наименование</th>
                 <th style="font-weight: bold;">Ширина ручья</th>
                 <th style="font-weight: bold;">Резчик</th>
+                <th style="font-weight: bold;">Резчик</th>
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
                 <th style="font-weight: bold;">Метраж</th>
@@ -354,9 +355,10 @@
                 <?php endif; ?>
             </tr>
             <?php
-            $sql = "select cts.id, cs.name, cs.width, cts.printed, cts.weight, cts.length "
+            $sql = "select cts.id, cs.name, cs.width, cts.printed, cts.weight, cts.length, pe.last_name, pe.first_name "
                     . "from calculation_take_stream cts "
                     . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
+                    . "left join plan_employee pe on cts.plan_employee_id = pe.id "
                     . "where cts.calculation_take_id = ".$take['id']
                     . " order by cs.position";
             $fetcher = new Fetcher($sql);
@@ -388,6 +390,7 @@
                 <td style="text-align: left;"><?=$row['name'] ?></td>
                 <td style="text-align: left;"><?=$row['width'] ?> мм</td>
                 <td style="text-align: left;"><?=$stream_worker ?></td>
+                <td style="text-align: left;"><?=$row['last_name'].' '.(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'.') ?></td>
                 <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>
@@ -404,9 +407,10 @@
     <?php endforeach; ?>
     <a name="not_take"></a>
     <?php
-    $sql = "select cnts.id, cs.name, cnts.printed, cnts.weight, cnts.length "
+    $sql = "select cnts.id, cs.name, cnts.printed, cnts.weight, cnts.length, pe.last_name, pe.first_name "
             . "from calculation_not_take_stream cnts "
             . "inner join calculation_stream cs on cnts.calculation_stream_id = cs.id "
+            . "left join plan_employee pe on cnts.plan_employee_id = pe.id "
             . "where cs.calculation_id = $id";
     $grabber = new Grabber($sql);
     $streams = $grabber->result;
@@ -438,6 +442,7 @@
             <tr>
                 <td style="font-weight: bold;">ID</td>
                 <th style="font-weight: bold;">Наименование</th>
+                <th style="font-weight: bold;">Резчик</th>
                 <th style="font-weight: bold;">Резчик</th>
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
@@ -477,6 +482,7 @@
                 <td style="text-align: left;"><?=$stream['id'] ?></td>
                 <td style="text-align: left;"><?=$stream['name'] ?></td>
                 <td style="text-align: left;"><?=$stream_worker ?></td>
+                <td style="text-align: left;"><?=$row['last_name'].' '.(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'.') ?></td>
                 <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>

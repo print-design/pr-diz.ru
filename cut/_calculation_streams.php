@@ -9,11 +9,36 @@ if(empty($take_id)) {
 
 //*********************************************
 // ВРЕМЕННЫЙ КОД! ПОТОМ УДАЛИТЬ ЕГО!
-$sql = "update calculation_stream cs inner join calculation c on cs.calculation_id = c.id set cs.width = c.stream_width where cs.width is null";
-$executer = new Executer($sql);
+// $sql = "update calculation_stream cs inner join calculation c on cs.calculation_id = c.id set cs.width = c.stream_width where cs.width is null";
+// $executer = new Executer($sql);
 // КОНЕЦ ВРЕМЕННОГО КОДА
 //*********************************************
 
+// Текущий резчик
+
+// Дневная смена: 8:00 текущего дня - 19:59 текущего дня
+// Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+// (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
+$working_time = new DateTime();
+$working_hour = date('G');
+$working_shift = 'day';
+
+if($working_hour > 19 && $working_hour < 24) {
+    $working_shift = 'night';
+}
+elseif($working_hour >= 0 && $working_hour < 8) {
+    $working_shift = 'night';
+    $working_time->modify("-1 day");
+}
+
+$employee_id = null;
+$sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')='".$working_time->format('d-m-Y')."' and shift = '$working_shift' and work_id = ". WORK_CUTTING." and machine_id = $machine_id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $employee_id = $row[0];
+}
+
+// Ручьи данного съёма
 $sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cs.width stream_width, cts.weight, cts.length, cts.radius, cts.printed, tm.spool, "
         . "c.individual_thickness, fv1.thickness thickness1, c.lamination1_individual_thickness, fv2.thickness thickness2, c.lamination2_individual_thickness, fv3.thickness thickness3, "
         . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
@@ -130,13 +155,14 @@ foreach($streams as $row):
         <input type="hidden" name="machine_id" value="<?= $machine_id ?>" />
         <input type="hidden" name="stream_id" value="<?=$stream_id ?>" />
         <input type="hidden" name="stream_width" value="<?=$stream_width ?>" />
+        <input type="hidden" name="spool" value="<?=$spool ?>" />
+        <input type="hidden" name="employee_id" value="<?=$employee_id ?>" />
         <input type="hidden" name="thickness1" value="<?=$thickness1 ?>" />
         <input type="hidden" name="thickness2" value="<?=$thickness2 ?>" />
         <input type="hidden" name="thickness3" value="<?=$thickness3 ?>" />
         <input type="hidden" name="density1" value="<?=$density1 ?>" />
         <input type="hidden" name="density2" value="<?=$density2 ?>" />
         <input type="hidden" name="density3" value="<?=$density3 ?>" />
-        <input type="hidden" name="spool" value="<?=$spool ?>" />
         <input type="hidden" name="scroll" />
         <div class="row">
             <div class="col-3">

@@ -37,7 +37,32 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
         exit();
     }
     
-    $sql = "insert into calculation_not_take_stream (calculation_stream_id, weight, length, printed) values ($calculation_stream_id, $weight, $length, now())";
+    // Текущий резчик
+    
+    // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
+    // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+    // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
+    $working_time = new DateTime();
+    $working_hour = date('G');
+    $working_shift = 'day';
+    
+    if($working_hour > 19 && $working_hour < 24) {
+        $working_shift = 'night';
+    }
+    elseif($working_hour >= 0 && $working_hour < 8) {
+        $working_shift = 'night';
+        $working_time->modify("-1 day");
+    }
+    
+    $employee_id = null;
+    $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')='".$working_time->format('d-m-Y')."' and shift = '$working_shift' and work_id = ". WORK_CUTTING." and machine_id = $machine_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $employee_id = $row[0];
+    }
+    
+    // Сохраняем рулон не из съёма
+    $sql = "insert into calculation_not_take_stream (calculation_stream_id, weight, length, printed, plan_employee_id) values ($calculation_stream_id, $weight, $length, now(), $employee_id)";
     $executer = new Executer($sql);
     $not_take_stream_id = $executer->insert_id;
     
