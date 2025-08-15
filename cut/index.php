@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include './_cut_timetable.php';
 
 // Авторизация
-if(!IsInRole(CUTTER_USERS) && !IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])) {
+if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_LAM_HEAD]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 

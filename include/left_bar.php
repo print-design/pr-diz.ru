@@ -69,7 +69,7 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     /*ВРЕМЕННО*/
     
     // Резка
-    if(IsInRole(CUTTER_USERS) || IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])):
+    if(IsInRole(CUTTER_USERS) || IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_LAM_HEAD]))):
     ?>
     <a href="<?=APPLICATION ?>/cut/<?= IsInRole(CUTTER_USERS) ? "" : "?machine_id=".CUTTER_1 ?>" class="left_bar_item ui_tooltip right<?=$cut_class ?>" title="Резка"><img src="<?=APPLICATION ?>/images/icons/factory.svg" /></a>
     <?php
