@@ -37,6 +37,25 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
             <p>Подписанных: <?=$subscribed ?></p>
             <div id="progress" style="font-size: 22px;">0</div>
             <button id="Start" onclick="Start();">Старт</button>
+            
+            <?php
+            $total_count_not = 0;
+            $subscribed_not = 0;
+            $sql = "select count(id) from calculation_not_take_stream";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $total_count_not = $row[0];
+            }
+            $sql = "select count(id) from calculation_not_take_stream where plan_employee_id is not null";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $subscribed_not = $row[0];
+            }
+            ?>
+            <p>Всего: <?=$total_count_not ?></p>
+            <p>Подписанных: <?=$subscribed_not ?></p>
+            <div id="progress_not" style="font-size: 22px;">0</div>
+            <button id="StartNot" onclick="StartNot();">Старт</button>
         </div>
     </body>
     <?php
@@ -48,7 +67,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
                     .done(function(data) {
                         $('#progress').text(data + ' из <?=$total_count ?>');
                 
-                        if(data > 0 && data <= <?=$total_count ?>) {
+                        if(data <= <?=$total_count ?>) {
                             Start();
                         }
                     })
