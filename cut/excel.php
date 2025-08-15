@@ -13,6 +13,8 @@ $to = filter_input(INPUT_GET, 'to');
 $date_from = null;
 $date_to = null;
 GetDateFromDateTo($from, $to, $date_from, $date_to);
+
+$diff1Day = new DateInterval('P1D');
     
 $spreadsheet = new Spreadsheet();
 $activeSheetIndex = 0;
@@ -75,7 +77,7 @@ foreach($cutters as $cutter) {
     $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.first_name, e.last_name "
             . "from plan_workshift1 ws "
             . "left join plan_employee e on ws.employee1_id = e.id "
-            . "where ws.work_id = ".WORK_CUTTING." and ws.date >= '".$date_from->format('Y-m-d')."' and ws.date <= '".$date_to->format('Y-m-d')."'";
+            . "where ws.work_id = ".WORK_CUTTING." and ws.date >= '".$date_from->format('Y-m-d')."' and ws.date <= '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."'";
     $fetcher = new Fetcher($sql);
     while($row = $fetcher->Fetch()) {
         $workshifts[$row['date'].'_'.$row['shift'].'_'.$row['machine_id']] = $row['id'];
@@ -97,7 +99,7 @@ foreach($cutters as $cutter) {
     if($cutter != CUTTERS_ALL) {
         $sql .= " and e.machine_id = ".$cutter;
     }
-    $sql .= " and e.date >= '".$date_from->format('Y-m-d')."' and e.date < '".$date_to->format('Y-m-d')."' "
+    $sql .= " and e.date >= '".$date_from->format('Y-m-d')."' and e.date < '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "union "
             . "select pc.id, pc.date, pc.shift, e.machine_id, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
@@ -116,7 +118,7 @@ foreach($cutters as $cutter) {
     if($cutter != CUTTERS_ALL) {
         $sql .= " and e.machine_id = ".$cutter;
     }
-    $sql .= " and pc.date >= '".$date_from->format('Y-m-d')."' and e.date < '".$date_to->format('Y-m-d')."' "
+    $sql .= " and pc.date >= '".$date_from->format('Y-m-d')."' and e.date < '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
             . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
             . "order by date, shift, position";
     $fetcher = new Fetcher($sql);
