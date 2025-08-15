@@ -26,7 +26,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $stream_id = filter_input(INPUT_POST, 'stream_id');
     $stream_width = filter_input(INPUT_POST, 'stream_width');
     $spool = filter_input(INPUT_POST, 'spool');
-    $employee_id = filter_input(INPUT_POST, 'employee_id');
+    $employee_id = filter_input(INPUT_POST, 'employee_id'); if($employee_id == null) { $employee_id = "NULL"; }
     
     $thickness1 = floatval(filter_input(INPUT_POST, 'thickness1'));
     $thickness2 = floatval(filter_input(INPUT_POST, 'thickness2'));

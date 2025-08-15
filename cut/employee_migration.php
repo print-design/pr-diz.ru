@@ -20,12 +20,12 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
         <div class="container-fluid">
             <h1>Миграция резчиков</h1>
             <?php
-            $take_streams_count = 0;
+            $total_count = 0;
             $subscribed = 0;
             $sql = "select count(id) from calculation_take_stream";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $take_streams_count = $row[0];
+                $total_count = $row[0];
             }
             $sql = "select count(id) from calculation_take_stream where plan_employee_id is not null";
             $fetcher = new Fetcher($sql);
@@ -33,11 +33,28 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
                 $subscribed = $row[0];
             }
             ?>
-            <p>Всего: <?=$take_streams_count ?></p>
+            <p>Всего: <?=$total_count ?></p>
             <p>Подписанных: <?=$subscribed ?></p>
+            <div id="progress" style="font-size: 22px;">0</div>
+            <button id="Start" onclick="Start();">Старт</button>
         </div>
     </body>
     <?php
     include '../include/footer.php';
     ?>
+    <script>
+        function Start() {
+            $.ajax({ url: 'employee_migration_ajax.php' })
+                    .done(function(data) {
+                        $('#progress').text(data + ' из <?=$total_count ?>');
+                
+                        if(data > 0 && data <= <?=$total_count ?>) {
+                            Start();
+                        }
+                    })
+                    .fail(function() {
+                        $('#progress').text("Ошибка");
+                    });
+        }
+        </script>
 </html>
