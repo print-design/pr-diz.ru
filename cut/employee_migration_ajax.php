@@ -7,7 +7,7 @@ $machine_id = null;
 
 $sql = "select cts.id, cts.printed, pe.machine_id, cs.calculation_id "
         . "from calculation_take_stream cts "
-        . "inner join calculation_stream cs on cts.calculation_take_id = cs.id "
+        . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
         . "inner join plan_edition pe on pe.calculation_id = cs.calculation_id "
         . "where cts.plan_employee_id is null and cts.plan_employee_tested = false and pe.work_id = ". WORK_CUTTING
         . " order by cts.id desc";
@@ -15,7 +15,7 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $id = $row['id'];
     $printed = $row['printed'];
-    $machine_id = $row['machine_id'];
+    $machine_id = $row['machine_id']; //echo $row['machine_id']."<br />";
     $calculation_id = $row['calculation_id'];
     $printed_date = DateTime::createFromFormat("Y-m-d H:i:s", $printed);
     $working_date = clone $printed_date;
