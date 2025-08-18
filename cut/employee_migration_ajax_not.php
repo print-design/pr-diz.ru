@@ -6,8 +6,8 @@ $printed = null;
 $machine_id = null;
 
 $sql = "select cts.id, cts.printed, pe.machine_id, cs.calculation_id "
-        . "from calculation_take_stream cts "
-        . "inner join calculation_stream cs on cts.calculation_take_id = cs.id "
+        . "from calculation_not_take_stream cts "
+        . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
         . "inner join plan_edition pe on pe.calculation_id = cs.calculation_id "
         . "where cts.plan_employee_id is null and cts.plan_employee_tested = false and pe.work_id = ". WORK_CUTTING
         . " order by cts.id desc";
@@ -38,19 +38,19 @@ if($row = $fetcher->Fetch()) {
     }
     
     if(!empty($employee_id)) {
-        $sql = "update calculation_take_stream set plan_employee_id = $employee_id where id = $id";
+        $sql = "update calculation_not_take_stream set plan_employee_id = $employee_id where id = $id";
         $executer = new Executer($sql);
         $error = $executer->error;
     }
     
-    $sql = "update calculation_take_stream set plan_employee_tested = true where id = $id";
+    $sql = "update calculation_not_take_stream set plan_employee_tested = true where id = $id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
 
 $result = 0;
 
-$sql = "select count(id) from calculation_take_stream where plan_employee_id is not null and plan_employee_tested = true";
+$sql = "select count(id) from calculation_not_take_stream where plan_employee_id is not null and plan_employee_tested = true";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $result = $row[0];

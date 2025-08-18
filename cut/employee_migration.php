@@ -22,12 +22,12 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
             <?php
             $total_count = 0;
             $subscribed = 0;
-            $sql = "select count(id) from calculation_take_stream";
+            $sql = "select count(id) from calculation_take_stream where plan_employee_id is null and plan_employee_tested = false";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $total_count = $row[0];
             }
-            $sql = "select count(id) from calculation_take_stream where plan_employee_id is not null";
+            $sql = "select count(id) from calculation_take_stream where plan_employee_tested = true";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $subscribed = $row[0];
@@ -38,15 +38,16 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
             <div id="progress" style="font-size: 22px;">0</div>
             <button id="Start" onclick="Start();">Старт</button>
             
+            <br /><br />
             <?php
             $total_count_not = 0;
             $subscribed_not = 0;
-            $sql = "select count(id) from calculation_not_take_stream";
+            $sql = "select count(id) from calculation_not_take_stream where plan_employee_id is null and plan_employee_tested = false";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $total_count_not = $row[0];
             }
-            $sql = "select count(id) from calculation_not_take_stream where plan_employee_id is not null";
+            $sql = "select count(id) from calculation_not_take_stream where plan_employee_tested = true";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $subscribed_not = $row[0];
@@ -69,6 +70,20 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
                 
                         if(data <= <?=$total_count ?>) {
                             Start();
+                        }
+                    })
+                    .fail(function() {
+                        $('#progress').text("Ошибка");
+                    });
+        }
+        
+        function StartNot() {
+            $.ajax({ url: 'employee_migration_ajax_not.php' })
+                    .done(function(data) {
+                        $('#progress_not').text(data + ' из <?=$total_count_not ?>');
+                
+                        if(data <= <?=$total_count ?>) {
+                            StartNot();
                         }
                     })
                     .fail(function() {
