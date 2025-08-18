@@ -60,66 +60,41 @@ foreach($cutters as $cutter) {
     $sheet->setCellValue('H'.$rowindex, "Выполненный метраж");
     $sheet->setCellValue('I'.$rowindex, "Выполненная масса");
     
-    // Работники
-    $employees = array();
-    $employees_sorted = array();
-    
-    $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
-    $fetcher = new Fetcher($sql);
-    while($row = $fetcher->Fetch()) {
-        $employees[$row['id']] = array("first_name" => mb_substr($row['first_name'], 0, 1).'.', "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']);
-        array_push($employees_sorted, $row['id']);
-    }
-    
-    // Работники1
-    $workshifts = array();
-    
-    $sql = "select ws.date, ws.shift, ws.machine_id, e.id, e.first_name, e.last_name "
-            . "from plan_workshift1 ws "
-            . "left join plan_employee e on ws.employee1_id = e.id "
-            . "where ws.work_id = ".WORK_CUTTING." and ws.date >= '".$date_from->format('Y-m-d')."' and ws.date <= '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."'";
-    $fetcher = new Fetcher($sql);
-    while($row = $fetcher->Fetch()) {
-        $workshifts[$row['date'].'_'.$row['shift'].'_'.$row['machine_id']] = $row['id'];
-    }
-    
     // Тиражи
-    $sql = "select e.id, e.date, e.shift, e.machine_id, ". PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
-            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
-            . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut, "
-            . "ifnull((select sum(worktime) from plan_edition where calculation_id = c.id and work_id = 3 and worktime_continued is null), 0) "
-            . "+ ifnull((select sum(worktime_continued) from plan_edition where calculation_id = c.id and work_id = 3), 0) "
-            . "+ ifnull((select sum(worktime) from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = 3)), 0) worktime_cut "
-            . "from plan_edition e "
-            . "inner join calculation c on e.calculation_id = c.id "
-            . "inner join calculation_result cr on cr.calculation_id = c.id "
+    $sql = "select distinct ped.date, ped.shift, ped.position, ". PLAN_TYPE_EDITION." as type, pem.last_name, pem.first_name, c.customer_id, "
+            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
+            . "cus.name customer, c.name calculation, c.unit, "
+            . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id) length_cut, "
+            . "(select sum(weight) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id) weight_cut "
+            . "from plan_edition ped "
+            . "inner join calculation c on ped.calculation_id = c.id "
+            . "inner join calculation_stream cs on cs.calculation_id = c.id "
+            . "inner join calculation_take_stream cts on cts.calculation_stream_id = cs.id "
             . "inner join customer cus on c.customer_id = cus.id "
-            . "where e.work_id = ". WORK_CUTTING;
+            . "left join plan_employee pem on cts.plan_employee_id = pem.id "
+            . "where ped.work_id = ". WORK_CUTTING;
     if($cutter != CUTTERS_ALL) {
-        $sql .= " and e.machine_id = ".$cutter;
+        $sql .= " and ped.machine_id = ".$cutter;
     }
-    $sql .= " and e.date >= '".$date_from->format('Y-m-d')."' and e.date < '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
-            . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
+    $sql .= " and cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
             . "union "
-            . "select pc.id, pc.date, pc.shift, e.machine_id, ". PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.customer_id, c.id calculation_id, c.name calculation, c.unit, c.streams_number, "
-            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, cus.name customer, "
-            . "(select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) length_cut, "
-            . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) weight_cut, "
-            . "ifnull((select sum(worktime) from plan_edition where calculation_id = c.id and work_id = 3 and worktime_continued is null), 0) "
-            . "+ ifnull((select sum(worktime_continued) from plan_edition where calculation_id = c.id and work_id = 3), 0) "
-            . "+ ifnull((select sum(worktime) from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = 3)), 0) worktime_cut "
+            . "select distinct pc.date, pc.shift, 1 as position, ". PLAN_TYPE_CONTINUATION." as type, pem.last_name, pem.first_name, c.customer_id, "
+            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
+            . "cus.name customer, c.name calculation, c.unit, "
+            . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id) length_cut, "
+            . "(select sum(weight) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id) weight_cut "
             . "from plan_continuation pc "
-            . "inner join plan_edition e on pc.plan_edition_id = e.id "
-            . "inner join calculation c on e.calculation_id = c.id "
-            . "inner join calculation_result cr on cr.calculation_id = c.id "
+            . "inner join plan_edition ped on pc.plan_edition_id = ped.id "
+            . "inner join calculation c on ped.calculation_id = c.id "
+            . "inner join calculation_stream cs on cs.calculation_id = c.id "
+            . "inner join calculation_take_stream cts on cts.calculation_stream_id = cs.id "
             . "inner join customer cus on c.customer_id = cus.id "
-            . "where e.work_id = ". WORK_CUTTING;
+            . "left join plan_employee pem on cts.plan_employee_id = pem.id "
+            . "where ped.work_id = ". WORK_CUTTING;
     if($cutter != CUTTERS_ALL) {
-        $sql .= " and e.machine_id = ".$cutter;
+        $sql .= " and ped.machine_id = ".$cutter;
     }
-    $sql .= " and pc.date >= '".$date_from->format('Y-m-d')."' and e.date < '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
-            . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
+    $sql .= " and cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
             . "order by date, shift, position";
     $fetcher = new Fetcher($sql);
     while ($row = $fetcher->Fetch()) {
@@ -127,29 +102,16 @@ foreach($cutters as $cutter) {
         
         $sheet->setCellValue('A'.$rowindex, DateTime::createFromFormat("Y-m-d", $row['date'])->format('d.m.Y'));
         $sheet->setCellValue('B'.$rowindex, $row['shift'] == "day" ? "День" : "Ночь");
-        
-        $key = $row['date'].'_'.$row['shift'].'_'.$row['machine_id'];
-        if(array_key_exists($key, $workshifts)) {
-            $employee = $employees[$workshifts[$key]];
-            $sheet->setCellValue('C'.$rowindex, $employee['last_name'].' '.$employee['first_name']);
-        }
-        
+        $sheet->setCellValue('C'.$rowindex, $row['last_name'].' '.(empty($row['first_name']) ? '' : mb_substr($row['first_name'], 0, 1).'.'));
         $sheet->setCellValue('D'.$rowindex, $row['customer_id'].'-'.$row['num_for_customer']);
         $sheet->setCellValue('E'.$rowindex, $row['customer']);
         $sheet->setCellValue('F'.$rowindex, $row['calculation'].($row['type'] == PLAN_TYPE_CONTINUATION ? ' (дорезка)' : ''));
         $sheet->setCellValue('G'.$rowindex, $row['unit'] == 'kg' ? "Кг" : "Шт");
-        $sheet->getStyle('H'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
-        $length_cut = $row['length_cut'];
-        $streams_number = $row['streams_number'];
-        if($length_cut > 0 && $streams_number > 0) {
-            $length_cut = $length_cut / $streams_number;
-        }
-        $sheet->setCellValue('H'.$rowindex, strval($length_cut * floatval($row['worktime']) / floatval($row['worktime_cut'])));
-        $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->setCellValue('I'.$rowindex, strval(floatval($row['weight_cut']) * floatval($row['worktime']) / floatval($row['worktime_cut'])));
+        $sheet->setCellValue('H'.$rowindex, $row['length_cut']);
+        $sheet->setCellValue('I'.$rowindex, $row['weight_cut']);
         
         // Подсчёт суммы
-        if($cutter == CUTTERS_ALL) {
+        /*if($cutter == CUTTERS_ALL) {
             if($row['unit'] == KG) {
                 if(key_exists($key, $workshifts) && key_exists($workshifts[$key], $employees)) {
                     if(!key_exists(KG, $employees[$workshifts[$key]])) {
@@ -169,7 +131,7 @@ foreach($cutters as $cutter) {
                     $employees[$workshifts[$key]][PIECES] = floatval($employees[$workshifts[$key]][PIECES]) + (strval($length_cut * floatval($row['worktime']) / floatval($row['worktime_cut'])) / 1000);
                 }
             }
-        }
+        }*/
     }
     
     $activeSheetIndex++;
