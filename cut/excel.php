@@ -165,6 +165,16 @@ while($row = $fetcher->Fetch()) {
     $sheet->setCellValue('D'.$rowindex, '=(B2*B'.$rowindex.')+(C2*C'.$rowindex.')');
 }*/
 
+$sql = "select distinct pem.id, pem.last_name, pem.first_name "
+        . "from calculation_take_stream cts "
+        . "left join plan_employee pem on cts.plan_employee_id = pem.id "
+        . "where cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
+        . "order by pem.last_name, pem.first_name";
+$fetcher = new Fetcher($sql);
+while($row = $fetcher->Fetch()) {
+    //
+}
+
 // Сохранение
 $filename = "Резчики_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xlsx";
     

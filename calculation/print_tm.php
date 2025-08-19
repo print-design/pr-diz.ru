@@ -3,6 +3,9 @@ include '../include/topscripts.php';
 include './calculation.php';
 include './calculation_result.php';
 
+require '../vendor/autoload.php';
+use chillerlan\QRCode\QRCode;
+
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
@@ -324,16 +327,10 @@ $current_date_time = date("dmYHis");
             <div class="d-flex justify-content-between" style="display: flex; justify-content: space-between;">
                 <div>
                     <?php
-                    include_once '../qr/qrlib.php';
-                    $errorCorrectionLevel = 'L'; // 'L','M','Q','H'
                     $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/calculation/details.php?id='.$id;
-                    $filename = "../temp/$current_date_time.png";
-                
-                    do {
-                        QRcode::png(addslashes($data ?? ''), $filename, $errorCorrectionLevel, 3, 0, true);
-                    } while (!file_exists($filename));
+                    $qrcode = (new QRCode)->render($data);
                     ?>
-                    <div class="d-inline-block header_qr" style="display: inline-block;"><img src='<?=$filename ?>' /></div>
+                    <img src="<?=$qrcode ?>" alt="QR Code" style="height: 80px; width: 80px;" />
                     <div class="d-inline-block header_title font-weight-bold mr-3" style="display: inline-block; font-weight: 700; margin-right: 1rem;">
                         Заказ №<?=$calculation->customer_id ?>-<?=$calculation->num_for_customer ?><br />
                         от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?>
