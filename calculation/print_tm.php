@@ -304,7 +304,7 @@ $current_date_time = date("dmYHis");
                 }
                 
                 #placeholder_top {
-                    height: 180px;
+                    height: 210px;
                 }
                 
                 .break_page {
