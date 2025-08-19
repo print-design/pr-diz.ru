@@ -304,7 +304,7 @@ $current_date_time = date("dmYHis");
                 }
                 
                 #placeholder_top {
-                    height: 150px;
+                    height: 180px;
                 }
                 
                 .break_page {
@@ -369,9 +369,7 @@ $current_date_time = date("dmYHis");
                         <tr>
                             <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;">Печать</td>
                         </tr>
-                        <tr>
-                            <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Печать</td>
-                        </tr>
+                        
                         <tr>
                             <td>Машина</td>
                             <td>
