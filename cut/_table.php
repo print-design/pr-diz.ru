@@ -343,7 +343,7 @@
                 <th style="font-weight: bold;">Наименование</th>
                 <th style="font-weight: bold;">Ширина ручья</th>
                 <th style="font-weight: bold;">Резчик</th>
-                <th style="font-weight: bold;">Резчик</th>
+                <th style="font-weight: bold;">Дата</th>
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
                 <th style="font-weight: bold;">Метраж</th>
@@ -389,8 +389,8 @@
                 <td style="text-align: left;"><?=$row['id'] ?></td>
                 <td style="text-align: left;"><?=$row['name'] ?></td>
                 <td style="text-align: left;"><?=$row['width'] ?> мм</td>
-                <td style="text-align: left;"><?=$stream_worker ?></td>
                 <td style="text-align: left;"><?=$row['last_name'].' '.(empty($row['first_name']) ? '' : mb_substr($row['first_name'], 0, 1).'.') ?></td>
+                <td style="text-align: left;"><?=$printed->format('j').' '.mb_substr($months_genitive[$printed->format('n')], 0, 3).' '.$printed->format('Y') ?></td>
                 <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($row['length'] ?? 0), 2), '0'), ',') ?> м</td>

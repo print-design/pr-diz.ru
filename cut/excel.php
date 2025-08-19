@@ -159,7 +159,7 @@ $sheet->setCellValue('D3', "Итого ₽");
 
 $row_number = 4;
 
-foreach($employees_sorted as $employee_id) {
+/*foreach($employees_sorted as $employee_id) {
     if(key_exists($employee_id, $employees) && in_array($employee_id, $workshifts)) {
         $sheet->setCellValue('A'.$row_number, $employees[$employee_id]['last_name'].' '.$employees[$employee_id]['first_name']);
         
@@ -178,7 +178,7 @@ foreach($employees_sorted as $employee_id) {
         
         $row_number++;
     }
-}
+}*/
 
 // Сохранение
 $filename = "Резчики_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xlsx";
