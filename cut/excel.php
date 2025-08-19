@@ -139,7 +139,7 @@ $sheet->setCellValue('D3', "Итого ₽");
 
 $rowindex = 3;
 
-$sql = "select distinct pem.id, pem.last_name, pem.first_name, "
+/*$sql = "select distinct pem.id, pem.last_name, pem.first_name, "
         . "(select sum(cts1.weight) / 1000 "
         . "from calculation_take_stream cts1 "
         . "inner join calculation_stream cs1 on cts1.calculation_stream_id = cs1.id "
@@ -163,7 +163,7 @@ while($row = $fetcher->Fetch()) {
     $sheet->setCellValue('C'.$rowindex, $row['length']);
     $sheet->getStyle('D'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
     $sheet->setCellValue('D'.$rowindex, '=(B2*B'.$rowindex.')+(C2*C'.$rowindex.')');
-}
+}*/
 
 // Сохранение
 $filename = "Резчики_".$date_from->format('Y-m-d')."_".$date_to->format('Y-m-d').".xlsx";
