@@ -48,16 +48,6 @@ and open the template in the editor.
             <?php if(!LoggedIn()): ?>
             <a href="mobile.php" title="Мобильная версия" class="btn btn-dark d-none" style="height: 12rem; padding: 2rem; font-size: 8rem;"><i class="fas fa-mobile-alt"></i></a>
             <?php endif; ?>
-            
-            <?php
-            /*echo "DELETE";
-            require 'vendor/autoload.php';
-            use chillerlan\QRCode\QRCode;
-            $data   = 'otpauth://totp/test?secret=B3JX4VCVJDVNXNZ5&issuer=chillerlan.net';
-            $qrcode = (new QRCode)->render($data);
-            printf('<img src="%s" alt="QR Code" />', $qrcode);*/
-            ?>
-            
         </div>
         <?php
         include 'include/footer.php';
