@@ -273,7 +273,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                            id="extracharge" 
                            name="extracharge" 
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round($calculation->extracharge) ?>" 
+                           value="<?= round($calculation->extracharge ?? 0) ?>" 
                            required="required"
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
@@ -290,7 +290,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                            id="input_shipping_cost_per_unit"
                            name="input_shipping_cost_per_unit"
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round(floatval($calculation_result->shipping_cost_per_unit), 3)  ?>" 
+                           value="<?= round(floatval($calculation_result->shipping_cost_per_unit ?? 0), 3)  ?>" 
                            required="required"
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
@@ -318,7 +318,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                            id="extracharge_cliche" 
                            name="extracharge_cliche" 
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round($calculation->extracharge_cliche) ?>" 
+                           value="<?= round($calculation->extracharge_cliche ?? 0) ?>" 
                            required="required" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
@@ -335,7 +335,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                            id="input_shipping_cliche_cost" 
                            name="input_shipping_cliche_cost" 
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round(floatval($calculation_result->shipping_cliche_cost), 0) ?>" 
+                           value="<?= round(floatval($calculation_result->shipping_cliche_cost ?? 0), 0) ?>" 
                            required="required" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_cliche_cost'); $(this).attr('name', 'input_shipping_cliche_cost');" 
@@ -363,7 +363,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                            id="extracharge_knife" 
                            name="extracharge_knife" 
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round($calculation->extracharge_knife) ?>" 
+                           value="<?= round($calculation->extracharge_knife ?? 0) ?>" 
                            required="required" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'extracharge_knife'); $(this).attr('name', 'extracharge_knife');" 
@@ -380,7 +380,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
                            id="input_shipping_knife_cost" 
                            name="input_shipping_knife_cost" 
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
-                           value="<?= round(floatval($calculation_result->shipping_knife_cost), 0) ?>" 
+                           value="<?= round(floatval($calculation_result->shipping_knife_cost ?? 0), 0) ?>" 
                            required="required" 
                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
                            onmouseup="javascript: $(this).attr('id', 'input_shipping_knife_cost'); $(this).attr('name', 'input_shipping_knife_cost');" 
@@ -451,7 +451,7 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
         <div class="col-4 pr-4"></div>
         <div class="col-4">
             <div>Итоговая прибыль</div>
-            <div class="value mb-2"><span id="income_total"><?= DisplayNumber(round(floatval($calculation_result->income), 0) + round(floatval($calculation_result->income_cliche), 0) + round(floatval($calculation_result->income_knife), 0), 0) ?></span> &#8381;</div>
+            <div class="value mb-2"><span id="income_total"><?= DisplayNumber(round(floatval($calculation_result->income ?? 0), 0) + round(floatval($calculation_result->income_cliche ?? 0), 0) + round(floatval($calculation_result->income_knife ?? 0), 0), 0) ?></span> &#8381;</div>
         </div>
     </div>
     <div class="mt-3 row text-nowrap">

@@ -216,7 +216,7 @@ $total_weight = $row['total_weight'];
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film'] ?></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'], 2) ?> г/м<sup>2</sup></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'] ?? 0, 2) ?> г/м<sup>2</sup></td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['width'] ?> мм</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['net_weight'] ?> кг</td>
                         <td style="padding-left: 5px; padding-right: 5px;"><?= $row['length'] ?> м</td>

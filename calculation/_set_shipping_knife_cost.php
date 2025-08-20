@@ -69,7 +69,7 @@ else {
             $result['extracharge_knife'] = $row['extracharge_knife'];
             $result['shipping_knife_cost'] = DisplayNumber(floatval($row['shipping_knife_cost']), 0);
             $result['income_knife'] = DisplayNumber(floatval($row['income_knife']), 0);
-            $result['income_total'] = DisplayNumber(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
+            $result['income_total'] = DisplayNumber(round(floatval($row['income'] ?? 0), 0) + round(floatval($row['income_cliche'] ?? 0), 0) + round(floatval($row['income_knife'] ?? 0), 0), 0);
         }
     }
     

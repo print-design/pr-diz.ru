@@ -49,11 +49,11 @@ else {
         
         if($row = $fetcher->Fetch()) {
             $result['shipping_cost_per_unit'] = DisplayNumber(floatval($row['shipping_cost_per_unit']), 3);
-            $result['input_shipping_cost_per_unit'] = round(floatval($row['shipping_cost_per_unit']), 3);
+            $result['input_shipping_cost_per_unit'] = round(floatval($row['shipping_cost_per_unit'] ?? 0), 3);
             $result['shipping_cost'] = DisplayNumber(floatval($row['shipping_cost']), 0);
             $result['income_per_unit'] = DisplayNumber(floatval($row['income_per_unit']), 3);
             $result['income'] = DisplayNumber(floatval($row['income']), 0);
-            $result['income_total'] = DisplayNumber(round(floatval($row['income']), 0) + round(floatval($row['income_cliche']), 0) + round(floatval($row['income_knife']), 0), 0);
+            $result['income_total'] = DisplayNumber(round(floatval($row['income'] ?? 0), 0) + round(floatval($row['income_cliche'] ?? 0), 0) + round(floatval($row['income_knife'] ?? 0), 0), 0);
         }
     }
     

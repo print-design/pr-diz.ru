@@ -27,7 +27,7 @@ include '../include/topscripts.php';
         foreach($widths as $item) {
             $matches = array();
             for($current_width = $start_width; $current_width <= $end_width; $current_width++) {
-                if($current_width / $item['width'] == round($current_width / $item['width'])) {
+                if($current_width / $item['width'] == round($current_width ?? 0 / $item['width'] ?? 1)) {
                     array_push($matches, $current_width);
                 }
             }

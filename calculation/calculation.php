@@ -2037,7 +2037,7 @@ class Calculation extends CalculationBase {
             }
             
             foreach($this->data_extracharge as $item) {
-                if($item->ech_type == $ech_type && round($this->weight) >= $item->min_weight && (round($this->weight) <= $item->max_weight || empty($item->max_weight))) {
+                if($item->ech_type == $ech_type && round($this->weight ?? 0) >= $item->min_weight && (round($this->weight ?? 0) <= $item->max_weight || empty($item->max_weight))) {
                     $this->extracharge = $item->value;
                 }
             }
@@ -2104,7 +2104,7 @@ class Calculation extends CalculationBase {
         
         if($this->extracharge != 0) {
             // !!!! Корректируем отгрузочную стоимость, чтобы она точно равнялась стоимости за единицу (округлённой до 3), умноженной на размер тиража
-            $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $this->quantity;
+            $this->shipping_cost = round($this->shipping_cost_per_unit ?? 0, 3) * $this->quantity;
         }
         
         // Прибыль
@@ -2612,7 +2612,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $ech_type = ET_SELF_ADHESIVE;
             
             foreach($this->data_extracharge as $item) {
-                if($item->ech_type == $ech_type && round($this->weight_dirty) >= $item->min_weight && (round($this->weight_dirty) <= $item->max_weight || empty($item->max_weight))) {
+                if($item->ech_type == $ech_type && round($this->weight_dirty ?? 0) >= $item->min_weight && (round($this->weight_dirty ?? 0) <= $item->max_weight || empty($item->max_weight))) {
                     $this->extracharge = $item->value;
                 }
             }
@@ -2682,7 +2682,7 @@ class CalculationSelfAdhesive extends CalculationBase {
         
         if($this->extracharge != 0) {
             // !!!! Корректируем отгрузочную стоимость, чтобы она точно равнялась стоимости за единицу (округлённой до 3), умноженной на размер тиража
-            $this->shipping_cost = round($this->shipping_cost_per_unit, 3) * $this->quantity;
+            $this->shipping_cost = round($this->shipping_cost_per_unit ?? 0, 3) * $this->quantity;
         }
         
         // Прибыль
