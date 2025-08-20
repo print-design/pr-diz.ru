@@ -70,7 +70,7 @@ if(null !== filter_input(INPUT_POST, 'film_brand_create_submit')) {
 // Обработка отправки формы создания вариации марки пленки
 if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
     $thickness = filter_input(INPUT_POST, 'thickness');
-    $thickness = preg_replace('/[^0-9]/i', '', $thickness);
+    $thickness = preg_replace('/[^0-9]/i', '', $thickness ?? '');
     if(empty($thickness)) {
         $thickness_valid = ISINVALID;
         $form_valid = false;
@@ -78,7 +78,7 @@ if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
     
     $weight = filter_input(INPUT_POST, 'weight');
     $weight = str_replace(',', '.', $weight);
-    $weight = preg_replace('/[^.0-9]/i', '', $weight);
+    $weight = preg_replace('/[^.0-9]/i', '', $weight ?? '');
     if(empty($weight)) {
         $weight_valid = ISINVALID;
         $form_valid = false;

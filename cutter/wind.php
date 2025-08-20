@@ -40,7 +40,7 @@ $radius_valid = '';
 $radius_message = 'Обязательно, не более 999';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length'));
+    $length = preg_replace("/\D/", "", filter_input(INPUT_POST, 'length') ?? '');
     if(empty($length) || intval($length) > 30000) {
         $length_valid = ISINVALID;
         $form_valid = false;

@@ -388,7 +388,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $work_type_id = filter_input(INPUT_POST, 'work_type_id');
         $unit = filter_input(INPUT_POST, 'unit');
         $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = "NULL";
-        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity')); if(empty($quantity)) $quantity = "NULL";
+        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity') ?? ''); if(empty($quantity)) $quantity = "NULL";
         $film_id = filter_input(INPUT_POST, 'film_id');
         $film_variation_id = filter_input(INPUT_POST, 'film_variation_id'); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
         $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = "NULL";
@@ -624,7 +624,7 @@ if($quantity === null && isset($row['quantity'])) {
     $quantity = $row['quantity'];
 }
 else {
-    $quantity = preg_replace("/\D/", "", $quantity);
+    $quantity = preg_replace("/\D/", "", $quantity ?? '');
 }
 
 $work_type_id = filter_input(INPUT_POST, 'work_type_id');

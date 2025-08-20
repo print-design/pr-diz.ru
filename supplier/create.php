@@ -74,11 +74,11 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
             // Сохранение вариаций
             foreach ($film_brand_variations[$film_brand_variations_key] as $variation) {
                 $thickness = $variation['thickness'];
-                $thickness = preg_replace('/[^0-9]/i', '', $thickness);
+                $thickness = preg_replace('/[^0-9]/i', '', $thickness ?? '');
                 
                 $weight = $variation['weight'];
                 $weight = str_replace(',', '.', $weight);
-                $weight = preg_replace('/[^.0-9]/i', '', $weight);
+                $weight = preg_replace('/[^.0-9]/i', '', $weight ?? '');
                 
                 $executer = new Executer("insert into film_brand_variation (film_brand_id, thickness, weight) values ($film_brand_id, $thickness, $weight)");
                 $error_message = $executer->error;
