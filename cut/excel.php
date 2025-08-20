@@ -100,6 +100,41 @@ foreach($cutters as $cutter) {
         $sql .= " and ped.machine_id = ".$cutter;
     }
     $sql .= " and pc.has_continuation = false "
+            . "union "
+            . "select distinct date(cnts.printed) printed, ped.date, ped.shift, ped.position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
+            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
+            . "cus.name customer, c.name calculation, c.unit, "
+            . "(select sum(length) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
+            . "(select sum(weight) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) weight_cut "
+            . "from plan_edition ped "
+            . "inner join calculation c on ped.calculation_id = c.id "
+            . "inner join calculation_stream cs on cs.calculation_id = c.id "
+            . "inner join calculation_not_take_stream cnts on cnts.calculation_stream_id = cs.id "
+            . "inner join customer cus on c.customer_id = cus.id "
+            . "left join plan_employee pem on cts.plan_employee_id = pem.id "
+            . "where cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and ped.work_id = ". WORK_CUTTING;
+    if($cutter != CUTTERS_ALL) {
+        $sql .= " and ped.machine_id = ".$cutter;
+    }
+    $sql .= " and ped.id not in (select plan_edition_id from plan_continuation) "
+            . "union "
+            . "select distinct date(cnts.printed) printed, pc.date, pc.shift, 1 as position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
+            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
+            . "cus.name customer, c.name calculation, c.unit, "
+            . "(select sum(length) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
+            . "(select sum(weight) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) weight_cut "
+            . "from plan_continuation pc "
+            . "inner join plan_edition ped on pc.plan_edition_id = ped.id "
+            . "inner join calculation c on ped.calculation_id = c.id "
+            . "inner join calculation_stream cs on cs.calculation_id = c.id "
+            . "inner join calculation_not_take_stream cnts on cnts.calculation_stream_id = cs.id "
+            . "inner join customer cus on c.customer_id = cus.id "
+            . "left join plan_employee pem on cnts.plan_employee_id = pem.id "
+            . "where cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and ped.work_id = ".WORK_CUTTING;
+    if($cutter != CUTTERS_ALL) {
+        $sql .= " and ped.machine_id = ".$cutter;
+    }
+    $sql .= " and pc.has_continuation = false "
             . "order by printed, last_name, first_name";
     $fetcher = new Fetcher($sql);
     while ($row = $fetcher->Fetch()) {
@@ -116,7 +151,7 @@ foreach($cutters as $cutter) {
         $sheet->getStyle('J'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('J'.$rowindex, $row['weight_cut']);
         
-        // Посчёт суммы
+        // Подсчёт суммы
         if(!empty($row['employee_id'])) {
             if($row['unit'] == KG) {
                 if(!key_exists($row['employee_id'], $kg_total)) {
