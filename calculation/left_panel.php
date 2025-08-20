@@ -20,7 +20,7 @@ function GetSkiNameExt($param, $param_width) {
             <?php endif; ?>
             <tr><th>Тип работы</th><td><?=WORK_TYPE_NAMES[$calculation->work_type_id] ?></td></tr>
             <?php if(!empty($calculation->quantity) && !empty($calculation->unit)): ?>
-            <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($calculation->quantity, 2, ",", " "), "0"), ",") ?> <?=$calculation->unit == 'kg' ? "кг" : "шт" ?></td></tr>
+            <tr><th>Объем заказа</th><td><?= rtrim(rtrim(number_format($calculation->quantity ?? 0, 2, ",", " "), "0"), ",") ?> <?=$calculation->unit == 'kg' ? "кг" : "шт" ?></td></tr>
             <?php endif; ?>
             <?php if(!empty($printings_number)): ?>
             <tr><th>Тиражей</th><td><?=$printings_number ?></td></tr>
@@ -30,7 +30,7 @@ function GetSkiNameExt($param, $param_width) {
             <tr><th colspan="2">Основная пленка</th></tr>
             <tr><td colspan="2"><?=$calculation->film_1 ?></td></tr>
             <tr>
-                <td><?= number_format($calculation->thickness_1, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_1, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                <td><?= number_format($calculation->thickness_1 ?? 0, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_1 ?? 0, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                 <td><?= GetSkiNameExt($calculation->ski_1, $calculation->width_ski_1) ?></td>
             </tr>
             <?php if($calculation->customers_material_1 == 1): ?>
@@ -41,7 +41,7 @@ function GetSkiNameExt($param, $param_width) {
             <tr><th colspan="2">Ламинация 1<?= empty($calculation->laminator_id) ? "" : ($calculation->laminator_id == LAMINATOR_SOLVENT ? " (сольвент)" : " (бессольвент)") ?></th></tr>
             <tr><td colspan="2"><?=$calculation->film_2 ?></td></tr>
             <tr>
-                <td><?= number_format($calculation->thickness_2, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_2, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                <td><?= number_format($calculation->thickness_2 ?? 0, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_2 ?? 0, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                 <td><?= GetSkiNameExt($calculation->ski_2, $calculation->width_ski_2) ?></td>
             </tr>
             <?php endif; ?>
@@ -54,7 +54,7 @@ function GetSkiNameExt($param, $param_width) {
             <tr><th colspan="2">Ламинация 2<?= empty($calculation->laminator_id) ? "" : ($calculation->laminator_id == LAMINATOR_SOLVENT ? " (сольвент)" : " (бессольвент)") ?></th></tr>
             <tr><td colspan="2"><?=$calculation->film_3 ?></td></tr>
             <tr>
-                <td><?= number_format($calculation->thickness_3, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_3, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
+                <td><?= number_format($calculation->thickness_3 ?? 0, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_3 ?? 0, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
                 <td><?= GetSkiNameExt($calculation->ski_3, $calculation->width_ski_3) ?></td>
             </tr>
             <?php endif; ?>
@@ -89,10 +89,10 @@ function GetSkiNameExt($param, $param_width) {
             <tr><th>Количество новых форм</th><td><?=$new_forms_number ?></td></tr>
                 <?php endif; ?>
                 <?php if(!empty($calculation->length)): ?>
-            <tr><th>Длина этикетки</th><td><?= rtrim(rtrim(number_format($calculation->length, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+            <tr><th>Длина этикетки</th><td><?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php if(!empty($calculation->stream_width)): ?>
-            <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($calculation->stream_width, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+            <tr><th>Ширина ручья</th><td><?= rtrim(rtrim(number_format($calculation->stream_width ?? 0, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php else: ?>
             <tr><th>Ширина ручья</th><td style="white-space: nowrap;">Разная ≈ <?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
@@ -108,7 +108,7 @@ function GetSkiNameExt($param, $param_width) {
                 <?php
                 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE):
                 ?>
-            <tr><th>Фактический зазор</th><td><?= rtrim(rtrim(number_format($calculation_result->gap, 2, ",", ""), "0"), ",") ?> мм</td></tr>
+            <tr><th>Фактический зазор</th><td><?= rtrim(rtrim(number_format($calculation_result->gap ?? 0, 2, ",", ""), "0"), ",") ?> мм</td></tr>
                 <?php endif; ?>
                 <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
             <tr><th>Количество ламинаций</th><td><?=$calculation->laminations_number == 0 ? "нет" : $calculation->laminations_number ?></td></tr>
@@ -116,7 +116,7 @@ function GetSkiNameExt($param, $param_width) {
                 <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE && $calculation->laminations_number > 0): ?>
             <tr><th>Ширина ламинирующего вала</th><td><?= $calculation->lamination_roller_width ?> мм</td></tr>
                 <?php endif; ?>
-            <tr><th>Доп. расходы с <?=(empty($calculation->unit) || $calculation->unit == 'kg' ? "кг" : "шт") ?></th><td><?=rtrim(rtrim(number_format($calculation->extra_expense, 2, ",", ""), "0"), ",") ?> руб</td></tr>
+            <tr><th>Доп. расходы с <?=(empty($calculation->unit) || $calculation->unit == 'kg' ? "кг" : "шт") ?></th><td><?=rtrim(rtrim(number_format($calculation->extra_expense ?? 0, 2, ",", ""), "0"), ",") ?> руб</td></tr>
             <tr><th>Экосбор с 1 кг</th><td><?=DisplayNumber((($calculation->eco_price_1 * $calculation->GetCurrencyRate($calculation->eco_currency_1, $calculation->usd, $calculation->euro)) + ($calculation->eco_price_2 * $calculation->GetCurrencyRate($calculation->eco_currency_2, $calculation->usd, $calculation->euro)) + ($calculation->eco_price_3 * $calculation->GetCurrencyRate($calculation->eco_currency_3, $calculation->usd, $calculation->euro))) / ((empty($calculation->laminations_number) ? 0 : $calculation->laminations_number) + 1), 2) ?> руб</td></tr>
         </table>
     </div>

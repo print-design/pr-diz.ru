@@ -10,7 +10,7 @@ if(!empty($film_variation_id)) {
             
     if($row = $fetcher->Fetch()) {
         if(!empty($row['price'])) {
-            $price_final = rtrim(rtrim(number_format($row['price'], 2, ",", " "), "0"), ",");
+            $price_final = rtrim(rtrim(number_format($row['price'] ?? 0, 2, ",", " "), "0"), ",");
             $currency_final = "";
             $currency_local = "";
             switch($row['currency']) {

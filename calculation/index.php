@@ -315,7 +315,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     while ($row = $fetcher->Fetch()):
                         
                     $rowcounter++;
-                    $quantity = empty($row['quantities']) ? number_format($row['quantity'], 0, ",", " ")." ".($row['unit'] == 'kg' ? "кг" : "шт") : $row['quantities']." ".GetPrintingsWithCases($row['quantities']);
+                    $quantity = empty($row['quantities']) ? number_format($row['quantity'] ?? 0, 0, ",", " ")." ".($row['unit'] == 'kg' ? "кг" : "шт") : $row['quantities']." ".GetPrintingsWithCases($row['quantities']);
                     ?>
                     <tr>
                         <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>

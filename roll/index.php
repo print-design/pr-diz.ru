@@ -115,7 +115,7 @@ $total_weight = $row['total_weight'];
                     <table>
                         <tr>
                             <td><h1 style="font-size: 32px; font-weight: 600;">Рулоны</h1></td>
-                            <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight, 0, ',', ' ') ?> кг)</td>
+                            <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight ?? 0, 0, ',', ' ') ?> кг)</td>
                         </tr>
                     </table>
                 </div>

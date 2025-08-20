@@ -1359,7 +1359,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            name="quantity" 
                                            class="form-control int-only int-format no-print-only print-only" 
                                            placeholder="Объем заказа" 
-                                           value="<?= empty($quantity) ? "" : number_format($quantity, 0, ",", " ") ?>" 
+                                           value="<?= empty($quantity) ? "" : number_format($quantity ?? 0, 0, ",", " ") ?>" 
                                            required="required" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 

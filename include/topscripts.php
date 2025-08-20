@@ -73,7 +73,7 @@ function IsInRole($role) {
 
 function DisplayNumber($value, $decimals) {
     if(is_float($value) || is_double($value) || is_int($value)) {
-        return number_format($value, $decimals, ",", " ");
+        return number_format($value ?? 0, $decimals ?? 0, ",", " ");
     }
     elseif(is_string($value)) {
         return str_replace(".", ",", $value);

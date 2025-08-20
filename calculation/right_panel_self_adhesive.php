@@ -395,11 +395,11 @@ if(!empty($calculation) && is_a($calculation, CalculationSelfAdhesive::class)):
         </div>
         <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#8364;</div>
-            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($calculation_result->euro, 2, ',', ' ') ?></div>
+            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($calculation_result->euro ?? 0, 2, ',', ' ') ?></div>
         </div>
         <div class="mr-4" style="margin-top: 29px;">
             <div class="text-nowrap">Курс &#36;</div>
-            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($calculation_result->usd, 2, ',', ' ') ?></div>
+            <div class="font-weight-bold" style="font-size: larger;"><?= number_format($calculation_result->usd ?? 0, 2, ',', ' ') ?></div>
         </div>
     </div>
     <div class="mt-3">
