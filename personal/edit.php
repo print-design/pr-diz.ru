@@ -67,27 +67,27 @@ $row = (new Fetcher("select username, last_name, first_name, email, phone from u
 
 $username = filter_input(INPUT_POST, 'username');
 if(empty($username)) {
-    $username = htmlentities($row['username']);
+    $username = htmlentities($row['username'] ?? '');
 }
 
 $last_name = filter_input(INPUT_POST, 'last_name');
 if(empty($last_name)) {
-    $last_name = htmlentities($row['last_name']);
+    $last_name = htmlentities($row['last_name'] ?? '');
 }
 
 $first_name = filter_input(INPUT_POST, 'first_name');
 if(empty($first_name)) {
-    $first_name = htmlentities($row['first_name']);
+    $first_name = htmlentities($row['first_name'] ?? '');
 }
 
 $email = filter_input(INPUT_POST, 'email');
 if(empty($email)) {
-    $email = htmlentities($row['email']);
+    $email = htmlentities($row['email'] ?? '');
 }
 
 $phone = filter_input(INPUT_POST, 'phone');
 if(empty($phone)) {
-    $phone = htmlentities($row['phone']);
+    $phone = htmlentities($row['phone'] ?? '');
 }
 ?>
 <!DOCTYPE html>

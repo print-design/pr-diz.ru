@@ -139,7 +139,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
             $weight = $row['weight'];
             $length = $row['length'];
             $cell = $row['cell'];
-            $comment = htmlentities($row['comment']);
+            $comment = htmlentities($row['comment'] ?? '');
             $pallet_id = $row['pallet_id'];
             $ordinal = $row['ordinal'];
             ?>
@@ -163,7 +163,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                             <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />
                             <div class="form-group">
                                 <label for="cell">Номер ячейки</label>
-                                <input type="text" id="cell" name="cell" value="<?= htmlentities($cell) ?>" class="form-control no-latin" style="font-size: 32px;" required="required" autocomplete="off" />
+                                <input type="text" id="cell" name="cell" value="<?= htmlentities($cell ?? '') ?>" class="form-control no-latin" style="font-size: 32px;" required="required" autocomplete="off" />
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>

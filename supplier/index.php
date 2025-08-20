@@ -117,12 +117,12 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
                     
                     while($row = $fetcher->Fetch()):
                         $id = $row['id'];
-                        $name = htmlentities($row['name']);
+                        $name = htmlentities($row['name'] ?? '');
                         $count = $row['count'];
                         $first = $row['first'];
                         $products = '';
                         if($first != null) {
-                            $products = htmlentities($first);
+                            $products = htmlentities($first ?? '');
                             
                             if($count > 1) {
                                 $products .= " и еще ".(intval($count) - 1);

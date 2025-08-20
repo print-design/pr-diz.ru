@@ -153,7 +153,7 @@ if(null !== filter_input(INPUT_POST, 'delete-brand-button')) {
 
 // Получение объекта
 $row = (new Fetcher("select name from supplier where id=". filter_input(INPUT_GET, 'id')))->Fetch();
-$name = htmlentities($row['name']);
+$name = htmlentities($row['name'] ?? '');
 ?>
 <!DOCTYPE html>
 <html>

@@ -293,12 +293,12 @@ $total_weight = $row[0];
                                 <div class="pr-2 comment_pen foredit">
                                     <a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a>
                                 </div>
-                                <div class="comment_text comment_text_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>"><?= htmlentities($row['comment']) ?></div>
+                                <div class="comment_text comment_text_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>"><?= htmlentities($row['comment'] ?? '') ?></div>
                             </div>
                             <div class="d-none comment_input">
                                 <input type="text" 
                                        class="form-control comment_input_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>" 
-                                       value="<?= htmlentities($row['comment']) ?>" 
+                                       value="<?= htmlentities($row['comment'] ?? '') ?>" 
                                        onkeydown="if(event.key == 'Enter') { SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>); }" 
                                        onfocusout="SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" />
                             </div>

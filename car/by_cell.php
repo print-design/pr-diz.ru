@@ -75,7 +75,7 @@ if(empty($cell)) {
                     $length = $row['length'];
                     $rolls_number = $row['rolls_number'];
                     $cell = $row['cell'];
-                    $comment = htmlentities($row['comment']);
+                    $comment = htmlentities($row['comment'] ?? '');
                     if(($type == 'pallet' && $rolls_number > 0) || $type == 'roll'):
                     ?>
                     <div class="object-card">

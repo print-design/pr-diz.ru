@@ -51,7 +51,7 @@ if(empty($id)) {
                 $weight = $row['net_weight'];
                 $length = $row['length'];
                 $cell = $row['cell'];
-                $comment = htmlentities($row['comment']);
+                $comment = htmlentities($row['comment'] ?? '');
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">

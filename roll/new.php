@@ -331,7 +331,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                     <input type="hidden" id="status_id" name="status_id" value="<?=ROLL_STATUS_FREE ?>" />
                     <div class="form-group">
                         <label for="comment">Комментарий</label>
-                        <textarea id="comment" name="comment" rows="4" class="form-control"><?= htmlentities(filter_input(INPUT_POST, 'comment')) ?></textarea>
+                        <textarea id="comment" name="comment" rows="4" class="form-control"><?= htmlentities(filter_input(INPUT_POST, 'comment') ?? '') ?></textarea>
                         <div class="invalid-feedback"></div>
                     </div>
                     <div class="d-flex justify-content-start mt-4">

@@ -51,7 +51,7 @@ if(empty($id)) {
                 $weight = $row['weight'];
                 $length = $row['length'];
                 $cell = $row['cell'];
-                $comment = htmlentities($row['comment']);
+                $comment = htmlentities($row['comment'] ?? '');
                 $pallet_id = $row['pallet_id'];
                 $ordinal = $row['ordinal'];
                 

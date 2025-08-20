@@ -1,6 +1,9 @@
 <?php
 include '../include/topscripts.php';
 
+require '../vendor/autoload.php';
+use chillerlan\QRCode\QRCode;
+
 // Если не задано значение roll_id, перенаправляем на список
 $roll_id = filter_input(INPUT_GET, 'roll_id');
 if(empty($roll_id)) {
@@ -160,16 +163,10 @@ $current_date_time = date("dmYHis");
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
                         <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
                             <?php
-                            include_once '../qr/qrlib.php';
-                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $filename = "../temp/".$current_roll."_".$current_date_time.".png";
-                            
-                            do {
-                                QRcode::png(addslashes($data ?? ''), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
+                            $qrcode = (new QRCode)->render($data);
                             ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
+                            <img src="<?=$qrcode ?>" alt="QR Code" style="height: 800px; width: 800px;" />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
                         </td>
@@ -209,15 +206,10 @@ $current_date_time = date("dmYHis");
                         <td>Ширина<br /><strong><?=$width ?> мм</strong></td>
                         <td rowspan="6" class="qr" style="height: 20%; white-space: normal;">
                             <?php
-                            $errorCorrectionLevel = 'M'; // 'L','M','Q','H'
                             $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/roll/roll.php?id='.$id;
-                            $filename = "../temp/".$current_roll."_".$current_date_time.".png";
-                            
-                            do {
-                                QRcode::png(addslashes($data ?? ''), $filename, $errorCorrectionLevel, 10, 4, true);
-                            } while (!file_exists($filename));
+                            $qrcode = (new QRCode)->render($data);
                             ?>
-                            <img src='<?=$filename ?>' style='height: 800px; width: 800px;' />
+                            <img src="<?=$qrcode ?>" alt="QR Code" style="height: 800px; width: 800px;" />
                             <br /><br />
                             <div class="text-nowrap" style="font-size: 60px;">Рулон <span class="font-weight-bold"><?="Р".$id ?></span> от <?=$date ?></div>
                         </td>

@@ -1243,7 +1243,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
                         <h1>Новый расчет</h1>
                         <?php else: ?>
-                        <h1><?= htmlentities($name) ?></h1>
+                        <h1><?= htmlentities($name ?? '') ?></h1>
                         <h2>№<?=$customer_id ?>-<?=$num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $date)->format('d.m.Y') ?></h2>
                         <?php endif; ?>
                         <!-- Заказчик -->
@@ -1283,7 +1283,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 name="name" 
                                 class="form-control<?=$name_valid ?>" 
                                 placeholder="Название заказа" 
-                                value="<?= htmlentities($name) ?>" 
+                                value="<?= htmlentities($name ?? '') ?>" 
                                 required="required" 
                                 autocomplete="off" 
                                 onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 

@@ -232,11 +232,11 @@ while($row = $fetcher->Fetch()) {
                     </div>
                 </div>
                 <div class="form-group comment_group<?=$comment_group_display_class ?>" id="comment_<?=$i ?>_group">
-                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control<?=$$comment_valid_name ?>" value="<?= isset($$comment_name) ? urldecode(htmlentities($$comment_name)) : '' ?>" placeholder="Комментарий" autocomplete="off" />
+                    <input type="text" id="comment_<?=$i ?>" name="comment_<?=$i ?>" class="form-control<?=$$comment_valid_name ?>" value="<?= isset($$comment_name) ? urldecode(htmlentities($$comment_name ?? '')) : '' ?>" placeholder="Комментарий" autocomplete="off" />
                     <div class="invalid-feedback"><?=$$comment_message ?></div>
                 </div>
                 <div class="form-group cell_group<?=$cell_group_display_class ?>" id="cell_<?=$i ?>_group">
-                    <input type="text" id="cell_<?=$i ?>" name="cell_<?=$i ?>" class="form-control<?=$$cell_valid_name ?>" value="<?= isset($$cell_name) ? urldecode(htmlentities($$cell_name)) : '' ?>" placeholder="Ячейка" autocomplete="off" />
+                    <input type="text" id="cell_<?=$i ?>" name="cell_<?=$i ?>" class="form-control<?=$$cell_valid_name ?>" value="<?= isset($$cell_name) ? urldecode(htmlentities($$cell_name ?? '')) : '' ?>" placeholder="Ячейка" autocomplete="off" />
                     <div class="invalid-feedback"><?=$$cell_message ?></div>
                 </div>
                     <?php endfor; ?>

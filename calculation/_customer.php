@@ -25,7 +25,7 @@ if($row = $fetcher->Fetch()):
                 <div><a href="javascript: void(0);" onclick="EditCustomerPerson();"><img src="../images/icons/edit1.svg" title="Редактировать" /></a></div>
             </div>
             <div id="customer_card_person_edit" class="d-none justify-content-between">
-                <div><input type="text" class="form-control" id="customer_card_person_input" value="<?= htmlentities($row['person']) ?>" /></div>
+                <div><input type="text" class="form-control" id="customer_card_person_input" value="<?= htmlentities($row['person'] ?? '') ?>" /></div>
                 <div>
                     <a class="btn btn-outline-dark d-none" onclick="CancelCustomerPerson();" href="javascript: void(0);"><i class="fas fa-undo"></i></a>
                     <a class="btn btn-dark" onclick="OKCustomerPerson(<?=$id ?>);" href="javascript: void(0);">OK</a>

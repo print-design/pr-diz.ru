@@ -137,7 +137,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
             $weight = $row['net_weight'];
             $length = $row['length'];
             $cell = $row['cell'];
-            $comment = htmlentities($row['comment']);
+            $comment = htmlentities($row['comment'] ?? '');
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -152,7 +152,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                         <p><strong>Масса нетто:</strong> <?=$weight ?> кг</p>
                         <p><strong>Длина:</strong> <?=$length ?> м</p>
                         <?php if(IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
-                        <p><strong>Ячейка:</strong> <?= htmlentities($cell) ?></p>
+                        <p><strong>Ячейка:</strong> <?= htmlentities($cell ?? '') ?></p>
                         <?php endif; ?>
                         <p><strong>Комментарий:</strong></p>
                         <div style="white-space: pre-wrap;"><?=$comment ?></div>
@@ -161,7 +161,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <div class="form-group">
                                 <label for="cell">Номер ячейки</label>
-                                <input type="text" id="cell" name="cell" value="<?= htmlentities($cell) ?>" class="form-control no-latin" style="font-size: 32px;" required="required" autocomplete="off" />
+                                <input type="text" id="cell" name="cell" value="<?= htmlentities($cell ?? '') ?>" class="form-control no-latin" style="font-size: 32px;" required="required" autocomplete="off" />
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-dark form-control" id="cell-submit" name="cell-submit">Сменить ячейку</button>

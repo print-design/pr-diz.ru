@@ -356,14 +356,14 @@ if(null === $comment) $comment = $row['comment'];
                             $comment_disabled = " disabled='disabled'";
                         }
                         
-                        $comment_value = htmlentities($comment);
+                        $comment_value = htmlentities($comment ?? '');
                         if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
                             $comment_value = "";
                         }
                         ?>
                         <label for="comment">Комментарий</label>
                         <?php if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-                        <p><?= htmlentities($comment) ?></p>
+                        <p><?= htmlentities($comment ?? '') ?></p>
                         <?php endif; ?>
                         <textarea id="comment" name="comment" rows="4" class="form-control"<?=$comment_disabled ?>><?=$comment_value ?></textarea>
                         <div class="invalid-feedback"></div>

@@ -61,7 +61,7 @@ if(empty($id)) {
                 $length = $row['length'];
                 $rolls_number = $row['rolls_number'];
                 $cell = $row['cell'];
-                $comment = htmlentities($row['comment']);
+                $comment = htmlentities($row['comment'] ?? '');
             ?>
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">

@@ -85,7 +85,7 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
     </tr>
     <tr>
         <td>Резка</td>
-        <td class="pl-1 font-weight-bold"><?= $last_name.(empty($first_name) ? '' : mb_substr($first_name, 0, 1)).' '.$dt_printed->format('d.m.Y H:i') ?></td>
+        <td class="pl-1 font-weight-bold"><?= $last_name.(empty($first_name) ? '' : ' '.mb_substr($first_name, 0, 1).'.').' '.$dt_printed->format('d.m.Y H:i') ?></td>
     </tr>
     <?php if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN): ?>
     <tr>

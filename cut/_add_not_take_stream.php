@@ -7,6 +7,7 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     $weight = filter_input(INPUT_POST, 'weight');
     $length = filter_input(INPUT_POST, 'length');
     $location = filter_input(INPUT_POST, 'php_self');
+    $machine_id = filter_input(INPUT_POST, 'machine_id');
     $location_get = array();
     
     foreach($_POST as $key=>$value) {
@@ -54,11 +55,20 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
         $working_time->modify("-1 day");
     }
     
-    $employee_id = null;
-    $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')='".$working_time->format('d-m-Y')."' and shift = '$working_shift' and work_id = ". WORK_CUTTING." and machine_id = $machine_id";
+    $machine_id = null;
+    $sql = "select machine_id from plan_edition where work_id = ". WORK_CUTTING." and calculation_id = ".$id;
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $employee_id = $row[0];
+        $machine_id = $row['machine_id'];
+        
+        if(!empty($machine_id)) {
+            $employee_id = null;
+            $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')='".$working_time->format('d-m-Y')."' and shift = '$working_shift' and work_id = ". WORK_CUTTING." and machine_id = $machine_id";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $employee_id = $row[0];
+            }
+        }
     }
     
     // Сохраняем рулон не из съёма

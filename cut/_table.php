@@ -398,7 +398,7 @@
                 <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
                 <?php endif; ?>
                 <?php if($editable && $calculation->status_id != ORDER_STATUS_SHIPPED): ?>
-                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?= htmlentities($row['name']) ?>'); $('#take_stream_old_weight').val('<?=$row['weight'] ?>'); $('#take_stream_old_length').val('<?=$row['length'] ?>');"><img src="../images/icons/edit1.svg" /></a></td>
+                <td style="text-align: left;"><a href="javascript: void(0);" title="Редактировать" data-toggle="modal" data-target="#edit_take_stream" onclick="javascript: $('#take_stream_id').val('<?=$row['id'] ?>'); $('#take_stream_name').html('<?= htmlentities($row['name'] ?? '') ?>'); $('#take_stream_old_weight').val('<?=$row['weight'] ?>'); $('#take_stream_old_length').val('<?=$row['length'] ?>');"><img src="../images/icons/edit1.svg" /></a></td>
                 <?php endif; ?>
             </tr>
             <?php endwhile; ?>

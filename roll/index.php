@@ -230,17 +230,17 @@ $total_weight = $row['total_weight'];
                                 <div class="pr-2 comment_pen foredit">
                                     <a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a>
                                 </div>
-                                <div class="comment_text"><?= htmlentities($row['comment']) ?></div>
+                                <div class="comment_text"><?= htmlentities($row['comment'] ?? '') ?></div>
                             </div>
                             <div class="d-none comment_input">
                                 <input type="text" 
                                        class="form-control" 
-                                       value="<?= htmlentities($row['comment']) ?>" 
+                                       value="<?= htmlentities($row['comment'] ?? '') ?>" 
                                        onkeydown="if(event.key === 'Enter') { SaveComment(event, <?=$row['id'] ?>); }" 
                                        onfocusout="SaveComment(event, <?=$row['id'] ?>);" />
                             </div>
                         </td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper"><?= htmlentities($row['comment']) ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper"><?= htmlentities($row['comment'] ?? '') ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                             <div class="film_menu">
