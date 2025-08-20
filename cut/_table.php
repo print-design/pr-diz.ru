@@ -364,26 +364,6 @@
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
                 $printed = DateTime::createFromFormat('Y-m-d H:i:s', $row['printed']);
-            // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
-            // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
-            // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
-            $stream_hour = $printed->format('G');
-            $stream_shift = 'day';
-            $working_printed = clone $printed; // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
-            
-            if($stream_hour > 19 && $stream_hour < 24) {
-                $stream_shift = 'night';
-            }
-            elseif($stream_hour >= 0 && $stream_hour < 8) {
-                $stream_shift = 'night';
-                $working_printed->modify("-1 day");
-            }
-            
-            $stream_worker = "ВЫХОДНОЙ ДЕНЬ";
-            
-            if(array_key_exists($working_printed->format('d-m-Y').$stream_shift, $workers)) {
-                $stream_worker = $workers[$working_printed->format('d-m-Y').$stream_shift];
-            }
             ?>
             <tr style="border-bottom: 0;">
                 <td style="text-align: left;"><?=$row['id'] ?></td>
@@ -443,7 +423,7 @@
                 <td style="font-weight: bold;">ID</td>
                 <th style="font-weight: bold;">Наименование</th>
                 <th style="font-weight: bold;">Резчик</th>
-                <th style="font-weight: bold;">Резчик</th>
+                <th style="font-weight: bold;">Дата</th>
                 <th style="font-weight: bold;">Время</th>
                 <th style="font-weight: bold;">Масса</th>
                 <th style="font-weight: bold;">Метраж</th>
@@ -457,32 +437,12 @@
             <?php
             foreach($streams as $stream):
                 $printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream['printed']);
-            // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
-            // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
-            // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
-            $stream_hour = $printed->format('G');
-            $stream_shift = 'day';
-            $working_printed = clone $printed; // Дата с точки зрения рабочего графика (напр. ночь 7 марта считается ночной сменой 6 марта)
-            
-            if($stream_hour > 19 && $stream_hour < 24) {
-                $stream_shift = 'night';
-            }
-            elseif($stream_hour >= 0 && $stream_hour < 8) {
-                $stream_shift = 'night';
-                $working_printed->modify("-1 day");
-            }
-            
-            $stream_worker = "ВЫХОДНОЙ ДЕНЬ";
-            
-            if(array_key_exists($working_printed->format('d-m-Y').$stream_shift, $workers)) {
-                $stream_worker = $workers[$working_printed->format('d-m-Y').$stream_shift];
-            }
             ?>
             <tr style="border-bottom: 0;">
                 <td style="text-align: left;"><?=$stream['id'] ?></td>
                 <td style="text-align: left;"><?=$stream['name'] ?></td>
-                <td style="text-align: left;"><?=$stream_worker ?></td>
                 <td style="text-align: left;"><?=$stream['last_name'].' '.(empty($stream['first_name']) ? '' : mb_substr($stream['first_name'], 0, 1).'.') ?></td>
+                <td style="text-align: left;"><?=$printed->format('j').' '. mb_substr($months_genitive[$printed->format('n')], 0, 3).' '.$printed->format('Y') ?></td>
                 <td style="text-align: left;"><?=$printed->format('H:i') ?></td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
                 <td style="text-align: left;"><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>

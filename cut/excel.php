@@ -62,8 +62,11 @@ foreach($cutters as $cutter) {
     $sheet->setCellValue('I'.$rowindex, "Выполненный метраж");
     $sheet->setCellValue('J'.$rowindex, "Выполненная масса");
     
+    $kg_total = array();
+    $pieces_total = array();
+    
     // Тиражи
-    $sql = "select distinct date(cts.printed) printed, ped.date, ped.shift, ped.position, pem.last_name, pem.first_name, c.customer_id, "
+    $sql = "select distinct date(cts.printed) printed, ped.date, ped.shift, ped.position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
             . "cus.name customer, c.name calculation, c.unit, "
             . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
@@ -80,7 +83,7 @@ foreach($cutters as $cutter) {
     }
     $sql .= " and ped.id not in (select plan_edition_id from plan_continuation) "
             . "union "
-            . "select distinct date(cts.printed) printed, pc.date, pc.shift, 1 as position, pem.last_name, pem.first_name, c.customer_id, "
+            . "select distinct date(cts.printed) printed, pc.date, pc.shift, 1 as position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
             . "cus.name customer, c.name calculation, c.unit, "
             . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
@@ -107,11 +110,29 @@ foreach($cutters as $cutter) {
         $sheet->setCellValue('E'.$rowindex, $row['customer_id'].'-'.$row['num_for_customer']);
         $sheet->setCellValue('F'.$rowindex, $row['customer']);
         $sheet->setCellValue('G'.$rowindex, $row['calculation']);
-        $sheet->setCellValue('H'.$rowindex, $row['unit'] == 'kg' ? "Кг" : "Шт");
+        $sheet->setCellValue('H'.$rowindex, $row['unit'] == KG ? "Кг" : "Шт");
         $sheet->getStyle('I'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
         $sheet->setCellValue('I'.$rowindex, $row['length_cut']);
         $sheet->getStyle('J'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('J'.$rowindex, $row['weight_cut']);
+        
+        // Посчёт суммы
+        if(!empty($row['employee_id'])) {
+            if($row['unit'] == KG) {
+                if(!key_exists($row['employee_id'], $kg_total)) {
+                    $kg_total[$row['employee_id']] = 0;
+                }
+                
+                $kg_total[$row['employee_id']] += $row['weight_cut'];
+            }
+            else {
+                if(!key_exists($row['employee_id'], $pieces_total)) {
+                    $pieces_total[$row['employee_id']] = 0;
+                }
+                
+                $pieces_total[$row['employee_id']] += $row['length_cut'];
+            }
+        }
     }
     
     $activeSheetIndex++;
@@ -139,7 +160,7 @@ $sheet->setCellValue('D3', "Итого ₽");
 
 $rowindex = 3;
 
-/*$sql = "select distinct pem.id, pem.last_name, pem.first_name, "
+/*$sql = "select distinct pem.id employee_id, pem.last_name, pem.first_name, "
         . "(select sum(cts1.weight) / 1000 "
         . "from calculation_take_stream cts1 "
         . "inner join calculation_stream cs1 on cts1.calculation_stream_id = cs1.id "
@@ -165,14 +186,24 @@ while($row = $fetcher->Fetch()) {
     $sheet->setCellValue('D'.$rowindex, '=(B2*B'.$rowindex.')+(C2*C'.$rowindex.')');
 }*/
 
-$sql = "select distinct pem.id, pem.last_name, pem.first_name "
+$sql = "select distinct pem.id employee_id, pem.last_name, pem.first_name "
         . "from calculation_take_stream cts "
         . "left join plan_employee pem on cts.plan_employee_id = pem.id "
         . "where cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
         . "order by pem.last_name, pem.first_name";
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()) {
-    //
+    $sheet->setCellValue('A'.(++$rowindex), $row['last_name'].' '.(empty($row['first_name']) ? '' : mb_substr($row['first_name'], 0, 1).'.'));
+    $sheet->getStyle('B'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    if(key_exists($row['employee_id'], $kg_total)) {
+        $sheet->setCellValue('B'.$rowindex, $kg_total[$row['employee_id']] / 1000);
+    }
+    $sheet->getStyle('C'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    if(key_exists($row['employee_id'], $pieces_total)) {
+        $sheet->setCellValue('C'.$rowindex, $pieces_total[$row['employee_id']] / 1000);
+    }
+    $sheet->getStyle('D'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+    $sheet->setCellValue('D'.$rowindex, '=(B2*B'.$rowindex.')+(C2*C'.$rowindex.')');
 }
 
 // Сохранение
