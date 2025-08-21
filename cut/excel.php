@@ -35,7 +35,7 @@ foreach($cutters as $cutter) {
         $sheet->setTitle("Все");
     }
     else {
-        $sheet->setTitle(html_entity_decode(CUTTER_NAMES[$cutter]));
+        $sheet->setTitle(html_entity_decode(CUTTER_NAMES[$cutter] ?? ''));
     }
         
     $sheet->getColumnDimension('A')->setAutoSize(true);

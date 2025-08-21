@@ -1551,7 +1551,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             </div>
                             <div id="roll_type_validation" class="text-danger<?= empty($roll_type_valid) ? " d-none" : " d-block" ?>">Выберите сторону печати</div>
                             <h3>Комментарий</h3>
-                            <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment) ?></textarea>
+                            <textarea rows="6" name="comment" class="form-control"><?= html_entity_decode($comment ?? '') ?></textarea>
                         </div>
                     </div>
                     <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
