@@ -111,8 +111,8 @@ foreach($cutters as $cutter) {
             . "inner join calculation_stream cs on cs.calculation_id = c.id "
             . "inner join calculation_not_take_stream cnts on cnts.calculation_stream_id = cs.id "
             . "inner join customer cus on c.customer_id = cus.id "
-            . "left join plan_employee pem on cts.plan_employee_id = pem.id "
-            . "where cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and ped.work_id = ". WORK_CUTTING;
+            . "left join plan_employee pem on cnts.plan_employee_id = pem.id "
+            . "where cnts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and ped.work_id = ". WORK_CUTTING;
     if($cutter != CUTTERS_ALL) {
         $sql .= " and ped.machine_id = ".$cutter;
     }
@@ -130,7 +130,7 @@ foreach($cutters as $cutter) {
             . "inner join calculation_not_take_stream cnts on cnts.calculation_stream_id = cs.id "
             . "inner join customer cus on c.customer_id = cus.id "
             . "left join plan_employee pem on cnts.plan_employee_id = pem.id "
-            . "where cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and ped.work_id = ".WORK_CUTTING;
+            . "where cnts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and ped.work_id = ".WORK_CUTTING;
     if($cutter != CUTTERS_ALL) {
         $sql .= " and ped.machine_id = ".$cutter;
     }
