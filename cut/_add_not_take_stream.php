@@ -6,6 +6,7 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     $calculation_stream_id = filter_input(INPUT_POST, 'calculation_stream_id');
     $weight = filter_input(INPUT_POST, 'weight');
     $length = filter_input(INPUT_POST, 'length');
+    $employee_id = null;
     $location = filter_input(INPUT_POST, 'php_self');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     $location_get = array();
@@ -71,11 +72,11 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
         }
     }
     
-    // Сохраняем рулон не из съёма
     if($employee_id == null) {
         $employee_id = "NULL";
     }
     
+    // Сохраняем рулон не из съёма
     $sql = "insert into calculation_not_take_stream (calculation_stream_id, weight, length, printed, plan_employee_id) values ($calculation_stream_id, $weight, $length, now(), $employee_id)";
     $executer = new Executer($sql);
     $not_take_stream_id = $executer->insert_id;

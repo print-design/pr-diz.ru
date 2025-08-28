@@ -26,7 +26,7 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     $stream_id = filter_input(INPUT_POST, 'stream_id');
     $stream_width = filter_input(INPUT_POST, 'stream_width');
     $spool = filter_input(INPUT_POST, 'spool');
-    $employee_id = filter_input(INPUT_POST, 'employee_id'); if($employee_id == null) { $employee_id = "NULL"; }
+    $employee_id = null;
     
     $thickness1 = floatval(filter_input(INPUT_POST, 'thickness1'));
     $thickness2 = floatval(filter_input(INPUT_POST, 'thickness2'));
@@ -95,6 +95,43 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $take_stream_id = $row['id'];
+        }
+        
+        // Текущий резчик
+        
+        // Дневная смена: 8:00 текущего дня - 19:59 текущего дня
+        // Ночная смена: 20:00 текущего дна - 23:59 текущего дня, 0:00 предыдущего дня - 7:59 предыдущего дня
+        // (например, когда наступает 0:00 7 марта, то это считается ночной сменой 6 марта)
+        $working_time = new DateTime();
+        $working_hour = date('G');
+        $working_shift = 'day';
+        
+        if($working_hour > 19 && $working_hour < 24) {
+            $working_shift = 'night';
+        }
+        elseif($working_hour >= 0 && $working_hour < 8) {
+            $working_shift = 'night';
+            $working_time->modify("-1 day");
+        }
+        
+        $machine_id = null;
+        $sql = "select machine_id from plan_edition where work_id = ". WORK_CUTTING." and calculation_id = ".$id;
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $machine_id = $row['machine_id'];
+            
+            if(!empty($machine_id)) {
+                $employee_id = null;
+                $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')='".$working_time->format('d-m-Y')."' and shift = '$working_shift' and work_id = ". WORK_CUTTING." and machine_id = $machine_id";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $employee_id = $row[0];
+                }
+            }
+        }
+        
+        if($employee_id == null) {
+            $employee_id = "NULL";
         }
         
         if(empty($take_stream_id)) {

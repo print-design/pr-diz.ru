@@ -156,7 +156,6 @@ foreach($streams as $row):
         <input type="hidden" name="stream_id" value="<?=$stream_id ?>" />
         <input type="hidden" name="stream_width" value="<?=$stream_width ?>" />
         <input type="hidden" name="spool" value="<?=$spool ?>" />
-        <input type="hidden" name="employee_id" value="<?=$employee_id ?>" />
         <input type="hidden" name="thickness1" value="<?=$thickness1 ?>" />
         <input type="hidden" name="thickness2" value="<?=$thickness2 ?>" />
         <input type="hidden" name="thickness3" value="<?=$thickness3 ?>" />
