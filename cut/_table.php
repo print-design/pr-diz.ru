@@ -285,7 +285,7 @@
     }
     
     // Съёмы
-    $sql = "select ct.id, ct.timestamp, sum(cts.weight) weight, sum(cts.length) length "
+    $sql = "select ct.id, max(cts.printed) timestamp, sum(cts.weight) weight, sum(cts.length) length "
                 . "from calculation_take_stream cts "
                 . "left join calculation_take ct on cts.calculation_take_id = ct.id "
                 . "where ct.calculation_id = $id "
