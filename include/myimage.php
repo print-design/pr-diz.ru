@@ -39,21 +39,21 @@ class MyImage {
         else {
             if(empty($max_height) && !empty($max_width)) {
                 $dest_width = $max_width;
-                $dest_height = $this->height * $max_width / $this->width;
+                $dest_height = round($this->height * $max_width / $this->width);
             }
                         
             if(!empty($max_height) && empty($max_width)) {
                 $dest_height = $max_height;
-                $dest_width = $this->width * $max_height / $this->height;
+                $dest_width = round($this->width * $max_height / $this->height);
             }
                         
             if(!empty($max_height) && !empty($max_width)) {
                 $dest_width = $max_width;
-                $dest_height = $this->height * $max_width / $this->width;
+                $dest_height = round($this->height * $max_width / $this->width);
                             
                 if($dest_height > $max_height) {
                     $dest_height = $max_height;
-                    $dest_width = $this->width * $max_height / $this->height;
+                    $dest_width = round($this->width * $max_height / $this->height);
                 }
             }
                         
