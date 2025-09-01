@@ -262,33 +262,7 @@ $current_date_time = date("dmYHis");
                 </tbody>
             </table>
         </div>
-        <?php
-        endforeach;
-        
-        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-        $files = scandir("../temp/");
-        foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
-            
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
-                    $file != "1_"."$current_date_time.png" &&
-                    $file != "2_"."$current_date_time.png" &&
-                    $file != "3_"."$current_date_time.png" &&
-                    $file != "4_"."$current_date_time.png" &&
-                    $file != "5_"."$current_date_time.png" &&
-                    $file != "6_"."$current_date_time.png" &&
-                    $file != "7_"."$current_date_time.png" &&
-                    $file != "8_"."$current_date_time.png" &&
-                    $file != "9_"."$current_date_time.png" &&
-                    $file != "10_"."$current_date_time.png" &&
-                    !is_dir($file)) {
-                unlink("../temp/$file");
-            }
-        }
-        ?>
+        <?php endforeach; ?>
     </body>
     <script>
         let shareData = {

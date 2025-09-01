@@ -800,7 +800,7 @@ $current_date_time = date("dmYHis");
                                     </td>
                                 </tr>
                                 <?php
-                                $sql = "select name from calculation_stream where calculation_id = $id order by position";
+                                $sql = "select name, image1, image2 from calculation_stream where calculation_id = $id order by position";
                                 $grabber = new Grabber($sql);
                                 $streams = $grabber->result;
                                 $i = 0;
@@ -1027,21 +1027,6 @@ $current_date_time = date("dmYHis");
                     <div class="border-bottom-2" style="width: 48%; font-size: 18px; font-weight: 700; margin-bottom: 30px;">Менеджер:</div>
                 </div>
             </div>
-            <?php
-            // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-            $files = scandir("../temp/");
-            foreach ($files as $file) {
-                $created = filemtime("../temp/".$file);
-                $now = time();
-                $diff = $now - $created;
-            
-                if($diff > 20 &&
-                        $file != "$current_date_time.png" &&
-                        !is_dir($file)) {
-                    unlink("../temp/$file");
-                }
-            }
-            ?>
         </div>
         <script>
             var css = '@page { size: portrait; margin: 8mm; }',

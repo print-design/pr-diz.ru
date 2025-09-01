@@ -233,41 +233,6 @@ $current_date_time = date("dmYHis");
             </table>
         </div>
         
-        <?php
-        endwhile;
-        
-        // Удаление всех файлов, кроме текущих (чтобы диск не переполнился).
-        $files = scandir("../temp/");
-        foreach ($files as $file) {
-            $created = filemtime("../temp/".$file);
-            $now = time();
-            $diff = $now - $created;
-            
-            if($diff > 20 &&
-                    $file != "$current_date_time.png" &&
-                    $file != "1_"."$current_date_time.png" &&
-                    $file != "2_"."$current_date_time.png" &&
-                    $file != "3_"."$current_date_time.png" &&
-                    $file != "4_"."$current_date_time.png" &&
-                    $file != "5_"."$current_date_time.png" &&
-                    $file != "6_"."$current_date_time.png" &&
-                    $file != "7_"."$current_date_time.png" &&
-                    $file != "8_"."$current_date_time.png" &&
-                    $file != "9_"."$current_date_time.png" &&
-                    $file != "10_"."$current_date_time.png" &&
-                    $file != "11_"."$current_date_time.png" &&
-                    $file != "12_"."$current_date_time.png" &&
-                    $file != "13_"."$current_date_time.png" &&
-                    $file != "14_"."$current_date_time.png" &&
-                    $file != "15_"."$current_date_time.png" &&
-                    $file != "16_"."$current_date_time.png" &&
-                    $file != "17_"."$current_date_time.png" &&
-                    $file != "18_"."$current_date_time.png" &&
-                    $file != "19_"."$current_date_time.png" &&
-                    !is_dir($file)) {
-                unlink("../temp/$file");
-            }
-        }
-        ?>
+        <?php endwhile; ?>
     </body>
 </html>

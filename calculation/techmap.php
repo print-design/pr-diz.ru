@@ -1,5 +1,6 @@
 <?php
 include '../include/topscripts.php';
+include '../include/myimage.php';
 include './calculation.php';
 include './calculation_result.php';
 
@@ -15,6 +16,12 @@ if(null === filter_input(INPUT_GET, 'id')) {
 
 // Данные получены из другой тех. карты
 const FROM_OTHER_TECHMAP = "from_other_techmap";
+
+// Размеры загружаемых картинок
+const IMAGE_MINI_HEIGHT = 0;
+const IMAGE_MINI_WIDTH = 100;
+const IMAGE_HEIGHT = 0;
+const IMAGE_WIDTH = 0;
 
 // Валидация формы
 $form_valid = true;
@@ -193,10 +200,13 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
             
             if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                 for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
+                    $stream_id = null;
+                    
                     if(empty($error_message)) {
                         $sql = "";
                         $stream_name = addslashes($streams["stream_$stream_i"]);
                         $stream_width = $stream_widths["stream_width_$stream_i"];
+                        
                         if(empty($stream_position_ids_names[$stream_i])) {
                             $sql = "insert into calculation_stream (calculation_id, position, name, width) values ($id, $stream_i, '$stream_name', $stream_width)";
                         }
@@ -206,7 +216,48 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
                         }
                     
                         $executer = new Executer($sql);
+                        
+                        if(empty($stream_id)) {
+                            $stream_id = $executer->insert_id;
+                        }
+                        
                         $error_message = $executer->error;
+                    }
+                    
+                    // Загружаем картинку 1
+                    if(!empty($_FILES["image1_$stream_i"]) && !empty($_FILES["image1_$stream_i"]['tmp_name']) && !empty($stream_id)) {
+                        $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
+                        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_1", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
+                        
+                        if($file_uploaded) {
+                            $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
+                            $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_1", IMAGE_WIDTH, IMAGE_HEIGHT);
+                            
+                            if($file_uploaded) {
+                                $filename = $myimage->filename;
+                                $sql = "update calculation_stream set image1 = '$filename' where id = $stream_id";
+                                $executer = new Executer($sql);
+                                $error_message = $executer->error;
+                            }
+                        }
+                    }
+                    
+                    // Загружаем картинку 2
+                    if(!empty($_FILES["image2_$stream_i"]) && !empty($_FILES["image2_$stream_i"]['tmp_name']) && !empty($stream_id)) {
+                        $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
+                        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_2", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
+                        
+                        if($file_uploaded) {
+                            $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
+                            $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_2", IMAGE_WIDTH, IMAGE_HEIGHT);
+                            
+                            if($file_uploaded) {
+                                $filename = $myimage->filename;
+                                $sql = "update calculation_stream set image2 = '$filename' where id = $stream_id";
+                                $executer = new Executer($sql);
+                                $error_message = $executer->error;
+                            }
+                        }
                     }
                 }
             }
@@ -411,15 +462,19 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
 }
 
 // Названия ручьёв
-$sql = "select position, name from calculation_stream where calculation_id = $id order by position";
+$sql = "select position, name, image1, image2 from calculation_stream where calculation_id = $id order by position";
 $grabber = new Grabber($sql);
 $result = $grabber->result;
 $error_message = $grabber->error;
 
 $stream_positions_names = array();
+$stream_position_images1 = array();
+$stream_position_images2 = array();
 
 foreach($result as $stream_position_name) {
     $stream_positions_names[$stream_position_name['position']] = $stream_position_name['name'];
+    $stream_position_images1[$stream_position_name['position']] = $stream_position_name['image1'];
+    $stream_position_images2[$stream_position_name['position']] = $stream_position_name['image2'];
 }
 
 $streams = array();
@@ -1405,7 +1460,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             <div id="cliche_validation" class="text-danger<?= empty($cliche_valid) ? " d-none" : " d-block" ?>">Укажите формы для каждой краски</div>
             <div id="requirement_validation" class="text-danger<?= empty($requirement_valid) ? " d-none" : " d-block" ?>">Укажите требование по материалу</div>
             <div style="position: relative;">
-                <form class="mt-3" method="post"<?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? " class='d-none'" : "" ?>>
+                <form class="mt-3" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="scroll" />
                     <input type="hidden" name="id" value="<?= $id ?>" />
                     <input type="hidden" name="techmap_id" value="<?=$calculation_result->techmap_id ?>" />
@@ -1555,18 +1610,38 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         </div>
                     </div>
                     <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+                    <h3>Наименования</h3>
                     <div class="row">
+                        <?php for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++): ?>
                         <div class="col-12">
-                            <h3>Наименования</h3>
-                            <?php for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++): ?>
                             <div class="form-group">
                                 <label for="stream_<?=$stream_i ?>">Ручей <?=$stream_i.(count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? ": Ширина ручья ".$calculation->stream_widths[$stream_i]." мм" : "") ?></label>
                                 <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
                                 <div class="invalid-feedback">Наименование обязательно</div>
                             </div>
                             <div><input type="hidden" name="stream_width_<?=$stream_i ?>" value="<?=count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? $calculation->stream_widths[$stream_i] : $calculation->stream_width ?>" /></div>
-                            <?php endfor; ?>
                         </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <input type="file" accept="image/*" name="image1_<?=$stream_i ?>" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <?php if(!empty($stream_position_images1[$stream_i])): ?>
+                            <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i] ?>" />
+                            <?php endif; ?>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <input type="file" accept="image/*" name="image2_<?=$stream_i ?>" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <?php if(!empty($stream_position_images2[$stream_i])): ?>
+                            <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i] ?>" />
+                            <?php endif; ?>
+                        </div>
+                        <?php endfor; ?>
                     </div>
                     <?php endif; ?>
                     <div class="row">
