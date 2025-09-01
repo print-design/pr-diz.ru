@@ -1628,7 +1628,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         </div>
                         <div class="col-2">
                             <?php if(!empty($stream_position_images1[$stream_i])): ?>
-                            <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i] ?>" />
+                            <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" />
                             <?php endif; ?>
                         </div>
                         <div class="col-4">
@@ -1638,7 +1638,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         </div>
                         <div class="col-2">
                             <?php if(!empty($stream_position_images2[$stream_i])): ?>
-                            <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i] ?>" />
+                            <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i].'?'. time() ?>" />
                             <?php endif; ?>
                         </div>
                         <?php endfor; ?>
