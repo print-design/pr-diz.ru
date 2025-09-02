@@ -273,6 +273,71 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
 }
 
+// Удаление картинки
+if(null !== filter_input(INPUT_POST, 'delete_image1_submit')) {
+    $stream_id = filter_input(INPUT_POST, 'stream_id');
+    
+    if(!empty($stream_id)) {
+        $sql = "select image1 from calculation_stream where id = $stream_id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $filename = $row[0];
+            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/".$filename;
+            if(file_exists($filepath)) {
+                unlink($filepath);
+            }
+            else {
+                $error_message = "Ошибка при удалении файла: файл не существует.";
+            }
+            
+            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/".$filename;
+            if(file_exists($filepath)) {
+                unlink($filepath);
+            }
+            else {
+                $error_message = "Ошибка при удалении файла: файл не существует.";
+            }
+            
+            $sql = "update calculation_stream set image1 = '' where id = $stream_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
+}
+
+if(null !== filter_input(INPUT_POST, 'delete_image2_submit')) {
+    $stream_id = filter_input(INPUT_POST, 'stream_id');
+    
+    if(!empty($stream_id)) {
+        $sql = "select image2 from calculation_stream where id = $stream_id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $filename = $row[0];
+            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/".$filename;
+            if(file_exists($filepath)) {
+                unlink($filepath);
+            }
+            else {
+                $error_message = "Ошибка при удалении файла: файл не существует.";
+            }
+            
+            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/".$filename;
+            if(file_exists($filepath)) {
+                unlink($filepath);
+            }
+            else {
+                $error_message = "Ошибка при удалении файла: файл не существует.";
+            }
+            
+            $sql = "update calculation_stream set image2 = '' where id = $stream_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
+}
+
 // Постановка в план технологической карты
 if(null !== filter_input(INPUT_POST, 'plan_submit')) {
     $id = filter_input(INPUT_POST, 'id');
@@ -462,16 +527,18 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
 }
 
 // Названия ручьёв
-$sql = "select position, name, image1, image2 from calculation_stream where calculation_id = $id order by position";
+$sql = "select id, position, name, image1, image2 from calculation_stream where calculation_id = $id order by position";
 $grabber = new Grabber($sql);
 $result = $grabber->result;
 $error_message = $grabber->error;
 
+$stream_position_ids = array();
 $stream_positions_names = array();
 $stream_position_images1 = array();
 $stream_position_images2 = array();
 
 foreach($result as $stream_position_name) {
+    $stream_position_ids[$stream_position_name['position']] = $stream_position_name['id'];
     $stream_positions_names[$stream_position_name['position']] = $stream_position_name['name'];
     $stream_position_images1[$stream_position_name['position']] = $stream_position_name['image1'];
     $stream_position_images2[$stream_position_name['position']] = $stream_position_name['image2'];
@@ -754,6 +821,16 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             </div>
         </div>
         <?php endif; ?>
+        <form id="delete_image1_form" method="post">
+            <input type="hidden" id="stream_id" name="stream_id" />
+            <input type="hidden" name="delete_image1_submit" value="1" />
+            <input type="hidden" name="scroll" />
+        </form>
+        <form id="delete_image2_form" method="post">
+            <input type="hidden" id="stream_id" name="stream_id" />
+            <input type="hidden" name="delete_image2_submit" value="1" />
+            <input type="hidden" name="scroll" />
+        </form>
         <div class="container-fluid">
             <div class="text-nowrap nav2">
                 <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
@@ -1645,13 +1722,13 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <?php if(!empty($stream_position_images1[$stream_i])): ?>
                                 <div class="mr-2 mb-3">
                                     <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" />    
-                                    <div>С подписью</div>
+                                    <div>С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image1_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image1_form.submit(); }">&times;</a></div>
                                 </div>
                                 <?php endif; ?>
                                 <?php if(!empty($stream_position_images2[$stream_i])): ?>
                                 <div class="ml-2 mb-3">
                                     <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i].'?'. time() ?>" />
-                                    <div>Без подписи</div>
+                                    <div>Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image2_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image2_form.submit(); }">&times;</a></div>
                                 </div>
                                 <?php endif; ?>
                             </div>
