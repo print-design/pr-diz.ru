@@ -313,13 +313,28 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
     $image = filter_input(INPUT_POST, 'image');
     
     if(!empty($stream_id) && !empty($image)) {
-        $sql = "select image$image from calculation_stream where id = $stream_id";
+        $targetname = "image";
+        
+        $sql = "select name, image$image from calculation_stream where id = $stream_id";
         $fetcher = new Fetcher($sql);
         
         if($row = $fetcher->Fetch()) {
-            $filename = $row[0];
+            if(!empty($row['name'])) {
+                $targetname = $row['name'];
+            }
+            
+            $filename = $row["image$image"];
             $filepath = "../content/$filename";
-            DownloadSendHeaders("ASD_".$filename);
+            
+            $extension = "";
+            $substrings = explode('.', $filename);
+            if(count($substrings) > 1) {
+                $extension = $substrings[count($substrings) - 1];
+            }
+            
+            $targetname = $targetname.'.'.$extension;
+            
+            DownloadSendHeaders($targetname);
             readfile($filepath);
             exit();
         }
