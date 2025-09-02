@@ -654,6 +654,22 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
         <?php
         include '../include/header_zakaz.php';
         ?>
+        <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
+        <div id="big_image" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer" style="justify-content: flex-start;">
+                        <button type="button" class="btn btn-dark"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
+                        <button type="button" class="btn btn-light"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
         <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
         <div id="set_printings" class="modal fade show">
             <div class="modal-dialog">
@@ -1721,7 +1737,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             <div class="d-flex justify-content-start">
                                 <?php if(!empty($stream_position_images1[$stream_i])): ?>
                                 <div class="mr-2 mb-3">
-                                    <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" />    
+                                    <a href="javascript: void(0);" data-toggle="modal" data-target="#big_image"><img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" /></a>
                                     <div>С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image1_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image1_form.submit(); }">&times;</a></div>
                                 </div>
                                 <?php endif; ?>
