@@ -274,11 +274,12 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
 }
 
 // Удаление картинки
-if(null !== filter_input(INPUT_POST, 'delete_image1_submit')) {
+if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
     $stream_id = filter_input(INPUT_POST, 'stream_id');
+    $image = filter_input(INPUT_POST, 'image');
     
-    if(!empty($stream_id)) {
-        $sql = "select image1 from calculation_stream where id = $stream_id";
+    if(!empty($stream_id) || !empty($image)) {
+        $sql = "select image$image from calculation_stream where id = $stream_id";
         $fetcher = new Fetcher($sql);
         
         if($row = $fetcher->Fetch()) {
@@ -299,41 +300,28 @@ if(null !== filter_input(INPUT_POST, 'delete_image1_submit')) {
                 $error_message = "Ошибка при удалении файла: файл не существует.";
             }
             
-            $sql = "update calculation_stream set image1 = '' where id = $stream_id";
+            $sql = "update calculation_stream set image$image = '' where id = $stream_id";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
     }
 }
 
-if(null !== filter_input(INPUT_POST, 'delete_image2_submit')) {
+// Выгрузка картинки
+if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
     $stream_id = filter_input(INPUT_POST, 'stream_id');
+    $image = filter_input(INPUT_POST, 'image');
     
-    if(!empty($stream_id)) {
-        $sql = "select image2 from calculation_stream where id = $stream_id";
+    if(!empty($stream_id) && !empty($image)) {
+        $sql = "select image$image from calculation_stream where id = $stream_id";
         $fetcher = new Fetcher($sql);
         
         if($row = $fetcher->Fetch()) {
             $filename = $row[0];
-            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/".$filename;
-            if(file_exists($filepath)) {
-                unlink($filepath);
-            }
-            else {
-                $error_message = "Ошибка при удалении файла: файл не существует.";
-            }
-            
-            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/".$filename;
-            if(file_exists($filepath)) {
-                unlink($filepath);
-            }
-            else {
-                $error_message = "Ошибка при удалении файла: файл не существует.";
-            }
-            
-            $sql = "update calculation_stream set image2 = '' where id = $stream_id";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
+            $filepath = "../content/$filename";
+            DownloadSendHeaders("ASD_".$filename);
+            readfile($filepath);
+            exit();
         }
     }
 }
@@ -659,12 +647,13 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                        <div id="big_image_header"></div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer" style="justify-content: flex-start;">
-                        <button type="button" class="btn btn-dark"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
-                        <button type="button" class="btn btn-light"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
+                        <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
+                        <button type="button" class="btn btn-light" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.submit(); }"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
                     </div>
                 </div>
             </div>
@@ -837,15 +826,16 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             </div>
         </div>
         <?php endif; ?>
-        <form id="delete_image1_form" method="post">
+        <form id="delete_image_form" method="post">
             <input type="hidden" id="stream_id" name="stream_id" />
-            <input type="hidden" name="delete_image1_submit" value="1" />
+            <input type="hidden" id="image" name="image" />
+            <input type="hidden" name="delete_image_submit" value="1" />
             <input type="hidden" name="scroll" />
         </form>
-        <form id="delete_image2_form" method="post">
+        <form id="download_image_form" method="post">
             <input type="hidden" id="stream_id" name="stream_id" />
-            <input type="hidden" name="delete_image2_submit" value="1" />
-            <input type="hidden" name="scroll" />
+            <input type="hidden" id="image" name="image" />
+            <input type="hidden" name="download_image_submit" value="1" />
         </form>
         <div class="container-fluid">
             <div class="text-nowrap nav2">
@@ -1737,14 +1727,14 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             <div class="d-flex justify-content-start">
                                 <?php if(!empty($stream_position_images1[$stream_i])): ?>
                                 <div class="mr-2 mb-3">
-                                    <a href="javascript: void(0);" data-toggle="modal" data-target="#big_image"><img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" /></a>
-                                    <div>С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image1_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image1_form.submit(); }">&times;</a></div>
+                                    <a href="javascript: void(0);" onclick="javascript: document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 1; document.forms.download_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.download_image_form.image.value = 1;" data-toggle="modal" data-target="#big_image"><img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" /></a>
+                                    <div>С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a></div>
                                 </div>
                                 <?php endif; ?>
                                 <?php if(!empty($stream_position_images2[$stream_i])): ?>
                                 <div class="ml-2 mb-3">
-                                    <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i].'?'. time() ?>" />
-                                    <div>Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image2_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image2_form.submit(); }">&times;</a></div>
+                                    <a href="javascript: void(0);" onclick="javascript: document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.download_image_form.image.value = 2;" data-toggle="modal" data-target="#big_image"><img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i].'?'. time() ?>" /></a>
+                                    <div>Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a></div>
                                 </div>
                                 <?php endif; ?>
                             </div>
