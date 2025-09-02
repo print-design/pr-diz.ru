@@ -321,6 +321,8 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
         if($row = $fetcher->Fetch()) {
             if(!empty($row['name'])) {
                 $targetname = $row['name'];
+                $targetname = str_replace('.', '', $targetname);
+                $targetname = str_replace(',', '', $targetname);
             }
             
             $filename = $row["image$image"];
