@@ -1621,22 +1621,24 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             </div>
                             <div><input type="hidden" name="stream_width_<?=$stream_i ?>" value="<?=count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? $calculation->stream_widths[$stream_i] : $calculation->stream_width ?>" /></div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <div class="form-group">
-                                <input type="file" accept="image/*" name="image1_<?=$stream_i ?>" class="form-control" />
+                                <label for="image1_<?=$stream_i ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> С подписью заказчика</label>
+                                <input type="file" accept="image/*" name="image1_<?=$stream_i ?>" id="image1_<?=$stream_i ?>" class="d-none" onchange="javascript: $('#filename1_<?=$stream_i ?>').html($(this).val());" />
                             </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-3" id="filename1_<?=$stream_i ?>">
                             <?php if(!empty($stream_position_images1[$stream_i])): ?>
                             <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" />
                             <?php endif; ?>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <div class="form-group">
-                                <input type="file" accept="image/*" name="image2_<?=$stream_i ?>" class="form-control" />
+                                <label for="image2_<?=$stream_i ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без подписи заказчика</label>
+                                <input type="file" accept="image/*" name="image2_<?=$stream_i ?>" id="image2_<?=$stream_i ?>" class="d-none" onchange="javascript: $('#filename2_<?=$stream_i ?>').html($(this).val());" />
                             </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-3" id="filename2_<?=$stream_i ?>">
                             <?php if(!empty($stream_position_images2[$stream_i])): ?>
                             <img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i].'?'. time() ?>" />
                             <?php endif; ?>
