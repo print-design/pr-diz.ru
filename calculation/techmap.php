@@ -1768,7 +1768,9 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 if(empty($calculation_result->techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
                                     $submit_class = "";
                                 }
-                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP) {
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP 
+                                        && count($stream_position_images1) == count(array_filter($stream_position_images1, function($x) { return !empty($x); })) 
+                                        && count($stream_position_images2) == count(array_filter($stream_position_images2, function($x) { return !empty($x); }))) {
                                     $plan_class = "";
                                 }
                                 ?>
