@@ -1476,7 +1476,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         <div><?= DisplayNumber(intval($printing['quantity']), 0) ?> шт</div>
                         <div><?= DisplayNumber(floatval($printing['length']), 0) ?> м</div>
                     </div>
-                    <table class="mb-3 w-100">
+                    <table class="mb-1 w-100">
                     <?php
                     for($i = 1; $i <= $calculation->ink_number; $i++):
                     $ink_var = "ink_$i";
@@ -1552,6 +1552,21 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         </tr>
                     <?php endfor; ?>
                     </table>
+                    <div class="font-italic">Загрузите файл</div>
+                    <div class="d-flex justify-content-between">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="image1_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />С под.</label>
+                            <input type="file" accept="image/*" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none" />
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="image2_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без п.</label>
+                            <input type="file" accept="image/*" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none" />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between pb-2">
+                        <img id="mini_image1_printing_<?=$printing['id'] ?>" class="img-fluid" src="../images/no-image-icon-100px.jpg" />
+                        <img id="mini_image2_printing_<?=$printing['id'] ?>" class="img-fluid" src="../images/no-image-icon-100px.jpg" />
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
