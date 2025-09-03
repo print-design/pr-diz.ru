@@ -1720,6 +1720,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <div class="invalid-feedback">Наименование обязательно</div>
                             </div>
                             <div><input type="hidden" name="stream_width_<?=$stream_i ?>" value="<?=count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? $calculation->stream_widths[$stream_i] : $calculation->stream_width ?>" /></div>
+                            <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                             <p class="font-weight-bold">Загрузите файл оригинал-макета</p>
                             <div class="d-flex justify-content-start">
                                 <?php if(empty($stream_position_images1[$stream_i])): ?>
@@ -1755,6 +1756,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 </div>
                                 <?php endif; ?>
                             </div>
+                            <?php endif; ?>
                             <?php endfor; ?>
                         </div>
                     </div>
@@ -1767,6 +1769,9 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 $plan_class = " d-none";
                                 if(empty($calculation_result->techmap_id) || filter_input(INPUT_POST, FROM_OTHER_TECHMAP) !== null || !$form_valid) {
                                     $submit_class = "";
+                                }
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_NOPRINT) {
+                                    $plan_class = "";
                                 }
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP 
                                         && count($stream_position_images1) == count(array_filter($stream_position_images1, function($x) { return !empty($x); })) 
