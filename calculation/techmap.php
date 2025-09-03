@@ -2145,7 +2145,12 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     processData: false, // Prevent jQuery from processing data
                     contentType: false, // Prevent jQuery from setting 
                     success: function(response) {
-                        alert(response.error);
+                        if(response.error.length > 0) {
+                            alert(response.error);
+                        }
+                        else {
+                            alert(response.info);
+                        }
                     },
                     error: function() {
                         alert('Ошибка при загрузке файла.');

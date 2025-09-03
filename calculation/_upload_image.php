@@ -1,7 +1,8 @@
 <?php
 include '../include/topscripts.php';
 
-$result = array('error' => 'Beginning');
+$result = array('error' => '');
+$result['info'] = "Мы только начинаем";
 
 echo json_encode($result);
 ?>
