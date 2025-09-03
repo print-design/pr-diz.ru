@@ -1556,11 +1556,11 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     <div class="d-flex justify-content-between">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="image1_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />С под.</label>
-                            <input type="file" accept="image/*" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none" />
+                            <input type="file" accept="image/*" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none" onchange="UploadImage('printing', <?=$printing['id'] ?>, 1);" />
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="image2_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без п.</label>
-                            <input type="file" accept="image/*" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none" />
+                            <input type="file" accept="image/*" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none" onchange="UploadImage('printing', <?=$printing['id'] ?>, 2);" />
                         </div>
                     </div>
                     <div class="d-flex justify-content-between pb-2">
@@ -2108,6 +2108,10 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         .fail(function() {
                             alert('Ошибка при редактировании требования по материалу');
                         });
+            }
+            
+            function UploadImage(object, id, image) {
+                alert(object + ' ' + id + ' ' + image);
             }
             
             <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
