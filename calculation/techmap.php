@@ -2131,7 +2131,26 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             }
             
             function UploadImage(object, id, image) {
-                alert(object + ' ' + id + ' ' + image);
+                var formData = new FormData();
+                formData.set('object', object);
+                formData.set('id', id);
+                formData.set('image', image);
+                formData.set('file', $("#image" + image + "_" + object + "_" + id)[0].files[0]);
+                
+                $.ajax({
+                    url: "_upload_image.php",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    processData: false, // Prevent jQuery from processing data
+                    contentType: false, // Prevent jQuery from setting 
+                    success: function(response) {
+                        alert(response.error);
+                    },
+                    error: function() {
+                        alert('Ошибка при загрузке файла.');
+                    }
+                });
             }
             
             <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
