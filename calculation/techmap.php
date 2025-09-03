@@ -225,40 +225,40 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
                     }
                     
                     // Загружаем картинку 1
-                    if(!empty($_FILES["image1_$stream_i"]) && !empty($_FILES["image1_$stream_i"]['tmp_name']) && !empty($stream_id)) {
-                        $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
-                        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_1", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
+                    //if(!empty($_FILES["image1_$stream_i"]) && !empty($_FILES["image1_$stream_i"]['tmp_name']) && !empty($stream_id)) {
+                    //    $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
+                    //    $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_1", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
                         
-                        if($file_uploaded) {
-                            $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
-                            $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_1", IMAGE_WIDTH, IMAGE_HEIGHT);
+                    //    if($file_uploaded) {
+                    //        $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
+                    //        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_1", IMAGE_WIDTH, IMAGE_HEIGHT);
                             
-                            if($file_uploaded) {
-                                $filename = $myimage->filename;
-                                $sql = "update calculation_stream set image1 = '$filename' where id = $stream_id";
-                                $executer = new Executer($sql);
-                                $error_message = $executer->error;
-                            }
-                        }
-                    }
+                    //        if($file_uploaded) {
+                    //            $filename = $myimage->filename;
+                    //            $sql = "update calculation_stream set image1 = '$filename' where id = $stream_id";
+                    //            $executer = new Executer($sql);
+                    //            $error_message = $executer->error;
+                    //        }
+                    //    }
+                    //}
                     
                     // Загружаем картинку 2
-                    if(!empty($_FILES["image2_$stream_i"]) && !empty($_FILES["image2_$stream_i"]['tmp_name']) && !empty($stream_id)) {
-                        $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
-                        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_2", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
+                    //if(!empty($_FILES["image2_$stream_i"]) && !empty($_FILES["image2_$stream_i"]['tmp_name']) && !empty($stream_id)) {
+                    //    $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
+                    //    $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_2", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
                         
-                        if($file_uploaded) {
-                            $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
-                            $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_2", IMAGE_WIDTH, IMAGE_HEIGHT);
+                    //    if($file_uploaded) {
+                    //        $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
+                    //        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_2", IMAGE_WIDTH, IMAGE_HEIGHT);
                             
-                            if($file_uploaded) {
-                                $filename = $myimage->filename;
-                                $sql = "update calculation_stream set image2 = '$filename' where id = $stream_id";
-                                $executer = new Executer($sql);
-                                $error_message = $executer->error;
-                            }
-                        }
-                    }
+                    //        if($file_uploaded) {
+                    //            $filename = $myimage->filename;
+                    //            $sql = "update calculation_stream set image2 = '$filename' where id = $stream_id";
+                    //            $executer = new Executer($sql);
+                    //            $error_message = $executer->error;
+                    //        }
+                    //    }
+                    //}
                 }
             }
         }
@@ -1552,24 +1552,44 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         </tr>
                     <?php endfor; ?>
                     </table>
+                    <?php
+                    $button1_wrapper_class = 'd-block';
+                    if(!empty($printing['image1'])) {
+                        $button1_wrapper_class = 'd-none';
+                    }
+                    $button2_wrapper_class = 'd-block';
+                    if(!empty($printing['image2'])) {
+                        $button2_wrapper_class = 'd-none';
+                    }
+                    ?>
                     <div class="font-italic">Загрузите файл</div>
                     <div class="d-flex justify-content-between">
-                        <div class="form-group" style="margin-bottom: 0;">
+                        <div id="mini_button1_wrapper_printing_<?=$printing['id'] ?>" class="form-group <?=$button1_wrapper_class ?>" style="margin-bottom: 0;">
                             <label for="image1_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />С под.</label>
-                            <input type="file" accept="image/*" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none" onchange="UploadImage('printing', <?=$printing['id'] ?>, 1);" />
+                            <input type="file" accept="image/*" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 1);" />
                         </div>
-                        <div class="form-group" style="margin-bottom: 0;">
+                        <div id="mini_button1_wrapper_printing_<?=$printing['id'] ?>" class="form-group <?=$button2_wrapper_class ?>" style="margin-bottom: 0;">
                             <label for="image2_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без п.</label>
-                            <input type="file" accept="image/*" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none" onchange="UploadImage('printing', <?=$printing['id'] ?>, 2);" />
+                            <input type="file" accept="image/*" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 2);" />
                         </div>
                     </div>
+                    <?php
+                    $image1_wrapper_class = 'd-block';
+                    if(empty($printing['image1'])) {
+                        $image1_wrapper_class = 'd-none';
+                    }
+                    $image2_wrapper_class = 'd-block';
+                    if(empty($printing['image2'])) {
+                        $image2_wrapper_class = "d-none";
+                    }
+                    ?>
                     <div class="d-flex justify-content-between pb-2">
-                        <div>
-                            <img id="mini_image1_printing_<?=$printing['id'] ?>" class="img-fluid" src="<?= empty($printing['image1']) ? '../images/no-image-icon-100px.jpg' : '../content/printing/mini/'.$printing['image1'] ?>" />
+                        <div id="mini_image1_wrapper_printing_<?=$printing['id'] ?>" class="<?=$image1_wrapper_class ?>">
+                            <img id="mini_image1_printing_<?=$printing['id'] ?>" class="img-fluid" />
                             С подписью
                         </div>
-                        <div>
-                            <img id="mini_image2_printing_<?=$printing['id'] ?>" class="img-fluid" src="<?= empty($printing['image2']) ? '../images/no-image-icon-100px.jpg' : '../content/printing/mini/'.$printing['image2'] ?>" />
+                        <div id="mini_image2_wrapper_printing_<?=$printing['id'] ?>" class="<?=$image2_wrapper_class ?>">
+                            <img id="mini_image2_printing_<?=$printing['id'] ?>" class="img-fluid" />
                             Без подписи
                         </div>
                     </div>
@@ -1748,7 +1768,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <div class="mr-2">
                                     <div class="form-group">
                                         <label for="image1_<?=$stream_i ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> С подписью заказчика</label>
-                                        <input type="file" accept="image/*" name="image1_<?=$stream_i ?>" id="image1_<?=$stream_i ?>" class="d-none" onchange="javascript: $('#filename1_<?=$stream_i ?>').html($(this).val());" />
+                                        <input type="file" accept="image/*" name="image1_<?=$stream_i ?>" id="image1_<?=$stream_i ?>" class="d-none color_input" onchange="javascript: $('#filename1_<?=$stream_i ?>').html($(this).val());" />
                                         <div id="filename1_<?=$stream_i ?>"></div>
                                     </div>
                                 </div>
@@ -1757,7 +1777,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                                 <div class="ml-2">
                                     <div class="form-group">
                                         <label for="image2_<?=$stream_i ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без подписи заказчика</label>
-                                        <input type="file" accept="image/*" name="image2_<?=$stream_i ?>" id="image2_<?=$stream_i ?>" class="d-none" onchange="javascript: $('#filename2_<?=$stream_i ?>').html($(this).val());" />
+                                        <input type="file" accept="image/*" name="image2_<?=$stream_i ?>" id="image2_<?=$stream_i ?>" class="d-none color_input" onchange="javascript: $('#filename2_<?=$stream_i ?>').html($(this).val());" />
                                         <div id="filename2_<?=$stream_i ?>"></div>
                                     </div>
                                 </div>
