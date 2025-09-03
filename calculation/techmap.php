@@ -505,7 +505,7 @@ $cliches_used_kodak = 0;
 $cliches_used_old = 0;
 
 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-    $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
+    $sql = "select id, quantity, length, image1, image2 from calculation_quantity where calculation_id = $id";
     $grabber = new Grabber($sql);
     $error_message = $grabber->error;
     $printings = $grabber->result;
@@ -1564,8 +1564,14 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         </div>
                     </div>
                     <div class="d-flex justify-content-between pb-2">
-                        <img id="mini_image1_printing_<?=$printing['id'] ?>" class="img-fluid" src="../images/no-image-icon-100px.jpg" />
-                        <img id="mini_image2_printing_<?=$printing['id'] ?>" class="img-fluid" src="../images/no-image-icon-100px.jpg" />
+                        <div>
+                            <img id="mini_image1_printing_<?=$printing['id'] ?>" class="img-fluid" src="<?= empty($printing['image1']) ? '../images/no-image-icon-100px.jpg' : '../content/printing/mini/'.$printing['image1'] ?>" />
+                            С подписью
+                        </div>
+                        <div>
+                            <img id="mini_image2_printing_<?=$printing['id'] ?>" class="img-fluid" src="<?= empty($printing['image2']) ? '../images/no-image-icon-100px.jpg' : '../content/printing/mini/'.$printing['image2'] ?>" />
+                            Без подписи
+                        </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
