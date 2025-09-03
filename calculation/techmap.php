@@ -1584,11 +1584,11 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     }
                     ?>
                     <div class="d-flex justify-content-between pb-2">
-                        <div id="mini_image1_wrapper_printing_<?=$printing['id'] ?>" class="<?=$image1_wrapper_class ?>">
+                        <div id="mini_image1_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image1_wrapper_class ?>">
                             <img id="mini_image1_printing_<?=$printing['id'] ?>" class="img-fluid" />
                             С подписью
                         </div>
-                        <div id="mini_image2_wrapper_printing_<?=$printing['id'] ?>" class="<?=$image2_wrapper_class ?>">
+                        <div id="mini_image2_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image2_wrapper_class ?>">
                             <img id="mini_image2_printing_<?=$printing['id'] ?>" class="img-fluid" />
                             Без подписи
                         </div>
@@ -2131,6 +2131,10 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
             }
             
             function UploadImage(object, id, image) {
+                $('#mini_image' + image + '_' + object + '_' + id).attr('src', '../images/loading-cargando.gif');
+                $('#mini_image' + image + '_wrapper_' + object + '_' + id).removeClass('d-none');
+                $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-block');
+                
                 var formData = new FormData();
                 formData.set('object', object);
                 formData.set('id', id);
@@ -2146,14 +2150,17 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     contentType: false, // Prevent jQuery from setting 
                     success: function(response) {
                         if(response.error.length > 0) {
-                            alert(response.error);
+                            //alert(response.error);
                         }
                         else {
-                            alert(response.info);
+                            //alert(response.info);
                         }
                     },
                     error: function() {
                         alert('Ошибка при загрузке файла.');
+                        $('#mini_image' + image + '_' + object + '_' + id).removeAttr('src');
+                        $('#mini_image' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
+                        $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
                     }
                 });
             }
