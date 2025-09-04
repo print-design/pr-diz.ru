@@ -135,31 +135,17 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         }
     }
     
-    // Ручьи
-    $streams = array();
-    $stream_widths = array();
-    
-    // Проверяем, чтобы были заполнены наименования ручьёв
-    if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
-        for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
-            $stream_valid_var = "stream_valid_$stream_i";
-            $$stream_valid_var = '';
-            
-            $stream_var = "stream_$stream_i";
-            $$stream_var = filter_input(INPUT_POST, "stream_$stream_i");
-            
-            $stream_width_var = "stream_width_$stream_i";
-            $$stream_width_var = filter_input(INPUT_POST, "stream_width_$stream_i");
-            
-            if(empty($$stream_var)) {
-                $$stream_valid_var = ISINVALID;
+    // Проверяем, чтобы были заполнены наименования ручьёв 
+    foreach($_POST as $key => $value) {
+        $head_length = mb_strlen("stream_");
+        if(mb_strlen($key) > $head_length && mb_substr($key, 0, $head_length) == "stream_") {
+            if(empty($value)) {
+                $streams_valid[$key] = ISINVALID;
                 $form_valid = false;
             }
-            
-            $streams[$stream_var] = $$stream_var;
-            $streams_valid[$stream_valid_var] = $$stream_valid_var;
-            
-            $stream_widths[$stream_width_var] = $$stream_width_var;
+            else {
+                $streams_valid[$key] = '';
+            }
         }
     }
     
@@ -196,29 +182,19 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
             }
             
             if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
-                for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
-                    $stream_id = null;
+                foreach($_POST as $key => $value) {
+                    $head_length = mb_strlen("stream_");
                     
-                    if(empty($error_message)) {
-                        $sql = "";
-                        $stream_name = addslashes($streams["stream_$stream_i"]);
-                        $stream_width = $stream_widths["stream_width_$stream_i"];
+                    if(mb_strlen($key) > $head_length && mb_substr($key, 0, $head_length) == "stream_") {
+                        $substrings = explode('_', $key);
                         
-                        if(empty($stream_position_ids_names[$stream_i])) {
-                            $sql = "insert into calculation_stream (calculation_id, position, name, width) values ($id, $stream_i, '$stream_name', $stream_width)";
+                        if(count($substrings) > 1) {
+                            $stream_id = $substrings[1];
+                            $name = addslashes($value);
+                            $sql = "update calculation_stream set name = '$name' where id = $stream_id";
+                            $executer = new Executer($sql);
+                            $error_message = $executer->error;
                         }
-                        else {
-                            $stream_id = $stream_position_ids_names[$stream_i]['id'];
-                            $sql = "update calculation_stream set name = '$stream_name', width = $stream_width where id = $stream_id";
-                        }
-                    
-                        $executer = new Executer($sql);
-                        
-                        if(empty($stream_id)) {
-                            $stream_id = $executer->insert_id;
-                        }
-                        
-                        $error_message = $executer->error;
                     }
                 }
             }
