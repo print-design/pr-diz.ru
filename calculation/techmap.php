@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include '../include/myimage.php';
 include './calculation.php';
 include './calculation_result.php';
 
@@ -18,10 +17,10 @@ if(null === filter_input(INPUT_GET, 'id')) {
 const FROM_OTHER_TECHMAP = "from_other_techmap";
 
 // Размеры загружаемых картинок
-const IMAGE_MINI_HEIGHT = 0;
-const IMAGE_MINI_WIDTH = 100;
-const IMAGE_HEIGHT = 0;
-const IMAGE_WIDTH = 0;
+//const IMAGE_MINI_HEIGHT = 0;
+//const IMAGE_MINI_WIDTH = 100;
+//const IMAGE_HEIGHT = 0;
+//const IMAGE_WIDTH = 0;
 
 // Валидация формы
 $form_valid = true;
@@ -1568,7 +1567,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             <label for="image1_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />С под.</label>
                             <input type="file" accept="image/*" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 1);" />
                         </div>
-                        <div id="mini_button1_wrapper_printing_<?=$printing['id'] ?>" class="form-group <?=$button2_wrapper_class ?>" style="margin-bottom: 0;">
+                        <div id="mini_button2_wrapper_printing_<?=$printing['id'] ?>" class="form-group <?=$button2_wrapper_class ?>" style="margin-bottom: 0;">
                             <label for="image2_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без п.</label>
                             <input type="file" accept="image/*" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 2);" />
                         </div>
@@ -1585,11 +1584,11 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     ?>
                     <div class="d-flex justify-content-between pb-2">
                         <div id="mini_image1_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image1_wrapper_class ?>">
-                            <img id="mini_image1_printing_<?=$printing['id'] ?>" class="img-fluid" />
+                            <img id="mini_image1_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image1'] ?>" class="img-fluid" />
                             С подписью
                         </div>
                         <div id="mini_image2_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image2_wrapper_class ?>">
-                            <img id="mini_image2_printing_<?=$printing['id'] ?>" class="img-fluid" />
+                            <img id="mini_image2_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image2'] ?>" class="img-fluid" />
                             Без подписи
                         </div>
                     </div>
@@ -2150,10 +2149,21 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     contentType: false, // Prevent jQuery from setting 
                     success: function(response) {
                         if(response.error.length > 0) {
-                            //alert(response.error);
+                            alert(response.error);
+                            $('#mini_image' + image + '_' + object + '_' + id).removeAttr('src');
+                            $('#mini_image' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
+                            $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
                         }
                         else {
-                            //alert(response.info);
+                            if(response.filename.length > 0) {
+                                $('#mini_button' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
+                                $('#mini_button' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
+                                $('#mini_image' + image + '_' + object + '_' + id).attr('src', '../content/' + object + '/mini/' + response.filename);
+                            }
+                            
+                            if(response.info.length > 0) {
+                                alert(response.info);
+                            }
                         }
                     },
                     error: function() {
