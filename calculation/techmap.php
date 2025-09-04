@@ -1572,7 +1572,7 @@ if($streams_count == 0) {
                                data-target="#big_image" 
                                data-filename="<?=$printing['image2'] ?>" 
                                onclick="javascript: document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.id.value = <?=$printing['id'] ?>; document.forms.download_image_form.image.value = 2; $('#big_image_header').text('Тираж <?=$printing_sequence ?>'); $('#big_image_img').attr('src', '../content/printing/' + $(this).attr('data-filename') + '?' + Date.now());">
-                                <img id="mini_image2_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image2'] ?>" class="img-fluid" />
+                                <img id="mini_image2_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image2'].'?'. time() ?>" class="img-fluid" />
                             </a>
                             Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a>
                         </div>
