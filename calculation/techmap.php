@@ -16,11 +16,9 @@ if(null === filter_input(INPUT_GET, 'id')) {
 // Данные получены из другой тех. карты
 const FROM_OTHER_TECHMAP = "from_other_techmap";
 
-// Размеры загружаемых картинок
-//const IMAGE_MINI_HEIGHT = 0;
-//const IMAGE_MINI_WIDTH = 100;
-//const IMAGE_HEIGHT = 0;
-//const IMAGE_WIDTH = 0;
+// Объекты, к которым присоединяются картинки
+const PRINTING = "printing";
+const STREAM = "stream";
 
 // Валидация формы
 $form_valid = true;
@@ -222,42 +220,6 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
                         
                         $error_message = $executer->error;
                     }
-                    
-                    // Загружаем картинку 1
-                    //if(!empty($_FILES["image1_$stream_i"]) && !empty($_FILES["image1_$stream_i"]['tmp_name']) && !empty($stream_id)) {
-                    //    $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
-                    //    $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_1", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
-                        
-                    //    if($file_uploaded) {
-                    //        $myimage = new MyImage($_FILES["image1_$stream_i"]['tmp_name']);
-                    //        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_1", IMAGE_WIDTH, IMAGE_HEIGHT);
-                            
-                    //        if($file_uploaded) {
-                    //            $filename = $myimage->filename;
-                    //            $sql = "update calculation_stream set image1 = '$filename' where id = $stream_id";
-                    //            $executer = new Executer($sql);
-                    //            $error_message = $executer->error;
-                    //        }
-                    //    }
-                    //}
-                    
-                    // Загружаем картинку 2
-                    //if(!empty($_FILES["image2_$stream_i"]) && !empty($_FILES["image2_$stream_i"]['tmp_name']) && !empty($stream_id)) {
-                    //    $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
-                    //    $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/", $stream_id."_2", IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
-                        
-                    //    if($file_uploaded) {
-                    //        $myimage = new MyImage($_FILES["image2_$stream_i"]['tmp_name']);
-                    //        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/", $stream_id."_2", IMAGE_WIDTH, IMAGE_HEIGHT);
-                            
-                    //        if($file_uploaded) {
-                    //            $filename = $myimage->filename;
-                    //            $sql = "update calculation_stream set image2 = '$filename' where id = $stream_id";
-                    //            $executer = new Executer($sql);
-                    //            $error_message = $executer->error;
-                    //        }
-                    //    }
-                    //}
                 }
             }
         }
@@ -274,70 +236,99 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
 
 // Удаление картинки
 if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
-    $stream_id = filter_input(INPUT_POST, 'stream_id');
+    $object = filter_input(INPUT_POST, 'object');
+    $id = filter_input(INPUT_POST, 'id');
     $image = filter_input(INPUT_POST, 'image');
     
-    if(!empty($stream_id) || !empty($image)) {
-        $sql = "select image$image from calculation_stream where id = $stream_id";
-        $fetcher = new Fetcher($sql);
+    if(!empty($object) && !empty($id) || !empty($image)) {
+        $sql = "";
         
-        if($row = $fetcher->Fetch()) {
-            $filename = $row[0];
-            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/mini/".$filename;
-            if(file_exists($filepath)) {
-                unlink($filepath);
-            }
-            else {
-                $error_message = "Ошибка при удалении файла: файл не существует.";
-            }
+        if($object == PRINTING) {
+            $sql = "select image$image from calculation_quantity where id = $id";
+        }
+        elseif($object == STREAM) {
+            $sql = "select image$image from calculation_stream where id = $id";
+        }
+        
+        if(!empty($sql)) {
+            $fetcher = new Fetcher($sql);
             
-            $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/".$filename;
-            if(file_exists($filepath)) {
-                unlink($filepath);
+            if($row = $fetcher->Fetch()) {
+                $filename = $row[0];
+                $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/$filename";
+                if(file_exists($filepath)) {
+                    unlink($filepath);
+                }
+                else {
+                    $error_message = "Ошибка при удалении файла: файл не существует.";
+                }
+                
+                $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/$filename";
+                if(file_exists($filepath)) {
+                    unlink($filepath);
+                }
+                else {
+                    $error_message = "Ошибка при удалении файла: файл не существует.";
+                }
+                
+                $sql = "";
+                
+                if($object == PRINTING) {
+                    $sql = "update calculation_quantity set image$image = '' where id = $id";
+                }
+                elseif($object == STREAM) {
+                    $sql = "update calculation_stream set image$image = '' where id = $id";
+                }
+                
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
             }
-            else {
-                $error_message = "Ошибка при удалении файла: файл не существует.";
-            }
-            
-            $sql = "update calculation_stream set image$image = '' where id = $stream_id";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
         }
     }
 }
 
 // Выгрузка картинки
 if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
-    $stream_id = filter_input(INPUT_POST, 'stream_id');
+    $object = filter_input(INPUT_POST, 'object');
+    $id = filter_input(INPUT_POST, 'id');
     $image = filter_input(INPUT_POST, 'image');
     
-    if(!empty($stream_id) && !empty($image)) {
-        $targetname = "image";
+    if(!empty($object) && !empty($id) && !empty($image)) {
+        $sql = "";
         
-        $sql = "select name, image$image from calculation_stream where id = $stream_id";
-        $fetcher = new Fetcher($sql);
+        if($object == PRINTING) {
+            $sql = "select name, image$image from calculation_quantity where id = $id";
+        }
+        elseif ($object == STREAM) {
+            $sql = "select name, image$image from calculation_stream where id = $id";
+        }
         
-        if($row = $fetcher->Fetch()) {
-            if(!empty($row['name'])) {
-                $targetname = $row['name'];
-                $targetname = str_replace('.', '', $targetname);
-                $targetname = str_replace(',', '', $targetname);
+        if(!empty($sql)) {
+            $targetname = "image";
+            $fetcher = new Fetcher($sql);
+            
+            if($row = $fetcher->Fetch()) {
+                if(!empty($row['name'])) {
+                    $targetname = $row['name'];
+                    $targetname = str_replace('.', '', $targetname);
+                    $targetname = str_replace(',', '', $targetname);
+                }
+                
+                $filename = $row["image$image"];
+                $filepath = "../content/$object/$filename";
+                
+                $extension = "";
+                $substrings = explode('.', $filename);
+                if(count($substrings) > 1) {
+                    $extension = $substrings[count($substrings) - 1];
+                }
+                
+                $targetname = $targetname.'.'.$extension;
+                
+                DownloadSendHeaders($targetname);
+                readfile($filepath);
+                exit();
             }
-            
-            $filename = $row["image$image"];
-            $filepath = "../content/$filename";
-            
-            $extension = "";
-            $substrings = explode('.', $filename);
-            if(count($substrings) > 1) {
-                $extension = $substrings[count($substrings) - 1];
-            }
-            
-            $targetname = $targetname.'.'.$extension;
-            
-            DownloadSendHeaders($targetname);
-            readfile($filepath);
-            exit();
         }
     }
 }
@@ -658,7 +649,6 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
         <?php
         include '../include/header_zakaz.php';
         ?>
-        <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
         <div id="big_image" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -666,7 +656,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                         <div id="big_image_header"></div>
                         <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
-                    <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" src="../content/20546_2.jpeg" alt="Изображение" /></div>
+                    <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
                     <div class="modal-footer" style="justify-content: flex-start;">
                         <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
                         <button type="button" class="btn btn-light" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.submit(); }"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
@@ -674,7 +664,6 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                 </div>
             </div>
         </div>
-        <?php endif; ?>
         <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
         <div id="set_printings" class="modal fade show">
             <div class="modal-dialog">
@@ -843,13 +832,15 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
         </div>
         <?php endif; ?>
         <form id="delete_image_form" method="post">
-            <input type="hidden" id="stream_id" name="stream_id" />
+            <input type="hidden" id="object" name="object" />
+            <input type="hidden" id="id" name="id" />
             <input type="hidden" id="image" name="image" />
             <input type="hidden" name="delete_image_submit" value="1" />
             <input type="hidden" name="scroll" />
         </form>
         <form id="download_image_form" method="post">
-            <input type="hidden" id="stream_id" name="stream_id" />
+            <input type="hidden" id="object" name="object" />
+            <input type="hidden" id="id" name="id" />
             <input type="hidden" id="image" name="image" />
             <input type="hidden" name="download_image_submit" value="1" />
         </form>
@@ -1585,11 +1576,11 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     <div class="d-flex justify-content-between pb-2">
                         <div id="mini_image1_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image1_wrapper_class ?>">
                             <img id="mini_image1_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image1'] ?>" class="img-fluid" />
-                            С подписью
+                            С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a>
                         </div>
                         <div id="mini_image2_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image2_wrapper_class ?>">
                             <img id="mini_image2_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image2'] ?>" class="img-fluid" />
-                            Без подписи
+                            Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a>
                         </div>
                     </div>
                 </div>
