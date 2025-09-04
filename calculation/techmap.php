@@ -498,36 +498,38 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
 }
 
 // Если ручьи не созданы, создаём их
-$streams_count = 0;
-
-$sql = "select count(id) from calculation_stream where calculation_id = $id";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $streams_count = $row[0];
-}
-
-if($streams_count == 0) {
-    $widths_count = 0;
-    $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
-    $grabber = new Grabber($sql);
-    $stream_widths = $grabber->result;
-    $error_message = $grabber->error;
+if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+    $streams_count = 0;
     
-    if(count($stream_widths) > 0) {
-        foreach ($stream_widths as $item) {
-            $stream_position = $item['stream_number'];
-            $stream_width =  $item['width'];
-            $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $stream_position, $stream_width)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
-        }
+    $sql = "select count(id) from calculation_stream where calculation_id = $id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $streams_count = $row[0];
     }
-    else {
-        for($i = 0; $i < $calculation->streams_number; ++$i) {
-            $stream_width = $calculation->stream_width;
-            $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $i, $stream_width)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
+    
+    if($streams_count == 0) {
+        $widths_count = 0;
+        $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
+        $grabber = new Grabber($sql);
+        $stream_widths = $grabber->result;
+        $error_message = $grabber->error;
+        
+        if(count($stream_widths) > 0) {
+            foreach ($stream_widths as $item) {
+                $stream_position = $item['stream_number'];
+                $stream_width =  $item['width'];
+                $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $stream_position, $stream_width)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
+        }
+        else {
+            for($i = 0; $i < $calculation->streams_number; ++$i) {
+                $stream_width = $calculation->stream_width;
+                $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $i, $stream_width)";
+                $executer = new Executer($sql);
+                $error_message = $executer->error;
+            }
         }
     }
 }
