@@ -521,35 +521,39 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     }
 }
 
-// Названия ручьёв
-$sql = "select id, position, name, image1, image2 from calculation_stream where calculation_id = $id order by position";
-$grabber = new Grabber($sql);
-$result = $grabber->result;
-$error_message = $grabber->error;
+// Если ручьи не созданы, создаём их
+$streams_count = 0;
 
-$stream_position_ids = array();
-$stream_positions_names = array();
-$stream_position_images1 = array();
-$stream_position_images2 = array();
-
-foreach($result as $stream_position_name) {
-    $stream_position_ids[$stream_position_name['position']] = $stream_position_name['id'];
-    $stream_positions_names[$stream_position_name['position']] = $stream_position_name['name'];
-    $stream_position_images1[$stream_position_name['position']] = $stream_position_name['image1'];
-    $stream_position_images2[$stream_position_name['position']] = $stream_position_name['image2'];
+$sql = "select count(id) from calculation_stream where calculation_id = $id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $streams_count = $row[0];
 }
 
-$streams = array();
-
-for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
-    $stream_var = "stream_$stream_i";
-    $$stream_var = filter_input(INPUT_POST, $stream_var);
-        
-    if(empty($$stream_var) && key_exists($stream_i, $stream_positions_names)) {
-        $$stream_var = $stream_positions_names[$stream_i];
+if($streams_count == 0) {
+    $widths_count = 0;
+    $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
+    $grabber = new Grabber($sql);
+    $stream_widths = $grabber->result;
+    $error_message = $grabber->error;
+    
+    if(count($stream_widths) > 0) {
+        foreach ($stream_widths as $item) {
+            $stream_position = $item['stream_number'];
+            $stream_width =  $item['width'];
+            $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $stream_position, $stream_width)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
     }
-        
-    $streams[$stream_var] = $$stream_var;
+    else {
+        for($i = 0; $i < $calculation->streams_number; ++$i) {
+            $stream_width = $calculation->stream_width;
+            $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $i, $stream_width)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -1758,51 +1762,74 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     <div class="row">
                         <div class="col-12">
                             <h2>Наименования</h2>
-                            <?php for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++): ?>
-                            <h3>Ручей <?=$stream_i.(count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? ": Ширина ручья ".$calculation->stream_widths[$stream_i]." мм" : "") ?></h3>
+                            <?php
+                            $sql = "select id, position, name, width, image1, image2 from calculation_stream where calculation_id = $id order by position";
+                            $fetcher = new Fetcher($sql);
+                            while($row = $fetcher->Fetch()):
+                            ?>
+                            <h3>Ручей <?=$row['position'].(count($calculation->stream_widths) > 0 ? ": Ширина ручья ".$row['width']." мм" : "") ?></h3>
                             <div class="form-group">
-                                <input type="text" name="stream_<?=$stream_i ?>" class="form-control<?= empty($streams_valid["stream_valid_$stream_i"]) ? "" : $streams_valid["stream_valid_$stream_i"] ?>" value="<?=$streams["stream_$stream_i"] ?>" placeholder="Наименование" autocomplete="off" required="required" />
+                                <input type="text" name="stream_<?=$row['id'] ?>" class="form-control<?=empty($streams_valid[$row['id']]) ? "" : $streams_valid[$row['id']] ?>" value="<?= htmlentities($row['name'] ?? '') ?>" placeholder="Наименование" autocomplete="off" required="required" />
                                 <div class="invalid-feedback">Наименование обязательно</div>
                             </div>
-                            <div><input type="hidden" name="stream_width_<?=$stream_i ?>" value="<?=count($calculation->stream_widths) > 0 && key_exists($stream_i, $calculation->stream_widths) ? $calculation->stream_widths[$stream_i] : $calculation->stream_width ?>" /></div>
                             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
                             <p class="font-weight-bold">Загрузите файл оригинал-макета</p>
                             <div class="d-flex justify-content-start">
-                                <?php if(empty($stream_position_images1[$stream_i])): ?>
-                                <div class="mr-2">
-                                    <div class="form-group">
-                                        <label for="image1_<?=$stream_i ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> С подписью заказчика</label>
-                                        <input type="file" accept="image/*" name="image1_<?=$stream_i ?>" id="image1_<?=$stream_i ?>" class="d-none color_input" onchange="javascript: $('#filename1_<?=$stream_i ?>').html($(this).val());" />
-                                        <div id="filename1_<?=$stream_i ?>"></div>
-                                    </div>
+                                <?php
+                                $button1_wrapper_class = 'd-block';
+                                if(!empty($row['image1'])) {
+                                    $button1_wrapper_class = 'd-none';
+                                }
+                                $button2_wrapper_class = 'd-block';
+                                if(!empty($row['image2'])) {
+                                    $button2_wrapper_class = 'd-none';
+                                }
+                                ?>
+                                <div id="mini_button1_wrapper_stream_<?=$row['id'] ?>" class="form-group mr-4 <?=$button1_wrapper_class ?>">
+                                    <label for="image1_stream_<?=$row['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> С подписью заказчика</label>
+                                    <input type="file" accept="image/*" name="image1_stream_<?=$row['id'] ?>" id="image1_stream_<?=$row['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$row['id'] ?>, 1);" />
                                 </div>
-                                <?php endif; ?>
-                                <?php if(empty($stream_position_images2[$stream_i])): ?>
-                                <div class="ml-2">
-                                    <div class="form-group">
-                                        <label for="image2_<?=$stream_i ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без подписи заказчика</label>
-                                        <input type="file" accept="image/*" name="image2_<?=$stream_i ?>" id="image2_<?=$stream_i ?>" class="d-none color_input" onchange="javascript: $('#filename2_<?=$stream_i ?>').html($(this).val());" />
-                                        <div id="filename2_<?=$stream_i ?>"></div>
-                                    </div>
+                                <div id="mini_button2_wrapper_stream_<?=$row['id'] ?>" class="form-group <?=$button2_wrapper_class ?>">
+                                    <label for="image2_stream_<?=$row['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> Без подписи заказчика</label>
+                                    <input type="file" accept="image/*" name="image2_stream_<?=$row['id'] ?>" id="image2_stream_<?=$row['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$row['id'] ?>, 2);" />
                                 </div>
-                                <?php endif; ?>
                             </div>
                             <div class="d-flex justify-content-start">
-                                <?php if(!empty($stream_position_images1[$stream_i])): ?>
-                                <div class="mr-2 mb-3">
-                                    <a href="javascript: void(0);" onclick="javascript: document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 1; document.forms.download_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.download_image_form.image.value = 1; $('#big_image_header').text('<?=$streams["stream_$stream_i"] ?>'); $('img#big_image_img').attr('src', '../content/<?=$stream_position_images1[$stream_i].'?'. time() ?>')" data-toggle="modal" data-target="#big_image"><img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images1[$stream_i].'?'. time() ?>" /></a>
-                                    <div>С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a></div>
+                                <?php
+                                $image1_wrapper_class = 'd-block';
+                                if(empty($row['image1'])) {
+                                    $image1_wrapper_class = 'd-none';
+                                }
+                                $image2_wrapper_class = 'd-block';
+                                if(empty($row['image2'])) {
+                                    $image2_wrapper_class = 'd-none';
+                                }
+                                ?>
+                                <div id="mini_image1_wrapper_stream_<?=$row['id'] ?>" class="mr-4 <?=$image1_wrapper_class ?>">
+                                    <a id="mini_image1_link_stream_<?=$row['id'] ?>" 
+                                       href="javascript: void(0);" 
+                                       data-toggle="modal" 
+                                       data-target="#big_image" 
+                                       data-filename="<?=$row['image1'] ?>" 
+                                       onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$row['id'] ?>; document.forms.download_image_form.image.value = 1; $('#big_image_header').text('<?= empty($row['name']) ? "Ручей ".$row['position'] : $row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
+                                        <img id="mini_image1_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image1'].'?'. time() ?>" class="img-fluid" />
+                                    </a>
+                                    <div class="mb-2">С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a></div>
                                 </div>
-                                <?php endif; ?>
-                                <?php if(!empty($stream_position_images2[$stream_i])): ?>
-                                <div class="ml-2 mb-3">
-                                    <a href="javascript: void(0);" onclick="javascript: document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.download_image_form.image.value = 2;  $('#big_image_header').text('<?=$streams["stream_$stream_i"] ?>'); $('img#big_image_img').attr('src', '../content/<?=$stream_position_images2[$stream_i].'?'. time() ?>');" data-toggle="modal" data-target="#big_image"><img class="img-fluid" alt="<?=$streams["stream_$stream_i"] ?>" src="../content/mini/<?=$stream_position_images2[$stream_i].'?'. time() ?>" /></a>
-                                    <div>Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.stream_id.value = <?=$stream_position_ids[$stream_i] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a></div>
+                                <div id="mini_image2_wrapper_stream_<?=$row['id'] ?>" class="<?=$image2_wrapper_class ?>">
+                                    <a id="mini_image2_link_stream_<?=$row['id'] ?>" 
+                                       href="javascript: void(0);" 
+                                       data-toggle="modal" 
+                                       data-target="#big_image" 
+                                       data-filename="<?=$row['image2'] ?>" 
+                                       onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$row['id'] ?>; document.forms.download_image_form.image.value = 2; $('#big_image_header').text('<?= empty($row['name']) ? "Ручей ".$row['position'] : $row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
+                                        <img id="mini_image2_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image2'].'?'. time() ?>" class="img-fluid" />
+                                    </a>
+                                    <div class="mb-2">Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a></div>
                                 </div>
-                                <?php endif; ?>
                             </div>
                             <?php endif; ?>
-                            <?php endfor; ?>
+                            <?php endwhile; ?>
                         </div>
                     </div>
                     <?php endif; ?>

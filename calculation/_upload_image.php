@@ -44,6 +44,20 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             }
         }
         
+        if($file_uploaded && $object == STREAM) {
+            $filename = $myimage->filename;
+            $sql = "update calculation_stream set image$image = '$filename' where id = $id";
+            $executer = new Executer($sql);
+            
+            if(empty($executer->error)) {
+                $database_updated = true;
+                $result['filename'] = $filename;
+            }
+            else {
+                $result['error'] = $executer->error;
+            }
+        }
+        
         if($database_updated) {
             // Проверяем, показывать ли кнопку "Поставить в план"
         }
