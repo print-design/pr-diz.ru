@@ -2166,8 +2166,8 @@ if($streams_count == 0) {
                             if(response.filename.length > 0) {
                                 $('#mini_button' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
                                 $('#mini_button' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
-                                $('#mini_image' + image + '_link_' + object + '_' + id).attr('data-filename', response.filename);
-                                $('#mini_image' + image + '_' + object + '_' + id).attr('src', '../content/' + object + '/mini/' + response.filename);
+                                $('#mini_image' + image + '_link_' + object + '_' + id).attr('data-filename', response.filename + '?' + Date.now());
+                                $('#mini_image' + image + '_' + object + '_' + id).attr('src', '../content/' + object + '/mini/' + response.filename + '?' + Date.now());
                             }
                             
                             if(response.info.length > 0) {
