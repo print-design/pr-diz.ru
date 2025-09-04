@@ -297,7 +297,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
         $sql = "";
         
         if($object == PRINTING) {
-            $sql = "select name, image$image from calculation_quantity where id = $id";
+            $sql = "select concat(c.name, cq.id) name, cq.image$image from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
         }
         elseif ($object == STREAM) {
             $sql = "select name, image$image from calculation_stream where id = $id";
@@ -309,7 +309,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
             
             if($row = $fetcher->Fetch()) {
                 if(!empty($row['name'])) {
-                    $targetname = $row['name'];
+                    $targetname = $row['name'].'_'.$image;
                     $targetname = str_replace('.', '', $targetname);
                     $targetname = str_replace(',', '', $targetname);
                 }
@@ -1575,11 +1575,25 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                     ?>
                     <div class="d-flex justify-content-between pb-2">
                         <div id="mini_image1_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image1_wrapper_class ?>">
-                            <img id="mini_image1_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image1'] ?>" class="img-fluid" />
+                            <a id="mini_image1_link_printing_<?=$printing['id'] ?>" 
+                               href="javascript: void(0);" 
+                               data-toggle="modal" 
+                               data-target="#big_image" 
+                               data-filename="<?=$printing['image1'] ?>" 
+                               onclick="javascript: document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.id.value = <?=$printing['id'] ?>; document.forms.download_image_form.image.value = 1; $('#big_image_header').text('Тираж <?=$printing_sequence ?>'); $('#big_image_img').attr('src', '../content/printing/' + $(this).attr('data-filename') + '?' + Date.now());">
+                                <img id="mini_image1_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image1'].'?'. time() ?>" class="img-fluid" />
+                            </a>
                             С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a>
                         </div>
                         <div id="mini_image2_wrapper_printing_<?=$printing['id'] ?>" class="w-50 <?=$image2_wrapper_class ?>">
-                            <img id="mini_image2_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image2'] ?>" class="img-fluid" />
+                            <a id="mini_image2_link_printing_<?=$printing['id'] ?>" 
+                               href="javascript: void(0);" 
+                               data-toggle="modal" 
+                               data-target="#big_image" 
+                               data-filename="<?=$printing['image2'] ?>" 
+                               onclick="javascript: document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.id.value = <?=$printing['id'] ?>; document.forms.download_image_form.image.value = 2; $('#big_image_header').text('Тираж <?=$printing_sequence ?>'); $('#big_image_img').attr('src', '../content/printing/' + $(this).attr('data-filename') + '?' + Date.now());">
+                                <img id="mini_image2_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image2'] ?>" class="img-fluid" />
+                            </a>
                             Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a>
                         </div>
                     </div>
@@ -2149,6 +2163,7 @@ for($stream_i = 1; $stream_i <= $calculation->streams_number; $stream_i++) {
                             if(response.filename.length > 0) {
                                 $('#mini_button' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
                                 $('#mini_button' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
+                                $('#mini_image' + image + '_link_' + object + '_' + id).attr('data-filename', response.filename);
                                 $('#mini_image' + image + '_' + object + '_' + id).attr('src', '../content/' + object + '/mini/' + response.filename);
                             }
                             
