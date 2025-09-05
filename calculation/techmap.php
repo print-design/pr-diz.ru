@@ -1832,7 +1832,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_NOPRINT) {
                                     $plan_class = "";
                                 }
-                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && count(array_filter($streams, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
                                     $plan_class = "";
                                 }
                                 ?>
@@ -2181,6 +2181,17 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             
                             if(response.info.length > 0) {
                                 alert(response.info);
+                            }
+                            
+                            if(response.to_plan_visible === true) {
+                                if($('#plan_submit').hasClass('d-none')) {
+                                    $('#plan_submit').removeClass('d-none');
+                                }
+                            }
+                            else {
+                                if(!$('#plan_submit').hasClass('d-none')) {
+                                    $('#plan_submit').addClass('d-none');
+                                }
                             }
                         }
                     },
