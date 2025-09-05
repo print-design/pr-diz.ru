@@ -63,23 +63,42 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             $status_id = null;
             $work_type_id = null;
             $streams = array();
+            $printings = array();
             
-            $sql = "select c.status_id, c.work_type_id from calculation_stream cs inner join calculation c on cs.calculation_id = c.id where cs.id = $id";
-            $fetcher = new Fetcher($sql);
-            if($row = $fetcher->Fetch()) {
-                $status_id = $row['status_id'];
-                $work_type_id = $row['work_type_id'];
+            if($object == STREAM) {
+                $sql = "select c.status_id, c.work_type_id from calculation_stream cs inner join calculation c on cs.calculation_id = c.id where cs.id = $id";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $status_id = $row['status_id'];
+                    $work_type_id = $row['work_type_id'];
+                }
+            
+                $sql = "select image1, image2 from calculation_stream where calculation_id = (select calculation_id from calculation_stream where id = $id)";
+                $grabber = new Grabber($sql);
+                $streams = $grabber->result;
+                $result['error'] = $grabber->error;
             }
-            
-            $sql = "select image1, image2 from calculation_stream where calculation_id = (select calculation_id from calculation_stream where id = $id)";
-            $grabber = new Grabber($sql);
-            $streams = $grabber->result;
-            $result['error'] = $grabber->error;
+            elseif($object == PRINTING) {
+                $sql = "select c.status_id, c.work_type_id from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
+                $fetcher = new Fetcher($sql);
+                if($row = $fetcher->Fetch()) {
+                    $status_id = $row['status_id'];
+                    $work_type_id = $row['work_type_id'];
+                }
+                
+                $sql = "select image1, image2 from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $id)";
+                $grabber = new Grabber($sql);
+                $printings = $grabber->result;
+                $result['error'] = $grabber->error;
+            }
             
             if($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_NOPRINT) {
                 $result['to_plan_visible'] = true;
             }
             elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
+                $result['to_plan_visible'] = true;
+            }
+            elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
                 $result['to_plan_visible'] = true;
             }
         }

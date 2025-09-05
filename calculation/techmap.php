@@ -1835,6 +1835,9 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
                                     $plan_class = "";
                                 }
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
+                                    $plan_class = "";
+                                }
                                 ?>
                                 <button type="submit" name="techmap_submit" id="techmap_submit" class="btn btn-dark mr-4 draft<?=$submit_class ?>" style="width: 175px;">Сохранить</button>
                                 <button type="submit" name="plan_submit" id="plan_submit" class="btn btn-dark mr-4 draft<?=$plan_class ?>" style="width: 175px;">Поставить в план</button>
