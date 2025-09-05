@@ -641,6 +641,24 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
         <?php
         include '../include/header_zakaz.php';
         ?>
+        <div id="confirm_delete" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                        Удалить выбранный файл?
+                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        Вы удаляете файл &laquo;<span id="deleted_file_name"></span>&raquo;.<br />
+                        После удаления файл будет невозможно восстановить.
+                    </div>
+                    <div class="modal-footer" style="justify-content: flex-start;">
+                        <button type="button" class="btn btn-light" style="width: 120px;" onclick="javascript: document.forms.delete_image_form.submit();"><img src="../images/icons/trash3.svg" class="mr-2" />Удалить</button>
+                        <button type="button" class="btn btn-light" style="width: 120px;" data-dismiss="modal">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="big_image" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1801,7 +1819,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                        onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$stream['id'] ?>; document.forms.download_image_form.image.value = 1; $('#big_image_header').text('<?= empty($stream['name']) ? "Ручей ".$stream_ordinal : $stream['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
                                         <img id="mini_image1_stream_<?=$stream['id'] ?>" src="../content/stream/mini/<?=$stream['image1'].'?'. time() ?>" class="img-fluid" />
                                     </a>
-                                    <div class="mb-2">С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a></div>
+                                    <div class="mb-2">С подписью <a href="javascript: void(0);" data-toggle="modal" data-target="#confirm_delete" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: $('#deleted_file_name').text('<?=$stream['image1'] ?>'); document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 1;">&times;</a></div>
                                 </div>
                                 <div id="mini_image2_wrapper_stream_<?=$stream['id'] ?>" class="<?=$image2_wrapper_class ?>">
                                     <a id="mini_image2_link_stream_<?=$stream['id'] ?>" 
@@ -1812,7 +1830,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                        onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$stream['id'] ?>; document.forms.download_image_form.image.value = 2; $('#big_image_header').text('<?= empty($stream['name']) ? "Ручей ".$stream_ordinal : $stream['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
                                         <img id="mini_image2_stream_<?=$stream['id'] ?>" src="../content/stream/mini/<?=$stream['image2'].'?'. time() ?>" class="img-fluid" />
                                     </a>
-                                    <div class="mb-2">Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a></div>
+                                    <div class="mb-2">Без подписи <a href="javascript: void(0);" data-toggle="modal" data-target="#confirm_delete" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: $('#deleted_file_name').text('<?=$stream['image2'] ?>'); document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 2;">&times;</a></div>
                                 </div>
                             </div>
                             <?php endif; ?>
