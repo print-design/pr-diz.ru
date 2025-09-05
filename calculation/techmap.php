@@ -533,6 +533,16 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
         }
     }
 }
+
+// Список ручьёв
+$streams = array();
+
+if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
+    $sql = "select id, position, name, width, image1, image2 from calculation_stream where calculation_id = $id order by position";
+    $grabber = new Grabber($sql);
+    $streams = $grabber->result;
+    $error_message = $grabber->error;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -1741,13 +1751,12 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                         <div class="col-12">
                             <h2>Наименования</h2>
                             <?php
-                            $sql = "select id, position, name, width, image1, image2 from calculation_stream where calculation_id = $id order by position";
-                            $fetcher = new Fetcher($sql);
-                            while($row = $fetcher->Fetch()):
+                            $stream_ordinal = 0;
+                            foreach($streams as $stream):
                             ?>
-                            <h3>Ручей <?=$row['position'].(count($calculation->stream_widths) > 0 ? ": Ширина ручья ".$row['width']." мм" : "") ?></h3>
+                            <h3>Ручей <?=(++$stream_ordinal).(count($calculation->stream_widths) > 0 ? ": Ширина ручья ".$stream['width']." мм" : "") ?></h3>
                             <div class="form-group">
-                                <input type="text" name="stream_<?=$row['id'] ?>" class="form-control<?=empty($streams_valid[$row['id']]) ? "" : $streams_valid[$row['id']] ?>" value="<?= htmlentities($row['name'] ?? '') ?>" placeholder="Наименование" autocomplete="off" required="required" />
+                                <input type="text" name="stream_<?=$stream['id'] ?>" class="form-control<?=empty($streams_valid["stream_".$stream['id']]) ? "" : $streams_valid["stream_".$stream['id']] ?>" value="<?= htmlentities($stream['name'] ?? '') ?>" placeholder="Наименование" autocomplete="off" required="required" />
                                 <div class="invalid-feedback">Наименование обязательно</div>
                             </div>
                             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
@@ -1755,59 +1764,59 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             <div class="d-flex justify-content-start">
                                 <?php
                                 $button1_wrapper_class = 'd-block';
-                                if(!empty($row['image1'])) {
+                                if(!empty($stream['image1'])) {
                                     $button1_wrapper_class = 'd-none';
                                 }
                                 $button2_wrapper_class = 'd-block';
-                                if(!empty($row['image2'])) {
+                                if(!empty($stream['image2'])) {
                                     $button2_wrapper_class = 'd-none';
                                 }
                                 ?>
-                                <div id="mini_button1_wrapper_stream_<?=$row['id'] ?>" class="form-group mr-4 <?=$button1_wrapper_class ?>">
-                                    <label for="image1_stream_<?=$row['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> С подписью заказчика</label>
-                                    <input type="file" accept="image/*" name="image1_stream_<?=$row['id'] ?>" id="image1_stream_<?=$row['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$row['id'] ?>, 1);" />
+                                <div id="mini_button1_wrapper_stream_<?=$stream['id'] ?>" class="form-group mr-4 <?=$button1_wrapper_class ?>">
+                                    <label for="image1_stream_<?=$stream['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> С подписью заказчика</label>
+                                    <input type="file" accept="image/*" name="image1_stream_<?=$stream['id'] ?>" id="image1_stream_<?=$stream['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$stream['id'] ?>, 1);" />
                                 </div>
-                                <div id="mini_button2_wrapper_stream_<?=$row['id'] ?>" class="form-group <?=$button2_wrapper_class ?>">
-                                    <label for="image2_stream_<?=$row['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> Без подписи заказчика</label>
-                                    <input type="file" accept="image/*" name="image2_stream_<?=$row['id'] ?>" id="image2_stream_<?=$row['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$row['id'] ?>, 2);" />
+                                <div id="mini_button2_wrapper_stream_<?=$stream['id'] ?>" class="form-group <?=$button2_wrapper_class ?>">
+                                    <label for="image2_stream_<?=$stream['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> Без подписи заказчика</label>
+                                    <input type="file" accept="image/*" name="image2_stream_<?=$stream['id'] ?>" id="image2_stream_<?=$stream['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$stream['id'] ?>, 2);" />
                                 </div>
                             </div>
                             <div class="d-flex justify-content-start">
                                 <?php
                                 $image1_wrapper_class = 'd-block';
-                                if(empty($row['image1'])) {
+                                if(empty($stream['image1'])) {
                                     $image1_wrapper_class = 'd-none';
                                 }
                                 $image2_wrapper_class = 'd-block';
-                                if(empty($row['image2'])) {
+                                if(empty($stream['image2'])) {
                                     $image2_wrapper_class = 'd-none';
                                 }
                                 ?>
-                                <div id="mini_image1_wrapper_stream_<?=$row['id'] ?>" class="mr-4 <?=$image1_wrapper_class ?>">
-                                    <a id="mini_image1_link_stream_<?=$row['id'] ?>" 
+                                <div id="mini_image1_wrapper_stream_<?=$stream['id'] ?>" class="mr-4 <?=$image1_wrapper_class ?>">
+                                    <a id="mini_image1_link_stream_<?=$stream['id'] ?>" 
                                        href="javascript: void(0);" 
                                        data-toggle="modal" 
                                        data-target="#big_image" 
-                                       data-filename="<?=$row['image1'] ?>" 
-                                       onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$row['id'] ?>; document.forms.download_image_form.image.value = 1; $('#big_image_header').text('<?= empty($row['name']) ? "Ручей ".$row['position'] : $row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
-                                        <img id="mini_image1_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image1'].'?'. time() ?>" class="img-fluid" />
+                                       data-filename="<?=$stream['image1'] ?>" 
+                                       onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$stream['id'] ?>; document.forms.download_image_form.image.value = 1; $('#big_image_header').text('<?= empty($stream['name']) ? "Ручей ".$stream_ordinal : $stream['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
+                                        <img id="mini_image1_stream_<?=$stream['id'] ?>" src="../content/stream/mini/<?=$stream['image1'].'?'. time() ?>" class="img-fluid" />
                                     </a>
-                                    <div class="mb-2">С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a></div>
+                                    <div class="mb-2">С подписью <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 1; document.forms.delete_image_form.submit(); }">&times;</a></div>
                                 </div>
-                                <div id="mini_image2_wrapper_stream_<?=$row['id'] ?>" class="<?=$image2_wrapper_class ?>">
-                                    <a id="mini_image2_link_stream_<?=$row['id'] ?>" 
+                                <div id="mini_image2_wrapper_stream_<?=$stream['id'] ?>" class="<?=$image2_wrapper_class ?>">
+                                    <a id="mini_image2_link_stream_<?=$stream['id'] ?>" 
                                        href="javascript: void(0);" 
                                        data-toggle="modal" 
                                        data-target="#big_image" 
-                                       data-filename="<?=$row['image2'] ?>" 
-                                       onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$row['id'] ?>; document.forms.download_image_form.image.value = 2; $('#big_image_header').text('<?= empty($row['name']) ? "Ручей ".$row['position'] : $row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
-                                        <img id="mini_image2_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image2'].'?'. time() ?>" class="img-fluid" />
+                                       data-filename="<?=$stream['image2'] ?>" 
+                                       onclick="javascript: document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$stream['id'] ?>; document.forms.download_image_form.image.value = 2; $('#big_image_header').text('<?= empty($stream['name']) ? "Ручей ".$stream_ordinal : $stream['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/' + $(this).attr('data-filename') + '?' + Date.now());">
+                                        <img id="mini_image2_stream_<?=$stream['id'] ?>" src="../content/stream/mini/<?=$stream['image2'].'?'. time() ?>" class="img-fluid" />
                                     </a>
-                                    <div class="mb-2">Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$row['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a></div>
+                                    <div class="mb-2">Без подписи <a href="javascript: void(0);" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 2; document.forms.delete_image_form.submit(); }">&times;</a></div>
                                 </div>
                             </div>
                             <?php endif; ?>
-                            <?php endwhile; ?>
+                            <?php endforeach; ?>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -1823,9 +1832,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_NOPRINT) {
                                     $plan_class = "";
                                 }
-                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP 
-                                        && count($stream_position_images1) == count(array_filter($stream_position_images1, function($x) { return !empty($x); })) 
-                                        && count($stream_position_images2) == count(array_filter($stream_position_images2, function($x) { return !empty($x); }))) {
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && count(array_filter($streams, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
                                     $plan_class = "";
                                 }
                                 ?>
