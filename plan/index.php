@@ -92,6 +92,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
         
         $name = str_replace('.', '', $name);
         $name = str_replace(',', '', $name);
+        $name = htmlspecialchars($name);
         $targetname = $name.'.'.$extension;
         
         DownloadSendHeaders($targetname);
@@ -293,14 +294,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
                         <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="modal-body" style="height: 700px;">
-                        <div id="images_list_data" style="overflow: auto; height: 100%;">
-                        Список
-                        <?php
-                        for($i = 0; $i < 1000; $i++) {
-                            echo "STRIMG<br />";
-                        }
-                        ?>
-                        </div>
+                        <div id="images_list_data" style="overflow: auto; height: 100%;"></div>
                     </div>
                 </div>
             </div>

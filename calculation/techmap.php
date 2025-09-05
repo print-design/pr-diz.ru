@@ -288,6 +288,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
                     $targetname = $row['name'].'_'.$image;
                     $targetname = str_replace('.', '', $targetname);
                     $targetname = str_replace(',', '', $targetname);
+                    $targetname = htmlspecialchars($targetname);
                 }
                 
                 $filename = $row["image$image"];

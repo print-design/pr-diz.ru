@@ -86,10 +86,8 @@ class PlanTimetable {
                 . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
                 . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                 . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
-                . "(select image1 from calculation_stream where calculation_id = c.id and image1 <> '' limit 1) as stream_image1, "
-                . "(select image2 from calculation_stream where calculation_id = c.id and image2 <> '' limit 1) as stream_image2, "
-                . "(select image1 from calculation_quantity where calculation_id = c.id and image1 <> '' limit 1) as printing_image1, "
-                . "(select image2 from calculation_quantity where calculation_id = c.id and image2 <> '' limit 1) as printing_image2 "
+                . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
+                . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
                 . "from plan_edition e "
                 . "inner join calculation c on e.calculation_id = c.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -126,10 +124,7 @@ class PlanTimetable {
                 . "0 as lamination, ev.comment, 0 as num_for_customer, "
                 . "0 as length_cut, "
                 . "0 as weight_cut, "
-                . "'' as stream_image1, "
-                . "'' as stream_image2, "
-                . "'' as printing_image1, "
-                . "'' as printing_image2 "
+                . "0 as images_count "
                 . "from plan_event ev where ev.in_plan = 1 and ev.work_id = ".$this->work_id." and ev.machine_id = ".$this->machine_id." and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and ev.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "union "
                 . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.lamination_roller_width, c.length, c.stream_width, c.streams_number, c.ink_number, c.status_id, c.cut_remove_cause, c.unit, c.quantity, "
@@ -157,10 +152,8 @@ class PlanTimetable {
                 . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
                 . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                 . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
-                . "(select image1 from calculation_stream where calculation_id = c.id and image1 <> '' limit 1) as stream_image1, "
-                . "(select image2 from calculation_stream where calculation_id = c.id and image2 <> '' limit 1) as stream_image2, "
-                . "(select image1 from calculation_quantity where calculation_id = c.id and image1 <> '' limit 1) as printing_image1, "
-                . "(select image2 from calculation_quantity where calculation_id = c.id and image2 <> '' limit 1) as printing_image2 "
+                . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
+                . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
                 . "from plan_continuation pc "
                 . "inner join plan_edition e on pc.plan_edition_id = e.id "
                 . "inner join calculation c on e.calculation_id = c.id "
@@ -196,26 +189,6 @@ class PlanTimetable {
             $row['laminations'] = $laminations;
             $row['manager'] = $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.';
             $row['samples_count'] = '';
-            
-            $row['image'] = "";
-            $row['image_object'] = "";
-            
-            if(!empty($row['stream_image1'])) {
-                $row['image'] = $row['stream_image1'];
-                $row['image_object'] = "stream";
-            }
-            elseif(!empty ($row['stream_image2'])) {
-                $row['image'] = $row['stream_image2'];
-                $row['image_object'] = "stream";
-            }
-            elseif(!empty ($row['printing_image1'])) {
-                $row['image'] = $row['printing_image1'];
-                $row['image_object'] = "printing";
-            }
-            elseif(!empty ($row['printing_image2'])) {
-                $row['image'] = $row['printing_image2'];
-                $row['image_object'] = "printing";
-            }
             
             if($this->work_id == WORK_PRINTING) {
                 // Вычисление количества образцов

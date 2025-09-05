@@ -22,7 +22,7 @@
                 <?php endif; ?>
                 <?php if($row['images_count'] > 0): ?>
                 <div class="mr-1">
-                    <button class="btn btn-link ui_tooltip right" title="Посмотреть макеты" data-toggle="modal" data-target="#images_list" onclick="javascript: $('#images_list_header').text('<?=$row['calculation'] ?>'); ShowImagesList(<?=$row['calculation_id'] ?>);"><img src="../images/icons/attach.svg" /></button>
+                    <button class="btn btn-link ui_tooltip right" title="Посмотреть макеты" data-toggle="modal" data-target="#images_list" onclick="javascript: $('#images_list_header').text('<?= htmlspecialchars($row['calculation']) ?>'); ShowImagesList(<?=$row['calculation_id'] ?>);"><img src="../images/icons/attach.svg" /></button>
                 </div>
                 <?php endif; ?>
                 <div style="position: relative; padding-top: 10px;">
