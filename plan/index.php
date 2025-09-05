@@ -74,6 +74,29 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
+
+// Выгрузка картинки
+if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
+    $object = filter_input(INPUT_POST, 'object');
+    $image = filter_input(INPUT_POST, 'image');
+    $name = filter_input(INPUT_POST, 'name');
+    
+    if(!empty($object) && !empty($image) && !empty($name)) {
+        $filepath = "../content/$object/$image";
+        
+        $extension = "";
+        $substrings = explode('.', $image);
+        if(count($substrings) > 1) {
+            $extension = $substrings[count($substrings) - 1];
+        }
+        
+        $targetname = $name.'.'.$extension;
+        
+        DownloadSendHeaders($targetname);
+        readfile($filepath);
+        exit();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -246,6 +269,20 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
         </style>
     </head>
     <body>
+        <div id="big_image" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                        <div id="big_image_header"></div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
+                    <div class="modal-footer" style="justify-content: flex-start;">
+                        <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="add_event" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -291,6 +328,12 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
         <?php
         include '../include/header_plan.php';
         ?>
+        <form id="download_image_form" method="post">
+            <input type="hidden" id="object" name="object" />
+            <input type="hidden" id="image" name="image" />
+            <input type="hidden" id="name" name="name" />
+            <input type="hidden" name="download_image_submit" value="1" />
+        </form>
         <div class="container-fluid">
             <?php
             $header = '';

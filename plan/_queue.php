@@ -50,7 +50,8 @@ class Queue {
                 . "0 lamination1_film_variation_id, '' lamination1_individual_film_name, "
                 . "0 lamination2_film_variation_id, '' lamination2_individual_film_name, "
                 . "0 as lamination, "
-                . "'' first_name, '' last_name "
+                . "'' first_name, '' last_name, "
+                . "'' as stream_image1, '' as stream_image2, '' as printing_image1, '' as printing_image2 "
                 . "from plan_event "
                 . "where in_plan = 0"
                 . " and work_id = ".$this->work_id
@@ -60,7 +61,11 @@ class Queue {
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "0 as lamination, "
-                . "u.first_name, u.last_name "
+                . "u.first_name, u.last_name, "
+                . "(select image1 from calculation_stream where calculation_id = c.id and image1 <> '' limit 1) as stream_image1, "
+                . "(select image2 from calculation_stream where calculation_id = c.id and image2 <> '' limit 1) as stream_image2, "
+                . "(select image1 from calculation_quantity where calculation_id = c.id and image1 <> '' limit 1) as printing_image1, "
+                . "(select image2 from calculation_quantity where calculation_id = c.id and image2 <> '' limit 1) as printing_image2 "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -79,6 +84,26 @@ class Queue {
             }
             elseif(!empty($row['lamination1_film_variation_id']) || !empty($row['lamination1_individual_film_name'])) {
                 $laminations_number = 1;
+            }
+            
+            $row['image'] = "";
+            $row['image_object'] = "";
+            
+            if(!empty($row['stream_image1'])) {
+                $row['image'] = $row['stream_image1'];
+                $row['image_object'] = "stream";
+            }
+            elseif(!empty ($row['stream_image2'])) {
+                $row['image'] = $row['stream_image2'];
+                $row['image_object'] = "stream";
+            }
+            elseif(!empty ($row['printing_image1'])) {
+                $row['image'] = $row['printing_image1'];
+                $row['image_object'] = "printing";
+            }
+            elseif(!empty ($row['printing_image2'])) {
+                $row['image'] = $row['printing_image2'];
+                $row['image_object'] = "printing";
             }
             
             if($row['type'] == PLAN_TYPE_EVENT) {

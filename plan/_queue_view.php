@@ -20,6 +20,11 @@
                     </form>
                 </div>
                 <?php endif; ?>
+                <?php if(!empty($row['image']) && !empty($row['image_object'])): ?>
+                <div class="mr-1">
+                    <button class="btn btn-link ui_tooltip right" title="Посмотреть макет" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['calculation'] ?>'); $('#big_image_img').attr('src', '../content/<?=$row['image_object'] ?>/<?=$row['image'] ?>'); document.forms.download_image_form.object.value = '<?=$row['image_object'] ?>'; document.forms.download_image_form.image.value = '<?=$row['image'] ?>'; document.forms.download_image_form.name.value= '<?=$row['calculation'] ?>';"><img src="../images/icons/attach.svg" /></button>
+                </div>
+                <?php endif; ?>
                 <div style="position: relative; padding-top: 10px;">
                     <a class="black queue_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg" /></a>
                     <div class="queue_menu text-left">
