@@ -669,7 +669,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                     <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
                     <div class="modal-footer" style="justify-content: flex-start;">
                         <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
-                        <button type="button" class="btn btn-light" onclick="javascript: if(confirm('Действительно удалить?')) { document.forms.delete_image_form.submit(); }"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
+                        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#confirm_delete" data-dismiss="modal"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
                     </div>
                 </div>
             </div>
