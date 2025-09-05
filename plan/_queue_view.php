@@ -20,9 +20,9 @@
                     </form>
                 </div>
                 <?php endif; ?>
-                <?php if(!empty($row['image']) && !empty($row['image_object'])): ?>
+                <?php if($row['images_count'] > 0): ?>
                 <div class="mr-1">
-                    <button class="btn btn-link ui_tooltip right" title="Посмотреть макет" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['calculation'] ?>'); $('#big_image_img').attr('src', '../content/<?=$row['image_object'] ?>/<?=$row['image'] ?>'); document.forms.download_image_form.object.value = '<?=$row['image_object'] ?>'; document.forms.download_image_form.image.value = '<?=$row['image'] ?>'; document.forms.download_image_form.name.value= '<?=$row['calculation'] ?>';"><img src="../images/icons/attach.svg" /></button>
+                    <button class="btn btn-link ui_tooltip right" title="Посмотреть макеты" data-toggle="modal" data-target="#images_list" onclick="javascript: $('#images_list_header').text('<?=$row['calculation'] ?>'); ShowImagesList(<?=$row['calculation_id'] ?>);"><img src="../images/icons/attach.svg" /></button>
                 </div>
                 <?php endif; ?>
                 <div style="position: relative; padding-top: 10px;">

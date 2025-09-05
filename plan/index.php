@@ -285,6 +285,26 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
                 </div>
             </div>
         </div>
+        <div id="images_list" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                        <div id="images_list_header"></div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body" style="height: 700px;">
+                        <div id="images_list_data" style="overflow: auto; height: 100%;">
+                        Список
+                        <?php
+                        for($i = 0; $i < 1000; $i++) {
+                            echo "STRIMG<br />";
+                        }
+                        ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="add_event" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -491,6 +511,13 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
             }
             
             EnableMenu();
+            
+            function ShowImagesList(calculation_id)  {
+                $.ajax({ url: "_images_list.php?calculation_id=" + calculation_id })
+                        .done(function(data) {
+                            $('#images_list_data').html(data);
+                        });
+            }
             
             <?php if($timetable->editable): ?>
             // Скрытие/показ левой панели.
