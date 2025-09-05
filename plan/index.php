@@ -90,6 +90,8 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
             $extension = $substrings[count($substrings) - 1];
         }
         
+        $name = str_replace('.', '', $name);
+        $name = str_replace(',', '', $name);
         $targetname = $name.'.'.$extension;
         
         DownloadSendHeaders($targetname);

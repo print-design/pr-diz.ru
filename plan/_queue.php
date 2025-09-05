@@ -121,7 +121,8 @@ class Queue {
                 . "0 lamination1_film_variation_id, '' lamination1_film_name, 0 lamination1_thickness, '' lamination1_individual_film_name, 0 lamination1_individual_thickness, "
                 . "0 lamination2_film_variation_id, '' lamination2_film_name, 0 lamination2_thickness, '' lamination2_individual_film_name, 0 lamination2_individual_thickness, "
                 . "0 as lamination, 0 as width_1, 0 as width_2, 0 as width_3, "
-                . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position "
+                . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position, "
+                . "'' as stream_image1, '' as stream_image2, '' as printing_image1, '' as printing_image2 "
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
                 . " union "
@@ -131,7 +132,11 @@ class Queue {
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
                 . "1 as lamination, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
-                . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position "
+                . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position, "
+                . "(select image1 from calculation_stream where calculation_id = c.id and image1 <> '' limit 1) as stream_image1, "
+                . "(select image2 from calculation_stream where calculation_id = c.id and image2 <> '' limit 1) as stream_image2, "
+                . "(select image1 from calculation_quantity where calculation_id = c.id and image1 <> '' limit 1) as printing_image1, "
+                . "(select image2 from calculation_quantity where calculation_id = c.id and image2 <> '' limit 1) as printing_image2 "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -162,7 +167,11 @@ class Queue {
                 . "c.lamination2_film_variation_id, f2.name lamination2_film_name, fv2.thickness lamination2_thickness, c.lamination2_individual_film_name, c.lamination2_individual_thickness, "
                 . "2 as lamination, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
-                . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position "
+                . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position, "
+                . "(select image1 from calculation_stream where calculation_id = c.id and image1 <> '' limit 1) as stream_image1, "
+                . "(select image2 from calculation_stream where calculation_id = c.id and image2 <> '' limit 1) as stream_image2, "
+                . "(select image1 from calculation_quantity where calculation_id = c.id and image1 <> '' limit 1) as printing_image1, "
+                . "(select image2 from calculation_quantity where calculation_id = c.id and image2 <> '' limit 1) as printing_image2 "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -198,6 +207,26 @@ class Queue {
                 $laminations_number = 1;
             }
             
+            $row['image'] = "";
+            $row['image_object'] = "";
+            
+            if(!empty($row['stream_image1'])) {
+                $row['image'] = $row['stream_image1'];
+                $row['image_object'] = "stream";
+            }
+            elseif(!empty ($row['stream_image2'])) {
+                $row['image'] = $row['stream_image2'];
+                $row['image_object'] = "stream";
+            }
+            elseif(!empty ($row['printing_image1'])) {
+                $row['image'] = $row['printing_image1'];
+                $row['image_object'] = "printing";
+            }
+            elseif(!empty ($row['printing_image2'])) {
+                $row['image'] = $row['printing_image2'];
+                $row['image_object'] = "printing";
+            }
+            
             if($row['type'] == PLAN_TYPE_EVENT) {
                 require './_event_view.php';
             }
@@ -212,7 +241,8 @@ class Queue {
                 . "0 as lamination1_film_variation_id, '' as lamination1_individual_film_name, "
                 . "0 as lamination2_film_variation_id, '' as lamination2_individual_film_name, "
                 . "0 as lamination, "
-                . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position, null as lamination_date, '' as lamination_shift, 0 as lamination_position "
+                . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position, null as lamination_date, '' as lamination_shift, 0 as lamination_position, "
+                . "'' as stream_image1, '' as stream_image2, '' as printing_image1, '' as printing_image2 "
                 . "from plan_event "
                 . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id;
         $sql .= " union "
@@ -222,7 +252,11 @@ class Queue {
                 . "0 as lamination, "
                 . "u.first_name, u.last_name, "
                 . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position, "
-                . "pelam.date as lamination_date, pelam.shift as lamination_shift, pelam.position as lamination_position "
+                . "pelam.date as lamination_date, pelam.shift as lamination_shift, pelam.position as lamination_position, "
+                . "(select image1 from calculation_stream where calculation_id = c.id and image1 <> '' limit 1) as stream_image1, "
+                . "(select image2 from calculation_stream where calculation_id = c.id and image2 <> '' limit 1) as stream_image2, "
+                . "(select image1 from calculation_quantity where calculation_id = c.id and image1 <> '' limit 1) as printing_image1, "
+                . "(select image2 from calculation_quantity where calculation_id = c.id and image2 <> '' limit 1) as printing_image2 "
                 . "from calculation c "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -263,6 +297,26 @@ class Queue {
             }
             elseif(!empty ($row['lamination1_film_variation_id']) || !empty ($row['lamination1_individual_film_name'])) {
                 $laminations_number = 1;
+            }
+            
+            $row['image'] = "";
+            $row['image_object'] = "";
+            
+            if(!empty($row['stream_image1'])) {
+                $row['image'] = $row['stream_image1'];
+                $row['image_object'] = "stream";
+            }
+            elseif(!empty ($row['stream_image2'])) {
+                $row['image'] = $row['stream_image2'];
+                $row['image_object'] = "stream";
+            }
+            elseif(!empty ($row['printing_image1'])) {
+                $row['image'] = $row['printing_image1'];
+                $row['image_object'] = "printing";
+            }
+            elseif(!empty ($row['printing_image2'])) {
+                $row['image'] = $row['printing_image2'];
+                $row['image_object'] = "printing";
             }
             
             if($row['type'] == PLAN_TYPE_EVENT) {
