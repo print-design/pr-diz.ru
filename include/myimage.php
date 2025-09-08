@@ -34,33 +34,34 @@ class MyImage {
         $dest_width = 0;
         
         if((empty($max_height) || $max_height >= $this->height) && (empty($max_width) || $max_width >= $this->width)) {
-            $result = move_uploaded_file($this->sourcefile, $targetFolder.$this->filename);
+            $dest_width = $this->width;
+            $dest_height = $this->height;
         }
-        else {
-            if(empty($max_height) && !empty($max_width)) {
-                $dest_width = $max_width;
-                $dest_height = round($this->height * $max_width / $this->width);
-            }
+        
+        if(empty($max_height) && !empty($max_width)) {
+            $dest_width = $max_width;
+            $dest_height = round($this->height * $max_width / $this->width);
+        }
                         
-            if(!empty($max_height) && empty($max_width)) {
+        if(!empty($max_height) && empty($max_width)) {
+            $dest_height = $max_height;
+            $dest_width = round($this->width * $max_height / $this->height);
+        }
+                        
+        if(!empty($max_height) && !empty($max_width)) {
+            $dest_width = $max_width;
+            $dest_height = round($this->height * $max_width / $this->width);
+            
+            if($dest_height > $max_height) {
                 $dest_height = $max_height;
                 $dest_width = round($this->width * $max_height / $this->height);
             }
+        }
                         
-            if(!empty($max_height) && !empty($max_width)) {
-                $dest_width = $max_width;
-                $dest_height = round($this->height * $max_width / $this->width);
-                            
-                if($dest_height > $max_height) {
-                    $dest_height = $max_height;
-                    $dest_width = round($this->width * $max_height / $this->height);
-                }
-            }
+        $src_image = null;
+        $dest_image = imagecreatetruecolor($dest_width, $dest_height);
                         
-            $src_image = null;
-            $dest_image = imagecreatetruecolor($dest_width, $dest_height);
-                        
-            switch ($this->image_size[2]) {
+        switch ($this->image_size[2]) {
             case IMG_BMP:
                 $src_image = imagecreatefrombmp($this->sourcefile);
                 imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $dest_width, $dest_height, $this->width, $this->height);
@@ -108,12 +109,11 @@ class MyImage {
                 imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $dest_width, $dest_height, $this->width, $this->height);
                 $result = imagexbm($dest_image, $targetFolder. $this->filename);
                 break;
-            }
-            
-            $this->image_size = getimagesize($targetFolder. $this->filename);
-            $this->width = $this->image_size[0];
-            $this->height = $this->image_size[1];
         }
+            
+        $this->image_size = getimagesize($targetFolder. $this->filename);
+        $this->width = $this->image_size[0];
+        $this->height = $this->image_size[1];
         
         return $result;
     }

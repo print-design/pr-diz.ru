@@ -19,25 +19,46 @@ $id = filter_input(INPUT_POST, 'id');
 $image = filter_input(INPUT_POST, 'image');
 
 if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_name'])) {
+    $myimage = null;
+    $input_file = null;
+    
     if($_FILES['file']['type'] == 'application/pdf') {
         if(move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf")) {
-            $result['info'] = "PDF-файл загружен";
-            echo json_encode($result);
-            exit();
+            $imagick = new Imagick();
+            $imagick->setResolution(300, 300);
+            $imagick->readImage($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf[0]");
+            $imagick->setImageFormat('jpeg');
+            $imagick->setCompressionQuality(95);
+            $output_file = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".jpg";
+            $imagick->writeImage($output_file);
+            
+            $input_file = $output_file;
+            $myimage = new MyImage($input_file);
+            $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/", $id."_".$image, IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
+            if(!$file_uploaded) {
+                $result['info'] .= $myimage->errorMessage;
+            }
         }
         else {
             $result['error'] = "Ошибка при загрузке PDF-файла";
-            echo json_encode($result);
-            exit();
+            $file_uploaded = false;
+        }
+    }
+    else {
+        $input_file = $_FILES['file']['tmp_name'];
+        $myimage = new MyImage($input_file);
+        $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/", $id."_".$image, IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
+        if(!$file_uploaded) {
+            $result['info'] .= $myimage->errorMessage;
         }
     }
     
-    $myimage = new MyImage($_FILES['file']['tmp_name']);
-    $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/", $id."_".$image, IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
-    
-    if($file_uploaded) {
-        $myimage = new MyImage($_FILES['file']['tmp_name']);
+    if(!empty($myimage) && !empty($input_file) && $file_uploaded) {
+        $myimage = new MyImage($input_file);
         $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/", $id."_".$image, IMAGE_WIDTH, IMAGE_HEIGHT);
+        if(!$file_uploaded) {
+            $result['info'] .= $myimage->errorMessage;
+        }
         
         $database_updated = false;
         $filename = '';
