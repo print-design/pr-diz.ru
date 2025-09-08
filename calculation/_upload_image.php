@@ -19,7 +19,19 @@ $id = filter_input(INPUT_POST, 'id');
 $image = filter_input(INPUT_POST, 'image');
 
 if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_name'])) {
-    // Загружаем файл
+    if($_FILES['file']['type'] == 'application/pdf') {
+        if(move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf")) {
+            $result['info'] = "PDF-файл загружен";
+            echo json_encode($result);
+            exit();
+        }
+        else {
+            $result['error'] = "Ошибка при загрузке PDF-файла";
+            echo json_encode($result);
+            exit();
+        }
+    }
+    
     $myimage = new MyImage($_FILES['file']['tmp_name']);
     $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/", $id."_".$image, IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
     
