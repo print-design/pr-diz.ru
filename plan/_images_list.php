@@ -10,17 +10,17 @@ while($row = $fetcher->Fetch()):
 ?>
     <div class="d-flex justify-content-start mb-4">
         <div class="mr-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image1'] ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
-                <img src="../content/stream/mini/<?=$row['image1'] ?>" />
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image1'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+                <img src="../content/stream/mini/<?=$row['image1'].'?'. time() ?>" />
             </a>
         </div>
         <div>
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image1'] ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image1'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 <?=$row['name'] ?>
             </a>
         </div>
         <div class="text-nowrap ml-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image1'] ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image1'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 С подписью
             </a>
         </div>
@@ -31,17 +31,17 @@ if(!empty($row['image2'])):
 ?>
     <div class="d-flex justify-content-start mb-4">
         <div class="mr-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image2'] ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
-                <img src="../content/stream/mini/<?=$row['image2'] ?>" />
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image2'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+                <img src="../content/stream/mini/<?=$row['image2'].'?'. time() ?>" />
             </a>
         </div>
         <div>
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image2'] ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image2'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 <?=$row['name'] ?>
             </a>
         </div>
         <div class="text-nowrap ml-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image2'] ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$row['image2'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 Без подписи
             </a>
         </div>
@@ -57,17 +57,17 @@ while ($row = $fetcher->Fetch()):
 ?>
     <div class="d-flex justify-content-start mb-4">
         <div class="mr-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image1'] ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
-                <img src="../content/printing/mini/<?=$row['image1'] ?>" />
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image1'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+                <img src="../content/printing/mini/<?=$row['image1'].'?'. time() ?>" />
             </a>
         </div>
         <div>
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image1'] ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image1'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 <?=$row['name'] ?>
             </a>
         </div>
         <div class="text-nowrap ml-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image1'] ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image1'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image1'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf1'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 С подписью
             </a>
         </div>
@@ -78,17 +78,17 @@ if(!empty($row['image2'])):
 ?>
     <div class="d-flex justify-content-start mb-4">
         <div class="mr-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image2'] ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
-                <img src="../content/printing/mini/<?=$row['image2'] ?>" />
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image2'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+                <img src="../content/printing/mini/<?=$row['image2'].'?'. time() ?>" />
             </a>
         </div>
         <div>
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image2'] ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image2'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 <?=$row['name'] ?>
             </a>
         </div>
         <div class="text-nowrap ml-3">
-            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image2'] ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
+            <a href="javascript: void(0);" data-dismiss="modal" data-toggle="modal" data-target="#big_image" onclick="javascript: $('#big_image_header').text('<?=$row['name'] ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$row['image2'].'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.image.value = '<?=$row['image2'] ?>'; document.forms.download_image_form.pdf.value = '<?=$row['pdf2'] ?>'; document.forms.download_image_form.name.value = '<?=$row['name'] ?>';">
                 Без подписи
             </a>
         </div>

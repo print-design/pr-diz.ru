@@ -23,7 +23,10 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
     $input_file = null;
     
     if($_FILES['file']['type'] == 'application/pdf') {
+        // Если файл - PDF
+        // Загружаем PDF-файл
         if(move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf")) {
+            // Сохраняем его имя в базе
             $filename = $id."_".$image.".pdf";
             
             if($object == STREAM) {
@@ -37,6 +40,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
                 $result['error'] = $executer->error;
             }
             
+            // Делаем из PDF картинку
             $imagick = new Imagick();
             $imagick->setResolution(300, 300);
             $imagick->readImage($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf[0]");
@@ -45,6 +49,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             $output_file = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".jpeg";
             $imagick->writeImage($output_file);
             
+            // Сохраняем мини-картинку
             $input_file = $output_file;
             $myimage = new MyImage($input_file);
             $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/", $id."_".$image, IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
@@ -58,6 +63,8 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
         }
     }
     else {
+        // Если файл - не PDF
+        // Сохраняем мини-картинку
         $input_file = $_FILES['file']['tmp_name'];
         $myimage = new MyImage($input_file);
         $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/", $id."_".$image, IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
@@ -66,6 +73,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
         }
     }
     
+    // Сохраняем полноразмерную картинку и вносим её имя в базу данных
     if(!empty($myimage) && !empty($input_file) && $file_uploaded) {
         $myimage = new MyImage($input_file);
         $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/", $id."_".$image, IMAGE_WIDTH, IMAGE_HEIGHT);
