@@ -220,17 +220,17 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
         $sql = "";
         
         if($object == PRINTING) {
-            $sql = "select image$image from calculation_quantity where id = $id";
+            $sql = "select image$image, pdf$image from calculation_quantity where id = $id";
         }
         elseif($object == STREAM) {
-            $sql = "select image$image from calculation_stream where id = $id";
+            $sql = "select image$image, pdf$image from calculation_stream where id = $id";
         }
         
         if(!empty($sql)) {
             $fetcher = new Fetcher($sql);
             
             if($row = $fetcher->Fetch()) {
-                $filename = $row[0];
+                $filename = $row["image$image"];
                 $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/$filename";
                 if(file_exists($filepath)) {
                     unlink($filepath);
@@ -247,13 +247,24 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
                     $error_message = "Ошибка при удалении файла: файл не существует.";
                 }
                 
+                $filename = $row["pdf$image"];
+                if(!empty($filename)) {
+                    $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/$filename";
+                    if(file_exists($filepath)) {
+                        unlink($filepath);
+                    }
+                    else {
+                        $error_message = "Ошибка при удалении файла PDF: файл не существует.";
+                    }
+                }
+                
                 $sql = "";
                 
                 if($object == PRINTING) {
-                    $sql = "update calculation_quantity set image$image = '' where id = $id";
+                    $sql = "update calculation_quantity set image$image = '', pdf$image = '' where id = $id";
                 }
                 elseif($object == STREAM) {
-                    $sql = "update calculation_stream set image$image = '' where id = $id";
+                    $sql = "update calculation_stream set image$image = '', pdf$image = '' where id = $id";
                 }
                 
                 $executer = new Executer($sql);
