@@ -281,10 +281,10 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
         $sql = "";
         
         if($object == PRINTING) {
-            $sql = "select concat(c.name, cq.id) name, cq.image$image from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
+            $sql = "select concat(c.name, cq.id) name, cq.image$image, cq.pdf$image from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
         }
         elseif ($object == STREAM) {
-            $sql = "select name, image$image from calculation_stream where id = $id";
+            $sql = "select name, image$image, pdf$image from calculation_stream where id = $id";
         }
         
         if(!empty($sql)) {
@@ -301,11 +301,18 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
                 
                 $filename = $row["image$image"];
                 $filepath = "../content/$object/$filename";
-                
                 $extension = "";
-                $substrings = explode('.', $filename);
-                if(count($substrings) > 1) {
-                    $extension = $substrings[count($substrings) - 1];
+                
+                if(!empty($row["pdf$image"])) {
+                    $filename = $row["pdf$image"];
+                    $filepath = "../content/$object/pdf/$filename";
+                    $extension = "pdf";
+                }
+                else {
+                    $substrings = explode('.', $filename);
+                    if(count($substrings) > 1) {
+                        $extension = $substrings[count($substrings) - 1];
+                    }
                 }
                 
                 $targetname = $targetname.'.'.$extension;
