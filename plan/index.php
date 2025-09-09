@@ -79,15 +79,22 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
 if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
     $object = filter_input(INPUT_POST, 'object');
     $image = filter_input(INPUT_POST, 'image');
+    $pdf = filter_input(INPUT_POST, 'pdf');
     $name = filter_input(INPUT_POST, 'name');
     
     if(!empty($object) && !empty($image) && !empty($name)) {
         $filepath = "../content/$object/$image";
-        
         $extension = "";
-        $substrings = explode('.', $image);
-        if(count($substrings) > 1) {
-            $extension = $substrings[count($substrings) - 1];
+        
+        if(!empty($pdf)) {
+            $filepath = "../content/$object/pdf/$pdf";
+            $extension = "pdf";
+        }
+        else {
+            $substrings = explode('.', $image);
+            if(count($substrings) > 1) {
+                $extension = $substrings[count($substrings) - 1];
+            }
         }
         
         $name = str_replace('.', '', $name);
@@ -347,6 +354,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
         <form id="download_image_form" method="post">
             <input type="hidden" id="object" name="object" />
             <input type="hidden" id="image" name="image" />
+            <input type="hidden" id="pdf" name="pdf" />
             <input type="hidden" id="name" name="name" />
             <input type="hidden" name="download_image_submit" value="1" />
         </form>
