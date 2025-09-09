@@ -24,6 +24,19 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
     
     if($_FILES['file']['type'] == 'application/pdf') {
         if(move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf")) {
+            $filename = $id."_".$image.".pdf";
+            
+            if($object == STREAM) {
+                $sql = "update calculation_stream set pdf$image = '$filename' where id = $id";
+                $executer = new Executer($sql);
+                $result['error'] = $executer->error;
+            }
+            elseif($object == PRINTING) {
+                $sql = "update calculation_quantity set pdf$image = '$filename' where id = $id";
+                $executer = new Executer($sql);
+                $result['error'] = $executer->error;
+            }
+            
             $imagick = new Imagick();
             $imagick->setResolution(300, 300);
             $imagick->readImage($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf[0]");
