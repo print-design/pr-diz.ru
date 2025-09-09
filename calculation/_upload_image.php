@@ -42,7 +42,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             $imagick->readImage($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf[0]");
             $imagick->setImageFormat('jpeg');
             $imagick->setCompressionQuality(95);
-            $output_file = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".jpg";
+            $output_file = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".jpeg";
             $imagick->writeImage($output_file);
             
             $input_file = $output_file;

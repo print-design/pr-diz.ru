@@ -235,16 +235,10 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
                 if(file_exists($filepath)) {
                     unlink($filepath);
                 }
-                else {
-                    $error_message = "Ошибка при удалении файла: файл не существует.";
-                }
                 
                 $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/$filename";
                 if(file_exists($filepath)) {
                     unlink($filepath);
-                }
-                else {
-                    $error_message = "Ошибка при удалении файла: файл не существует.";
                 }
                 
                 $filename = $row["pdf$image"];
@@ -253,17 +247,11 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
                     if(file_exists($filepath)) {
                         unlink($filepath);
                     }
-                    else {
-                        $error_message = "Ошибка при удалении файла PDF: файл не существует.";
-                    }
                     
                     $filename = $row["image$image"];
                     $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/$filename";
                     if(file_exists($filepath)) {
                         unlink($filepath);
-                    }
-                    else {
-                        $error_message = "Ошибка при удалении файла: файл не существует.";
                     }
                 }
                 
