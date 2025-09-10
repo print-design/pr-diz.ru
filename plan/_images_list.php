@@ -10,7 +10,7 @@ $sql = "select name, image1, image2, pdf1, pdf2, 'stream' as object "
         . "select concat(c.name, cq.quantity) name, cq.image1, cq.image2, cq.pdf1, cq.pdf2, 'printing' as object, "
         . "from calculation_quantity cq "
         . "inner join calculation c on cq.calculation_id = c.id "
-        . "where cq.calculation_id = $calculation_id";
+        . "where cq.calculation_id = $calculation_id"; echo $sql;
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
     if(!empty($row['image1'])):
