@@ -1,3 +1,42 @@
+<form id="download_image_form" method="post">
+    <input type="hidden" id="image" name="image" />
+    <input type="hidden" id="pdf" name="pdf" />
+    <input type="hidden" id="name" name="name" />
+    <input type="hidden" name="download_image_submit" value="1" />
+</form>
+<div id="big_image" class="modal fade show">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                <div id="big_image_header"></div>
+                <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-light" id="big_image_left" style="font-size: x-large;" onclick="javascript: $('#big_image_img').attr('src', '../content/stream/' + $('#images_list_item_1').attr('data-image') + '?' + Date.now()); document.forms.download_image_form.image.value = $('#images_list_item_1').attr('data-image'); document.forms.download_image_form.pdf.value = $('#images_list_item_1').attr('data-pdf'); $('#big_image_left').addClass('disabled'); $('#big_image_right').removeClass('disabled');">&lt;</button>
+                    <button type="button" class="btn btn-light" id="big_image_right" style="font-size: x-large;" onclick="javascript: $('#big_image_img').attr('src', '../content/stream/' + $('#images_list_item_2').attr('data-image') + '?' + Date.now()); document.forms.download_image_form.image.value = $('#images_list_item_2').attr('data-image'); document.forms.download_image_form.pdf.value = $('#images_list_item_2').attr('data-pdf'); $('#big_image_right').addClass('disabled'); $('#big_image_left').removeClass('disabled');">&gt;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="images_list" class="modal fade show">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                <div id="images_list_header"></div>
+                <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="height: 700px;">
+                <div id="images_list_data" style="overflow: auto; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="edit_take_stream" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -225,9 +264,10 @@
             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <th style="border-top-width: 0; font-weight: bold;">Этикеток</th>
             <?php endif; ?>
+            <th style="border-top-width: 0;"></th>
         </tr>
         <?php
-        $sql = "select cs.id, cs.name, cs.width, "
+        $sql = "select cs.id, cs.name, cs.width, cs.image1, cs.image2, cs.pdf1, cs.pdf2, "
                 . "ifnull((select count(id) from calculation_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
                 . "+ "
                 . "ifnull((select count(id) from calculation_not_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
@@ -255,6 +295,11 @@
             <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
             <td style="text-align: left;"><?= DisplayNumber(floor($row['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
             <?php endif; ?>
+            <td style="text-align: right;">
+                <?php if(!empty($row['image1']) || !empty($row['image2'])): ?>
+                <a href="javascript: void(0);" class="ui_tooltip left" title="Посмотреть макеты" data-toggle="modal" data-target="#images_list" onclick="$('#images_list_header').text('<?= htmlspecialchars($row['name']) ?>'); ShowImagesList(<?=$row['id'] ?>);"><img src="../images/icons/attach.svg" /></a>
+                <?php endif; ?>
+            </td>
         </tr>
         <?php endwhile; ?>
     </table>
@@ -460,3 +505,11 @@
     endif;
     ?>
 </div>
+<script>
+    function ShowImagesList(stream_id) {
+        $.ajax({ url: "../cut/_images_list.php?stream_id=" + stream_id })
+                .done(function(data) {
+                    $('#images_list_data').html(data);
+        });
+    }
+</script>
