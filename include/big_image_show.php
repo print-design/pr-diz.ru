@@ -1,9 +1,6 @@
 <?php
 include '../include/topscripts.php';
 
-const STREAM = "stream";
-const PRINTING = "printing";
-
 $object = filter_input(INPUT_GET, 'object');
 $id = filter_input(INPUT_GET, 'id');
 $image = filter_input(INPUT_GET, 'image');
@@ -44,9 +41,11 @@ if(!empty($stream_id)) {
         $result["name"] = htmlentities($row["name"]);
         if(!empty($row['image1'])) {
             $result["filename"] = $row["image1"];
+            $result["image"] = 1;
         }
         elseif(!empty ($row['image2'])) {
             $result["filename"] = $row["image2"];
+            $result["image"] = 2;
         }
     }
 }

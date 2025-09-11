@@ -2,10 +2,6 @@
 include '../include/topscripts.php';
 include '../include/myimage.php';
 
-// К каким объектам прикладываются макеты
-const STREAM = "stream";
-const PRINTING = "printing";
-
 // Размеры загружаемых картинок
 const IMAGE_MINI_HEIGHT = 0;
 const IMAGE_MINI_WIDTH = 100;

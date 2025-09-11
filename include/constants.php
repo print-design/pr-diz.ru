@@ -198,6 +198,10 @@ const WASTE_PAPER_FILM = "Офсет БДМ-7";
 const PRICE_ECO_CUSTOMERS_MATERIAL = 1;
 const PRICE_ECO_OTHER_MATERIAL = 2;
 
+// Объекты, для которых загружены картинки
+const STREAM = "stream";
+const PRINTING = "printing";
+
 // Другое
 const ISINVALID = ' is-invalid';
 ?>

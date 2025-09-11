@@ -29,38 +29,6 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
 }
-
-// Выгрузка картинки
-if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
-    $image = filter_input(INPUT_POST, 'image');
-    $pdf = filter_input(INPUT_POST, 'pdf');
-    $name = filter_input(INPUT_POST, 'name');
-    
-    if(!empty($image) && !empty($name)) {
-        $filepath = "../content/stream/$image";
-        $extension = "";
-        
-        if(!empty($pdf)) {
-            $filepath = "../content/stream/pdf/$pdf";
-            $extension = "pdf";
-        }
-        else {
-            $substrings = explode('.', $image);
-            if(count($substrings) > 1) {
-                $extension = $substrings[count($substrings) - 1];
-            }
-        }
-        
-        $name = str_replace('.', '', $name);
-        $name = str_replace(',', '', $name);
-        $name = htmlspecialchars($name);
-        $targetname = $name.'.'.$extension;
-        
-        DownloadSendHeaders($targetname);
-        readfile($filepath);
-        exit();
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -306,6 +274,36 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
                 $('a.hide_not_take_table').addClass('d-none');
                 $('a.show_not_take_table').removeClass('d-none');
                 $('table.not_take_table').addClass('d-none');
+            }
+            
+            function ShowImage(stream_id) {
+                $.ajax({ url: "../include/big_image_show.php?stream_id=" + stream_id,
+                    dataType: "json",
+                    success: function(response) {
+                        if(response.error.length > 0) {
+                            alert(response.error);
+                        }
+                        else {
+                            $('#big_image_header').text(response.name);
+                            $('#big_image_img').attr('src', '../content/stream/' + response.filename + '?' + Date.now());
+                            document.forms.download_image_form.object.value = 'stream';
+                            document.forms.download_image_form.id.value = stream_id;
+                            document.forms.download_image_form.image.value = response.image;
+                            ShowImageButtons(stream_id, response.image);
+                        }
+                    }
+                });
+            }
+            
+            function ShowImageButtons(stream_id, image) {
+                $.ajax({ url: "../include/big_image_buttons.php?stream_id=" + stream_id + "&image=" + image,
+                    success: function(response) {
+                        $('#big_image_buttons').html(response);
+                    },
+                    error: function() {
+                        alert('Ошибка при создании кнопок макета.');
+                    }
+                });
             }
         </script>
     </body>

@@ -74,39 +74,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
-
-// Выгрузка картинки
-if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
-    $object = filter_input(INPUT_POST, 'object');
-    $image = filter_input(INPUT_POST, 'image');
-    $pdf = filter_input(INPUT_POST, 'pdf');
-    $name = filter_input(INPUT_POST, 'name');
-    
-    if(!empty($object) && !empty($image) && !empty($name)) {
-        $filepath = "../content/$object/$image";
-        $extension = "";
-        
-        if(!empty($pdf)) {
-            $filepath = "../content/$object/pdf/$pdf";
-            $extension = "pdf";
-        }
-        else {
-            $substrings = explode('.', $image);
-            if(count($substrings) > 1) {
-                $extension = $substrings[count($substrings) - 1];
-            }
-        }
-        
-        $name = str_replace('.', '', $name);
-        $name = str_replace(',', '', $name);
-        $name = htmlspecialchars($name);
-        $targetname = $name.'.'.$extension;
-        
-        DownloadSendHeaders($targetname);
-        readfile($filepath);
-        exit();
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>

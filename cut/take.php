@@ -208,38 +208,6 @@ if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
 }
 
-// Выгрузка картинки
-if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
-    $image = filter_input(INPUT_POST, 'image');
-    $pdf = filter_input(INPUT_POST, 'pdf');
-    $name = filter_input(INPUT_POST, 'name');
-    
-    if(!empty($image) && !empty($name)) {
-        $filepath = "../content/stream/$image";
-        $extension = "";
-        
-        if(!empty($pdf)) {
-            $filepath = "../content/stream/pdf/$pdf";
-            $extension = "pdf";
-        }
-        else {
-            $substrings = explode('.', $image);
-            if(count($substrings) > 1) {
-                $extension = $substrings[count($substrings) - 1];
-            }
-        }
-        
-        $name = str_replace('.', '', $name);
-        $name = str_replace(',', '', $name);
-        $name = htmlspecialchars($name);
-        $targetname = $name.'.'.$extension;
-        
-        DownloadSendHeaders($targetname);
-        readfile($filepath);
-        exit();
-    }
-}
-
 // Если у данной работы ещё не было сделано ни одного съёма, перенаправляем на страницу начала работы
 if(empty($take_id)) {
     header('Location: details.php?id='.$id.(empty($machine_id) ? '' : '&machine_id='.$machine_id));

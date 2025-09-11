@@ -215,6 +215,7 @@ function GetDateFromDateTo($getDateFrom, $getDateTo, &$dateFrom, &$dateTo) {
     }
 }
 
+// Принудительная выгрузка (вместо открытия)
 function DownloadSendHeaders($filename) {
     // disable caching
     $now = gmdate("D, d M Y H:i:s");
@@ -230,6 +231,60 @@ function DownloadSendHeaders($filename) {
     // disposition / encoding on response body
     header("Content-Disposition: attachment;filename={$filename}");
     header("Content-Transfer-Encoding: binary");
+}
+
+// Выгрузка картинки
+if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
+    $object = filter_input(INPUT_POST, 'object');
+    $id = filter_input(INPUT_POST, 'id');
+    $image = filter_input(INPUT_POST, 'image');
+    
+    if(!empty($object) && !empty($id) && !empty($image)) {
+        $sql = "";
+        
+        if($object == PRINTING) {
+            $sql = "select concat(c.name, cq.id) name, cq.image$image, cq.pdf$image from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
+        }
+        elseif ($object == STREAM) {
+            $sql = "select name, image$image, pdf$image from calculation_stream where id = $id";
+        }
+        
+        if(!empty($sql)) {
+            $targetname = "image";
+            $fetcher = new Fetcher($sql);
+            
+            if($row = $fetcher->Fetch()) {
+                if(!empty($row['name'])) {
+                    $targetname = $row['name'].'_'.$image;
+                    $targetname = str_replace('.', '', $targetname);
+                    $targetname = str_replace(',', '', $targetname);
+                    $targetname = htmlspecialchars($targetname);
+                }
+                
+                $filename = $row["image$image"];
+                $filepath = "../content/$object/$filename";
+                $extension = "";
+                
+                if(!empty($row["pdf$image"])) {
+                    $filename = $row["pdf$image"];
+                    $filepath = "../content/$object/pdf/$filename";
+                    $extension = "pdf";
+                }
+                else {
+                    $substrings = explode('.', $filename);
+                    if(count($substrings) > 1) {
+                        $extension = $substrings[count($substrings) - 1];
+                    }
+                }
+                
+                $targetname = $targetname.'.'.$extension;
+                
+                DownloadSendHeaders($targetname);
+                readfile($filepath);
+                exit();
+            }
+        }
+    }
 }
 
 function Array2Csv(array &$array, $titles) {
