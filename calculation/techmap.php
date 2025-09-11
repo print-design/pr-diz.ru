@@ -2225,6 +2225,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             alert(response.error);
                         }
                         else {
+                            $('#big_image_header').text(response.name);
                             $('#big_image_img').attr('src', '../content/' + object + '/' + response.filename + '?' + Date.now());
                             $('#big_image_delete').removeClass('d-none');
                             $('#deleted_file_name').text(response.delete_file_name);

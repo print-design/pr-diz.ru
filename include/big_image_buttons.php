@@ -46,7 +46,7 @@ elseif($image == 2 && !empty ($row['filename'])) {
     $target_text = "&lt;";
 }
 ?>
-<button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_img').attr('src', '../content/<?=$object ?>/<?=$filename.'?'. time() ?>'); $('#deleted_file_name').text('<?=$delete_file_name ?>'); document.forms.delete_image_form.object.value = '<?=$object ?>'; document.forms.delete_image_form.id.value = <?=$id ?>; document.forms.delete_image_form.image.value = <?=$target_image ?>; document.forms.download_image_form.object.value = '<?=$object ?>'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = <?=$target_image ?>; ShowImageButtons('<?=$object ?>', <?=$id ?>, <?=$target_image ?>);"><?=$target_text ?></button>
+<button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/<?=$object ?>/<?=$filename.'?'. time() ?>'); $('#deleted_file_name').text('<?=$delete_file_name ?>'); document.forms.delete_image_form.object.value = '<?=$object ?>'; document.forms.delete_image_form.id.value = <?=$id ?>; document.forms.delete_image_form.image.value = <?=$target_image ?>; document.forms.download_image_form.object.value = '<?=$object ?>'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = <?=$target_image ?>; ShowImageButtons('<?=$object ?>', <?=$id ?>, <?=$target_image ?>);"><?=$target_text ?></button>
 <?php
 endif;
 endif;

@@ -27,8 +27,9 @@ if(!empty($object) && !empty($id) && !empty($image)) {
     
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
+        $result["name"] = htmlentities($row["name"]);
         $result["filename"] = $row["image$image"];
-        $result["delete_file_name"] = $row['name'].", ".($image == 1 ? "с подписью заказчика" : "без подписи заказчика");
+        $result["delete_file_name"] = htmlentities($row['name']).", ".($image == 1 ? "с подписью заказчика" : "без подписи заказчика");
     }
 }
 
