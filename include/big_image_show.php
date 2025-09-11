@@ -8,8 +8,11 @@ $object = filter_input(INPUT_GET, 'object');
 $id = filter_input(INPUT_GET, 'id');
 $image = filter_input(INPUT_GET, 'image');
 
+$stream_id = filter_input(INPUT_GET, 'stream_id');
+
 $result = array( 'error' => '' );
 
+// Вариант 1. object + id + image
 if(!empty($object) && !empty($id) && !empty($image)) {
     $sql = "";
     
@@ -30,6 +33,21 @@ if(!empty($object) && !empty($id) && !empty($image)) {
         $result["name"] = htmlentities($row["name"]);
         $result["filename"] = $row["image$image"];
         $result["delete_file_name"] = htmlentities($row['name']).", ".($image == 1 ? "с подписью заказчика" : "без подписи заказчика");
+    }
+}
+
+// Вариант 2. stream_id
+if(!empty($stream_id)) {
+    $sql = "select name, image1, image2 from calculation_stream where id = $stream_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $result["name"] = htmlentities($row["name"]);
+        if(!empty($row['image1'])) {
+            $result["filename"] = $row["image1"];
+        }
+        elseif(!empty ($row['image2'])) {
+            $result["filename"] = $row["image2"];
+        }
     }
 }
 

@@ -8,6 +8,9 @@ $object = filter_input(INPUT_GET, 'object');
 $id = filter_input(INPUT_GET, 'id');
 $image = filter_input(INPUT_GET, 'image');
 
+$stream_id = filter_input(INPUT_GET, 'stream_id');
+
+// Вариант 1. object + id + image
 if(!empty($object) && !empty($id) && !empty($image)):
     $sql = "";
     
@@ -51,4 +54,10 @@ elseif($image == 2 && !empty ($row['filename'])) {
 endif;
 endif;
 endif;
+
+// Вариант 2. stream_id
+if(!empty($stream_id)):
+    $sql = "select name, image1";
 ?>
+<button type="button">Миру мир! Нет войне!</button>
+<?php endif; ?>

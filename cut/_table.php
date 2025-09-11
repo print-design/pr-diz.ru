@@ -1,3 +1,4 @@
+<?php include '../include/big_image.php'; ?>
 <div id="edit_take_stream" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -228,7 +229,7 @@
             <th style="border-top-width: 0;"></th>
         </tr>
         <?php
-        $sql = "select cs.id, cs.name, cs.width, cs.image1, cs.image2, cs.pdf1, cs.pdf2, "
+        $sql = "select cs.id, cs.name, cs.width, cs.image1, cs.image2, "
                 . "ifnull((select count(id) from calculation_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
                 . "+ "
                 . "ifnull((select count(id) from calculation_not_take_stream where calculation_stream_id = cs.id and weight > 0 and length > 0), 0) "
@@ -258,7 +259,7 @@
             <?php endif; ?>
             <td style="text-align: right;">
                 <?php if(!empty($row['image1']) || !empty($row['image2'])): ?>
-                <a href="javascript: void(0);" class="ui_tooltip left" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image"><img src="../images/icons/attach.svg" /></a>
+                <a href="javascript: void(0);" class="ui_tooltip left" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImage(<?=$row['id'] ?>);"><img src="../images/icons/attach.svg" /></a>
                 <?php endif; ?>
             </td>
         </tr>
