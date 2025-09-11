@@ -279,33 +279,6 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
         </style>
     </head>
     <body>
-        <div id="big_image" class="modal fade show">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
-                        <div id="big_image_header"></div>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                    </div>
-                    <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
-                    <div class="modal-footer" style="justify-content: flex-start;">
-                        <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="images_list" class="modal fade show">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
-                        <div id="images_list_header"></div>
-                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                    </div>
-                    <div class="modal-body" style="height: 700px;">
-                        <div id="images_list_data" style="overflow: auto; height: 100%;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div id="add_event" class="modal fade show">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -513,13 +486,6 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
             }
             
             EnableMenu();
-            
-            function ShowImagesList(calculation_id)  {
-                $.ajax({ url: "_images_list.php?calculation_id=" + calculation_id })
-                        .done(function(data) {
-                            $('#images_list_data').html(data);
-                        });
-            }
             
             <?php if($timetable->editable): ?>
             // Скрытие/показ левой панели.
