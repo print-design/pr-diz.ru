@@ -2244,7 +2244,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
             }
             
             function ShowImageButtons(object, id, image) {
-                $.ajax({ url: "../include/big_image_buttons.php?object=" + object + "&id=" + "&image=" + image,
+                $.ajax({ url: "../include/big_image_buttons.php?object=" + object + "&id=" + id + "&image=" + image,
                     success: function(response) {
                         $('#big_image_buttons').html(response);
                     },
