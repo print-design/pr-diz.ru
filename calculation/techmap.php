@@ -2231,10 +2231,25 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             document.forms.delete_image_form.object.value = object;
                             document.forms.delete_image_form.id.value = id;
                             document.forms.delete_image_form.image.value = image;
+                            document.forms.download_image_form.object.value = object;
+                            document.forms.download_image_form.id.value = id;
+                            document.forms.download_image_form.image.value = image;
+                            ShowImageButtons(object, id, image);
                         }
                     },
                     error: function() {
                         alert('Ошибка при открытии макета.');
+                    }
+                });
+            }
+            
+            function ShowImageButtons(object, id, image) {
+                $.ajax({ url: "../include/big_image_buttons.php?object=" + object + "&id=" + "&image=" + image,
+                    success: function(response) {
+                        $('#big_image_buttons').html(response);
+                    },
+                    error: function() {
+                        alert('Ошибка при создании кнопок макета.');
                     }
                 });
             }

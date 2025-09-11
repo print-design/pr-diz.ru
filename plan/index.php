@@ -324,13 +324,6 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
         <?php
         include '../include/header_plan.php';
         ?>
-        <form id="download_image_form" method="post">
-            <input type="hidden" id="object" name="object" />
-            <input type="hidden" id="image" name="image" />
-            <input type="hidden" id="pdf" name="pdf" />
-            <input type="hidden" id="name" name="name" />
-            <input type="hidden" name="download_image_submit" value="1" />
-        </form>
         <div class="container-fluid">
             <?php
             $header = '';
