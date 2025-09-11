@@ -132,6 +132,10 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
     <div class="d-flex justify-content-end">
         <div class="mr-1 position-relative" style="width: 23px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -93px; left: -23px; width: 150px; clip: rect(93px, 43px, 113px, 23px);" /></div>
         <div class="mr-1 position-relative" style="width: 21px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -68px; left: -23px; width: 150px; clip: rect(68px, 46px, 85px, 23px);" /></div>
-        <div class="position-relative" style="width: 21px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -93px; left: -50px; width: 150px; clip: rect(93px, 73px, 113px, 50px);" /></div>
+        <?php if($calculation->customer_id == 216): ?>
+        <div class="position-relative" style="width: 21px; height: 22px;"><img src="<?=APPLICATION ?>/images/mebius5.png" style="position: absolute; top: 1px; left: 0px; width: 18px;" /></div>
+        <?php else: ?>
+        <div class="position-relative" style="width: 21px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -93px; left: -50px; width: 150px; clip: rect(93px, 73px, 113px, 50px);" /></div>        
+        <?php endif; ?>
     </div>
 </div>
