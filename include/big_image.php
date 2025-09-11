@@ -7,7 +7,10 @@
             </div>
             <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
             <div class="modal-footer d-flex justify-content-between">
-                <div><button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button></div>
+                <div>
+                    <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
+                    <button type="button" class="btn btn-light ml-2 d-none" id="big_image_delete" data-toggle="modal" data-target="#confirm_delete" data-dismiss="modal"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
+                </div>
                 <div id="big_image_buttons"></div>
             </div>
         </div>

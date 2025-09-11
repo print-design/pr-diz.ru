@@ -656,6 +656,8 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
     <body>
         <?php
         include '../include/header_zakaz.php';
+        
+        include '../include/big_image.php';
         ?>
         <div id="confirm_delete" class="modal fade show">
             <div class="modal-dialog">
@@ -1584,7 +1586,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                href="javascript: void(0);" 
                                data-toggle="modal" 
                                data-target="#big_image" 
-                               data-filename="<?=$printing['image1'] ?>">
+                               onclick="javascript: ShowImage('printing', <?=$printing['id'] ?>, 1);">
                                 <img id="mini_image1_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image1'].'?'. time() ?>" class="img-fluid" />
                             </a>
                             С подписью <a href="javascript: void(0);" data-toggle="modal" data-target="#confirm_delete" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: $('#deleted_file_name').text('Тираж <?=$printing_sequence ?>, с подписью заказчика'); document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 1;">&times;</a>
@@ -1594,7 +1596,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                href="javascript: void(0);" 
                                data-toggle="modal" 
                                data-target="#big_image" 
-                               data-filename="<?=$printing['image2'] ?>">
+                               onclick="javascript: ShowImage('printing', <?=$printing['id'] ?>, 2);">
                                 <img id="mini_image2_printing_<?=$printing['id'] ?>" src="../content/printing/mini/<?=$printing['image2'].'?'. time() ?>" class="img-fluid" />
                             </a>
                             Без подписи <a href="javascript: void(0);" data-toggle="modal" data-target="#confirm_delete" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: $('#deleted_file_name').text('Тираж <?=$printing_sequence ?>, без подписи заказчика'); document.forms.delete_image_form.object.value = 'printing'; document.forms.delete_image_form.id.value = <?=$printing['id'] ?>; document.forms.delete_image_form.image.value = 2;">&times;</a>
@@ -1808,7 +1810,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                        href="javascript: void(0);" 
                                        data-toggle="modal" 
                                        data-target="#big_image" 
-                                       data-filename="<?=$stream['image1'] ?>">
+                                       onclick="javascript: ShowImage('stream', <?=$stream['id'] ?>, 1);">
                                         <img id="mini_image1_stream_<?=$stream['id'] ?>" src="../content/stream/mini/<?=$stream['image1'].'?'. time() ?>" class="img-fluid" />
                                     </a>
                                     <div class="mb-2">С подписью <a href="javascript: void(0);" data-toggle="modal" data-target="#confirm_delete" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: $('#deleted_file_name').text('<?= empty($stream['name']) ? "Ручей ".$stream_ordinal : htmlentities($stream['name'] ?? '') ?>, с подписью заказчика'); document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 1;">&times;</a></div>
@@ -1818,7 +1820,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                        href="javascript: void(0);" 
                                        data-toggle="modal" 
                                        data-target="#big_image" 
-                                       data-filename="<?=$stream['image2'] ?>">
+                                       onclick="javascript: ShowImage('stream', <?=$stream['id'] ?>, 2);">
                                         <img id="mini_image2_stream_<?=$stream['id'] ?>" src="../content/stream/mini/<?=$stream['image2'].'?'. time() ?>" class="img-fluid" />
                                     </a>
                                     <div class="mb-2">Без подписи <a href="javascript: void(0);" data-toggle="modal" data-target="#confirm_delete" style="font-weight: bold; font-size: x-large; vertical-align: central;" onclick="javascript: $('#deleted_file_name').text('<?= empty($stream['name']) ? "Ручей ".$stream_ordinal : htmlentities($stream['name'] ?? '') ?>, без подписи заказчика'); document.forms.delete_image_form.object.value = 'stream'; document.forms.delete_image_form.id.value = <?=$stream['id'] ?>; document.forms.delete_image_form.image.value = 2;">&times;</a></div>
@@ -2187,7 +2189,6 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             if(response.filename.length > 0) {
                                 $('#mini_button' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
                                 $('#mini_button' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
-                                $('#mini_image' + image + '_link_' + object + '_' + id).attr('data-filename', response.filename + '?' + Date.now());
                                 $('#mini_image' + image + '_' + object + '_' + id).attr('src', '../content/' + object + '/mini/' + response.filename + '?' + Date.now());
                             }
                             
@@ -2212,6 +2213,28 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                         $('#mini_image' + image + '_' + object + '_' + id).removeAttr('src');
                         $('#mini_image' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
                         $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
+                    }
+                });
+            }
+            
+            function ShowImage(object, id, image) {
+                $.ajax({ url: "../include/big_image_show.php?object=" + object + "&id=" + id + "&image=" + image,
+                    dataType: "json", 
+                    success: function(response) {
+                        if(response.error.length > 0) {
+                            alert(response.error);
+                        }
+                        else {
+                            $('#big_image_img').attr('src', '../content/' + object + '/' + response.filename + '?' + Date.now());
+                            $('#big_image_delete').removeClass('d-none');
+                            $('#deleted_file_name').text(response.delete_file_name);
+                            document.forms.delete_image_form.object.value = object;
+                            document.forms.delete_image_form.id.value = id;
+                            document.forms.delete_image_form.image.value = image;
+                        }
+                    },
+                    error: function() {
+                        alert('Ошибка при открытии макета.');
                     }
                 });
             }
