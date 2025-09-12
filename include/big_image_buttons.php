@@ -94,9 +94,11 @@ $filename = $row['image1'];
 $target_text = '...';
 if($current_ordinal < $ordinal) { $target_text = "&lt;"; }
 elseif($current_ordinal > $ordinal) { $target_text = "&gt;"; }
+if($current_ordinal == $ordinal + 1 || $current_ordinal == $ordinal - 1):
 ?>
 <button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 1; ShowImageButtons(<?=$calculation_id ?>, <?=$current_ordinal ?>);"><?=$target_text ?></button>
 <?php
+endif;
 endif;
 if(!empty($row['image2'])):
     $current_ordinal++;
@@ -104,9 +106,11 @@ $filename = $row['image2'];
 $target_text = "...";
 if($current_ordinal < $ordinal) { $target_text = "&lt;"; }
 elseif($current_ordinal > $ordinal) { $target_text = "&gt;"; }
+if($current_ordinal == $ordinal + 1 || $current_ordinal == $ordinal - 1):
 ?>
 <button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 2; ShowImageButtons(<?=$calculation_id ?>, <?=$current_ordinal ?>);"><?=$target_text ?></button>
 <?php
+endif;
 endif;
 endwhile;
 
@@ -124,9 +128,11 @@ $filename = $row['image1'];
 $target_text = '...';
 if($current_ordinal < $ordinal) { $target_text = "&lt;"; }
 elseif($current_ordinal > $ordinal) { $target_text = "&gt;"; }
+if($current_ordinal == $ordinal + 1 || $current_ordinal == $ordinal - 1):
 ?>
 <button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 1; ShowImageButtons(<?=$calculation_id ?>, <?=$current_ordinal ?>);"><?=$target_text ?></button>
 <?php
+endif;
 endif;
 if(!empty($row['image2'])):
     $current_ordinal++;
@@ -134,9 +140,11 @@ $filename = $row['image2'];
 $target_text = "...";
 if($current_ordinal < $ordinal) { $target_text = "&lt;"; }
 elseif($current_ordinal > $ordinal) { $target_text = "&gt;"; }
+if($current_ordinal == $ordinal + 1 || $current_ordinal == $ordinal - 1):
 ?>
 <button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 2; ShowImageButtons(<?=$calculation_id ?>, <?=$current_ordinal ?>);"><?=$target_text ?></button>
 <?php
+endif;
 endif;
 endwhile;
 endif;
