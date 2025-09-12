@@ -6,6 +6,7 @@ $id = filter_input(INPUT_GET, 'id');
 $image = filter_input(INPUT_GET, 'image');
 
 $stream_id = filter_input(INPUT_GET, 'stream_id');
+$calculation_id = filter_input(INPUT_GET, 'calculation_id');
 
 $result = array( 'error' => '' );
 
@@ -46,6 +47,52 @@ if(!empty($stream_id)) {
         elseif(!empty ($row['image2'])) {
             $result["filename"] = $row["image2"];
             $result["image"] = 2;
+        }
+    }
+}
+
+// Вариант 3. calculation_id
+if(!empty($calculation_id)) {
+    $result['name'] = '';
+    $result['filename'] = '';
+    $result['object'] = '';
+    $result['id'] = null;
+    $result['image'] = null;
+    
+    $sql = "select id, name, image1, image2 from calculation_stream where calculation_id = $calculation_id and (image1 <> '' or image2 <> '')";
+    $fetcher = new Fetcher($sql);
+    while (($row = $fetcher->Fetch()) && empty($result['name'])) {
+        $result['name'] = $row['name'];
+        $result['id'] = $row['id'];
+        $result['object'] = STREAM;
+        if(!empty($row['image1'])) {
+            $result['filename'] = $row['image1'];
+            $result['image'] = 1;
+        }
+        elseif(!empty ($row['image2'])) {
+            $result['filename'] = $row['image2'];
+            $result['image'] = 2;
+        }
+    }
+    
+    if(empty($result['name']) || empty($result['filename']) || empty($result['object']) || empty($result['id']) || empty($result['image'])) {
+        $sql = "select cq.id, concat(c.name, cq.id) name, cq.image1, cq.image2 "
+                . "from calculation_quantity cq "
+                . "inner join calculation c on cq.calculation_id = c.id "
+                . "where c.id = $calculation_id and (image1 <> '' or image2 <> '')";
+        $fetcher = new Fetcher($sql);
+        while (($row = $fetcher->Fetch()) && empty($result['name'])) {
+            $result['name'] = $row['name'];
+            $result['id'] = $row['id'];
+            $result['object'] = PRINTING;
+            if(!empty($row['image1'])) {
+                $result['filename'] = $row['image1'];
+                $result['image'] = 1;
+            }
+            elseif(!empty ($row['image2'])) {
+                $result['filename'] = $row['image2'];
+                $result['image'] = 2;
+            }
         }
     }
 }

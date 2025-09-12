@@ -413,7 +413,7 @@
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-right text-nowrap" style="position:relative;"<?=$drop ?>>
         <?php if($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && $this->edition['images_count'] > 0): ?>
-        <a href="javascript: void(0);" class="btn btn-link ui_tooltip left d-inline" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image"><img src="../images/icons/attach.svg" /></a>
+        <a href="javascript: void(0);" class="btn btn-link ui_tooltip left d-inline" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImage(<?=$this->edition['calculation_id'] ?>);"><img src="../images/icons/attach.svg" /></a>
         <?php endif; ?>
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT && $this->plan_shift->timetable->editable): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"><img src="../images/icons/vertical-dots1.svg"<?=$drop ?> /></a>

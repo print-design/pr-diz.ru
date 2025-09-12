@@ -291,6 +291,9 @@ if($row = $fetcher->Fetch()) {
                             document.forms.download_image_form.image.value = response.image;
                             ShowImageButtons(stream_id, response.image);
                         }
+                    },
+                    error: function() {
+                        alert('Ошибка при открыти макета.');
                     }
                 });
             }

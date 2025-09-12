@@ -5,6 +5,7 @@ $object = filter_input(INPUT_GET, 'object');
 $id = filter_input(INPUT_GET, 'id');
 $image = filter_input(INPUT_GET, 'image');
 $stream_id = filter_input(INPUT_GET, 'stream_id');
+$calculation_id = filter_input(INPUT_GET, 'calculation_id');
 
 // Вариант 1. object + id + image
 if(!empty($object) && !empty($id) && !empty($image)):
@@ -77,4 +78,9 @@ if(!empty($row['image1']) && !empty($row['image2'])):
 endif;
 endif;
 endif;
+
+// Вариант 3. calculation_id
+if(!empty($calculation_id)):
 ?>
+<button>Миру мир! Нет войне!</button>
+<?php endif; ?>
