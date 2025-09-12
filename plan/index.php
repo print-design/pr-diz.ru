@@ -462,7 +462,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                             document.forms.download_image_form.object.value = response.object;
                             document.forms.download_image_form.id.value = response.id;
                             document.forms.download_image_form.image.value = response.image;
-                            ShowImageButtons(calculation_id);
+                            ShowImageButtons(calculation_id, 1);
                         }
                     },
                     error: function() {
@@ -471,8 +471,8 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 });
             }
             
-            function ShowImageButtons(calculation_id) {
-                $.ajax({ url: "../include/big_image_buttons.php?calculation_id=" + calculation_id,
+            function ShowImageButtons(calculation_id, ordinal) {
+                $.ajax({ url: "../include/big_image_buttons.php?calculation_id=" + calculation_id + "&ordinal=" + ordinal,
                     success: function(response) {
                         $('#big_image_buttons').html(response);
                     },
