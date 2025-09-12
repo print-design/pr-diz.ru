@@ -81,6 +81,49 @@ endif;
 
 // Вариант 3. calculation_id
 if(!empty($calculation_id)):
+    $sql = "select id, name, image1, image2 from calculation_stream where calculation_id = $calculation_id and (image1 <> '' or image2 <> '')";
+$fetcher = new Fetcher($sql);
+while($row = $fetcher->Fetch()):
+    $id = $row['id'];
+    $name = $row['name'];
+if(!empty($row['image1'])):
+$filename = $row['image1'];
+$target_text = "&lt;";
 ?>
-<button>Миру мир! Нет войне!</button>
-<?php endif; ?>
+<button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 1; ShowImageButtons(<?=$calculation_id ?>);"><?=$target_text ?></button>
+<?php
+endif;
+if(!empty($row['image2'])):
+$filename = $row['image2'];
+$target_text = "&lt;";
+?>
+<button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/stream/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'stream'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 2; ShowImageButtons(<?=$calculation_id ?>);"><?=$target_text ?></button>
+<?php
+endif;
+endwhile;
+
+$sql = "select cq.id, concat(c.name, cq.id) name, cq.image1, cq.image2 "
+        . "from calculation_quantity cq "
+        . "inner join calculation c on cq.calculation_id = c.id "
+        . "where c.id = $calculation_id and (image1 <> '' or image2 <> '')";
+$fetcher = new Fetcher($sql);
+while($row = $fetcher->Fetch()):
+    $id = $row['id'];
+    $name = $row['name'];
+if(!empty($row['image1'])):
+$filename = $row['image1'];
+$target_text = "&lt;";
+?>
+<button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 1; ShowImageButtons(<?=$calculation_id ?>);"><?=$target_text ?></button>
+<?php
+endif;
+if(!empty($row['image2'])):
+$filename = $row['image2'];
+$target_text = "&lt;";
+?>
+<button type="button" class="btn btn-light" style="font-size: x-large;" onclick="javascript: $('#big_image_header').text('<?= htmlentities($name) ?>'); $('#big_image_img').attr('src', '../content/printing/<?=$filename.'?'. time() ?>'); document.forms.download_image_form.object.value = 'printing'; document.forms.download_image_form.id.value = <?=$id ?>; document.forms.download_image_form.image.value = 2; ShowImageButtons(<?=$calculation_id ?>);"><?=$target_text ?></button>
+<?php
+endif;
+endwhile;
+endif;
+?>

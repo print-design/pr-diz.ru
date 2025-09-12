@@ -472,7 +472,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             }
             
             function ShowImageButtons(calculation_id) {
-                $.ajax({ url: "../include/big_image_buttons.php?calculation_id" + calculation_id,
+                $.ajax({ url: "../include/big_image_buttons.php?calculation_id=" + calculation_id,
                     success: function(response) {
                         $('#big_image_buttons').html(response);
                     },
