@@ -18,6 +18,11 @@ $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
+// Чужой менеджер смотреть объект не имеет право
+if(IsInRole(ROLE_NAMES[ROLE_MANAGER]) && !IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) && $calculation->manager_id != GetUserId()) {
+    header('Location: '.APPLICATION.'/unauthorized.php');
+}
+
 $comment = '';
 
 $sql = "select e.comment, pc.comment as continuation_comment "

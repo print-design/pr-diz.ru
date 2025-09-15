@@ -215,7 +215,7 @@ class CalculationBase {
             $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1,
             $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2,
             $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3,
-            $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id,
+            $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id,
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
             $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
@@ -292,6 +292,7 @@ class CalculationBase {
             $number_in_raport, // Количество этикеток в рапорте
             $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
+            $manager_id, // ID менеджера
             $status_id, // Статус
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
@@ -387,6 +388,7 @@ class CalculationBase {
         $this->number_in_raport = $number_in_raport; // Кол-во этикеток в рапорте
         $this->lamination_roller_width = $lamination_roller_width; // Ширина ламинирующего вала
         $this->ink_number = $ink_number; // Красочность
+        $this->manager_id = $manager_id; // ID менелдера
         $this->status_id = $status_id; // Статус
         
         $this->ink_1 = $ink_1; $this->ink_2 = $ink_2; $this->ink_3 = $ink_3; $this->ink_4 = $ink_4; $this->ink_5 = $ink_5; $this->ink_6 = $ink_6; $this->ink_7 = $ink_7; $this->ink_8 = $ink_8; // Тип краски (CMYK, пантон, белая, лак)
@@ -636,6 +638,7 @@ class CalculationBase {
         $number_in_raport = null; // Кол-во этикеток в рапорте
         $lamination_roller_width = null; // Ширина ламинирующего вала
         $ink_number = 0; // Красочность
+        $manager_id = 0; // ID менеджера
         $status_id = null; // Статус
         
         $cliche_in_price = null; // Включить формы в стоимость
@@ -665,7 +668,7 @@ class CalculationBase {
                 . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
                 . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
                 . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-                . "rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, rc.status_id, "
+                . "rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, rc.manager_id, rc.status_id, "
                 . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
                 . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
                 . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -851,6 +854,7 @@ class CalculationBase {
             $number_in_raport = $row['number_in_raport']; // Кол-во этикеток в рапорте
             $lamination_roller_width = $row['lamination_roller_width']; // Ширина ламинирующего вала
             $ink_number = $row['ink_number']; // Красочность
+            $manager_id = $row['manager_id']; // ID менеджера
             $status_id = $row['status_id']; // Статус
             
             $ink_1 = $row['ink_1']; $ink_2 = $row['ink_2']; $ink_3 = $row['ink_3']; $ink_4 = $row['ink_4']; $ink_5 = $row['ink_5']; $ink_6 = $row['ink_6']; $ink_7 = $row['ink_7']; $ink_8 = $row['ink_8'];
@@ -1101,6 +1105,7 @@ class CalculationBase {
                     $number_in_raport, // Кол-во этикеток в рапорте
                     $lamination_roller_width, // Ширина ламинирующего вала
                     $ink_number, // Красочность
+                    $manager_id, // ID менеджера
                     $status_id, // Статус
                     
                     $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
@@ -1197,6 +1202,7 @@ class CalculationBase {
                     $number_in_raport, // Кол-во этикеток в рапорте
                     $lamination_roller_width, // Ширина ламинирующего вала
                     $ink_number, // Красочность
+                    $manager_id, // ID менеджера
                     $status_id, // Статус
                     
                     $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
@@ -1382,6 +1388,7 @@ class Calculation extends CalculationBase {
             $number_in_raport, // Кол-во этикеток в рапорте
             $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
+            $manager_id, // ID менеджера
             $status_id, // Статус
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
@@ -1420,7 +1427,7 @@ class Calculation extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
+                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
@@ -2290,6 +2297,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $number_in_raport, // Кол-во этикеток в рапорте
             $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
+            $manager_id, // ID менеджера
             $status_id, // Статус
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
@@ -2328,7 +2336,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $status_id, 
+                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
