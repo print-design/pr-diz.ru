@@ -1024,7 +1024,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <tr>
                             <td>Длина этикетки</td>
-                            <td><?= DisplayNumber(floatval($calculation->length), 0).(empty($calculation->length) ? "" : " мм") ?></td>
+                            <td><?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
