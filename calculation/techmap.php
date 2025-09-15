@@ -497,9 +497,15 @@ $streams = array();
 
 if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
     $sql = "select id, position, name, width, image1, image2 from calculation_stream where calculation_id = $id order by position";
-    $grabber = new Grabber($sql);
-    $streams = $grabber->result;
-    $error_message = $grabber->error;
+    $fetcher = new Fetcher($sql);
+    
+    while($row = $fetcher->Fetch()) {
+        $post_name = filter_input(INPUT_POST, 'stream_'.$row['id']);
+        if(!empty($post_name)) {
+            $row['name'] = $post_name;
+        }
+        array_push($streams, $row);
+    }
 }
 ?>
 <!DOCTYPE html>
