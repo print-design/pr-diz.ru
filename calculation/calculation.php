@@ -638,7 +638,7 @@ class CalculationBase {
         $number_in_raport = null; // Кол-во этикеток в рапорте
         $lamination_roller_width = null; // Ширина ламинирующего вала
         $ink_number = 0; // Красочность
-        $manager_id = 0; // ID менеджера
+        $manager_id = null; // ID менеджера
         $status_id = null; // Статус
         
         $cliche_in_price = null; // Включить формы в стоимость
