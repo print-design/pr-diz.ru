@@ -5,7 +5,7 @@
                 <div id="big_image_header"></div>
                 <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body d-flex justify-content-center" style="max-height: 700px;"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
+            <div class="modal-body d-flex justify-content-center" style="max-height: 500px; overflow: auto;"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
             <div class="modal-footer d-flex justify-content-between">
                 <div>
                     <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
