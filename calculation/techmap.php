@@ -1796,10 +1796,10 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_NOPRINT) {
                                     $plan_class = "";
                                 }
-                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
                                     $plan_class = "";
                                 }
-                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
                                     $plan_class = "";
                                 }
                                 ?>

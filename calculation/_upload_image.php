@@ -145,10 +145,10 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             if($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_NOPRINT) {
                 $result['to_plan_visible'] = true;
             }
-            elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
+            elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
                 $result['to_plan_visible'] = true;
             }
-            elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) || empty($x["image2"]); })) == 0) {
+            elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
                 $result['to_plan_visible'] = true;
             }
         }
