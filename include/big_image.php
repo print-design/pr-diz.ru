@@ -1,6 +1,6 @@
 <div id="big_image" class="modal fade show">
     <div class="modal-dialog" style="overflow: auto;">
-        <div class="modal-content">
+        <div class="modal-content" style="max-height: 600px; overflow: auto;">
             <div class="modal-header font-weight-bold" style="font-size: x-large;">
                 <div id="big_image_header"></div>
                 <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
