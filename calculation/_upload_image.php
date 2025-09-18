@@ -113,6 +113,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             $status_id = null;
             $work_type_id = null;
             $streams = array();
+            $stream_names = array();
             $printings = array();
             
             if($object == STREAM) {
@@ -123,10 +124,24 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
                     $work_type_id = $row['work_type_id'];
                 }
             
-                $sql = "select image1, image2 from calculation_stream where calculation_id = (select calculation_id from calculation_stream where id = $id)";
+                $sql = "select name, image1, image2 from calculation_stream where calculation_id = (select calculation_id from calculation_stream where id = $id)";
                 $grabber = new Grabber($sql);
                 $streams = $grabber->result;
                 $result['error'] = $grabber->error;
+                
+                foreach($streams as $stream) {
+                    if(!key_exists($stream['name'], $stream_names)) {
+                        $stream_names[$stream['name']] = 0;
+                    }
+                    
+                    if(!empty($stream['image1'])) {
+                        $stream_names[$stream['name']] = intval($stream_names[$stream['name']]) + 1;
+                    }
+                    
+                    if(!empty($stream['image2'])) {
+                        $stream_names[$stream['name']] = intval($stream_names[$stream['name']]) + 1;
+                    }
+                }
             }
             elseif($object == PRINTING) {
                 $sql = "select c.status_id, c.work_type_id from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
@@ -145,7 +160,10 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             if($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_NOPRINT) {
                 $result['to_plan_visible'] = true;
             }
-            elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
+            //elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
+            //    $result['to_plan_visible'] = true;
+            //}
+            elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_PRINT && count(array_filter($stream_names, function($x) { return $x == 0; } )) == 0) {
                 $result['to_plan_visible'] = true;
             }
             elseif($status_id == ORDER_STATUS_TECHMAP && $work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {

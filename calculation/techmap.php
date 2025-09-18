@@ -500,6 +500,9 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
 // Список ручьёв
 $streams = array();
 
+// Список картинок по именованиям каждого ручья
+$stream_names = array();
+
 if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
     $sql = "select id, position, name, width, image1, image2 from calculation_stream where calculation_id = $id order by position";
     $fetcher = new Fetcher($sql);
@@ -510,6 +513,18 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
             $row['name'] = $post_name;
         }
         array_push($streams, $row);
+        
+        if(!key_exists($row['name'], $stream_names)) {
+            $stream_names[$row['name']] = 0;
+        }
+        
+        if(!empty($row['image1'])) {
+            $stream_names[$row['name']] = intval($stream_names[$row['name']]) + 1;
+        }
+        
+        if(!empty($row['image2'])) {
+            $stream_names[$row['name']] = intval($stream_names[$row['name']]) + 1;
+        }
     }
 }
 ?>
@@ -1796,7 +1811,10 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_NOPRINT) {
                                     $plan_class = "";
                                 }
-                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
+                                //elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_PRINT && count(array_filter($streams, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
+                                //    $plan_class = "";
+                                //}
+                                elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_PRINT && count(array_filter($stream_names, function($x) { return $x == 0; })) == 0) {
                                     $plan_class = "";
                                 }
                                 elseif($calculation->status_id == ORDER_STATUS_TECHMAP && $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE && count(array_filter($printings, function($x) { return empty($x["image1"]) && empty($x["image2"]); })) == 0) {
