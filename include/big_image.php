@@ -1,11 +1,11 @@
 <div id="big_image" class="modal fade show">
-    <div class="modal-dialog" style="overflow: auto;">
+    <div class="modal-dialog">
         <div class="modal-content" style="max-height: 600px; overflow: auto;">
             <div class="modal-header font-weight-bold" style="font-size: x-large;">
                 <div id="big_image_header"></div>
                 <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body d-flex justify-content-center"><img id="big_image_img" class="img-fluid" alt="Изображение" /></div>
+            <div class="modal-body d-flex justify-content-center align-items-baseline align-self-start" style="overflow: auto;"><img id="big_image_img" class="img-fluid" alt="Изображение" style="cursor: zoom-in; position: relative; top: 0px; left: 0px;" onclick="javascript: if($(this).hasClass('img-fluid')) { $(this).removeClass('img-fluid'); $(this).css('cursor', 'zoom-out'); } else { $(this).addClass('img-fluid'); $(this).css('cursor', 'zoom-in'); }" /></div>
             <div class="modal-footer d-flex justify-content-between">
                 <div>
                     <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
