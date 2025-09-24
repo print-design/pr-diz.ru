@@ -421,6 +421,40 @@ if(file_exists('find.php')) {
             obj.css('cursor', 'zoom-in'); 
         }
     }
+    
+    // Заполнение трекинга заказов
+    function StatusTrack(id) {
+        $.ajax({ url: '../calculation/_status_track.php?id=' + id })
+                .done(function(data) {
+                    $('#status_track_body').html(data);
+                })
+                .fail(function() {
+                    alert('Ошибка при получении трекинга заказов');
+                });
+        /*
+         * 
+         * 
+         * $.ajax({ url: ajax_path + "&text=" + text })
+                        .done(function(data) {
+                            $(ev.target).val(data);
+                            $(ev.target).parents('.comment_input').addClass('d-none');
+                            
+                            $(comment_text_class).html(data);
+                            $(comment_input_class).val(data);
+                            
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при редактировании комментария');
+                        });
+            }
+         * 
+         * 
+         * 
+         */
+        //$('#status_track_body').html('<strong>Миру мир!</strong>' + id);
+    }
         
     // Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
     function AdjustFixedBlock(fixed_block) {

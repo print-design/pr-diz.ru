@@ -326,7 +326,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         <td class="text-right"><?=$quantity ?></td>
                         <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap" data-toggle="modal" data-target="#status_track"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']) ?></td>
+                        <td class="text-nowrap" data-toggle="modal" data-target="#status_track" onclick="javascript: StatusTrack(<?=$row['id'] ?>);"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']) ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php
