@@ -13,6 +13,7 @@ $result = array('error' => '', 'info' => '', 'filename' => '', 'to_plan_visible'
 $object = filter_input(INPUT_POST, 'object');
 $id = filter_input(INPUT_POST, 'id');
 $image = filter_input(INPUT_POST, 'image');
+$resolution = filter_input(INPUT_POST, 'resolution');
 
 if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_name'])) {
     $myimage = null;
@@ -38,7 +39,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             
             // Делаем из PDF картинку
             $imagick = new Imagick();
-            $imagick->setResolution(300, 300);
+            $imagick->setResolution($resolution, $resolution);
             $imagick->readImage($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/pdf/".$id."_".$image.".pdf[0]");
             $imagick->setImageFormat('jpeg');
             $imagick->setCompressionQuality(95);

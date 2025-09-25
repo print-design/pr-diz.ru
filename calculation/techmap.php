@@ -1531,11 +1531,11 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                     <div class="d-flex justify-content-between">
                         <div id="mini_button1_wrapper_printing_<?=$printing['id'] ?>" class="form-group <?=$button1_wrapper_class ?>" style="margin-bottom: 0;">
                             <label for="image1_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />С под.</label>
-                            <input type="file" accept="image/*,application/pdf" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 1);" />
+                            <input type="file" accept="image/*,application/pdf" name="image1_printing_<?=$printing['id'] ?>" id="image1_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 1, 300);" />
                         </div>
                         <div id="mini_button2_wrapper_printing_<?=$printing['id'] ?>" class="form-group <?=$button2_wrapper_class ?>" style="margin-bottom: 0;">
                             <label for="image2_printing_<?=$printing['id'] ?>" class="btn btn-sm btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" />Без п.</label>
-                            <input type="file" accept="image/*,application/pdf" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 2);" />
+                            <input type="file" accept="image/*,application/pdf" name="image2_printing_<?=$printing['id'] ?>" id="image2_printing_<?=$printing['id'] ?>" class="d-none color_input" onchange="UploadImage('printing', <?=$printing['id'] ?>, 2, 300);" />
                         </div>
                     </div>
                     <?php
@@ -1755,11 +1755,11 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 ?>
                                 <div id="mini_button1_wrapper_stream_<?=$stream['id'] ?>" class="form-group mr-4 <?=$button1_wrapper_class ?>">
                                     <label for="image1_stream_<?=$stream['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> С подписью заказчика</label>
-                                    <input type="file" accept="image/*,application/pdf" name="image1_stream_<?=$stream['id'] ?>" id="image1_stream_<?=$stream['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$stream['id'] ?>, 1);" />
+                                    <input type="file" accept="image/*,application/pdf" name="image1_stream_<?=$stream['id'] ?>" id="image1_stream_<?=$stream['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$stream['id'] ?>, 1, 300);" />
                                 </div>
                                 <div id="mini_button2_wrapper_stream_<?=$stream['id'] ?>" class="form-group <?=$button2_wrapper_class ?>">
                                     <label for="image2_stream_<?=$stream['id'] ?>" class="btn btn-light"><img src="../images/icons/upload_file.svg" class="mr-2 align-baseline" /> Без подписи заказчика</label>
-                                    <input type="file" accept="image/*,application/pdf" name="image2_stream_<?=$stream['id'] ?>" id="image2_stream_<?=$stream['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$stream['id'] ?>, 2);" />
+                                    <input type="file" accept="image/*,application/pdf" name="image2_stream_<?=$stream['id'] ?>" id="image2_stream_<?=$stream['id'] ?>" class="d-none color_input" onchange="UploadImage('stream', <?=$stream['id'] ?>, 2, 300);" />
                                 </div>
                             </div>
                             <div class="d-flex justify-content-start">
@@ -2131,7 +2131,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                         });
             }
             
-            function UploadImage(object, id, image) {
+            function UploadImage(object, id, image, resolution) {
                 $('#mini_image' + image + '_' + object + '_' + id).attr('src', '../images/loading-cargando.gif');
                 $('#mini_image' + image + '_wrapper_' + object + '_' + id).removeClass('d-none');
                 $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-block');
@@ -2140,6 +2140,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                 formData.set('object', object);
                 formData.set('id', id);
                 formData.set('image', image);
+                formData.set('resolution', resolution);
                 formData.set('file', $("#image" + image + "_" + object + "_" + id)[0].files[0]);
                 
                 $.ajax({
