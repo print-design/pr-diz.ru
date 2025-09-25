@@ -2181,10 +2181,30 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                         }
                     },
                     error: function() {
-                        alert('Ошибка при загрузке файла.');
-                        $('#mini_image' + image + '_' + object + '_' + id).removeAttr('src');
-                        $('#mini_image' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
-                        $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
+                        if(resolution > 250) {
+                            UploadImage(object, id, image, 250);
+                        }
+                        else if (resolution > 200) {
+                            UploadImage(object, id, image, 200);
+                        }
+                        else if(resolution > 150) {
+                            UploadImage(object, id, image, 150);
+                        }
+                        else if(resolution > 100) {
+                            UploadImage(object, id, image, 100);
+                        }
+                        else if(resolution > 50) {
+                            UploadImage(object, id, image, 50);
+                        }
+                        else if(resolution > 10) {
+                            UploadImage(object, id, image, 10);
+                        }
+                        else {
+                            alert('Ошибка при загрузке файла.');
+                            $('#mini_image' + image + '_' + object + '_' + id).removeAttr('src');
+                            $('#mini_image' + image + '_wrapper_' + object + '_' + id).removeClass('d-block');
+                            $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-none');
+                        }
                     }
                 });
             }
