@@ -147,7 +147,9 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         
         if(empty($error_message)) {
             // При установке статуса "Режется нет перехода в другой раздел"
-            $sql = "update calculation set status_id = ".ORDER_STATUS_CUTTING." where id = $id";
+            $status_id = ORDER_STATUS_CUTTING;
+            $user_id = GetUserId();
+            $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -175,7 +177,9 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     
     if(empty($error_message)) {
         // При установке статуса "Снято с резки" нет перехода в другой раздел
-        $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_REMOVED." where id = $id";
+        $status_id = ORDER_STATUS_CUT_REMOVED;
+        $user_id = GetUserId();
+        $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }

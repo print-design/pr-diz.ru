@@ -21,7 +21,9 @@ if(null !== filter_input(INPUT_POST, 'start_cut_submit')) {
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     
     // При установке статуса "Приладка на резке" происходит переход в раздел "Производят"
-    $sql = "update calculation set status_id = ".ORDER_STATUS_CUT_PRILADKA.", status_date = now() where id = $id";
+    $status_id = ORDER_STATUS_CUT_PRILADKA;
+    $user_id = GetUserId();
+    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     

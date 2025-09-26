@@ -107,8 +107,9 @@ if(null !== filter_input(INPUT_POST, 'customer_pays_for_knife_submit')) {
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $status_id = filter_input(INPUT_POST, 'status_id');
+    $user_id = GetUserId();
     
-    $sql = "update calculation set status_id = $status_id, status_date = now() where id = $id";
+    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }

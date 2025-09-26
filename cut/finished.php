@@ -21,7 +21,9 @@ if(null !== filter_input(INPUT_POST, 'pack_submit')) {
     $machine_id = filter_input(INPUT_POST, 'machine_id');
     
     // При установке статуса "Готово к упаковке" нет перехода в другой раздел
-    $sql = "update calculation set status_id = ".ORDER_STATUS_PACK_READY." where id = $id";
+    $status_id = ORDER_STATUS_PACK_READY;
+    $user_id = GetUserId();
+    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
     

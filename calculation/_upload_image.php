@@ -111,18 +111,21 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
         
         if($database_updated) {
             // Проверяем, показывать ли кнопку "Поставить в план"
-            $status_id = null;
             $work_type_id = null;
+            $status_id = null;
             $streams = array();
             $stream_names = array();
             $printings = array();
             
             if($object == STREAM) {
-                $sql = "select c.status_id, c.work_type_id from calculation_stream cs inner join calculation c on cs.calculation_id = c.id where cs.id = $id";
+                $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id "
+                        . "from calculation_stream cs "
+                        . "inner join calculation c on cs.calculation_id = c.id "
+                        . "where cs.id = $id";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
-                    $status_id = $row['status_id'];
                     $work_type_id = $row['work_type_id'];
+                    $status_id = $row['status_id'];
                 }
             
                 $sql = "select name, image1, image2 from calculation_stream where calculation_id = (select calculation_id from calculation_stream where id = $id)";
@@ -145,11 +148,12 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
                 }
             }
             elseif($object == PRINTING) {
-                $sql = "select c.status_id, c.work_type_id from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
+                $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id "
+                        . "from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
-                    $status_id = $row['status_id'];
                     $work_type_id = $row['work_type_id'];
+                    $status_id = $row['status_id'];
                 }
                 
                 $sql = "select image1, image2 from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $id)";

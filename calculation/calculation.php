@@ -215,7 +215,7 @@ class CalculationBase {
             $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1,
             $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2,
             $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3,
-            $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id,
+            $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id,
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
             $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
@@ -227,7 +227,7 @@ class CalculationBase {
             $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche,
             $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
             $requirement1, $requirement2, $requirement3, $cut_priladka, $cut_remove_cause, 
-            $customer, $last_name, $first_name, $num_for_customer;
+            $customer, $last_name, $first_name, $status_id, $num_for_customer;
     
     // Конструктор
     public function __construct(DataPriladka $data_priladka, 
@@ -293,7 +293,6 @@ class CalculationBase {
             $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
             $manager_id, // ID менеджера
-            $status_id, // Статус
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
             $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
@@ -324,6 +323,7 @@ class CalculationBase {
             $customer, // Заказчик
             $last_name, // Фамилия менеджера
             $first_name, // Имя менеджера
+            $status_id, // Статус
             $num_for_customer // Номер заказа у данного заказчика
             ) {
         $this->data_priladka = $data_priladka;
@@ -389,7 +389,6 @@ class CalculationBase {
         $this->lamination_roller_width = $lamination_roller_width; // Ширина ламинирующего вала
         $this->ink_number = $ink_number; // Красочность
         $this->manager_id = $manager_id; // ID менелдера
-        $this->status_id = $status_id; // Статус
         
         $this->ink_1 = $ink_1; $this->ink_2 = $ink_2; $this->ink_3 = $ink_3; $this->ink_4 = $ink_4; $this->ink_5 = $ink_5; $this->ink_6 = $ink_6; $this->ink_7 = $ink_7; $this->ink_8 = $ink_8; // Тип краски (CMYK, пантон, белая, лак)
         $this->color_1 = $color_1; $this->color_2 = $color_2; $this->color_3 = $color_3; $this->color_4 = $color_4; $this->color_5 = $color_5; $this->color_6 = $color_6; $this->color_7 = $color_7; $this->color_8 = $color_8; // Номер пантона
@@ -420,6 +419,7 @@ class CalculationBase {
         $this->customer = $customer; // Заказчик
         $this->last_name = $last_name; // Фамилия менеджера
         $this->first_name = $first_name; // Имя менеджера
+        $this->status_id = $status_id; // Статус
         $this->num_for_customer = $num_for_customer; // Номер заказа у данного заказчика
     }
     
@@ -639,7 +639,6 @@ class CalculationBase {
         $lamination_roller_width = null; // Ширина ламинирующего вала
         $ink_number = 0; // Красочность
         $manager_id = null; // ID менеджера
-        $status_id = null; // Статус
         
         $cliche_in_price = null; // Включить формы в стоимость
         $extracharge = null; // Наценка на тираж
@@ -656,6 +655,7 @@ class CalculationBase {
         $customer = null; // Заказчик
         $last_name = null; // Фамилия менеджера
         $first_name = null; // Имя менеджера
+        $status_id = null; // Статус
         $num_for_customer = null; // Номер заказа у данного заказчика
         
         $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
@@ -668,7 +668,7 @@ class CalculationBase {
                 . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
                 . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
                 . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
-                . "rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, rc.manager_id, rc.status_id, "
+                . "rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, rc.manager_id, "
                 . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
                 . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
                 . "rc.cmyk_1, rc.cmyk_2, rc.cmyk_3, rc.cmyk_4, rc.cmyk_5, rc.cmyk_6, rc.cmyk_7, rc.cmyk_8, "
@@ -679,6 +679,7 @@ class CalculationBase {
                 . "rc.knife, rc.extracharge_knife, rc.knife_in_price, rc.customer_pays_for_knife, rc.extra_expense, "
                 . "rc.requirement1, rc.requirement2, rc.requirement3, rc.cut_priladka, rc.cut_remove_cause, "
                 . "cus.name customer, u.last_name, u.first_name, "
+                . "(select status_id from calculation_status_history where calculation_id = rc.id order by date limit 1) status_id, "
                 . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
                 . "from calculation rc "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -855,7 +856,6 @@ class CalculationBase {
             $lamination_roller_width = $row['lamination_roller_width']; // Ширина ламинирующего вала
             $ink_number = $row['ink_number']; // Красочность
             $manager_id = $row['manager_id']; // ID менеджера
-            $status_id = $row['status_id']; // Статус
             
             $ink_1 = $row['ink_1']; $ink_2 = $row['ink_2']; $ink_3 = $row['ink_3']; $ink_4 = $row['ink_4']; $ink_5 = $row['ink_5']; $ink_6 = $row['ink_6']; $ink_7 = $row['ink_7']; $ink_8 = $row['ink_8'];
             $color_1 = $row['color_1']; $color_2 = $row['color_2']; $color_3 = $row['color_3']; $color_4 = $row['color_4']; $color_5 = $row['color_5']; $color_6 = $row['color_6']; $color_7 = $row['color_7']; $color_8 = $row['color_8'];
@@ -887,6 +887,7 @@ class CalculationBase {
             $customer = $row['customer']; // Заказчик
             $last_name = $row['last_name']; // Фамилия менеджера
             $first_name = $row['first_name']; // Имя менеджера
+            $status_id = $row['status_id']; // Статус
             $num_for_customer = $row['num_for_customer']; // Номер заказа у данного заказчика
             
             // Если тип работы - плёнка без печати, то 
@@ -1106,7 +1107,6 @@ class CalculationBase {
                     $lamination_roller_width, // Ширина ламинирующего вала
                     $ink_number, // Красочность
                     $manager_id, // ID менеджера
-                    $status_id, // Статус
                     
                     $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
                     $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
@@ -1137,6 +1137,7 @@ class CalculationBase {
                     $customer, // Заказчик
                     $last_name, // Фамилия менеджера
                     $first_name, // Имя менеджера
+                    $status_id, // Статус
                     $num_for_customer); // Номер заказа у данного заказчика
         }
         elseif(empty ($error_message)) {
@@ -1203,7 +1204,6 @@ class CalculationBase {
                     $lamination_roller_width, // Ширина ламинирующего вала
                     $ink_number, // Красочность
                     $manager_id, // ID менеджера
-                    $status_id, // Статус
                     
                     $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
                     $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
@@ -1234,6 +1234,7 @@ class CalculationBase {
                     $customer, // Заказчик
                     $last_name, // Фамилия менеджера
                     $first_name, // Имя менеджера
+                    $status_id, // Статус
                     $num_for_customer); // Номер заказа для данного заказчика
         }
         else {
@@ -1389,7 +1390,6 @@ class Calculation extends CalculationBase {
             $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
             $manager_id, // ID менеджера
-            $status_id, // Статус
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
             $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
@@ -1420,6 +1420,7 @@ class Calculation extends CalculationBase {
             $customer, // Заказчик
             $last_name, // Фамилия менеджера
             $first_name, // Имя менеджера
+            $status_id, // Статус
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
@@ -1427,7 +1428,7 @@ class Calculation extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, 
+                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
@@ -1437,7 +1438,7 @@ class Calculation extends CalculationBase {
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
                 $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
                 $requirement1, $requirement2, $requirement3, $cut_priladka, $cut_remove_cause, 
-                $customer, $last_name, $first_name, $num_for_customer);
+                $customer, $last_name, $first_name, $status_id, $num_for_customer);
                 
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
@@ -2298,7 +2299,6 @@ class CalculationSelfAdhesive extends CalculationBase {
             $lamination_roller_width, // Ширина ламинирующего вала
             $ink_number, // Красочность
             $manager_id, // ID менеджера
-            $status_id, // Статус
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, // Тип краски (CMYK, пантон, белая, лак)
             $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, // Номер пантона
@@ -2329,6 +2329,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $customer, // Заказчик
             $last_name, // Фамилия менеджера
             $first_name, // Имя менеджера
+            $status_id, // Статус
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
@@ -2336,7 +2337,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
-                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, 
+                $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
                 $cmyk_1, $cmyk_2, $cmyk_3, $cmyk_4, $cmyk_5, $cmyk_6, $cmyk_7, $cmyk_8, 
@@ -2346,7 +2347,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
                 $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
                 $requirement1, $requirement2, $requirement3, $cut_priladka, $cut_remove_cause, 
-                $customer, $last_name, $first_name, $num_for_customer);
+                $customer, $last_name, $first_name, $status_id, $num_for_customer);
         
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);

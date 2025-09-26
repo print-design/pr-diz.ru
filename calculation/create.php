@@ -459,7 +459,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
         
         $manager_id = GetUserId();
-        $status_id = ORDER_STATUS_DRAFT; // Статус "Черновик"
         
         // Данные о цвете
         for($i=1; $i<=8; $i++) {
@@ -493,12 +492,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $knife_in_price = 0; if(filter_input(INPUT_POST, 'knife_in_price') == 'on') $knife_in_price = 1;
         $customer_pays_for_knife = 0; if(filter_input(INPUT_POST, 'customer_pays_for_knife') == 'on') $customer_pays_for_knife = 1;
         $extra_expense = filter_input(INPUT_POST, 'extra_expense'); if(empty($extra_expense)) $extra_expense = 0;
+        $status_id = ORDER_STATUS_DRAFT; // Статус "Черновик"
         
         $sql = "insert into calculation (customer_id, name, unit, quantity, work_type_id, "
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
                 . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
-                . "laminator_id, streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, manager_id, status_id, "
+                . "laminator_id, streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, manager_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -511,7 +511,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
                 . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
-                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, $status_id, "
+                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -523,6 +523,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
+        
+        // Сохраняем статус
+        if(empty($error_message)) {
+            $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($insert_id, $status_id, $manager_id)";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
         
         // Для самоклеящейся бумаги заполняем список тиражей
         if(empty($error_message) && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
@@ -582,7 +589,7 @@ if(!empty($id)) {
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
             . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
-            . "c.laminator_id, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.manager_id, c.status_id, "
+            . "c.laminator_id, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.manager_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
@@ -591,6 +598,7 @@ if(!empty($id)) {
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
             . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, "
             . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, extra_expense, "
+            . "(select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);
@@ -855,11 +863,6 @@ if($manager_id === null && isset($row['manager_id'])) {
     $manager_id = $row['manager_id'];
 }
 
-$status_id = filter_input(INPUT_POST, 'status_id');
-if($status_id === null && isset($row['status_id'])) {
-    $status_id = $row['status_id'];
-}
-
 // Количество новых форм
 $new_forms_number = 0;
 
@@ -995,6 +998,11 @@ if($customer_pays_for_knife === null && isset($row['customer_pays_for_knife'])) 
 $extra_expense = filter_input(INPUT_POST, 'extra_expense');
 if($extra_expense === null && isset($row['extra_expense'])) {
     $extra_expense = $row['extra_expense'];
+}
+
+$status_id = filter_input(INPUT_POST, 'status_id');
+if($status_id === null && isset($row['status_id'])) {
+    $status_id = $row['status_id'];
 }
 
 $num_for_customer = null;
