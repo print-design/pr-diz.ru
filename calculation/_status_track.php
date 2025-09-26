@@ -66,9 +66,9 @@ $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
 ?>
 <div>
-    <div style="display: inline-block; text-align: center; width: 25px; line-height: 17px;">
+    <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px; vertical-align: text-top;">
         <i class="fas fa-circle" style="color: <?= ORDER_STATUS_COLORS[$row['status_id']] ?>;"></i><br />
-        <div style="display: inline-block; border: solid 1px #AAAAAA; height: 20px; width: 2px;"></div>
+        <div style="display: inline-block; border: solid 1px #AAAAAA; height: 25px; width: 2px;"></div>
     </div>
     <div style="display: inline-block; vertical-align: top;">
         <?= $row['status_id'] == $status_id ? '<strong>'.ORDER_STATUS_NAMES[$row['status_id']].'</strong>' : ORDER_STATUS_NAMES[$row['status_id']] ?>
@@ -76,12 +76,29 @@ while($row = $fetcher->Fetch()):
     </div>
 </div>
 <?php endwhile; ?>
-<?php foreach(ORDER_STATUS_NAMES as $key => $value): ?>
+<?php
+$order_statuses = array_merge(ORDER_STATUSES_BEGIN, ORDER_STATUSES_NOT_IN_WORK, ORDER_STATUSES_IN_WORK, ORDER_STATUSES_IN_PRODUCTION, ORDER_STATUSES_END);
+$order_statuses_dictionary = array();
+$i = 0;
+
+foreach($order_statuses as $order_status) {
+    $order_statuses_dictionary[$order_status] = ++$i;
+}
+
+foreach($order_statuses as $order_status):
+    if($order_statuses_dictionary[$order_status] > $order_statuses_dictionary[$status_id] 
+            && !in_array($order_status, array(ORDER_STATUS_CUT_REMOVED, ORDER_STATUS_REJECTED, ORDER_STATUS_TRASH))):
+?>
 <div style="color: #AAAAAA;">
-    <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px;">
+    <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px; vertical-align: top;">
         <i class="far fa-circle"></i><br />
-        <div style="display: inline-block; border: solid 1px #AAAAAA; height: 8px; width: 2px;"></div>
+        <?php if($order_status != ORDER_STATUS_SHIPPED): ?>
+        <div style="display: inline-block; border: solid 1px #AAAAAA; height: 10px; width: 2px;"></div>
+        <?php endif; ?>
     </div>
-    <div style="display: inline-block; vertical-align: top; line-height: 15px;"><?=$value ?></div>
+    <div style="display: inline-block; vertical-align: top; line-height: 15px;"><?= ORDER_STATUS_NAMES[$order_status] ?></div>
 </div>
-<?php endforeach; ?>
+<?php
+endif;
+endforeach;
+?>
