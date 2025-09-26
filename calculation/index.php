@@ -84,16 +84,16 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                    $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
-                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
+                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
                     }
                     elseif(!empty ($status_id) && $status_id == ORDER_STATUS_IN_PRODUCTION) {
-                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
+                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                     }
                     elseif(!empty($status_id)) {
-                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) = $status_id";
+                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id";
                     }
                     
                     $unit = filter_input(INPUT_GET, 'unit');
@@ -203,16 +203,16 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             <option value="">Наименование...</option>
                             <?php
                             if($status_id == ORDER_STATUS_NOT_IN_WORK) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
+                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
                             }
                             elseif($status_id == ORDER_STATUS_IN_PRODUCTION) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
+                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                             }
                             elseif(!empty ($status_id)) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) = $status_id";
+                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id";
                             }
                             else {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
                             }
                             
                             $customer = filter_input(INPUT_GET, 'customer');
@@ -306,7 +306,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
                             . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                             . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
-                            . "(select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id, "
+                            . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
                             . "left join customer cus on c.customer_id = cus.id "

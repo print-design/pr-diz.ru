@@ -118,7 +118,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             $printings = array();
             
             if($object == STREAM) {
-                $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id "
+                $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id "
                         . "from calculation_stream cs "
                         . "inner join calculation c on cs.calculation_id = c.id "
                         . "where cs.id = $id";
@@ -148,7 +148,7 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
                 }
             }
             elseif($object == PRINTING) {
-                $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id "
+                $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id "
                         . "from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {

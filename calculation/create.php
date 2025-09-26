@@ -598,7 +598,7 @@ if(!empty($id)) {
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
             . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, "
             . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, extra_expense, "
-            . "(select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id, "
+            . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
             . "from calculation c where c.id = $id";
     $fetcher = new Fetcher($sql);

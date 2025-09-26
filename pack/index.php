@@ -91,7 +91,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
                     . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                     . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
-                    . "(select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id, "
+                    . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                     . "from calculation c "
                     . "inner join plan_edition e on e.calculation_id = c.id "

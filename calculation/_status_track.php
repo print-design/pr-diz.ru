@@ -26,7 +26,7 @@ $cut_remove_cause = 0;
 
 $sql = "select c.name, c.date, c.customer_id, c.quantity, c.unit, c.raport, c.length, c.cut_remove_cause, cus.name customer, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
-        . "(select status_id from calculation_status_history where calculation_id = c.id order by date limit 1) status_id, "
+        . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
         . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
         . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
         . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
