@@ -85,7 +85,8 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
     </tr>
     <tr>
         <td>Резка</td>
-        <td class="pl-1 font-weight-bold"><?= $last_name.(empty($first_name) ? '' : ' '.mb_substr($first_name, 0, 1).'.').' '.$dt_printed->format('d.m.Y H:i') ?></td>
+        <!-- Фамилия резчика показывается только на бирках "Принт-Дизайн" -->
+        <td class="pl-1 font-weight-bold"><?= ($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN ? $last_name.(empty($first_name) ? '' : ' '.mb_substr($first_name, 0, 1).'.').' ' : '').$dt_printed->format('d.m.Y H:i') ?></td>
     </tr>
     <?php if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN): ?>
     <tr>
@@ -127,7 +128,10 @@ if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN):
 </table>
 <div class="d-flex justify-content-between">
     <div class="mb-2" style="font-size: small;">
-        Гарантия хранения 12 мес.<br />ТУ 22.29.21-001-10785166-2025
+        Гарантия хранения 12 мес.
+        <?php if($calculation_result->labels == CalculationResult::LABEL_PRINT_DESIGN): ?>
+        <br />ТУ 22.29.21-001-10785166-2025
+        <?php endif; ?>
     </div>
     <div class="d-flex justify-content-end">
         <div class="mr-1 position-relative" style="width: 23px; height: 22px;"><img src="<?=APPLICATION ?>/images/package.png" style="position: absolute; top: -93px; left: -23px; width: 150px; clip: rect(93px, 43px, 113px, 23px);" /></div>
