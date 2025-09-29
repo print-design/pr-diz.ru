@@ -196,8 +196,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
             }
         }
         
-        if(empty($error_message)) {
-            $error_message = SetCalculationStatus($id, ORDER_STATUS_CALCULATION, '');
+        if(empty($error_message) && $calculation->status_id == ORDER_STATUS_CALCULATION) {
+            $error_message = SetCalculationStatus($id, ORDER_STATUS_TECHMAP, '');
         }
     }
 }
