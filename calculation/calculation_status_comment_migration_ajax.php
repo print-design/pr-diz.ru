@@ -9,7 +9,7 @@ $fetcher = new Fetcher($sql);
 
 if($row = $fetcher->Fetch()) {
     $calculation_id = $row['id'];
-    $comment = $row['cut_remove_cause'];
+    $comment = addslashes($row['cut_remove_cause']);
 }
 
 $result = 10000000;
