@@ -1,7 +1,7 @@
 <?php
 include '../include/status_track.php';
 ?>
-<div id="status" data-toggle="modal" data-target="#status_track" onclick="javascript: StatusTrack(<?=$id ?>);" style="border: solid 2px <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>; color: <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>;">
+<div id="status" data-toggle="modal" data-target="#status_track" onclick="javascript: StatusTrack(<?=$id ?>);" style="cursor: pointer; border: solid 2px <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>; color: <?=ORDER_STATUS_COLORS[$calculation->status_id] ?>;">
     <i class="<?=ORDER_STATUS_ICONS[$calculation->status_id] ?>"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=ORDER_STATUS_NAMES[$calculation->status_id] ?>
     <?php
     if(in_array($calculation->status_id, ORDER_STATUSES_WITH_METERS)) {
