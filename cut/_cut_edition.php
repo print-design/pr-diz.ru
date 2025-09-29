@@ -17,7 +17,7 @@ class CutEdition {
         include './_cut_edition_view.php';
     }
     
-    function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $cut_remove_cause) {
+    function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) {
         include '../include/order_status_index.php';
     }
 }

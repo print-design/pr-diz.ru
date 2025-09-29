@@ -45,7 +45,7 @@ class CutTimetable {
         $button_start = true;
         
         // Тиражи
-        $sql = "select e.id id, e.date, e.shift, ".PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, e.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.cut_remove_cause, c.unit, c.quantity, "
+        $sql = "select e.id id, e.date, e.shift, ".PLAN_TYPE_EDITION." as type, if(isnull(e.worktime_continued), 0, 1) as has_continuation, ifnull(e.worktime_continued, e.worktime) worktime, e.position, e.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.unit, c.quantity, "
                 . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                 . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
                 . "if(isnull(e.worktime_continued), round(cr.length_pure_1), round(cr.length_pure_1) / e.worktime * e.worktime_continued) as length_pure_1, "
@@ -56,6 +56,7 @@ class CutTimetable {
                 . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                 . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                 . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
+                . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
                 . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                 . "from plan_edition e "
                 . "inner join calculation c on e.calculation_id = c.id "
@@ -65,7 +66,7 @@ class CutTimetable {
                 . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
-                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.cut_remove_cause, c.unit, c.quantity, "
+                . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.unit, c.quantity, "
                 . "0 as gap_raport, "
                 . "0 as quantity_sum, "
                 . "round(cr.length_pure_1) / e.worktime * pc.worktime as length_pure_1, "
@@ -76,6 +77,7 @@ class CutTimetable {
                 . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                 . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                 . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
+                . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
                 . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                 . "from plan_continuation pc "
                 . "inner join plan_edition e on pc.plan_edition_id = e.id "

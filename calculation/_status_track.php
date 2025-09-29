@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Отображение статуса заказа
-function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $cut_remove_cause) {
+function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) {
     include '../include/order_status_index.php';
 }
 
@@ -13,6 +13,7 @@ $str_customer = '';
 $str_nn = '';
 $str_date = '';
 $status_id = 0;
+$status_comment = '';
 
 $length_cut = 0;
 $weight_cut = 0;
@@ -22,11 +23,11 @@ $unit = '';
 $raport = 0;
 $length = 0;
 $gap_raport = 0;
-$cut_remove_cause = 0;
 
-$sql = "select c.name, c.date, c.customer_id, c.quantity, c.unit, c.raport, c.length, c.cut_remove_cause, cus.name customer, "
+$sql = "select c.name, c.date, c.customer_id, c.quantity, c.unit, c.raport, c.length, cus.name customer, "
         . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer, "
         . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
+        . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
         . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
         . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
         . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
@@ -43,6 +44,7 @@ if($row = $fetcher->Fetch()) {
     $str_nn = $row['customer_id'].'_'.$row['num_for_customer'];
     $str_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y');
     $status_id = $row['status_id'];
+    $status_comment = $row['status_comment'];
     
     $length_cut = $row['length_cut'];
     $weight_cut = $row['weight_cut'];
@@ -52,13 +54,12 @@ if($row = $fetcher->Fetch()) {
     $raport = $row['raport'];
     $length = $row['length'];
     $gap_raport = $row['gap_raport'];
-    $cut_remove_cause = $row['cut_remove_cause'];
 }
 ?>
 <div style="font-size: large; font-weight: bold; margin-bottom: 3px;"><?=$str_name ?></div>
 <div style="font-weight: bold; margin-bottom: 3px;"><?=$str_customer ?></div>
 <div style="margin-bottom: 5px;">№<?=$str_nn ?> от <?=$str_date ?></div>
-<div style="margin-bottom: 20px;"><?= ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $cut_remove_cause) ?></div>
+<div style="margin-bottom: 20px;"><?= ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) ?></div>
 
 <?php
 $sql = "select status_id, date from calculation_status_history where calculation_id = $calculation_id order by date asc";

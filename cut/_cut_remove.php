@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" name="cut_remove_cause" id="cut_remove_cause" class="form-control" placeholder="Описание проблемы" required="required" autocomplete="off" />
+                        <input type="text" name="status_comment" id="status_comment" class="form-control" placeholder="Описание проблемы" required="required" autocomplete="off" />
                     </div>
                 </div>
                 <div class="modal-footer" style="justify-content: flex-start;">

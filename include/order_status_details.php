@@ -46,7 +46,7 @@ include '../include/status_track.php';
     }
                                 
     if($calculation->status_id == ORDER_STATUS_CUT_REMOVED) {
-        echo ": ".$calculation->cut_remove_cause;
+        echo ": ".$calculation->status_comment;
     }
     ?>
 </div>

@@ -26,7 +26,7 @@ if(!empty($status_id)) {
         echo "<div style='font-size: smaller;'><span class='text-nowrap'>".rtrim(rtrim(DisplayNumber(floatval($result_cut), 2), '0'), ',')."</span> из <span class='text-nowrap'>".DisplayNumber(floatval(empty($quantity_sum) ? $quantity : $quantity_sum), 0)."</span> ".($unit == KG ? "кг" : "шт")."</div>";
     }
     elseif($status_id == ORDER_STATUS_CUT_REMOVED) {
-        echo "<div style='font-size: smaller;'>".$this->edition['cut_remove_cause']."</div>";
+        echo "<div style='font-size: smaller;'>".$this->edition['status_comment']."</div>";
     }
 }
 ?>

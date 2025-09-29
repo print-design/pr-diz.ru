@@ -26,7 +26,7 @@ if(in_array($status_id, ORDER_STATUSES_WITH_METERS)) {
     echo "<div style='font-size: smaller;' class='text-nowrap'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".rtrim(rtrim(DisplayNumber(floatval($result_cut), 2), '0'), ',')." из ".DisplayNumber(floatval(empty($quantity_sum) ? $quantity : $quantity_sum), 0).' '.($unit == KG ? "кг" : "шт")."</div>";
 }
 elseif($status_id == ORDER_STATUS_CUT_REMOVED) {
-    echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$cut_remove_cause."</div>";
+    echo "<div style='font-size: smaller;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$status_comment."</div>";
 }
 endif;
 ?>

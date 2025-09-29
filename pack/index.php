@@ -19,7 +19,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
 }
 
 // Отображение статуса заказа
-function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $cut_remove_cause) {
+function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) {
     include '../include/order_status_index.php';
 }
 ?>
@@ -83,7 +83,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, ct.time, c.customer_id, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.cut_remove_cause, c.unit, c.quantity, "
+            $sql = "select distinct c.id, ct.time, c.customer_id, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                     . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
                     . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
@@ -92,6 +92,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                     . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                     . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
+                    . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                     . "from calculation c "
                     . "inner join plan_edition e on e.calculation_id = c.id "
@@ -113,7 +114,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['weight']), 1) ?> кг</td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
-                    <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']); ?></td>
+                    <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td><?= trim($row['comment'].' '.$row['continuation_comment'], ' ') ?></td>
                     <td>
                         <a href="details.php<?= BuildQuery('id', $row['id']) ?>" class="btn btn-light" style="width: 150px;">Приступить</a>

@@ -61,7 +61,7 @@
     });
             
     $('#cut_remove').on('hidden.bs.modal', function() {
-        $('input#cut_remove_cause').val('');
+        $('input#status_comment').val('');
     });
     
     $('#edit_take_stream').on('shown.bs.modal', function() {

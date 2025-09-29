@@ -46,7 +46,7 @@ function GetPrintingsWithCases($number) {
 }
 
 // Отображение статуса
-function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $cut_remove_cause) {
+function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) {
     include '../include/order_status_index.php';
 }
 
@@ -298,7 +298,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     }
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
-                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length, c.cut_remove_cause, "
+                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length, "
                             . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities, "
                             . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                             . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
@@ -307,6 +307,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                             . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                             . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
+                            . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
                             . "left join customer cus on c.customer_id = cus.id "
@@ -327,7 +328,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         <td class="text-right"><?=$quantity ?></td>
                         <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                         <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap" data-toggle="modal" data-target="#status_track" onclick="javascript: StatusTrack(<?=$row['id'] ?>);"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['cut_remove_cause']) ?></td>
+                        <td class="text-nowrap" data-toggle="modal" data-target="#status_track" onclick="javascript: StatusTrack(<?=$row['id'] ?>);"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']) ?></td>
                         <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
                     </tr>
                     <?php

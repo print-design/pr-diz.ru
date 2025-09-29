@@ -49,20 +49,14 @@ if(null !== filter_input(INPUT_POST, 'ready_submit')) {
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $cut_remove_cause = addslashes(filter_input(INPUT_POST, 'cut_remove_cause') ?? '');
+    $status_comment = addslashes(filter_input(INPUT_POST, 'status_comment') ?? '');
     
-    $sql = "update calculation set cut_remove_cause = '$cut_remove_cause' where id = $id";
+    // При установке статуса "Снято с резки" нет перехода в другой раздел
+    $status_id = ORDER_STATUS_CUT_REMOVED;
+    $user_id = GetUserId();
+    $sql = "insert into calculation_status_history (calculation_id, status_id, comment, user_id) values ($id, $status_id, '$status_comment', $user_id)";
     $executer = new Executer($sql);
     $error_message = $executer->error;
-    
-    if(empty($error_message)) {
-        // При установке статуса "Снято с резки" нет перехода в другой раздел
-        $status_id = ORDER_STATUS_CUT_REMOVED;
-        $user_id = GetUserId();
-        $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
     
     if(empty($error_message)) {
         header('Location: '.APPLICATION.'/cut/?machine_id='.$machine_id);

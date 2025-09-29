@@ -53,7 +53,7 @@
     <td class="<?=$this->cut_shift->shift ?> text-nowrap">
         <?php
         if(!$this->edition['has_continuation']) {
-            $this->ShowOrderStatus($this->edition['status_id'], $this->edition['length_cut'], $this->edition['weight_cut'], $this->edition['quantity_sum'], $this->edition['quantity'], $this->edition['unit'], $this->edition['raport'], $this->edition['length'], $this->edition['gap_raport'], $this->edition['cut_remove_cause']); 
+            $this->ShowOrderStatus($this->edition['status_id'], $this->edition['length_cut'], $this->edition['weight_cut'], $this->edition['quantity_sum'], $this->edition['quantity'], $this->edition['unit'], $this->edition['raport'], $this->edition['length'], $this->edition['gap_raport'], $this->edition['status_comment']); 
         }
         ?>
     </td>
