@@ -47,6 +47,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
     <body>
         <?php
         include '../include/header_pack.php';
+        include '../include/status_track.php';
         ?>
         <div class="container-fluid">
             <?php
@@ -114,7 +115,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['weight']), 1) ?> кг</td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
-                    <td><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
+                    <td data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td><?= trim($row['comment'].' '.$row['continuation_comment'], ' ') ?></td>
                     <td>
                         <a href="details.php<?= BuildQuery('id', $row['id']) ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
