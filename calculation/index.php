@@ -259,7 +259,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                 <tbody>
                     <?php
                     // Сортировка
-                    $orderby = "order by c.status_date desc, c.id desc";
+                    $orderby = "order by status_date desc, c.id desc";
                     
                     if(array_key_exists('order', $_REQUEST)) {
                         switch ($_REQUEST['order']) {
@@ -308,6 +308,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                             . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
                             . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
+                            . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
                             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                             . "from calculation c "
                             . "left join customer cus on c.customer_id = cus.id "
