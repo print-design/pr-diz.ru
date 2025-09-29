@@ -96,6 +96,7 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
     <body>
         <?php
         include '../include/header_cut.php';
+        include '../include/status_track.php';
         ?>
         <div class="container-fluid">
             <?php

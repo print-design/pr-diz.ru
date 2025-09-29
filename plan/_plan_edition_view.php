@@ -379,7 +379,7 @@
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?= ($this->edition['type'] == PLAN_TYPE_EVENT || $this->edition['has_continuation']) ? "" : $this->edition['manager'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
+    <td data-toggle="modal" data-target="#status_track" onclick="javascript:  StatusTrack(<?=$this->edition['calculation_id'] ?>);" style="cursor: pointer;" class="<?=$this->plan_shift->shift ?> showdropline text-nowrap"<?=$drop ?>>
         <?php
         if(!empty($this->edition['status_id']) && !$this->edition['has_continuation']) {
             $this->ShowOrderStatus($this->edition['status_id'], $this->edition['length_cut'], $this->edition['weight_cut'], $this->edition['quantity_sum'], $this->edition['quantity'], $this->edition['unit'], $this->edition['raport'], $this->edition['length'], $this->edition['gap_raport'], $this->edition['status_comment']);

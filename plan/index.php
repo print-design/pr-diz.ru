@@ -248,7 +248,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
     <body>
         <?php
         include '../include/header_plan.php';
-        
+        include '../include/status_track.php';
         include '../include/big_image.php';
         ?>
         <div id="add_event" class="modal fade show">

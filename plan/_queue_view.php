@@ -82,6 +82,6 @@
             <?php endif; ?>
         </div>
     </div>
-    <div><strong>Статус:</strong> <span style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>; font-weight: bold;"><?=ORDER_STATUS_NAMES[$row['status_id']] ?></span></div>
+    <div data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript: StatusTrack(<?=$row['id'] ?>);"><strong>Статус:</strong> <span style="color: <?=ORDER_STATUS_COLORS[$row['status_id']] ?>; font-weight: bold;"><?=ORDER_STATUS_NAMES[$row['status_id']] ?></span></div>
     <div><strong>Менеджер:</strong> <?=$row['last_name'] ?> <?= mb_substr($row['first_name'], 0, 1)  ?>.</div>
 </div>
