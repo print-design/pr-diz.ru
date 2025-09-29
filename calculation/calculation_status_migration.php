@@ -42,7 +42,7 @@ include '../include/topscripts.php';
                     .done(function(data) {
                         $('#result').text(data + ' из <?=$total ?>');
                         
-                        if(data <= <?=$total ?>) {
+                        if(data < <?=$total ?>) {
                             Migrate();
                         }
                     })
