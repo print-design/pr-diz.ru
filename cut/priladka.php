@@ -22,11 +22,7 @@ if(null !== filter_input(INPUT_POST, 'ready_submit')) {
     $length = filter_input(INPUT_POST, 'length');
     
     // При установке статуса "Режется" нет перехода в другой раздел
-    $status_id = ORDER_STATUS_CUTTING;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+    $error_message = SetCalculationStatus($id, ORDER_STATUS_CUTTING, '');
     
     if(empty($error_message)) {
         $sql = "select count(id) from calculation_take where calculation_id = $id";
@@ -49,14 +45,10 @@ if(null !== filter_input(INPUT_POST, 'ready_submit')) {
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $status_comment = addslashes(filter_input(INPUT_POST, 'status_comment') ?? '');
+    $status_comment = filter_input(INPUT_POST, 'status_comment');
     
     // При установке статуса "Снято с резки" нет перехода в другой раздел
-    $status_id = ORDER_STATUS_CUT_REMOVED;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, comment, user_id) values ($id, $status_id, '$status_comment', $user_id)";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+    $error_message = SetCalculationStatus($id, ORDER_STATUS_CUT_REMOVED, $status_comment);
     
     if(empty($error_message)) {
         header('Location: '.APPLICATION.'/cut/?machine_id='.$machine_id);

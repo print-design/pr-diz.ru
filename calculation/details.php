@@ -109,9 +109,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $status_id = filter_input(INPUT_POST, 'status_id');
     $user_id = GetUserId();
     
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+    $error_message = SetCalculationStatus($id, $status_id, '');
 }
 
 // Получение объекта

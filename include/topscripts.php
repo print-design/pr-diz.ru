@@ -377,6 +377,28 @@ class Fetcher {
     }
 }
 
+// Добавление статуса заказа
+function SetCalculationStatus($calculation_id, $status_id, $comment) {
+    $comment_slashes = addslashes($comment ?? '');
+    $user_id = GetUserId();
+    $error_message = '';
+    $old_status_id = 0;
+    
+    $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by date desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $old_status_id = $row['0'];
+    }
+    
+    if($old_status_id != $status_id) {
+        $sql = "insert into calculation_status_history (calculation_id, status_id, comment, user_id) values ($calculation_id, $status_id, '$comment_slashes', $user_id)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    return $error_message;
+}
+
 // Валидация формы логина
 $login_form_valid = true;
 

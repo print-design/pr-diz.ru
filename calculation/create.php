@@ -526,9 +526,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         // Сохраняем статус
         if(empty($error_message)) {
-            $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($insert_id, $status_id, $manager_id)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
+            $error_message = SetCalculationStatus($insert_id, $status_id, '');
         }
         
         // Для самоклеящейся бумаги заполняем список тиражей

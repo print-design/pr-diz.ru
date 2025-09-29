@@ -78,11 +78,7 @@ if(empty($error)) {
 if(empty($error) && $work_id == WORK_PRINTING) {
     // 1. Тип работы "печать".
     // Статус устанавливаем "ожидание постановки в план".
-    $status_id = ORDER_STATUS_CONFIRMED;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error = $executer->error;
+    $error = SetCalculationStatus($calculation_id, ORDER_STATUS_CONFIRMED, '');
     
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
@@ -93,11 +89,7 @@ if(empty($error) && $work_id == WORK_PRINTING) {
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TYPE_NOPRINT) {
     // 2. Тип работы "ламинация", тип заказа "плёнка без печати".
     // Статус устанавливаем "ожидание постановки в план".
-    $status_id = ORDER_STATUS_CONFIRMED;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error = $executer->error;
+    $error = SetCalculationStatus($calculation_id, ORDER_STATUS_CONFIRMED, '');
     
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
@@ -108,11 +100,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TY
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TYPE_PRINT) {
     // 3. Тип работы "ламинация", тип заказа "плёнка с печатью".
     // Статус устанавливаем "в плане печати".
-    $status_id = ORDER_STATUS_PLAN_PRINT;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error = $executer->error;
+    $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_PRINT, '');
     
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
@@ -123,11 +111,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TY
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == WORK_TYPE_NOPRINT) {
     // 6. Тип работы "резка", ламинации нет, тип заказа "плёнка без печати".
     // Статус устанавливаем "ожидание постановки в план".
-    $status_id = ORDER_STATUS_CONFIRMED;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error = $executer->error;
+    $error = SetCalculationStatus($calculation_id, ORDER_STATUS_CONFIRMED, '');
     
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
@@ -138,11 +122,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_t
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == WORK_TYPE_PRINT) {
     // 7. Тип работы "резка", ламинации нет, тип заказа "плёнка с печатью".
     // Статус устанавливаем "в плане печати".
-    $status_id = ORDER_STATUS_PLAN_PRINT;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error = $executer->error;
+    $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_PRINT, '');
     
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
@@ -153,11 +133,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_t
 elseif(empty ($error) && $work_id == WORK_CUTTING && $has_lamination) {
     // 8. Тип работы "резка", ламинация есть.
     // Статус устанавливаем "в плане ламинации".
-    $status_id = ORDER_STATUS_PLAN_LAMINATE;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error = $executer->error;
+    $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_LAMINATE, '');
     
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
@@ -168,11 +144,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING && $has_lamination) {
 elseif(empty ($error) && $work_id == WORK_CUTTING && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     // 9. Тип работы "резка", тип заказа "самоклеящиеся материалы".
     // Статус устанавливаем "в плане печати".
-    $status_id = ORDER_STATUS_PLAN_PRINT;
-    $user_id = GetUserId();
-    $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-    $executer = new Executer($sql);
-    $error = $executer->error;
+    $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_PRINT, '');
     
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";

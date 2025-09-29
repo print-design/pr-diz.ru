@@ -197,11 +197,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         }
         
         if(empty($error_message)) {
-            $status_id = ORDER_STATUS_CALCULATION;
-            $user_id = GetUserId();
-            $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
+            $error_message = SetCalculationStatus($id, ORDER_STATUS_CALCULATION, '');
         }
     }
 }
@@ -272,11 +268,7 @@ if(null !== filter_input(INPUT_POST, 'plan_submit')) {
     $id = filter_input(INPUT_POST, 'id');
     
     if(!empty($id)) {
-        $status_id = ORDER_STATUS_WAITING;
-        $user_id = GetUserId();
-        $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($id, $status_id, $user_id)";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
+        $error_message = SetCalculationStatus($id, ORDER_STATUS_WAITING, '');
     }
     
     if(empty($error_message)) {
@@ -295,11 +287,7 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            $status_id = ORDER_STATUS_CALCULATION;
-            $user_id = GetUserId();
-            $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values($id, $status_id, $user_id)";
-            $executer = new Executer($sql);
-            $error_message = $executer->error;
+            $error_message = SetCalculationStatus($id, ORDER_STATUS_CALCULATION, '');
         }
         
         if(empty($error_message)) {

@@ -240,20 +240,12 @@ else {
     if(empty($error) && $work_id == WORK_PRINTING) {
         // 1. Тип работы "печать".
         // Статус устанавливаем "в плане печати".
-        $status_id = ORDER_STATUS_PLAN_PRINT;
-        $user_id = GetUserId();
-        $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-        $executer = new Executer($sql);
-        $error = $executer->error;
+        $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_PRINT, '');
     }
     elseif(empty ($error) && $work_id == WORK_LAMINATION && !$two_laminations) {
         // 2. Тип работы "ламинация", ламинация одна.
         // Статус устанавливаем "в плане ламинации".
-        $status_id = ORDER_STATUS_PLAN_LAMINATE;
-        $user_id = GetUserId();
-        $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-        $executer = new Executer($sql);
-        $error = $executer->error;
+        $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_LAMINATE, '');
     }
     elseif(empty ($error) && $work_id == WORK_LAMINATION && $two_laminations) {
         // 3. Тип работы "ламинация", ламинации две.
@@ -268,21 +260,13 @@ else {
         }
         
         if($editions_count == 2) {
-            $status_id = ORDER_STATUS_PLAN_LAMINATE;
-            $user_id = GetUserId();
-            $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-            $executer = new Executer($sql);
-            $error = $executer->error;
+            $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_LAMINATE, '');
         }
     }
     elseif(empty ($error) && $work_id == WORK_CUTTING) {
         // 4. Тип работы "резка".
         // Статус устанавливаем "в плане резки".
-        $status_id = ORDER_STATUS_PLAN_CUT;
-        $user_id = GetUserId();
-        $sql = "insert into calculation_status_history (calculation_id, status_id, user_id) values ($calculation_id, $status_id, $user_id)";
-        $executer = new Executer($sql);
-        $error = $executer->error;
+        $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_CUT, '');
     }
 }
 
