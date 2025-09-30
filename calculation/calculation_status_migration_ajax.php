@@ -23,9 +23,7 @@ if($row = $fetcher->Fetch()) {
 $result = 10000000;
 
 if(!empty($calculation_id) && !empty($date) && !empty($status_id) && !empty($user_id)) {
-    $sql = "insert into calculation_status_history (calculation_id, date, status_id, comment, user_id) values($calculation_id, '$date', $status_id, '$comment', $user_id)";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
+    $error_message = SetCalculationStatus($calculation_id, $status_id, $comment);
     
     if(empty($error_message)) {
         $sql = "select count(c.id) "
