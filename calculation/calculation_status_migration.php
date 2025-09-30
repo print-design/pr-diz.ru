@@ -19,9 +19,6 @@ include '../include/topscripts.php';
                 $sql = "select count(c.id) "
                         . "from calculation c "
                         . "where c.status_id = (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1)";
-                //$sql = "select count(c.id) "
-                //        . "from calculation c "
-                //        . "where (select count(id) from calculation_status_history where calculation_id = c.id) > 0";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
                     $in_history = $row[0];
