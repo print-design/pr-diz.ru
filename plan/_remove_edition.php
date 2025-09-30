@@ -83,7 +83,7 @@ if(empty($error) && $work_id == WORK_PRINTING) {
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
         $executer = new Executer($sql);
-        $error = new Executer($sql);
+        $error = $executer->error;
     }
 }
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TYPE_NOPRINT) {
@@ -94,7 +94,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TY
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
         $executer = new Executer($sql);
-        $error = new Executer($sql);
+        $error = $executer->error;
     }
 }
 elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TYPE_PRINT) {
@@ -105,7 +105,7 @@ elseif(empty ($error) && $work_id == WORK_LAMINATION && $work_type_id == WORK_TY
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
         $executer = new Executer($sql);
-        $error = new Executer($sql);
+        $error = $executer->error;
     }
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == WORK_TYPE_NOPRINT) {
@@ -116,7 +116,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_t
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
         $executer = new Executer($sql);
-        $error = new Executer($sql);
+        $error = $executer->error;
     }
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_type_id == WORK_TYPE_PRINT) {
@@ -127,7 +127,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING && !$has_lamination && $work_t
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
         $executer = new Executer($sql);
-        $error = new Executer($sql);
+        $error = $executer->error;
     }
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && $has_lamination) {
@@ -138,7 +138,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING && $has_lamination) {
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
         $executer = new Executer($sql);
-        $error = new Executer($sql);
+        $error = $executer->error;
     }
 }
 elseif(empty ($error) && $work_id == WORK_CUTTING && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
@@ -149,7 +149,7 @@ elseif(empty ($error) && $work_id == WORK_CUTTING && $work_type_id == WORK_TYPE_
     if(empty($error)) {
         $sql = "update calculation set queue_top = 1 where id = $calculation_id";
         $executer = new Executer($sql);
-        $error = new Executer($sql);
+        $error = $executer->error;
     }
 }
 
