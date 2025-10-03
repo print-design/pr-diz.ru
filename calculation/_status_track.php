@@ -76,8 +76,18 @@ while($row = $fetcher->Fetch()):
         <div style="font-size: smaller;"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y, H:i') ?></div>
     </div>
 </div>
-<?php endwhile; ?>
 <?php
+if($status_id == ORDER_STATUS_SHIPPED && $row['status_id'] == ORDER_STATUS_SHIPPED):
+?>
+<div style="color: #AAAAAA;">
+    <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px; vertical-align: top;">
+        <i class="far fa-circle"></i><br />
+    </div>
+</div>
+<?php
+endif;
+endwhile;
+
 $order_statuses = array_merge(ORDER_STATUSES_BEGIN, ORDER_STATUSES_NOT_IN_WORK, ORDER_STATUSES_IN_WORK, ORDER_STATUSES_IN_PRODUCTION, ORDER_STATUSES_END);
 $order_statuses_dictionary = array();
 $i = 0;
