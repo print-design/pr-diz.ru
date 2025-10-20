@@ -401,7 +401,17 @@ if(file_exists('find.php')) {
     
     // Увеличение и уменьшение картинки
     function MouseUpImage(obj, e) {
-        if(obj.hasClass('img-fluid')) {
+        if(obj.hasClass('moving')) {
+            obj.removeClass('moving');
+            
+            if(obj.hasClass('img-fluid')) {
+                obj.css('cursor', 'zoom-in');
+            }
+            else {
+                obj.css('cursor', 'zoom-out');
+            }
+        }
+        else if(obj.hasClass('img-fluid')) {
             width1 = obj.width();
             height1 = obj.height();
             positionX1 = e.pageX - obj.offset().left;
@@ -416,9 +426,6 @@ if(file_exists('find.php')) {
             positionY2 = positionY1 * height2 / height1;
             obj.parent().scrollLeft(positionX2 - obj.parent().width() / 2);
             obj.parent().scrollTop(positionY2 - obj.parent().height() / 2);
-        } else if(obj.hasClass('moving')) {
-            obj.removeClass('moving');
-            obj.css('cursor', 'zoom-out');
         } else {
             obj.addClass('img-fluid'); 
             obj.css('cursor', 'zoom-in'); 
@@ -437,7 +444,7 @@ if(file_exists('find.php')) {
     
     // Перемещение картинки
     function MouseMoveImage(obj, e) {
-        if(!obj.hasClass('img-fluid') && e.which === 1) {
+        if(e.which === 1) {
             obj.addClass('moving');
             obj.css('cursor', 'grab');
             
