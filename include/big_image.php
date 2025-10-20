@@ -5,7 +5,7 @@
                 <div id="big_image_header"></div>
                 <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
             </div>
-            <div class="modal-body d-flex justify-content-center align-items-baseline align-self-start" style="height: 500px; width: 500px; overflow: auto;"><img id="big_image_img" class="img-fluid" alt="Изображение" style="cursor: zoom-in; position: absolute; top: 0px; left: 0px;" onclick="javascript: ResizeImage($(this), event);" /></div>
+            <div class="modal-body d-flex justify-content-center align-items-baseline align-self-start" style="height: 500px; width: 500px; overflow: auto;"><img id="big_image_img" class="img-fluid" alt="Изображение" style="cursor: zoom-in; position: absolute; top: 0px; left: 0px;" onclick="javascript: ResizeImage($(this), event);" draggable="false" onmousedown="javascript: MouseDownImage($(this), event);" onmouseup="javascript: MouseUpImage($(this), event);" onmousemove="javascript: MouseMoveImage($(this), event);" /></div>
             <div class="modal-footer d-flex justify-content-between">
                 <div>
                     <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>

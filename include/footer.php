@@ -400,7 +400,7 @@ if(file_exists('find.php')) {
     });
     
     // Увеличение и уменьшение картинки
-    function ResizeImage(obj, e) {
+    function MouseUpImage(obj, e) {
         if(obj.hasClass('img-fluid')) {
             width1 = obj.width();
             height1 = obj.height();
@@ -416,9 +416,39 @@ if(file_exists('find.php')) {
             positionY2 = positionY1 * height2 / height1;
             obj.parent().scrollLeft(positionX2 - obj.parent().width() / 2);
             obj.parent().scrollTop(positionY2 - obj.parent().height() / 2);
+        } else if(obj.hasClass('moving')) {
+            obj.removeClass('moving');
+            obj.css('cursor', 'zoom-out');
         } else {
             obj.addClass('img-fluid'); 
             obj.css('cursor', 'zoom-in'); 
+        }
+    }
+    
+    // Координаты мыши на картинке
+    imageX = 0;
+    imageY = 0;
+    
+    // Сохранение прежних координат мыши
+    function MouseDownImage(obj, e) {
+        imageX = e.pageX;
+        imageY = e.pageY;
+    }
+    
+    // Перемещение картинки
+    function MouseMoveImage(obj, e) {
+        if(!obj.hasClass('img-fluid') && e.which === 1) {
+            obj.addClass('moving');
+            obj.css('cursor', 'grab');
+            
+            distanceX = e.pageX - imageX;
+            distanceY = e.pageY - imageY;
+            
+            obj.parent().scrollLeft(obj.parent().scrollLeft() - distanceX);
+            obj.parent().scrollTop(obj.parent().scrollTop() - distanceY);
+            
+            imageX = e.pageX;
+            imageY = e.pageY;
         }
     }
     
