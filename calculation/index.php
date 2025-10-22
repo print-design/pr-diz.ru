@@ -146,9 +146,14 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <div class="p-1 text-nowrap">
-                    <?php $order = filter_input(INPUT_GET, 'order'); ?>
+                    <?php
+                    $status = filter_input(INPUT_GET, 'status');
+                    $order = filter_input(INPUT_GET, 'order');
+                    ?>
                     <form class="form-inline d-inline" method="get">
-                        <input type="hidden" name="status" value="<?= filter_input(INPUT_GET, 'status') ?>" />
+                        <?php if(null !== $status): ?>
+                        <input type="hidden" name="status" value="<?= $status ?>" />
+                        <?php endif; ?>
                         <?php if(null !== $order): ?>
                         <input type="hidden" name="order" value="<?= $order ?>" />
                         <?php endif; ?>
