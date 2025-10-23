@@ -61,6 +61,11 @@
         <?= $this->edition['comment'] ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?>">
+        <?php if($this->edition['images_count']): ?>
+        <a href="javascript: void(0);" class="btn btn-link ui_tooltip left d-inline" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImageCalculation(<?=$this->edition['calculation_id'] ?>);"><img src="../images/icons/attach.svg" /></a>
+        <?php endif; ?>
+    </td>
+    <td class="<?=$this->cut_shift->shift ?>">
         <?php if($this->edition['status_id'] == ORDER_STATUS_PLAN_CUT && $this->edition['button_start'] && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take): ?>
         <a href="details.php?id=<?=$this->edition['calculation_id'] ?>&machine_id=<?=$this->cut_shift->timetable->machine_id ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
         <?php elseif($this->edition['status_id'] == ORDER_STATUS_CUT_REMOVED && !$this->cut_shift->timetable->has_priladka && !$this->cut_shift->timetable->has_take && !$this->edition['has_continuation']): ?>

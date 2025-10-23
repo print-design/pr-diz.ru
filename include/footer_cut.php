@@ -23,39 +23,6 @@
         $('table.not_take_table').addClass('d-none');
     }
     
-    function ShowImage(stream_id) {
-        $.ajax({ url: "../include/big_image_show.php?stream_id=" + stream_id,
-            dataType: "json",
-            success: function(response) {
-                if(response.error.length > 0) {
-                    alert(response.error);
-                }
-                else {
-                    $('#big_image_header').text(response.name);
-                    $('#big_image_img').attr('src', '../content/stream/' + response.filename + '?' + Date.now());
-                    document.forms.download_image_form.object.value = 'stream';
-                    document.forms.download_image_form.id.value = stream_id;
-                    document.forms.download_image_form.image.value = response.image;
-                    ShowImageButtons(stream_id, response.image);
-                }
-            },
-            error: function() {
-                alert('Ошибка при открытии макета.');
-            }
-        });
-    }
-    
-    function ShowImageButtons(stream_id, image) {
-        $.ajax({ url: "../include/big_image_buttons.php?stream_id=" + stream_id + "&image=" + image,
-            success: function(response) {
-                $('#big_image_buttons').html(response);
-            },
-            error: function() {
-                alert('Ошибка при создании кнопок макета.');
-            }
-        });
-    }
-    
     $('#cut_remove').on('shown.bs.modal', function() {
         $('input:text:visible:first').focus();
     });

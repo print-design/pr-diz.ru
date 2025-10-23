@@ -459,6 +459,111 @@ if(file_exists('find.php')) {
         }
     }
     
+    // Показ картинок
+    function ShowImage(object, id, image) {
+        $.ajax({ url: "../include/big_image_show.php?object=" + object + "&id=" + id + "&image=" + image,
+            dataType: "json", 
+            success: function(response) {
+                if(response.error.length > 0) {
+                    alert(response.error);
+                }
+                else {
+                    $('#big_image_header').text(response.name);
+                    $('#big_image_img').attr('src', '../content/' + object + '/' + response.filename + '?' + Date.now());
+                    $('#big_image_delete').removeClass('d-none');
+                    $('#deleted_file_name').text(response.delete_file_name);
+                    document.forms.delete_image_form.object.value = object;
+                    document.forms.delete_image_form.id.value = id;
+                    document.forms.delete_image_form.image.value = image;
+                    document.forms.download_image_form.object.value = object;
+                    document.forms.download_image_form.id.value = id;
+                    document.forms.download_image_form.image.value = image;
+                    ShowImageButtons(object, id, image);
+                }
+            },
+            error: function() {
+                alert('Ошибка при открытии макета.');
+            }
+        });
+    }
+    
+    function ShowImageButtons(object, id, image) {
+        $.ajax({ url: "../include/big_image_buttons.php?object=" + object + "&id=" + id + "&image=" + image,
+            success: function(response) {
+                $('#big_image_buttons').html(response);
+            },
+            error: function() {
+                alert('Ошибка при создании кнопок макета.');
+            }
+        });
+    }
+            
+    function ShowImageCalculation(calculation_id) {
+        $.ajax({ url: "../include/big_image_show.php?calculation_id=" + calculation_id,
+            dataType: "json",
+            success: function(response) {
+                if(response.error.length > 0) {
+                    alert(response.error);
+                }
+                else {
+                    $('#big_image_header').text(response.name);
+                    $('#big_image_img').attr('src', '../content/' + response.object + '/' + response.filename + '?' + Date.now());
+                    document.forms.download_image_form.object.value = response.object;
+                    document.forms.download_image_form.id.value = response.id;
+                    document.forms.download_image_form.image.value = response.image;
+                    ShowImageCalculationButtons(calculation_id, 1);
+                }
+            },
+            error: function() {
+                alert('Ошибка при открытии макета.');
+            }
+        });
+    }
+    
+    function ShowImageCalculationButtons(calculation_id, ordinal) {
+        $.ajax({ url: "../include/big_image_buttons.php?calculation_id=" + calculation_id + "&ordinal=" + ordinal,
+            success: function(response) {
+                $('#big_image_buttons').html(response);
+            },
+            error: function() {
+                alert('Ошибка при создании кнопок макета.')
+            }
+        });
+    }
+            
+    function ShowImageStream(stream_id) {
+        $.ajax({ url: "../include/big_image_show.php?stream_id=" + stream_id,
+            dataType: "json",
+            success: function(response) {
+                if(response.error.length > 0) {
+                    alert(response.error);
+                }
+                else {
+                    $('#big_image_header').text(response.name);
+                    $('#big_image_img').attr('src', '../content/stream/' + response.filename + '?' + Date.now());
+                    document.forms.download_image_form.object.value = 'stream';
+                    document.forms.download_image_form.id.value = stream_id;
+                    document.forms.download_image_form.image.value = response.image;
+                    ShowImageStreamButtons(stream_id, response.image);
+                }
+            },
+            error: function() {
+                alert('Ошибка при открытии макета.');
+            }
+        });
+    }
+    
+    function ShowImageStreamButtons(stream_id, image) {
+        $.ajax({ url: "../include/big_image_buttons.php?stream_id=" + stream_id + "&image=" + image,
+            success: function(response) {
+                $('#big_image_buttons').html(response);
+            },
+            error: function() {
+                alert('Ошибка при создании кнопок макета.');
+            }
+        });
+    }
+    
     // Заполнение трекинга заказов
     function StatusTrack(id) {
         $.ajax({ url: '../calculation/_status_track.php?id=' + id })

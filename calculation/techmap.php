@@ -2199,44 +2199,6 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                 });
             }
             
-            function ShowImage(object, id, image) {
-                $.ajax({ url: "../include/big_image_show.php?object=" + object + "&id=" + id + "&image=" + image,
-                    dataType: "json", 
-                    success: function(response) {
-                        if(response.error.length > 0) {
-                            alert(response.error);
-                        }
-                        else {
-                            $('#big_image_header').text(response.name);
-                            $('#big_image_img').attr('src', '../content/' + object + '/' + response.filename + '?' + Date.now());
-                            $('#big_image_delete').removeClass('d-none');
-                            $('#deleted_file_name').text(response.delete_file_name);
-                            document.forms.delete_image_form.object.value = object;
-                            document.forms.delete_image_form.id.value = id;
-                            document.forms.delete_image_form.image.value = image;
-                            document.forms.download_image_form.object.value = object;
-                            document.forms.download_image_form.id.value = id;
-                            document.forms.download_image_form.image.value = image;
-                            ShowImageButtons(object, id, image);
-                        }
-                    },
-                    error: function() {
-                        alert('Ошибка при открытии макета.');
-                    }
-                });
-            }
-            
-            function ShowImageButtons(object, id, image) {
-                $.ajax({ url: "../include/big_image_buttons.php?object=" + object + "&id=" + id + "&image=" + image,
-                    success: function(response) {
-                        $('#big_image_buttons').html(response);
-                    },
-                    error: function() {
-                        alert('Ошибка при создании кнопок макета.');
-                    }
-                });
-            }
-            
             <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                 
             // Переход между страницами редактирования форм тиражей
