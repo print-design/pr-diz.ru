@@ -6,7 +6,7 @@ $current_hour = intval($current_time->format('G'));
 $current_shift = 'day';
 $working_current_time = clone $current_time;
 
-if($current_hour < 8 || $current_hour > 19) {
+if($current_hour > 19 && $current_hour < 24) {
     $current_shift = 'night';
 }
 elseif ($current_hour >= 0 && $current_hour < 8) {

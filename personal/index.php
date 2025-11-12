@@ -5,7 +5,7 @@ include '../include/topscripts.php';
 if(!LoggedIn()) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
-        
+
 // Получение личных данных
 $username = '';
 $last_name = '';
