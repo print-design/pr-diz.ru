@@ -58,12 +58,26 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             include '../include/pager_top.php';
             $rowcounter = 0;
             
+            // Фильтр
+            $filter = '';
+            
+            $find = trim(filter_input(INPUT_GET, 'find') ?? '');
+            if(!empty($find)) {
+                $find_substrings = explode('-', $find);
+                if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
+                    $filter .= " and false";
+                }
+                else {
+                    $filter .= " and c.customer_id = ". intval($find_substrings[0])." and (select count(id) from calculation where customer_id = c.customer_id and id <= c.id) = ". intval($find_substrings[1]);
+                }
+            }
+            
             // Общее количество работ для установления количества страниц в постраничном выводе
             $sql = "select count(c.id) "
                     . "from calculation c "
                     . "inner join plan_edition e on e.calculation_id = c.id "
                     . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
-                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING;
+                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING.$filter;
             $fetcher = new Fetcher($sql);
             
             if($row = $fetcher->Fetch()) {
@@ -102,7 +116,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "inner join user u on c.manager_id = u.id "
                     . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
                     . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING
+                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING.$filter
                     . " order by ct.time desc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
