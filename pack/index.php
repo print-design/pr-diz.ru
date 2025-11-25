@@ -105,12 +105,19 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
+            /*$gap_raport = 0;
+            $sql = "select gap_raport from norm_gap where date <= c.date order by id desc limit 1";
+            $fetcher = new Fetcher($sql);
+            if($row = $fetcher->Fetch()) {
+                $gap_raport = $row[0];
+            }*/
+            
             $sql = "select distinct c.id, ct.time, c.customer_id, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . ($status_id == ORDER_STATUS_SHIPPED ? "ss.shipping_date, " : "")
-                    . "cq.quantity_sum, "
+                    . "cq.quantity_sum, ctw.weight, cgr.gap_raport, "
                     //. "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
-                    . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
-                    . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
+                    //. "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
+                    //. "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
                     . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
                     . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
                     . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
@@ -127,6 +134,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . ($status_id == ORDER_STATUS_SHIPPED ? "left join (select calculation_id, max(date) as shipping_date from calculation_status_history where status_id = ". ORDER_STATUS_SHIPPED." group by calculation_id) ss on ss.calculation_id = c.id " : "")
                     . "left join plan_continuation pc on pc.plan_edition_id = e.id "
                     . "left join (select calculation_id, sum(quantity) as quantity_sum from calculation_quantity group by calculation_id) cq on cq.calculation_id = c.id "
+                    . "left join (select ct1.calculation_id, sum(cts1.weight) as weight from calculation_take ct1 inner join calculation_take_stream cts1 on cts1.calculation_take_id = ct1.id group by ct1.calculation_id) ctw on ctw.calculation_id = c.id "
+                    . "left join (select c1.id as calculation_id, (select gap_raport from norm_gap where date <= c1.date order by id desc limit 1) as gap_raport from calculation c1 group by c1.id) cgr on cgr.calculation_id = c.id "
                     . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING.$filter
                     . " order by ct.time desc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
