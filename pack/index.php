@@ -64,6 +64,31 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     // Фильтр
                     $filter = '';
                     
+                    $unit = filter_input(INPUT_GET, 'unit');
+                    if(!empty($unit)) {
+                        $filter .= " and c.unit = '$unit'";
+                    }
+                    
+                    $work_type = filter_input(INPUT_GET, 'work_type');
+                    if(!empty($work_type)) {
+                        $filter .= " and c.work_type = $work_type";
+                    }
+                    
+                    $manager = filter_input(INPUT_GET, 'manager');
+                    if(!empty($manager)) {
+                        $filter .= " and c.manager_id = $manager";
+                    }
+                    
+                    $customer = filter_input(INPUT_GET, 'customer');
+                    if(!empty($customer)) {
+                        $filter .= " and c.customer_id = $customer";
+                    }
+                    
+                    $name = filter_input(INPUT_GET, 'name');
+                    if(!empty($name)) {
+                        $filter .= " and trim(c.name) = '$name'";
+                    }
+                    
                     $find = trim(filter_input(INPUT_GET, 'find') ?? '');
                     if(!empty($find)) {
                         $find_substrings = explode('-', $find);
@@ -91,9 +116,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 </div>
                 <div></div>
             </div>            
-            <table class="table typography">
+            <table class="table table-hover typography">
                 <tr>
-                    <th class="text-nowrap">Дата<i class='fas fa-arrow-down ml-2' style="color: #BBBBBB;"></i></th>
+                    <th class="text-nowrap">Дата</th>
                     <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
                     <th>Дата отгрузки</th>
                     <?php endif; ?>
