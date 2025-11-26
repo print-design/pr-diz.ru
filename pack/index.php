@@ -71,7 +71,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             $filter .= " and false";
                         }
                         else {
-                            $filter .= " and c.customer_id = ". intval($find_substrings[0])." and (select count(id) from calculation where customer_id = c.customer_id and id <= c.id) = ". intval($find_substrings[1]);
+                            $filter .= " and c.customer_id = ". intval($find_substrings[0])." and num_for_customers.num_for_customer = ". intval($find_substrings[1]);
                         }
                     }
                     
@@ -79,7 +79,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     $sql = "select count(c.id) "
                             . "from calculation c "
                             . "inner join plan_edition e on e.calculation_id = c.id "
-                            . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING.$filter;
+                            . "left join (select calculation_id, status_id from calculation_status_history where id in (select max(id) from calculation_status_history group by calculation_id)) cshmax on cshmax.calculation_id = c.id "
+                            . "left join (select c1.id as calculation_id, (select count(id) from calculation where customer_id = c1.customer_id and id < c1.id) as num_for_customer from calculation c1) num_for_customers on num_for_customers.calculation_id = c.id "
+                            . "where cshmax.status_id = $status_id and e.work_id = ".WORK_CUTTING.$filter;
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
