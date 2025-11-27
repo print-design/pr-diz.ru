@@ -117,9 +117,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <div class="p-1 text-nowrap">
-                    <?php
-                    $status_id = filter_input(INPUT_GET, 'status_id');
-                    ?>
                     <form class="form-inline d-inline" method="get">
                         <?php if(null !== $status_id): ?>
                         <input type="hidden" name="status_id" value="<?=$status_id ?>" />
@@ -184,7 +181,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         </select>
                     </form>
                 </div>
-            </div>            
+            </div>
             <table class="table table-hover typography">
                 <tr>
                     <th class="text-nowrap">Дата</th>
@@ -200,7 +197,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th>Комментарий</th>
                     <th></th>
                 </tr>
-            <?php 
+            <?php
             $sql = "select distinct c.id, ct.time, c.customer_id, num_for_customers.num_for_customer, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . ($status_id == ORDER_STATUS_SHIPPED ? "ss.shipping_date, " : "")
                     . "cq.quantity_sum, cgr.gap_raport, cshmax.status_id, cshmax.status_comment, ifnull(ctw.weight, 0) + ifnull(csw.weight, 0) weight_cut, ifnull(ctw.length, 0) + ifnull(csw.length, 0) length_cut "
