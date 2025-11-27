@@ -201,7 +201,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             $sql = "select distinct c.id, ct.time, c.customer_id, num_for_customers.num_for_customer, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . ($status_id == ORDER_STATUS_SHIPPED ? "ss.shipping_date, " : "")
                     . "cq.quantity_sum, cshmax.status_id, cshmax.status_comment, ifnull(ctw.weight, 0) + ifnull(csw.weight, 0) weight_cut, ifnull(ctw.length, 0) + ifnull(csw.length, 0) length_cut, "
-                    . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport "
+                    . "if(cq.quantity_sum is null, 0, (select gap_raport from norm_gap where date <= c.date order by id desc limit 1)) as gap_raport "
                     . "from calculation c "
                     . "inner join plan_edition e on e.calculation_id = c.id "
                     . "inner join customer cus on c.customer_id = cus.id "
