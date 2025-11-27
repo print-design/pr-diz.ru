@@ -198,12 +198,18 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
+            //            . ($status_id == ORDER_STATUS_SHIPPED ? "left join (select calculation_id, max(date) as shipping_date from calculation_status_history where status_id = ". ORDER_STATUS_SHIPPED." group by calculation_id) ss on ss.calculation_id = c.id " : "")
             $sql = "select distinct c.id, ct.time, c.customer_id, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
-                    . ($status_id == ORDER_STATUS_SHIPPED ? "ss.shipping_date, " : "")
-                    . "cq.quantity_sum, ifnull(ctw.weight, 0) + ifnull(csw.weight, 0) weight_cut, ifnull(ctw.length, 0) + ifnull(csw.length, 0) length_cut, "
+                    . ($status_id == ORDER_STATUS_SHIPPED ? "(select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) as shipping_date, " : "")
+                    . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
+                    . "(select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)) as weight, "
+                    . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
+                    . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
+                    . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
+                    . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
+                    . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
                     . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
                     . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
-                    . "if(cq.quantity_sum is null, 0, (select gap_raport from norm_gap where date <= c.date order by id desc limit 1)) as gap_raport, "
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                     . "from calculation c "
                     . "inner join plan_edition e on e.calculation_id = c.id "
@@ -211,12 +217,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
                     . "inner join user u on c.manager_id = u.id "
                     . "inner join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
-                    . ($status_id == ORDER_STATUS_SHIPPED ? "left join (select calculation_id, max(date) as shipping_date from calculation_status_history where status_id = ". ORDER_STATUS_SHIPPED." group by calculation_id) ss on ss.calculation_id = c.id " : "")
                     . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-                    . "left join (select calculation_id, sum(quantity) as quantity_sum from calculation_quantity group by calculation_id) cq on cq.calculation_id = c.id "
-                    . "left join (select ct1.calculation_id, sum(cts1.weight) as weight, sum(cts1.length) as length from calculation_take ct1 inner join calculation_take_stream cts1 on cts1.calculation_take_id = ct1.id group by ct1.calculation_id) ctw on ctw.calculation_id = c.id "
-                    . "left join (select cs1.calculation_id, sum(cnts1.weight) as weight, sum(cnts1.length) as length from calculation_stream cs1 inner join calculation_not_take_stream cnts1 on cnts1.calculation_stream_id = cs1.id group by cs1.calculation_id) csw on csw.calculation_id = c.id "
-                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING.$filter
+                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id and e.work_id = ".WORK_CUTTING
                     . " order by ct.time desc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
