@@ -563,6 +563,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
+        // Удаляем все двойные или тройные пробелы в названиях расчётов (иначе будут проблемы в поиске по названию).
+        if(empty($error_message)) {
+            $sql = "update calculation set name = replace(name, '  ', ' ') where id = $insert_id";
+            $executer = new Executer($sql);
+            $error_message = $executer->error;
+        }
+        
         if(empty($error_message)) {
             header('Location: create.php?id='.$insert_id);
         }
