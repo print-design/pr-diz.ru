@@ -18,9 +18,9 @@ else {
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION."/pack/". BuildQueryAddRemove('status_id', ORDER_STATUS_PACK_READY, 'page') ?>">Упаковка</a></li>
-            <li class="nav-item text-nowrap"><a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION."/pack/". BuildQueryAddRemove('status_id', ORDER_STATUS_SHIP_READY, 'page') ?>">Ждёт отгрузки</a></li>
-            <li class="nav-item"><a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION."/pack/". BuildQueryAddRemove('status_id', ORDER_STATUS_SHIPPED, 'page') ?>">Отгружено</a></li>
+            <li class="nav-item"><a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION."/pack/?status_id=".ORDER_STATUS_PACK_READY ?>">Упаковка</a></li>
+            <li class="nav-item text-nowrap"><a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION."/pack/?status_id=".ORDER_STATUS_SHIP_READY ?>">Ждёт отгрузки</a></li>
+            <li class="nav-item"><a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION."/pack/?status_id=".ORDER_STATUS_SHIPPED ?>">Отгружено</a></li>
         </ul>
         <div class="ml-auto"></div>
         <?php
