@@ -34,12 +34,17 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_CUTTER]))) {
             <form method="post">
                 <div class="form-group">
                     <label for="title">Заголовок</label>
-                    <input type="text" class="form-control" name="title" />
+                    <input type="text" class="form-control" name="title" required="required" />
                 </div>
                 <div class="form-group">
                     <label for="body">Текст предложения</label>
-                    <textarea class="form-control" name="body" rows="4"></textarea>
+                    <textarea class="form-control" name="body" rows="4" required="required"></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="body">Обоснование (какой эффект ожидается)</label>
+                    <textarea class="form-control" name="effect" rows="4" required="required"></textarea>
+                </div>
+                <button type="submit" class="btn btn-dark">Подать</button>
             </form>
         </div>
         <?php
