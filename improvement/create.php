@@ -6,6 +6,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_CUTTER]))) {
     header('Location: '.APPLICATION.'/unauthorized.php');
 }
 ?>
+<!DOCTYPE html>
 <html>
     <head>
         <?php
