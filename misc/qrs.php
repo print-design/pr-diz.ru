@@ -9,33 +9,43 @@ use chillerlan\QRCode\QRCode;
         <p><strong>Пример:</strong> Артикул (ТУ-2245-003-70398464-2016) + Дата резки (22.12.2025) + Номер партии плёнки (1241237) + ID ролика (24615)</p>
         <hr />
         
-        <?php $data = "ТУ-2245-003-70398464-201622.12.202524615"; ?>
-        <p><?=$data ?></p>
+        <?php $data = "00000040290004241220251216854227153148"; ?>
+        <!-- p><? = $ data ?></p-->
         <?php $qrcode = (new QRCode)->render($data); ?>
         <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
         
-        <?php $data = "ТУ-2245-003-70398464-201622.12.202524614"; ?>
-        <p><?=$data ?></p>
+        <?php $data = "00000040290004241220251216854227153149"; ?>
+        <!-- p><? = $ data ?></p-->
         <?php $qrcode = (new QRCode)->render($data); ?>
         <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
         
-        <?php $data = "ТУ-2245-003-70398464-201622.12.202524613"; ?>
-        <p><?=$data ?></p>
+        <?php $data = "00000040290004241220251216854234153161"; ?>
+        <!-- p><? = $ data ?></p-->
         <?php $qrcode = (new QRCode)->render($data); ?>
         <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
         
-        <?php $data = "ТУ-2245-003-70398464-201622.12.202524612"; ?>
-        <p><?=$data ?></p>
+        <?php $data = "00000040290004241220251216854234153162"; ?>
+        <!-- p><? = $ data ?></p-->
         <?php $qrcode = (new QRCode)->render($data); ?>
         <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
         
-        <?php $data = "ТУ-2245-003-70398464-201622.12.202524611"; ?>
-        <p><?=$data ?></p>
+        <?php $data = "00000040290004241220251216854240153177"; ?>
+        <!-- p><? = $ data ?></p-->
         <?php $qrcode = (new QRCode)->render($data); ?>
         <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
         
-        <?php $data = "ТУ-2245-003-70398464-201622.12.202524610"; ?>
-        <p><?=$data ?></p>
+        <?php $data = "00000040290004241220251216854240153179"; ?>
+        <!-- p><? = $ data ?></p-->
+        <?php $qrcode = (new QRCode)->render($data); ?>
+        <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
+        
+        <?php $data = "00000040290004241220251216854252153201"; ?>
+        <!-- p><? = $ data ?></p-->
+        <?php $qrcode = (new QRCode)->render($data); ?>
+        <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
+        
+        <?php $data = "00000040290004241220251216854252153202"; ?>
+        <!-- p><? = $ data ?></p-->
         <?php $qrcode = (new QRCode)->render($data); ?>
         <img src="<?=$qrcode ?>" alt="<?=$data ?>" width="400" height="400" />
 
