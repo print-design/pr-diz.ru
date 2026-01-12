@@ -16,6 +16,7 @@ $plan_class = '';
 $cut_class = '';
 $pack_class = '';
 $admin_class = '';
+$improvement_class = '';
 
 if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
     $zakaz_class = " active";
@@ -34,6 +35,9 @@ elseif($folder == "pack") {
 }
 elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     $admin_class = " active";
+}
+elseif($folder == "improvement") {
+    $improvement_class = " active";
 }
 
 ?>
@@ -95,5 +99,10 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     <!-- Старший менеджер может редактировать константы -->
     <?php if(IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR])): ?>
     <a href="<?=APPLICATION ?>/supplier/film.php" class="left_bar_item ui_tooltip right<?=$admin_class ?>" title="Админка"><img src="<?=APPLICATION ?>/images/nav_admin.svg" /></a>
+    <?php endif; ?>
+    
+    <!-- Предложения по улучшению -->
+    <?php if(IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) || IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])): ?>
+    <a href="<?= APPLICATION ?>/improvement/" class="left_bar_item ui_tooltip right<?=$improvement_class ?>" title="Предложения по улучшению"><i class="fas fa-gift" style="font-size: 1.3rem;"></i></a>
     <?php endif; ?>
 </div>
