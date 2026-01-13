@@ -100,8 +100,8 @@ while($row = $fetcher->Fetch()):
     </div>
 </div>
 <?php endwhile; ?>
-<div style="color: #AAAAAA;">
+<div style="color: #000000;">
     <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px; vertical-align: top;">
-        <i class="far fa-circle"></i><br />
+        <i class="fas fa-arrow-up"></i>
     </div>
 </div>
