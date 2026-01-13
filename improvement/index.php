@@ -25,7 +25,14 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <h1>Предложения по улучшению</h1>
+            <div class="d-flex justify-content-between mb-auto">
+                <div>
+                    <h1>Предложения по улучшению</h1>
+                </div>
+                <div>
+                    <a href="create.php" class="btn btn-dark">Новое предложение</a>
+                </div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
