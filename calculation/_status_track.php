@@ -62,7 +62,30 @@ if($row = $fetcher->Fetch()) {
 <div style="margin-bottom: 20px;"><?= ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) ?></div>
 
 <?php
-$sql = "select status_id, date from calculation_status_history where calculation_id = $calculation_id order by date asc";
+$order_statuses = array_merge(array_reverse(ORDER_STATUSES_END), array_reverse(ORDER_STATUSES_IN_PRODUCTION), array_reverse(ORDER_STATUSES_IN_WORK), array_reverse(ORDER_STATUSES_NOT_IN_WORK), array_reverse(ORDER_STATUSES_BEGIN));
+$order_statuses_dictionary = array();
+$i = 0;
+
+foreach($order_statuses as $order_status) {
+    $order_statuses_dictionary[$order_status] = ++$i;
+}
+
+foreach($order_statuses as $order_status):
+    if($order_statuses_dictionary[$order_status] < $order_statuses_dictionary[$status_id] 
+            && !in_array($order_status, array(ORDER_STATUS_CUT_REMOVED, ORDER_STATUS_REJECTED, ORDER_STATUS_TRASH))):
+?>
+<div style="color: #AAAAAA;">
+    <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px; vertical-align: top;">
+        <i class="far fa-circle"></i><br />
+        <div style="display: inline-block; border: solid 1px #AAAAAA; height: 10px; width: 2px;"></div>
+    </div>
+    <div style="display: inline-block; vertical-align: top; line-height: 15px;"><?= ORDER_STATUS_NAMES[$order_status] ?></div>
+</div>
+<?php
+endif;
+endforeach;
+
+$sql = "select status_id, date from calculation_status_history where calculation_id = $calculation_id order by date desc";
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
 ?>
@@ -76,40 +99,9 @@ while($row = $fetcher->Fetch()):
         <div style="font-size: smaller;"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y, H:i') ?></div>
     </div>
 </div>
-<?php
-if($status_id == ORDER_STATUS_SHIPPED && $row['status_id'] == ORDER_STATUS_SHIPPED):
-?>
+<?php endwhile; ?>
 <div style="color: #AAAAAA;">
     <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px; vertical-align: top;">
         <i class="far fa-circle"></i><br />
     </div>
 </div>
-<?php
-endif;
-endwhile;
-
-$order_statuses = array_merge(ORDER_STATUSES_BEGIN, ORDER_STATUSES_NOT_IN_WORK, ORDER_STATUSES_IN_WORK, ORDER_STATUSES_IN_PRODUCTION, ORDER_STATUSES_END);
-$order_statuses_dictionary = array();
-$i = 0;
-
-foreach($order_statuses as $order_status) {
-    $order_statuses_dictionary[$order_status] = ++$i;
-}
-
-foreach($order_statuses as $order_status):
-    if($order_statuses_dictionary[$order_status] > $order_statuses_dictionary[$status_id] 
-            && !in_array($order_status, array(ORDER_STATUS_CUT_REMOVED, ORDER_STATUS_REJECTED, ORDER_STATUS_TRASH))):
-?>
-<div style="color: #AAAAAA;">
-    <div style="display: inline-block; text-align: center; width: 25px; line-height: 10px; vertical-align: top;">
-        <i class="far fa-circle"></i><br />
-        <?php if($order_status != ORDER_STATUS_SHIPPED): ?>
-        <div style="display: inline-block; border: solid 1px #AAAAAA; height: 10px; width: 2px;"></div>
-        <?php endif; ?>
-    </div>
-    <div style="display: inline-block; vertical-align: top; line-height: 15px;"><?= ORDER_STATUS_NAMES[$order_status] ?></div>
-</div>
-<?php
-endif;
-endforeach;
-?>
