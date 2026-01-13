@@ -1,6 +1,5 @@
 <?php
 include '../include/topscripts.php';
-include './improvement_goals.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
@@ -46,16 +45,14 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST
                     <tr>
                         <th>Дата</th>
                         <th>Сотрудник</th>
-                        <th>Подразделение</th>
                         <th>Предложение</th>
-                        <th>Раздел</th>
                         <th>Статус</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "select id, DATE_FORMAT(timestamp, '%d.%m.%Y') date, last_name, first_name, role, title, improvement_goal "
+                    $sql = "select id, DATE_FORMAT(timestamp, '%d.%m.%Y') date, employee, title "
                             . "from improvement "
                             . "order by id desc limit $pager_skip, $pager_take";
                     $fetcher = new Fetcher($sql);
@@ -63,10 +60,8 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST
                     ?>
                     <tr>
                         <td><?=$row['date'] ?></td>
-                        <td><?=$row['last_name'].' '.$row['first_name'] ?></td>
-                        <td><?=$row['role'] ?></td>
+                        <td><?=$row['employee'] ?></td>
                         <td><?=$row['title'] ?></td>
-                        <td><?= IMPROVEMENT_GOALS_NAMES[$row['improvement_goal']] ?></td>
                         <td></td>
                         <td>
                             <a href="details.php?id=<?=$row['id'] ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
