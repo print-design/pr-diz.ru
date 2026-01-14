@@ -47,8 +47,6 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST
                         <th>Сотрудник</th>
                         <th>Коротко</th>
                         <th>Подробно</th>
-                        <th>Статус</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,9 +62,6 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_MANAGER_SENIOR], ROLE_NAMES[ROLE_TECHNOLOGIST
                         <td><?= htmlentities($row['employee']) ?></td>
                         <td><?=$row['title'] ?></td>
                         <td><?=$row['body'] ?></td>
-                        <td>
-                            <a href="details.php?id=<?=$row['id'] ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
-                        </td>
                     </tr>
                     <?php endwhile; ?>
                 </tbody>
