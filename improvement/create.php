@@ -1,43 +1,22 @@
 <?php
 include '../include/topscripts.php';
-include './improvement_goals.php';
-
-const DBT_PLAN_EMPLOYEE = "plan_employee";
-const DBT_USER = "user";
 
 // Валидация формы
 $form_valid = true;
 $error_message = '';
 
-$user_name_valid = '';
+$employee_valid = '';
 $title_valid = '';
 $body_valid = '';
-$improvement_goal_valid = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
-    $user_name = filter_input(INPUT_POST, 'user_name');
-    if(empty($user_name)) {
-        $user_name_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $substrings = explode('_', $user_name);
-    $last_name = '';
-    $first_name = '';
-    $role = '';
-    
-    if(count($substrings) < 3) {
-        $user_name_valid = ISINVALID;
-        $form_valid = false;
-    }
-    else {
-        $last_name = $substrings[0];
-        $first_name = $substrings[1];
-        $role = mb_substr($user_name, mb_strlen($last_name) + mb_strlen($first_name) + 2);
-        
-        if(empty($last_name) || empty($first_name) || empty($role)) {
-            $user_name_valid = ISINVALID;
+    $employee = '';
+    $anonymous = filter_input(INPUT_POST, 'anonymous');
+    if($anonymous != 'on') {
+        $employee = filter_input(INPUT_POST, 'employee');
+        if(filter_input(INPUT_POST, 'anonymous') != 'on' && empty($employee)) {
+            $employee_valid = ISINVALID;
             $form_valid = false;
         }
     }
@@ -54,20 +33,12 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
         $form_valid = false;
     }
     
-    $effect = filter_input(INPUT_POST, 'effect');
-    
-    $improvement_goal = filter_input(INPUT_POST, 'improvement_goal');
-    if(empty($improvement_goal)) {
-        $improvement_goal = ISINVALID;
-        $form_valid = false;
-    }
-    
     if($form_valid) {
+        $employee = addslashes($employee);
         $title = addslashes($title);
         $body = addslashes($body);
-        $effect = addslashes($effect);
         
-        $sql = "insert into improvement (last_name, first_name, role, title, body, effect, improvement_goal) values ('$last_name', '$first_name', '$role', '$title', '$body', '$effect', $improvement_goal)";
+        $sql = "insert into improvement (employee, title, body) values ('$employee', '$title', '$body')";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -83,7 +54,6 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
         <?php
         include '../include/style_mobile.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
     </head>
     <body>
         <div class="container-fluid header">
@@ -112,48 +82,24 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
             <h1>Предложение по улучшению</h1>
             <form method="post">
                 <div class="form-group">
-                    <label for="user_name">Сотрудник</label>
-                    <select class="form-control" id="user_name" name="user_name" multiple="multiple" required="required">
-                        <option value="" hidden="hidden">...</option>
-                        <?php
-                        $sql = "select id, trim(last_name) last_name, trim(first_name) first_name, role_id, '". DBT_PLAN_EMPLOYEE."' as dbt "
-                                . "from plan_employee "
-                                . "where active = 1 "
-                                . "union "
-                                . "select id, trim(last_name) last_name, trim(first_name) first_name, role_id, '". DBT_USER."' as dbt "
-                                . "from user "
-                                . "where active = 1 "
-                                . "order by last_name, first_name";
-                        $fetcher = new Fetcher($sql);
-                        while($row = $fetcher->Fetch()):
-                        ?>
-                        <option value="<?=$row['last_name'].'_'.$row['first_name'].'_'.($row['dbt'] == DBT_USER ? ROLE_LOCAL_NAMES[$row['role_id']] : PLAN_ROLE_NAMES[$row['role_id']]) ?>"><?=$row['last_name'].' '.$row['first_name'] ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                    <div class="invalid-feedbacki">Фамилия и имя обязательно</div>
+                    <label for="employee">Имя, фамилия</label>
+                    <input type="text" class="form-control" id="employee" name="employee" required="required" />
+                    <div class="invalid-feedback">Имя, фамилия обязательно</div>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label mb-2" style="line-height: 25px;">
+                        <input type="checkbox" class="form-check-input" id="anonymous" name="anonymous" value="on" />Хочу остаться анонимным
+                    </label>
                 </div>
                 <div class="form-group">
-                    <label for="title">Заголовок</label>
+                    <label for="title">Коротко</label>
                     <input type="text" class="form-control" name="title" required="required" />
                     <div class="invalid-feedback">Заголовок обязательно</div>
                 </div>
                 <div class="form-group">
-                    <label for="body">Текст предложения</label>
+                    <label for="body">Подробно</label>
                     <textarea class="form-control" name="body" rows="4" required="required"></textarea>
                     <div class="invalid-feedback">Текст предложения обязательно</div>
-                </div>
-                <div class="form-group">
-                    <label for="effect">Что изменится в результате улучшения</label>
-                    <textarea class="form-control" name="effect" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="improvement_goal">На что направлено улучшение</label>
-                    <select class="form-control" id="improvement_goal" name="improvement_goal" required="required">
-                        <option value="" hidden="hidden">...</option>
-                        <?php foreach(IMPROVEMENT_GOALS as $item): ?>
-                        <option value="<?=$item ?>"><?= IMPROVEMENT_GOALS_NAMES[$item] ?></option>
-                        <?php endforeach; ?>
-                    </select>
                 </div>
                 <button type="submit" class="btn btn-dark" id="improvement_create_submit" name="improvement_create_submit">Подать</button>
             </form>
@@ -163,14 +109,17 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
         include '../include/footer.php';
         include '../include/footer_mobile.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
-        <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            $('#user_name').select2({
-                placeholder: "Фамилия, имя...",
-                maximumSelectionLength: 1,
-                language: "ru",
-                width: "100%"
+            $("#anonymous").change(function() {
+                if($(this).prop('checked') === true) {
+                    $("#employee").val('');
+                    $("#employee").prop('disabled', true);
+                    $("#employee").removeAttr('required');
+                }
+                else {
+                    $("#employee").prop('disabled', false);
+                    $("#employee").attr('required', 'required');
+                }
             });
         </script>
     </body>
