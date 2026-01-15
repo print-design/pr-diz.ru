@@ -57,15 +57,16 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
     </head>
     <body>
         <div class="container-fluid header">
-            <nav class="navbar navbar-expand-sm justify-content-end">
-                <?php if(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
+            <?php if(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
+            <nav class="navbar navbar-expand-sm justify-content-between">
+                <div><a href="<?= APPLICATION ?>/improvement/" title="К списку">К списку</a></div>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown no-dropdown-arrow-after">
                         <a class="nav-link mr-0" href="<?=APPLICATION ?>/user_mobile.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-cog" aria-hidden="true"></i></a>
                     </li>
                 </ul>
-                <?php endif; ?>
             </nav>
+            <?php endif; ?>
         </div>
         <div id="topmost"></div>
         <div class="container-fluid">
