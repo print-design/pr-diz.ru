@@ -77,7 +77,7 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
             if(null !== filter_input(INPUT_POST, 'improvement_create_submit') && empty($error_message)):
             ?>
             <h1>Ваше предложение отправлено</h1>
-            <a href="<?= APPLICATION ?>/improvement/" class="btn btn-dark" title="OK">OK</a>
+            <a href="<?= APPLICATION ?>/improvement/create.php" class="btn btn-dark" title="OK">OK</a>
             <?php else: ?>
             <h1>Предложение по улучшению</h1>
             <form method="post">

@@ -7,7 +7,7 @@ use chillerlan\QRCode\QRCode;
 <html>
     <body>
         <?php
-        $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION."/improvement/";
+        $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION."/improvement/create.php";
         $qrcode = (new QRCode)->render($data);
         ?>
         <img src="<?=$qrcode ?>" alt="QR Code" />
