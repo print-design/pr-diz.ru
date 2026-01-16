@@ -57,7 +57,7 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
     </head>
     <body>
         <div class="container-fluid header">
-            <?php if(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
+            <?php if(IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) || IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD])): ?>
             <nav class="navbar navbar-expand-sm justify-content-between">
                 <div><a href="<?= APPLICATION ?>/improvement/" title="К списку">К списку</a></div>
                 <ul class="navbar-nav">

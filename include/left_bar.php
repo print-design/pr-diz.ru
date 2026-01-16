@@ -102,7 +102,7 @@ elseif($folder == "improvement") {
     <?php endif; ?>
     
     <!-- Предложения по улучшению -->
-    <?php if(IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) || IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])): ?>
+    <?php if(IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) || IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]))): ?>
     <a href="<?= APPLICATION ?>/improvement/" class="left_bar_item ui_tooltip right<?=$improvement_class ?>" title="Предложения по улучшению"><i class="far fa-thumbs-up" style="font-size: 1.3rem;"></i></a>
     <?php endif; ?>
 </div>
