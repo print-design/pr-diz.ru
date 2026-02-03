@@ -153,20 +153,20 @@ foreach($cutters as $cutter) {
         
         // Подсчёт суммы
         if(!empty($row['employee_id'])) {
-            if($row['unit'] == KG) {
+            //if($row['unit'] == KG) {
                 if(!key_exists($row['employee_id'], $kg_total)) {
                     $kg_total[$row['employee_id']] = 0;
                 }
                 
                 $kg_total[$row['employee_id']] += $row['weight_cut'];
-            }
-            else {
+            //}
+            //else {
                 if(!key_exists($row['employee_id'], $pieces_total)) {
                     $pieces_total[$row['employee_id']] = 0;
                 }
                 
                 $pieces_total[$row['employee_id']] += $row['length_cut'];
-            }
+            //}
         }
     }
     
@@ -194,32 +194,6 @@ $sheet->setCellValue('C2', '0');
 $sheet->setCellValue('D3', "Итого ₽");
 
 $rowindex = 3;
-
-/*$sql = "select distinct pem.id employee_id, pem.last_name, pem.first_name, "
-        . "(select sum(cts1.weight) / 1000 "
-        . "from calculation_take_stream cts1 "
-        . "inner join calculation_stream cs1 on cts1.calculation_stream_id = cs1.id "
-        . "inner join calculation c1 on cs1.calculation_id = c1.id "
-        . "where cts1.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and cts1.plan_employee_id = pem.id and c1.unit = '".KG."') weight, "
-        . "(select sum(cts1.length) / 1000 "
-        . "from calculation_take_stream cts1 "
-        . "inner join calculation_stream cs1 on cts1.calculation_stream_id = cs1.id "
-        . "inner join calculation c1 on cs1.calculation_id = c1.id "
-        . "where cts1.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and cts1.plan_employee_id = pem.id and c1.unit = '".PIECES."') length "
-        . "from calculation_take_stream cts "
-        . "left join plan_employee pem on cts.plan_employee_id = pem.id "
-        . "where cts.printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' "
-        . "order by pem.last_name, pem.first_name";
-$fetcher = new Fetcher($sql);
-while($row = $fetcher->Fetch()) {
-    $sheet->setCellValue('A'.(++$rowindex), $row['last_name'].' '.(empty($row['first_name']) ? '' : mb_substr($row['first_name'], 0, 1).'.'));
-    $sheet->getStyle('B'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-    $sheet->setCellValue('B'.$rowindex, $row['weight']);
-    $sheet->getStyle('C'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-    $sheet->setCellValue('C'.$rowindex, $row['length']);
-    $sheet->getStyle('D'.$rowindex)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-    $sheet->setCellValue('D'.$rowindex, '=(B2*B'.$rowindex.')+(C2*C'.$rowindex.')');
-}*/
 
 $sql = "select distinct pem.id employee_id, pem.last_name, pem.first_name "
         . "from calculation_take_stream cts "
