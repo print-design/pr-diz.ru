@@ -69,7 +69,7 @@ foreach($cutters as $cutter) {
     $sql = "select distinct date(cts.printed) printed, ped.date, ped.shift, ped.position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
             . "cus.name customer, c.name calculation, c.unit, "
-            . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
+            . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) / c.streams_number length_cut, "
             . "(select sum(weight) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) weight_cut "
             . "from plan_edition ped "
             . "inner join calculation c on ped.calculation_id = c.id "
@@ -86,7 +86,7 @@ foreach($cutters as $cutter) {
             . "select distinct date(cts.printed) printed, pc.date, pc.shift, 1 as position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
             . "cus.name customer, c.name calculation, c.unit, "
-            . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
+            . "(select sum(length) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) / c.streams_number length_cut, "
             . "(select sum(weight) from calculation_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cts.plan_employee_id and date(printed) = date(cts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) weight_cut "
             . "from plan_continuation pc "
             . "inner join plan_edition ped on pc.plan_edition_id = ped.id "
@@ -104,7 +104,7 @@ foreach($cutters as $cutter) {
             . "select distinct date(cnts.printed) printed, ped.date, ped.shift, ped.position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
             . "cus.name customer, c.name calculation, c.unit, "
-            . "(select sum(length) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
+            . "(select sum(length) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) / c.streams_number length_cut, "
             . "(select sum(weight) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) weight_cut "
             . "from plan_edition ped "
             . "inner join calculation c on ped.calculation_id = c.id "
@@ -121,7 +121,7 @@ foreach($cutters as $cutter) {
             . "select distinct date(cnts.printed) printed, pc.date, pc.shift, 1 as position, pem.id employee_id, pem.last_name, pem.first_name, c.customer_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) as num_for_customer, "
             . "cus.name customer, c.name calculation, c.unit, "
-            . "(select sum(length) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) length_cut, "
+            . "(select sum(length) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) / c.streams_number length_cut, "
             . "(select sum(weight) from calculation_not_take_stream where printed between '".$date_from->format('Y-m-d')."' and '".((clone $date_to)->add($diff1Day))->format('Y-m-d')."' and plan_employee_id = cnts.plan_employee_id and date(printed) = date(cnts.printed) and calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)) weight_cut "
             . "from plan_continuation pc "
             . "inner join plan_edition ped on pc.plan_edition_id = ped.id "
@@ -153,20 +153,17 @@ foreach($cutters as $cutter) {
         
         // Подсчёт суммы
         if(!empty($row['employee_id'])) {
-            //if($row['unit'] == KG) {
-                if(!key_exists($row['employee_id'], $kg_total)) {
-                    $kg_total[$row['employee_id']] = 0;
-                }
-                
-                $kg_total[$row['employee_id']] += $row['weight_cut'];
-            //}
-            //else {
-                if(!key_exists($row['employee_id'], $pieces_total)) {
-                    $pieces_total[$row['employee_id']] = 0;
-                }
-                
-                $pieces_total[$row['employee_id']] += $row['length_cut'];
-            //}
+            if(!key_exists($row['employee_id'], $kg_total)) {
+                $kg_total[$row['employee_id']] = 0;
+            }
+            
+            $kg_total[$row['employee_id']] += $row['weight_cut'];
+            
+            if(!key_exists($row['employee_id'], $pieces_total)) {
+                $pieces_total[$row['employee_id']] = 0;
+            }
+            
+            $pieces_total[$row['employee_id']] += $row['length_cut'];
         }
     }
     
