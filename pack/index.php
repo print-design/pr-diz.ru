@@ -60,7 +60,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1 text-nowrap">
-                    <h1 class="d-inline">Готовые резки</h1>
+                    <h1 class="d-inline"><?= key_exists($status_id, ORDER_STATUS_NAMES) ? ORDER_STATUS_NAMES[$status_id] : "Производят" ?></h1>
                     <?php
                     // Фильтр
                     $filter = '';
@@ -209,7 +209,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, ifnull(ct.time, cs.time) as time, c.customer_id, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
+            $sql = "select distinct c.id, ifnull(ifnull(ct.time, cs.time), '1900-01-01') as time, c.customer_id, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . ($status_id == ORDER_STATUS_SHIPPED ? "(select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) as shipping_date, " : "")
                     . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                     . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
