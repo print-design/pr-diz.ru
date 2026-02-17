@@ -104,22 +104,19 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     // Общее количество работ для установления количества страниц в постраничном выводе
                     $sql = "select count(distinct c.id) "
                             . "from calculation c "
-                            . "inner join plan_edition e on e.calculation_id = c.id "
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join calculation_result cr on cr.calculation_id = c.id "
                             . "inner join user u on c.manager_id = u.id "
                             . "inner join (select calculation_id, max(date) as time from calculation_status_history group by calculation_id) cs on cs.calculation_id = c.id "
-                            . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
-                            . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-                            . "where e.work_id = ".WORK_CUTTING;
+                            . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
                     if(!empty($status_id)) {
-                        $sql .= " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".$status_id;
+                        $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".$status_id;
                     }
                     else {
-                        $sql .= " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                        $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
                     }
                     $sql .= $filter;
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql); 
                     
                     if($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
@@ -209,7 +206,10 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, ifnull(ifnull(ct.time, cs.time), '1900-01-01') as time, c.customer_id, e.machine_id, e.comment, pc.comment as continuation_comment, cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
+            $sql = "select distinct c.id, ifnull(ifnull(ct.time, cs.time), '1900-01-01') as time, c.customer_id, "
+                    . "(select comment from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING." and comment is not null and comment <> '' limit 1) as comment, "
+                    . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING.") and comment is not null and comment <> '' limit 1) as continuation_comment, "
+                    . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . ($status_id == ORDER_STATUS_SHIPPED ? "(select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) as shipping_date, " : "")
                     . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                     . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
@@ -221,19 +221,16 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                     . "from calculation c "
-                    . "inner join plan_edition e on e.calculation_id = c.id "
                     . "inner join customer cus on c.customer_id = cus.id "
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
                     . "inner join user u on c.manager_id = u.id "
                     . "inner join (select calculation_id, max(date) as time from calculation_status_history group by calculation_id) cs on cs.calculation_id = c.id "
-                    . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id "
-                    . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-                    . "where e.work_id = ".WORK_CUTTING;
+                    . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
             if(!empty($status_id)) {
-                $sql .= " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".$status_id;
+                $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".$status_id;
             }
             else {
-                $sql .= " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
             }
             $sql .= $filter." order by ct.time desc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
