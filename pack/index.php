@@ -232,7 +232,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             else {
                 $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
             }
-            $sql .= $filter." order by ct.time desc limit $pager_skip, $pager_take";
+            $sql .= $filter." order by time desc limit $pager_skip, $pager_take";
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
