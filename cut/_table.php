@@ -190,7 +190,7 @@
     </div>
 </div>
 <div class="calculation_stream">
-    <div class="name" style="font-size: 33px;"><?=CUTTER_NAMES[$machine_id] ?></div>
+    <div class="name" style="font-size: 33px;"><?= key_exists($machine_id, CUTTER_NAMES) ? CUTTER_NAMES[$machine_id] : "" ?></div>
     <div class="name">Результаты резки</div>
     <?php
     $bobbins = 0;
@@ -271,6 +271,7 @@
     // Смены и резчики
     $workers = array();
     
+    if(!empty($machine_id)):
     $sql = "select date_format(pw.date, '%d-%m-%Y') date, pw.shift, pe.last_name, pe.first_name "
             . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
             . "where (pw.date in (select cast(timestamp as date) from calculation_take where calculation_id = $id) "
@@ -290,6 +291,7 @@
             $workers[$row['date'].$row['shift']] = $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.';
         }
     }
+    endif;
     
     // Съёмы
     $sql = "select ct.id, max(cts.printed) timestamp, sum(cts.weight) weight, sum(cts.length) length "
