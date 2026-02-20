@@ -259,6 +259,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
                     $targetname = str_replace('.', '', $targetname);
                     $targetname = str_replace(',', '', $targetname);
                     $targetname = str_replace(';', '', $targetname);
+                    $targetname = str_replace('"', "", $targetname);
                     $targetname = htmlspecialchars($targetname);
                 }
                 
@@ -278,7 +279,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
                     }
                 }
                 
-                $targetname = $targetname.'.'.$extension;
+                $targetname = $targetname.'.'.$extension; //echo $filepath; echo "<br />"; echo $targetname; exit();
                 
                 DownloadSendHeaders($targetname);
                 readfile($filepath);
