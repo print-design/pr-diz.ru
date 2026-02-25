@@ -186,12 +186,12 @@ if($row = $fetcher->Fetch()) {
                         </div>
                         <?php endif; ?>
                         <div class="form-group">
-                            <label for="length">Процент отходов на СтартСтоп</label>
+                            <label for="waste_percent">Процент отходов на СтартСтоп</label>
                             <div class="input-group">
                                 <input type="text" class="form-control float-none<?=$waste_percent_valid ?>" id="waste_percent" name="waste_percent" value="<?= empty($waste_percent) ? "" : intval($waste_percent) ?>" placeholder="Процент отходов на СтартСтоп" required="required" autocomplete="off" />
                                 <div class="input-group-append"><span class="input-group-text">%</span></div>
                             </div>
-                            <div class="invalid-feedback">Метраж обязательно</div>
+                            <div class="invalid-feedback">Процент отходов на СтартСтоп обязательно</div>
                         </div>
                         <button type="submit" id="norm_priladka_submit" name="norm_priladka_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
                     </div>
@@ -202,6 +202,19 @@ if($row = $fetcher->Fetch()) {
                             <label for="time_run2">Время приладки 1 краски, мин</label>
                             <input type="text" class="form-control float-only<?=$time_run2_valid ?>" id="time_run2" name="time_run2" value="<?= empty($time_run2) ? "" : floatval($time_run2) ?>" placeholder="Время, мин" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Время обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="length_run2">Метраж приладки 1 краски, метры</label>
+                            <input type="text" class="form-control float-none<?=$length_run2_valid ?>" id="length_run2" name="length_run2" value="<?= empty($length_run2) ? "" : floatval($length_run2) ?>" placeholder="Метраж, метры" required="required" autocomplete="off" />
+                            <div class="invalid-feedback">Метраж обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="waste_percent_run2">Процент отходов на СтартСтоп</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control float-none<?=$waste_percent_run2_valid ?>" id="waste_percent_run2" name="waste_percent_run2" value="<?= empty($waste_percent_run2) ? "" : intval($waste_percent_run2) ?>" placeholder="Процент отходов на СтартСтоп" required="required" autocomplete="off" />
+                                <div class="input-group-append"><span class="input-group-text">%</span></div>
+                            </div>
+                            <div class="invalid-feedback">Процент отходов на СтартСтоп обязательно</div>
                         </div>
                     </div>
                     <?php endif; ?>
