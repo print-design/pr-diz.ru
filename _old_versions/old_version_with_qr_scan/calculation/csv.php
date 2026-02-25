@@ -117,6 +117,7 @@ if($id !== null) {
     array_push($file_data, array("УК1", $calculation->uk1, "", "нет печати - 0, есть печать - 1"));
     array_push($file_data, array("УК2", $calculation->uk2, "", "нет ламинации - 0, есть ламинация - 1"));
     array_push($file_data, array("УК3", $calculation->uk3, "", "нет второй ламинации - 0, есть вторая ламинация - 1"));
+    array_push($file_data, array("УК4", $calculation->uk4, "", "нет второго прогона - 0, есть второй прогон - 1"));
     array_push($file_data, array("УКПФ", $calculation->ukpf, "", "ПФ не включен в себестоимость - 0, ПФ включен в себестоимость - 1"));
         
     // Результаты вычислений

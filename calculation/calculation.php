@@ -950,8 +950,8 @@ class CalculationBase {
         }
         
         // ПОЛУЧЕНИЕ НОРМ
-        $data_priladka = new DataPriladka(null, null, null, null);
-        $data_priladka_laminator = new DataPriladka(null, null, null, null);
+        $data_priladka = new DataPriladka(null, null, null, null, null, null, null);
+        $data_priladka_laminator = new DataPriladka(null, null, null, null, null, null, null);
         $data_machine = new DataMachine(null, null, null, null);
         $data_laminator = new DataLaminator(null, null, null);
         $data_gap = new DataGap(null, null, null);
@@ -962,24 +962,24 @@ class CalculationBase {
         
         if(!empty($date)) {
             if(empty($machine_id)) {
-                $data_priladka = new DataPriladka(0, 0, 0, 0);
+                $data_priladka = new DataPriladka(0, 0, 0, 0, 0, 0, 0);
             }
             else {
-                $sql = "select time, length, stamp, waste_percent from norm_priladka where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
+                $sql = "select time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2 from norm_priladka where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if ($row = $fetcher->Fetch()) {
-                    $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent']);
+                    $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent'], $row['time_run2'], $row['length_run2'], $row['waste_percent_run2']);
                 }
             }
             
             if(empty($laminator_id)) {
-                $data_priladka_laminator = new DataPriladka(0, 0, 0, 0);
+                $data_priladka_laminator = new DataPriladka(0, 0, 0, 0, 0, 0, 0);
             }
             else {
                 $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if($row = $fetcher->Fetch()) {
-                    $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent']);
+                    $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent'], 0, 0, 0);
                 }
             }
             
@@ -1248,14 +1248,14 @@ class CalculationBase {
 class Calculation extends CalculationBase {
     public $laminations_number = 0; // количество ламинаций
     
-    public $uk1, $uk2, $uk3, $ukpf, $ukcuspaypf; // уравнивающий коэффициент 1, 2, 3, ПФ, ЗаказчикПлатитЗаПФ
+    public $uk1, $uk2, $uk3, $uk4, $ukpf, $ukcuspaypf; // уравнивающий коэффициент 1, 2, 3, ПФ, ЗаказчикПлатитЗаПФ
     public $area_pure_start = 0; // м2 чистые, м2 (рассчитывается: длина * ширина * кол-во в шт.; используется для вычисления массы тиража, если он в шт.)
     public $weight = 0; // масса тиража, кг
     public $width_start_1, $width_start_2, $width_start_3; // ширина материала начальная (до приведения к числу кратному 5), мм
     public $width_1, $width_2, $width_3; // ширина материала кратная 5, мм 
     public $area_pure_1, $area_pure_2, $area_pure_3; // м2 чистые, м2 (рассчитывается: вес / плотность)
     public $length_pure_start_1, $length_pure_start_2, $length_pure_start_3; // м пог чистые, м
-    public $waste_length_1, $waste_length_2, $waste_length_3; // СтартСтопОтход, м
+    public $waste_length_1, $waste_length_1_run2, $waste_length_2, $waste_length_3; // СтартСтопОтход, м
     public $length_dirty_start_1, $length_dirty_start_2, $length_dirty_start_3; // м пог грязные, м
     public $area_dirty_1, $area_dirty_2, $area_dirty_3; // м2 грязные, м2
     public $weight_pure_1, $weight_pure_2, $weight_pure_3; // масса плёнки чистая, кг
@@ -1493,14 +1493,17 @@ class Calculation extends CalculationBase {
         if($this->customers_material_2 == true) $this->price_2 = 0;
         if($this->customers_material_3 == true) $this->price_3 = 0;
         
-        // Уравнивующий коэф 1(УК1)=0 когда нет печати,=1 когда есть печать
+        // Уравнивующий коэфф. 1(УК1)=0 когда нет печати,=1 когда есть печать
         $this->uk1 = $this->work_type_id == WORK_TYPE_PRINT ? 1 : 0;
         
-        // Уравнивующий коэф 2 (УК2)=0 когда нет ламинации 1 , = 1 когда есть ламинация 1
+        // Уравнивующий коэфф. 2 (УК2)=0 когда нет ламинации 1 , =1 когда есть ламинация 1
         $this->uk2 = $this->laminations_number > 0 ? 1 : 0;
         
-        // Уравнивующий коэф 3 (УК3)=0 когда нет ламинации 2, = 1 когда есть ламинация 2
+        // Уравнивующий коэфф. 3 (УК3)=0 когда нет ламинации 2, =1 когда есть ламинация 2
         $this->uk3 = $this->laminations_number > 1 ? 1 : 0;
+        
+        // Уравнивающий коэфф. 4 (УК4)=0 когда нет второго прогона, =1 когда есть второй прогон
+        $this->uk4 = 0;
         
         // Уравнивающий коэфф. ПФ (УКПФ)=0, когда ПФ не велючен в себестоимость, =1 когда ПФ включен в себестоимость
         $this->ukpf = $this->cliche_in_price == 1 ? 1 : 0;
@@ -1671,6 +1674,9 @@ class Calculation extends CalculationBase {
         
         // СтартСтопОтход 1, м
         $this->waste_length_1 = $this->data_priladka->waste_percent * $this->length_pure_start_1 / 100;
+        
+        // СтартСтопОтход 1 Второй Прогон, м
+        $this->waste_length_1_run2 = ($this->data_priladka ?? 0) * $this->length_pure_start_1 / 100 * $this->uk4;
         
         // СтартСтопОтход 2, м
         $this->waste_length_2 = $this->data_priladka_laminator->waste_percent * $this->length_pure_start_2 / 100;

@@ -1631,9 +1631,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault(); ShowLamination1();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                
-                            </div>
                         </div>
                         <!-- Ламинация 1 -->
                         <div id="form_lamination_1" class="d-none">
@@ -1850,7 +1847,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault(); ShowLamination2();"><i class="fas fa-plus"></i>&nbsp;Добавить ламинацию</button>
                                     </div> 
                                 </div>
-                                <div class="col-6"></div>
                             </div>
                             <!-- Ламинация 2 -->
                             <div id="form_lamination_2" class="d-none">
@@ -2029,7 +2025,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                         </div>
-                        <p id="film_title" class="d-none no-print-only print-only self-adhesive-only"><span class="font-weight-bold">Ручьи</span></p>
+                        <p id="streams_title" class="d-none no-print-only print-only self-adhesive-only"><span class="font-weight-bold">Ручьи</span></p>
                         <div class="row">
                             <!-- Рапорт -->
                             <div class="col-4 print-only self-adhesive-only d-none">
@@ -2336,7 +2332,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <?php endforeach; ?>
                         </div>
                         <!-- Количество красок (для самоклейки возможно 0) -->
-                        <p id="film_title" class="d-none print-only self-adhesive-only"><span class="font-weight-bold">Краска</span></p>
+                        <p id="color_title" class="d-none print-only self-adhesive-only"><span class="font-weight-bold">Краска</span></p>
                         <div class="print-only self-adhesive-only d-none">
                             <div class="row">
                                 <?php
@@ -2614,8 +2610,122 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             endfor;
                             ?>
                         </div>
+                        <!-- Второй прогон -->
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <div id="show_run2">
+                                    <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault();"><i class="fas fa-plus"></i>&nbsp;Добавить второй прогон</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <div class="p-0">
+                                <p id="run2_title"><span class="font-weight-bold">Второй прогон</span></p>
+                            </div>
+                            <div class="p-0">
+                                <div id="hide_run2">
+                                    <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: event.preventDefault();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="ink_run2">
+                            <label for="ink_run2_number">Количество красок</label>
+                            <select id="ink_run2_number" name="int_run2_number" class="form-control">
+                                <option value="" hidden="hidden">Количество красок...</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                        </div>
+                        <!-- Второй прогон, каждая краска -->
+                        <?php
+                        for($i = 1; $i <= 4; $i++):
+                        ?>
+                        <div class="row ink_run2_block" id="ink_run2_block_<?=$i ?>">
+                            <?php
+                            $ink_run2_class = " col-12";
+                            ?>
+                            <div class="form-group<?=$ink_run2_class ?>" id="ink_run2_group_<?=$i ?>">
+                                <label for="ink_run2_<?=$i ?>"><?=$i ?> цвет</label>
+                                <select id="ink_run2_<?=$i ?>" name="ink_run2_<?=$i ?>" class="form-control ink_run2" data-id="<?=$i ?>">
+                                    <option value="" hidden="hidden" selected="selected">Цвет...</option>
+                                    <option value="cmyk">CMYK</option>
+                                    <option value="panton">Пантон</option>
+                                    <option value="white">Белый</option>
+                                    <option value="lacquer">Лак</option>
+                                </select>
+                                <div class="invalid-feedback">Цвет обязательно</div>
+                            </div>
+                            <div class="form-group col-3" id="color_run2_group_<?=$i ?>">
+                                <label for="color_run2_<?=$i ?>">Номер пантона</label>
+                                <div class="input-group flex-nowrap">
+                                    <div class="input-group-prepend"><span class="input-group-text">P</span></div>
+                                    <input type="text" 
+                                           id="color_run2_<?=$i ?>" 
+                                           name="color_run2_<?=$i ?>" 
+                                           class="form-control panton_run2 color_run2" 
+                                           placeholder="Номер пантона" 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'color_run2_<?=$i ?>'); $(this).attr('name', 'color_run2_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'color_run2_<?=$i ?>'); $(this).attr('name', 'color_run2_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
+                                           onfocusout="javascript: $(this).attr('id', 'color_run2_<?=$i ?>'); $(this).attr('name', 'color_run2_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" />
+                                </div>
+                                <div class="invalid-feedback">Код цвета обязательно</div>
+                            </div>
+                            <div class="form-group col-3" id="cmyk_run2_group_<?=$i ?>">
+                                <label for="cmyk_run2_<?=$i ?>">CMYK</label>
+                                <select id="cmyk_run2_<?=$i ?>" name="cmyk_run2_<?=$i ?>" class="form-control" data-id="<?=$i ?>">
+                                    <option value="" hidden="hidden" selected="selected">CMYK...</option>
+                                    <option value="cyan">Cyan</option>
+                                    <option value="magenda">Magenda</option>
+                                    <option value="yellow">Yellow</option>
+                                    <option value="kontur">Kontur</option>
+                                </select>
+                                <div class="invalid-feedback">Выберите компонент цвета</div>
+                            </div>
+                            <div class="form-group col-3" id="lacquer_run2_group_<?=$i ?>">
+                                <label for="lacquer_run2_<?=$i ?>">Лак</label>
+                                <select id="lacquer_run2_<?=$i ?>" name="lacquer_run2_<?=$i ?>" class="form-control lacquer_run2" data-id="<?=$i ?>">
+                                    <option value="" hidden="hidden" selected="selected">Лак...</option>
+                                    <option value="glossy">Глянцевый</option>
+                                    <option value="matte">Матовый</option>
+                                </select>
+                                <div class="invalid-feedback">Выберите лак</div>
+                            </div>
+                            <div class="form-group col-3" id="percent_run2_group_<?=$i ?>">
+                                <label for="percent_run2_<?=$i ?>">Процент</label>
+                                <div class="input-group flex-nowrap">
+                                    <input type="text" 
+                                           id="percent_run2_<?=$i ?>" 
+                                           name="percent_run2_<?=$i ?>" 
+                                           class="form-control int-only percent" 
+                                           style="width: 80px;" 
+                                           placeholder="Процент..." 
+                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
+                                           onmouseup="javascript: $(this).attr('id', 'percent_run2_<?=$i ?>'); $(this).attr('name', 'percent_run2_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
+                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
+                                           onkeyup="javascript: $(this).attr('id', 'percent_run2_<?=$i ?>'); $(this).attr('name', 'percent_run2_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
+                                           onfocusout="javascript: $(this).attr('id', 'percent_run2_<?=$i ?>'); $(this).attr('name', 'percent_run2_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                    <div class="invalid-feedback">Не менее <?=$min_percent ?></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-3" id="cliche_run2_group_<?=$i ?>">
+                                <label for="cliche_run2_<?=$i ?>">Форма</label>
+                                <select id="cliche_run2_<?=$i ?>" name="cliche_run2_<?=$i ?>" class="form-control cliche_run2">
+                                    <option value="<?= CLICHE_FLINT ?>">Новая Флинт</option>
+                                    <option value="<?= CLICHE_KODAK ?>">Новая Кодак</option>
+                                    <option value="<?= CLICHE_OLD ?>">Старая</option>
+                                </select>
+                            </div>
+                        </div>
+                        <?php endfor; ?>
                         <!-- Самая нижняя часть формы -->
-                        <p id="film_title"><span class="font-weight-bold">Дополнительно</span></p>
+                        <p id="extra_title" class="mt-2"><span class="font-weight-bold">Дополнительно</span></p>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">

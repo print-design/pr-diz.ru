@@ -145,6 +145,7 @@ if(!empty($id)) {
     $sheet->setCellValue('A'.(++$rowindex), "УК1"); $sheet->setCellValue("B$rowindex", $calculation->uk1); $sheet->setCellValue("C$rowindex", "нет печати - 0, есть печать - 1");
     $sheet->setCellValue('A'.(++$rowindex), "УК2"); $sheet->setCellValue("B$rowindex", $calculation->uk2); $sheet->setCellValue("C$rowindex", "нет ламинации - 0, есть ламинация - 1");
     $sheet->setCellValue('A'.(++$rowindex), "УК3"); $sheet->setCellValue("B$rowindex", $calculation->uk3); $sheet->setCellValue("C$rowindex", "нет второй ламинации - 0, есть вторая ламинация - 1");
+    $sheet->setCellValue('A'.(++$rowindex), "УК4"); $sheet->setCellValue("B$rowindex", $calculation->uk4); $sheet->setCellValue("C$rowindex", "нет второго прогона - 0, есть второй прогон - 1");
     $sheet->setCellValue('A'.(++$rowindex), "УКПФ"); $sheet->setCellValue("B$rowindex", $calculation->ukpf); $sheet->setCellValue("C$rowindex", "ПФ не включен в себестоимость - 0, ПФ включен в себестоимость - 1");
     
     ++$rowindex;
