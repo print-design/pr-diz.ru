@@ -2755,10 +2755,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <!-- Второй прогон, каждая краска -->
                         <?php
                         for($i = 1; $i <= 4; $i++):
-                            $block_run2_class = " d-none";
+                            $ink_block_run2_class = " d-none";
                         $ink_run2_required = "";
+                        
+                        if(!empty($ink_run2_number) && is_numeric($ink_run2_number) && $i <= $ink_run2_number) {
+                            $ink_block_run2_class = "";
+                            $ink_run2_required = " required='required'";
+                        }
                         ?>
-                        <div class="row ink_run2_block" id="ink_run2_block_<?=$i ?>">
+                        <div class="row ink_run2_block<?=$ink_block_run2_class ?>" id="ink_run2_block_<?=$i ?>">
                             <?php
                             $ink_run2_class = " col-12";
                             $cmyk_run2_class = " d-none";
@@ -4330,6 +4335,22 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 else {
                     $('#ink_group_' + data_id).addClass('col-12');
+                }
+            });
+            
+            // Обработка выбора количества красок, второй прогон
+            $('#ink_run2_number').change(function() {
+                var count = $(this).val();
+                $('.ink_run2_block').addClass('d-none');
+                $('.ink_run2').removeAttr('required');
+                
+                if(count != '') {
+                    iCount = parseInt(count);
+                    
+                    for(var i = 1; i <= iCount; i++) {
+                        $('#ink_run2_block_' + i).removeClass('d-none');
+                        $('#ink_run2_' + i).attr('required', 'required');
+                    }
                 }
             });
             
