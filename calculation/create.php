@@ -4333,6 +4333,73 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
+            // Обработка выбора краски, второй прогон
+            $('.ink_run2').change(function() {
+                ink_run2 = $(this).val();
+                var data_id = $(this).attr('data-id');
+                
+                // Устанавливаем видимость всех элементов по умолчанию, как если бы выбрали пустое значение
+                $('#ink_run2_group_' + data_id).removeClass('col-12');
+                $('#ink_run2_group_' + data_id).removeClass('col-6');
+                $('#ink_run2_group_' + data_id).removeClass('col-3');
+                
+                $('#color_run2_group_' + data_id).removeClass('col-3');
+                $('#color_run2_group_' + data_id).addClass('d-none');
+                
+                $('#cmyk_run2_group_' + data_id).removeClass('col-3');
+                $('#cmyk_run2_group_' + data_id).addClass('d-none');
+                
+                $('#lacquer_run2_group_' + data_id).removeClass('col-3');
+                $('#lacquer_run2_group_' + data_id).addClass('d-none');
+                
+                $('#percent_run2_group_' + data_id).removeClass('col-3');
+                $('#percent_run2_group_' + data_id).addClass('d-none');
+                
+                $('#cliche_run2_group_' + data_id).removeClass('col-3');
+                $('#cliche_run2_group_' + data_id).addClass('d-none');
+                
+                // Снимаем атрибут required с кода цвета, CMYK, лака и процента
+                $('#color_run2_' + data_id).removeAttr('required');
+                $('#cmyk_run2_' + data_id).removeAttr('required');
+                $('#lacquer_run2_' + data_id).removeAttr('required');
+                $('#percent_run2_' + data_id).removeAttr('required');
+                
+                // Затем, в зависимости от выбранного значения, устанавливаем видимость нужного элемента для этого значения
+                switch(ink_run2) {
+                    case 'white':
+                        $('#ink_run2_group_' + data_id).addClass('col-6');
+                        break;
+                        
+                    case 'cmyk':
+                        $('#ink_run2_group_' + data_id).addClass('col-3');
+                        $('#cmyk_run2_group_' + data_id).removeClass('d-none');
+                        $('#cmyk_run2_group_' + data_id).addClass('col-3');
+                        $('#cmyk_run2_' + data_id).attr('required', 'required');
+                        break;
+                        
+                    case 'panton':
+                        $('#ink_run2_group_' + data_id).addClass('col-3');
+                        $('#color_run2_group_' + data_id).removeClass('d-none');
+                        $('#color_run2_group_' + data_id).addClass('col-3');
+                        $('#color_run2_' + data_id).attr('required', 'required');
+                        break;
+                        
+                    case 'lacquer':
+                        $('#ink_run2_group_' + data_id).addClass('col-3');
+                        $('#lacquer_run2_group_' + data_id).removeClass('d-none');
+                        $('#lacquer_run2_group_' + data_id).addClass('col-3');
+                        $('#lacquer_run2_' + data_id).attr('required', 'required');
+                        break;
+                }
+                
+                $('#percent_run2_group_' + data_id).removeClass('d-none');
+                $('#percent_run2_group_' + data_id).addClass('col-3');
+                $('#percent_run2_' + data_id).attr('required', 'required');
+                
+                $('#cliche_run2_group_' + data_id).removeClass('d-none');
+                $('#cliche_run2_group_' + data_id).addClass('col-3');
+            });
+            
             // Показ расходов
             function ShowCosts() {
                 $("#costs").removeClass("d-none");
