@@ -104,8 +104,8 @@ $lamination2_width_machine_valid = '';
 
 $raport_valid = '';
 
-// Переменные для валидации цвета, CMYK и процента
-for($i=1; $i<=8; $i++) {
+// Переменные для валидации цвета, CMYK, лака и процента
+for($i = 1; $i <= 8; $i++) {
     $ink_valid_var = 'ink_'.$i.'_valid';
     $$ink_valid_var = '';
     
@@ -120,6 +120,24 @@ for($i=1; $i<=8; $i++) {
     
     $percent_valid_var = 'percent_'.$i.'_valid';
     $$percent_valid_var = '';
+}
+
+// Переменные для валидации цвета, CMYK, лака и процента, второй прогон
+for($i = 1; $i <= 4; $i++) {
+    $ink_run2_valid_var = 'ink_run2_'.$i.'_valid';
+    $$ink_run2_valid_var = '';
+    
+    $cmyk_run2_valid_var = 'cmyk_'.$i.'_valid';
+    $$cmyk_run2_valid_var = '';
+    
+    $lacquer_run2_valid_var = 'lacquer_run2_'.$i.'_valid';
+    $$lacquer_run2_valid_var = '';
+    
+    $color_run2_valid_var = 'color_run2_'.$i.'_valid';
+    $$color_run2_valid_var = '';
+    
+    $percent_run2_valid_var = 'percent_run2_'.$i.'_valid';
+    $$percent_run2_valid_var = '';
 }
 
 // Сохранение в базу расчёта
@@ -334,7 +352,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    // Проверка валидности цвета, CMYK и процента
+    // Проверка валидности цвета, CMYK, лака и процента
     $ink_number = filter_input(INPUT_POST, 'ink_number');
     
     for($i = 1; $i <= 8; $i++) {
@@ -378,6 +396,52 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                     $$lacquer_valid_var = ISINVALID;
                     $form_valid = false;
                 }
+            }
+        }
+    }
+    
+    // Проверка валидности цвета, CMYK, лака и процента, второй прогон
+    $ink_run2_number = filter_input(INPUT_POST, 'ink_run2_number');
+    
+    for($i = 1; $i <= 4; $i++) {
+        if(!empty($ink_run2_number) && is_numeric($ink_run2_number) && $i <= $ink_run2_number) {
+            $ink_run2_var = "ink_run2_".$i;
+            $$ink_run2_var = filter_input(INPUT_POST, 'ink_run2_'.$i);
+            
+            $color_run2_var = "color_run2_".$i;
+            $$color_run2_var = filter_input(INPUT_POST, 'color_run2_'.$i);
+            
+            $cmyk_run2_var = "cmyk_run2_".$i;
+            $$cmyk_run2_var = filter_input(INPUT_POST, 'cmyk_run2_'.$i);
+            
+            $lacquer_run2_var = "lacquer_run2_".$i;
+            $$lacquer_run2_var = filter_input(INPUT_POST, 'lacquer_run2_'.$i);
+            
+            $percent_run2_var = "percent_run2_".$i;
+            $$percent_run2_var = filter_input(INPUT_POST, 'percent_run2_'.$i);
+            
+            if(empty($$percent_run2_var) || (intval($percent_run2_var) < intval($min_percent))) {
+                $percent_run2_valid_var = 'percent_run2_'.$i.'_valid';
+                $$percent_run2_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            if($$ink_run2_var == 'panton' && empty($$color_run2_var)) {
+                $color_run2_valid_var = 'color_run2_'.$i.'_valid';
+                $$color_run2_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            if($$ink_run2_var == 'cmyk' && empty($$cmyk_run2_var)) {
+                $cmyk_run2_valid_var = 'cmyk_run2_'.$i.'_valid';
+                $$cmyk_run2_valid_var = ISINVALID;
+                $form_valid = false;
+            }
+            
+            if($$ink_run2_var == 'lacquer' && empty($$lacquer_run2_var)) {
+                $lacquer_run2_valid_var = 'lacquer_run2_'.$i.'_valid';
+                $$lacquer_run2_valid_var = ISINVALID;
+                $form_valid = false;
             }
         }
     }
@@ -879,7 +943,7 @@ $lacquer_1 = null; $lacquer_2 = null; $lacquer_3 = null; $lacquer_4 = null; $lac
 $percent_1 = null; $percent_2 = null; $percent_3 = null; $percent_4 = null; $percent_5 = null; $percent_6 = null; $percent_7 = null; $percent_8 = null;
 $cliche_1 = null; $cliche_2 = null; $cliche_3 = null; $cliche_4 = null; $cliche_5 = null; $cliche_6 = null; $cliche_7 = null; $cliche_8 = null;
 
-for ($i=1; $i<=$ink_number; $i++) {
+for ($i = 1; $i <= $ink_number; $i++) {
     $ink_var = "ink_$i";
     $$ink_var = filter_input(INPUT_POST, "ink_$i");
     if(null === $$ink_var && isset($row["ink_$i"])) {
@@ -920,6 +984,56 @@ for ($i=1; $i<=$ink_number; $i++) {
         if($$cliche_var != CLICHE_OLD) {
             $new_forms_number++;
         }
+    }
+}
+
+// Данные о цветах, второй прогон
+$ink_run2_1 = null; $ink_run2_2 = null; $ink_run2_3 = null; $ink_run2_4 = null;
+$color_run2_1 = null; $color_run2_2 = null; $color_run2_3 = null; $color_run2_4 = null;
+$cmyk_run2_1 = null; $cmyk_run2_2 = null; $cmyk_run2_3 = null; $cmyk_run2_4 = null;
+$lacquer_run2_1 = null; $lacquer_run2_2 = null; $lacquer_run2_3 = null; $lacquer_run2_4 = null;
+$percent_run2_1 = null; $percent_run2_2 = null; $percent_run2_3 = null; $percent_run2_4 = null;
+$cliche_run2_1 = null; $cliche_run2_2 = null; $cliche_run2_3 = null; $cliche_run2_4 = null;
+
+for($i = 1; $i < 4; $i++) {
+    $ink_run2_var = "ink_run2_$i";
+    $$ink_run2_var = filter_input(INPUT_POST, "ink_run2_$i");
+    if(null === $$ink_run2_var && isset($row["ink_run2_$i"])) {
+        $$ink_run2_var = $row["ink_run2_$i"];
+    }
+    
+    $color_run2_var = "color_run2_$i";
+    $$color_run2_var = filter_input(INPUT_POST, "color_run2_$i");
+    if(null === $$color_run2_var && isset($row["color_run2_$i"])) {
+        $$color_run2_var = $row["color_run2_$i"];
+    }
+    
+    $cmyk_run2_var = "cmyk_run2_$i";
+    $$cmyk_run2_var = filter_input(INPUT_POST, "cmyk_run2_$i");
+    if(null === $$cmyk_run2_var && isset($row["cmyk_run2_$i"])) {
+        $$cmyk_run2_var = $row["cmyk_run2_$i"];
+    }
+    
+    $lacquer_run2_var = "lacquer_run2_$i";
+    $$lacquer_run2_var = filter_input(INPUT_POST, "lacquer_run2_$i");
+    if(null === $$lacquer_run2_var && isset($row["lacquer_run2_$i"])) {
+        $$lacquer_run2_var = $row["lacquer_run2_$i"];
+    }
+    
+    $percent_run2_var = "percent_run2_$i";
+    $$percent_run2_var = filter_input(INPUT_POST, "percent_run2_$i");
+    if(null === $$percent_run2_var && isset($row["percent_run2_$i"])) {
+        $$percent_run2_var = $row["percent_run2_$i"];
+    }
+    
+    $cliche_run2_var = "cliche_run2_$i";
+    $$cliche_run2_var = filter_input(INPUT_POST, "cliche_run2_$i");
+    if(null === $$cliche_run2_var && isset($row["cliche_run2_$i"])) {
+        $$cliche_run2_var = $row["cliche_run2_$i"];
+    }
+    
+    if($$cliche_run2_var != CLICHE_OLD) {
+        $new_forms_number++;
     }
 }
 
@@ -2641,31 +2755,78 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <!-- Второй прогон, каждая краска -->
                         <?php
                         for($i = 1; $i <= 4; $i++):
+                            $block_run2_class = " d-none";
+                        $ink_run2_required = "";
                         ?>
                         <div class="row ink_run2_block" id="ink_run2_block_<?=$i ?>">
                             <?php
                             $ink_run2_class = " col-12";
+                            $cmyk_run2_class = " d-none";
+                            $lacquer_run2_class = " d-none";
+                            $color_run2_class = " d-none";
+                            $percent_run2_class = " d-none";
+                            $cliche_run2_class = " d-none";
+                            
+                            $ink_run2_var_name = "ink_run2_$i";
+                            
+                            if($$ink_run2_var_name == "white") {
+                                $ink_run2_class = " col-6";
+                                $percent_run2_class = " col-3";
+                                $cliche_run2_class = " col-3";
+                            }
+                            elseif($$ink_run2_var_name == "lacquer") {
+                                $ink_run2_class = " col-3";
+                                $lacquer_run2_class = " col-3";
+                                $percent_run2_class = " col-3";
+                                $cliche_run2_class = " col-3";
+                            }
+                            elseif($$ink_run2_var_name == "panton") {
+                                $ink_run2_class = " col-3";
+                                $color_run2_class = " col-3";
+                                $percent_run2_class = " col-3";
+                                $cliche_run2_class = " col-3";
+                            }
+                            elseif($$ink_run2_var_name == "cmyk") {
+                                $ink_run2_class = " col-3";
+                                $cmyk_run2_class = " col-3";
+                                $percent_run2_class = " col-3";
+                                $cliche_run2_class = " col-3";
+                            }
                             ?>
                             <div class="form-group<?=$ink_run2_class ?>" id="ink_run2_group_<?=$i ?>">
                                 <label for="ink_run2_<?=$i ?>"><?=$i ?> цвет</label>
-                                <select id="ink_run2_<?=$i ?>" name="ink_run2_<?=$i ?>" class="form-control ink_run2" data-id="<?=$i ?>">
+                                <select id="ink_run2_<?=$i ?>" name="ink_run2_<?=$i ?>" class="form-control ink_run2" data-id="<?=$i ?>"<?=$ink_run2_required ?>>
                                     <option value="" hidden="hidden" selected="selected">Цвет...</option>
-                                    <option value="cmyk">CMYK</option>
-                                    <option value="panton">Пантон</option>
-                                    <option value="white">Белый</option>
-                                    <option value="lacquer">Лак</option>
+                                    <?php
+                                    $cmyk_run2_selected = "";
+                                    $panton_run2_selected = "";
+                                    $white_run2_selected = "";
+                                    $lacquer_run2_selected = "";
+                                    
+                                    $selected_run2_var_name = $$ink_run2_var_name."_selected";
+                                    $$selected_run2_var_name = " selected='selected'";
+                                    ?>
+                                    <option value="cmyk"<?=$cmyk_run2_selected ?>>CMYK</option>
+                                    <option value="panton"<?=$panton_run2_selected ?>>Пантон</option>
+                                    <option value="white"<?=$white_run2_selected ?>>Белый</option>
+                                    <option value="lacquer"<?=$lacquer_run2_selected ?>>Лак</option>
                                 </select>
                                 <div class="invalid-feedback">Цвет обязательно</div>
                             </div>
-                            <div class="form-group col-3" id="color_run2_group_<?=$i ?>">
+                            <div class="form-group<?=$color_run2_class ?>" id="color_run2_group_<?=$i ?>">
+                                <?php
+                                $color_run2_var = "color_run2_$i";
+                                $color_run2_var_valid = 'color_run2_'.$i.'_valid';
+                                ?>
                                 <label for="color_run2_<?=$i ?>">Номер пантона</label>
                                 <div class="input-group flex-nowrap">
                                     <div class="input-group-prepend"><span class="input-group-text">P</span></div>
                                     <input type="text" 
                                            id="color_run2_<?=$i ?>" 
                                            name="color_run2_<?=$i ?>" 
-                                           class="form-control panton_run2 color_run2" 
+                                           class="form-control panton_run2 color_run2<?=$$color_run2_valid_var ?>" 
                                            placeholder="Номер пантона" 
+                                           value="<?= empty($$color_run2_var) ? "" : $$color_run2_var ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'color_run2_<?=$i ?>'); $(this).attr('name', 'color_run2_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
@@ -2674,34 +2835,63 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                                 <div class="invalid-feedback">Код цвета обязательно</div>
                             </div>
-                            <div class="form-group col-3" id="cmyk_run2_group_<?=$i ?>">
+                            <div class="form-group<?=$cmyk_run2_class ?>" id="cmyk_run2_group_<?=$i ?>">
+                                <?php
+                                $cmyk_run2_var = "cmyk_run2_$i";
+                                $cmyk_run2_var_valid = 'cmyk_'.$i.'_valid';
+                                ?>
                                 <label for="cmyk_run2_<?=$i ?>">CMYK</label>
-                                <select id="cmyk_run2_<?=$i ?>" name="cmyk_run2_<?=$i ?>" class="form-control" data-id="<?=$i ?>">
+                                <select id="cmyk_run2_<?=$i ?>" name="cmyk_run2_<?=$i ?>" class="form-control cmyk_run2<?=$$cmyk_run2_var_valid ?>" data-id="<?=$i ?>">
                                     <option value="" hidden="hidden" selected="selected">CMYK...</option>
-                                    <option value="cyan">Cyan</option>
-                                    <option value="magenda">Magenda</option>
-                                    <option value="yellow">Yellow</option>
-                                    <option value="kontur">Kontur</option>
+                                    <?php
+                                    $cyan_run2_selected = "";
+                                    $magenta_run2_selected = "";
+                                    $yellow_run2_selected = "";
+                                    $kontur_run2_selected = "";
+                                    
+                                    $cmyk_run2_var_selected = $$cmyk_run2_var.'_selected';
+                                    $$cmyk_run2_var_selected = " selected='selected'";
+                                    ?>
+                                    <option value="cyan"<?=$cyan_run2_selected ?>>Cyan</option>
+                                    <option value="magenda"<?=$magenta_run2_selected ?>>Magenda</option>
+                                    <option value="yellow"<?=$yellow_run2_selected ?>>Yellow</option>
+                                    <option value="kontur"<?=$kontur_run2_selected ?>>Kontur</option>
                                 </select>
                                 <div class="invalid-feedback">Выберите компонент цвета</div>
                             </div>
-                            <div class="form-group col-3" id="lacquer_run2_group_<?=$i ?>">
+                            <div class="form-group<?=$lacquer_run2_class ?>" id="lacquer_run2_group_<?=$i ?>">
+                                <?php
+                                $lacquer_run2_var = "lacquer_run2_$i";
+                                $lacquer_run2_var_valid = 'lacquer_run2_'.$i.'_valid';
+                                ?>
                                 <label for="lacquer_run2_<?=$i ?>">Лак</label>
-                                <select id="lacquer_run2_<?=$i ?>" name="lacquer_run2_<?=$i ?>" class="form-control lacquer_run2" data-id="<?=$i ?>">
+                                <select id="lacquer_run2_<?=$i ?>" name="lacquer_run2_<?=$i ?>" class="form-control lacquer_run2<?=$$lacquer_run2_var_valid ?>" data-id="<?=$i ?>">
                                     <option value="" hidden="hidden" selected="selected">Лак...</option>
-                                    <option value="glossy">Глянцевый</option>
-                                    <option value="matte">Матовый</option>
+                                    <?php
+                                    $glossy_run2_selected = "";
+                                    $matte_run2_selected = "";
+                                    
+                                    $lacquer_run2_var_selected = $$lacquer_run2_var.'_selected';
+                                    $$lacquer_run2_var_selected = " selected='selected'";
+                                    ?>
+                                    <option value="glossy"<?=$glossy_run2_selected ?>>Глянцевый</option>
+                                    <option value="matte"<?=$matte_run2_selected ?>>Матовый</option>
                                 </select>
                                 <div class="invalid-feedback">Выберите лак</div>
                             </div>
-                            <div class="form-group col-3" id="percent_run2_group_<?=$i ?>">
+                            <div class="form-group<?=$percent_run2_class ?>" id="percent_run2_group_<?=$i ?>">
+                                <?php
+                                $percent_run2_var = "percent_run2_$i";
+                                $percent_run2_var_valid = 'percent_run2_'.$i.'_valid';
+                                ?>
                                 <label for="percent_run2_<?=$i ?>">Процент</label>
                                 <div class="input-group flex-nowrap">
                                     <input type="text" 
                                            id="percent_run2_<?=$i ?>" 
                                            name="percent_run2_<?=$i ?>" 
-                                           class="form-control int-only percent" 
+                                           class="form-control int-only percent_run2<?=$$percent_run2_var_valid ?>" 
                                            style="width: 80px;" 
+                                           value="<?= empty($$percent_run2_var) ? "" : $$percent_run2_var ?>" 
                                            placeholder="Процент..." 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'percent_run2_<?=$i ?>'); $(this).attr('name', 'percent_run2_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
@@ -2714,12 +2904,21 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback">Не менее <?=$min_percent ?></div>
                                 </div>
                             </div>
-                            <div class="form-group col-3" id="cliche_run2_group_<?=$i ?>">
+                            <div class="form-group<?=$cliche_run2_class ?>" id="cliche_run2_group_<?=$i ?>">
                                 <label for="cliche_run2_<?=$i ?>">Форма</label>
                                 <select id="cliche_run2_<?=$i ?>" name="cliche_run2_<?=$i ?>" class="form-control cliche_run2">
-                                    <option value="<?= CLICHE_FLINT ?>">Новая Флинт</option>
-                                    <option value="<?= CLICHE_KODAK ?>">Новая Кодак</option>
-                                    <option value="<?= CLICHE_OLD ?>">Старая</option>
+                                    <?php
+                                    $old_run2_selected = "";
+                                    $flint_run2_selected = "";
+                                    $kodak_run2_selected = "";
+                                    
+                                    $cliche_run2_var = "cliche_run2_$i";
+                                    $cliche_run2_selected_var = $$cliche_run2_var."_selected";
+                                    $$cliche_run2_selected_var = " selected='selected'";
+                                    ?>
+                                    <option value="<?= CLICHE_FLINT ?>"<?=$flint_run2_selected ?>>Новая Флинт</option>
+                                    <option value="<?= CLICHE_KODAK ?>"<?=$kodak_run2_selected ?>>Новая Кодак</option>
+                                    <option value="<?= CLICHE_OLD ?>"<?=$old_run2_selected ?>>Старая</option>
                                 </select>
                             </div>
                         </div>
