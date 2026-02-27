@@ -2728,7 +2728,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <div class="row mt-2 run2-only d-none">
                             <div class="col-6">
                                 <div id="show_run2">
-                                    <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault();"><i class="fas fa-plus"></i>&nbsp;Добавить второй прогон</button>
+                                    <button type="button" class="btn btn-light" onclick="javascript: event.preventDefault(); ShowRun2();"><i class="fas fa-plus"></i>&nbsp;Добавить второй прогон</button>
                                 </div>
                             </div>
                         </div>
@@ -2739,7 +2739,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                                 <div class="p-0">
                                     <div id="hide_run2">
-                                        <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: event.preventDefault();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
+                                        <button type="button" class="btn btn-link font-weight-bold" onclick="javascript: event.preventDefault(); HideRun2();"><img src="../images/icons/trash2.svg" />&nbsp;&nbsp;&nbsp;Удалить</button>
                                     </div>
                                 </div>
                             </div>
@@ -2931,7 +2931,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <?php endfor; ?>
                         </div>
                         <!-- Самая нижняя часть формы -->
-                        <p id="extra_title" class="mt-2"><span class="font-weight-bold">Дополнительно</span></p>
+                        <p id="extra_title" class="mt-3"><span class="font-weight-bold">Дополнительно</span></p>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
@@ -4050,6 +4050,20 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 
                 // Показываем радиобаттон "Бессольвент"
                 $('#solvent_no').parent().parent().removeClass('d-none');
+            }
+            
+            // Показ второго прогона
+            function ShowRun2() {
+                $('#form_run2').removeClass('d-none');
+                $('#show_run2').addClass('d-none');
+                $('#ink_run2_number').attr('required', 'required');
+            }
+            
+            // Скрытие второго прогона
+            function HideRun2() {
+                $('#form_run2').addClass('d-none');
+                $('#show_run2').removeClass('d-none');
+                $('#ink_run2_number').removeAttr('required');
             }
             
             // Заполнение списка валов ламинации
