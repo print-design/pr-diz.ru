@@ -8,12 +8,20 @@ class DataPriladka {
     public $stamp; // Длина приладки штампа
     public $waste_percent; // Процент отходов от приладки
     
+    public $time_run2; // Время приладки, второй прогон
+    public $length_run2; // Длина приладки 1 краски, второй прогон
+    public $waste_percent_run2; // Процент отходов от приладки, второй прогон
+
     // Конструктор
-    public function __construct($time, $length, $stamp, $waste_percent) {
+    public function __construct($time, $length, $stamp, $waste_percent, $time_run2, $length_run2, $waste_percent_run2) {
         $this->time = $time;
         $this->length = $length;
         $this->stamp = $stamp;
         $this->waste_percent = $waste_percent;
+        
+        $this->time_run2 = $time_run2;
+        $this->length_run2 = $length_run2;
+        $this->waste_percent_run2 = $waste_percent_run2;
     }
 }
 
@@ -1671,12 +1679,11 @@ class Calculation extends CalculationBase {
             $this->length_pure_start_3 = $this->area_pure_3 / ($this->streams_number * $this->stream_width / 1000);
         }
         
-        
         // СтартСтопОтход 1, м
         $this->waste_length_1 = $this->data_priladka->waste_percent * $this->length_pure_start_1 / 100;
         
         // СтартСтопОтход 1 Второй Прогон, м
-        $this->waste_length_1_run2 = ($this->data_priladka ?? 0) * $this->length_pure_start_1 / 100 * $this->uk4;
+        $this->waste_length_1_run2 = ($this->data_priladka->waste_percent_run2 ?? 0) * $this->length_pure_start_1 / 100 * $this->uk4;
         
         // СтартСтопОтход 2, м
         $this->waste_length_2 = $this->data_priladka_laminator->waste_percent * $this->length_pure_start_2 / 100;
