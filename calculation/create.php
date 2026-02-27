@@ -420,7 +420,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $percent_run2_var = "percent_run2_".$i;
             $$percent_run2_var = filter_input(INPUT_POST, 'percent_run2_'.$i);
             
-            if(empty($$percent_run2_var) || (intval($percent_run2_var) < intval($min_percent))) {
+            if(empty($$percent_run2_var) || (intval($$percent_run2_var) < intval($min_percent))) {
                 $percent_run2_valid_var = 'percent_run2_'.$i.'_valid';
                 $$percent_run2_valid_var = ISINVALID;
                 $form_valid = false;
@@ -693,13 +693,19 @@ if(!empty($id)) {
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
             . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
-            . "c.laminator_id, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.manager_id, "
+            . "c.laminator_id, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.ink_run2_number, c.manager_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
             . "c.color_1, c.color_2, c.color_3, c.color_4, c.color_5, c.color_6, c.color_7, c.color_8, "
             . "c.cmyk_1, c.cmyk_2, c.cmyk_3, c.cmyk_4, c.cmyk_5, c.cmyk_6, c.cmyk_7, c.cmyk_8, "
             . "c.lacquer_1, c.lacquer_2, c.lacquer_3, c.lacquer_4, c.lacquer_5, c.lacquer_6, c.lacquer_7, c.lacquer_8, "
             . "c.percent_1, c.percent_2, c.percent_3, c.percent_4, c.percent_5, c.percent_6, c.percent_7, c.percent_8, "
             . "c.cliche_1, c.cliche_2, c.cliche_3, c.cliche_4, c.cliche_5, c.cliche_6, c.cliche_7, c.cliche_8, "
+            . "c.ink_run2_1, c.ink_run2_2, c.ink_run2_3, c.ink_run2_4, "
+            . "c.color_run2_1, c.color_run2_2, c.color_run2_3, c.color_run2_4, "
+            . "c.cmyk_run2_1, c.cmyk_run2_2, c.cmyk_run2_3, c.cmyk_run2_4, "
+            . "c.lacquer_run2_1, c.lacquer_run2_2, c.lacquer_run2_3, c.lacquer_run2_4, "
+            . "c.percent_run2_1, c.percent_run2_2, c.percent_run2_3, c.percent_run2_4, "
+            . "c.cliche_run2_1, c.cliche_run2_2, c.cliche_run2_3, c.cliche_run2_4, "
             . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, extracharge, extracharge_cliche, customer_pays_for_cliche, "
             . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, extra_expense, "
             . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
@@ -960,6 +966,11 @@ if($lamination_roller_width === null && isset($row['lamination_roller_width'])) 
 $ink_number = filter_input(INPUT_POST, 'ink_number');
 if($ink_number === null && isset($row['ink_number'])) {
     $ink_number = $row['ink_number'];
+}
+
+$ink_run2_number = filter_input(INPUT_POST, 'ink_run2_number');
+if($ink_run2_number === null && isset($row['ink_run2_number'])) {
+    $ink_run2_number = $row['ink_run2_number'];
 }
 
 $manager_id = filter_input(INPUT_POST, 'manager_id');
@@ -2778,14 +2789,20 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     </div>
                                 </div>
                             </div>
+                            <!-- Второй прогон, количество красок -->
                             <div class="form-group" id="ink_run2">
                                 <label for="ink_run2_number">Количество красок</label>
-                                <select id="ink_run2_number" name="int_run2_number" class="form-control">
+                                <select id="ink_run2_number" name="ink_run2_number" class="form-control">
                                     <option value="" hidden="hidden">Количество красок...</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
+                                    <?php
+                                    for($i = 1; $i <= 4; $i++):
+                                        $selected = "";
+                                    if($ink_run2_number == $i) {
+                                        $selected = " selected='selected'";
+                                    }
+                                    ?>
+                                    <option<?=$selected ?>><?=$i ?></option>
+                                    <?php endfor; ?>
                                 </select>
                             </div>
                             <!-- Второй прогон, каждая краска -->
@@ -2810,28 +2827,30 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 
                                 $ink_run2_var_name = "ink_run2_$i";
                                 
-                                if($$ink_run2_var_name == "white") {
-                                    $ink_run2_class = " col-6";
-                                    $percent_run2_class = " col-3";
-                                    $cliche_run2_class = " col-3";
-                                }
-                                elseif($$ink_run2_var_name == "lacquer") {
-                                    $ink_run2_class = " col-3";
-                                    $lacquer_run2_class = " col-3";
-                                    $percent_run2_class = " col-3";
-                                    $cliche_run2_class = " col-3";
-                                }
-                                elseif($$ink_run2_var_name == "panton") {
-                                    $ink_run2_class = " col-3";
-                                    $color_run2_class = " col-3";
-                                    $percent_run2_class = " col-3";
-                                    $cliche_run2_class = " col-3";
-                                }
-                                elseif($$ink_run2_var_name == "cmyk") {
-                                    $ink_run2_class = " col-3";
-                                    $cmyk_run2_class = " col-3";
-                                    $percent_run2_class = " col-3";
-                                    $cliche_run2_class = " col-3";
+                                switch($$ink_run2_var_name) {
+                                    case "white":
+                                        $ink_run2_class = " col-6";
+                                        $percent_run2_class = " col-3";
+                                        $cliche_run2_class = " col-3";
+                                        break;
+                                    case "lacquer":
+                                        $ink_run2_class = " col-3";
+                                        $lacquer_run2_class = " col-3";
+                                        $percent_run2_class = " col-3";
+                                        $cliche_run2_class = " col-3";
+                                        break;
+                                    case "panton":
+                                        $ink_run2_class = " col-3";
+                                        $color_run2_class = " col-3";
+                                        $percent_run2_class = " col-3";
+                                        $cliche_run2_class = " col-3";
+                                        break;
+                                    case "cmyk":
+                                        $ink_run2_class = " col-3";
+                                        $cmyk_run2_class = " col-3";
+                                        $percent_run2_class = " col-3";
+                                        $cliche_run2_class = " col-3";
+                                        break;
                                 }
                                 ?>
                                 <div class="form-group<?=$ink_run2_class ?>" id="ink_run2_group_<?=$i ?>">
@@ -2844,7 +2863,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         $white_run2_selected = "";
                                         $lacquer_run2_selected = "";
                                         
-                                        $selected_run2_var_name = $$ink_run2_var_name."_selected";
+                                        $selected_run2_var_name = $$ink_run2_var_name."_run2_selected";
                                         $$selected_run2_var_name = " selected='selected'";
                                         ?>
                                         <option value="cmyk"<?=$cmyk_run2_selected ?>>CMYK</option>
@@ -2890,7 +2909,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         $yellow_run2_selected = "";
                                         $kontur_run2_selected = "";
                                         
-                                        $cmyk_run2_var_selected = $$cmyk_run2_var.'_selected';
+                                        $cmyk_run2_var_selected = $$cmyk_run2_var.'_run2_selected';
                                         $$cmyk_run2_var_selected = " selected='selected'";
                                         ?>
                                         <option value="cyan"<?=$cyan_run2_selected ?>>Cyan</option>
@@ -2912,7 +2931,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         $glossy_run2_selected = "";
                                         $matte_run2_selected = "";
                                         
-                                        $lacquer_run2_var_selected = $$lacquer_run2_var.'_selected';
+                                        $lacquer_run2_var_selected = $$lacquer_run2_var.'_run2_selected';
                                         $$lacquer_run2_var_selected = " selected='selected'";
                                         ?>
                                         <option value="glossy"<?=$glossy_run2_selected ?>>Глянцевый</option>
@@ -4015,7 +4034,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             }
             
             <?php if(!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)): ?>
-                ShowLamination1();
+            ShowLamination1();
             <?php endif; ?>
             
             // Скрытие марки плёнки и толщины для ламинации 1
@@ -4060,7 +4079,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             }
             
             <?php if(!empty($lamination2_film_id) || !empty($lamination2_individual_film_name)): ?>
-                ShowLamination2();
+            ShowLamination2();
             <?php endif; ?>
             
             // Скрытие марки плёнки и толщины для ламинации 2
@@ -4093,6 +4112,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#show_run2').addClass('d-none');
                 $('#ink_run2_number').attr('required', 'required');
             }
+            
+            <?php if(!empty($ink_run2_number) && is_numeric($ink_run2_number) && intval($ink_run2_number) > 0): ?>
+            ShowRun2();
+            <?php endif; ?>
             
             // Скрытие второго прогона
             function HideRun2() {
