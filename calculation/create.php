@@ -521,11 +521,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $number_in_raport = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
+        $ink_run2_number = filter_input(INPUT_POST, 'ink_run2_number'); if(null == $ink_run2_number) $ink_run2_number = "NULL";
         
         $manager_id = GetUserId();
         
         // Данные о цвете
-        for($i=1; $i<=8; $i++) {
+        for($i = 1; $i <= 8; $i++) {
             $ink_var = "ink_$i";
             $$ink_var = filter_input(INPUT_POST, "ink_$i");
             
@@ -546,6 +547,28 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $$cliche_var = filter_input(INPUT_POST, "cliche_$i");
         }
         
+        // Данные о цвете, второй прогон
+        for($i = 1; $i <= 4; $i++) {
+            $ink_run2_var = "ink_run2_$i";
+            $$ink_run2_var = filter_input(INPUT_POST, "ink_run2_$i");
+            
+            $color_run2_var = "color_run2_$i";
+            $$color_run2_var = filter_input(INPUT_POST, "color_run2_$i");
+            
+            $cmyk_run2_var = "cmyk_run2_$i";
+            $$cmyk_run2_var = filter_input(INPUT_POST, "cmyk_run2_$i");
+            
+            $lacquer_run2_var = "lacquer_run2_$i";
+            $$lacquer_run2_var = filter_input(INPUT_POST, "lacquer_run2_$i");
+            
+            $percent_run2_var = "percent_run2_$i";
+            $$percent_run2_var = filter_input(INPUT_POST, "percent_run2_$i");
+            if(empty($$percent_run2_var)) $$percent_run2_var = "NULL";
+            
+            $cliche_run2_var = "cliche_run2_$i";
+            $$cliche_run2_var = filter_input(INPUT_POST, "cliche_run2_$i");
+        }
+        
         $cliche_in_price = 0; if(filter_input(INPUT_POST, 'cliche_in_price') == 'on') $cliche_in_price = 1;
         $cliches_count_flint = filter_input(INPUT_POST, 'cliches_count_flint'); if($cliches_count_flint === null) $cliches_count_flint = "NULL";
         $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = "NULL";
@@ -562,26 +585,38 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
                 . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
-                . "laminator_id, streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, manager_id, "
+                . "laminator_id, streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, ink_run2_number, manager_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
                 . "lacquer_1, lacquer_2, lacquer_3, lacquer_4, lacquer_5, lacquer_6, lacquer_7, lacquer_8, "
                 . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
                 . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
+                . "ink_run2_1, ink_run2_2, ink_run2_3, ink_run2_4, "
+                . "color_run2_1, color_run2_2, color_run2_3, color_run2_4, "
+                . "cmyk_run2_1, cmyk_run2_2, cmyk_run2_3, cmyk_run2_4, "
+                . "lacquer_run2_1, lacquer_run2_2, lacquer_run2_3, lacquer_run2_4, "
+                . "percent_run2_1, percent_run2_2, percent_run2_3, percent_run2_4, "
+                . "cliche_run2_1, cliche_run2_2, cliche_run2_3, cliche_run2_4, "
                 . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, customer_pays_for_cliche, "
                 . "knife, knife_in_price, customer_pays_for_knife, extra_expense) "
                 . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
                 . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
-                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $manager_id, "
+                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $ink_run2_number, $manager_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
                 . "'$lacquer_1', '$lacquer_2', '$lacquer_3', '$lacquer_4', '$lacquer_5', '$lacquer_6', '$lacquer_7', '$lacquer_8', "
                 . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
                 . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
+                . "'$ink_run2_1', '$ink_run2_2', '$ink_run2_3', '$ink_run2_4', "
+                . "'$color_run2_1', '$color_run2_2', '$color_run2_3', '$color_run2_4', "
+                . "'$cmyk_run2_1', '$cmyk_run2_2', '$cmyk_run2_3', '$cmyk_run2_4', "
+                . "'$lacquer_run2_1', '$lacquer_run2_2', '$lacquer_run2_3', '$lacquer_run2_4', "
+                . "'$percent_run2_1', '$percent_run2_2', '$percent_run2_3', '$percent_run2_4', "
+                . "'$cliche_run2_1', '$cliche_run2_2', '$cliche_run2_3', '$cliche_run2_4', "
                 . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $customer_pays_for_cliche, "
                 . "$knife, $knife_in_price, $customer_pays_for_knife, $extra_expense)";
         $executer = new Executer($sql);
