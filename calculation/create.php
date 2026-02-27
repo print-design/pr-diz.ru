@@ -4122,6 +4122,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#form_run2').addClass('d-none');
                 $('#show_run2').removeClass('d-none');
                 $('#ink_run2_number').removeAttr('required');
+                $('#ink_run2_number').val('');
+                $('#ink_run2_number').change();
             }
             
             // Заполнение списка валов ламинации
