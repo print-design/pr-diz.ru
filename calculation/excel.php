@@ -90,11 +90,11 @@ if(!empty($id)) {
     if(!empty($calculation->machine_id)) {
         $sheet->setCellValue('A'.(++$rowindex), "Рапорт"); $sheet->setCellValue("B$rowindex", $calculation->raport);
     }
-        
+    
     if($calculation->laminations_number > 0) {
         $sheet->setCellValue('A'.(++$rowindex), "Ширина ламинирующего вала, мм"); $sheet->setCellValue("B$rowindex", $calculation->lamination_roller_width);
     }
-        
+    
     if(!empty($calculation->machine_id)) {
         for($i = 1; $i <= $calculation->ink_number; $i++) {
             $ink = "ink_$i";
@@ -134,7 +134,7 @@ if(!empty($id)) {
     $sheet->setCellValue('A'.(++$rowindex), "Дополнительные расходы с ".$calculation->GetUnitName($calculation->unit).", руб"); $sheet->setCellValue("B$rowindex", $calculation->extra_expense);
     
     ++$rowindex;
-        
+    
     // Значения по умолчанию
     if(empty($calculation->thickness_2)) $calculation->thickness_2 = 0;
     if(empty($calculation->density_2)) $calculation->density_2 = 0;
@@ -447,9 +447,9 @@ if(!empty($id)) {
     
     $sheet->setCellValue('A'.(++$rowindex), "М пог грязные 1");
     $sheet->setCellValue("B$rowindex", $calculation->length_dirty_start_1);
-    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_1, 5)." + (".DisplayNumber($calculation->ink_number, 5)." * ".DisplayNumber($calculation->data_priladka->length, 5).") + (".DisplayNumber($calculation->laminations_number, 5)." * ".DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ".DisplayNumber($calculation->waste_length_1, 5));
-    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_1."+(".$calculation->ink_number."*".$calculation->data_priladka->length.")+(".$calculation->laminations_number."*".$calculation->data_priladka_laminator->length.")+".$calculation->waste_length_1);
-    $sheet->setCellValue("E$rowindex", "м пог чистые 1 + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 1");
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->length_pure_start_1, 5)." + (".$calculation->ink_number." * ".DisplayNumber($calculation->data_priladka->length, 5).") + (".$calculation->laminations_number." * ".DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ".DisplayNumber($calculation->waste_length_1, 5)." + (".$calculation->ink_run2_number." * ". DisplayNumber($calculation->data_priladka->length_run2 ?? 0, 5).") + ". DisplayNumber($calculation->waste_length_1_run2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_1."+(".$calculation->ink_number."*".$calculation->data_priladka->length.")+(".$calculation->laminations_number."*".$calculation->data_priladka_laminator->length.")+".$calculation->waste_length_1."+(".$calculation->ink_run2_number."*".($calculation->data_priladka->length_run2 ?? 0).")+".$calculation->waste_length_1_run2);
+    $sheet->setCellValue("E$rowindex", "м пог чистые 1 + (красочность * метраж приладки 1 краски) + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 1 + (красочность второй прогон * метраж приладки одной краски второй прогон) + СтартСтопОтход 1 второй прогон");
     
     $sheet->setCellValue('A'.(++$rowindex), "М пог грязные 2");
     $sheet->setCellValue("B$rowindex", $calculation->length_dirty_start_2);

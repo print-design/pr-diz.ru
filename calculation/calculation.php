@@ -1773,7 +1773,7 @@ class Calculation extends CalculationBase {
         
         
         // М пог грязные 1, м
-        $this->length_dirty_start_1 = $this->length_pure_start_1 + ($this->ink_number * $this->data_priladka->length) + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_1;
+        $this->length_dirty_start_1 = $this->length_pure_start_1 + ($this->ink_number * $this->data_priladka->length) + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_1 + ($this->ink_run2_number * $this->data_priladka->length_run2) + $this->waste_length_1_run2;
         
         // М пог грязные 2, м
         $this->length_dirty_start_2 = $this->length_pure_start_2 + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_2; 
