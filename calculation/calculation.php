@@ -1335,6 +1335,7 @@ class Calculation extends CalculationBase {
     public $ink_etoxypropanol_kg_price; // цена 1 кг чистого этоксипропанола для краски, руб
     
     public $vaporization_area_dirty; // м2 испарения грязная
+    
     public $vaporization_areas_pure; // массив: м2 испарения чистая
     public $vaporization_expenses; // массив: расход испарения растворителя, кг
     public $vaporization_costs; // массив: стоимость испарения растворителя, руб
@@ -1345,6 +1346,17 @@ class Calculation extends CalculationBase {
     public $ink_costs; // массив: стоимость каждой КраскаСмеси
     public $ink_costs_mix; // массив: расход краска + растворитель каждой краски
     public $ink_costs_final; // массив: стоимость каждой КраскаСмеси финальная
+    
+    public $vaporization_areas_pure_run2; // массив: м2 испарения чистая, Второй прогон
+    public $vaporization_expenses_run2; // массив: расход испарения растворителя, Второй прогон, кг
+    public $vaporization_costs_run2; // массив: стоимость испарения растворителя, Второй прогон, руб
+    
+    public $ink_kg_prices_run2; // массив: цена 1 кг каждой чистой краски, Второй прогон
+    public $mix_ink_kg_prices_run2; // массив: цена 1 кг каждой КраскаСмеси, Второй прогон
+    public $ink_expenses_run2; // массив: расход каждой КраскаСмеси, Второй прогон
+    public $ink_costs_run2; // массив: стоимость каждой КраскаСмеси, Второй прогон
+    public $ink_costs_mix_run2; // массив: расход краска + растворитель каждой краски, Второй прогон
+    public $ink_costs_final_run2; // массив: стоимость каждой КраскаСмеси финальная, Второй прогон
     
     public $glue_kg_weight; // расход КлеяСмеси на 1 кг клея, кг
     public $glue_kg_price; // цена 1 кг чистого клея, руб
@@ -1918,6 +1930,8 @@ class Calculation extends CalculationBase {
         // М2 испарения растворителя грязная, м2
         $this->vaporization_area_dirty = $this->data_machine->width * $this->length_dirty_start_1 / 1000;
         
+        // ПЕРВЫЙ ПРОГОН
+        
         // Создаём массив: м2 испарения чистая
         $this->vaporization_areas_pure = array();
         
@@ -1987,6 +2001,80 @@ class Calculation extends CalculationBase {
             }
             else {
                 $this->ink_costs_final[$i] = floatval($this->ink_costs_mix[$i]);
+            }
+        }
+        
+        // ВТОРОЙ ПРОГОН
+        
+        // Создаём массив: м2 испарения чистая
+        $this->vaporization_areas_pure_run2 = array();
+        
+        // Создаём массив: расход испарения растворителя, кг
+        $this->vaporization_expenses_run2 = array();
+        
+        // Создаём массив: стоимость испарения растворителя, руб
+        $this->vaporization_costs_run2 = array();
+        
+        // Создаём массивв цен за 1 кг каждой чистой краски
+        $this->ink_kg_prices_run2 = array();
+        
+        // Создаём массив цен за 1 кг каждой КраскаСмеси
+        $this->mix_ink_kg_prices_run2 = array();
+        
+        // Создаём массив расходов каждой КраскаСмеси
+        $this->ink_expenses_run2 = array();
+        
+        // Создаём массив стоимостей каждой КраскаСмеси
+        $this->ink_costs_run2 = array();
+        
+        // Создаём массив расходов краска + растворитель
+        $this->ink_costs_mix_run2 = array();
+        
+        // Создаём массив финальных стоимостей каждой КраскаСмеси
+        $this->ink_costs_final_run2 = array();
+        
+        // Перебираем все краски и помещаем в каждый из четырёх массивов данные по каждой краске
+        for($i = 1; $i <= $this->ink_run2_number; $i++) {
+            $ink_run2 = "ink_run2_$i";
+            $cmyk_run2 = "cmyk_run2_$i";
+            $lacquer_run2 = "lacquer_run2_$i";
+            $percent_run2 = "percent_run2_$i";
+            
+            // Цена 1 кг чистой краски, руб
+            $price = $this->GetInkPrice($$ink_run2, $$cmyk_run2, $$lacquer_run2, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency);
+            $ink_kg_price = $price->value * self::GetCurrencyRate($price->currency, $this->usd, $this->euro);
+            $this->ink_kg_prices_run2[$i] = $ink_kg_price;
+            
+            // Цена 1 кг КраскаСмеси, руб
+            $mix_ink_kg_price = (($ink_kg_price * 1) + ($ink_solvent_kg_price * $this->data_ink->solvent_part)) / $this->ink_1kg_mix_weight;
+            $this->mix_ink_kg_prices_run2[$i] = $mix_ink_kg_price;
+            
+            // Расход КраскаСмеси, кг
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink_run2, $$cmyk_run2, $$lacquer_run2, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense) * $$percent_run2 / 1000 / 100;
+            $this->ink_expenses_run2[$i] = $ink_expense;
+            
+            // Стоимость КраскаСмеси, руб
+            $ink_cost = $ink_expense * $mix_ink_kg_price;
+            $this->ink_costs_run2[$i] = $ink_cost;
+            
+            // М2 испарения растворителя чистая, м2
+            $this->vaporization_areas_pure_run2[$i] = $this->vaporization_area_dirty - ($this->print_area * $$percent_run2 / 100);
+        
+            // Расход испарения растворителя, кг
+            $this->vaporization_expenses_run2[$i] = $this->vaporization_areas_pure_run2[$i] * $this->data_machine->vaporization_expense / 1000;
+        
+            // Стоимость испарения растворителя, руб
+            $this->vaporization_costs_run2[$i] = $this->vaporization_expenses_run2[$i] * $ink_solvent_kg_price * $ink_solvent_currency;
+            
+            // Расход (краска + растворитель на одну краску), руб
+            $this->ink_costs_mix_run2[$i] = $this->ink_costs_run2[$i] + $this->vaporization_costs_run2[$i];
+            
+            // Стоимость КраскаСмеси финальная, руб
+            if($this->ink_costs_mix_run2[$i] < $this->data_ink->min_price_per_ink) {
+                $this->ink_costs_final_run2[$i] = floatval($this->data_ink->min_price_per_ink);
+            }
+            else {
+                $this->ink_costs_final_run2[$i] = floatval($this->ink_costs_mix_run2[$i]);
             }
         }
         
