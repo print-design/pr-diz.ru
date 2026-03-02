@@ -211,10 +211,100 @@ function GetSkiNameExt($param, $param_width) {
             }
             ?>
         </td>
-        <?php endif; ?>
+        <?php endif; ?><!-- if($calculation->work_type_id == WORK_TYPE_PRINT): -->
     </tr>
-    <?php endfor; ?>
+    <?php endfor; ?><!-- for($i=1; $i<=$calculation->ink_number; $i++): -->
 </table>
+<!-- Второй прогон -->
+<?php if($calculation->machine_id == PRINTER_SOMA_OPTIMA && !empty($calculation->ink_run2_number)): ?>
+<p class="font-weight-bold mt-3">Красочность, второй прогон: <?=$calculation->ink_run2_number ?></p>
+
+<table class="table w-100">
+    <tr>
+        <th class="ink">Цветовая схема</th>
+        <th class="ink">Цвет</th>
+        <th class="ink">Запечатка</th>
+        <th class="ink">Тип полимера</th>
+        <th class="ink">Форма</th>
+    </tr>
+    <?php
+    for($i = 1; $i <= $calculation->ink_run2_number; $i++):
+    $ink_run2_var = "ink_run2_$i";
+    $color_run2_var = "color_run2_$i";
+    $cmyk_run2_var = "cmyk_run2_$i";
+    $lacquer_run2_var = "lacquer_run2_$i";
+    $percent_run2_var = "percent_run2_$i";
+    $cliche_run2_var = "cliche_run2_$i";
+    ?>
+    <tr>
+        <td>
+            <?php
+            switch($$ink_run2_var) {
+                case INK_CMYK:
+                    echo "CMYK";
+                    break;
+                case INK_PANTON:
+                    echo "Пантон";
+                    break;
+                case INK_LACQUER:
+                    echo "Лак";
+                    break;
+                case INK_WHITE:
+                    echo 'Белый';
+                    break;
+            }
+            ?>
+        </td>
+        <td>
+            <?php
+            if($$ink_run2_var == INK_CMYK) {
+                echo $$cmyk_run2_var;
+            }
+            elseif($$ink_run2_var == INK_PANTON) {
+                echo 'P'.$$color_run2_var;
+            }
+            elseif($$ink_run2_var == INK_LACQUER) {
+                switch ($$lacquer_run2_var) {
+                    case LACQUER_GLOSSY:
+                        echo 'глянцевый';
+                        break;
+                    case LACQUER_MATTE:
+                        echo 'матовый';
+                        break;
+                }
+            }
+            ?>
+        </td>
+        <td><?=$$percent_run2_var ?>%</td>
+        <td>
+            <?php
+            switch ($$cliche_run2_var) {
+                case CLICHE_FLINT:
+                    echo 'Флинт';
+                    break;
+                case CLICHE_KODAK:
+                    echo 'Кодак';
+                    break;
+            }
+            ?>
+        </td>
+        <td>
+            <?php
+            switch ($$cliche_run2_var) {
+                case CLICHE_OLD:
+                    echo 'Старая';
+                    break;
+                default :
+                    echo 'Новая';
+                    break;
+            }
+            ?>
+        </td>
+    </tr>
+    <?php endfor; ?><!-- if($calculation->machine_id == PRINTER_SOMA_OPTIMA && !empty($calculation->ink_run2_number)): -->
+</table>
+<?php endif; ?>
+<!-- Конец: Второй прогон -->
 <div class="row">
     <div class="col-6"></div>
     <div class="col-6">

@@ -13,6 +13,7 @@ $calculation_result = CalculationResult::Create($id);
 
 $new_forms_number = 0;
 
+// Красочность
 for($i=1; $i<=$calculation->ink_number; $i++) {
     $ink_var = "ink_$i";
     $$ink_var = $calculation->$ink_var;
@@ -39,6 +40,32 @@ for($i=1; $i<=$calculation->ink_number; $i++) {
     }
 }
 
+// Красочность, второй прогон
+for($i = 1; $i <= $calculation->ink_run2_number; $i++) {
+    $ink_run2_var = "ink_run2_$i";
+    $$ink_run2_var = $calculation->$ink_run2_var;
+    
+    $color_run2_var = "color_run2_$i";
+    $$color_run2_var = $calculation->$color_run2_var;
+    
+    $cmyk_run2_var = "cmyk_run2_$i";
+    $$cmyk_run2_var = $calculation->$cmyk_run2_var;
+    
+    $lacquer_run2_var = "lacquer_run2_$i";
+    $$lacquer_run2_var = $calculation->$lacquer_run2_var;
+    
+    $percent_run2_var = "percent_run2_$i";
+    $$percent_run2_var = $calculation->$percent_run2_var;
+    
+    $cliche_run2_var = "cliche_run2_$i";
+    $$cliche_run2_var = $calculation->$cliche_run2_var;
+    
+    if(!empty($$cliche_run2_var) && $$cliche_run2_var != CLICHE_OLD) {
+        $new_forms_number++;
+    }
+}
+
+// Количество новых форм
 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $new_forms_number += ($calculation->cliches_count_flint + $calculation->cliches_count_kodak);
 }
