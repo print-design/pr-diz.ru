@@ -409,19 +409,25 @@ if(!empty($id)) {
         $sheet->setCellValue("E$rowindex", "м2 чистые 3 / (количество ручьёв * ширина ручья / 1000)");
     }
     
-    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 1");
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 1, м");
     $sheet->setCellValue("B$rowindex", $calculation->waste_length_1);
     $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_1, 5)." / 100");
     $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka->waste_percent."*".$calculation->length_pure_start_1."/100");
     $sheet->setCellValue("E$rowindex", "СтартСтопОтход печати * м пог чистые 1 / 100");
     
-    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 2");
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 1 Второй Прогон, м");
+    $sheet->setCellValue("B$rowindex", $calculation->waste_length_1_run2);
+    $sheet->setCellValue("C$rowindex", "|= ". DisplayNumber(($calculation->data_priladka->waste_percent_run2 ?? 0), 5)." * ".DisplayNumber($calculation->length_pure_start_1, 5)." / 100 * ".$calculation->uk4);
+    $sheet->setCellValue("D$rowindex", "=".($calculation->data_priladka->waste_percent_run2 ?? 0)."*".$calculation->length_pure_start_1."/100*".$calculation->uk4);
+    $sheet->setCellValue("E$rowindex", "СтартСтопОтход печати Второй Прогон * м пог чистые 1 / 100 * УК4");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 2, м");
     $sheet->setCellValue("B$rowindex", $calculation->waste_length_2);
     $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka_laminator->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_2, 5)." / 100");
     $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka_laminator->waste_percent."*".$calculation->length_pure_start_2."/100");
     $sheet->setCellValue("E$rowindex", "СтартСтопОтход ламинации * м. пог. чистые 2 / 100");
     
-    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 3");
+    $sheet->setCellValue('A'.(++$rowindex), "СтартСтопОтход 3, м");
     $sheet->setCellValue("B$rowindex", $calculation->waste_length_3);
     $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->data_priladka_laminator->waste_percent, 5)." * ".DisplayNumber($calculation->length_pure_start_3, 5)." / 100");
     $sheet->setCellValue("D$rowindex", "=".$calculation->data_priladka_laminator->waste_percent."*".$calculation->length_pure_start_3."/100");

@@ -1041,45 +1041,47 @@ $lacquer_run2_1 = null; $lacquer_run2_2 = null; $lacquer_run2_3 = null; $lacquer
 $percent_run2_1 = null; $percent_run2_2 = null; $percent_run2_3 = null; $percent_run2_4 = null;
 $cliche_run2_1 = null; $cliche_run2_2 = null; $cliche_run2_3 = null; $cliche_run2_4 = null;
 
-for($i = 1; $i < 4; $i++) {
-    $ink_run2_var = "ink_run2_$i";
-    $$ink_run2_var = filter_input(INPUT_POST, "ink_run2_$i");
-    if(null === $$ink_run2_var && isset($row["ink_run2_$i"])) {
-        $$ink_run2_var = $row["ink_run2_$i"];
-    }
-    
-    $color_run2_var = "color_run2_$i";
-    $$color_run2_var = filter_input(INPUT_POST, "color_run2_$i");
-    if(null === $$color_run2_var && isset($row["color_run2_$i"])) {
-        $$color_run2_var = $row["color_run2_$i"];
-    }
-    
-    $cmyk_run2_var = "cmyk_run2_$i";
-    $$cmyk_run2_var = filter_input(INPUT_POST, "cmyk_run2_$i");
-    if(null === $$cmyk_run2_var && isset($row["cmyk_run2_$i"])) {
-        $$cmyk_run2_var = $row["cmyk_run2_$i"];
-    }
-    
-    $lacquer_run2_var = "lacquer_run2_$i";
-    $$lacquer_run2_var = filter_input(INPUT_POST, "lacquer_run2_$i");
-    if(null === $$lacquer_run2_var && isset($row["lacquer_run2_$i"])) {
-        $$lacquer_run2_var = $row["lacquer_run2_$i"];
-    }
-    
-    $percent_run2_var = "percent_run2_$i";
-    $$percent_run2_var = filter_input(INPUT_POST, "percent_run2_$i");
-    if(null === $$percent_run2_var && isset($row["percent_run2_$i"])) {
-        $$percent_run2_var = $row["percent_run2_$i"];
-    }
-    
-    $cliche_run2_var = "cliche_run2_$i";
-    $$cliche_run2_var = filter_input(INPUT_POST, "cliche_run2_$i");
-    if(null === $$cliche_run2_var && isset($row["cliche_run2_$i"])) {
-        $$cliche_run2_var = $row["cliche_run2_$i"];
-    }
-    
-    if($$cliche_run2_var != CLICHE_OLD) {
-        $new_forms_number++;
+if(!empty($ink_run2_number)) {
+    for($i = 1; $i <= $ink_run2_number; $i++) {
+        $ink_run2_var = "ink_run2_$i";
+        $$ink_run2_var = filter_input(INPUT_POST, "ink_run2_$i");
+        if(null === $$ink_run2_var && isset($row["ink_run2_$i"])) {
+            $$ink_run2_var = $row["ink_run2_$i"];
+        }
+        
+        $color_run2_var = "color_run2_$i";
+        $$color_run2_var = filter_input(INPUT_POST, "color_run2_$i");
+        if(null === $$color_run2_var && isset($row["color_run2_$i"])) {
+            $$color_run2_var = $row["color_run2_$i"];
+        }
+        
+        $cmyk_run2_var = "cmyk_run2_$i";
+        $$cmyk_run2_var = filter_input(INPUT_POST, "cmyk_run2_$i");
+        if(null === $$cmyk_run2_var && isset($row["cmyk_run2_$i"])) {
+            $$cmyk_run2_var = $row["cmyk_run2_$i"];
+        }
+        
+        $lacquer_run2_var = "lacquer_run2_$i";
+        $$lacquer_run2_var = filter_input(INPUT_POST, "lacquer_run2_$i");
+        if(null === $$lacquer_run2_var && isset($row["lacquer_run2_$i"])) {
+            $$lacquer_run2_var = $row["lacquer_run2_$i"];
+        }
+        
+        $percent_run2_var = "percent_run2_$i";
+        $$percent_run2_var = filter_input(INPUT_POST, "percent_run2_$i");
+        if(null === $$percent_run2_var && isset($row["percent_run2_$i"])) {
+            $$percent_run2_var = $row["percent_run2_$i"];
+        }
+        
+        $cliche_run2_var = "cliche_run2_$i";
+        $$cliche_run2_var = filter_input(INPUT_POST, "cliche_run2_$i");
+        if(null === $$cliche_run2_var && isset($row["cliche_run2_$i"])) {
+            $$cliche_run2_var = $row["cliche_run2_$i"];
+        }
+        
+        if($$cliche_run2_var != CLICHE_OLD) {
+            $new_forms_number++;
+        }
     }
 }
 

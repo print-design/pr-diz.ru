@@ -1755,7 +1755,7 @@ class Calculation extends CalculationBase {
         
         // СтартСтопОтход 2, м
         $this->waste_length_2 = $this->data_priladka_laminator->waste_percent * $this->length_pure_start_2 / 100;
-                
+        
         // СтартСтопОтход 3, м
         $this->waste_length_3 = $this->data_priladka_laminator->waste_percent * $this->length_pure_start_3 / 100;
         
