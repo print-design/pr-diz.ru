@@ -1325,7 +1325,7 @@ class Calculation extends CalculationBase {
     public $weight_dirty_1, $weight_dirty_2, $weight_dirty_3; // масса плёнки грязная, кг
     public $length_dirty_1, $length_dirty_2, $length_dirty_3; // длина плёнки грязная, кг
     public $film_cost_1, $film_cost_2, $film_cost_3; // стоимость плёнки грязная, руб
-    public $priladka_time_1, $priladka_time_2, $priladka_time_3; // время приладки, мин
+    public $priladka_time_1, $priladka_time_1_run2, $priladka_time_2, $priladka_time_3; // время приладки, мин
     public $print_time_1, $lamination_time_2, $lamination_time_3; // время печати или ламинации без приладки, ч
     public $work_time_1, $work_time_2, $work_time_3; // время печати или ламинации с приладкой, ч
     public $work_cost_1, $work_cost_2, $work_cost_3; // стоимость печати или ламирации с приладкой, руб
@@ -1803,8 +1803,8 @@ class Calculation extends CalculationBase {
         
         // Масса плёнки чистая 3
         $this->weight_pure_3 = $this->length_pure_start_3 * $this->width_3 * $this->density_3 / 1000000;
-                
-    
+        
+        
         // Длина пленки чистая 1, м
         $this->length_pure_1 = $this->length_pure_start_1;
         
@@ -1853,6 +1853,9 @@ class Calculation extends CalculationBase {
         
         // Время приладки 1, мин
         $this->priladka_time_1 = $this->ink_number * $this->data_priladka->time / 60;
+        
+        // Время приладки 1 Второй прогон, мин
+        $this->priladka_time_1_run2 = $this->ink_run2_number * $this->data_priladka->time_run2 / 60 * $this->uk4;
         
         // Время приладки 2, мин
         $this->priladka_time_2 = $this->data_priladka_laminator->time * $this->uk2 / 60;

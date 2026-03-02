@@ -587,9 +587,15 @@ if(!empty($id)) {
     
     $sheet->setCellValue('A'.(++$rowindex), "Время приладки 1, ч");
     $sheet->setCellValue("B$rowindex", $calculation->priladka_time_1);
-    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->ink_number, 5)." * ".DisplayNumber($calculation->data_priladka->time, 5)." / 60");
+    $sheet->setCellValue("C$rowindex", "|= ".$calculation->ink_number." * ".DisplayNumber($calculation->data_priladka->time, 5)." / 60");
     $sheet->setCellValue("D$rowindex", "=".$calculation->ink_number."*".$calculation->data_priladka->time."/60");
     $sheet->setCellValue("E$rowindex", "красочность * время приладки 1 краски / 60");
+    
+    $sheet->setCellValue('A'.(++$rowindex), "Время приладки 1 Второй прогон, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->priladka_time_1_run2);
+    $sheet->setCellValue("C$rowindex", "|= ".$calculation->ink_run2_number." * ".DisplayNumber($calculation->data_priladka->time_run2 ?? 0, 5)." / 60 * ".$calculation->uk4);
+    $sheet->setCellValue("D$rowindex", "=".$calculation->ink_run2_number."*".($calculation->data_priladka->time_run2 ?? 0)."/60*".$calculation->uk4);
+    $sheet->setCellValue("E$rowindex", "красочность второй прогон * время приладки 1 краски второй прогон / 60 * УК4");
     
     $sheet->setCellValue('A'.(++$rowindex), "Время приладки 2, ч");
     $sheet->setCellValue("B$rowindex", $calculation->priladka_time_2);
