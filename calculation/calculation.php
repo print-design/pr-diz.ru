@@ -1879,6 +1879,7 @@ class Calculation extends CalculationBase {
         
         // Время печати (без приладки) 1 второй прогон, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
+        $this->print_time_1_run2 = $this->data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1 + $this->waste_length_1_run2) / $this->data_machine->speed_run2 / 1000 * $this->uk1 * $this->uk4;
         
         // Время ламинации (без приладки) 2, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
