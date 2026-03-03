@@ -669,6 +669,12 @@ if(!empty($id)) {
     $sheet->setCellValue("D$rowindex", "=".$calculation->work_time_1."*".$calculation->data_machine->price);
     $sheet->setCellValue("E$rowindex", "общее время выполнения 1 * цена работы оборудования 1");
     
+    $sheet->setCellValue('A'.(++$rowindex), "Стоимость выполнения тиража 1 второй прогон, руб");
+    $sheet->setCellValue("B$rowindex", $calculation->work_cost_1_run2);
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_time_1_run2, 5)." * ".DisplayNumber($calculation->data_machine->price_run2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->work_time_1_run2."*".$calculation->data_machine->price_run2);
+    $sheet->setCellValue("E$rowindex", "общее время выполнения 1 второй прогон * цена работы оборудования 1 второй прогон");
+    
     $sheet->setCellValue('A'.(++$rowindex), "Стоимость выполнения тиража 2, руб");
     $sheet->setCellValue("B$rowindex", $calculation->work_cost_2);
     $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_time_2, 5)." * ".DisplayNumber($calculation->data_laminator->price, 5));

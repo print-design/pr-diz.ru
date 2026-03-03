@@ -1334,7 +1334,7 @@ class Calculation extends CalculationBase {
     public $priladka_time_1, $priladka_time_1_run2, $priladka_time_2, $priladka_time_3; // время приладки, мин
     public $print_time_1, $print_time_1_run2, $lamination_time_2, $lamination_time_3; // время печати или ламинации без приладки, ч
     public $work_time_1, $work_time_1_run2, $work_time_2, $work_time_3; // время печати или ламинации с приладкой, ч
-    public $work_cost_1, $work_cost_2, $work_cost_3; // стоимость печати или ламирации с приладкой, руб
+    public $work_cost_1, $work_cost_1_run2, $work_cost_2, $work_cost_3; // стоимость печати или ламирации с приладкой, руб
     public $print_area; // площадь запечатки
     public $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски, кг
     public $ink_flexol82_kg_price; // цена 1 кг чистого флексоля 82 для краски, руб
@@ -1905,6 +1905,9 @@ class Calculation extends CalculationBase {
         
         // Стоимость выполнения тиража 1, руб
         $this->work_cost_1 = $this->work_time_1 * $this->data_machine->price;
+        
+        // Стоимость выполнения тиража 1 второй прогон, руб
+        $this->work_cost_1_run2 = $this->work_time_1_run2 * $this->data_machine->price_run2;
         
         // Стоимость выполнения тиража 2, руб
         $this->work_cost_2 = $this->work_time_2 * $this->data_laminator->price;
