@@ -621,6 +621,12 @@ if(!empty($id)) {
     $sheet->setCellValue("D$rowindex", $calculation->data_machine->speed == 0 ? "=0" : "=(".$calculation->length_pure_start_1."+".$calculation->waste_length_1."+".$calculation->waste_length_1_run2.")/".$calculation->data_machine->speed."/1000*".$calculation->uk1);
     $sheet->setCellValue("E$rowindex", $calculation->data_machine->speed == 0 ? "печати нет" : "(м пог чистые 1 + СтартСтопОтход 1 + СтартСтопОтход 1 второй прогон) / скорость работы машины / 1000 * УК1");
     
+    $sheet->setCellValue('A'.(++$rowindex), "Время печати (без приладки) 1 второй прогон, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->print_time_1_run2);
+    $sheet->setCellValue("C$rowindex", $calculation->data_machine->speed_run2 == 0 ? "|= 0" : "|= (". DisplayNumber($calculation->length_pure_start_1, 5)." + ". DisplayNumber($calculation->waste_length_1, 5)." + ". DisplayNumber($calculation->waste_length_1_run2, 5).") / ".DisplayNumber($calculation->data_machine->speed_run2, 5)." / 1000 * ".$calculation->uk1." * ".$calculation->uk4);
+    $sheet->setCellValue("D$rowindex", $calculation->data_machine->speed_run2 == 0 ? "=0" : "=(".$calculation->length_pure_start_1." + ".$calculation->waste_length_1." + ".$calculation->waste_length_1_run2.") / ".$calculation->data_machine->speed_run2." / 1000 * ".$calculation->uk1." * ".$calculation->uk4);
+    $sheet->setCellValue("E$rowindex", $calculation->data_machine->speed_run2 == 0 ? "второго прогона нет" : "(м пог чистые 1 + СтартСтопОтход 1 + СтартСтопОтход 1 второй прогон) / скорость работы машины второй прогон / 1000 * УК1 * УК4");
+    
     $sheet->setCellValue('A'.(++$rowindex), "Время ламинации (без приладки) 2, ч");
     $sheet->setCellValue("B$rowindex", $calculation->lamination_time_2);
     $sheet->setCellValue("C$rowindex", $calculation->data_laminator->speed == 0 ? "|= 0" : "|= (".DisplayNumber($calculation->length_pure_start_2, 5)." + ".DisplayNumber($calculation->waste_length_2, 5).") / ".DisplayNumber($calculation->data_laminator->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk2, 0));
