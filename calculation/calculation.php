@@ -32,12 +32,18 @@ class DataMachine {
     public $width; // Ширина машины
     public $vaporization_expense; // Расход растворителя на испарение
     
+    public $price_run2; // Цена второй прогон
+    public $speed_run2; // Скорость второй прогон
+    
     // Контруктор
-    public function __construct($price, $speed, $width, $vaporization_expense) {
+    public function __construct($price, $speed, $width, $vaporization_expense, $price_run2, $speed_run) {
         $this->price = $price;
         $this->speed = $speed;
         $this->width = $width;
         $this->vaporization_expense = $vaporization_expense;
+        
+        $this->price_run2 = $price_run2;
+        $this->speed_run2 = $speed_run;
     }
 }
 
@@ -998,7 +1004,7 @@ class CalculationBase {
         // ПОЛУЧЕНИЕ НОРМ
         $data_priladka = new DataPriladka(null, null, null, null, null, null, null);
         $data_priladka_laminator = new DataPriladka(null, null, null, null, null, null, null);
-        $data_machine = new DataMachine(null, null, null, null);
+        $data_machine = new DataMachine(null, null, null, null, null, null);
         $data_laminator = new DataLaminator(null, null, null);
         $data_gap = new DataGap(null, null, null);
         $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -1030,13 +1036,13 @@ class CalculationBase {
             }
             
             if(empty($machine_id)) {
-                $data_machine = new DataMachine(0, 0, 0, 0);
+                $data_machine = new DataMachine(0, 0, 0, 0, 0, 0);
             }
             else {
-                $sql = "select price, speed, width, vaporization_expense from norm_machine where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
+                $sql = "select price, speed, width, price_run2, speed_run2, vaporization_expense from norm_machine where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
                 $fetcher = new Fetcher($sql);
                 if ($row = $fetcher->Fetch()) {
-                    $data_machine = new DataMachine($row['price'], $row['speed'], $row['width'], $row['vaporization_expense']);
+                    $data_machine = new DataMachine($row['price'], $row['speed'], $row['width'], $row['vaporization_expense'], $row['price_run2'], $row['speed_run2']);
                 }
             }
             
@@ -1869,7 +1875,7 @@ class Calculation extends CalculationBase {
 
         // Время печати (без приладки) 1, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
-        $this->print_time_1 = $this->data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $this->data_machine->speed / 1000 * $this->uk1;
+        $this->print_time_1 = $this->data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1 + $this->waste_length_1_run2) / $this->data_machine->speed / 1000 * $this->uk1;
         
         // Время печати (без приладки) 1 второй прогон, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0

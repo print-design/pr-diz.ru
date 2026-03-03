@@ -453,8 +453,8 @@ if(!empty($id)) {
     
     $sheet->setCellValue('A'.(++$rowindex), "М пог грязные 1 второй прогон");
     $sheet->setCellValue("B$rowindex", $calculation->length_dirty_start_1_run2);
-    $sheet->setCellValue("C$rowindex", "|= ". DisplayNumber($calculation->length_pure_start_1, 5)." + (".$calculation->laminations_number." * ". DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ". DisplayNumber($calculation->waste_length_1, 5)." + (".$calculation->ink_run2_number." * ". DisplayNumber($calculation->data_priladka->length_run2, 5).") + ".DisplayNumber($calculation->waste_length_1_run2, 5));
-    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_1." + (".$calculation->laminations_number." * ".$calculation->data_priladka_laminator->length.") + ".$calculation->waste_length_1." + (".$calculation->ink_run2_number." * ".$calculation->data_priladka->length_run2.") + ".$calculation->waste_length_1_run2);
+    $sheet->setCellValue("C$rowindex", "|= ". DisplayNumber($calculation->length_pure_start_1, 5)." + (".$calculation->laminations_number." * ". DisplayNumber($calculation->data_priladka_laminator->length, 5).") + ". DisplayNumber($calculation->waste_length_1, 5)." + (".$calculation->ink_run2_number." * ". DisplayNumber($calculation->data_priladka->length_run2 ?? 0, 5).") + ".DisplayNumber($calculation->waste_length_1_run2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->length_pure_start_1." + (".$calculation->laminations_number." * ".$calculation->data_priladka_laminator->length.") + ".$calculation->waste_length_1." + (".$calculation->ink_run2_number." * ".($calculation->data_priladka->length_run2 ?? 0).") + ".$calculation->waste_length_1_run2);
     $sheet->setCellValue("E$rowindex", "м пог чистые 1 + (количество ламинаций * метраж приладки ламинации) + СтартСтопОтход 1 + (красочность прогон 2 * метраж приладки одной краски второй прогон) + СтартСтопОтход 1 второй прогон");
     
     $sheet->setCellValue('A'.(++$rowindex), "М пог грязные 2");
@@ -617,9 +617,9 @@ if(!empty($id)) {
     
     $sheet->setCellValue('A'.(++$rowindex), "Время печати (без приладки) 1, ч");
     $sheet->setCellValue("B$rowindex", $calculation->print_time_1);
-    $sheet->setCellValue("C$rowindex", $calculation->data_machine->speed == 0 ? "|= 0" : "|= (".DisplayNumber($calculation->length_pure_start_1, 5)." + ".DisplayNumber($calculation->waste_length_1, 5).") / ".DisplayNumber($calculation->data_machine->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk1, 0));
-    $sheet->setCellValue("D$rowindex", $calculation->data_machine->speed == 0 ? "=0" : "=(".$calculation->length_pure_start_1."+".$calculation->waste_length_1.")/".$calculation->data_machine->speed."/1000*".$calculation->uk1);
-    $sheet->setCellValue("E$rowindex", $calculation->data_machine->speed == 0 ? "печати нет" : "(м пог чистые 1 + СтартСтопОтход 1) / скорость работы машины / 1000 * УК1");
+    $sheet->setCellValue("C$rowindex", $calculation->data_machine->speed == 0 ? "|= 0" : "|= (".DisplayNumber($calculation->length_pure_start_1, 5)." + ".DisplayNumber($calculation->waste_length_1, 5)." + ". DisplayNumber($calculation->waste_length_1_run2, 5).") / ".DisplayNumber($calculation->data_machine->speed, 5)." / 1000 * ".DisplayNumber($calculation->uk1, 0));
+    $sheet->setCellValue("D$rowindex", $calculation->data_machine->speed == 0 ? "=0" : "=(".$calculation->length_pure_start_1."+".$calculation->waste_length_1."+".$calculation->waste_length_1_run2.")/".$calculation->data_machine->speed."/1000*".$calculation->uk1);
+    $sheet->setCellValue("E$rowindex", $calculation->data_machine->speed == 0 ? "печати нет" : "(м пог чистые 1 + СтартСтопОтход 1 + СтартСтопОтход 1 второй прогон) / скорость работы машины / 1000 * УК1");
     
     $sheet->setCellValue('A'.(++$rowindex), "Время ламинации (без приладки) 2, ч");
     $sheet->setCellValue("B$rowindex", $calculation->lamination_time_2);
