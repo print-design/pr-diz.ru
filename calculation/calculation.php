@@ -1326,7 +1326,7 @@ class Calculation extends CalculationBase {
     public $length_dirty_1, $length_dirty_2, $length_dirty_3; // длина плёнки грязная, кг
     public $film_cost_1, $film_cost_2, $film_cost_3; // стоимость плёнки грязная, руб
     public $priladka_time_1, $priladka_time_1_run2, $priladka_time_2, $priladka_time_3; // время приладки, мин
-    public $print_time_1, $lamination_time_2, $lamination_time_3; // время печати или ламинации без приладки, ч
+    public $print_time_1, $print_time_1_run2, $lamination_time_2, $lamination_time_3; // время печати или ламинации без приладки, ч
     public $work_time_1, $work_time_2, $work_time_3; // время печати или ламинации с приладкой, ч
     public $work_cost_1, $work_cost_2, $work_cost_3; // стоимость печати или ламирации с приладкой, руб
     public $print_area; // площадь запечатки
@@ -1870,6 +1870,9 @@ class Calculation extends CalculationBase {
         // Время печати (без приладки) 1, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
         $this->print_time_1 = $this->data_machine->speed == 0 ? 0 : ($this->length_pure_start_1 + $this->waste_length_1) / $this->data_machine->speed / 1000 * $this->uk1;
+        
+        // Время печати (без приладки) 1 второй прогон, ч
+        // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0
         
         // Время ламинации (без приладки) 2, ч
         // Если печати нет, то сразу возвращаем 0, иначе получится деление на 0

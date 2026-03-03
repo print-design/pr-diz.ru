@@ -18,6 +18,9 @@ $speed_valid = '';
 $width_valid = '';
 $vaporization_expense_valid = '';
 
+$price_run2_valid = '';
+$speed_run2_valid = '';
+
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
     if(empty(filter_input(INPUT_POST, 'price'))) {
@@ -40,6 +43,16 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $form_valid = false;
     }
     
+    if(key_exists('price_run2_valid', $_POST) && empty(filter_input(INPUT_POST, 'price_run2_valid'))) {
+        $price_run2_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(key_exists('speed_run2_valid', $_POST) && empty(filter_input(INPUT_POST, 'speed_run2_valid'))) {
+        $speed_run2_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if($form_valid) {
         // Старый объект
         $old_price = '';
@@ -47,7 +60,10 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $old_width = '';
         $old_vaporization_expense = '';
         
-        $sql = "select price, speed, width, vaporization_expense from norm_machine where machine_id = $machine_id order by date desc limit 1";
+        $old_price_run2 = '';
+        $old_speed_run2 = '';
+        
+        $sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2 from norm_machine where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -56,6 +72,9 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
             $old_speed = $row['speed'];
             $old_width = $row['width'];
             $old_vaporization_expense = $row['vaporization_expense'];
+            
+            $old_price_run2 = $row['price_run2'];
+            $old_speed_run2 = $row['speed_run2'];
         }
         
         // Новый объект
@@ -64,11 +83,16 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $new_width = filter_input(INPUT_POST, 'width');
         $new_vaporization_expense = filter_input(INPUT_POST, 'vaporization_expense');
         
+        $new_price_run2 = filter_input(INPUT_POST, 'price_run2'); if($new_price_run2 === null) $new_price_run2 = "NULL";
+        $new_speed_run2 = filter_input(INPUT_POST, 'speed_run2'); if($new_speed_run2 === null) $new_speed_run2 = "NULL";
+        
         if($old_price != $new_price || 
                 $old_speed != $new_speed || 
                 $old_width != $new_width || 
-                $old_vaporization_expense != $new_vaporization_expense) {
-            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense) values ($machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense)";
+                $old_vaporization_expense != $new_vaporization_expense || 
+                ($new_price_run2 != "NULL" && $old_price_run2 != $new_price_run2) || 
+                ($new_speed_run2 != "NULL" && $old_speed_run2 != $new_speed_run2)) {
+            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense, price_run2, speed_run2) values ($machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense, $new_price_run2, $new_speed_run2)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -84,7 +108,10 @@ $speed = '';
 $width = '';
 $vaporization_expense = '';
 
-$sql = "select price, speed, width, vaporization_expense from norm_machine where machine_id = $machine_id order by date desc limit 1";
+$price_run2 = '';
+$speed_run2 = '';
+
+$sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2 from norm_machine where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -95,6 +122,9 @@ if($row = $fetcher->Fetch()) {
     $speed = $row['speed'];
     $width = $row['width'];
     $vaporization_expense = $row['vaporization_expense'];
+    
+    $price_run2 = $row['price_run2'];
+    $speed_run2 = $row['speed_run2'];
 }
 ?>
 <!DOCTYPE html>
@@ -122,10 +152,13 @@ if($row = $fetcher->Fetch()) {
             <?php
             endif;
             ?>
-            <div class="row">
-                <div class="col-12 col-md-4 col-lg-2">
-                    <form method="post">
-                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+            <form method="post">
+                <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                <div class="row">
+                    <div class="col-12 col-md-4 col-lg-2">
+                        <?php if($machine_id == PRINTER_SOMA_OPTIMA): ?>
+                        <h2>Прогон 1</h2>
+                        <?php endif; ?>
                         <div class="form-group">
                             <label for="price">Цена работы оборудования, руб/час</label>
                             <input type="text" class="form-control float-only<?=$price_valid ?>" id="price" name="price" value="<?= empty($price) ? "" : floatval($price) ?>" placeholder="Цена, руб/час" required="required" autocomplete="off" />
@@ -151,9 +184,24 @@ if($row = $fetcher->Fetch()) {
                         </div>
                         <?php endif; ?>
                         <button type="submit" id="norm_machine_submit" name="norm_machine_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>
-                    </form>
+                    </div>
+                    <?php if($machine_id == PRINTER_SOMA_OPTIMA): ?>
+                    <div class="col-12 col-md-4 col-lg-2">
+                        <h2>Прогон 2</h2>
+                        <div class="form-group">
+                            <label for="price_run2">Цена работы оборудования, руб/час</label>
+                            <input type="text" class="form-control float-only<?=$price_run2_valid ?>" id="price_run2" name="price_run2" value="<?= empty($price_run2) ? "" : floatval($price_run2) ?>" placeholder="Цена, руб/час" required="required" autocomplete="off" />
+                            <div class="invalid-feedback">Цена обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="speed_run2">Скорость работы оборудования, км/час</label>
+                            <input type="text" class="form-control float-only<?=$speed_run2_valid ?>" id="speed_run2" name="speed_run2" value="<?= empty($speed_run2) ? "" : floatval($speed_run2) ?>" placeholder="Скорость, км/час" required="required" autocomplete="off" />
+                            <div class="invalid-feedback">Скорость обязательно</div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
-            </div>
+            </form>
         </div>
         <?php
         include '../include/footer.php';
