@@ -26,6 +26,8 @@ $lacquer_glossy_price_valid = "";
 $lacquer_glossy_expense_valid = "";
 $lacquer_matte_price_valid = "";
 $lacquer_matte_expense_valid = "";
+$lacquer_selective_price_valid = "";
+$lacquer_selective_expense_valid = "";
 $solvent_etoxipropanol_price_valid = "";
 $solvent_flexol82_price_valid = "";
 $solvent_part_valid = "";
@@ -118,6 +120,15 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $form_valid = false;
     }
     
+    if(empty(filter_input(INPUT_POST, 'lacquer_selective_price')) || empty(filter_input(INPUT_POST, 'lacquer_selective_currency'))) {
+        $lacquer_selective_price_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(empty(filter_input(INPUT_POST, 'lacquer_selective_expense'))) {
+        $lacquer_selective_expense_valid = false;
+    }
+    
     if(empty(filter_input(INPUT_POST, 'solvent_etoxipropanol_price')) || empty(filter_input(INPUT_POST, 'solvent_etoxipropanol_currency'))) {
         $solvent_etoxipropanol_valid = ISINVALID;
         $form_valid = false;
@@ -179,6 +190,9 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $old_lacquer_matte_price = "";
         $old_lacquer_matte_currency = "";
         $old_lacquer_matte_expense = "";
+        $old_lacquer_selective_price = "";
+        $old_lacquer_selective_currency = "";
+        $old_lacquer_selective_expense = "";
         $old_solvent_etoxipropanol_price = "";
         $old_solvent_etoxipropanol_currency = "";
         $old_solvent_flexol82_price = "";
@@ -190,7 +204,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $old_self_adhesive_laquer_expense = "";
         $old_min_percent = "";
         
-        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent from norm_ink order by date desc limit 1";
+        $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, lacquer_selective_price, lacquer_selective_currency, lacquer_selective_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent from norm_ink order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -216,9 +230,12 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
             $old_lacquer_glossy_price = $row["lacquer_glossy_price"];
             $old_lacquer_glossy_currency = $row["lacquer_glossy_currency"];
             $old_lacquer_glossy_expense = $row['lacquer_glossy_expense'];
-            $old_lacquer_matte_price  = $row['lacquer_matte_price'];
-            $old_lacquer_matte_currency  = $row['lacquer_matte_currency'];
-            $old_lacquer_matte_expense  = $row['lacquer_matte_expense'];
+            $old_lacquer_matte_price = $row['lacquer_matte_price'];
+            $old_lacquer_matte_currency = $row['lacquer_matte_currency'];
+            $old_lacquer_matte_expense = $row['lacquer_matte_expense'];
+            $old_lacquer_selective_price = $row['old_lacquer_selective_price'];
+            $old_lacquer_selective_currency = $row['old_lacquer_selective_currency'];
+            $old_lacquer_selective_expense = $row['old_lacquer_selective_expense'];
             $old_solvent_etoxipropanol_price = $row["solvent_etoxipropanol_price"];
             $old_solvent_etoxipropanol_currency = $row["solvent_etoxipropanol_currency"];
             $old_solvent_flexol82_price = $row['solvent_flexol82_price'];
@@ -256,6 +273,9 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
         $new_lacquer_matte_price = filter_input(INPUT_POST, "lacquer_matte_price");
         $new_lacquer_matte_currency = filter_input(INPUT_POST, "lacquer_matte_currency");
         $new_lacquer_matte_expense = filter_input(INPUT_POST, 'lacquer_matte_expense');
+        $new_lacquer_selective_price = filter_input(INPUT_POST, 'lacquer_selective_price');
+        $new_lacquer_selective_currency = filter_input(INPUT_POST, "lacquer_selective_currency");
+        $new_lacquer_selective_expense = filter_input(INPUT_POST, "lacquer_selective_expense");
         $new_solvent_etoxipropanol_price = filter_input(INPUT_POST, "solvent_etoxipropanol_price");
         $new_solvent_etoxipropanol_currency = filter_input(INPUT_POST, "solvent_etoxipropanol_currency");
         $new_solvent_flexol82_price = filter_input(INPUT_POST, 'solvent_flexol82_price');
@@ -290,7 +310,10 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
                 $old_lacquer_glossy_expense != $new_lacquer_glossy_expense ||
                 $old_lacquer_matte_price != $new_lacquer_matte_price ||
                 $old_lacquer_matte_currency != $new_lacquer_matte_currency ||
-                $old_lacquer_matte_expense != $new_lacquer_matte_expense ||
+                $old_lacquer_matte_expense != $new_lacquer_matte_expense || 
+                $old_lacquer_selective_price != $new_lacquer_selective_price || 
+                $old_lacquer_selective_currency != $new_lacquer_selective_currency || 
+                $old_lacquer_selective_expense != $new_lacquer_selective_expense ||
                 $old_solvent_etoxipropanol_price != $new_solvent_etoxipropanol_price ||
                 $old_solvent_etoxipropanol_currency != $new_solvent_etoxipropanol_currency || 
                 $old_solvent_flexol82_price != $new_solvent_flexol82_price || 
@@ -301,7 +324,7 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
                 $old_self_adhesive_laquer_currency != $new_self_adhesive_laquer_currency || 
                 $old_self_adhesive_laquer_expense != $new_self_adhesive_laquer_expense || 
                 $old_min_percent != $new_min_percent) {
-            $sql = "insert into norm_ink (c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent) values ($new_c_price, '$new_c_currency', $new_c_expense, $new_m_price, '$new_m_currency', $new_m_expense, $new_y_price, '$new_y_currency', $new_y_expense, $new_k_price, '$new_k_currency', $new_k_expense, $new_white_price, '$new_white_currency', $new_white_expense, $new_panton_price, '$new_panton_currency', $new_panton_expense, $new_lacquer_glossy_price, '$new_lacquer_glossy_currency', $new_lacquer_glossy_expense, $new_lacquer_matte_price, '$new_lacquer_matte_currency', $new_lacquer_matte_expense, $new_solvent_etoxipropanol_price, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82_price, '$new_solvent_flexol82_currency', $new_solvent_part, $new_min_price_per_ink, $new_self_adhesive_laquer_price, '$new_self_adhesive_laquer_currency', $new_self_adhesive_laquer_expense, $new_min_percent)";
+            $sql = "insert into norm_ink (c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, lacquer_selective_price, lacquer_selective_currency, lacquer_selective_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent) values ($new_c_price, '$new_c_currency', $new_c_expense, $new_m_price, '$new_m_currency', $new_m_expense, $new_y_price, '$new_y_currency', $new_y_expense, $new_k_price, '$new_k_currency', $new_k_expense, $new_white_price, '$new_white_currency', $new_white_expense, $new_panton_price, '$new_panton_currency', $new_panton_expense, $new_lacquer_glossy_price, '$new_lacquer_glossy_currency', $new_lacquer_glossy_expense, $new_lacquer_matte_price, '$new_lacquer_matte_currency', $new_lacquer_matte_expense, $new_lacquer_selective_price, '$new_lacquer_selective_currency', $new_lacquer_selective_expense, $new_solvent_etoxipropanol_price, '$new_solvent_etoxipropanol_currency', $new_solvent_flexol82_price, '$new_solvent_flexol82_currency', $new_solvent_part, $new_min_price_per_ink, $new_self_adhesive_laquer_price, '$new_self_adhesive_laquer_currency', $new_self_adhesive_laquer_expense, $new_min_percent)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -336,6 +359,9 @@ $lacquer_glossy_expense = "";
 $lacquer_matte_price = "";
 $lacquer_matte_currency = "";
 $lacquer_matte_expense = "";
+$lacquer_selective_price = "";
+$lacquer_selective_currency = "";
+$lacquer_selective_expense = "";
 $solvent_etoxipropanol_price = "";
 $solvent_etoxipropanol_currency = "";
 $solvent_flexol82_price = "";
@@ -347,7 +373,7 @@ $self_adhesive_laquer_currency = "";
 $self_adhesive_laquer_expense = "";
 $min_percent = "";
 
-$sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent from norm_ink order by date desc limit 1";
+$sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, lacquer_selective_price, lacquer_selective_currency, lacquer_selective_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent from norm_ink order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -378,6 +404,9 @@ if($row = $fetcher->Fetch()) {
     $lacquer_matte_price = $row["lacquer_matte_price"];
     $lacquer_matte_currency = $row["lacquer_matte_currency"];
     $lacquer_matte_expense = $row['lacquer_matte_expense'];
+    $lacquer_selective_price = $row['lacquer_selective_price'];
+    $lacquer_selective_currency = $row['lacquer_selective_currency'];
+    $lacquer_selective_expense = $row['lacquer_selective_expense'];
     $solvent_etoxipropanol_price = $row["solvent_etoxipropanol_price"];
     $solvent_etoxipropanol_currency = $row["solvent_etoxipropanol_currency"];
     $solvent_flexol82_price = $row['solvent_flexol82_price'];
@@ -626,6 +655,7 @@ if($row = $fetcher->Fetch()) {
                                 </div>
                             </div>
                         </div>
+                        is
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">
