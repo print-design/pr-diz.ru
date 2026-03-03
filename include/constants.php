@@ -49,6 +49,7 @@ const CMYK_KONTUR = "kontur";
 // Лак
 const LACQUER_GLOSSY = "glossy";
 const LACQUER_MATTE = "matte";
+const LACQUER_SELECTIVE = "selective";
     
 // Формы
 const CLICHE_OLD = "old";

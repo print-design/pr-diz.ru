@@ -2716,12 +2716,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <?php
                                         $glossy_selected = "";
                                         $matte_selected = "";
+                                        $selective_selected = "";
                                         
                                         $lacquer_var_selected = $$lacquer_var.'_selected';
                                         $$lacquer_var_selected = " selected='selected'";
                                         ?>
-                                        <option value="glossy"<?=$glossy_selected ?>>Глянцевый</option>
-                                        <option value="matte"<?=$matte_selected ?>>Матовый</option>
+                                        <option value="<?= LACQUER_GLOSSY ?>"<?=$glossy_selected ?>>Глянцевый</option>
+                                        <option value="<?= LACQUER_MATTE ?>"<?=$matte_selected ?>>Матовый</option>
+                                        <option value="<?= LACQUER_SELECTIVE ?>"<?=$selective_selected ?>>Выборочный</option>
                                     </select>
                                     <div class="invalid-feedback">Выберите лак</div>
                                 </div>
@@ -2932,12 +2934,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <?php
                                         $glossy_run2_selected = "";
                                         $matte_run2_selected = "";
+                                        $selective_run2_selected = "";
                                         
                                         $lacquer_run2_var_selected = $$lacquer_run2_var.'_run2_selected';
                                         $$lacquer_run2_var_selected = " selected='selected'";
                                         ?>
-                                        <option value="glossy"<?=$glossy_run2_selected ?>>Глянцевый</option>
-                                        <option value="matte"<?=$matte_run2_selected ?>>Матовый</option>
+                                        <option value="<?= LACQUER_GLOSSY ?>"<?=$glossy_run2_selected ?>>Глянцевый</option>
+                                        <option value="<?= LACQUER_MATTE ?>"<?=$matte_run2_selected ?>>Матовый</option>
+                                        <option value="<?=LACQUER_SELECTIVE ?>">Выборочный</option>
                                     </select>
                                     <div class="invalid-feedback">Выберите лак</div>
                                 </div>

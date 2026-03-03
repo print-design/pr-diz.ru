@@ -655,7 +655,32 @@ if($row = $fetcher->Fetch()) {
                                 </div>
                             </div>
                         </div>
-                        is
+                        <div class="d-table-row">
+                            <div class="d-table-cell pr-3">
+                                <div class="form-group">
+                                    <label for="lacquer_selective_price">Чистый лак выборочный (за кг)</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control float-only<?=$lacquer_selective_price_valid ?>" id="lacquer_selective_price" name="lacquer_selective_price" value="<?= empty($lacquer_selective_price) || $lacquer_selective_price == 0.0 ? "" : floatval($lacquer_selective_price) ?>" placeholder="Цена, за кг" required="required" autocomplete="off" />
+                                        <div class="input-group-append">
+                                            <select id="lacquer_selective_currency" name="lacquer_selective_currency" required="required">
+                                                <option value="" hidden="">...</option>
+                                                <option value="<?= CURRENCY_RUB ?>"<?=$lacquer_selective_currency == CURRENCY_RUB ? " selected='selected'" : "" ?>>Руб</option>
+                                                <option value="<?= CURRENCY_USD ?>"<?=$lacquer_selective_currency == CURRENCY_USD ? " selected='selected'" : "" ?>>USD</option>
+                                                <option value="<?= CURRENCY_EURO ?>"<?=$lacquer_selective_currency == CURRENCY_EURO ? " selected='selected'" : "" ?>>EUR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">Чистый Лак выборочный обязательно</div>
+                                </div>
+                            </div>
+                            <div class="d-table-cell pl-3">
+                                <div class="form-group">
+                                    <label for="lacquer_selective_expense">Расход смеси лака выборочного (г/м<sup>2</sup>)</label>
+                                    <input type="text" class="form-control float-only<?=$lacquer_selective_expense_valid ?>" id="lacquer_selective_expense" name="lacquer_selective_expense" value="<?= empty($lacquer_selective_expense) || $lacquer_selective_expense = 0.0 ? "" : floatval($lacquer_selective_expense) ?>" placeholder="Расход смеси лака выборочного (г/м2)" required="required" autocomplete="off" />
+                                    <div class="invalid-feedback">Расход смеси лака выборочного обязательного</div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-table-row">
                             <div class="d-table-cell pr-3">
                                 <div class="form-group">

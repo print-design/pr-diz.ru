@@ -101,6 +101,9 @@ class DataInk {
     public $lacquer_matte_price;
     public $lacquer_matte_currency;
     public $lacquer_matte_expense;
+    public $lacquer_selective_price;
+    public $lacquer_selective_currency;
+    public $lacquer_selective_expense;
     public $solvent_etoxipropanol_price;
     public $solvent_etoxipropanol_currency;
     public $solvent_flexol82_price;
@@ -113,7 +116,7 @@ class DataInk {
     public $min_percent; // Минимальный процент запечатки
     
     // Конструктор
-    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_glossy_expense, $lacquer_matte_price, $lacquer_matte_currency, $lacquer_matte_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price_per_ink, $self_adhesive_laquer_price, $self_adhesive_laquer_currency, $self_adhesive_laquer_expense, $min_percent) {
+    public function __construct($c_price, $c_currency, $c_expense, $m_price, $m_currency, $m_expense, $y_price, $y_currency, $y_expense, $k_price, $k_currency, $k_expense, $white_price, $white_currency, $white_expense, $panton_price, $panton_currency, $panton_expense, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_glossy_expense, $lacquer_matte_price, $lacquer_matte_currency, $lacquer_matte_expense, $lacquer_selective_price, $lacquer_selective_currency, $lacquer_selective_expense, $solvent_etoxipropanol_price, $solvent_etoxipropanol_currency, $solvent_flexol82_price, $solvent_flexol82_currency, $solvent_part, $min_price_per_ink, $self_adhesive_laquer_price, $self_adhesive_laquer_currency, $self_adhesive_laquer_expense, $min_percent) {
         $this->c_price = $c_price;
         $this->c_currency = $c_currency;
         $this->c_expense = $c_expense;
@@ -138,6 +141,9 @@ class DataInk {
         $this->lacquer_matte_price = $lacquer_matte_price;
         $this->lacquer_matte_currency = $lacquer_matte_currency;
         $this->lacquer_matte_expense = $lacquer_matte_expense;
+        $this->lacquer_selective_price = $lacquer_selective_price;
+        $this->lacquer_selective_currency = $lacquer_selective_currency;
+        $this->lacquer_selective_expense = $lacquer_selective_expense;
         $this->solvent_etoxipropanol_price = $solvent_etoxipropanol_price;
         $this->solvent_etoxipropanol_currency = $solvent_etoxipropanol_currency;
         $this->solvent_flexol82_price = $solvent_flexol82_price;
@@ -475,7 +481,7 @@ class CalculationBase {
     }
     
     // Получение цены на краску
-    function GetInkPrice($ink, $cmyk, $lacquer, $c_price, $c_currency, $m_price, $m_currency, $y_price, $y_currency, $k_price, $k_currency, $panton_price, $panton_currency, $white_price, $white_currency, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_matte_price, $lacquer_matte_currency) {
+    function GetInkPrice($ink, $cmyk, $lacquer, $c_price, $c_currency, $m_price, $m_currency, $y_price, $y_currency, $k_price, $k_currency, $panton_price, $panton_currency, $white_price, $white_currency, $lacquer_glossy_price, $lacquer_glossy_currency, $lacquer_matte_price, $lacquer_matte_currency, $lacquer_selective_price, $lacquer_selective_currency) {
         switch ($ink) {
             case INK_CMYK:
                 switch ($cmyk) {
@@ -506,6 +512,9 @@ class CalculationBase {
                     case LACQUER_MATTE:
                         return new DataPrice($lacquer_matte_price, $lacquer_matte_currency);
                         
+                    case LACQUER_SELECTIVE:
+                        return new DataPrice($lacquer_selective_price, $lacquer_selective_currency);
+                        
                     default :
                         return new DataPrice($lacquer_glossy_price, $lacquer_glossy_currency);
                 }
@@ -516,7 +525,7 @@ class CalculationBase {
     }
     
     // Получение расхода краски
-    function GetInkExpense($ink, $cmyk, $lacquer, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_glossy_expense, $lacquer_matte_expense) {
+    function GetInkExpense($ink, $cmyk, $lacquer, $c_expense, $m_expense, $y_expense, $k_expense, $panton_expense, $white_expense, $lacquer_glossy_expense, $lacquer_matte_expense, $lacquer_selective_expense) {
         switch ($ink) {
             case INK_CMYK:
                 switch ($cmyk) {
@@ -542,6 +551,9 @@ class CalculationBase {
                 switch($lacquer) {
                     case LACQUER_MATTE:
                         return $lacquer_matte_expense;
+                        
+                    case LACQUER_SELECTIVE:
+                        return $lacquer_selective_expense;
                         
                     default :
                         return $lacquer_glossy_expense;
@@ -1063,11 +1075,11 @@ class CalculationBase {
                 $data_gap = new DataGap($row['gap_raport'], $row['gap_stream'], $row['ski']);
             }
             
-            $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent "
+            $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, lacquer_selective_price, lacquer_selective_currency, lacquer_selective_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent "
                     . "from norm_ink where date <= '$date' order by id desc limit 1";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
-                $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_glossy_price'], $row['lacquer_glossy_currency'], $row['lacquer_glossy_expense'], $row['lacquer_matte_price'], $row['lacquer_matte_currency'], $row['lacquer_matte_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price_per_ink'], $row['self_adhesive_laquer_price'], $row['self_adhesive_laquer_currency'], $row['self_adhesive_laquer_expense'], $row['min_percent']);
+                $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_glossy_price'], $row['lacquer_glossy_currency'], $row['lacquer_glossy_expense'], $row['lacquer_matte_price'], $row['lacquer_matte_currency'], $row['lacquer_matte_expense'], $row['lacquer_selective_price'], $row['lacquer_selective_currency'], $row['lacquer_selective_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price_per_ink'], $row['self_adhesive_laquer_price'], $row['self_adhesive_laquer_currency'], $row['self_adhesive_laquer_expense'], $row['min_percent']);
             }
             
             if(empty($laminator_id)) {
@@ -1989,7 +2001,7 @@ class Calculation extends CalculationBase {
             $percent = "percent_$i";
             
             // Цена 1 кг чистой краски, руб
-            $price = $this->GetInkPrice($$ink, $$cmyk, $$lacquer, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency);
+            $price = $this->GetInkPrice($$ink, $$cmyk, $$lacquer, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency, $this->data_ink->lacquer_selective_price, $this->data_ink->lacquer_selective_currency);
             $ink_kg_price = $price->value * self::GetCurrencyRate($price->currency, $this->usd, $this->euro);
             $this->ink_kg_prices[$i] = $ink_kg_price;
             
@@ -1998,7 +2010,7 @@ class Calculation extends CalculationBase {
             $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
             // Расход КраскаСмеси, кг
-            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense) * $$percent / 1000 / 100;
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense, $this->data_ink->lacquer_selective_expense) * $$percent / 1000 / 100;
             $this->ink_expenses[$i] = $ink_expense;
             
             // Стоимость КраскаСмеси, руб
@@ -2063,7 +2075,7 @@ class Calculation extends CalculationBase {
             $percent_run2 = "percent_run2_$i";
             
             // Цена 1 кг чистой краски, руб
-            $price = $this->GetInkPrice($$ink_run2, $$cmyk_run2, $$lacquer_run2, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency);
+            $price = $this->GetInkPrice($$ink_run2, $$cmyk_run2, $$lacquer_run2, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency, $this->data_ink->lacquer_selective_price, $this->data_ink->lacquer_selective_currency);
             $ink_kg_price = $price->value * self::GetCurrencyRate($price->currency, $this->usd, $this->euro);
             $this->ink_kg_prices_run2[$i] = $ink_kg_price;
             
@@ -2072,7 +2084,7 @@ class Calculation extends CalculationBase {
             $this->mix_ink_kg_prices_run2[$i] = $mix_ink_kg_price;
             
             // Расход КраскаСмеси, кг
-            $ink_expense = $this->print_area * $this->GetInkExpense($$ink_run2, $$cmyk_run2, $$lacquer_run2, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense) * $$percent_run2 / 1000 / 100;
+            $ink_expense = $this->print_area * $this->GetInkExpense($$ink_run2, $$cmyk_run2, $$lacquer_run2, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense, $this->data_ink->lacquer_selective_expense) * $$percent_run2 / 1000 / 100;
             $this->ink_expenses_run2[$i] = $ink_expense;
             
             // Стоимость КраскаСмеси, руб
@@ -2745,7 +2757,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             }
             else {
                 // Цена 1 кг чистой краски, руб
-                $ink_price = $this->GetInkPrice($$ink, $$cmyk, $$lacquer, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency);
+                $ink_price = $this->GetInkPrice($$ink, $$cmyk, $$lacquer, $this->data_ink->c_price, $this->data_ink->c_currency, $this->data_ink->m_price, $this->data_ink->m_currency, $this->data_ink->y_price, $this->data_ink->y_currency, $this->data_ink->k_price, $this->data_ink->k_currency, $this->data_ink->panton_price, $this->data_ink->panton_currency, $this->data_ink->white_price, $this->data_ink->white_currency, $this->data_ink->lacquer_glossy_price, $this->data_ink->lacquer_glossy_currency, $this->data_ink->lacquer_matte_price, $this->data_ink->lacquer_matte_currency, $this->data_ink->lacquer_selective_price, $this->data_ink->lacquer_selective_currency);
                 $ink_kg_price = $ink_price->value * self::GetCurrencyRate($ink_price->currency, $this->usd, $this->euro);
                 $this->ink_kg_prices[$i] = $ink_kg_price;
             
@@ -2754,7 +2766,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $this->mix_ink_kg_prices[$i] = $mix_ink_kg_price;
             
                 // Расход КраскаСмеси, кг
-                $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense) * $$percent / 1000 / 100;
+                $ink_expense = $this->print_area * $this->GetInkExpense($$ink, $$cmyk, $$lacquer, $this->data_ink->c_expense, $this->data_ink->m_expense, $this->data_ink->y_expense, $this->data_ink->k_expense, $this->data_ink->panton_expense, $this->data_ink->white_expense, $this->data_ink->lacquer_glossy_expense, $this->data_ink->lacquer_matte_expense, $this->data_ink->lacquer_selective_expense) * $$percent / 1000 / 100;
                 $this->ink_expenses[$i] = $ink_expense;
             
                 // Стоимость КраскаСмеси, руб

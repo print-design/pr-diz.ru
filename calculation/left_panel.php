@@ -181,6 +181,9 @@ function GetSkiNameExt($param, $param_width) {
                     case LACQUER_MATTE:
                         echo 'матовый';
                         break;
+                    case LACQUER_SELECTIVE:
+                        echo 'выборочный';
+                        break;
                 }
             }
             ?>
@@ -270,6 +273,9 @@ function GetSkiNameExt($param, $param_width) {
                         break;
                     case LACQUER_MATTE:
                         echo 'матовый';
+                        break;
+                    case LACQUER_SELECTIVE:
+                        echo 'выборочный';
                         break;
                 }
             }

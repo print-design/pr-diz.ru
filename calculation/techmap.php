@@ -716,6 +716,9 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                                 case LACQUER_MATTE:
                                                     echo 'Лак матовый';
                                                     break;
+                                                case LACQUER_SELECTIVE:
+                                                    echo 'Лак выборочный';
+                                                    break;
                                                 default :
                                                     echo 'Лак';
                                                     break;
@@ -1327,6 +1330,9 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                             case LACQUER_MATTE:
                                                 echo 'Лак матовый';
                                                 break;
+                                            case LACQUER_SELECTIVE:
+                                                echo 'Лак выборочный';
+                                                break;
                                             default :
                                                 echo "Лак";
                                                 break;
@@ -1472,6 +1478,9 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                                 break;
                                             case LACQUER_MATTE:
                                                 echo 'Лак матовый';
+                                                break;
+                                            case LACQUER_SELECTIVE:
+                                                echo 'Лак выборочный';
                                                 break;
                                             default :
                                                 echo 'Лак';

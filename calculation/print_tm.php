@@ -525,6 +525,9 @@ $current_date_time = date("dmYHis");
                                             case LACQUER_MATTE:
                                                 echo 'Лак матовый';
                                                 break;
+                                            case LACQUER_SELECTIVE:
+                                                echo 'Лак выборочный';
+                                                break;
                                             default :
                                                 echo "Лак";
                                                 break;
@@ -982,6 +985,9 @@ $current_date_time = date("dmYHis");
                                                 break;
                                             case LACQUER_MATTE:
                                                 echo 'Лак матовый';
+                                                break;
+                                            case LACQUER_SELECTIVE:
+                                                echo 'Лак выборочный';
                                                 break;
                                             default :
                                                 echo 'Лак';

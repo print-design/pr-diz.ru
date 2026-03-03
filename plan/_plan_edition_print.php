@@ -149,6 +149,14 @@
                                 $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
                                 array_push($color_lines, "<span class='text-nowrap'>Лак матовый - ".DisplayNumber($color_weight, 2)." кг</span>");
                                 break;
+                            case LACQUER_SELECTIVE:
+                                $ink_expense = $this->plan_shift->timetable->ink_expenses[LACQUER_SELECTIVE];
+                                if($this->edition['work_type_id'] == WORK_TYPE_SELF_ADHESIVE) {
+                                    $ink_expense = $this->plan_shift->timetable->ink_expenses[WORK_TYPE_SELF_ADHESIVE];
+                                }
+                                $color_weight = $print_area * $ink_expense * $this->edition['percent_'.$i] / 1000 / 100;
+                                array_push($color_lines, "<span class='text-nowrap'>Лак выборочный - ".DisplayNumber($color_weight, 2)." кг</span>");
+                                break;
                         }
                         break;
                 }

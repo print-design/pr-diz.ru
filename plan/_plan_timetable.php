@@ -249,7 +249,7 @@ class PlanTimetable {
         }
         
         // Расход краски на 1 м2
-        $sql_ink = "select c_expense, m_expense, y_expense, k_expense, white_expense, panton_expense, lacquer_glossy_expense, lacquer_matte_expense, self_adhesive_laquer_expense from norm_ink order by id desc limit 1";
+        $sql_ink = "select c_expense, m_expense, y_expense, k_expense, white_expense, panton_expense, lacquer_glossy_expense, lacquer_matte_expense, lacquer_selective_expense, self_adhesive_laquer_expense from norm_ink order by id desc limit 1";
         $fetcher_ink = new Fetcher($sql_ink);
         if($row = $fetcher_ink->Fetch()) {
             $this->ink_expenses[CMYK_CYAN] = $row['c_expense'];
@@ -260,6 +260,7 @@ class PlanTimetable {
             $this->ink_expenses[INK_PANTON] = $row['panton_expense'];
             $this->ink_expenses[LACQUER_GLOSSY] = $row['lacquer_glossy_expense'];
             $this->ink_expenses[LACQUER_MATTE] = $row['lacquer_matte_expense'];
+            $this->ink_expenses[LACQUER_SELECTIVE] = $row['lacquer_selective_expense'];
             $this->ink_expenses[WORK_TYPE_SELF_ADHESIVE] = $row['self_adhesive_laquer_expense'];
         }
     }
