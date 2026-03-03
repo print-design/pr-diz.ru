@@ -1318,7 +1318,7 @@ class Calculation extends CalculationBase {
     public $area_pure_1, $area_pure_2, $area_pure_3; // м2 чистые, м2 (рассчитывается: вес / плотность)
     public $length_pure_start_1, $length_pure_start_2, $length_pure_start_3; // м пог чистые, м
     public $waste_length_1, $waste_length_1_run2, $waste_length_2, $waste_length_3; // СтартСтопОтход, м
-    public $length_dirty_start_1, $length_dirty_start_2, $length_dirty_start_3; // м пог грязные, м
+    public $length_dirty_start_1, $length_dirty_start_1_run2, $length_dirty_start_2, $length_dirty_start_3; // м пог грязные, м
     public $area_dirty_1, $area_dirty_2, $area_dirty_3; // м2 грязные, м2
     public $weight_pure_1, $weight_pure_2, $weight_pure_3; // масса плёнки чистая, кг
     public $length_pure_1, $length_pure_2, $length_pure_3; // длина плёнки чистая, м
@@ -1774,6 +1774,9 @@ class Calculation extends CalculationBase {
         
         // М пог грязные 1, м
         $this->length_dirty_start_1 = $this->length_pure_start_1 + ($this->ink_number * $this->data_priladka->length) + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_1 + ($this->ink_run2_number * $this->data_priladka->length_run2) + $this->waste_length_1_run2;
+        
+        // М пог грязные 1 второй прогон, м
+        $this->length_dirty_start_1_run2 = $this->length_pure_start_1 + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_1 + ($this->ink_run2_number * $this->data_priladka->length_run2) + $this->waste_length_1_run2;
         
         // М пог грязные 2, м
         $this->length_dirty_start_2 = $this->length_pure_start_2 + ($this->laminations_number * $this->data_priladka_laminator->length) + $this->waste_length_2; 
