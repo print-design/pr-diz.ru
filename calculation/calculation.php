@@ -1333,7 +1333,7 @@ class Calculation extends CalculationBase {
     public $film_cost_1, $film_cost_2, $film_cost_3; // стоимость плёнки грязная, руб
     public $priladka_time_1, $priladka_time_1_run2, $priladka_time_2, $priladka_time_3; // время приладки, мин
     public $print_time_1, $print_time_1_run2, $lamination_time_2, $lamination_time_3; // время печати или ламинации без приладки, ч
-    public $work_time_1, $work_time_2, $work_time_3; // время печати или ламинации с приладкой, ч
+    public $work_time_1, $work_time_1_run2, $work_time_2, $work_time_3; // время печати или ламинации с приладкой, ч
     public $work_cost_1, $work_cost_2, $work_cost_3; // стоимость печати или ламирации с приладкой, руб
     public $print_area; // площадь запечатки
     public $ink_1kg_mix_weight; // расход КраскаСмеси на 1 кг краски, кг
@@ -1892,6 +1892,9 @@ class Calculation extends CalculationBase {
         
         // Общее время выполнения тиража 1, ч
         $this->work_time_1 = $this->priladka_time_1 + $this->print_time_1;
+        
+        // Общее время выполнения тиража 1 второй прогон, ч
+        $this->work_time_1_run2 = $this->priladka_time_1_run2 + $this->print_time_1_run2;
          
         // Общее время выполнения тиража 2, ч
         $this->work_time_2 = $this->priladka_time_2 + $this->lamination_time_2;

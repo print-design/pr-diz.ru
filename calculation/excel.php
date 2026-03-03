@@ -645,6 +645,12 @@ if(!empty($id)) {
     $sheet->setCellValue("D$rowindex", "=".$calculation->priladka_time_1."+".$calculation->print_time_1);
     $sheet->setCellValue("E$rowindex", "время приладки 1 + время печати");
     
+    $sheet->setCellValue('A'.(++$rowindex), "Общее время выполнения тиража 1 второй прогон, ч");
+    $sheet->setCellValue("B$rowindex", $calculation->work_time_1_run2);
+    $sheet->setCellValue("C$rowindex", "|= ". DisplayNumber($calculation->priladka_time_1_run2, 5)." + ". DisplayNumber($calculation->print_time_1_run2, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->priladka_time_1_run2."+".$calculation->print_time_1_run2);
+    $sheet->setCellValue("E$rowindex", "время приладки 1 второй прогон + время печати второй прогон");
+    
     $sheet->setCellValue('A'.(++$rowindex), "Общее время выполнения тиража 2, ч");
     $sheet->setCellValue("B$rowindex", $calculation->work_time_2);
     $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->priladka_time_2, 5)." + ".DisplayNumber($calculation->lamination_time_2, 5));
