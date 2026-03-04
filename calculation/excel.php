@@ -1154,7 +1154,12 @@ if(!empty($id)) {
             $total_cliche_cost_formula .= " + ";
         }
         
-        if(!empty($total_cli))
+        if(!empty($total_cliche_cost_result)) {
+            $total_cliche_cost_result .= "+";
+        }
+        
+        $total_cliche_cost_formula .= DisplayNumber($calculation->cliche_costs_run2[$i], 5);
+        $total_cliche_cost_result .= $calculation->cliche_costs_run2[$i];
     }
     
     $sheet->setCellValue('A'.(++$rowindex), "Себестоимость ПФ, руб");
