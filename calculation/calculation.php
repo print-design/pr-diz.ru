@@ -2252,8 +2252,14 @@ class Calculation extends CalculationBase {
             $this->scotch_costs[$i] = $this->cliche_area * $this->data_cliche->scotch_price * self::GetCurrencyRate($this->data_cliche->scotch_currency, $this->usd, $this->euro);
         }
         
+        $this->scotch_costs_run2 = array();
+        
+        for($i = 1; $i <= $this->ink_run2_number; $i++) {
+            $this->scotch_costs_run2[$i] = $this->cliche_area * $this->data_cliche->scotch_price * self::GetCurrencyRate($this->data_cliche->scotch_currency, $this->usd, $this->euro);
+        }
+        
         // Общая себестоимость скотча
-        $this->scotch_cost = array_sum($this->scotch_costs);
+        $this->scotch_cost = array_sum($this->scotch_costs) + array_sum($this->scotch_costs_run2);
         
         //********************************************
         // НАЦЕНКА

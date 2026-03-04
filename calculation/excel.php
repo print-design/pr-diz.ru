@@ -1058,6 +1058,32 @@ if(!empty($id)) {
         $sheet->setCellValue("E$rowindex", "площадь формы цвет $i, м2 * цена скотча за м2 * курс валюты");
     }
     
+    for($i = 1; $i <= $calculation->ink_run2_number; $i++) {
+        if(!empty($scotch_formula)) {
+            $scotch_formula .= " + ";
+        }
+        
+        if(!empty($scotch_result)) {
+            $scotch_result .= "+";
+        }
+        
+        if(!empty($scotch_comment)) {
+            $scotch_comment .= " + ";
+        }
+        
+        $scotch_formula .= DisplayNumber($calculation->scotch_costs_run2[$i], 5);
+        $scotch_result .= $calculation->scotch_costs_run2[$i];
+        $scotch_comment .= "стоимость скотча цвет $i второй прогон";
+        
+        $cliche_area = $calculation->cliche_area;
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Стоимость скотча Цвет $i второй прогон, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->scotch_costs_run2[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($calculation->data_cliche->scotch_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($calculation->data_cliche->scotch_currency, $calculation->usd, $calculation->euro), 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$calculation->data_cliche->scotch_price."*".$calculation->GetCurrencyRate($calculation->data_cliche->scotch_currency, $calculation->usd, $calculation->euro));
+        $sheet->setCellValue("E$rowindex", "площадь формы цвет $i, м2 * цена скотча за м2 * курс валюты");
+    }
+    
     $sheet->setCellValue('A'.(++$rowindex), "Общая себестоимость скотча, руб");
     $sheet->setCellValue("B$rowindex", $calculation->scotch_cost);
     $sheet->setCellValue("C$rowindex", "|= ".$scotch_formula);
@@ -1099,7 +1125,7 @@ if(!empty($id)) {
     $total_ink_expense_formula = "";
     $total_ink_expense_result = "";
         
-    for($i=1; $i<=$calculation->ink_number; $i++) {
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
         if(!empty($total_ink_cost_formula)) {
             $total_ink_cost_formula .= " + ";
             $total_ink_cost_result .= "+";
