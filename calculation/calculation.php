@@ -2316,7 +2316,7 @@ class Calculation extends CalculationBase {
         }
         
         for($i = 1; $i <= $this->ink_run2_number; $i++) {
-            $this->ink_costs_final_run2[$i];
+            $this->ink_cost += $this->ink_costs_final_run2[$i];
         }
         
         // Общий расход всех КраскаСмеси

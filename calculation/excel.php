@@ -1166,6 +1166,22 @@ if(!empty($id)) {
         $total_ink_expense_result .= $calculation->ink_expenses[$i];
     }
     
+    for($i = 1; $i <= $calculation->ink_run2_number; $i++) {
+        if(!empty($total_ink_cost_formula)) {
+            $total_ink_cost_formula .= " + ";
+            $total_ink_cost_result .= "+";
+        }
+        $total_ink_cost_formula .= DisplayNumber($calculation->ink_costs_final_run2[$i], 5);
+        $total_ink_cost_result .= $calculation->ink_costs_final_run2[$i];
+        
+        if(!empty($total_ink_expense_formula)) {
+            $total_ink_expense_formula .= " + ";
+            $total_ink_expense_result .= "+";
+        }
+        $total_ink_expense_formula .= DisplayNumber($calculation->ink_expenses_run2[$i], 5);
+        $total_ink_expense_result .= $calculation->ink_expenses_run2[$i];
+    }
+    
     $sheet->setCellValue('A'.(++$rowindex), "Стоимость краски, руб");
     $sheet->setCellValue("B$rowindex", $calculation->ink_cost);
     $sheet->setCellValue("C$rowindex", "|= ".$total_ink_cost_formula);
