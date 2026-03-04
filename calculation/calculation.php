@@ -1392,7 +1392,9 @@ class Calculation extends CalculationBase {
     public $cliche_area; // площадь формы, м2
     public $cliche_new_number; // количество новых форм
     public $cliche_costs; // массив: стоимость каждой формы, руб
+    public $cliche_costs_run2; // массив: стоимость каждой фоормы, Второй прогон, руб
     public $scotch_costs; // массив: стоимость скотча
+    public $scotch_costs_run2; // массив: стоимость скотча, второй прогон
     public $scotch_cost; // общая себестоимость скотча
     
     public $extracharge = 0; // Наценка на тираж
@@ -2178,6 +2180,7 @@ class Calculation extends CalculationBase {
         
         // Создаём массив стоимостей каждой формы
         $this->cliche_costs = array();
+        $this->cliche_costs_run2 = array();
         
         // Количество новых форм
         $this->cliche_new_number = 0;
@@ -2210,6 +2213,33 @@ class Calculation extends CalculationBase {
             $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $this->usd, $this->euro);
             $this->cliche_costs[$i] = $cliche_cost;
         }
+        
+        // Второй прогон
+        for($i = 1; $i <= $this->ink_run2_number; $i++) {
+            $cliche_run2 = "cliche_run2_$i";
+            
+            if(!empty($$cliche_run2) && $$cliche_run2 != CLICHE_OLD) {
+                $this->cliche_new_number += 1;
+            }
+            
+            $cliche_sm_price = 0;
+            $cliche_currency = "";
+            
+            switch($$cliche_run2) {
+                case CLICHE_FLINT:
+                    $cliche_sm_price = $this->data_cliche->flint_price;
+                    $cliche_currency = $this->data_cliche->flint_currency;
+                    break;
+                
+                case CLICHE_KODAK:
+                    $cliche_sm_price = $this->data_cliche->kodak_price;
+                    $cliche_currency = $this->data_cliche->kodak_currency;
+                    break;
+            }
+            
+            $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $this->usd, $this->euro);
+            $this->cliche_costs_run2[$i] = $cliche_cost;
+        }        
         
         //********************************************
         // Стоимость скотча
@@ -2279,11 +2309,19 @@ class Calculation extends CalculationBase {
             $this->ink_cost += $this->ink_costs_final[$i];
         }
         
+        for($i = 1; $i <= $this->ink_run2_number; $i++) {
+            $this->ink_costs_final_run2[$i];
+        }
+        
         // Общий расход всех КраскаСмеси
         $this->ink_expense = 0;
         
         for($i = 1; $i <= $this->ink_number; $i++) {
             $this->ink_expense += $this->ink_expenses[$i];
+        }
+        
+        for($i = 1; $i <= $this->ink_run2_number; $i++) {
+            $this->ink_expense += $this->ink_expenses_run2[$i];
         }
         
         // Общая стоимость всех КлеяСмеси
@@ -2294,6 +2332,10 @@ class Calculation extends CalculationBase {
         
         for($i = 1; $i <= $this->ink_number; $i++) {
             $this->cliche_cost += $this->cliche_costs[$i];
+        }
+        
+        for($i = 1; $i <= $this->ink_run2_number; $i++) {
+            //$this->cliche_cost += $this->cli
         }
         
         // Отгрузочная стоимость ПФ

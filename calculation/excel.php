@@ -1136,7 +1136,7 @@ if(!empty($id)) {
     $total_cliche_cost_formula = "";
     $total_cliche_cost_result = "";
         
-    for($i=1; $i<=$calculation->ink_number; $i++) {
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
         if(!empty($total_cliche_cost_formula)) {
             $total_cliche_cost_formula .= " + ";
         }
@@ -1147,6 +1147,14 @@ if(!empty($id)) {
         
         $total_cliche_cost_formula .= DisplayNumber($calculation->cliche_costs[$i], 5);
         $total_cliche_cost_result .= $calculation->cliche_costs[$i];
+    }
+    
+    for($i = 1; $i <= $calculation->ink_run2_number; $i++) {
+        if(!empty($total_cliche_cost_formula)) {
+            $total_cliche_cost_formula .= " + ";
+        }
+        
+        if(!empty($total_cli))
     }
     
     $sheet->setCellValue('A'.(++$rowindex), "Себестоимость ПФ, руб");
