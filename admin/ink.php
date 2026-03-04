@@ -233,9 +233,9 @@ if(null !== filter_input(INPUT_POST, 'norm_ink_submit')) {
             $old_lacquer_matte_price = $row['lacquer_matte_price'];
             $old_lacquer_matte_currency = $row['lacquer_matte_currency'];
             $old_lacquer_matte_expense = $row['lacquer_matte_expense'];
-            $old_lacquer_selective_price = $row['old_lacquer_selective_price'];
-            $old_lacquer_selective_currency = $row['old_lacquer_selective_currency'];
-            $old_lacquer_selective_expense = $row['old_lacquer_selective_expense'];
+            $old_lacquer_selective_price = $row['lacquer_selective_price'];
+            $old_lacquer_selective_currency = $row['lacquer_selective_currency'];
+            $old_lacquer_selective_expense = $row['lacquer_selective_expense'];
             $old_solvent_etoxipropanol_price = $row["solvent_etoxipropanol_price"];
             $old_solvent_etoxipropanol_currency = $row["solvent_etoxipropanol_currency"];
             $old_solvent_flexol82_price = $row['solvent_flexol82_price'];
@@ -676,7 +676,7 @@ if($row = $fetcher->Fetch()) {
                             <div class="d-table-cell pl-3">
                                 <div class="form-group">
                                     <label for="lacquer_selective_expense">Расход смеси лака выборочного (г/м<sup>2</sup>)</label>
-                                    <input type="text" class="form-control float-only<?=$lacquer_selective_expense_valid ?>" id="lacquer_selective_expense" name="lacquer_selective_expense" value="<?= empty($lacquer_selective_expense) || $lacquer_selective_expense = 0.0 ? "" : floatval($lacquer_selective_expense) ?>" placeholder="Расход смеси лака выборочного (г/м2)" required="required" autocomplete="off" />
+                                    <input type="text" class="form-control float-only<?=$lacquer_selective_expense_valid ?>" id="lacquer_selective_expense" name="lacquer_selective_expense" value="<?= empty($lacquer_selective_expense) || $lacquer_selective_expense == 0.0 ? "" : floatval($lacquer_selective_expense) ?>" placeholder="Расход смеси лака выборочного (г/м2)" required="required" autocomplete="off" />
                                     <div class="invalid-feedback">Расход смеси лака выборочного обязательного</div>
                                 </div>
                             </div>
