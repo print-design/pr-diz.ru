@@ -2270,7 +2270,7 @@ class Calculation extends CalculationBase {
         $this->film_cost = $this->film_cost_1 + $this->film_cost_2 + $this->film_cost_3;
         
         // Общая стоимость трудозатрат
-        $this->work_cost = $this->work_cost_1 + $this->work_cost_2 + $this->work_cost_3;
+        $this->work_cost = $this->work_cost_1 + $this->work_cost_1_run2 + $this->work_cost_2 + $this->work_cost_3;
         
         // Общая стоимость всех КраскаСмеси
         $this->ink_cost = 0;

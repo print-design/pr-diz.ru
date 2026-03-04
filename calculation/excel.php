@@ -1090,9 +1090,9 @@ if(!empty($id)) {
     
     $sheet->setCellValue('A'.(++$rowindex), "Общая стоимость работ, руб");
     $sheet->setCellValue("B$rowindex", $calculation->work_cost);
-    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_cost_1, 5)." + ".DisplayNumber($calculation->work_cost_2, 5)." + ".DisplayNumber($calculation->work_cost_3, 5));
-    $sheet->setCellValue("D$rowindex", "=".$calculation->work_cost_1."+".$calculation->work_cost_2."+".$calculation->work_cost_3);
-    $sheet->setCellValue("E$rowindex", "стоимость выполнения тиража 1 + стоимость выполнения тиража 2 + стоимость выполнения тиража 3");
+    $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->work_cost_1, 5)." + ". DisplayNumber($calculation->work_cost_1_run2, 5)." + ".DisplayNumber($calculation->work_cost_2, 5)." + ".DisplayNumber($calculation->work_cost_3, 5));
+    $sheet->setCellValue("D$rowindex", "=".$calculation->work_cost_1."+".$calculation->work_cost_1_run2."+".$calculation->work_cost_2."+".$calculation->work_cost_3);
+    $sheet->setCellValue("E$rowindex", "стоимость выполнения тиража 1 + стоимость выполнения тиража 1 второй прогон + стоимость выполнения тиража 2 + стоимость выполнения тиража 3");
         
     $total_ink_cost_formula = "";
     $total_ink_cost_result = "";
