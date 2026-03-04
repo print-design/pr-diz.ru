@@ -1019,7 +1019,7 @@ class CalculationBase {
         $data_machine = new DataMachine(null, null, null, null, null, null);
         $data_laminator = new DataLaminator(null, null, null);
         $data_gap = new DataGap(null, null, null);
-        $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $data_ink = new DataInk(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         $data_glue = new DataGlue(null, null, null, null, null, null, null);
         $data_cliche = new DataCliche(null, null, null, null, null, null);
         $data_extracharge = array();
