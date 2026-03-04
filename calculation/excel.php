@@ -997,7 +997,7 @@ if(!empty($id)) {
     $sheet->setCellValue("D$rowindex", "");
     $sheet->setCellValue("E$rowindex", "");
         
-    for($i=1; $i<=$calculation->ink_number; $i++) {
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
         $cliche = "cliche_$i";
             
         $cliche_sm_price = 0;
@@ -1016,6 +1016,31 @@ if(!empty($id)) {
         }
         
         $sheet->setCellValue('A'.(++$rowindex), "Цена формы $i, руб");
+        $sheet->setCellValue("B$rowindex", $calculation->cliche_costs[$i]);
+        $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($cliche_sm_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($cliche_currency, $calculation->usd, $calculation->euro), 5));
+        $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$cliche_sm_price."*".$calculation->GetCurrencyRate($cliche_currency, $calculation->usd, $calculation->euro));
+        $sheet->setCellValue("E$rowindex", "площадь формы, м2 * цена формы за 1 м2 * курс валюты");
+    }
+    
+    for($i = 1; $i <= $calculation->ink_run2_number; $i++) {
+        $cliche_run2 = "cliche_run2_$i";
+        
+        $cliche_sm_price = 0;
+        $cliche_currency = "";
+        
+        switch (get_object_vars($calculation)[$cliche_run2]) {
+            case CLICHE_FLINT:
+                $cliche_sm_price = $calculation->data_cliche->flint_price;
+                $cliche_currency = $calculation->data_cliche->flint_currency;
+                break;
+                
+            case CLICHE_KODAK:
+                $cliche_sm_price = $calculation->data_cliche->kodak_price;
+                $cliche_currency = $calculation->data_cliche->kodak_currency;
+                break;
+        }
+        
+        $sheet->setCellValue('A'.(++$rowindex), "Цена формы $i второй прогон, руб");
         $sheet->setCellValue("B$rowindex", $calculation->cliche_costs[$i]);
         $sheet->setCellValue("C$rowindex", "|= ".DisplayNumber($calculation->cliche_area, 5)." * ".DisplayNumber($cliche_sm_price, 5)." * ".DisplayNumber($calculation->GetCurrencyRate($cliche_currency, $calculation->usd, $calculation->euro), 5));
         $sheet->setCellValue("D$rowindex", "=".$calculation->cliche_area."*".$cliche_sm_price."*".$calculation->GetCurrencyRate($cliche_currency, $calculation->usd, $calculation->euro));

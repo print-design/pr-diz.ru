@@ -2239,7 +2239,7 @@ class Calculation extends CalculationBase {
             
             $cliche_cost = $this->cliche_area * $cliche_sm_price * self::GetCurrencyRate($cliche_currency, $this->usd, $this->euro);
             $this->cliche_costs_run2[$i] = $cliche_cost;
-        }        
+        }
         
         //********************************************
         // Стоимость скотча
@@ -2341,7 +2341,7 @@ class Calculation extends CalculationBase {
         }
         
         for($i = 1; $i <= $this->ink_run2_number; $i++) {
-            //$this->cliche_cost += $this->cli
+            $this->cliche_cost += $this->cliche_costs_run2[$i];
         }
         
         // Отгрузочная стоимость ПФ
