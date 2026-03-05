@@ -6,6 +6,21 @@ include './calculation_result.php';
 require '../vendor/autoload.php';
 use chillerlan\QRCode\QRCode;
 
+function GetInkWithCases($param) {
+    if($param < 1) {
+        return "красок";
+    }
+    elseif ($param < 2) {
+        return "краска";
+    }
+    elseif ($param < 5) {
+        return "краски";
+    }
+    else {
+        return "красок";
+    }
+}
+
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id');
 $calculation = CalculationBase::Create($id);
@@ -30,6 +45,28 @@ if(!empty($calculation->ink_number)) {
     
         $cliche_var = "cliche_$i";
         $$cliche_var = $calculation->$cliche_var;
+    }
+}
+
+if(!empty($calculation->ink_run2_number)) {
+    for($i= 1; $i <= $calculation->ink_run2_number; $i++) {
+        $ink_run2_var = "ink_run2_$i";
+        $$ink_run2_var = $calculation->$ink_run2_var;
+        
+        $color_run2_var = "color_run2_$i";
+        $$color_run2_var = $calculation->$color_run2_var;
+        
+        $cmyk_run2_var = "cmyk_run2_$i";
+        $$cmyk_run2_var = $calculation->$cmyk_run2_var;
+        
+        $lacquer_run2_var = "lacquer_run2_$i";
+        $$lacquer_run2_var = $calculation->$lacquer_run2_var;
+        
+        $percent_run2_var = "percent_run2_$i";
+        $$percent_run2_var = $calculation->$percent_run2_var;
+        
+        $cliche_run2_var = "cliche_run2_$i";
+        $$cliche_run2_var = $calculation->$cliche_run2_var;
     }
 }
 
@@ -467,7 +504,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                         <tr>
                             <td>Красочность</td>
-                            <td><?=$calculation->ink_number ?> красок</td>
+                            <td><?=$calculation->ink_number." ".GetInkWithCases($calculation->ink_number) ?></td>
                         </tr>
                         <tr>
                             <td>Штамп</td>
@@ -480,7 +517,7 @@ $current_date_time = date("dmYHis");
                         </tr>
                     </table>
                     <?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?>
-                    <p class="font-weight-bold" style="font-weight: bold;">Красочность: <?=$calculation->ink_number ?> красок</p>
+                    <p class="font-weight-bold" style="font-weight: bold;">Красочность: <?=$calculation->ink_number." ".GetInkWithCases($calculation->ink_number) ?></p>
                     <table class="w-100" style="width: 100%;">
                         <?php
                         for($i = 1; $i <= $calculation->ink_number; $i++):
@@ -539,6 +576,80 @@ $current_date_time = date("dmYHis");
                             <td>
                                 <?php
                                 switch ($$cliche_var) {
+                                    case CLICHE_OLD:
+                                        echo "Старая";
+                                        break;
+                                    case CLICHE_FLINT:
+                                        echo "Новая Flint $machine_coeff";
+                                        break;
+                                    case CLICHE_KODAK:
+                                        echo "Новая Kodak $machine_coeff";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php endfor; ?>
+                    </table>
+                    <p class="font-weight-bold" style="font-weight: bold;">Второй прогон: <?=$calculation->ink_run2_number." ".GetInkWithCases($calculation->ink_run2_number) ?></p>
+                    <table class="w-100" style="width: 100%;">
+                        <?php
+                        for($i = 1; $i <= $calculation->ink_run2_number; $i++):
+                        $ink_run2_var = "ink_run2_$i";
+                        $color_run2_var = "color_run2_$i";
+                        $cmyk_run2_var = "cmyk_run2_$i";
+                        $lacquer_run2_var = "lacquer_run2_$i";
+                        $percent_run2_var = "percent_run2_$i";
+                        $cliche_run2_var = "cliche_run2_$i";
+                        ?>
+                        <tr>
+                            <td>
+                                <?php
+                                switch ($$ink_run2_var) {
+                                    case INK_CMYK:
+                                        switch ($$cmyk_run2_var) {
+                                            case CMYK_CYAN:
+                                                echo "Cyan";
+                                                break;
+                                            case CMYK_MAGENDA:
+                                                echo "Magenda";
+                                                break;
+                                            case CMYK_YELLOW:
+                                                echo "Yellow";
+                                                break;
+                                            case CMYK_KONTUR:
+                                                echo "Kontur";
+                                                break;
+                                        }
+                                        break;
+                                    case INK_PANTON:
+                                        echo "P".$$color_run2_var;
+                                        break;
+                                    case INK_WHITE;
+                                        echo "Белая";
+                                        break;
+                                    case INK_LACQUER;
+                                        switch($$lacquer_run2_var) {
+                                            case LACQUER_GLOSSY:
+                                                echo 'Лак глянцевый';
+                                                break;
+                                            case LACQUER_MATTE:
+                                                echo 'Лак матовый';
+                                                break;
+                                            case LACQUER_SELECTIVE:
+                                                echo 'Лак выборочный';
+                                                break;
+                                            default :
+                                                echo "Лак";
+                                                break;
+                                        }
+                                        break;
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                switch ($$cliche_run2_var) {
                                     case CLICHE_OLD:
                                         echo "Старая";
                                         break;
