@@ -307,7 +307,7 @@ if(IsInRole(ROLE_NAMES[ROLE_MANAGER]) && !IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIO
 }
 
 if(!empty($calculation->ink_number)) {
-    for($i=1; $i<=$calculation->ink_number; $i++) {
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
         $ink_var = "ink_$i";
         $$ink_var = $calculation->$ink_var;
     
@@ -325,6 +325,28 @@ if(!empty($calculation->ink_number)) {
         
         $cliche_var = "cliche_$i";
         $$cliche_var = $calculation->$cliche_var;
+    }
+}
+
+if(!empty($calculation->ink_run2_number)) {
+    for($i= 1; $i <= $calculation->ink_run2_number; $i++) {
+        $ink_run2_var = "ink_run2_$i";
+        $$ink_run2_var = $calculation->$ink_run2_var;
+        
+        $color_run2_var = "color_run2_$i";
+        $$color_run2_var = $calculation->$color_run2_var;
+        
+        $cmyk_run2_var = "cmyk_run2_$i";
+        $$cmyk_run2_var = $calculation->$cmyk_run2_var;
+        
+        $lacquer_run2_var = "lacquer_run2_$i";
+        $$lacquer_run2_var = $calculation->$lacquer_run2_var;
+        
+        $percent_run2_var = "percent_run2_$i";
+        $$percent_run2_var = $calculation->$percent_run2_var;
+        
+        $cliche_run2_var = "cliche_run2_$i";
+        $$cliche_run2_var = $calculation->$cliche_run2_var;
     }
 }
 
@@ -1376,6 +1398,98 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                         </tr>
                         <?php endfor; ?>
                     </table>
+                    <h3>Второй прогон: <?=$calculation->ink_run2_number ?> цв.</h3>
+                    <table>
+                        <?php
+                        for($i = 1; $i <= $calculation->ink_run2_number; $i++):
+                        $ink_run2_var = "ink_run2_$i";
+                        $color_run2_var = "color_run2_$i";
+                        $cmyk_run2_var = "cmyk_run2_$i";
+                        $lacquer_run2_var = "lacquer_run2_$i";
+                        $percent_run2_var = "percent_run2_$i";
+                        $cliche_run2_var = "cliche_run2_$i";
+                        ?>
+                        <tr>
+                            <td>
+                                <div class="color_label_run2 d-inline" id="color_label_run2_<?=$i ?>">
+                                <?php
+                                switch ($$ink_run2_var) {
+                                    case INK_CMYK:
+                                        switch ($$cmyk_run2_var) {
+                                            case CMYK_CYAN:
+                                                echo "Cyan";
+                                                break;
+                                            case CMYK_MAGENDA:
+                                                echo "Magenda";
+                                                break;
+                                            case CMYK_YELLOW:
+                                                echo "Yellow";
+                                                break;
+                                            case CMYK_KONTUR:
+                                                echo "Kontur";
+                                                break;
+                                        }
+                                        break;
+                                    case INK_PANTON:
+                                        echo "P".$$color_run2_var;
+                                        break;
+                                    case INK_WHITE;
+                                        echo "Белая";
+                                        break;
+                                    case INK_LACQUER;
+                                        switch ($$lacquer_run2_var) {
+                                            case LACQUER_GLOSSY:
+                                                echo 'Лак глянцевый';
+                                                break;
+                                            case LACQUER_MATTE:
+                                                echo 'Лак матовый';
+                                                break;
+                                            case LACQUER_SELECTIVE:
+                                                echo 'Лак выборочный';
+                                                break;
+                                            default :
+                                                echo "Лак";
+                                                break;
+                                        }
+                                        break;
+                                }
+                                ?>
+                                </div>
+                                <?php
+                                if($$ink_run2_var == INK_PANTON):
+                                ?>
+                                <div class="edit_panton_link_run2 d-inline" id="edit_panton_link_run2_<?=$i ?>"><a class="edit_panton_run2" href="javascript: void(0);" onclick="javascript: EditPantonRun2(<?=$i ?>);"><img class="ml-2" src="../images/icons/edit1.svg" /></a></div>
+                                <div class="edit_panton_form_run2 d-none" id="edit_panton_form_run2_<?=$i ?>">
+                                    <form class="panton_form_run2 form-inline">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text">P</span></div>
+                                            <input type="text" class="form-control color_input_run2" name="color" id="color_input_run2_<?=$i ?>" value="<?=$$color_run2_var ?>" data-id="<?=$id ?>" data-i="<?=$i ?>" />
+                                            <div class="input-group-append">
+                                                <a class="btn btn-outline-dark" href="javascript: void(0);" onclick="javascript: SavePantonRun2(<?=$id ?>, <?=$i ?>);">OK</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php
+                                switch ($$cliche_run2_var) {
+                                    case CLICHE_OLD:
+                                        echo "Старая";
+                                        break;
+                                    case CLICHE_FLINT:
+                                        echo "Новая Flint $machine_coeff";
+                                        break;
+                                    case CLICHE_KODAK:
+                                        echo "Новая Kodak $machine_coeff";
+                                        break;
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php endfor; ?>
+                    </table>
                 </div>
                 <div class="col-4">
                     <h3>Ламинация 2</h3>
@@ -2051,6 +2165,25 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                 $('#color_input_' + i).focus();
             }
             
+            function EditPantonRun2(i) {
+                $('.color_label_run2').removeClass('d-none');
+                $('.color_label_run2').addClass('d-inline');
+                $('#color_label_run2_' + i).removeClass('d-inline');
+                $('#color_label_run2_' + i).addClass('d-none');
+                
+                $('.edit_panton_link_run2').removeClass('d-none');
+                $('.edit_panton_link_run2').addClass('d-inline');
+                $('#edit_panton_link_run2_' + i).removeClass('d-inline');
+                $('#edit_panton_link_run2_' + i).addClass('d-none');
+                
+                $('.edit_panton_form_run2').removeClass('d-inline');
+                $('.edit_panton_form_run2').addClass('d-none');
+                $('#edit_panton_form_run2_' + i).removeClass('d-none');
+                $('#edit_panton_form_run2_' + i).addClass('d-inline');
+                
+                $('#color_input_' + i).focus();
+            }
+            
             function SavePanton(id, i) {
                 $.ajax({ url: "_edit_panton.php?id=" + id + "&i=" + i + "&value=" + $('#color_input_' + i).val() })
                         .done(function(data) {
@@ -2064,6 +2197,25 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             
                             $('#edit_panton_link_' + i).removeClass('d-none');
                             $('#edit_panton_link_' + i).addClass('d-inline');
+                        })
+                        .fail(function() {
+                            alert('Ошибка при редактировании пантона');
+                        });
+            }
+            
+            function SavePantonRun2(id, i) {
+                $.ajax({ url: "_edit_panton_run2.php?id=" + id + "&i=" + i + "&value=" + $('#color_input_run2_' + i).val() })
+                        .done(function(data) {
+                            $('#color_label_run2_' + i).text('P' + data);
+                            
+                            $('#edit_panton_form_run2_' + i).removeClass('d-inline');
+                            $('#edit_panton_form_run2_' + i).addClass('d-none');
+                            
+                            $('#color_label_run2_' + i).removeClass('d-none');
+                            $('#color_label_run2_' + i).addClass('d-inline');
+                            
+                            $('#edit_panton_link_run2_' + i).removeClass('d-none');
+                            $('#edit_panton_link_run2_' + i).addClass('d-inline');
                         })
                         .fail(function() {
                             alert('Ошибка при редактировании пантона');

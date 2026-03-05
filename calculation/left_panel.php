@@ -220,7 +220,7 @@ function GetSkiNameExt($param, $param_width) {
 </table>
 <!-- Второй прогон -->
 <?php if($calculation->machine_id == PRINTER_SOMA_OPTIMA && !empty($calculation->ink_run2_number)): ?>
-<p class="font-weight-bold mt-3">Красочность, второй прогон: <?=$calculation->ink_run2_number ?></p>
+<p class="font-weight-bold mt-3">Второй прогон: <?=$calculation->ink_run2_number." ".GetInkWithCases($calculation->ink_number) ?></p>
 
 <table class="table w-100">
     <tr>
