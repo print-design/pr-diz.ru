@@ -85,7 +85,7 @@ function GetSkiNameExt($param, $param_width) {
                     }
                 }
                 ?>
-            <tr><th>Красочность</th><td><?=$calculation->ink_number ?>&nbsp;<?= GetInkWithCases($calculation->ink_number) ?></td></tr>
+            <tr><th>Красочность</th><td><?=$calculation->ink_number + $calculation->ink_run2_number ?>&nbsp;<?= GetInkWithCases($calculation->ink_number + $calculation->ink_run2_number) ?></td></tr>
             <tr><th>Количество новых форм</th><td><?=$new_forms_number ?></td></tr>
                 <?php endif; ?>
                 <?php if(!empty($calculation->length)): ?>
