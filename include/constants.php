@@ -50,6 +50,7 @@ const CMYK_KONTUR = "kontur";
 const LACQUER_GLOSSY = "glossy";
 const LACQUER_MATTE = "matte";
 const LACQUER_SELECTIVE = "selective";
+const LACQUER_NAMES = array(LACQUER_GLOSSY => "глянцевый", LACQUER_MATTE => "матовый", LACQUER_SELECTIVE => "выборочный");
     
 // Формы
 const CLICHE_OLD = "old";
