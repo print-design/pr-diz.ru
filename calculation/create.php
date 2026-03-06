@@ -521,7 +521,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $number_in_raport = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
-        $ink_run2_number = filter_input(INPUT_POST, 'ink_run2_number'); if(null == $ink_run2_number) $ink_run2_number = "NULL";
+        $ink_run2_number = filter_input(INPUT_POST, 'ink_run2_number'); if(null == $ink_run2_number) $ink_run2_number = "NULL"; if($machine_id != PRINTER_SOMA_OPTIMA) $ink_run2_number = "NULL";
         
         $manager_id = GetUserId();
         
@@ -529,16 +529,16 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         for($i = 1; $i <= 8; $i++) {
             $ink_var = "ink_$i";
             $$ink_var = filter_input(INPUT_POST, "ink_$i");
-            
+                
             $color_var = "color_$i";
             $$color_var = filter_input(INPUT_POST, "color_$i");
-            
+                
             $cmyk_var = "cmyk_$i";
             $$cmyk_var = filter_input(INPUT_POST, "cmyk_$i");
-            
+                
             $lacquer_var = "lacquer_$i";
             $$lacquer_var = filter_input(INPUT_POST, "lacquer_$i");
-            
+                
             $percent_var = "percent_$i";
             $$percent_var = filter_input(INPUT_POST, "percent_$i");
             if(empty($$percent_var)) $$percent_var = "NULL";
@@ -3359,6 +3359,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             $('#work_type_id').change(function() {
                 SetFieldsVisibility($(this).val());
                 FillMachines($(this).val());
+                HideRun2();
                 
                 // Для типа "Самоклеящийся материал" делаем список красок узким,
                 // чтобы уместились поля для количества форм
@@ -3453,7 +3454,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
                     
-                    // Скрываем поля "только второй прогон"
+                    // Скрываем второй прогон
+                    HideRun2();
                     $('.run2-only').addClass('d-none');
                 }
                 else {
@@ -3486,6 +3488,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('.run2-only').removeClass('d-none');
                     }
                     else {
+                        HideRun2();
                         $('.run2-only').addClass('d-none');
                     }
                 }
