@@ -100,9 +100,10 @@ if(!empty($id)) {
             $ink = "ink_$i";
             $color = "color_$i";
             $cmyk = "cmyk_$i";
+            $lacquer = "lacquer_$i";
             $percent = "percent_$i";
             $cliche = "cliche_$i";
-            $sheet->setCellValue('A'.(++$rowindex), "Краска $i:"); $sheet->setCellValue("B$rowindex", $calculation->GetInkName(get_object_vars($calculation)[$ink]).(empty(get_object_vars($calculation)[$color]) ? "" : " ".get_object_vars($calculation)[$color]).(empty(get_object_vars($calculation)[$cmyk]) ? "" : " ".get_object_vars($calculation)[$cmyk])." ".get_object_vars($calculation)[$percent]."% ".$calculation->GetClicheName(get_object_vars($calculation)[$cliche]));
+            $sheet->setCellValue('A'.(++$rowindex), "Краска $i:"); $sheet->setCellValue("B$rowindex", $calculation->GetInkName(get_object_vars($calculation)[$ink]).(empty(get_object_vars($calculation)[$color]) ? "" : " ".get_object_vars($calculation)[$color]).(empty(get_object_vars($calculation)[$cmyk]) ? "" : " ".get_object_vars($calculation)[$cmyk]).(empty(get_object_vars($calculation)[$lacquer]) ? "" : " ". get_object_vars($calculation)[$lacquer])." ".get_object_vars($calculation)[$percent]."% ".$calculation->GetClicheName(get_object_vars($calculation)[$cliche]));
         }
         
         if($calculation->machine_id == PRINTER_SOMA_OPTIMA) {
@@ -110,9 +111,10 @@ if(!empty($id)) {
                 $ink_run2 = "ink_run2_$i";
                 $color_run2 = "color_run2_$i";
                 $cmyk_run2 = "cmyk_run2_$i";
+                $lacquer_run2 = "lacquer_run2_$i";
                 $percent_run2 = "percent_run2_$i";
                 $cliche_run2 = "cliche_run2_$i";
-                $sheet->setCellValue('A'.(++$rowindex), "Краска $i Второй прогон"); $sheet->setCellValue("B$rowindex", $calculation->GetInkName(get_object_vars($calculation)[$ink_run2]).(empty(get_object_vars($calculation)[$color_run2]) ? "" : " ".get_object_vars($calculation)[$color_run2]).(empty(get_object_vars($calculation)[$cmyk_run2]) ? "" : " ".get_object_vars($calculation)[$cmyk_run2])." ".get_object_vars($calculation)[$percent_run2]."% ".$calculation->GetClicheName(get_object_vars($calculation)[$cliche_run2]));
+                $sheet->setCellValue('A'.(++$rowindex), "Краска $i Второй прогон"); $sheet->setCellValue("B$rowindex", $calculation->GetInkName(get_object_vars($calculation)[$ink_run2]).(empty(get_object_vars($calculation)[$color_run2]) ? "" : " ".get_object_vars($calculation)[$color_run2]).(empty(get_object_vars($calculation)[$cmyk_run2]) ? "" : " ".get_object_vars($calculation)[$cmyk_run2]).(empty(get_object_vars($calculation)[$lacquer_run2]) ? "" : " ". get_object_vars($calculation)[$lacquer_run2])." ".get_object_vars($calculation)[$percent_run2]."% ".$calculation->GetClicheName(get_object_vars($calculation)[$cliche_run2]));
             }
         }
     }

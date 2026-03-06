@@ -69,10 +69,11 @@ if(!empty($id)) {
             $ink = "ink_$i";
             $color = "color_$i";
             $cmyk = "cmyk_$i";
+            $lacquer = "lacquer_$i";
             $percent = "percent_$i";
             $cliche = "cliche_$i";
             $sheet->setCellValue('A'.(++$rowindex), "Краска $i:");
-            $sheet->setCellValue("B$rowindex", $calculation->GetInkName(get_object_vars($calculation)[$ink]).(empty(get_object_vars($calculation)[$color]) ? "" : " ".get_object_vars($calculation)[$color]).(empty(get_object_vars($calculation)[$cmyk]) ? "" : " ".get_object_vars($calculation)[$cmyk])." ".get_object_vars($calculation)[$percent]."% ".$calculation->GetClicheName(get_object_vars($calculation)[$cliche]));
+            $sheet->setCellValue("B$rowindex", $calculation->GetInkName(get_object_vars($calculation)[$ink]).(empty(get_object_vars($calculation)[$color]) ? "" : " ".get_object_vars($calculation)[$color]).(empty(get_object_vars($calculation)[$cmyk]) ? "" : " ".get_object_vars($calculation)[$cmyk]).(empty(get_object_vars($calculation)[$lacquer]) ? "" : " ". get_object_vars($calculation)[$lacquer])." ".get_object_vars($calculation)[$percent]."% ".$calculation->GetClicheName(get_object_vars($calculation)[$cliche]));
         }
     }
         
