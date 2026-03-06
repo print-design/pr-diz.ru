@@ -2941,7 +2941,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         ?>
                                         <option value="<?= LACQUER_GLOSSY ?>"<?=$glossy_run2_selected ?>>Глянцевый</option>
                                         <option value="<?= LACQUER_MATTE ?>"<?=$matte_run2_selected ?>>Матовый</option>
-                                        <option value="<?=LACQUER_SELECTIVE ?>">Выборочный</option>
+                                        <option value="<?=LACQUER_SELECTIVE ?>"<?=$selective_run2_selected ?>>Выборочный</option>
                                     </select>
                                     <div class="invalid-feedback">Выберите лак</div>
                                 </div>
