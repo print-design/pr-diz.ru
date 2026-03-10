@@ -86,6 +86,7 @@ $price_valid = '';
 $currency_valid = '';
 $quantity_valid = '';
 $printings_number_valid = '';
+$laminator_id_valid = '';
 
 $individual_film_name_valid = '';
 $individual_thickness_valid = '';
@@ -265,6 +266,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     // ЛАМИНАЦИЯ 1
+    // Если есть плёнка 2, но нет ламинатора, то ошибка
+    if((!empty($lamination1_film_id) || !empty($lamination1_film_name)) && empty($laminator_id)) {
+        $laminator_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     // Валидация цен ламинации 1 - они должны быть не меньше минимальных
     $lamination1_price_min = filter_input(INPUT_POST, 'lamination1_price_min');
     $lamination1_price = filter_input(INPUT_POST, 'lamination1_price');
@@ -2187,6 +2194,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                             </div>
                         </div>
+                        <?php if(!$form_valid && !empty($laminator_id_valid)): ?>
+                        <div class='alert alert-danger'>Не указан ламинатор</div>
+                        <?php endif; ?>
                         <p id="streams_title" class="d-none no-print-only print-only self-adhesive-only"><span class="font-weight-bold">Ручьи</span></p>
                         <div class="row">
                             <!-- Рапорт -->
