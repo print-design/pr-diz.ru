@@ -149,7 +149,7 @@ class FunctionArray extends CalculationBase
         ],
         'BAHTTEXT' => [
             'category' => Category::CATEGORY_TEXT_AND_DATA,
-            'functionCall' => [TextData\Thai::class, 'getBahtText'],
+            'functionCall' => [Functions::class, 'DUMMY'],
             'argumentCount' => '1',
         ],
         'BASE' => [
@@ -919,7 +919,7 @@ class FunctionArray extends CalculationBase
         'FLOOR' => [
             'category' => Category::CATEGORY_MATH_AND_TRIG,
             'functionCall' => [MathTrig\Floor::class, 'floor'],
-            'argumentCount' => '1-2', // Excel requires 2, Ods/Gnumeric 1-2
+            'argumentCount' => '1-2', // Excel requries 2, Ods/Gnumeric 1-2
         ],
         'FLOOR.MATH' => [
             'category' => Category::CATEGORY_MATH_AND_TRIG,
@@ -1284,9 +1284,8 @@ class FunctionArray extends CalculationBase
         ],
         'INFO' => [
             'category' => Category::CATEGORY_INFORMATION,
-            'functionCall' => [Information\Info::class, 'getInfo'],
+            'functionCall' => [Functions::class, 'DUMMY'],
             'argumentCount' => '1',
-            'passCellReference' => true,
         ],
         'INT' => [
             'category' => Category::CATEGORY_MATH_AND_TRIG,

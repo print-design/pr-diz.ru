@@ -136,8 +136,7 @@ abstract class Coordinate
     }
 
     /**
-     * Split range into coordinate strings, using comma for union
-     * and ignoring intersection (space).
+     * Split range into coordinate strings.
      *
      * @param string $range e.g. 'B4:D9' or 'B4:D9,H2:O11' or 'B4'
      *
@@ -159,28 +158,6 @@ abstract class Coordinate
         }
 
         return $outArray;
-    }
-
-    /**
-     * Split range into coordinate strings, resolving unions and intersections.
-     *
-     * @param string $range e.g. 'B4:D9' or 'B4:D9,H2:O11' or 'B4'
-     * @param bool $unionIsComma true=comma is union, space is intersection
-     *                           false=space is union, comma is intersection
-     *
-     * @return array<array<string>> Array containing one or more arrays containing one or two coordinate strings
-     *                                e.g. ['B4','D9'] or [['B4','D9'], ['H2','O11']]
-     *                                        or ['B4']
-     */
-    public static function allRanges(string $range, bool $unionIsComma = true): array
-    {
-        if (!$unionIsComma) {
-            $range = str_replace([',', ' ', "\0"], ["\0", ',', ' '], $range);
-        }
-
-        return self::splitRange(
-            self::resolveUnionAndIntersection($range)
-        );
     }
 
     /**
@@ -316,7 +293,7 @@ abstract class Coordinate
 
         $worksheet = $matches['worksheet'];
         if ($worksheet !== '') {
-            if (str_starts_with($worksheet, "'") && str_ends_with($worksheet, "'")) {
+            if (substr($worksheet, 0, 1) === "'" && substr($worksheet, -1, 1) === "'") {
                 $worksheet = substr($worksheet, 1, -1);
             }
             $data['worksheet'] = strtolower($worksheet);
@@ -401,7 +378,7 @@ abstract class Coordinate
             return $indexCache[$columnAddress];
         }
         //    It's surprising how costly the strtoupper() and ord() calls actually are, so we use a lookup array
-        //        rather than use ord() and make it case-insensitive to get rid of the strtoupper() as well.
+        //        rather than use ord() and make it case insensitive to get rid of the strtoupper() as well.
         //        Because it's a static, there's no significant memory overhead either.
         /** @var array<string, int> */
         static $columnLookup = [
@@ -671,7 +648,7 @@ abstract class Coordinate
      *
      * @param array<string, mixed> $coordinateCollection associative array mapping coordinates to values
      *
-     * @return array<string, mixed> associative array mapping coordinate ranges to values
+     * @return array<string, mixed> associative array mapping coordinate ranges to valuea
      */
     public static function mergeRangesInCollection(array $coordinateCollection): array
     {

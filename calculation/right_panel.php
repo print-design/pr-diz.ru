@@ -442,6 +442,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
             <div class="value"><span id="shipping_cost"><?= DisplayNumber(floatval($calculation_result->shipping_cost), 0) ?></span> &#8381;&nbsp;&nbsp;&nbsp;<span class="font-weight-normal"><span id="shipping_cost_per_unit"><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit), 3) ?></span> &#8381; за <?=(empty($calculation->unit) || $calculation->unit == KG ? "кг" : "шт") ?></span></div>
             <div class="mt-2">Отгрузочная стоимость ПФ</div>
             <div class="value"><span id="shipping_cliche_cost"><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost), 0) ?></span> &#8381;</div>
+            <div class="value font-weight-normal" id="right_panel_new_forms"><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($calculation->stream_width * $calculation->streams_number + 20) + ($calculation->ski_1 == SKI_NO ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($calculation->raport) + 20) ?>&nbsp;мм</div>            
         </div>
         <div class="col-4">
             <h3>Прибыль</h3>

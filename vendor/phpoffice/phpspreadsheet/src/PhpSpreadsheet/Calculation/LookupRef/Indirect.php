@@ -106,8 +106,8 @@ class Indirect
      */
     private static function extractRequiredCells(?Worksheet $worksheet, string $cellAddress): array
     {
-        return Calculation::getInstance($worksheet?->getParent())
-            ->extractCellRange($cellAddress, $worksheet, false, createCell: true);
+        return Calculation::getInstance($worksheet !== null ? $worksheet->getParent() : null)
+            ->extractCellRange($cellAddress, $worksheet, false);
     }
 
     private static function handleRowColumnRanges(?Worksheet $worksheet, string $start, string $end): string

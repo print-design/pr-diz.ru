@@ -221,7 +221,7 @@ var Alert = function ($$$1) {
     CLICK_DATA_API: "click" + EVENT_KEY + DATA_API_KEY
   };
   var ClassName = {
-    ALERT: 'alert',
+    ALERT: 'alert',T
     FADE: 'fade',
     SHOW: 'show'
     /**

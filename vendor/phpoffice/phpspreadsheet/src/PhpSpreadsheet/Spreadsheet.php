@@ -17,7 +17,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class Spreadsheet implements JsonSerializable
 {
-    // Allowable values for workbook window visibility
+    // Allowable values for workbook window visilbity
     const VISIBILITY_VISIBLE = 'visible';
     const VISIBILITY_HIDDEN = 'hidden';
     const VISIBILITY_VERY_HIDDEN = 'veryHidden';
@@ -58,7 +58,7 @@ class Spreadsheet implements JsonSerializable
     /**
      * Calculation Engine.
      */
-    private Calculation $calculationEngine;
+    private ?Calculation $calculationEngine;
 
     /**
      * Active sheet index.
@@ -107,14 +107,14 @@ class Spreadsheet implements JsonSerializable
     private ?string $macrosCertificate = null;
 
     /**
-     * ribbonXMLData : null if workbook isn't Excel 2007 or not contain a customized UI.
+     * ribbonXMLData : null if workbook is'nt Excel 2007 or not contain a customized UI.
      *
      * @var null|array{target: string, data: string}
      */
     private ?array $ribbonXMLData = null;
 
     /**
-     * ribbonBinObjects : null if workbook isn't Excel 2007 or not contain embedded objects (picture(s)) for Ribbon Elements
+     * ribbonBinObjects : null if workbook is'nt Excel 2007 or not contain embedded objects (picture(s)) for Ribbon Elements
      * ignored if $ribbonXMLData is null.
      *
      * @var null|mixed[]
@@ -152,7 +152,7 @@ class Spreadsheet implements JsonSerializable
 
     /**
      * Specifies a boolean value that indicates whether to group dates
-     * when presenting the user with filtering options in the user
+     * when presenting the user with filtering optiomd in the user
      * interface.
      */
     private bool $autoFilterDateGrouping = true;
@@ -405,7 +405,7 @@ class Spreadsheet implements JsonSerializable
     }
 
     /**
-     * This workbook have additional object for the ribbon ?
+     * This workbook have additionnal object for the ribbon ?
      */
     public function hasRibbonBinObjects(): bool
     {
@@ -477,7 +477,7 @@ class Spreadsheet implements JsonSerializable
     public function __destruct()
     {
         $this->disconnectWorksheets();
-        unset($this->calculationEngine);
+        $this->calculationEngine = null;
         $this->cellXfCollection = [];
         $this->cellStyleXfCollection = [];
         $this->definedNames = [];
@@ -499,22 +499,8 @@ class Spreadsheet implements JsonSerializable
     /**
      * Return the calculation engine for this worksheet.
      */
-    public function getCalculationEngine(): Calculation
+    public function getCalculationEngine(): ?Calculation
     {
-        return $this->calculationEngine;
-    }
-
-    /**
-     * Intended for use only via a destructor.
-     *
-     * @internal
-     */
-    public function getCalculationEngineOrNull(): ?Calculation
-    {
-        if (!isset($this->calculationEngine)) { //* @phpstan-ignore-line
-            return null;
-        }
-
         return $this->calculationEngine;
     }
 
@@ -705,9 +691,9 @@ class Spreadsheet implements JsonSerializable
      */
     public function getSheetByName(string $worksheetName): ?Worksheet
     {
-        $trimWorksheetName = StringHelper::strToUpper(trim($worksheetName, "'"));
+        $trimWorksheetName = trim($worksheetName, "'");
         foreach ($this->workSheetCollection as $worksheet) {
-            if (StringHelper::strToUpper($worksheet->getTitle()) === $trimWorksheetName) {
+            if (strcasecmp($worksheet->getTitle(), $trimWorksheetName) === 0) {
                 return $worksheet;
             }
         }
@@ -735,8 +721,9 @@ class Spreadsheet implements JsonSerializable
      */
     public function getIndex(Worksheet $worksheet, bool $noThrow = false): int
     {
+        $wsHash = $worksheet->getHashInt();
         foreach ($this->workSheetCollection as $key => $value) {
-            if ($value === $worksheet) {
+            if ($value->getHashInt() === $wsHash) {
                 return $key;
             }
         }
@@ -1030,34 +1017,13 @@ class Spreadsheet implements JsonSerializable
         if ($definedName !== '') {
             $definedName = StringHelper::strToUpper($definedName);
             // first look for global defined name
-            foreach ($this->definedNames as $dn) {
-                $upper = StringHelper::strToUpper($dn->getName());
-                if (
-                    !$dn->getLocalOnly()
-                    && $definedName === $upper
-                ) {
-                    $returnValue = $dn;
-
-                    break;
-                }
+            if (isset($this->definedNames[$definedName])) {
+                $returnValue = $this->definedNames[$definedName];
             }
 
             // then look for local defined name (has priority over global defined name if both names exist)
-            if ($worksheet !== null) {
-                $wsTitle = StringHelper::strToUpper($worksheet->getTitle());
-                $definedName = (string) preg_replace('/^.*!/', '', $definedName);
-                foreach ($this->definedNames as $dn) {
-                    $sheet = $dn->getScope() ?? $dn->getWorksheet();
-                    $upper = StringHelper::strToUpper($dn->getName());
-                    $upperTitle = StringHelper::strToUpper((string) $sheet?->getTitle());
-                    if (
-                        $dn->getLocalOnly()
-                        && $upper === $definedName
-                        && $upperTitle === $wsTitle
-                    ) {
-                        return $dn;
-                    }
-                }
+            if (($worksheet !== null) && isset($this->definedNames[$worksheet->getTitle() . '!' . $definedName])) {
+                $returnValue = $this->definedNames[$worksheet->getTitle() . '!' . $definedName];
             }
         }
 
@@ -1146,7 +1112,7 @@ class Spreadsheet implements JsonSerializable
         $this->uniqueID = uniqid('', true);
 
         $usedKeys = [];
-        // I don't know why new Style rather than clone.
+        // I don't now why new Style rather than clone.
         $this->cellXfSupervisor = new Style(true);
         //$this->cellXfSupervisor = clone $this->cellXfSupervisor;
         $this->cellXfSupervisor->bindParent($this);
@@ -1154,19 +1120,21 @@ class Spreadsheet implements JsonSerializable
 
         $oldCalc = $this->calculationEngine;
         $this->calculationEngine = new Calculation($this);
-        $this->calculationEngine
-            ->setSuppressFormulaErrors(
-                $oldCalc->getSuppressFormulaErrors()
-            )
-            ->setCalculationCacheEnabled(
-                $oldCalc->getCalculationCacheEnabled()
-            )
-            ->setBranchPruningEnabled(
-                $oldCalc->getBranchPruningEnabled()
-            )
-            ->setInstanceArrayReturnType(
-                $oldCalc->getInstanceArrayReturnType()
-            );
+        if ($oldCalc !== null) {
+            $this->calculationEngine
+                ->setSuppressFormulaErrors(
+                    $oldCalc->getSuppressFormulaErrors()
+                )
+                ->setCalculationCacheEnabled(
+                    $oldCalc->getCalculationCacheEnabled()
+                )
+                ->setBranchPruningEnabled(
+                    $oldCalc->getBranchPruningEnabled()
+                )
+                ->setInstanceArrayReturnType(
+                    $oldCalc->getInstanceArrayReturnType()
+                );
+        }
         $usedKeys['calculationEngine'] = true;
 
         $currentCollection = $this->cellStyleXfCollection;
@@ -1467,10 +1435,6 @@ class Spreadsheet implements JsonSerializable
 
     /**
      * Return the unique ID value assigned to this spreadsheet workbook.
-     *
-     * @deprecated 5.2.0 Serves no useful purpose. No replacement.
-     *
-     * @codeCoverageIgnore
      */
     public function getID(): string
     {
@@ -1559,7 +1523,7 @@ class Spreadsheet implements JsonSerializable
 
     /**
      * Return whether to group dates when presenting the user with
-     * filtering options in the user interface.
+     * filtering optiomd in the user interface.
      *
      * @return bool true if workbook window is minimized
      */
@@ -1570,7 +1534,7 @@ class Spreadsheet implements JsonSerializable
 
     /**
      * Set whether to group dates when presenting the user with
-     * filtering options in the user interface.
+     * filtering optiomd in the user interface.
      *
      * @param bool $autoFilterDateGrouping true if workbook window is minimized
      */
@@ -1836,19 +1800,5 @@ class Spreadsheet implements JsonSerializable
                 $numberFormat->setFormatCode($formatCode);
             }
         }
-    }
-
-    public function returnArrayAsArray(): void
-    {
-        $this->calculationEngine->setInstanceArrayReturnType(
-            Calculation::RETURN_ARRAY_AS_ARRAY
-        );
-    }
-
-    public function returnArrayAsValue(): void
-    {
-        $this->calculationEngine->setInstanceArrayReturnType(
-            Calculation::RETURN_ARRAY_AS_VALUE
-        );
     }
 }

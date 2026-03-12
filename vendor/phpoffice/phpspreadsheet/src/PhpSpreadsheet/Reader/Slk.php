@@ -173,9 +173,6 @@ class Slk extends BaseReader
         'U' => 'underline',
     ];
 
-    /**
-     * @param-out true $hasCalculatedValue
-     */
     private function processFormula(string $rowDatum, bool &$hasCalculatedValue, string &$cellDataFormula, string $row, string $column): void
     {
         $cellDataFormula = '=' . substr($rowDatum, 1);
@@ -423,11 +420,7 @@ class Slk extends BaseReader
                 $spreadsheet->getActiveSheet()->getColumnDimension($startCol)->setWidth((float) $columnWidth);
                 do {
                     /** @var string $startCol */
-                    $spreadsheet->getActiveSheet()
-                        ->getColumnDimension(
-                            StringHelper::stringIncrement($startCol)
-                        )
-                        ->setWidth((float) $columnWidth);
+                    $spreadsheet->getActiveSheet()->getColumnDimension((string) ++$startCol)->setWidth((float) $columnWidth);
                 } while ($startCol !== $endCol);
             }
         }

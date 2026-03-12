@@ -3,11 +3,9 @@
 namespace PhpOffice\PhpSpreadsheet\Calculation\LookupRef;
 
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
-use PhpOffice\PhpSpreadsheet\Calculation\Information\ErrorValue;
 use PhpOffice\PhpSpreadsheet\Calculation\Information\ExcelError;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class RowColumnInformation
@@ -42,9 +40,9 @@ class RowColumnInformation
      *
      * @param null|mixed[]|string $cellAddress A reference to a range of cells for which you want the column numbers
      *
-     * @return int|int[]|string
+     * @return int|int[]
      */
-    public static function COLUMN($cellAddress = null, ?Cell $cell = null): int|string|array
+    public static function COLUMN($cellAddress = null, ?Cell $cell = null): int|array
     {
         if (self::cellAddressNullOrWhitespace($cellAddress)) {
             return self::cellColumn($cell);
@@ -81,11 +79,7 @@ class RowColumnInformation
 
         $cellAddress = (string) preg_replace('/[^a-z]/i', '', $cellAddress);
 
-        try {
-            return Coordinate::columnIndexFromString($cellAddress);
-        } catch (SpreadsheetException) {
-            return ExcelError::NAME();
-        }
+        return Coordinate::columnIndexFromString($cellAddress);
     }
 
     /**
@@ -106,9 +100,6 @@ class RowColumnInformation
         if (self::cellAddressNullOrWhitespace($cellAddress)) {
             return 1;
         }
-        if (is_string($cellAddress) && ErrorValue::isError($cellAddress)) {
-            return $cellAddress;
-        }
         if (!is_array($cellAddress)) {
             return ExcelError::VALUE();
         }
@@ -124,18 +115,9 @@ class RowColumnInformation
         return $columns;
     }
 
-    private static function cellRow(?Cell $cell): int|string
+    private static function cellRow(?Cell $cell): int
     {
-        return ($cell !== null) ? self::convert0ToName($cell->getRow()) : 1;
-    }
-
-    private static function convert0ToName(int|string $result): int|string
-    {
-        if (is_int($result) && ($result <= 0 || $result > 1048576)) {
-            return ExcelError::NAME();
-        }
-
-        return $result;
+        return ($cell !== null) ? $cell->getRow() : 1;
     }
 
     /**
@@ -153,9 +135,9 @@ class RowColumnInformation
      *
      * @param null|mixed[][]|string $cellAddress A reference to a range of cells for which you want the row numbers
      *
-     * @return int|mixed[]|string
+     * @return int|mixed[]
      */
-    public static function ROW($cellAddress = null, ?Cell $cell = null): int|string|array
+    public static function ROW($cellAddress = null, ?Cell $cell = null): int|array
     {
         if (self::cellAddressNullOrWhitespace($cellAddress)) {
             return self::cellRow($cell);
@@ -190,7 +172,7 @@ class RowColumnInformation
         }
         [$cellAddress] = explode(':', $cellAddress);
 
-        return self::convert0ToName((int) preg_replace('/\D/', '', $cellAddress));
+        return (int) preg_replace('/\D/', '', $cellAddress);
     }
 
     /**
@@ -210,9 +192,6 @@ class RowColumnInformation
     {
         if (self::cellAddressNullOrWhitespace($cellAddress)) {
             return 1;
-        }
-        if (is_string($cellAddress) && ErrorValue::isError($cellAddress)) {
-            return $cellAddress;
         }
         if (!is_array($cellAddress)) {
             return ExcelError::VALUE();

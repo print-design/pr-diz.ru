@@ -7,7 +7,6 @@ use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 use PhpOffice\PhpSpreadsheet\Calculation\Functions;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
 use PhpOffice\PhpSpreadsheet\NamedRange;
 use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -227,15 +226,8 @@ class Value
         $worksheet = (!empty($worksheetName))
             ? $cell->getWorksheet()->getParentOrThrow()->getSheetByName($worksheetName)
             : $cell->getWorksheet();
-        if ($worksheet === null) {
-            return ExcelError::REF();
-        }
 
-        try {
-            return $worksheet->getCell($fullCellReference)->isFormula();
-        } catch (SpreadsheetException) {
-            return true;
-        }
+        return ($worksheet !== null) ? $worksheet->getCell($fullCellReference)->isFormula() : ExcelError::REF();
     }
 
     /**
@@ -265,7 +257,7 @@ class Value
         if (is_bool($value)) {
             return (int) $value;
         }
-        if (is_string($value) && str_starts_with($value, '#')) {
+        if (is_string($value) && substr($value, 0, 1) === '#') {
             return $value;
         }
 

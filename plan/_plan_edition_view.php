@@ -447,7 +447,7 @@
             <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/cut.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Результаты</div></a></div>
             <?php endif; ?>
         </div>
-        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(ROLE_NAMES[ROLE_PACKER])): ?>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
         <div class="timetable_menu text-left">
             <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../calculation/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Распечатать тех. карту</div></a></div>

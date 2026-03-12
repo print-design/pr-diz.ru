@@ -2,6 +2,8 @@
 
 namespace PhpOffice\PhpSpreadsheet\Writer;
 
+use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
+
 abstract class BaseWriter implements IWriter
 {
     /**
@@ -16,6 +18,18 @@ abstract class BaseWriter implements IWriter
      * immediately available to MS Excel or other office spreadsheet viewer when opening the file.
      */
     protected bool $preCalculateFormulas = true;
+
+    /**
+     * Table formats
+     * Enables table formats in writer, disabled here, must be enabled in writer via a setter.
+     */
+    protected bool $tableFormats = false;
+
+    /**
+     * Conditional Formatting
+     * Enables conditional formatting in writer, disabled here, must be enabled in writer via a setter.
+     */
+    protected bool $conditionalFormatting = false;
 
     /**
      * Use disk caching where possible?
@@ -54,6 +68,34 @@ abstract class BaseWriter implements IWriter
     public function setPreCalculateFormulas(bool $precalculateFormulas): self
     {
         $this->preCalculateFormulas = $precalculateFormulas;
+
+        return $this;
+    }
+
+    public function getTableFormats(): bool
+    {
+        return $this->tableFormats;
+    }
+
+    public function setTableFormats(bool $tableFormats): self
+    {
+        if ($tableFormats) {
+            throw new PhpSpreadsheetException('Table formatting not implemented for this writer');
+        }
+
+        return $this;
+    }
+
+    public function getConditionalFormatting(): bool
+    {
+        return $this->conditionalFormatting;
+    }
+
+    public function setConditionalFormatting(bool $conditionalFormatting): self
+    {
+        if ($conditionalFormatting) {
+            throw new PhpSpreadsheetException('Conditional Formatting not implemented for this writer');
+        }
 
         return $this;
     }
@@ -123,18 +165,13 @@ abstract class BaseWriter implements IWriter
         $this->shouldCloseFile = true;
     }
 
-    protected function tryClose(): bool
-    {
-        return fclose($this->fileHandle);
-    }
-
     /**
      * Close file handle only if we opened it ourselves.
      */
     protected function maybeCloseFileHandle(): void
     {
         if ($this->shouldCloseFile) {
-            if (!$this->tryClose()) {
+            if (!fclose($this->fileHandle)) {
                 throw new Exception('Could not close file after writing.');
             }
         }

@@ -11,7 +11,6 @@ use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use Throwable;
 
 class Date
 {
@@ -173,7 +172,10 @@ class Date
             throw new Exception("Invalid string $value supplied for datatype Date");
         }
 
-        $newValue = self::dateTimeToExcel($date);
+        $newValue = self::PHPToExcel($date);
+        if ($newValue === false) {
+            throw new Exception("Invalid string $value supplied for datatype Date");
+        }
 
         if (preg_match('/^\s*\d?\d:\d\d(:\d\d([.]\d+)?)?\s*(am|pm)?\s*$/i', $value) == 1) {
             $newValue = fmod($newValue, 1.0);
@@ -372,23 +374,15 @@ class Date
             $selected = $worksheet->getSelectedCells();
 
             try {
-                if ($value === null) {
-                    $value = Functions::flattenSingleValue(
-                        $cell->getCalculatedValue()
-                    );
-                }
-                if (is_numeric($value)) {
-                    $result = self::isDateTimeFormat(
+                $result = is_numeric($value ?? $cell->getCalculatedValue())
+                    && self::isDateTimeFormat(
                         $worksheet->getStyle(
                             $cell->getCoordinate()
                         )->getNumberFormat(),
                         $dateWithoutTimeOkay
                     );
-                    /** @var float|int $value */
-                    self::excelToDateTimeObject($value);
-                }
-            } catch (Throwable) {
-                $result = false;
+            } catch (Exception) {
+                // Result is already false, so no need to actually do anything here
             }
             $worksheet->setSelectedCells($selected);
             $spreadsheet->setActiveSheetIndex($index);
