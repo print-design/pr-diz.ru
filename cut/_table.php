@@ -265,6 +265,7 @@
         </tr>
         <?php endwhile; ?>
     </table>
+    <?php if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])): ?>
     <div class="name">Готовые съёмы</div>
     <div class="subtitle">Общий метраж съёмов: <?= rtrim(rtrim(DisplayNumber(floatval($length), 2), '0'), ',') ?> м</div>
     <?php
@@ -466,6 +467,7 @@
         </table>
     </div>
     <?php
-    endif;
+    endif; // if(count($streams) > 0):
+    endif; // if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
     ?>
 </div>

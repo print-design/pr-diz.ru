@@ -41,6 +41,33 @@ if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
 }
 
+// Количество новых форм
+$new_forms_number = 0;
+
+if($calculation->work_type_id == WORK_TYPE_PRINT) {
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
+        $cliche_var = "cliche_$i";
+        $$cliche_var = $calculation->$cliche_var;
+        
+        if(!empty($$cliche_var) && $$cliche_var != CLICHE_OLD) {
+            $new_forms_number++;
+        }
+    }
+    
+    for($i = 1; $i <= $calculation->ink_run2_number; $i++) {
+        $cliche_run2_var = "cliche_run2_$i";
+        $$cliche_run2_var = $calculation->$cliche_run2_var;
+        
+        if(!empty($$cliche_run2_var) && $$cliche_run2_var != CLICHE_OLD) {
+            $new_forms_number++;
+        }
+    }
+}
+
+if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+    $new_forms_number += ($calculation->cliches_count_flint + $calculation->cliches_count_kodak);
+}
+
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
@@ -210,7 +237,34 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             </table>
                         </div>
                         <div class="col-6">
+                            <?php if(IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])): ?>
+                            <div style="font-size: 20px; font-weight: bold;">Отгрузочная стоимость</div>
+                            <table>
+                                <tr>
+                                    <td>Отгр. стоимость</td>
+                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cost), 0) ?> &#8381;</td>
+                                </tr>
+                                <tr>
+                                    <td>Отгр. стоимость за <?=(empty($calculation->unit) || $calculation->unit == KG ? "кг" : "шт") ?></td>
+                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit), 0) ?> &#8381;</td>
+                                </tr>
+                                <tr>
+                                    <td>Отгр. стоимость ПФ</td>
+                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost), 0) ?> &#8381;</td>
+                                </tr>
+                                <tr>
+                                    <td>Новые ПФ</td>
+                                    <td><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($calculation->stream_width * $calculation->streams_number + 20) + ($calculation->ski_1 == SKI_NO ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($calculation->raport) + 20) ?>&nbsp;мм</td>
+                                </tr>
+                                <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
+                                <tr>
+                                    <td>Отгр. стоимость ножа</td>
+                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_knife_cost), 0) ?> &#8381;</td>
+                                </tr>
+                                <?php endif; ?>
+                            </table>
                             <?php
+                            else: // if(IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
                             $roll_folder = ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "roll" : "roll_left");
                             switch ($calculation_result->photolabel) {
                                 case CalculationResult::PHOTOLABEL_LEFT:
@@ -266,11 +320,12 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 </tr>
                             </table>
                             <?php
-                            endif;
+                            endif; // if($calculation_result->photolabel != CalculationResult::PHOTOLABEL_NOT_FOUND):
                         
                             if(!empty($comment)) {
                                 echo "<p>Комментарий: <strong>$comment</strong></p>";
                             }
+                            endif; // if(IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
                             ?>
                         </div>
                     </div>
@@ -282,6 +337,8 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         $machine_id = $row[0];
                     }
                     include '../cut/_table.php';
+                    
+                    if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
                     ?>
                     <div class="d-flex justify-content-xl-start mt-4">
                         <?php if($calculation->status_id == ORDER_STATUS_PACK_READY): ?>
@@ -305,6 +362,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <?php endif; ?>
                         <div><button type="button" class="btn btn-light pl-4 pr-4"><i class="fas fa-download mr-2"></i>Выгрузка</button></div>
                     </div>
+                    <?php endif; ?>
                 </div>
                 <div class="col-4">
                     <?php include '../cut/_cut_right.php'; ?>

@@ -60,6 +60,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 <?php endif; ?>
             </td>
         </tr>
+        <?php if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])): ?>
         <tr>
             <td>Ширина мат-ла</td>
             <td><?= DisplayNumber(floatval($calculation_result->width_1), 0) ?> мм</td>
@@ -86,14 +87,17 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 ?>
             </td>
         </tr>
+        <?php endif; ?>
         <tr>
             <td>Длина этикетки</td>
             <td><?= rtrim(rtrim(DisplayNumber(floatval($calculation->length), 2), "0"), ",").(empty($calculation->length) ? "" : " мм") ?></td>
         </tr>
+        <?php if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])): ?>
         <tr>
             <td>Кол-во ручьёв</td>
             <td><?=$calculation->streams_number ?></td>
         </tr>
+        <?php endif; ?> 
         <tr>
             <td>Красочность</td>
             <td><?=$calculation->ink_number ?> кр.</td>
@@ -159,6 +163,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 ?>
             </td>
         </tr>
+        <?php if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])): ?>
         <tr>
             <td>Намотка до</td>
             <td>
@@ -229,6 +234,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>Шпуля</td>
             <td><?= empty($calculation_result->spool) ? "Ждем данные" : $calculation_result->spool." мм" ?></td>
         </tr>
+        <?php endif; ?>
         <tr>
             <td>Этикеток в 1 м. пог.</td>
             <td>
@@ -263,6 +269,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                 ?>
             </td>
         </tr>
+        <?php if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])): ?>
         <tr>
             <td>Склейки</td>
             <td>Помечать</td>
@@ -271,6 +278,7 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
             <td>Отходы</td>
             <td><?=$waste ?></td>
         </tr>
+        <?php endif; ?>
         <tr>
             <td>Упаковка</td>
             <td>

@@ -14,7 +14,7 @@ $calculation_result = CalculationResult::Create($id);
 $new_forms_number = 0;
 
 // Красочность
-for($i=1; $i<=$calculation->ink_number; $i++) {
+for($i = 1; $i <= $calculation->ink_number; $i++) {
     $ink_var = "ink_$i";
     $$ink_var = $calculation->$ink_var;
     
