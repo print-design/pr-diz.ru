@@ -157,6 +157,9 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                         echo DisplayNumber(floatval($calculation->stream_width) + floatval($calculation->data_gap->gap_stream), 2)." / ".DisplayNumber(floatval($calculation->data_gap->gap_stream), 2)." мм";
                     }
                 }
+                else if(empty ($calculation->stream_width)) {
+                    echo "Разная ≈ ".rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",")."  мм";
+                }
                 else {
                     echo DisplayNumber(floatval($calculation->stream_width), 0)." мм";
                 }
@@ -222,7 +225,15 @@ if(!empty($waste3) && $waste3 != $waste2) $waste = WASTE_KAGAT;
                     echo 'Нет данных по ширине мат-ла';
                 }
                 elseif($calculation_result->winding_unit == 'kg') {
-                    echo DisplayNumber((floatval($calculation_result->winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * floatval($calculation->stream_width)) - 200, 0)." м";
+                    $stream_width = 0;
+                    
+                    if(!empty($calculation->stream_width)) {
+                        $stream_width = floatval($calculation->stream_width);
+                    }
+                    else {
+                        $stream_width = array_sum($calculation->stream_widths) / $calculation->streams_number;
+                    }
+                    echo DisplayNumber((floatval($calculation_result->winding) * 1000 * 1000) / ((floatval($calculation->density_1) + ($calculation->density_2 === null ? 0 : floatval($calculation->density_2)) + ($calculation->density_3 === null ? 0 : floatval($calculation->density_3))) * $stream_width) - 200, 0)." м";
                 }
                 else {
                     echo 'Нет';
