@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between" style="border-bottom: solid 1px #E7E6ED; margin-bottom: 5px; padding-bottom: 5px;">
         <div class="d-flex justify-content-start">
             <?php if($row['type'] == PLAN_TYPE_EDITION): ?>
-            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
+            <div style="padding-top: 10px; padding-right: 10px;" data-id="<?=$row['id'] ?>" data-lamination="<?=$row['lamination'] ?>" data-run2="<?=$row['run2'] ?>" draggable="true" ondragstart="DragEdition(event);"><img src="../images/icons/double-vertical-dots.svg" draggable="false" /></div>
             <?php endif; ?>
             <div>
                 <div style="font-weight: bold; font-size: large; line-height: 1.4rem; margin-bottom: 0.5rem;"><a href='../calculation/techmap.php?id=<?=$row['id'] ?>'><?=$row['calculation'] ?></a></div>
