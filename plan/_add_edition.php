@@ -3,6 +3,7 @@ require_once '../include/topscripts.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $lamination = filter_input(INPUT_GET, 'lamination');
+$run2 = filter_input(INPUT_GET, 'run2');
 $work_id = filter_input(INPUT_GET, 'work_id');
 $machine_id = filter_input(INPUT_GET, 'machine_id');
 $date = filter_input(INPUT_GET, 'date');
@@ -219,7 +220,7 @@ else {
 
 $plan_edition_id = 0;
 
-$sql = "select id from plan_edition where calculation_id = $calculation_id and lamination = $lamination and work_id = $work_id and machine_id = $machine_id" ;
+$sql = "select id from plan_edition where calculation_id = $calculation_id and lamination = $lamination and run2 = $run2 and work_id = $work_id and machine_id = $machine_id" ;
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $plan_edition_id = $row[0];
@@ -232,8 +233,8 @@ if($plan_edition_id > 0) {
     $error = $executer->error;
 }
 else {
-    $sql = "insert into plan_edition (calculation_id, lamination, work_id, machine_id, date, shift, worktime, position) "
-            . "values ($calculation_id, $lamination, ".$edition->WorkId.", ".$edition->MachineId.", '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
+    $sql = "insert into plan_edition (calculation_id, lamination, run2, work_id, machine_id, date, shift, worktime, position) "
+            . "values ($calculation_id, $lamination, $run2, ".$edition->WorkId.", ".$edition->MachineId.", '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
     $executer = new Executer($sql);
     $error = $executer->error;
     

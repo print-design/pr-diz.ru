@@ -3,6 +3,7 @@ require_once '../include/topscripts.php';
 
 $calculation_id = filter_input(INPUT_GET, 'calculation_id');
 $lamination = filter_input(INPUT_GET, 'lamination');
+$run2 = filter_input(INPUT_GET, 'run2');
 $work_id = filter_input(INPUT_GET, 'work_id');
 $error = '';
 
@@ -69,7 +70,7 @@ elseif (empty ($error) && $work_id == WORK_LAMINATION) {
 
 // Удаляем из плана.
 if(empty($error)) {
-    $sql = "delete from plan_edition where calculation_id = $calculation_id and lamination = $lamination and work_id = $work_id";
+    $sql = "delete from plan_edition where calculation_id = $calculation_id and lamination = $lamination and run2 = $run2 and work_id = $work_id";
     $executer = new Executer($sql);
     $error = $executer->error;
 }
