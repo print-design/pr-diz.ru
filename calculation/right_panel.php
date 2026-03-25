@@ -151,6 +151,10 @@ if(!empty($id) && (empty($calculation_result) || !is_a($calculation_result, Calc
     $new_length_dirty_1 = $calculation->length_dirty_1;
     if($new_length_dirty_1 === null) $new_length_dirty_1 = "NULL";
     
+    // Длина с приладкой второй прогон = метры погонные грязные второй прогон
+    $new_length_dirty_1_run2 = $calculation->length_dirty_start_1_run2;
+    if($new_length_dirty_1_run2 === null) $new_length_dirty_1_run2 = "NULL";
+    
     // Лам 1 цена = лам 1 цена
     $new_film_cost_2 = $calculation->film_cost_2;
     if($new_film_cost_2 === null) $new_film_cost_2 = "NULL";
@@ -297,14 +301,14 @@ if(!empty($id) && (empty($calculation_result) || !is_a($calculation_result, Calc
     // ПОМЕЩАЕМ РЕЗУЛЬТАТЫ ВЫЧИСЛЕНИЙ В БАЗУ
     if(empty($error_message)) {
         $sql = "insert into calculation_result (calculation_id, usd, euro, cost, cost_per_unit, shipping_cost, shipping_cost_per_unit, income, income_per_unit, cliche_cost, shipping_cliche_cost, income_cliche, total_weight_dirty, "
-                . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, "
+                . "film_cost_1, film_cost_per_unit_1, width_1, weight_pure_1, length_pure_1, weight_dirty_1, length_dirty_1, length_dirty_1_run2, "
                 . "film_cost_2, film_cost_per_unit_2, width_2, weight_pure_2, length_pure_2, weight_dirty_2, length_dirty_2, "
                 . "film_cost_3, film_cost_per_unit_3, width_3, weight_pure_3, length_pure_3, weight_dirty_3, length_dirty_3, "
                 . "film_waste_cost_1, film_waste_weight_1, ink_cost, ink_weight, work_cost_1, work_time_1, "
                 . "film_waste_cost_2, film_waste_weight_2, glue_cost_2, glue_expense_2, work_cost_2, work_time_2, "
                 . "film_waste_cost_3, film_waste_weight_3, glue_cost_3, glue_expense_3, work_cost_3, work_time_3) "
                 . "values ($id, $new_usd, $new_euro, $new_cost, $new_cost_per_unit, $new_shipping_cost, $new_shipping_cost_per_unit, $new_income, $new_income_per_unit, $new_cliche_cost, $new_shipping_cliche_cost, $new_income_cliche, $new_total_weight_dirty, "
-                . "$new_film_cost_1, $new_film_cost_per_unit_1, $new_width_1, $new_weight_pure_1, $new_length_pure_1, $new_weight_dirty_1, $new_length_dirty_1, "
+                . "$new_film_cost_1, $new_film_cost_per_unit_1, $new_width_1, $new_weight_pure_1, $new_length_pure_1, $new_weight_dirty_1, $new_length_dirty_1, $new_length_dirty_1_run2, "
                 . "$new_film_cost_2, $new_film_cost_per_unit_2, $new_width_2, $new_weight_pure_2, $new_length_pure_2, $new_weight_dirty_2, $new_length_dirty_2, "
                 . "$new_film_cost_3, $new_film_cost_per_unit_3, $new_width_3, $new_weight_pure_3, $new_length_pure_3, $new_weight_dirty_3, $new_length_dirty_3, "
                 . "$new_film_waste_cost_1, $new_film_waste_weight_1, $new_ink_cost, $new_ink_weight, $new_work_cost_1, $new_work_time_1, "

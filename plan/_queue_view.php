@@ -62,6 +62,9 @@
         <span class="text-nowrap"><?=$films_strings[0] ?></span> <span class="text-nowrap"><?=$films_strings[1] ?></span> <span class="text-nowrap"><?=$films_strings[2] ?></span>
     </div>
     <?php endif; ?>
+    <?php if($row["run2"]): ?>
+    <strong>Второй прогон</strong>
+    <?php endif; ?>
     <div class="row">
         <div class="col-6"><strong>Метраж:</strong> <?= DisplayNumber(intval($row['length']), 0) ?></div>
         <div class="col-6"><strong>Красочность:</strong> <?=$row['ink_number'] ?></div>
