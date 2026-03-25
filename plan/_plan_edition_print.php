@@ -40,7 +40,7 @@
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
         <?=$this->edition['calculation'] ?>
         <?php else: ?>
-        <div style="font-weight: bold; display: inline;"><?=$this->edition['calculation'] ?></div><br /><?=$this->edition['customer'] ?>
+        <div style="font-weight: bold; display: inline;"><?=$this->edition['calculation'] ?></div><br /><?php if($this->edition["run2"]): ?><strong><i>Прогон 2</i></strong><br /><?php endif; ?><?=$this->edition['customer'] ?>
         <?php endif; ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> text-nowrap storekeeper_hidden">

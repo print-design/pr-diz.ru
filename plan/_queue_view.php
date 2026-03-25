@@ -63,7 +63,7 @@
     </div>
     <?php endif; ?>
     <?php if($row["run2"]): ?>
-    <strong>Второй прогон</strong>
+    <strong><i>Прогон 2</i></strong>
     <?php endif; ?>
     <div class="row">
         <div class="col-6"><strong>Метраж:</strong> <?= DisplayNumber(intval($row['length']), 0) ?></div>

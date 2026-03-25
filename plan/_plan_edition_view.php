@@ -116,7 +116,7 @@
         <?php if($this->edition['type'] == PLAN_TYPE_EVENT): ?>
         <?= $this->edition['calculation'] ?>
         <?php else: ?>
-        <div style="font-weight: bold; display: inline;"<?=$drop ?>><?= $this->edition['calculation'] ?></div><br /><?= $this->edition['customer'] ?>
+        <div style="font-weight: bold; display: inline;"<?=$drop ?>><?= $this->edition['calculation'] ?></div><br /><?php if($this->edition["run2"]): ?><strong><i>Прогон 2</i></strong><br /><?php endif; ?><?= $this->edition['customer'] ?>
         <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap storekeeper_hidden"<?=$drop ?>>
