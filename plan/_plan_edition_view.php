@@ -94,7 +94,7 @@
     ?>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>>
         <?php if($this->edition['type'] == PLAN_TYPE_EDITION && !$this->edition['has_continuation'] && !in_array($this->edition['status_id'], ORDER_STATUSES_IN_CUT)): ?>
-        <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
+        <div draggable="true" ondragstart="DragTimetableEdition(event);" data-id="<?=$this->edition['calculation_id'] ?>" data-lamination="<?=$this->edition['lamination'] ?>" data-run2="<?=$this->edition['run2'] ?>" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);'>
             <img src="../images/icons/double-vertical-dots.svg" draggable="false" ondragover='DragOverTimetable(event);' ondragleave='DragLeaveTimetable(event);' />
         </div>
         <?php endif; ?>

@@ -656,6 +656,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 dragqueue = true;
                 ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
                 ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
+                ev.dataTransfer.setData("run2", $(ev.target).attr("data-run2"));
                 ev.dataTransfer.setData("type", "edition");
             }
             
@@ -668,6 +669,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             function DragTimetableEdition(ev) {
                 ev.dataTransfer.setData("calculation_id", $(ev.target).attr("data-id"));
                 ev.dataTransfer.setData("lamination", $(ev.target).attr("data-lamination"));
+                ev.dataTransfer.setData("run2", $(ev.target).attr("data-run2"));
                 ev.dataTransfer.setData("type", "timetableedition");
             }
             
@@ -714,8 +716,9 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 if(type === 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     var lamination = ev.dataTransfer.getData('lamination');
+                    var run2 = ev.dataTransfer.getData('run2');
                     
-                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
+                    $.ajax({ dataType: 'JSON', url: "_remove_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&run2=" + run2 + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>" })
                             .done(function(remove_data) {
                                 if(remove_data.error === '') {
                                     DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
@@ -763,8 +766,9 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 if(type === 'edition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     var lamination = ev.dataTransfer.getData('lamination');
+                    var run2 = ev.dataTransfer.getData('run2');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&run2=" + run2 + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error === '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
@@ -800,8 +804,9 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 else if(type === 'timetableedition') {
                     var calculation_id = ev.dataTransfer.getData('calculation_id');
                     var lamination = ev.dataTransfer.getData('lamination');
+                    var run2 = ev.dataTransfer.getData('run2');
                     
-                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
+                    $.ajax({ dataType: 'JSON', url: "_add_edition.php?calculation_id=" + calculation_id + "&lamination=" + lamination + "&run2=" + run2 + "&work_id=<?= filter_input(INPUT_GET, 'work_id') ?>&machine_id=<?= filter_input(INPUT_GET, 'machine_id') ?>&date=" + date + "&shift=" + shift + "&before=" + before })
                         .done(function(add_data) {
                             if(add_data.error === '') {
                                 DrawTimetable('<?= filter_input(INPUT_GET, 'work_id') ?>', '<?= filter_input(INPUT_GET, 'machine_id') ?>', '<?= filter_input(INPUT_GET, 'from') ?>', '<?= filter_input(INPUT_GET, 'to') ?>');
