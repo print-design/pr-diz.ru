@@ -97,7 +97,7 @@ class Queue {
                 . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or machine_id = ".$this->machine_id.")"
                 . " order by position, queue_top desc, status_date";
         $fetcher = new Fetcher($sql);
-                    
+        
         while($row = $fetcher->Fetch()) {
             $laminations_number = 0;
             if(!empty($row['lamination2_film_variation_id']) || !empty($row['lamination2_individual_film_name'])) {

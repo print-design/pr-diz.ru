@@ -28,8 +28,9 @@ $length_pure_2 = 0;
 $length_pure_3 = 0;
 $has_lamination = false;
 $two_laminations = false;
+$has_run2 = false;
 
-$sql = "select c.work_type_id, c.ink_number, cr.length_pure_1, cr.length_pure_2, cr.length_pure_3, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name "
+$sql = "select c.work_type_id, c.ink_number, cr.length_pure_1, cr.length_pure_2, cr.length_pure_3, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name, c.ink_run2_1 "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
@@ -47,6 +48,10 @@ if($row = $fetcher->Fetch()) {
     
     if(!empty($row['lamination2_film_variation_id']) || !empty($row['lamination2_individual_film_name'])) {
         $two_laminations = true;
+    }
+    
+    if(!empty($row["ink_run2_1"])) {
+        $has_run2 = true;
     }
 }
 
@@ -238,18 +243,34 @@ else {
     $executer = new Executer($sql);
     $error = $executer->error;
     
-    if(empty($error) && $work_id == WORK_PRINTING) {
-        // 1. Тип работы "печать".
+    if(empty($error) && $work_id == WORK_PRINTING && !$has_run2) {
+        // 1. Тип работы "печать", нет второго прогона.
         // Статус устанавливаем "в плане печати".
         $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_PRINT, '');
     }
+    elseif(empty ($error) && $work_id == WORK_PRINTING && $has_run2) {
+        // 2. Тип работы "печать", есть второй прогон.
+        // Статус устанавливаем "в плане печати".
+        // - два тиража
+        $editions_count = 0;
+        
+        $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $editions_count = $row[0];
+        }
+        
+        if($editions_count == 2) {
+            $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_PRINT, '');
+        }
+    }
     elseif(empty ($error) && $work_id == WORK_LAMINATION && !$two_laminations) {
-        // 2. Тип работы "ламинация", ламинация одна.
+        // 3. Тип работы "ламинация", ламинация одна.
         // Статус устанавливаем "в плане ламинации".
         $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_LAMINATE, '');
     }
     elseif(empty ($error) && $work_id == WORK_LAMINATION && $two_laminations) {
-        // 3. Тип работы "ламинация", ламинации две.
+        // 4. Тип работы "ламинация", ламинации две.
         // Статус устанавливаем "в плане ламинации":
         // - два тиража,
         $editions_count = 0;
@@ -265,7 +286,7 @@ else {
         }
     }
     elseif(empty ($error) && $work_id == WORK_CUTTING) {
-        // 4. Тип работы "резка".
+        // 5. Тип работы "резка".
         // Статус устанавливаем "в плане резки".
         $error = SetCalculationStatus($calculation_id, ORDER_STATUS_PLAN_CUT, '');
     }
