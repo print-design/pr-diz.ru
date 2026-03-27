@@ -57,14 +57,29 @@ if($row = $fetcher->Fetch()) {
 }
 
 $machine_width = null;
+$price_run2 = null;
+$speed_run2 = null;
 
 $machine_id = filter_input(INPUT_POST, 'machine_id');
 if(!empty($machine_id)) {
-    $sql = "select width from norm_machine where machine_id = $machine_id order by date desc limit 1";
+    $sql = "select width, price_run2, speed_run2 from norm_machine where machine_id = $machine_id order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $machine_width = $row['width'];
+        $price_run2 = $row['price_run2'];
+        $speed_run2 = $row['speed_run2'];
     }
+}
+
+$time_run2 = null;
+$length_run2 = null;
+$waste_percent_run2 = null;
+$query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ". $this->machine_id." order by id desc limit 1";
+$fetcher = new Fetcher($query);
+if ($row = $fetcher->Fetch()) {
+    $time_run2 = $row['time_run2'];
+    $length_run2 = $row['length_run2'];
+    $waste_percent_run2 = $row['waste_percent_run2'];
 }
 
 // Значение марки плёнки "другая"
@@ -451,6 +466,12 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $form_valid = false;
             }
         }
+    }
+    
+    // Если есть второй прогон, но нет норм по второму прогону для данной машины, запрещаем создавать расчёт
+    if($ink_run2_number == "NULL" && (empty($price_run2) || empty($speed_run2) || empty($time_run2) || empty($length_run2) || empty($waste_percent_run2))) {
+        $error_message = "Не заполнены 'Нормы' для второго прогона по этой машине";
+        $form_valid = false;
     }
     
     if($form_valid) {
