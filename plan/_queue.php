@@ -5,7 +5,7 @@ require_once './_functions.php';
 class Queue {
     private $work_id = null;
     private $machine_id = null;
-    
+
     public function __construct($work_id, $machine_id) {
         $this->work_id = $work_id;
         $this->machine_id = $machine_id;
@@ -74,28 +74,61 @@ class Queue {
                 . " and work_id = ".$this->work_id.")"
                 . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
                 . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
-                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")"
-                . " union "
-                . "select ". PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1_run2 as length, c.ink_run2_number, c.raport, c.queue_top, "
-                . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
-                . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
-                . "0 as lamination, 1 as run2, "
-                . "u.first_name, u.last_name, "
-                . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
-                . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
-                . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
-                . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
-                . "from calculation c "
-                . "inner join customer cus on c.customer_id = cus.id "
-                . "inner join calculation_result cr on cr.calculation_id = c.id "
-                . "inner join user u on c.manager_id = u.id "
-                . "where c.ink_run2_1 <> ''"
-                . " and c.id not in (select calculation_id from plan_edition where run2 = 1"
-                . " and work_id = ".$this->work_id.")"
-                . " and c.work_type_id <> ". WORK_TYPE_NOPRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ". ORDER_STATUS_CONFIRMED
-                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or machine_id = ".$this->machine_id.")"
-                . " order by position, queue_top desc, status_date";
+                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
+        
+        $run2 = true;
+        
+        $price_run2 = null;
+        $speed_run2 = null;
+        $query = "select price_run2, speed_run2 from norm_machine where machine_id = ". $this->machine_id." order by id desc limit 1";
+        $fetcher = new Fetcher($query);
+        if ($row = $fetcher->Fetch()) {
+            $price_run2 = $row['price_run2'];
+            $speed_run2 = $row['speed_run2'];
+        }
+        
+        if(empty($price_run2) || empty($speed_run2)) {
+            $run2 = false;
+        }
+        
+        $time_run2 = null;
+        $length_run2 = null;
+        $waste_percent_run2 = null;
+        $query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ". $this->machine_id." order by id desc limit 1";
+        $fetcher = new Fetcher($query);
+        if ($row = $fetcher->Fetch()) {
+            $time_run2 = $row['time_run2'];
+            $length_run2 = $row['length_run2'];
+            $waste_percent_run2 = $row['waste_percent_run2'];
+        }
+        
+        if(empty($time_run2) || empty($length_run2) || empty($waste_percent_run2)) {
+            $run2 = false;
+        }
+        
+        if($run2) {
+            $sql .= " union "
+                    . "select ". PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1_run2 as length, c.ink_run2_number, c.raport, c.queue_top, "
+                    . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
+                    . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
+                    . "0 as lamination, 1 as run2, "
+                    . "u.first_name, u.last_name, "
+                    . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
+                    . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
+                    . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
+                    . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
+                    . "from calculation c "
+                    . "inner join customer cus on c.customer_id = cus.id "
+                    . "inner join calculation_result cr on cr.calculation_id = c.id "
+                    . "inner join user u on c.manager_id = u.id "
+                    . "where c.ink_run2_1 <> ''"
+                    . " and c.id not in (select calculation_id from plan_edition where run2 = 1"
+                    . " and work_id = ".$this->work_id.")"
+                    . " and c.work_type_id <> ". WORK_TYPE_NOPRINT
+                    . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ". ORDER_STATUS_CONFIRMED
+                    . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or machine_id = ".$this->machine_id.")";
+        }
+        $sql .= " order by position, queue_top desc, status_date";
         $fetcher = new Fetcher($sql);
         
         while($row = $fetcher->Fetch()) {
