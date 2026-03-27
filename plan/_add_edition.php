@@ -30,14 +30,19 @@ $has_lamination = false;
 $two_laminations = false;
 $has_run2 = false;
 
-$sql = "select c.work_type_id, c.ink_number, cr.length_pure_1, cr.length_pure_2, cr.length_pure_3, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name, c.ink_run2_1 "
+$sql = "select c.work_type_id, c.ink_number, c.ink_run2_number, cr.length_pure_1, cr.length_pure_2, cr.length_pure_3, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name, c.ink_run2_1 "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
         . "where c.id = $calculation_id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $work_type_id = $row['work_type_id'];
-    $ink_number = empty($row['ink_number']) ? 0 : $row['ink_number'];
+    if($run2) {
+        $ink_number = empty($row['ink_run2_number']) ? 0 : $row['ink_run2_number'];
+    }
+    else {
+        $ink_number = empty($row['ink_number']) ? 0 : $row['ink_number'];
+    }
     $length_pure_1 = $row['length_pure_1'];
     $length_pure_2 = $row['length_pure_2'];
     $length_pure_3 = $row['length_pure_3'];
@@ -69,16 +74,27 @@ if($work_id == WORK_PRINTING) {
     $machine_speed = 0;
     $machine_tuning_time = 0;
     $machine_waste_percent = 0;
-    $sql = "select speed from norm_machine where machine_id = ".$edition->MachineId." order by date desc limit 1";
+    $sql = "select speed, speed_run2 from norm_machine where machine_id = ".$edition->MachineId." order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $machine_speed = $row['speed'];
+        if($run2) {
+            $machine_speed = $row['speed_run2'];
+        }
+        else {
+            $machine_speed = $row['speed'];
+        }
     }
-    $sql = "select time, waste_percent from norm_priladka where machine_id = ".$edition->MachineId." order by date desc limit 1";
+    $sql = "select time, waste_percent, time_run2, waste_percent_run2 from norm_priladka where machine_id = ".$edition->MachineId." order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $machine_tuning_time = $row['time'];
-        $machine_waste_percent = $row['waste_percent'];
+        if($run2) {
+            $machine_tuning_time = $row['time_run2'];
+            $machine_waste_percent = $row['waste_percent_run2'];
+        }
+        else {
+            $machine_tuning_time = $row['time'];
+            $machine_waste_percent = $row['waste_percent'];        
+        }
     }
     $edition->WorkTime = ($ink_number * $machine_tuning_time / 60.0) + ($length_pure_1 * (1 + ($machine_waste_percent / 100)) / $machine_speed / 1000.0);
 }
