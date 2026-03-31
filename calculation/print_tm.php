@@ -211,7 +211,8 @@ $current_date_time = date("dmYHis");
             
             .header_title {
                 font-size: 18px;
-                vertical-align: middle;
+                vertical-align: top;
+                margin-top: 10px;
             }
             
             .right_logo {
@@ -363,6 +364,9 @@ $current_date_time = date("dmYHis");
         <div id="fixed_top">
             <div class="d-flex justify-content-between" style="display: flex; justify-content: space-between;">
                 <div>
+                    <div class="d-inline-block right_logo" style="display: inline-block;"><img src="../images/logo_with_label.svg" /></div>
+                </div>
+                <div>
                     <?php
                     $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION.'/calculation/details.php?id='.$id;
                     $qrcode = (new QRCode)->render($data);
@@ -383,9 +387,7 @@ $current_date_time = date("dmYHis");
                         <?=$calculation->first_name ?> <?=$calculation->last_name ?>
                     </div>
                 </div>
-                <div>
-                    <div class="d-inline-block right_logo" style="display: inline-block;"><img src="../images/logo_with_label.svg" /></div>
-                </div>
+                
             </div>
             <div id="title">Заказчик: <?=$calculation->customer ?></div>
             <div id="subtitle">Наименование: <?=$calculation->name ?></div>
@@ -425,11 +427,7 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                         <tr>
                             <td>Марка мат-ла</td>
-                            <td><?= $calculation->film_1 ?></td>
-                        </tr>
-                        <tr>
-                            <td>Толщина</td>
-                            <td class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_1), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_1), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
+                            <td><div><?= $calculation->film_1 ?></div> <span class="text-nowrap" style="white-space: nowrap"><?= DisplayNumber(floatval($calculation->thickness_1), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_1), 2), "0"), ",").' г/м<sup>2</sup>' ?></span></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -470,12 +468,10 @@ $current_date_time = date("dmYHis");
                                         echo "Ждем данные";
                                         break;
                                 }
+                                echo '<br /> '.DisplayNumber(floatval($calculation->raport), 3);
                                 ?>
+                                &nbsp; мм
                             </td>
-                        </tr>
-                        <tr>
-                            <td>Рапорт</td>
-                            <td><?= DisplayNumber(floatval($calculation->raport), 3) ?></td>
                         </tr>
                         <tr>
                             <td>Растяг</td>
@@ -484,14 +480,10 @@ $current_date_time = date("dmYHis");
                         <tr>
                             <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
                             <?php if(!empty($calculation->stream_width)): ?>
-                            <td><?=$calculation->stream_width.(empty($calculation->stream_width) ? "" : " мм") ?></td>
+                            <td>Ширина&nbsp;<?=$calculation->stream_width.(empty($calculation->stream_width) ? "" : " мм") ?> Длина&nbsp;<?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : "&nbsp;мм") ?></td>
                             <?php else: ?>
-                            <td style="white-space: nowrap;">Разная ≈ <?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",") ?> мм</td>
+                            <td style="white-space: nowrap;">Ширина&nbsp;разная&nbsp;≈&nbsp;<?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",") ?>&nbsp;мм Длина&nbsp;<?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : "&nbsp;мм") ?></td>
                             <?php endif; ?>
-                        </tr>
-                        <tr>
-                            <td>Длина этикетки</td>
-                            <td><?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : " мм") ?></td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
@@ -680,15 +672,11 @@ $current_date_time = date("dmYHis");
                                     <td><?=$lamination ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Ламинация 1</td>
+                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700;">Ламинация 1</td>
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
-                                    <td><?= $calculation->film_2 ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Толщина</td>
-                                    <td class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_2), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_2), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
+                                    <td><?= $calculation->film_2 ?> <span class="text-nowrap" style="white-space: nowrap"><?= DisplayNumber(floatval($calculation->thickness_2), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_2), 2), "0"), ",").' г/м<sup>2</sup>' ?></span></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
@@ -719,15 +707,11 @@ $current_date_time = date("dmYHis");
                                     <td><?=$calculation->requirement2 ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700; border-bottom: 0;">Ламинация 2</td>
+                                    <td colspan="2" class="font-weight-bold" style="font-weight: 700;">Ламинация 2</td>
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
-                                    <td><?= $calculation->film_3 ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Толщина</td>
-                                    <td class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_3), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_3), 2), "0"), ",").' г/м<sup>2</sup>' ?></td>
+                                    <td><?= $calculation->film_3 ?> <span class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_3), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_3), 2), "0"), ",").' г/м<sup>2</sup>' ?></span></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
