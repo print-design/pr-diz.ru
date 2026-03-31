@@ -391,19 +391,19 @@ $current_date_time = date("dmYHis");
             </div>
             <div id="title">Заказчик: <?=$calculation->customer ?></div>
             <div id="subtitle">Наименование: <?=$calculation->name ?></div>
-            <div class="row" style="display: flex; flex-wrap: wrap;">
-                <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
+            <div style="display: flex; flex-wrap: wrap;">
+                <div class="topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
                     <strong>Объем заказа:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(intval($quantities_sum), 0)." шт" : DisplayNumber(intval($calculation->quantity), 0).($calculation->unit == KG ? " кг" : " шт") ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? DisplayNumber(floatval($lengths_sum), 0)." м" : DisplayNumber(floatval($calculation_result->length_pure_1), 0)." м" ?>
                 </div>
-                <div class="col-6 topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
+                <div class="topproperty" style="-webkit-box-flex: 0; flex: 0 0 50%; max-width: 50%;">
                     <strong>Тип работы:</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=WORK_TYPE_NAMES[$calculation->work_type_id] ?>
                 </div>
             </div>
         </div>
         <div id="placeholder_top"></div>
         <div id="main">
-            <div class="row" style="display: flex; flex-wrap: wrap;">
-                <div class="col-4 border-right" style="-webkit-box-flex: 0; flex: 0 0 33%; max-width: 33%; border-right: 1px solid  #dee2e6; padding-right: 5px;">
+            <div style="display: flex; flex-wrap: wrap;">
+                <div class="border-right" style="-webkit-box-flex: 0; flex: 0 0 40%; max-width: 40%; border-right: 1px solid  #dee2e6; padding-right: 5px;">
                     <table class="w-100" style="width: 100%;">
                         <tr>
                             <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;">Печать</td>
@@ -468,9 +468,8 @@ $current_date_time = date("dmYHis");
                                         echo "Ждем данные";
                                         break;
                                 }
-                                echo '<br /> '.DisplayNumber(floatval($calculation->raport), 3);
+                                echo ' '.DisplayNumber(floatval($calculation->raport), 3).' мм';
                                 ?>
-                                &nbsp; мм
                             </td>
                         </tr>
                         <tr>
@@ -478,12 +477,14 @@ $current_date_time = date("dmYHis");
                             <td>Нет</td>
                         </tr>
                         <tr>
-                            <td><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
-                            <?php if(!empty($calculation->stream_width)): ?>
-                            <td>Ширина&nbsp;<?=$calculation->stream_width.(empty($calculation->stream_width) ? "" : " мм") ?> Длина&nbsp;<?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : "&nbsp;мм") ?></td>
-                            <?php else: ?>
-                            <td style="white-space: nowrap;">Ширина&nbsp;разная&nbsp;≈&nbsp;<?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",") ?>&nbsp;мм Длина&nbsp;<?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : "&nbsp;мм") ?></td>
-                            <?php endif; ?>
+                            <td colspan="2"><?=$calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки " : "Ширина ручья " ?>
+                                <?php if(!empty($calculation->stream_width)): ?>
+                                <strong><?=$calculation->stream_width.(empty($calculation->stream_width) ? "" : " мм, ") ?></strong>
+                                <?php else: ?>
+                                <strong>разная ≈ <?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",").' мм, ' ?></strong>
+                                <?php endif; ?>
+                                Длина <strong><?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : "&nbsp;мм") ?></strong>
+                            </td>
                         </tr>
                         <tr>
                             <td>Кол-во ручьёв</td>
@@ -659,9 +660,9 @@ $current_date_time = date("dmYHis");
                     </table>
                     <?php endif; ?>
                 </div>
-                <div class="col-8" style="-webkit-box-flex: 0; flex: 0 0 66%; max-width: 66%;">
-                    <div class="row" style="display: flex; flex-wrap: wrap;">
-                        <div class="col-6 border-right" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; border-right: 1px solid #dee2e6; padding-left: 5px; padding-right: 5px;">
+                <div style="-webkit-box-flex: 0; flex: 0 0 59%; max-width: 59%;">
+                    <div style="display: flex; flex-wrap: wrap;">
+                        <div class="border-right" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; border-right: 1px solid #dee2e6; padding-left: 5px; padding-right: 5px;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
                                     <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;"><?php if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE): ?> Ламинация<?php else: echo "<br /> "; endif; ?></td>
@@ -736,7 +737,7 @@ $current_date_time = date("dmYHis");
                                 <?php endif; ?>
                             </table>
                         </div>
-                        <div class="col-6" style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; padding-left: 5px;">
+                        <div style="-webkit-box-flex: 0; flex: 0 0 48%; max-width: 48%; padding-left: 5px;">
                             <table class="w-100" style="width: 100%;">
                                 <tr>
                                     <td colspan="2" class="font-weight-bold border-bottom-2" style="font-size: 18px; font-weight: 700;">Резка</td>
@@ -1014,7 +1015,7 @@ $current_date_time = date("dmYHis");
             <div style="white-space: pre-wrap; font-size: 24px;"><?=$calculation_result->comment ?></div>
             <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
             <div class="break_page"></div>
-            <div class="row" style="display: flex; flex-wrap: wrap;">
+            <div style="display: flex; flex-wrap: wrap;">
                 <?php
                 $printing_sequence = 0;
                 $counter = 0;
@@ -1029,11 +1030,11 @@ $current_date_time = date("dmYHis");
                         echo "<div class='break-page'></div>";
                     }
                     
-                    echo "<div class='row'>";
+                    echo "<div>";
                     $counter = 1;
                 }
                 ?>
-                <div class="col-3" style="-webkit-box-flex: 0; flex: 0 0 22%; max-width: 20%; padding-right: 30px;">
+                <div style="-webkit-box-flex: 0; flex: 0 0 22%; max-width: 20%; padding-right: 30px;">
                     <div class="mt-4 mb-2 printing_title font-weight-bold" style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 700;">Тираж <?=$printing_sequence ?></div>
                     <div class="d-flex justify-content-between font-italic border-bottom" style="display: flex; -webkit-box-pack: 0; justify-content: space-between; font-style: italic; border-bottom: 1px solid #dee2e6;">
                         <div><?= DisplayNumber(intval($printing['quantity']), 0) ?> шт</div>
