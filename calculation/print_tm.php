@@ -427,7 +427,7 @@ $current_date_time = date("dmYHis");
                         <?php endif; ?>
                         <tr>
                             <td>Марка мат-ла</td>
-                            <td><div><?= $calculation->film_1 ?></div> <span class="text-nowrap" style="white-space: nowrap"><?= DisplayNumber(floatval($calculation->thickness_1), 0).' мкм' ?></span></td>
+                            <td><div><?= $calculation->film_1 ?></div> <span class="text-nowrap" style="white-space: nowrap"><?= DisplayNumber(floatval($calculation->thickness_1), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_1), 2), "0"), ",").' г/м<sup>2</sup>' ?></span></td>
                         </tr>
                         <tr>
                             <td>Ширина мат-ла</td>
@@ -678,7 +678,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
-                                    <td><?= $calculation->film_2 ?> <span class="text-nowrap" style="white-space: nowrap"><?= DisplayNumber(floatval($calculation->thickness_2), 0).' мкм' ?></span></td>
+                                    <td><?= $calculation->film_2 ?> <span class="text-nowrap" style="white-space: nowrap"><?= DisplayNumber(floatval($calculation->thickness_2), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_2), 2), "0"), ",").' г/м<sup>2</sup>' ?></span></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
@@ -713,7 +713,7 @@ $current_date_time = date("dmYHis");
                                 </tr>
                                 <tr>
                                     <td>Марка пленки</td>
-                                    <td><?= $calculation->film_3 ?> <span class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_3), 0).' мкм' ?></span></td>
+                                    <td><?= $calculation->film_3 ?> <span class="text-nowrap" style="white-space: nowrap;"><?= DisplayNumber(floatval($calculation->thickness_3), 0).' мкм&nbsp;&ndash;&nbsp;'.rtrim(rtrim(DisplayNumber(floatval($calculation->density_3), 2), "0"), ",").' г/м<sup>2</sup>' ?></span></td>
                                 </tr>
                                 <tr>
                                     <td>Ширина мат-ла</td>
