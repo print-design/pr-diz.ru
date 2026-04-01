@@ -60,7 +60,12 @@ $machine_width = null;
 $price_run2 = null;
 $speed_run2 = null;
 
+$time_run2 = null;
+$length_run2 = null;
+$waste_percent_run2 = null;
+
 $machine_id = filter_input(INPUT_POST, 'machine_id');
+
 if(!empty($machine_id)) {
     $sql = "select width, price_run2, speed_run2 from norm_machine where machine_id = $machine_id order by date desc limit 1";
     $fetcher = new Fetcher($sql);
@@ -71,9 +76,6 @@ if(!empty($machine_id)) {
     }
 }
 
-$time_run2 = null;
-$length_run2 = null;
-$waste_percent_run2 = null;
 if(!empty($machine_id)) {
     $query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = $machine_id order by id desc limit 1";
     $fetcher = new Fetcher($query);
