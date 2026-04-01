@@ -74,12 +74,14 @@ if(!empty($machine_id)) {
 $time_run2 = null;
 $length_run2 = null;
 $waste_percent_run2 = null;
-$query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ". $this->machine_id." order by id desc limit 1";
-$fetcher = new Fetcher($query);
-if ($row = $fetcher->Fetch()) {
-    $time_run2 = $row['time_run2'];
-    $length_run2 = $row['length_run2'];
-    $waste_percent_run2 = $row['waste_percent_run2'];
+if(!empty($machine_id)) {
+    $query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = $machine_id order by id desc limit 1";
+    $fetcher = new Fetcher($query);
+    if ($row = $fetcher->Fetch()) {
+        $time_run2 = $row['time_run2'];
+        $length_run2 = $row['length_run2'];
+        $waste_percent_run2 = $row['waste_percent_run2'];
+    }
 }
 
 // Значение марки плёнки "другая"
