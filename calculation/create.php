@@ -59,6 +59,7 @@ if($row = $fetcher->Fetch()) {
 $machine_width = null;
 $price_run2 = null;
 $speed_run2 = null;
+$min_weight = null;
 
 $time_run2 = null;
 $length_run2 = null;
@@ -67,12 +68,13 @@ $waste_percent_run2 = null;
 $machine_id = filter_input(INPUT_POST, 'machine_id');
 
 if(!empty($machine_id)) {
-    $sql = "select width, price_run2, speed_run2 from norm_machine where machine_id = $machine_id order by date desc limit 1";
+    $sql = "select width, price_run2, speed_run2, min_weight from norm_machine where machine_id = $machine_id order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $machine_width = $row['width'];
         $price_run2 = $row['price_run2'];
         $speed_run2 = $row['speed_run2'];
+        $min_weight = $row['min_weight'];
     }
 }
 
@@ -160,6 +162,9 @@ for($i = 1; $i <= 4; $i++) {
     $$percent_run2_valid_var = '';
 }
 
+// Текст валидации
+$quantity_valid_text = "Объём заказа обязательно";
+
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -201,6 +206,13 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     elseif(filter_input(INPUT_POST, 'work_type_id') != WORK_TYPE_SELF_ADHESIVE && empty (filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
+    }
+    
+    // Если тип - "Плёнка с печатью", а размер тиража - в кг, то размер тиража должен быть не меньше минимальной масса.
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && filter_input(INPUT_POST, 'quantity') < $min_weight) {
+        $quantity_valid = ISINVALID;
+        $form_valid = false;
+        $quantity_valid_text = "Масса заказа не менее $min_weight кг";
     }
     
     // Валидация цен - они должны быть не меньше минимальных
@@ -1564,7 +1576,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <input type="text" 
                                            id="quantity" 
                                            name="quantity" 
-                                           class="form-control int-only int-format no-print-only print-only" 
+                                           class="form-control int-only int-format no-print-only print-only<?=$quantity_valid ?>" 
                                            placeholder="Объем заказа" 
                                            value="<?= empty($quantity) ? "" : number_format($quantity ?? 0, 0, ",", " ") ?>" 
                                            required="required" 
@@ -1573,7 +1585,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
                                            onfocusout="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
-                                    <div class="invalid-feedback">Объем заказа обязательно</div>
+                                    <div class="invalid-feedback"><?=$quantity_valid_text ?></div>
                                 </div>
                             </div>
                         </div>
