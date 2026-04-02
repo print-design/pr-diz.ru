@@ -6,7 +6,7 @@ use chillerlan\QRCode\QRCode;
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MARKER]))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // Текущий пользователь

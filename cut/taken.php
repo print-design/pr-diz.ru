@@ -5,7 +5,7 @@ include '../calculation/calculation_result.php';
 
 // Авторизация
 if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // Если не указан id или машина, направляем к списку заданий

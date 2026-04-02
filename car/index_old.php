@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST]))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // Обработка отправки формы

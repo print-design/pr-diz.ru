@@ -8,7 +8,7 @@ if(IsInRole(array('electrocarist'))) {
 
 // Авторизация
 elseif(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // Если не задано значение id, перенаправляем на список

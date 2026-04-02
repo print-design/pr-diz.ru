@@ -1,5 +1,5 @@
 <?php
 if(!IsInRole('accountant')) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 ?>

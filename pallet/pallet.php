@@ -8,7 +8,7 @@ if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
 
 // Авторизация
 elseif(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // Если не задано значение id, перенаправляем на список

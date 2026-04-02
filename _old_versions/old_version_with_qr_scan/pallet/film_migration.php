@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'storekeeper', 'manager', 'administrator'))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // Общего количества

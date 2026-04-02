@@ -5,7 +5,7 @@ include './calculation_result.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // Атрибут "поле неактивно"
@@ -119,7 +119,7 @@ $calculation_result = CalculationResult::Create($id);
 
 // Чужой менеджер смотреть объект не имеет право
 if(IsInRole(ROLE_NAMES[ROLE_MANAGER]) && !IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) && $calculation->manager_id != GetUserId()) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 $new_forms_number = 0;

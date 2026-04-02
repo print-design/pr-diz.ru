@@ -3,7 +3,7 @@ include_once '../include/topscripts.php';
 
 // Авторизация
 if(!IsInRole(array('technologist', 'dev', 'cutter'))) {
-    header('Location: '.APPLICATION.'/unauthorized.php');
+    include '../include/_unauthorized.php';
 }
 
 // СТАТУС "СВОБОДНЫЙ"
