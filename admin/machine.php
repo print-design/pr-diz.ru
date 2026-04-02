@@ -21,6 +21,8 @@ $vaporization_expense_valid = '';
 $price_run2_valid = '';
 $speed_run2_valid = '';
 
+$min_weight_valid = '';
+
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
     if(empty(filter_input(INPUT_POST, 'price'))) {
@@ -43,13 +45,18 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $form_valid = false;
     }
     
-    if(key_exists('price_run2_valid', $_POST) && empty(filter_input(INPUT_POST, 'price_run2_valid'))) {
+    if(key_exists('price_run2', $_POST) && empty(filter_input(INPUT_POST, 'price_run2'))) {
         $price_run2_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(key_exists('speed_run2_valid', $_POST) && empty(filter_input(INPUT_POST, 'speed_run2_valid'))) {
+    if(key_exists('speed_run2', $_POST) && empty(filter_input(INPUT_POST, 'speed_run2'))) {
         $speed_run2_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    if(null === filter_input(INPUT_POST, 'min_weight')) {
+        $min_weight_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -63,7 +70,9 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $old_price_run2 = '';
         $old_speed_run2 = '';
         
-        $sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2 from norm_machine where machine_id = $machine_id order by date desc limit 1";
+        $old_min_weight = '';
+        
+        $sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight from norm_machine where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -75,6 +84,8 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
             
             $old_price_run2 = $row['price_run2'];
             $old_speed_run2 = $row['speed_run2'];
+            
+            $old_min_weight = $row['min_weight'];
         }
         
         // Новый объект
@@ -86,13 +97,16 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $new_price_run2 = filter_input(INPUT_POST, 'price_run2'); if($new_price_run2 === null) $new_price_run2 = "NULL";
         $new_speed_run2 = filter_input(INPUT_POST, 'speed_run2'); if($new_speed_run2 === null) $new_speed_run2 = "NULL";
         
+        $new_min_weight = filter_input(INPUT_POST, 'min_weight'); if($new_min_weight === null) $new_min_weight = "NULL";
+        
         if($old_price != $new_price || 
                 $old_speed != $new_speed || 
                 $old_width != $new_width || 
                 $old_vaporization_expense != $new_vaporization_expense || 
                 ($new_price_run2 != "NULL" && $old_price_run2 != $new_price_run2) || 
-                ($new_speed_run2 != "NULL" && $old_speed_run2 != $new_speed_run2)) {
-            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense, price_run2, speed_run2) values ($machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense, $new_price_run2, $new_speed_run2)";
+                ($new_speed_run2 != "NULL" && $old_speed_run2 != $new_speed_run2) || 
+                $old_min_weight != $new_min_weight) {
+            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight) values ($machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense, $new_price_run2, $new_speed_run2, $new_min_weight)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -111,7 +125,9 @@ $vaporization_expense = '';
 $price_run2 = '';
 $speed_run2 = '';
 
-$sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2 from norm_machine where machine_id = $machine_id order by date desc limit 1";
+$min_weight = '';
+
+$sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight from norm_machine where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -125,6 +141,8 @@ if($row = $fetcher->Fetch()) {
     
     $price_run2 = $row['price_run2'];
     $speed_run2 = $row['speed_run2'];
+    
+    $min_weight = $row['min_weight'];
 }
 ?>
 <!DOCTYPE html>
@@ -200,6 +218,16 @@ if($row = $fetcher->Fetch()) {
                         </div>
                     </div>
                     <?php endif; ?>
+                    <div class="col-12 col-md-4 col-lg-2">
+                        <?php if($machine_id == PRINTER_SOMA_OPTIMA): ?>
+                        <h2>&nbsp;</h2>
+                        <?php endif; ?>
+                        <div class="form-group">
+                            <label for="min_weight">Минимальная масса заказа, кг</label>
+                            <input type="text" class="form-control int-only<?=$min_weight_valid ?>" id="min_weight" name="min_weight" value="<?= empty($min_weight) ? "" : intval($min_weight) ?>" placeholder="Минимальная масса заказа, кг" required="required" autocomplete="off" />
+                            <div class="invalid-feedback">Минимальная масса заказа обязательно</div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
