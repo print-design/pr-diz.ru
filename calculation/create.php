@@ -1588,6 +1588,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback"><?=$quantity_valid_text ?></div>
                                 </div>
                             </div>
+                            <div class="col-6" id="min_weight_text" style="font-size: 30px; padding-top: 20px; color: green;"></div>
                         </div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
@@ -3500,6 +3501,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('select#raport').html("<option value=''>Рапорт...</option>")
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
+                    $('#min_weight_text').text('');
                     
                     // Скрываем второй прогон
                     HideRun2();
@@ -3538,6 +3540,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         HideRun2();
                         $('.run2-only').addClass('d-none');
                     }
+                    
+                    // Показываем минимальную массу заказа
+                    $('#min_weight_text').text('min');
                 }
             });
             
