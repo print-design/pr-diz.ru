@@ -1588,7 +1588,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback"><?=$quantity_valid_text ?></div>
                                 </div>
                             </div>
-                            <div class="col-6" id="min_weight_text" style="font-size: 30px; padding-top: 20px; color: green;"></div>
+                            <div class="col-6" id="min_weight_text" style="font-size: 30px; padding-top: 20px; color: red;"></div>
                         </div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
@@ -3554,6 +3554,19 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             .done(function(data) {
                                 min_weight = data;
                                 $('#min_weight_text').text('min ' + min_weight + ' кг');
+                                
+                                quantity = $('#quantity').val();
+                                
+                                if(quantity.length > 0 && min_weight > 0) {
+                                    int_quantity = Number.parseInt($('#quantity').val().replace(/[^0-9\\.]+/g, ''));
+                                    
+                                    if(int_quantity < min_weight) {
+                                        $('#min_weight_text').css('color', 'red');
+                                    }
+                                    else {
+                                        $('#min_weight_text').css('color', 'green');
+                                    }
+                                }
                             })
                             .fail(function() {
                                 alert('Ошибка при получении минимальной массы заказа');
@@ -3676,13 +3689,25 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Валидация минимальнй массы заказа
             $('#quantity').keyup(function() {
                 if(min_weight > 0) {
-                    alert($(this).val() + 'KEYUP');
+                    int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
+                    if(Number.isInteger(int_weight) && int_weight >= min_weight) {
+                        $('#min_weight_text').css('color', 'green');
+                    }
+                    else {
+                        $('#min_weight_text').css('color', 'red');
+                    }
                 }
             });
             
             $('#quantity').change(function() {
                 if(min_weight > 0) {
-                    alert($(this).val() + 'CHANGE');
+                    int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
+                    if(Number.isInteger(int_weight) && int_weight >= min_weight) {
+                        $('#min_weight_text').css('color', 'green');
+                    }
+                    else {
+                        $('#min_weight_text').css('color', 'red');
+                    }
                 }
             });
             
