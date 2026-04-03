@@ -3485,6 +3485,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#label_quantity').text('Объем заказа, шт');
                     $('#label_extra_expense').text('Дополнительные расходы с шт, руб');
                 }
+                
+                SetMinWeight($('#machine_id').val(), $('input[value=kg]').is(':checked'));
             });
             
             min_weight = 0;
@@ -3498,6 +3500,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 
                 SetRaportOnChange();
+                SetMinWeight($(this).val(), $('input[value=kg]').is(':checked'));
                 
                 if($(this).val() == "") {
                     $('select#raport').html("<option value=''>Рапорт...</option>")
@@ -3542,18 +3545,24 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         HideRun2();
                         $('.run2-only').addClass('d-none');
                     }
-                    
-                    // Показываем минимальную массу заказа
-                    $.ajax({ url: "_min_weight.php?machine_id=" + $(this).val() })
+                }
+            });
+            
+            function SetMinWeight(machine_id, kg_checked) {
+                if(machine_id != null && machine_id != '' && kg_checked) {
+                    $.ajax({ url: "_min_weight.php?machine_id=" + machine_id })
                             .done(function(data) {
                                 min_weight = data;
-                                $('#min_weight_text').text('min' + min_weight);
+                                $('#min_weight_text').text('min ' + min_weight + ' кг');
                             })
                             .fail(function() {
                                 alert('Ошибка при получении минимальной массы заказа');
                             });
                 }
-            });
+                else {
+                    $('#min_weight_text').text('');
+                }
+            }
             
             // При выборе значения "Ввести вручную" в списке рапортов, скрываем список и показываем текстовое поле
             function SetRaportOnChange() {
@@ -3661,6 +3670,19 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         .fail(function() {
                             alert('Ошибка при выборе толщины пленки');
                         });
+                }
+            });
+            
+            // Валидация минимальнй массы заказа
+            $('#quantity').keyup(function() {
+                if(min_weight > 0) {
+                    alert($(this).val() + 'KEYUP');
+                }
+            });
+            
+            $('#quantity').change(function() {
+                if(min_weight > 0) {
+                    alert($(this).val() + 'CHANGE');
                 }
             });
             
