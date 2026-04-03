@@ -3487,6 +3487,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
+            min_weight = 0;
+            
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function() {
                 $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
@@ -3542,7 +3544,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     }
                     
                     // Показываем минимальную массу заказа
-                    $('#min_weight_text').text('min');
+                    $.ajax({ url: "_min_weight.php?machine_id=" + $(this).val() })
+                            .done(function(data) {
+                                min_weight = data;
+                                $('#min_weight_text').text('min' + min_weight);
+                            })
+                            .fail(function() {
+                                alert('Ошибка при получении минимальной массы заказа');
+                            });
                 }
             });
             
