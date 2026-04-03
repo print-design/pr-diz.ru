@@ -3486,7 +3486,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#label_extra_expense').text('Дополнительные расходы с шт, руб');
                 }
                 
-                SetMinWeight($('#machine_id').val(), $('input[value=kg]').is(':checked'));
+                SetMinWeight($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
             });
             
             min_weight = 0;
@@ -3500,7 +3500,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 
                 SetRaportOnChange();
-                SetMinWeight($(this).val(), $('input[value=kg]').is(':checked'));
+                SetMinWeight($('#work_type_id').val(), $(this).val(), $('input[value=kg]').is(':checked'));
                 
                 if($(this).val() == "") {
                     $('select#raport').html("<option value=''>Рапорт...</option>")
@@ -3548,8 +3548,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
-            function SetMinWeight(machine_id, kg_checked) {
-                if(machine_id != null && machine_id != '' && kg_checked) {
+            function SetMinWeight(work_type_id, machine_id, kg_checked) {
+                if(work_type_id == <?= WORK_TYPE_PRINT ?> && machine_id != null && machine_id != '' && kg_checked) {
                     $.ajax({ url: "_min_weight.php?machine_id=" + machine_id })
                             .done(function(data) {
                                 min_weight = data;
