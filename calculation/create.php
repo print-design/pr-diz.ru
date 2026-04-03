@@ -162,9 +162,6 @@ for($i = 1; $i <= 4; $i++) {
     $$percent_run2_valid_var = '';
 }
 
-// Текст валидации
-$quantity_valid_text = "Объём заказа обязательно";
-
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -212,7 +209,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && filter_input(INPUT_POST, 'quantity') < $min_weight) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
-        $quantity_valid_text = "Масса заказа не менее $min_weight кг";
     }
     
     // Валидация цен - они должны быть не меньше минимальных
@@ -983,7 +979,7 @@ if($work_type_id != WORK_TYPE_SELF_ADHESIVE && !empty($streams_number)) {
         }
     }
     
-    if(count($stream_widths) == 0) {
+    if(count($stream_widths) == 0 && !empty($id)) {
         $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
         $fetcher = new Fetcher($sql);
         while($stream_widths_row = $fetcher->Fetch()) {
@@ -1585,7 +1581,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
                                            onfocusout="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
-                                    <div class="invalid-feedback" id="quantity_invalid_feedback"><?=$quantity_valid_text ?></div>
+                                    <div class="invalid-feedback" id="quantity_invalid_feedback">Объём заказа обязательно</div>
                                 </div>
                             </div>
                             <div class="col-6" id="min_weight_text" style="font-size: 30px; padding-top: 20px; color: red;"></div>
@@ -3579,6 +3575,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#min_weight_text').text('');
                 }
             }
+            
+            SetMinWeight($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
             
             // При выборе значения "Ввести вручную" в списке рапортов, скрываем список и показываем текстовое поле
             function SetRaportOnChange() {
