@@ -1585,7 +1585,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
                                            onkeyup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
                                            onfocusout="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
-                                    <div class="invalid-feedback"><?=$quantity_valid_text ?></div>
+                                    <div class="invalid-feedback" id="quantity_invalid_feedback"><?=$quantity_valid_text ?></div>
                                 </div>
                             </div>
                             <div class="col-6" id="min_weight_text" style="font-size: 30px; padding-top: 20px; color: red;"></div>
@@ -3562,9 +3562,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     
                                     if(int_quantity < min_weight) {
                                         $('#min_weight_text').css('color', 'red');
+                                        $('#quantity').addClass('is-invalid');
+                                        $('#quantity_invalid_feedback').text('Объём заказа меньше минимального');
                                     }
                                     else {
                                         $('#min_weight_text').css('color', 'green');
+                                        $('#quantity').removeClass('is-invalid');
                                     }
                                 }
                             })
@@ -3692,9 +3695,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
                     if(Number.isInteger(int_weight) && int_weight >= min_weight) {
                         $('#min_weight_text').css('color', 'green');
+                        $('#quantity').removeClass('is-invalid');
                     }
                     else {
                         $('#min_weight_text').css('color', 'red');
+                        $('#quantity').addClass('is-invalid');
+                        $('#quantity_invalid_feedback').text('Объём заказа меньше минимального');
                     }
                 }
             });
@@ -3704,9 +3710,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
                     if(Number.isInteger(int_weight) && int_weight >= min_weight) {
                         $('#min_weight_text').css('color', 'green');
+                        $('#quantity').removeClass('is-invalid');
                     }
                     else {
                         $('#min_weight_text').css('color', 'red');
+                        $('#quantity').addClass('is-invalid');
+                        $('#quantity_invalid_feedback').text('Объём заказа меньше минимального');
                     }
                 }
             });
