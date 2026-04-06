@@ -22,6 +22,7 @@ $price_run2_valid = '';
 $speed_run2_valid = '';
 
 $min_weight_valid = '';
+$min_length_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
@@ -60,6 +61,11 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $form_valid = false;
     }
     
+    if(null === filter_input(INPUT_POST, 'min_length')) {
+        $min_length_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
     if($form_valid) {
         // Старый объект
         $old_price = '';
@@ -71,8 +77,9 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $old_speed_run2 = '';
         
         $old_min_weight = '';
+        $old_min_length = '';
         
-        $sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight from norm_machine where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_length from norm_machine where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
@@ -86,6 +93,7 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
             $old_speed_run2 = $row['speed_run2'];
             
             $old_min_weight = $row['min_weight'];
+            $old_min_length = $row['min_length'];
         }
         
         // Новый объект
@@ -98,6 +106,7 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $new_speed_run2 = filter_input(INPUT_POST, 'speed_run2'); if($new_speed_run2 === null) $new_speed_run2 = "NULL";
         
         $new_min_weight = filter_input(INPUT_POST, 'min_weight'); if($new_min_weight === null) $new_min_weight = "NULL";
+        $new_min_length = filter_input(INPUT_POST, 'min_length'); if($new_min_length === null) $new_min_length = "NULL";
         
         if($old_price != $new_price || 
                 $old_speed != $new_speed || 
@@ -105,8 +114,9 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
                 $old_vaporization_expense != $new_vaporization_expense || 
                 ($new_price_run2 != "NULL" && $old_price_run2 != $new_price_run2) || 
                 ($new_speed_run2 != "NULL" && $old_speed_run2 != $new_speed_run2) || 
-                $old_min_weight != $new_min_weight) {
-            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight) values ($machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense, $new_price_run2, $new_speed_run2, $new_min_weight)";
+                $old_min_weight != $new_min_weight || 
+                $old_min_length != $new_min_length) {
+            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_length) values ($machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense, $new_price_run2, $new_speed_run2, $new_min_weight, $new_min_length)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -126,8 +136,9 @@ $price_run2 = '';
 $speed_run2 = '';
 
 $min_weight = '';
+$min_length = '';
 
-$sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight from norm_machine where machine_id = $machine_id order by date desc limit 1";
+$sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_length from norm_machine where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -143,6 +154,7 @@ if($row = $fetcher->Fetch()) {
     $speed_run2 = $row['speed_run2'];
     
     $min_weight = $row['min_weight'];
+    $min_length = $row['min_length'];
 }
 ?>
 <!DOCTYPE html>
@@ -226,6 +238,11 @@ if($row = $fetcher->Fetch()) {
                             <label for="min_weight">Минимальная масса заказа, кг</label>
                             <input type="text" class="form-control int-only<?=$min_weight_valid ?>" id="min_weight" name="min_weight" value="<?= empty($min_weight) ? "" : intval($min_weight) ?>" placeholder="Минимальная масса заказа, кг" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Минимальная масса заказа обязательно</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="min_length">Минимальная длина заказа, км</label>
+                            <input type="text" class="form-control int-only<?=$min_length_valid ?>" id="min_length" name="min_length" value="<?= empty($min_length) ? "" : intval($min_length) ?>" placeholder="Максимальная длина заказа, км" required="required" autocomplete="off" />
+                            <div class="invalid-feedbackl">Минимальная длина заказа обязательно</div>
                         </div>
                     </div>
                 </div>
