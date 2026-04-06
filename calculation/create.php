@@ -1584,7 +1584,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback" id="quantity_invalid_feedback">Объём заказа обязательно</div>
                                 </div>
                             </div>
-                            <div class="col-6" id="min_weight_text" style="font-size: 30px; padding-top: 20px; color: red;"></div>
+                            <div class="col-6" id="min_weight_text" style="padding-top: 35px; color: red;"></div>
                         </div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
