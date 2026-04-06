@@ -60,6 +60,7 @@ $machine_width = null;
 $price_run2 = null;
 $speed_run2 = null;
 $min_weight = null;
+$min_length = null;
 
 $time_run2 = null;
 $length_run2 = null;
@@ -68,13 +69,14 @@ $waste_percent_run2 = null;
 $machine_id = filter_input(INPUT_POST, 'machine_id');
 
 if(!empty($machine_id)) {
-    $sql = "select width, price_run2, speed_run2, min_weight from norm_machine where machine_id = $machine_id order by date desc limit 1";
+    $sql = "select width, price_run2, speed_run2, min_weight, min_length from norm_machine where machine_id = $machine_id order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $machine_width = $row['width'];
         $price_run2 = $row['price_run2'];
         $speed_run2 = $row['speed_run2'];
         $min_weight = $row['min_weight'];
+        $min_length = $row['min_length'];
     }
 }
 
@@ -1584,7 +1586,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div class="invalid-feedback" id="quantity_invalid_feedback">Объём заказа обязательно</div>
                                 </div>
                             </div>
-                            <div class="col-6" id="min_weight_text" style="padding-top: 35px; color: red;"></div>
+                            <div class="col-6 d-flex justify-content-start">
+                                <div id="min_weight_text" style="padding-top: 35px; color: red; margin-right: 10px;"></div>
+                                <div id="min_length_text" style="padding-top: 35px; color: green;"></div>
+                            </div>
                         </div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
@@ -3482,10 +3487,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#label_extra_expense').text('Дополнительные расходы с шт, руб');
                 }
                 
-                SetMinWeight($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
+                SetValidParameters($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
             });
             
             min_weight = 0;
+            min_length = 0;
             
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function() {
@@ -3496,13 +3502,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 
                 SetRaportOnChange();
-                SetMinWeight($('#work_type_id').val(), $(this).val(), $('input[value=kg]').is(':checked'));
+                SetValidParameters($('#work_type_id').val(), $(this).val(), $('input[value=kg]').is(':checked'));
                 
                 if($(this).val() == "") {
                     $('select#raport').html("<option value=''>Рапорт...</option>")
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
                     $('#min_weight_text').text('');
+                    $('#min_length_text').text('');
                     
                     // Скрываем второй прогон
                     HideRun2();
@@ -3544,26 +3551,33 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             });
             
-            function SetMinWeight(work_type_id, machine_id, kg_checked) {
+            function SetValidParameters(work_type_id, machine_id, kg_checked) {
                 if(work_type_id == <?= WORK_TYPE_PRINT ?> && machine_id != null && machine_id != '' && kg_checked) {
-                    $.ajax({ url: "_min_weight.php?machine_id=" + machine_id })
+                    $.ajax({ dataType: 'JSON', url: "_valid_parameters.php?machine_id=" + machine_id })
                             .done(function(data) {
-                                min_weight = data;
-                                $('#min_weight_text').text('min ' + min_weight + ' кг');
-                                
-                                quantity = $('#quantity').val();
-                                
-                                if(quantity.length > 0 && min_weight > 0) {
-                                    int_quantity = Number.parseInt($('#quantity').val().replace(/[^0-9\\.]+/g, ''));
+                                if(data.error != '') {
+                                    alert(data.error);
+                                }
+                                else {
+                                    min_weight = data.min_weight;
+                                    min_length = data.min_length;
+                                    $('#min_weight_text').text('min ' + data.min_weight + ' кг');
+                                    $('#min_length_text').text('min ' + data.min_length + ' км');
                                     
-                                    if(int_quantity < min_weight) {
-                                        $('#min_weight_text').css('color', 'red');
-                                        $('#quantity').addClass('is-invalid');
-                                        $('#quantity_invalid_feedback').text('Объём заказа меньше минимального');
-                                    }
-                                    else {
-                                        $('#min_weight_text').css('color', 'green');
-                                        $('#quantity').removeClass('is-invalid');
+                                    quantity = $('#quantity').val();
+                                    
+                                    if(quantity.length > 0 && data.min_weight > 0) {
+                                        int_quantity = Number.parseInt($('#quantity').val().replace(/[^0-9\\.]+/g, ''));
+                                        
+                                        if(int_quantity < data.min_weight) {
+                                            $('#min_weight_text').css('color', 'red');
+                                            $('#quantity').addClass('is-invalid');
+                                            $('#quantity_invalid_feedback').text('Объём заказа меньше минимального');
+                                        }
+                                        else {
+                                            $('#min_weight_text').css('color', 'green');
+                                            $('#quantity').removeClass('is-invalid');
+                                        }
                                     }
                                 }
                             })
@@ -3573,10 +3587,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 else {
                     $('#min_weight_text').text('');
+                    $('#min_length_text').text('');
                 }
             }
             
-            SetMinWeight($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
+            SetValidParameters($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
             
             // При выборе значения "Ввести вручную" в списке рапортов, скрываем список и показываем текстовое поле
             function SetRaportOnChange() {
