@@ -60,7 +60,7 @@ $machine_width = null;
 $price_run2 = null;
 $speed_run2 = null;
 $min_weight = null;
-$min_length = null;
+$min_square = null;
 
 $time_run2 = null;
 $length_run2 = null;
@@ -69,14 +69,14 @@ $waste_percent_run2 = null;
 $machine_id = filter_input(INPUT_POST, 'machine_id');
 
 if(!empty($machine_id)) {
-    $sql = "select width, price_run2, speed_run2, min_weight, min_length from norm_machine where machine_id = $machine_id order by date desc limit 1";
+    $sql = "select width, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = $machine_id order by date desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $machine_width = $row['width'];
         $price_run2 = $row['price_run2'];
         $speed_run2 = $row['speed_run2'];
         $min_weight = $row['min_weight'];
-        $min_length = $row['min_length'];
+        $min_square = $row['min_square'];
     }
 }
 
@@ -1588,7 +1588,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                             <div class="col-6 d-flex justify-content-start">
                                 <div id="min_weight_text" style="padding-top: 35px; color: red; margin-right: 10px;"></div>
-                                <div id="min_length_text" style="padding-top: 35px; color: green;"></div>
+                                <div id="min_square_text" style="padding-top: 35px; color: green;"></div>
                             </div>
                         </div>
                         <!-- Количество тиражей -->
@@ -3491,7 +3491,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             min_weight = 0;
-            min_length = 0;
+            min_square = 0;
             
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function() {
@@ -3509,7 +3509,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#ink_number').html("<option value='' hidden='hidden'>Количество красок...</option>");
                     $('#ink_number').change();
                     $('#min_weight_text').text('');
-                    $('#min_length_text').text('');
+                    $('#min_square_text').text('');
                     
                     // Скрываем второй прогон
                     HideRun2();
@@ -3560,9 +3560,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 }
                                 else {
                                     min_weight = data.min_weight;
-                                    min_length = data.min_length;
-                                    $('#min_weight_text').text('min ' + data.min_weight + ' кг');
-                                    $('#min_length_text').text('min ' + data.min_length + ' км');
+                                    min_square = data.min_square;
+                                    $('#min_weight_text').html('min ' + data.min_weight + ' кг');
+                                    $('#min_square_text').html('min ' + data.min_square + ' км<sup>2</sup>');
                                     
                                     quantity = $('#quantity').val();
                                     
@@ -3587,7 +3587,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
                 else {
                     $('#min_weight_text').text('');
-                    $('#min_length_text').text('');
+                    $('#min_square_text').text('');
                 }
             }
             
