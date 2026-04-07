@@ -240,8 +240,8 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">Минимальная масса заказа обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="min_square">Минимальная квадратура заказа, км<sup>2</sup></label>
-                            <input type="text" class="form-control int-only<?=$min_square_valid ?>" id="min_square" name="min_square" value="<?= empty($min_square) ? "" : intval($min_square) ?>" placeholder="Минимальная квадратура заказа, км2" required="required" autocomplete="off" />
+                            <label for="min_square">Минимальная квадратура заказа, м<sup>2</sup></label>
+                            <input type="text" class="form-control int-only<?=$min_square_valid ?>" id="min_square" name="min_square" value="<?= empty($min_square) ? "" : intval($min_square) ?>" placeholder="Минимальная квадратура заказа, м2" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Минимальная квадратура заказа обязательно</div>
                         </div>
                     </div>

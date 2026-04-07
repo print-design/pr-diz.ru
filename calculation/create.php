@@ -3562,7 +3562,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     min_weight = data.min_weight;
                                     min_square = data.min_square;
                                     $('#min_weight_text').html('min ' + data.min_weight + ' кг');
-                                    $('#min_square_text').html('min ' + data.min_square + ' км<sup>2</sup>');
+                                    $('#min_square_text').html('min ' + data.min_square + ' м<sup>2</sup>');
                                     
                                     quantity = $('#quantity').val();
                                     
