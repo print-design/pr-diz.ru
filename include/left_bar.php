@@ -17,6 +17,7 @@ $cut_class = '';
 $pack_class = '';
 $admin_class = '';
 $improvement_class = '';
+$okto_class = '';
 
 if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
     $zakaz_class = " active";
@@ -38,6 +39,9 @@ elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
 }
 elseif($folder == "improvement") {
     $improvement_class = " active";
+}
+elseif($folder == "okto") {
+    $okto_class = " active";
 }
 
 ?>
@@ -105,4 +109,6 @@ elseif($folder == "improvement") {
     <?php if(IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) || IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]))): ?>
     <a href="<?= APPLICATION ?>/improvement/" class="left_bar_item ui_tooltip right<?=$improvement_class ?>" title="Предложения по улучшению"><i class="far fa-thumbs-up" style="font-size: 1.3rem;"></i></a>
     <?php endif; ?>
+    
+    <a href="<?= APPLICATION ?>/okto/" class="left_bar_item ui_tooltip right<?=$okto_class ?>" title="Octopus"><i class="far fa-comments" style="font-size: 1.3rem;"></i></a>
 </div>
