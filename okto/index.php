@@ -84,7 +84,11 @@ if(!LoggedIn()) {
         <?php
         include '../include/footer.php';
         ?>
+        <script src="../js/waypoints/lib/jquery.waypoints.min.js"></script>
+        <script src="../js/waypoints/lib/shortcuts/inview.min.js"></script>
         <script>
+            intervalID = 0;
+            
             $(document).ready(function() {
                 $('.btn_contact').click(function() {
                     $('.btn_contact').removeClass('btn-dark');
@@ -95,6 +99,13 @@ if(!LoggedIn()) {
                     $('#dialog').removeClass('d-none');
                     $('#dialog').load('_dialog.php?id=' + $(this).attr('data-id'), function() {
                         $('#dialog').scrollTop($('#dialog_content').height());
+                        clearInterval(intervalID);
+                        intervalID = setInterval(function() {
+                            user_id_to = $('#user_id_to').val();
+                            $('#dialog').load('_dialog.php?id=' + user_id_to, function() {
+                                $('#dialog').scrollTop($('#dialog_content').height());
+                            });
+                        }, 2000);
                     });
                     
                     $('#input').removeClass('d-none');
