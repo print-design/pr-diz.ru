@@ -16,20 +16,23 @@ $sql = "select timestamp, message, viewed, 0 as inbox from dialog "
         . "order by timestamp";
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
-    $viewedclass = $row['inbox'] == 1 ? "inbox" : ($row['viewed'] == 1 ? "viewed" : "unviewed");
+    $inoutclass = $row['inbox'] == 1 ? "inbox" : "outbox";
+    $viewedclass = $row['viewed'] == 1 ? "viewed" : "unviewed";
     $alignclass = $row['inbox'] == 1 ? "text-left" : "text-right";
 ?>
-    <div class="<?=$viewedclass ?> right <?=$alignclass ?>">
+    <div class="<?=$inoutclass ?> <?=$viewedclass ?> right <?=$alignclass ?>">
         <p><?=$row['timestamp'] ?></p>
         <p>
             <?=$row['message'] ?>
             <?php 
+            if($inoutclass == 'outbox'):
             if($viewedclass == 'viewed'):
             ?>
             <i class="fas fa-check-double ml-2"></i>
-            <?php elseif($viewedclass == 'unviewed'): ?>
+            <?php else: ?>
             <i class="fas fa-check ml-2"></i>
             <?php
+            endif;
             endif;
             ?>
         </p>

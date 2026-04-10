@@ -150,8 +150,8 @@ if(!LoggedIn()) {
             
             function CheckViewed() {
                 $('#message').val('');
-                $('.unviewed').each(function(index) {
-                    $('#message').val($('#message').val() + $(this).position().top + ' -- ');
+                $('.inbox.unviewed').each(function(index) {
+                    $('#message').val($('#message').val() + ($(this).position().top > $('#dialog').height() ? "нет" : "да") + ' -- ');
                 });
                 $('#message').val($('#message').val() + $('#dialog').height() + ' ' + $('#dialog').scrollTop());
             }
