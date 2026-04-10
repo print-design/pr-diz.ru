@@ -55,26 +55,9 @@ if(!LoggedIn()) {
             <h1>Octopus</h1>
             <div class="wrapper" style="position: absolute; top: 100px; bottom: 0; left: 0; right: 0; padding-left: 75px;">
                 <nav id="sidebar">
-                    <div id="contacts" style="overflow: auto; position: absolute; top: 0px; bottom: 0; left: 0; right: 15px;">
-                        <?php
-                        $me = GetUserId();
-                        $sql = "select u.id, u.last_name, u.first_name, "
-                                . "(select count(id) from dialog where user_id_from = u.id and user_id_to = $me and viewed = 0) unviewed "
-                                . "from user u where u.active = 1 and u.id <> $me "
-                                . "order by u.last_name, u.first_name";
-                        $fetcher = new Fetcher($sql);
-                        while($row = $fetcher->Fetch()):
-                        ?>
-                        <button type="button" class="btn btn-light w-100 mt-1 mb-1 btn_contact" style="text-align: left;" data-id="<?=$row['id'] ?>">
-                            <div class="d-flex justify-content-between">
-                                <div><?=$row['last_name'].' '.$row['first_name'] ?></div>
-                                <div><?=($row['unviewed'] > 0 ? $row['unviewed'] : '') ?></div>
-                            </div>
-                                
-                        </button>
-                        <?php endwhile; ?>
-                    </div>
+                    <div id="contacts" style="overflow: auto; position: absolute; top: 0px; bottom: 0; left: 0; right: 15px;"></div>
                 </nav>
+                <div id="contacts1"></div>
                 <div id="content" style="width: 100%; position: relative;">
                     <div id="dialog" class="d-none" style="overflow: auto; position: absolute; top: 4px; bottom: 150px; left: 0; right: 10px; padding: 15px; border: solid 1px lightgray; border-radius: 20px;"></div>
                     <div id="input" class="d-none" style="position: fixed; bottom: 10px; left: 472px; right: 10px;">
@@ -96,10 +79,24 @@ if(!LoggedIn()) {
         <script src="../js/waypoints/lib/jquery.waypoints.min.js"></script>
         <script src="../js/waypoints/lib/shortcuts/inview.min.js"></script>
         <script>
-            intervalID = 0;
+            intervalContactsID = 0;
+            intervalDialogID = 0;
             scrollTop = 0;
             
             $(document).ready(function() {
+                $('#contacts').text('CFR');
+                $('#contacts').load('_contacts.php', ChooseContact);
+                
+                intervalContactsID = setInterval(function() {
+                    $('#contacts').load('_contacts.php', ChooseContact);
+                }, 2000);
+                
+                $('#dialog').on('scroll', function() {
+                    scrollTop = $(this).scrollTop();
+                });
+            });
+            
+            function ChooseContact() {
                 $('.btn_contact').click(function() {
                     $('.btn_contact').removeClass('btn-dark');
                     $('.btn_contact').addClass('btn-light');
@@ -109,8 +106,8 @@ if(!LoggedIn()) {
                     $('#dialog').removeClass('d-none');
                     $('#dialog').load('_dialog.php?id=' + $(this).attr('data-id'), function() {
                         $('#dialog').scrollTop($('#dialog_content').height());
-                        clearInterval(intervalID);
-                        intervalID = setInterval(function() {
+                        clearInterval(intervalDialogID);
+                        intervalDialogID = setInterval(function() {
                             user_id_to = $('#user_id_to').val();
                             $('#dialog').load('_dialog.php?id=' + user_id_to, function() {
                                 $('#dialog').scrollTop(scrollTop);
@@ -123,11 +120,7 @@ if(!LoggedIn()) {
                     $('#user_id_to').val($(this).attr('data-id'));
                     $('#message').focus();
                 });
-                
-                $('#dialog').on('scroll', function() {
-                    scrollTop = $(this).scrollTop();
-                });
-            });
+            }
             
             function MessageSubmit(event) {
                 event.preventDefault();

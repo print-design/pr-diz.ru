@@ -1,7 +1,6 @@
 <?php
 include '../include/topscripts.php';
 ?>
-<!--div id="dialog_content" style="margin-bottom: 5rem;"-->
 <div id="dialog_content">
 <?php
 $user_id_self = GetUserId();
