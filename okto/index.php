@@ -88,6 +88,7 @@ if(!LoggedIn()) {
         <script src="../js/waypoints/lib/shortcuts/inview.min.js"></script>
         <script>
             intervalID = 0;
+            scrollTop = 0;
             
             $(document).ready(function() {
                 $('.btn_contact').click(function() {
@@ -103,14 +104,19 @@ if(!LoggedIn()) {
                         intervalID = setInterval(function() {
                             user_id_to = $('#user_id_to').val();
                             $('#dialog').load('_dialog.php?id=' + user_id_to, function() {
-                                $('#dialog').scrollTop($('#dialog_content').height());
+                                $('#dialog').scrollTop(scrollTop);
                             });
+                            CheckViewed();
                         }, 2000);
                     });
                     
                     $('#input').removeClass('d-none');
                     $('#user_id_to').val($(this).attr('data-id'));
                     $('#message').focus();
+                });
+                
+                $('#dialog').on('scroll', function() {
+                    scrollTop = $(this).scrollTop();
                 });
             });
             
@@ -140,6 +146,14 @@ if(!LoggedIn()) {
                         alert('Ошибка при отправки сообщения');
                     }
                 });
+            }
+            
+            function CheckViewed() {
+                $('#message').val('');
+                $('.unviewed').each(function(index) {
+                    $('#message').val($('#message').val() + $(this).position().top + ' -- ');
+                });
+                $('#message').val($('#message').val() + $('#dialog').height() + ' ' + $('#dialog').scrollTop());
             }
         </script>
     </body>
