@@ -151,9 +151,22 @@ if(!LoggedIn()) {
             function CheckViewed() {
                 $('#message').val('');
                 $('.inbox.unviewed').each(function(index) {
-                    $('#message').val($('#message').val() + ($(this).position().top > $('#dialog').height() ? "нет" : "да") + ' -- ');
+                    if($(this).position().top < $('#dialog').height()) {
+                        $.ajax({ url: '_set_viewed.php?id=' + $(this).attr('data-id'),
+                            success: function(response) {
+                                if(response != 1) {
+                                    alert(response);
+                                }
+                            },
+                            error: function() {
+                                alert('Ошибка при установке сообщения прочитанным');
+                            }
+                        });
+                        $('#message').val($('#message').val() + '_set_viewed.php?id=' + $(this).attr('data-id') + ' ');
+                        $('#message').val($('#message').val() + ($(this).position().top > $('#dialog').height() ? "нет" : "да") + ' -- ');
+                    }
                 });
-                $('#message').val($('#message').val() + $('#dialog').height() + ' ' + $('#dialog').scrollTop());
+                //$('#message').val($('#message').val() + $('#dialog').height() + ' ' + $('#dialog').scrollTop());
             }
         </script>
     </body>
