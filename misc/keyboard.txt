@@ -1,0 +1,309 @@
+Имя	ИД процесса	Описание	Состояние	Группа
+AarSvc_51989		Agent Activation Runtime_51989	Остановлено	AarSvcGroup
+AarSvc_c4839		Agent Activation Runtime_c4839	Остановлено	AarSvcGroup
+ADPSvc		Служба платформы агрегированных данных	Остановлено	LocalServiceAndNoImpersonation
+ALG		Служба шлюза уровня приложения	Остановлено	
+AMD Crash Defender Service		AMD Crash Defender Service	Остановлено	
+AMD External Events Utility		AMD External Events Utility	Остановлено	
+AppIDSvc		Удостоверение приложения	Остановлено	LocalServiceNetworkRestricted
+Appinfo	3696	Сведения о приложении	Выполняется	netsvcs
+AppMgmt		Управление приложениями	Остановлено	netsvcs
+AppReadiness		Готовность приложений	Остановлено	AppReadiness
+AppVClient		Microsoft App-V Client	Остановлено	
+AppXSvc		Служба развертывания AppX (AppXSVC)	Остановлено	wsappx
+ApxSvc		Прокси-служба виртуального звукового устройства Windows	Остановлено	LocalService
+AssignedAccessManagerSvc		Служба AssignedAccessManager	Остановлено	AssignedAccessManagerSvc
+AudioEndpointBuilder	1684	Средство построения конечных точек Windows Audio	Выполняется	LocalSystemNetworkRestricted
+Audiosrv	1820	Windows Audio	Выполняется	LocalServiceNetworkRestricted
+autotimesvc		Время в сети мобильной связи	Остановлено	autoTimeSvc
+AxInstSV		Установщик ActiveX (AxInstSV)	Остановлено	AxInstSVGroup
+BcastDVRUserService_51989		Пользовательская служба DVR для игр и трансляции_51989	Остановлено	BcastDVRUserService
+BcastDVRUserService_c4839		Пользовательская служба DVR для игр и трансляции_c4839	Остановлено	BcastDVRUserService
+BDESVC		Служба шифрования дисков BitLocker	Остановлено	netsvcs
+BFE	2244	Служба базовой фильтрации	Выполняется	LocalServiceNoNetworkFirewall
+BITS		Фоновая интеллектуальная служба передачи (BITS)	Остановлено	netsvcs
+BluetoothUserService_51989		Служба поддержки пользователей Bluetooth_51989	Остановлено	BthAppGroup
+BluetoothUserService_c4839		Служба поддержки пользователей Bluetooth_c4839	Остановлено	BthAppGroup
+brlapi		brlapi	Остановлено	
+BrokerInfrastructure	1268	Служба инфраструктуры фоновых задач	Выполняется	DcomLaunch
+BTAGService		Служба звукового шлюза Bluetooth	Остановлено	LocalServiceNetworkRestricted
+BthAvctpSvc		Служба AVCTP	Остановлено	LocalServiceRedirectionGuard
+bthserv		Служба поддержки Bluetooth	Остановлено	LocalService
+camsvc		Служба диспетчера доступа к возможностям	Остановлено	osprivacy
+CaptureService_51989		CaptureService_51989	Остановлено	LocalService
+CaptureService_c4839		CaptureService_c4839	Остановлено	LocalService
+cbdhsvc_51989	3788	Пользовательская служба буфера обмена_51989	Выполняется	ClipboardSvcGroup
+cbdhsvc_c4839	6576	Пользовательская служба буфера обмена_c4839	Выполняется	ClipboardSvcGroup
+CDPSvc		Служба платформы подключенных устройств	Остановлено	LocalService
+CDPUserSvc_51989		Служба пользователя платформы подключенных устройств_51989	Остановлено	UnistackSvcGroup
+CDPUserSvc_c4839		Служба пользователя платформы подключенных устройств_c4839	Остановлено	UnistackSvcGroup
+CertPropSvc		Распространение сертификата	Остановлено	netsvcs
+ClipSVC		Служба лицензий клиента (ClipSVC)	Остановлено	wsappx
+CloudBackupRestoreSvc_51989		Облачная служба резервного копирования и восстановления_51989	Остановлено	UnistackSvcGroup
+CloudBackupRestoreSvc_c4839		Облачная служба резервного копирования и восстановления_c4839	Остановлено	UnistackSvcGroup
+cloudidsvc		Служба идентификации облачных удостоверений (Майкрософт)	Остановлено	CloudIdServiceGroup
+COMSysApp		Системное приложение COM+	Остановлено	
+ConsentUxUserSvc_51989		Служба пользователя ConsentUX_51989	Остановлено	DevicesFlow
+ConsentUxUserSvc_c4839		Служба пользователя ConsentUX_c4839	Остановлено	DevicesFlow
+CoreMessagingRegistrar	1812	CoreMessaging	Выполняется	LocalServiceNoNetwork
+CredentialEnrollmentManagerUserSvc_51989		CredentialEnrollmentManagerUserSvc_51989	Остановлено	
+CredentialEnrollmentManagerUserSvc_c4839		CredentialEnrollmentManagerUserSvc_c4839	Остановлено	
+CryptSvc	2212	Службы криптографии	Выполняется	NetworkService
+CscService		Автономные файлы	Остановлено	LocalSystemNetworkRestricted
+DcomLaunch	1268	Модуль запуска процессов DCOM-сервера	Выполняется	DcomLaunch
+dcsvc		Служба объявленной конфигурации (DC)	Остановлено	netsvcs
+defragsvc		Оптимизация дисков	Остановлено	defragsvc
+DeviceAssociationBrokerSvc_51989		DeviceAssociationBroker_51989	Остановлено	DevicesFlow
+DeviceAssociationBrokerSvc_c4839		DeviceAssociationBroker_c4839	Остановлено	DevicesFlow
+DeviceAssociationService		Служба сопоставления устройств	Остановлено	LocalSystemNetworkRestricted
+DeviceInstall		Служба установки устройств	Остановлено	DcomLaunch
+DevicePickerUserSvc_51989		DevicePicker_51989	Остановлено	DevicesFlow
+DevicePickerUserSvc_c4839		DevicePicker_c4839	Остановлено	DevicesFlow
+DevicesFlowUserSvc_51989		DevicesFlow_51989	Остановлено	DevicesFlow
+DevicesFlowUserSvc_c4839		DevicesFlow_c4839	Остановлено	DevicesFlow
+DevQueryBroker		Брокер фонового обнаружения DevQuery	Остановлено	LocalSystemNetworkRestricted
+Dhcp	2020	DHCP-клиент	Выполняется	LocalServiceNetworkRestricted
+diagsvc		Diagnostic Execution Service	Остановлено	diagnostics
+DiagTrack		Функциональные возможности для подключенных пользователей и телеметрия	Остановлено	utcsvc
+DialogBlockingService		DialogBlockingService	Остановлено	DialogBlockingService
+DispBrokerDesktopSvc		Служба политики отображения	Остановлено	LocalService
+DisplayEnhancementService		Служба улучшения отображения	Остановлено	LocalSystemNetworkRestricted
+DmEnrollmentSvc		Служба регистрации управления устройством	Остановлено	netsvcs
+dmwappushservice		Служба маршрутизации push-сообщений на основе протокола WAP (Wireless Application Protocol) для управления устройствами	Остановлено	netsvcs
+Dnscache	2028	DNS-клиент	Выполняется	NetworkService
+DoSvc		Оптимизация доставки	Остановлено	NetworkService
+dot3svc		Проводная автонастройка	Остановлено	LocalSystemNetworkRestricted
+DPS		Служба политики диагностики	Остановлено	LocalServiceNoNetwork
+DsmSvc		Диспетчер настройки устройств	Остановлено	netsvcs
+DsSvc		Служба совместного доступа к данным	Остановлено	LocalSystemNetworkRestricted
+DusmSvc		Использование данных	Остановлено	LocalServiceNetworkRestricted
+EapHost		Расширяемый протокол проверки подлинности (EAP)	Остановлено	netsvcs
+EasyTuneEngineService		EasyTuneEngineService	Остановлено	
+edgeupdate		Microsoft Edge Update Service (edgeupdate)	Остановлено	
+edgeupdatem		Microsoft Edge Update Service (edgeupdatem)	Остановлено	
+EFS		Шифрованная файловая система (EFS)	Остановлено	
+embeddedmode		Встроенный режим	Остановлено	LocalSystemNetworkRestricted
+EntAppSvc		Служба управления корпоративными приложениями	Остановлено	appmodelRedirectionGuard
+EventLog	1604	Журнал событий Windows	Выполняется	LocalServiceNetworkRestricted
+EventSystem		Система событий COM+	Остановлено	LocalServiceRedirectionGuard
+fdPHost		Хост поставщика функции обнаружения	Остановлено	LocalService
+FDResPub		Публикация ресурсов обнаружения функции	Остановлено	LocalServiceAndNoImpersonation
+fhsvc		Служба истории файлов	Остановлено	LocalSystemNetworkRestricted
+FileSyncHelper		FileSyncHelper	Остановлено	
+FontCache		Служба кэша шрифтов Windows	Остановлено	LocalService
+FrameServer		Сервер кадров камеры Windows	Остановлено	Camera
+FrameServerMonitor		Монитор сервера кадров камеры Windows	Остановлено	CameraMonitor
+GameInputSvc		GameInput Service	Остановлено	
+gpsvc		Клиент групповой политики	Остановлено	GPSvcGroup
+GraphicsPerfSvc		GraphicsPerfSvc	Остановлено	GraphicsPerfSvcGroup
+Gservice		Gservice	Остановлено	
+hidserv		Доступ к HID-устройствам	Остановлено	LocalSystemNetworkRestricted
+hpatchmon		Hotpatch Monitoring Service	Остановлено	LocalSystemNetworkRestricted
+HvHost		Служба узла HV	Остановлено	LocalSystemNetworkRestricted
+icssvc		Служба Windows Mobile Hotspot	Остановлено	LocalServiceNetworkRestricted
+IKEEXT	2548	Модули ключей IPsec для обмена ключами в Интернете и протокола IP с проверкой подлинности	Выполняется	netsvcs
+InstallService		Служба установки Microsoft Store	Остановлено	netsvcs
+InventorySvc		Служба инвентаризации и оценки совместимости	Остановлено	InvSvcGroup
+iphlpsvc		Вспомогательная служба IP	Остановлено	NetSvcs
+IpxlatCfgSvc		Служба настройки преобразования IP-адресов	Остановлено	LocalSystemNetworkRestricted
+KeyIso	1132	Изоляция ключей CNG	Выполняется	
+KtmRm		KtmRm для координатора распределенных транзакций	Остановлено	NetworkServiceAndNoImpersonation
+LanmanServer		Сервер	Остановлено	netsvcs
+LanmanWorkstation	2300	Рабочая станция	Выполняется	NetworkService
+lfsvc		Служба географического положения	Остановлено	netsvcsRedirectionGuard
+LibreOfficeMaintenance		LibreOffice Maintenance Service	Остановлено	
+LicenseManager		Служба Windows License Manager	Остановлено	LocalService
+lltdsvc		Тополог канального уровня	Остановлено	LocalService
+lmhosts	2976	Модуль поддержки NetBIOS через TCP/IP	Выполняется	LocalServiceNetworkRestricted
+LocalKdc		Локальный центр распространения ключей Kerberos	Остановлено	
+LSM	1448	Диспетчер локальных сеансов	Выполняется	DcomLaunch
+LxpSvc		Служба Language Experience Service	Остановлено	netsvcs
+MapsBroker		Диспетчер скачанных карт	Остановлено	NetworkService
+McmSvc		Служба управления подключениями мобильных устройств	Остановлено	McmSvc
+McpManagementService		McpManagementService	Остановлено	McpManagementServiceGroup
+MDCoreSvc		Основная служба Microsoft Defender	Остановлено	
+MessagingService_51989		MessagingService_51989	Остановлено	UnistackSvcGroup
+MessagingService_c4839		MessagingService_c4839	Остановлено	UnistackSvcGroup
+MicrosoftEdgeElevationService		Microsoft Edge Elevation Service (MicrosoftEdgeElevationService)	Остановлено	
+midisrv		Служба Windows MIDI	Остановлено	
+mpssvc	2244	Брандмауэр Защитника Windows	Выполняется	LocalServiceNoNetworkFirewall
+MSDTC		Координатор распределенных транзакций	Остановлено	
+MSiSCSI		Служба инициатора Майкрософт iSCSI	Остановлено	netsvcs
+msiserver		Установщик Windows	Остановлено	
+MsKeyboardFilter		Фильтрация клавиатуры Microsoft	Остановлено	netsvcs
+MyService1		GIGABYTE Adjust	Остановлено	
+NaturalAuthentication		Проверка подлинности на основе физических параметров	Остановлено	netsvcs
+NcaSvc		Помощник по подключению к сети	Остановлено	NetSvcs
+NcbService		Посредник подключений к сети	Остановлено	LocalSystemNetworkRestricted
+NcdAutoSetup		Автоматическая настройка сетевых устройств	Остановлено	LocalServiceNoNetwork
+Netlogon		Сетевой вход в систему	Остановлено	
+Netman		Сетевые подключения	Остановлено	LocalSystemNetworkRestricted
+netprofm	2828	Служба списка сетей	Выполняется	netprofm
+NetSetupSvc		Служба настройки сети	Остановлено	netsvcs
+NetTcpPortSharing		Служба общего доступа к портам Net.Tcp	Остановлено	
+NgcCtnrSvc	2812	Контейнер службы Microsoft Passport	Выполняется	LocalServiceNetworkRestricted
+NgcSvc	1568	Служба Microsoft Passport	Выполняется	LocalSystemNetworkRestricted
+NlaSvc		Сведения о расположении в сети	Остановлено	netprofm
+nllbIDSAgent		nllbIDSAgent	Остановлено	
+Norton Antivirus		Norton Antivirus	Остановлено	
+Norton Firewall		Norton Firewall Service	Остановлено	
+Norton Tools		Norton Tools	Остановлено	
+nortonAvDumper64		nortonAvDumper64	Остановлено	
+NortonVpn		Norton VPN	Остановлено	
+NortonWscReporter		NortonWscReporter	Остановлено	
+NPSMSvc_51989		Служба диспетчера текущего сеанса_51989	Остановлено	LocalService
+NPSMSvc_c4839		Служба диспетчера текущего сеанса_c4839	Остановлено	LocalService
+nsi	1956	Служба интерфейса сохранения сети	Выполняется	LocalService
+OCButtonService		OCButtonService	Остановлено	
+OneDrive Updater Service		OneDrive Updater Service	Остановлено	
+OneSyncSvc_51989		Синхронизация узла_51989	Остановлено	UnistackSvcGroup
+OneSyncSvc_c4839		Синхронизация узла_c4839	Остановлено	UnistackSvcGroup
+P9RdrService_51989		P9RdrService_51989	Остановлено	P9RdrService
+P9RdrService_c4839		P9RdrService_c4839	Остановлено	P9RdrService
+PcaSvc		Служба помощника по совместимости программ	Остановлено	LocalSystemNetworkRestricted
+PeerDistSvc		BranchCache	Остановлено	PeerDist
+PenService_51989		PenService_51989	Остановлено	PenService
+PenService_c4839		PenService_c4839	Остановлено	PenService
+perceptionsimulation		Служба имитации восприятия Windows	Остановлено	
+PerfHost		Хост библиотеки счетчика производительности	Остановлено	
+PhoneSvc		Телефонная связь	Остановлено	LocalService
+PimIndexMaintenanceSvc_51989		Служба контактных данных_51989	Остановлено	UnistackSvcGroup
+PimIndexMaintenanceSvc_c4839		Служба контактных данных_c4839	Остановлено	UnistackSvcGroup
+pla		Журналы и оповещения производительности	Остановлено	LocalServiceNoNetwork
+PlugPlay	1268	Plug and Play	Выполняется	DcomLaunch
+PolicyAgent	2984	Агент политики IPsec	Выполняется	NetworkServiceNetworkRestricted
+Power	1268	Питание	Выполняется	DcomLaunch
+PrintDeviceConfigurationService		Служба настройки принтеров	Остановлено	LocalSystemNetworkRestricted
+PrintNotify		Расширения и уведомления для принтеров	Остановлено	print
+PrintScanBrokerService		PrintScanBrokerService	Остановлено	PrintScanBrokerService
+PrintWorkflowUserSvc_51989		PrintWorkflow_51989	Остановлено	PrintWorkflow
+PrintWorkflowUserSvc_c4839		PrintWorkflow_c4839	Остановлено	PrintWorkflow
+ProfSvc	1648	Служба профилей пользователей	Выполняется	UserProfileService
+PushToInstall		Служба PushToInstall Windows	Остановлено	netsvcs
+QWAVE		Quality Windows Audio Video Experience	Остановлено	LocalServiceAndNoImpersonation
+RasAuto		Диспетчер автоматических подключений удаленного доступа	Остановлено	netsvcs
+RasMan		Диспетчер подключений удаленного доступа	Остановлено	netsvcs
+refsdedupsvc		Служба Dedup ReFS	Остановлено	
+RemoteAccess		Маршрутизация и удаленный доступ	Остановлено	netsvcs
+RemoteRegistry		Удаленный реестр	Остановлено	localService
+RetailDemo		Служба демонстрации магазина	Остановлено	rdxgroup
+RmSvc		Служба управления радио	Остановлено	LocalServiceNetworkRestricted
+RpcEptMapper	1396	Сопоставитель конечных точек RPC	Выполняется	RPCSS
+RpcLocator		Локатор удаленного вызова процедур (RPC)	Остановлено	
+RpcSs	1396	Удаленный вызов процедур (RPC)	Выполняется	rpcss
+RtkAudioUniversalService		Realtek Audio Universal Service	Остановлено	
+SamSs		Диспетчер учетных записей безопасности	Остановлено	
+SCardSvr		Смарт-карта	Остановлено	LocalServiceAndNoImpersonation
+ScDeviceEnum		Служба перечисления устройств чтения смарт-карт	Остановлено	LocalSystemNetworkRestricted
+Schedule		Планировщик задач	Остановлено	netsvcs
+SCPolicySvc		Политика удаления смарт-карт	Остановлено	netsvcs
+SDRSVC		Программа архивации данных	Остановлено	SDRSVC
+seclogon		Вторичный вход в систему	Остановлено	netsvcs
+SecurityHealthService		Служба "Безопасность Windows"	Остановлено	
+SEMgrSvc		Диспетчер платежей и NFC/защищенных элементов	Остановлено	LocalService
+SENS		Служба уведомления о системных событиях	Остановлено	netsvcsRedirectionGuard
+Sense		Sense	Остановлено	
+SensorDataService		Служба данных датчиков	Остановлено	
+SensorService		Служба датчиков	Остановлено	LocalSystemNetworkRestricted
+SensrSvc		Служба наблюдения за датчиками	Остановлено	LocalServiceAndNoImpersonation
+SessionEnv		Настройка сервера удаленных рабочих столов	Остановлено	netsvcs
+SharedAccess		Общий доступ к подключению к Интернету (ICS)	Остановлено	netsvcs
+ShellHWDetection		Определение оборудования оболочки	Остановлено	netsvcs
+shpamsvc		Shared PC Account Manager	Остановлено	netsvcsRedirectionGuard
+smphost		SMP дисковых пространств (Майкрософт)	Остановлено	smphost
+SmsRouter		Служба маршрутизатора SMS Microsoft Windows.	Остановлено	LocalServiceNetworkRestricted
+SNMPTrap		Ловушка SNMP	Остановлено	
+Spooler		Диспетчер печати	Остановлено	
+sppsvc		Защита программного обеспечения	Остановлено	
+SSDPSRV		Обнаружение SSDP	Остановлено	LocalServiceAndNoImpersonation
+ssh-agent		OpenSSH Authentication Agent	Остановлено	
+SstpSvc		Служба SSTP	Остановлено	LocalService
+StateRepository	1160	Служба репозитория состояний	Выполняется	appmodel
+StiSvc		Служба загрузки изображений Windows (WIA)	Остановлено	imgsvc
+StorSvc		Служба хранилища	Остановлено	LocalSystemNetworkRestricted
+svsvc		Быстрая проверка	Остановлено	LocalSystemNetworkRestricted
+swprv		Программный поставщик теневого копирования (Microsoft)	Остановлено	swprv
+SysMain		SysMain	Остановлено	LocalSystemNetworkRestricted
+SystemEventsBroker	1268	Брокер системных событий	Выполняется	DcomLaunch
+TapiSrv		Телефония	Остановлено	NetworkService
+TermService		Службы удаленных рабочих столов	Остановлено	NetworkService
+TextInputManagementService	1892	Служба управления текстовым вводом	Выполняется	LocalSystemNetworkRestricted
+Themes		Темы	Остановлено	netsvcs
+TieringEngineService		Управление уровнями хранилища	Остановлено	
+TimeBrokerSvc		Брокер времени	Остановлено	LocalServiceNetworkRestricted
+TokenBroker		Диспетчер учетных веб-записей	Остановлено	netsvcs
+TrkWks		Клиент отслеживания изменившихся связей	Остановлено	LocalSystemNetworkRestricted
+TroubleshootingSvc		Рекомендованная служба устранения неполадок	Остановлено	netsvcs
+TrustedInstaller		Установщик модулей Windows	Остановлено	
+tzautoupdate		Автоматическое обновление часового пояса	Остановлено	LocalService
+UdkUserSvc_51989		Пользовательская служба UDK_51989	Остановлено	UdkSvcGroup
+UdkUserSvc_c4839		Пользовательская служба UDK_c4839	Остановлено	UdkSvcGroup
+UevAgentService		Служба виртуализации взаимодействия с пользователем	Остановлено	
+UmRdpService		Перенаправитель портов пользовательского режима служб удаленных рабочих столов	Остановлено	LocalSystemNetworkRestricted
+UnistoreSvc_51989		Служба хранения данных пользователя_51989	Остановлено	UnistackSvcGroup
+UnistoreSvc_c4839		Служба хранения данных пользователя_c4839	Остановлено	UnistackSvcGroup
+upnphost		Узел универсальных PNP-устройств	Остановлено	LocalServiceAndNoImpersonation
+UserDataSvc_51989		Служба доступа к данным пользователя_51989	Остановлено	UnistackSvcGroup
+UserDataSvc_c4839		Служба доступа к данным пользователя_c4839	Остановлено	UnistackSvcGroup
+UserManager	1768	Диспетчер пользователей	Выполняется	netsvcs
+UsoSvc		Служба оркестратора обновлений	Остановлено	netsvcs
+VaultSvc	1132	Диспетчер учетных данных	Выполняется	
+vds		Виртуальный диск	Остановлено	
+vmicguestinterface		Интерфейс гостевой службы Hyper-V	Остановлено	LocalSystemNetworkRestricted
+vmicheartbeat		Служба пульса (Hyper-V)	Остановлено	ICService
+vmickvpexchange		Служба обмена данными (Hyper-V)	Остановлено	LocalSystemNetworkRestricted
+vmicrdv		Служба виртуализации удаленных рабочих столов Hyper-V	Остановлено	ICService
+vmicshutdown		Служба завершения работы в качестве гостя (Hyper-V)	Остановлено	LocalSystemNetworkRestricted
+vmictimesync		Служба синхронизации времени Hyper-V	Остановлено	LocalServiceNetworkRestricted
+vmicvmsession		Служба Hyper-V PowerShell Direct	Остановлено	LocalSystemNetworkRestricted
+vmicvss		Служба запросов на теневое копирование томов Hyper-V	Остановлено	LocalSystemNetworkRestricted
+VSS		Теневое копирование тома	Остановлено	
+W32Time		Служба времени Windows	Остановлено	LocalService
+WaaSMedicSvc		WaaSMedicSvc	Остановлено	wusvcs
+WalletService		Служба кошелька	Остановлено	appmodel
+WarpJITSvc		Warp JIT Service	Остановлено	LocalServiceNetworkRestricted
+wbengine		Служба модуля архивации на уровне блоков	Остановлено	
+WbioSrvc		Биометрическая служба Windows	Остановлено	WbioSvcGroup
+Wcmsvc	2172	Диспетчер подключений Windows	Выполняется	LocalServiceNetworkRestricted
+wcncsvc		Немедленные подключения Windows - регистратор настройки	Остановлено	LocalServiceAndNoImpersonation
+WdiServiceHost		Узел службы диагностики	Остановлено	LocalService
+WdiSystemHost		Узел системы диагностики	Остановлено	LocalSystemNetworkRestricted
+WdNisSvc		Служба проверки сети антивирусной программы Microsoft Defender	Остановлено	
+WebClient		Веб-клиент	Остановлено	LocalService
+webthreatdefsvc		Служба защиты от веб-угроз	Остановлено	WebThreatDefense
+webthreatdefusersvc_51989		Служба защиты пользователей от веб-угроз_51989	Остановлено	LocalSystemNetworkRestricted
+webthreatdefusersvc_c4839		Служба защиты пользователей от веб-угроз_c4839	Остановлено	LocalSystemNetworkRestricted
+Wecsvc		Сборщик событий Windows	Остановлено	NetworkService
+WEPHOSTSVC		Служба узла поставщика шифрования Windows	Остановлено	WepHostSvcGroup
+wercplsupport		Поддержка панели управления "Отчеты о проблемах"	Остановлено	netsvcs
+WerSvc		Служба регистрации ошибок Windows	Остановлено	WerSvcGroup
+WFDSConMgrSvc		Служба диспетчера подключений служб Wi-Fi Direct	Остановлено	LocalServiceNetworkRestricted
+whesvc		Работоспособность и оптимизированные взаимодействия Windows	Остановлено	whesvc
+WiaRpc		События получения неподвижных изображений	Остановлено	LocalSystemNetworkRestricted
+WinDefend	2572	Служба антивирусной программы Microsoft Defender	Выполняется	
+WinHttpAutoProxySvc	2088	Служба автоматического обнаружения веб-прокси WinHTTP	Выполняется	LocalServiceHttp
+Winmgmt	2556	Инструментарий управления Windows	Выполняется	netsvcs
+WinRM		Служба удаленного управления Windows (WS-Management)	Остановлено	NetworkService
+wisvc		Служба предварительной оценки Windows	Остановлено	netsvcs
+WlanSvc		Служба автонастройки WLAN	Остановлено	LocalSystemNetworkRestricted
+wlidsvc		Помощник по входу в учетную запись Майкрософт	Остановлено	netsvcs
+wlpasvc		Служба помощника по локальному профилю	Остановлено	LocalServiceNetworkRestricted
+WManSvc		Служба управления Windows	Остановлено	netsvcs
+wmiApSrv		Адаптер производительности WMI	Остановлено	
+WMPNetworkSvc		Служба общих сетевых ресурсов проигрывателя Windows Media	Остановлено	
+workfolderssvc		Рабочие папки	Остановлено	LocalService
+WpcMonSvc		Родительский контроль	Остановлено	LocalService
+WPDBusEnum		Служба перечислителя переносных устройств	Остановлено	LocalSystemNetworkRestricted
+WpnService		Служба системы push-уведомлений Windows	Остановлено	netsvcs
+WpnUserService_51989		Пользовательская служба push-уведомлений Windows_51989	Остановлено	UnistackSvcGroup
+WpnUserService_c4839		Пользовательская служба push-уведомлений Windows_c4839	Остановлено	UnistackSvcGroup
+WSAIFabricSvc		WSAIFabricSvc	Остановлено	WSAIFabricSvcGroup
+wscsvc		Центр обеспечения безопасности	Остановлено	LocalServiceNetworkRestricted
+WSearch		Windows Search	Остановлено	
+wuauserv		Центр обновления Windows	Остановлено	netsvcs
+wuqisvc		Аналитика качества и использования Майкрософт	Остановлено	WuqiSvcGroup
+WwanSvc		Автонастройка WWAN	Остановлено	LocalSystemNetworkRestricted
+XblAuthManager		Диспетчер проверки подлинности Xbox Live	Остановлено	netsvcsRedirectionGuard
+XblGameSave		Сохранение игр на Xbox Live	Остановлено	netsvcs
+XboxGipSvc		Xbox Accessory Management Service	Остановлено	netsvcs
+XboxNetApiSvc		Сетевая служба Xbox Live	Остановлено	netsvcs
