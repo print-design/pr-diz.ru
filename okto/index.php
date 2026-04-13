@@ -60,13 +60,14 @@ if(!LoggedIn()) {
                 <div id="content" style="width: 100%; position: relative;">
                     <div id="dialog" class="d-none" style="overflow: auto; position: absolute; top: 4px; bottom: 150px; left: 0; right: 10px; padding: 15px; border: solid 1px lightgray; border-radius: 20px;"></div>
                     <div id="input" class="d-none" style="position: fixed; bottom: 10px; left: 472px; right: 10px;">
+                        <div id="attach"><div class="waiting_attach"><img src="../images/loading-cargando.gif" /></div></div>
                         <form method="post" id="message_form" onsubmit="javascript: MessageSubmit(event);">
                             <input type="hidden" name="user_id_from" id="user_id_from" value="<?= GetUserId() ?>" />
                             <input type="hidden" name="user_id_to" id="user_id_to" />
                             <textarea name="message" id="message" class="form-control" required="required"></textarea>
                             <div class="d-flex justify-content-between mt-3">
-                                <div><button type="button" class="btn btn-dark ui_tooltip top" title="Загрузить изображение"><i class="fas fa-image"></i></button></div>
-                                <div><button type='submit' class='btn btn-dark' style="width: 100px;"><i class="fas fa-chevron-right"></i></button></div>
+                                <div><button type="button" class="btn btn-dark ui_tooltip top" title="Загрузить изображение" tabindex="1" onclick="javascript: AttachImage();"><i class="fas fa-image"></i></button></div>
+                                <div><button type='submit' class='btn btn-dark' style="width: 100px;" tabindex="0"><i class="fas fa-chevron-right"></i></button></div>
                             </div>
                         </form>
                     </div>
@@ -165,6 +166,10 @@ if(!LoggedIn()) {
                         });
                     }
                 });
+            }
+            
+            function AttachImage() {
+                $('#attach').load('_attach.php');
             }
         </script>
     </body>
