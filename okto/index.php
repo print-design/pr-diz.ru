@@ -5,6 +5,8 @@ include '../include/topscripts.php';
 if(!LoggedIn()) {
     include '../include/_unauthorized.php';
 }
+
+$user_id = GetUserId();
 ?>
 <!DOCTYPE html>
 <html>
@@ -63,7 +65,7 @@ if(!LoggedIn()) {
                         <div id="attach"><div id="waiting_attach" class="d-none"><img src="../images/loading-cargando.gif" /></div></div>
                         <input type="file" accept="image/*,application/pdf" name="dialog_file" id="dialog_file" class="d-none" onchange="UploadAttach(300);" />
                         <form method="post" id="message_form" onsubmit="javascript: MessageSubmit(event);">
-                            <input type="hidden" name="user_id_from" id="user_id_from" value="<?= GetUserId() ?>" />
+                            <input type="hidden" name="user_id_from" id="user_id_from" value="<?= $user_id ?>" />
                             <input type="hidden" name="user_id_to" id="user_id_to" />
                             <textarea name="message" id="message" class="form-control" required="required"></textarea>
                             <div class="d-flex justify-content-between mt-3">
@@ -172,11 +174,59 @@ if(!LoggedIn()) {
             function UploadAttach(resolution) {
                 $('#waiting_attach').removeClass('d-none');
                 
-                var formData = new formData();
+                var formData = new FormData();
+                formData.set('user_id', <?=$user_id ?>);
                 formData.set('resolution', resolution);
                 formData.set('file', $('#dialog_file')[0].files[0]);
                 
-                //$.ajax({ })
+                $.ajax({
+                    url: "_upload_attach.php",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    processData: false, // Prevent jQuery from processing data
+                    contentType: false, // Prevent jQuery from setting
+                    success: function(response) {
+                        if(response.error.length > 0) {
+                            alert(response.error);
+                            $('#waiting_attach').addClass('d-none');
+                        }
+                        else {
+                            if(response.filename.length > 0) {
+                                $('#waiting_attach').addClass('d-none');
+                                $('#attach').load('_attach.php');
+                            }
+                            
+                            if(response.info.length > 0) {
+                                alert(response.info);
+                            }
+                        }
+                    },
+                    error: function() {
+                        if(resolution > 250) {
+                            UploadAttach(250);
+                        }
+                        else if(resolution > 200) {
+                            UploadAttach(200);
+                        }
+                        else if(resolution > 150) {
+                            UploadAttach(150);
+                        }
+                        else if(resolution > 100) {
+                            UploadAttach(100);
+                        }
+                        else if(resolution > 50) {
+                            UploadAttach(50);
+                        }
+                        else if(resolution > 10) {
+                            UploadAttach(10);
+                        }
+                        else {
+                            alert('Ошибка при загрузке файла');
+                            $('#waiting_attach').addClass('d-none');
+                        }
+                    }
+                });
             }
         </script>
     </body>
