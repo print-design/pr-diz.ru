@@ -145,6 +145,10 @@ $user_id = GetUserId();
                             $('#dialog').load('_dialog.php?id=' + response.id, function() {
                                 $('#dialog').scrollTop($('#dialog_content').height());
                             });
+                            
+                            $('#attach').load('_attach.php', function() {
+                                $('#dialog').css('bottom', ($('#input').height() + 20) + 'px');
+                            });
 
                             $('#message').val('');
                             $('#message').focus();
