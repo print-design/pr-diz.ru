@@ -107,6 +107,7 @@ $user_id = GetUserId();
                     $(this).removeClass('btn-light');
                     $(this).addClass('btn-dark');
                     
+                    $('#attach').load('_attach.php');
                     $('#dialog').removeClass('d-none');
                     $('#dialog').load('_dialog.php?id=' + $(this).attr('data-id'), function() {
                         $('#dialog').scrollTop($('#dialog_content').height());
@@ -199,6 +200,7 @@ $user_id = GetUserId();
                             
                             if(response.info.length > 0) {
                                 alert(response.info);
+                                $('#waiting_attach').addClass('d-none');
                             }
                         }
                     },

@@ -51,7 +51,7 @@ if(!empty($user_id) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_na
         // Если файл - не PDF
         // Сохраняем мини-картинку
         $input_file = $_FILES['file']['tmp_name'];
-        $myimage = new MyImage($input_file);
+        $myimage = new MyImage($input_file); // $result['info'] = implode(' -- ', get_object_vars($myimage));
         $file_uploaded = $myimage->ResizeAndSave($_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/dialog/mini/", $name, IMAGE_MINI_WIDTH, IMAGE_MINI_HEIGHT);
         if(!$file_uploaded) {
             $result['info'] .= $myimage->errorMessage;
@@ -70,7 +70,7 @@ if(!empty($user_id) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_na
         
         if($file_uploaded) {
             $filename = $myimage->filename;
-            $sql = "insert into dialog_user_image (user_id, image, pdf) values ($user_id, $filename, $pdf)";
+            $sql = "insert into dialog_user_image (user_id, image, pdf) values ($user_id, '$filename', '$pdf')";
             $executer = new Executer($sql);
             
             if(empty($executer->error)) {
