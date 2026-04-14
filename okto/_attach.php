@@ -8,4 +8,4 @@ while($row = $fetcher->Fetch()):
 ?>
 <p><?=$row['image'] ?></p>
 <?php endwhile; ?>
-<div class="waiting_attach"><img src="../images/loading-cargando.gif" /></div>
+<div id="waiting_attach" class="d-none"><img src="../images/loading-cargando.gif" /></div>
