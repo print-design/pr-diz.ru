@@ -3,8 +3,8 @@ include '../include/topscripts.php';
 include '../include/myimage.php';
 
 // Размеры загружаемых картинок
-const IMAGE_MINI_HEIGHT = 0;
-const IMAGE_MINI_WIDTH = 100;
+const IMAGE_MINI_HEIGHT = 100;
+const IMAGE_MINI_WIDTH = 0;
 const IMAGE_HEIGHT = 0;
 const IMAGE_WIDTH = 0;
 

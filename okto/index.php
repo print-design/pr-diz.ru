@@ -107,7 +107,9 @@ $user_id = GetUserId();
                     $(this).removeClass('btn-light');
                     $(this).addClass('btn-dark');
                     
-                    $('#attach').load('_attach.php');
+                    $('#attach').load('_attach.php', function() {
+                        $('#dialog').css('bottom', ($('#input').height() + 20) + 'px');
+                    });
                     $('#dialog').removeClass('d-none');
                     $('#dialog').load('_dialog.php?id=' + $(this).attr('data-id'), function() {
                         $('#dialog').scrollTop($('#dialog_content').height());
@@ -195,7 +197,9 @@ $user_id = GetUserId();
                         else {
                             if(response.filename.length > 0) {
                                 $('#waiting_attach').addClass('d-none');
-                                $('#attach').load('_attach.php');
+                                $('#attach').load('_attach.php', function() {
+                                    $('#dialog').css('bottom', ($('#input').height() + 20) + 'px');
+                                });
                             }
                             
                             if(response.info.length > 0) {
