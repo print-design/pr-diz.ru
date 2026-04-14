@@ -454,23 +454,23 @@ $current_date_time = date("dmYHis");
                             <td><?= DisplayNumber(floatval($calculation_result->length_dirty_1), 0) ?> м</td>
                         </tr>
                         <tr>
-                            <td>Печать</td>
                             <td>
+                                Печать
                                 <?php
                                 switch ($calculation_result->side) {
                                     case CalculationResult::SIDE_FRONT:
-                                        echo 'Лицевая';
+                                        echo ' лицевая';
                                         break;
                                     case CalculationResult::SIDE_BACK:
-                                        echo 'Оборотная';
+                                        echo ' оборотная';
                                         break;
                                     default :
-                                        echo "Ждем данные";
+                                        echo " (ждем данные)";
                                         break;
                                 }
-                                echo ' '.DisplayNumber(floatval($calculation->raport), 3).' мм';
                                 ?>
                             </td>
+                            <td>Вал <?= DisplayNumber(floatval($calculation->raport), 3) ?> мм</td>
                         </tr>
                         <tr>
                             <td>Растяг</td>
