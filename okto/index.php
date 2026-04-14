@@ -47,6 +47,8 @@ $user_id = GetUserId();
     <body>
         <?php
         include '../include/header.php';
+        
+        include '../include/big_image.php';
         ?>
         <div class="container-fluid">
             <?php
@@ -63,7 +65,7 @@ $user_id = GetUserId();
                     <div id="dialog" class="d-none" style="overflow: auto; position: absolute; top: 4px; bottom: 150px; left: 0; right: 10px; padding: 15px; border: solid 1px lightgray; border-radius: 20px;"></div>
                     <div id="input" class="d-none" style="position: fixed; bottom: 10px; left: 472px; right: 10px;">
                         <div id="attach"><div id="waiting_attach" class="d-none"><img src="../images/loading-cargando.gif" /></div></div>
-                        <input type="file" accept="image/*,application/pdf" name="dialog_file" id="dialog_file" class="d-none" onchange="UploadAttach(300);" />
+                        <input type="file" accept="image/*,application/pdf" name="dialog_file" id="dialog_file" class="d-none" onchange="UploadAttachImage(300);" />
                         <form method="post" id="message_form" onsubmit="javascript: MessageSubmit(event);">
                             <input type="hidden" name="user_id_from" id="user_id_from" value="<?= $user_id ?>" />
                             <input type="hidden" name="user_id_to" id="user_id_to" />
@@ -174,7 +176,7 @@ $user_id = GetUserId();
                 });
             }
             
-            function UploadAttach(resolution) {
+            function UploadAttachImage(resolution) {
                 $('#waiting_attach').removeClass('d-none');
                 
                 var formData = new FormData();
@@ -210,22 +212,22 @@ $user_id = GetUserId();
                     },
                     error: function() {
                         if(resolution > 250) {
-                            UploadAttach(250);
+                            UploadAttachImage(250);
                         }
                         else if(resolution > 200) {
-                            UploadAttach(200);
+                            UploadAttachImage(200);
                         }
                         else if(resolution > 150) {
-                            UploadAttach(150);
+                            UploadAttachImage(150);
                         }
                         else if(resolution > 100) {
-                            UploadAttach(100);
+                            UploadAttachImage(100);
                         }
                         else if(resolution > 50) {
-                            UploadAttach(50);
+                            UploadAttachImage(50);
                         }
                         else if(resolution > 10) {
-                            UploadAttach(10);
+                            UploadAttachImage(10);
                         }
                         else {
                             alert('Ошибка при загрузке файла');
@@ -233,6 +235,10 @@ $user_id = GetUserId();
                         }
                     }
                 });
+            }
+            
+            function ShowDialogUserImage(id) {
+                //
             }
         </script>
     </body>
