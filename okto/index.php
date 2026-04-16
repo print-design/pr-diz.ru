@@ -131,7 +131,7 @@ $user_id = GetUserId();
                 });
                 
                 $('#input').removeClass('d-none');
-                $('#user_id_to').val($(this).attr('data-id'));
+                $('#user_id_to').val(id);
                 $('#message').focus();
             }
             
