@@ -88,13 +88,19 @@ $user_id = GetUserId();
             intervalContactsID = 0;
             intervalDialogID = 0;
             scrollTop = 0;
+            user_id_to = 0;
             
             $(document).ready(function() {
-                $('#contacts').text('CFR');
-                $('#contacts').load('_contacts.php', ChooseContact);
+                
+                $('#contacts').load('_contacts.php');
                 
                 intervalContactsID = setInterval(function() {
-                    $('#contacts').load('_contacts.php', ChooseContact);
+                    if(user_id_to === 0) {
+                        $('#contacts').load('_contacts.php');
+                    }
+                    else {
+                        $('#contacts').load('_contacts.php?id=' + user_id_to);
+                    }
                 }, 2000);
                 
                 $('#dialog').on('scroll', function() {
@@ -102,33 +108,31 @@ $user_id = GetUserId();
                 });
             });
             
-            function ChooseContact() {
-                $('.btn_contact').click(function() {
-                    $('.btn_contact').removeClass('btn-dark');
-                    $('.btn_contact').addClass('btn-light');
-                    $(this).removeClass('btn-light');
-                    $(this).addClass('btn-dark');
-                    
-                    $('#attach').load('_attach.php', function() {
-                        $('#dialog').css('bottom', ($('#input').height() + 20) + 'px');
-                    });
-                    $('#dialog').removeClass('d-none');
-                    $('#dialog').load('_dialog.php?id=' + $(this).attr('data-id'), function() {
-                        $('#dialog').scrollTop($('#dialog_content').height());
-                        clearInterval(intervalDialogID);
-                        intervalDialogID = setInterval(function() {
-                            user_id_to = $('#user_id_to').val();
-                            $('#dialog').load('_dialog.php?id=' + user_id_to, function() {
-                                $('#dialog').scrollTop(scrollTop);
-                            });
-                            CheckViewed();
-                        }, 2000);
-                    });
-                    
-                    $('#input').removeClass('d-none');
-                    $('#user_id_to').val($(this).attr('data-id'));
-                    $('#message').focus();
+            function ChooseContact(btn, id) {
+                user_id_to = id;
+                $('.btn_contact').removeClass('btn-dark');
+                $('.btn_contact').addClass('btn-light');
+                btn.removeClass('btn-light');
+                btn.addClass('btn-dark');
+                
+                $('#attach').load('_attach.php', function() {
+                    $('#dialog').css('bottom', ($('#input').height() + 20) + 'px');
                 });
+                $('#dialog').removeClass('d-none');
+                $('#dialog').load('_dialog.php?id=' + id, function() {
+                    $('#dialog').scrollTop($('#dialog_content').height());
+                    clearInterval(intervalDialogID);
+                    intervalDialogID = setInterval(function() {
+                        $('#dialog').load('_dialog.php?id=' + user_id_to, function() {
+                            $('#dialog').scrollTop(scrollTop);
+                        });
+                        CheckViewed();
+                    }, 2000);
+                });
+                
+                $('#input').removeClass('d-none');
+                $('#user_id_to').val($(this).attr('data-id'));
+                $('#message').focus();
             }
             
             function MessageSubmit(event) {
