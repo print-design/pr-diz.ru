@@ -71,6 +71,11 @@ $user_id = GetUserId();
             <input type="hidden" id="is_user_image" name="is_user_image" />
             <input type="hidden" name="download_image_dialog_submit" value="1" />
         </form>
+        <form id="delete_image_dialog_form" method="post">
+            <input type="hidden" id="id" name="id" />
+            <input type="hidden" id="is_user_image" name="is_user_image" />
+            <input type="hidden" name="delete_image_dialog_submit" value="1" />
+        </form>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -274,7 +279,7 @@ $user_id = GetUserId();
                         $('#big_image_img').attr('src', '../content/dialog/' + response.filename + '?' + Date.now());
                         document.forms.download_image_dialog_form.id.value = response.id;
                         document.forms.download_image_dialog_form.is_user_image.value = response.is_user_image;
-                        //ShowImageDialogButtons(id, is_user_image, 1);
+                        ShowImageDialogButtons(id, is_user_image);
                     }, 
                     error: function() {
                         alert('Ошибка при открытии изображения');
@@ -282,10 +287,10 @@ $user_id = GetUserId();
                 });
             }
             
-            function ShowImageDialogButtons(id, is_user_image, ordinal) {
-                $.ajax({ url: "_big_image_buttons_dialog.php?id=" + id + "&is_user_image=" + is_user_image + "&ordinal=" + ordinal, 
+            function ShowImageDialogButtons(id, is_user_image) {
+                $.ajax({ url: "_big_image_buttons_dialog.php?id=" + id + "&is_user_image=" + is_user_image, 
                     success: function(response) {
-                        $('#big_image_buttons').html(response);
+                        $('#big_image_dialog_buttons').html(response);
                     }, error: function() {
                         alert('Ошибка при создании кнопок всплывающего окна');
                     }
