@@ -7,7 +7,60 @@ if(!LoggedIn()) {
 }
 
 $user_id = GetUserId();
-?>
+
+// Выгрузка картинки
+if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
+    $id = filter_input(INPUT_POST, 'id');
+    $is_user_image = filter_input(INPUT_POST, 'is_user_image');
+    
+    if(!empty($id) && $is_user_image !== null) {
+        $sql = "";
+        
+        if($is_user_image == 1) {
+            $sql = "select image, pdf from dialog_user_image where id = $id";
+        }
+        else {
+            $sql = "select image, pdf from dialog_image where id = $id";
+        }
+        
+        if(!empty($sql)) {
+            $targetname = "image";
+            $fetcher = new Fetcher($sql);
+            
+            if($row = $fetcher->Fetch()) {
+                $targetname = "Изображение $id";
+                $targetname = str_replace('.', '', $targetname);
+                $targetname = str_replace(',', '', $targetname);
+                $targetname = str_replace(';', '', $targetname);
+                $targetname = str_replace('"', '', $targetname);
+                $targetname = htmlspecialchars($targetname);
+            }
+            
+            $filename = $row['image'];
+            $filepath = "../content/dialog/$filename";
+            $extension = "";
+            
+            if(!empty($row['pdf'])) {
+                $filename = $row['pdf'];
+                $filepath = "../content/dialog/pdf/$filename";
+                $extension = "pdf";
+            }
+            else {
+                $substrings = explode('.', $filename);
+                if(count($substrings) > 1) {
+                    $extension = $substrings[count($substrings) - 1];
+                }
+            }
+            
+            $targetname = $targetname.'.'.$extension;
+            
+            DownloadSendHeaders($targetname);
+            readfile($filepath);
+            exit();
+        }
+    }
+}
+?> 
 <!DOCTYPE html>
 <html>
     <head>
@@ -108,8 +161,6 @@ $user_id = GetUserId();
         <?php
         include '../include/footer.php';
         ?>
-        <script src="../js/waypoints/lib/jquery.waypoints.min.js"></script>
-        <script src="../js/waypoints/lib/shortcuts/inview.min.js"></script>
         <script>
             intervalContactsID = 0;
             intervalDialogID = 0;
