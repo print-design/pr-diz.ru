@@ -43,8 +43,8 @@ while($row = $fetcher->Fetch()):
         ?>
         <a href="javascript: void(0);" 
            data-toggle="modal" 
-           data-target="#big_image" 
-           onclick="javascript: ShowDialogUserImage(<?=$row['id'] ?>);">
+           data-target="#big_image_dialog" 
+           onclick="javascript: ShowImageDialog(<?=$row1['id'] ?>, 0);">
             <img src="../content/dialog/mini/<?=$row1['image'] ?>" style="margin-right: 10px; margin-bottom: 10px;" />
         </a>
         <?php

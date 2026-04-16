@@ -47,9 +47,30 @@ $user_id = GetUserId();
     <body>
         <?php
         include '../include/header.php';
-        
-        include '../include/big_image.php';
         ?>
+        <div id="big_image_dialog" class="modal fade show">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header font-weight-bold" style="font-size: x-large;">
+                        <div id="big_image_header"></div>
+                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center align-items-baseline align-self-start" style="height: 500px; width: 500px; overflow: auto;"><img id="big_image_img" class="img-fluid" alt="Изображение" style="cursor: zoom-in; position: absolute; top: 0px; left: 0px;" draggable="false" onmousedown="javascript: MouseDownImage($(this), event);" onmouseup="javascript: MouseUpImage($(this), event);" onmousemove="javascript: MouseMoveImage($(this), event);" /></div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <div>
+                            <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_dialog_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
+                            <button type="button" class="btn btn-light ml-2 d-none" id="big_image_dialog_delete" data-toggle="modal" data-target="#confirm_delete" data-dismiss="modal"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
+                        </div>
+                        <div id="big_image_dialog_buttons"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form id="download_image_dialog_form" method="post">
+            <input type="hidden" id="id" name="id" />
+            <input type="hidden" id="is_user_image" name="is_user_image" />
+            <input type="hidden" name="download_image_dialog_submit" value="1" />
+        </form>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -245,8 +266,30 @@ $user_id = GetUserId();
                 });
             }
             
-            function ShowDialogUserImage(id) {
-                //
+            function ShowImageDialog(id, is_user_image) {
+                $.ajax({ url: "_big_image_show_dialog.php?id=" + id + "&is_user_image=" + is_user_image, 
+                    dataType: "json", 
+                    success: function(response) {
+                        $('#big_image_header').text(response.name);
+                        $('#big_image_img').attr('src', '../content/dialog/' + response.filename + '?' + Date.now());
+                        document.forms.download_image_dialog_form.id.value = response.id;
+                        document.forms.download_image_dialog_form.is_user_image.value = response.is_user_image;
+                        //ShowImageDialogButtons(id, is_user_image, 1);
+                    }, 
+                    error: function() {
+                        alert('Ошибка при открытии изображения');
+                    }
+                });
+            }
+            
+            function ShowImageDialogButtons(id, is_user_image, ordinal) {
+                $.ajax({ url: "_big_image_buttons_dialog.php?id=" + id + "&is_user_image=" + is_user_image + "&ordinal=" + ordinal, 
+                    success: function(response) {
+                        $('#big_image_buttons').html(response);
+                    }, error: function() {
+                        alert('Ошибка при создании кнопок всплывающего окна');
+                    }
+                });
             }
         </script>
     </body>
