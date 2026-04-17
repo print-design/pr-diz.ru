@@ -112,7 +112,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
                     <div class="modal-footer d-flex justify-content-between">
                         <div>
                             <button type="button" class="btn btn-dark" onclick="javascript: document.forms.download_image_dialog_form.submit();"><img src="../images/icons/download.svg" class="mr-2 align-middle" />Скачать</button>
-                            <button type="button" class="btn btn-light ml-2 d-none" id="big_image_dialog_delete" data-toggle="modal" data-target="#confirm_delete" data-dismiss="modal"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
+                            <button type="button" class="btn btn-light ml-2 d-none" id="big_image_dialog_delete" onclick="javascript: if(confirm('Действительно удалить?')) { DeleteImageDialog($(this).attr('data-id')); }"><img src="../images/icons/trash3.svg" class="mr-2 align-middle" />Удалить</button>
                         </div>
                         <div id="big_image_dialog_buttons"></div>
                     </div>
@@ -145,9 +145,9 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
                     <div id="input" class="d-none" style="position: fixed; bottom: 10px; left: 472px; right: 10px;">
                         <div id="attach"><div id="waiting_attach" class="d-none"><img src="../images/loading-cargando.gif" /></div></div>
                         <input type="file" accept="image/*,application/pdf" name="dialog_file" id="dialog_file" class="d-none" onchange="UploadAttachImage(300);" />
-                        <form method="post" id="message_form" onsubmit="javascript: MessageSubmit(event);">
+                        <form method="postrm" onsubmit="javascript: MessageSubmit(event);">
                             <input type="hidden" name="user_id_from" id="user_id_from" value="<?= $user_id ?>" />
-                            <input type="hidden" name="user_id_to" id="user_id_to" />
+                            <i" id="message_fonput type="hidden" name="user_id_to" id="user_id_to" />
                             <textarea name="message" id="message" class="form-control" required="required"></textarea>
                             <div class="d-flex justify-content-between mt-3">
                                 <div><button type="button" class="btn btn-dark ui_tooltip top" title="Загрузить изображение" tabindex="1" onclick="javascript: $('#dialog_file').click();"><i class="fas fa-image"></i></button></div>
@@ -323,6 +323,14 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
             }
             
             function ShowImageDialog(id, is_user_image) {
+                if(is_user_image === 1) {
+                    $('#big_image_dialog_delete').removeClass('d-none');
+                    $('#big_image_dialog_delete').attr('data-id', id);
+                }
+                else {
+                    $('#big_image_dialog_delete').addClass('d-none');
+                }
+                        
                 $.ajax({ url: "_big_image_show_dialog.php?id=" + id + "&is_user_image=" + is_user_image, 
                     dataType: "json", 
                     success: function(response) {
@@ -342,8 +350,29 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
                 $.ajax({ url: "_big_image_buttons_dialog.php?id=" + id + "&is_user_image=" + is_user_image, 
                     success: function(response) {
                         $('#big_image_dialog_buttons').html(response);
-                    }, error: function() {
+                    },
+                    error: function() {
                         alert('Ошибка при создании кнопок всплывающего окна');
+                    }
+                });
+            }
+            
+            function DeleteImageDialog(id) {
+                $.ajax({ url: "_delete_image_dialog_user.php?id=" + id, 
+                    dataType: "json",
+                    success: function(response) {
+                        if(response.error != '') {
+                            alert('Ошибка при удалении картинки');
+                        }
+                        else {
+                            $('#big_image_dialog').modal('hide');
+                            $('#attach').load('_attach.php', function() {
+                                $('#dialog').css('bottom', ($('#input').height() + 20) + 'px');
+                            });
+                        }
+                    },
+                    error: function() {
+                        alert('Ощибка при удалении картинки');
                     }
                 });
             }
