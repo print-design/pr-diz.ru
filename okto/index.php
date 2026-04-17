@@ -145,9 +145,9 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
                     <div id="input" class="d-none" style="position: fixed; bottom: 10px; left: 472px; right: 10px;">
                         <div id="attach"><div id="waiting_attach" class="d-none"><img src="../images/loading-cargando.gif" /></div></div>
                         <input type="file" accept="image/*,application/pdf" name="dialog_file" id="dialog_file" class="d-none" onchange="UploadAttachImage(300);" />
-                        <form method="postrm" onsubmit="javascript: MessageSubmit(event);">
+                        <form method="post" id="message_form" onsubmit="javascript: MessageSubmit(event);">
                             <input type="hidden" name="user_id_from" id="user_id_from" value="<?= $user_id ?>" />
-                            <i" id="message_fonput type="hidden" name="user_id_to" id="user_id_to" />
+                            <input type="hidden" name="user_id_to" id="user_id_to" />
                             <textarea name="message" id="message" class="form-control" required="required"></textarea>
                             <div class="d-flex justify-content-between mt-3">
                                 <div><button type="button" class="btn btn-dark ui_tooltip top" title="Загрузить изображение" tabindex="1" onclick="javascript: $('#dialog_file').click();"><i class="fas fa-image"></i></button></div>

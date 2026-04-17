@@ -9,7 +9,7 @@ $error = '';
 $result = array('id' => $user_id_to, 'error' => '');
 
 if(empty($user_id_from) || empty($user_id_to) || empty($message)) {
-    $result['error'] = "Пустые исходные данные";
+    $result['error'] = "Пустые исходные данные -- $user_id_from -- $user_id_to -- $message";
 }
 else {
     $message = addslashes($message);
