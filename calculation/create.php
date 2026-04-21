@@ -164,6 +164,11 @@ for($i = 1; $i <= 4; $i++) {
     $$percent_run2_valid_var = '';
 }
 
+// ВАЛИДАЦИЯ МИНИМАЛЬНОГО ОБЪЁМА ЗАКАЗА
+$min_m2_when_kg_invalid = false; // минимальная квадратура когда кг
+$min_kg_when_pcs_invalid = false; // минимальная масса когда шт
+$min_m2_when_pcs_invalid = false; // минимальная квадратура когда шт
+
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -207,10 +212,17 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    // Если тип - "Плёнка с печатью", а размер тиража - в кг, то размер тиража должен быть не меньше минимальной масса.
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && filter_input(INPUT_POST, 'quantity') < $min_weight) {
+    // МИНИМАЛЬНАЯ МАССА КОГДА КГ
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+            filter_input(INPUT_POST, 'quantity') < $min_weight) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
+    }
+    
+    // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА КГ
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+        $min_m2_when_kg_invalid = true;
     }
     
     // Валидация цен - они должны быть не меньше минимальных
@@ -1591,6 +1603,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <div id="min_square_text" style="padding-top: 35px; color: green;"></div>
                             </div>
                         </div>
+                        <div id="min_m2_when_kg_invalid" class="text-danger d-none">Объем заказа не соответствует формуле: MIN M2 KG</div>
+                        <div id="min_kg_when_pcs_invalid" class="text-danger d-none">Объем заказа не соответствует формуле: MIN KG PCS</div>
+                        <div id="min_m2_when_pcs_invalid" class="text-danger d-none">Объем заказа не соответствует формуле: MIN M2 PCS</div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
                             <label for="printings_number" class="d-block">Количество тиражей</label>
@@ -3593,6 +3608,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 else {
                     $('#min_weight_text').text('');
                     $('#min_square_text').text('');
+                    $('#quantity').removeClass('is-invalid');
                 }
             }
             
@@ -3711,7 +3727,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Валидация минимальнй массы заказа
             $('#quantity').keyup(function() {
-                if(min_weight > 0) {
+                if($('#unit_kg').is(':checked') && min_weight > 0) {
                     int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
                     if(Number.isInteger(int_weight) && int_weight >= min_weight) {
                         $('#min_weight_text').css('color', 'green');
@@ -3726,7 +3742,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             $('#quantity').change(function() {
-                if(min_weight > 0) {
+                if($('#unit_kg').is(':checked') && min_weight > 0) {
                     int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
                     if(Number.isInteger(int_weight) && int_weight >= min_weight) {
                         $('#min_weight_text').css('color', 'green');
