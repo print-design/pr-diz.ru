@@ -3684,9 +3684,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             $('#price_min').val(data.price);
                             ValidatePrice($('#price'), $('#price_min'));
                             
-                            if(data.currency_local != '') {
+                            if(data.currency_local != '' && data.currency != '') {
                                 $('#currency').addClass('d-none');
                                 $('#currency').removeAttr('required');
+                                $('#currency').val(data.currency);
                                 $('#currency_text').text(data.currency_local);
                                 $('#currency_text').removeClass('d-none');
                             }
@@ -3694,6 +3695,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 $('#currency_text').addClass('d-none');
                                 $('#currency').removeClass('d-none');
                                 $('#currency').attr('required', 'required');
+                                $('#currency').val('');
                             }
                         })
                         .fail(function() {
