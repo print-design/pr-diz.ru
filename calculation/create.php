@@ -3552,6 +3552,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             function SetValidParameters(work_type_id, machine_id, kg_checked) {
+                if(work_type_id != <?= WORK_TYPE_PRINT?>) {
+                    min_weight = 0;
+                    min_square = 0;
+                }
+                
                 if(work_type_id == <?= WORK_TYPE_PRINT ?> && machine_id != null && machine_id != '' && kg_checked) {
                     $.ajax({ dataType: 'JSON', url: "_valid_parameters.php?machine_id=" + machine_id })
                             .done(function(data) {
