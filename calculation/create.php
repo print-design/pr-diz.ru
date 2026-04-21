@@ -3781,9 +3781,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             $('#lamination1_price_min').val(data.price);
                             ValidatePrice($('#lamination1_price'), $('#lamination1_price_min'));
                             
-                            if(data.currency_local != '') {
+                            if(data.currency_local != '' && data.currency != '') {
                                 $('#lamination1_currency').addClass('d-none');
                                 $('#lamination1_currency').removeAttr('required');
+                                $('#lamination1_currency').val(data.currency);
                                 $('#lamination1_currency_text').text(data.currency_local);
                                 $('#lamination1_currency_text').removeClass('d-none');
                             }
@@ -3791,6 +3792,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 $('#lamination1_currency_text').addClass('d-none');
                                 $('#lamination1_currency').removeClass('d-none');
                                 $('#lamination1_currency').attr('required', 'required');
+                                $('#lamination1_currency').val('');
                             }
                         })
                         .fail(function() {
@@ -3845,9 +3847,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             $('#lamination2_price_min').val(data.price);
                             ValidatePrice($('#lamination2_price'), $('#lamination2_price_min'));
                             
-                            if(data.currency_local.length != '') {
+                            if(data.currency_local != '' && data.currency != '') {
                                 $('#lamination2_currency').addClass('d-none');
                                 $('#lamination2_currency').removeAttr('required');
+                                $('#lamination2_currency').val(data.currency);
                                 $('#lamination2_currency_text').text(data.currency_local);
                                 $('#lamination2_currency_text').removeClass('d-none');
                             }
@@ -3855,6 +3858,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 $('#lamination2_currency_text').addClass('d-none');
                                 $('#lamination2_currency').removeClass('d-none');
                                 $('#lamination2_currency').attr('required', 'required');
+                                $('#lamination2_currency').val('');
                             }
                         })
                         .fail(function() {
