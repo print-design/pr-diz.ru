@@ -255,25 +255,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    // МИНИМАЛЬНАЯ МАССА КОГДА КГ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
-            filter_input(INPUT_POST, 'quantity') < $min_weight) {
-        $quantity_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА КГ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
-            filter_input(INPUT_POST, 'quantity') < $min_weight) {
-        $min_m2_when_kg_invalid = true;
-    }
-    
-    // МИНИМАЛЬНАЯ МАССА КОГДА ШТ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
-            filter_input(INPUT_POST, 'quantity') < $min_weight) {
-        $min_kg_when_pcs_invalid = true;
-    }
-    
     // Валидация цен - они должны быть не меньше минимальных
     $price_min = filter_input(INPUT_POST, 'price_min');
     $price = filter_input(INPUT_POST, 'price');
@@ -353,6 +334,49 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             $width_machine_valid = ISINVALID;
             $form_valid = false;
         }
+    }
+    
+    // ВАЛИДАЦИЯ ОБЪЁМА ЗАКАЗА
+    $stream_widths_string = '';
+    $stream_widths_sum = 0;
+    $streams_number = filter_input(INPUT_POST, 'streams_number');
+    $stream_width = filter_input(INPUT_POST, 'stream_width');
+    if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
+        $stream_widths_string = '('.implode(' + ', $stream_widths).')';
+        $stream_widths_sum = array_sum($stream_widths);
+    }
+    else {
+        $temp_streams = array();
+        for($stream_i = 0; $stream_i < $streams_number; $stream_i++) {
+            array_push($temp_streams, $stream_width);
+        }
+        $stream_widths_string = '('.implode(' + ', $temp_streams).')';
+        $stream_widths_sum = array_sum($temp_streams);
+    }
+    
+    // МИНИМАЛЬНАЯ МАССА КОГДА КГ
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+        $quantity_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА КГ
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+        $min_m2_when_kg_invalid = true;
+    }
+    
+    // МИНИМАЛЬНАЯ МАССА КОГДА ШТ
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+        $min_kg_when_pcs_invalid = true;
+    }
+    
+    // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА ШТ
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+        $min_m2_when_pcs_invalid = true;
     }
     
     // ЛАМИНАЦИЯ 1
@@ -1665,24 +1689,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <div id="min_kg_when_pcs_invalid" class="text-danger<?=$min_kg_when_pcs_class ?>">
                             Объем заказа не соответствует формуле: <br />
                             min кг >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000 * сумма удельных весов / 1000<br />
-                            <?php
-                            $stream_widths_string = '';
-                            if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
-                                $stream_widths_string = '('.implode(' + ', $stream_widths).')';
-                            }
-                            else {
-                                $temp_streams = array();
-                                for($stream_i = 0; $stream_i < $streams_number; $stream_i++) {
-                                    array_push($temp_streams, $stream_width);
-                                }
-                                $stream_widths_string = '('.implode(' + ', $temp_streams).')';
-                            }
-                            ?>
                             <?=$min_weight.' >= '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000 * ('.$density1.' + '.$density2.' + '.$density3.') / 1000' ?><br /><br />
                         </div>
                         <div id="min_m2_when_pcs_invalid" class="text-danger<?=$min_m2_when_pcs_class ?>">
                             Объем заказа не соответствует формуле: <br />
                             min m2 >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000<br />
+                            <?=$min_square.' >= '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000' ?><br /><br />
                         </div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
