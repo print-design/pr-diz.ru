@@ -3716,7 +3716,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 $('#currency_text').addClass('d-none');
                                 $('#currency').removeClass('d-none');
                                 $('#currency').attr('required', 'required');
-                                $('#currency').val('');
                             }
                         })
                         .fail(function() {
@@ -3813,7 +3812,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 $('#lamination1_currency_text').addClass('d-none');
                                 $('#lamination1_currency').removeClass('d-none');
                                 $('#lamination1_currency').attr('required', 'required');
-                                $('#lamination1_currency').val('');
                             }
                         })
                         .fail(function() {
@@ -3879,7 +3877,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 $('#lamination2_currency_text').addClass('d-none');
                                 $('#lamination2_currency').removeClass('d-none');
                                 $('#lamination2_currency').attr('required', 'required');
-                                $('#lamination2_currency').val('');
                             }
                         })
                         .fail(function() {
