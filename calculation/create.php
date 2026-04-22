@@ -169,6 +169,49 @@ $min_m2_when_kg_invalid = false; // минимальная квадратура 
 $min_kg_when_pcs_invalid = false; // минимальная масса когда шт
 $min_m2_when_pcs_invalid = false; // минимальная квадратура когда шт
 
+// Удельный вес (для валидации максимального объёма)
+$density1 = 0;
+$individual_density = filter_input(INPUT_POST, 'individual_density');
+$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+if(!empty($individual_density)) {
+    $density1 = $individual_density;
+}
+elseif(!empty ($film_variation_id)) {
+    $sql = "select weight from film_variation where id=$film_variation_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $density1 = $row[0];
+    }
+}
+
+$density2 = 0;
+$lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
+$lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
+if(!empty($lamination1_individual_density)) {
+    $density2 = $lamination1_individual_density;
+}
+elseif(!empty ($lamination1_film_variation_id)) {
+    $sql = "select weight from film_variation where id = $lamination1_film_variation_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $density2 = $row[0];
+    }
+}
+
+$density3 = 0;
+$lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
+$lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
+if(!empty($lamination2_individual_density)) {
+    $density3 = $lamination2_individual_density;
+}
+elseif(!empty ($lamination2_film_variation_id)) {
+    $sql = "select weight from film_variation where id = $lamination2_film_variation_id";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $density3 = $row[0];
+    }
+}
+
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -1608,9 +1651,19 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $min_kg_when_pcs_class = $min_kg_when_pcs_invalid ? "" : " d-none";
                         $min_m2_when_pcs_class = $min_m2_when_pcs_invalid ? "" : " d-none";
                         ?>
-                        <div id="min_m2_when_kg_invalid" class="text-danger<?=$min_m2_when_kg_class ?>">Объем заказа не соответствует формуле: min m2 >= объем заказа КГ * 1000 / сумма удельных весов</div>
-                        <div id="min_kg_when_pcs_invalid" class="text-danger<?=$min_kg_when_pcs_class ?>">Объем заказа не соответствует формуле: min кг >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000 * сумма удельных весов / 1000</div>
-                        <div id="min_m2_when_pcs_invalid" class="text-danger<?=$min_m2_when_pcs_class ?>">Объем заказа не соответствует формуле: min m2 >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000</div>
+                        <div id="min_m2_when_kg_invalid" class="text-danger<?=$min_m2_when_kg_class ?>">
+                            Объем заказа не соответствует формуле: <br />
+                            min m2 >= объем заказа КГ * 1000 / сумма удельных весов<br />
+                            <?=$min_square.' >= '.$quantity.' * 1000 / ('.$density1.' + '.$density2.' + '.$density3.')' ?>
+                        </div>
+                        <div id="min_kg_when_pcs_invalid" class="text-danger<?=$min_kg_when_pcs_class ?>">
+                            Объем заказа не соответствует формуле: <br />
+                            min кг >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000 * сумма удельных весов / 1000<br />
+                        </div>
+                        <div id="min_m2_when_pcs_invalid" class="text-danger<?=$min_m2_when_pcs_class ?>">
+                            Объем заказа не соответствует формуле: <br />
+                            min m2 >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000<br />
+                        </div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
                             <label for="printings_number" class="d-block">Количество тиражей</label>
