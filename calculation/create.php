@@ -359,7 +359,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // МИНИМАЛЬНАЯ МАССА КОГДА КГ
     // min кг < объема заказа КГ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
             $min_weight > $quantity) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
@@ -367,21 +367,21 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА КГ
     // min m2 < объем заказа КГ * 1000 / сумма удельных весов
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
             $min_square > $quantity * 1000 / ($density1 + $density2 + $density3)) {
         $min_m2_when_kg_invalid = true;
     }
     
     // МИНИМАЛЬНАЯ МАССА КОГДА ШТ
     // min кг < суммарная ширина ручьёв / кол-во ручьёв * длину этикетки * объем заказа ШТ / 1000 / 1000 * сумму удельных весов / 1000
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_PC && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == PIECES && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
             $min_weight > $stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000 * ($density1 + $density2 + $density3) / 1000) {
         $min_kg_when_pcs_invalid = true;
     }
     
     // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА ШТ
     // min m2 < суммарная ширина ручьев / кол-во ручьев * длину этикетки * объем заказа ШТ / 1000 / 1000
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_PC && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == PIECES && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
             $min_square > $streams_widths_sum / $streams_number * $length * $quantity / 1000 / 1000) {
         $min_m2_when_pcs_invalid = true;
     }
