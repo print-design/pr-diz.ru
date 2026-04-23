@@ -3604,6 +3604,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#label_extra_expense').text('Дополнительные расходы с шт, руб');
                 }
                 
+                $('#min_m2_when_kg_invalid').addClass('d-none');
+                $('#min_kg_when_pcs_invalid').addClass('d-none');
+                $('#min_m2_when_pcs_invalid').addClass('d-none');
                 SetValidParameters($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
             });
             
