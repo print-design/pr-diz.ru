@@ -354,28 +354,35 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $stream_widths_sum = array_sum($temp_streams);
     }
     
+    $quantity = filter_input(INPUT_POST, 'quantity');
+    $length = filter_input(INPUT_POST, 'length');
+    
     // МИНИМАЛЬНАЯ МАССА КОГДА КГ
+    // min кг < объема заказа КГ
     if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
-            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+            $min_weight >= $quantity) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
     
     // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА КГ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
-            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+    // min m2 < объем заказа КГ * 1000 / сумма удельных весов
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
+            $min_square >= $quantity * 1000 / ($density1 + $density2 + $density3)) {
         $min_m2_when_kg_invalid = true;
     }
     
     // МИНИМАЛЬНАЯ МАССА КОГДА ШТ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
-            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+    // min кг < суммарная ширина ручьёв / кол-во ручьёв * длину этикетки * объем заказа ШТ / 1000 / 1000 * сумму удельных весов / 1000
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_PC && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+            $min_weight >= $stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000 * ($density1 + $density2 + $density3) / 1000) {
         $min_kg_when_pcs_invalid = true;
     }
     
     // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА ШТ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
-            filter_input(INPUT_POST, 'quantity') < $min_weight) {
+    // min m2 < суммарная ширина ручьев / кол-во ручьев * длину этикетки * объем заказа ШТ / 1000 / 1000
+    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == UNIT_PC && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
+            $min_square >= $streams_widths_sum / $streams_number * $length * $quantity / 1000 / 1000) {
         $min_m2_when_pcs_invalid = true;
     }
     
@@ -1683,18 +1690,18 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         ?>
                         <div id="min_m2_when_kg_invalid" class="text-danger<?=$min_m2_when_kg_class ?>">
                             Объем заказа не соответствует формуле: <br />
-                            min m2 >= объем заказа КГ * 1000 / сумма удельных весов<br />
-                            <?=$min_square.' >= '.$quantity.' * 1000 / ('.$density1.' + '.$density2.' + '.$density3.')' ?><br /><br />
+                            min m2 < объем заказа КГ * 1000 / сумма удельных весов<br />
+                            <?=$min_square.' < '.$quantity.' * 1000 / ('.$density1.' + '.$density2.' + '.$density3.')' ?><br /><br />
                         </div>
                         <div id="min_kg_when_pcs_invalid" class="text-danger<?=$min_kg_when_pcs_class ?>">
                             Объем заказа не соответствует формуле: <br />
-                            min кг >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000 * сумма удельных весов / 1000<br />
-                            <?=$min_weight.' >= '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000 * ('.$density1.' + '.$density2.' + '.$density3.') / 1000' ?><br /><br />
+                            min кг < суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000 * сумма удельных весов / 1000<br />
+                            <?=$min_weight.' < '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000 * ('.$density1.' + '.$density2.' + '.$density3.') / 1000' ?><br /><br />
                         </div>
                         <div id="min_m2_when_pcs_invalid" class="text-danger<?=$min_m2_when_pcs_class ?>">
                             Объем заказа не соответствует формуле: <br />
-                            min m2 >= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000<br />
-                            <?=$min_square.' >= '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000' ?><br /><br />
+                            min m2 < суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000<br />
+                            <?=$min_square.' < '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000' ?><br /><br />
                         </div>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
