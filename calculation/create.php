@@ -173,6 +173,9 @@ $density1 = 0; // удельный вес 1
 $density2 = 0; // удельный вес 2
 $density3 = 0; // удельный вес 3
 
+$stream_widths_string = '';
+$stream_widths_sum = 0;
+
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
@@ -298,10 +301,6 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     // ВАЛИДАЦИЯ МИНИМАЛЬНОГО ОБЪЁМА ЗАКАЗА
-    $stream_widths_string = '';
-    $stream_widths_sum = 0;
-    $streams_number = filter_input(INPUT_POST, 'streams_number');
-    $stream_width = filter_input(INPUT_POST, 'stream_width');
     if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
         $stream_widths_string = '('.implode(' + ', $stream_widths).')';
         $stream_widths_sum = array_sum($stream_widths);
@@ -356,10 +355,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     $quantity = filter_input(INPUT_POST, 'quantity');
     $length = filter_input(INPUT_POST, 'length');
+    $unit = filter_input(INPUT_POST, 'unit');
     
     // МИНИМАЛЬНАЯ МАССА КОГДА КГ
     // min кг < объема заказа КГ
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+    if($work_type_id == WORK_TYPE_PRINT && $unit == KG && !empty($quantity) && !empty($min_weight) && 
             $min_weight > $quantity) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
@@ -367,22 +367,22 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА КГ
     // min m2 < объем заказа КГ * 1000 / сумма удельных весов
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == KG && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
+    if($work_type_id == WORK_TYPE_PRINT && $unit == KG && !empty($quantity) && !empty($min_square) && 
             $min_square > $quantity * 1000 / ($density1 + $density2 + $density3)) {
         $min_m2_when_kg_invalid = true;
     }
     
     // МИНИМАЛЬНАЯ МАССА КОГДА ШТ
     // min кг < суммарная ширина ручьёв / кол-во ручьёв * длину этикетки * объем заказа ШТ / 1000 / 1000 * сумму удельных весов / 1000
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == PIECES && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_weight) && 
+    if($work_type_id == WORK_TYPE_PRINT && $unit == PIECES && !empty($quantity) && !empty($min_weight) && 
             $min_weight > $stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000 * ($density1 + $density2 + $density3) / 1000) {
         $min_kg_when_pcs_invalid = true;
     }
     
     // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА ШТ
     // min m2 < суммарная ширина ручьев / кол-во ручьев * длину этикетки * объем заказа ШТ / 1000 / 1000
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT && filter_input(INPUT_POST, 'unit') == PIECES && !empty(filter_input(INPUT_POST, 'quantity')) && !empty($min_square) && 
-            $min_square > $streams_widths_sum / $streams_number * $length * $quantity / 1000 / 1000) {
+    if($work_type_id == WORK_TYPE_PRINT && $unit == PIECES && !empty($quantity) && !empty($min_square) && 
+            $min_square > $stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000) {
         $min_m2_when_pcs_invalid = true;
     }
     
