@@ -164,53 +164,14 @@ for($i = 1; $i <= 4; $i++) {
     $$percent_run2_valid_var = '';
 }
 
-// ВАЛИДАЦИЯ МИНИМАЛЬНОГО ОБЪЁМА ЗАКАЗА
+// ПЕРЕМЕННЫЕ ДЛЯ ВАЛИДАЦИИ МИНИМАЛЬНОГО ОБЪЁМА ЗАКАЗА
 $min_m2_when_kg_invalid = false; // минимальная квадратура когда кг
 $min_kg_when_pcs_invalid = false; // минимальная масса когда шт
 $min_m2_when_pcs_invalid = false; // минимальная квадратура когда шт
 
-// Удельный вес (для валидации максимального объёма)
-$density1 = 0;
-$individual_density = filter_input(INPUT_POST, 'individual_density');
-$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
-if(!empty($individual_density)) {
-    $density1 = $individual_density;
-}
-elseif(!empty ($film_variation_id)) {
-    $sql = "select weight from film_variation where id=$film_variation_id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $density1 = $row[0];
-    }
-}
-
-$density2 = 0;
-$lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
-$lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
-if(!empty($lamination1_individual_density)) {
-    $density2 = $lamination1_individual_density;
-}
-elseif(!empty ($lamination1_film_variation_id)) {
-    $sql = "select weight from film_variation where id = $lamination1_film_variation_id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $density2 = $row[0];
-    }
-}
-
-$density3 = 0;
-$lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
-$lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
-if(!empty($lamination2_individual_density)) {
-    $density3 = $lamination2_individual_density;
-}
-elseif(!empty ($lamination2_film_variation_id)) {
-    $sql = "select weight from film_variation where id = $lamination2_film_variation_id";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $density3 = $row[0];
-    }
-}
+$density1 = 0; // удельный вес 1
+$density2 = 0; // удельный вес 2
+$density3 = 0; // удельный вес 3
 
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
@@ -336,7 +297,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    // ВАЛИДАЦИЯ ОБЪЁМА ЗАКАЗА
+    // ВАЛИДАЦИЯ МИНИМАЛЬНОГО ОБЪЁМА ЗАКАЗА
     $stream_widths_string = '';
     $stream_widths_sum = 0;
     $streams_number = filter_input(INPUT_POST, 'streams_number');
@@ -352,6 +313,45 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         $stream_widths_string = '('.implode(' + ', $temp_streams).')';
         $stream_widths_sum = array_sum($temp_streams);
+    }
+    
+    $individual_density = filter_input(INPUT_POST, 'individual_density');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    if(!empty($individual_density)) {
+        $density1 = $individual_density;
+    }
+    elseif(!empty ($film_variation_id)) {
+        $sql = "select weight from film_variation where id=$film_variation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $density1 = $row[0];
+        }
+    }
+    
+    $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
+    $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
+    if(!empty($lamination1_individual_density)) {
+        $density2 = $lamination1_individual_density;
+    }
+    elseif(!empty ($lamination1_film_variation_id)) {
+        $sql = "select weight from film_variation where id = $lamination1_film_variation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $density2 = $row[0];
+        }
+    }
+    
+    $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
+    $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
+    if(!empty($lamination2_individual_density)) {
+        $density3 = $lamination2_individual_density;
+    }
+    elseif(!empty ($lamination2_film_variation_id)) {
+        $sql = "select weight from film_variation where id = $lamination2_film_variation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $density3 = $row[0];
+        }
     }
     
     $quantity = filter_input(INPUT_POST, 'quantity');
@@ -1684,6 +1684,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                         </div>
                         <?php
+                        if(null !== filter_input(INPUT_POST, 'create_calculation_submit')):
                         $min_m2_when_kg_class = $min_m2_when_kg_invalid ? "" : " d-none";
                         $min_kg_when_pcs_class = $min_kg_when_pcs_invalid ? "" : " d-none";
                         $min_m2_when_pcs_class = $min_m2_when_pcs_invalid ? "" : " d-none";
@@ -1706,6 +1707,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             <?=$min_square.' <= '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000' ?><br />
                             <?=$min_square.' <= '.($stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000) ?><br /><br />
                         </div>
+                        <?php endif; ?>
                         <!-- Количество тиражей -->
                         <div class="form-group self-adhesive-only d-none">
                             <label for="printings_number" class="d-block">Количество тиражей</label>
