@@ -353,14 +353,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    $quantity = intval(filter_input(INPUT_POST, 'quantity'));
+    $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity') ?? '');
     $length = filter_input(INPUT_POST, 'length');
     $unit = filter_input(INPUT_POST, 'unit');
     
     // МИНИМАЛЬНАЯ МАССА КОГДА КГ
     // min кг < объема заказа КГ
     if($work_type_id == WORK_TYPE_PRINT && $unit == KG && !empty($quantity) && !empty($min_weight) && 
-            $min_weight > $quantity) {
+            $min_weight > $quantity) { echo "KG<br />";
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
