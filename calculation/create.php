@@ -370,6 +370,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if($work_type_id == WORK_TYPE_PRINT && $unit == KG && !empty($quantity) && !empty($min_square) && 
             $min_square > ($quantity * 1000 / ($density1 + $density2 + $density3))) {
         $min_m2_when_kg_invalid = true;
+        $form_valid = false;
     }
     
     // МИНИМАЛЬНАЯ МАССА КОГДА ШТ
@@ -377,6 +378,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if($work_type_id == WORK_TYPE_PRINT && $unit == PIECES && !empty($quantity) && !empty($min_weight) && 
             $min_weight > ($stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000 * ($density1 + $density2 + $density3) / 1000)) {
         $min_kg_when_pcs_invalid = true;
+        $form_valid = false;
     }
     
     // МИНИМАЛЬНАЯ КВАДРАТУРА КОГДА ШТ
@@ -384,6 +386,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     if($work_type_id == WORK_TYPE_PRINT && $unit == PIECES && !empty($quantity) && !empty($min_square) && 
             $min_square > ($stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000)) {
         $min_m2_when_pcs_invalid = true;
+        $form_valid = false;
     }
     
     // ЛАМИНАЦИЯ 1
