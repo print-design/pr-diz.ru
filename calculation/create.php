@@ -2668,6 +2668,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                             <?php endforeach; ?>
                         </div>
+                        <!-- Валидация: сумма ширин ручьёв не больше максимальной ширины машины -->
+                        <?php
+                        if(null !== filter_input(INPUT_POST, 'create_calculation_submit')):
+                        $exceed_max_width_class = ""; // $exceed_max_width_invalid ? "" : " d-none";
+                        ?>
+                        <div id="exceed_max_width" class="text-danger<?=$exceed_max_width_class ?>">
+                            Суммарная ширина ручьёв превышает максимальную
+                        </div>
+                        <?php endif; ?>
                         <!-- Количество красок (для самоклейки возможно 0) -->
                         <p id="color_title" class="d-none print-only self-adhesive-only"><span class="font-weight-bold">Краска</span></p>
                         <div class="print-only self-adhesive-only d-none">
