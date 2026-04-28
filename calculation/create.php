@@ -360,7 +360,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     // МИНИМАЛЬНАЯ МАССА КОГДА КГ
     // min кг < объема заказа КГ
     if($work_type_id == WORK_TYPE_PRINT && $unit == KG && !empty($quantity) && !empty($min_weight) && 
-            $min_weight > $quantity) { echo "KG<br />";
+            $min_weight > $quantity) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
