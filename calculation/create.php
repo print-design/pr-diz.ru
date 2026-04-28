@@ -1688,9 +1688,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         </div>
                         <?php
                         if(null !== filter_input(INPUT_POST, 'create_calculation_submit')):
-                        $min_m2_when_kg_class = $min_m2_when_kg_invalid ? "" : " d-none";
-                        $min_kg_when_pcs_class = $min_kg_when_pcs_invalid ? "" : " d-none";
-                        $min_m2_when_pcs_class = $min_m2_when_pcs_invalid ? "" : " d-none";
+                        $min_m2_when_kg_class = " d-none"; // $min_m2_when_kg_invalid ? "" : " d-none";
+                        $min_kg_when_pcs_class = " d-none"; // $min_kg_when_pcs_invalid ? "" : " d-none";
+                        $min_m2_when_pcs_class = " d-none"; // $min_m2_when_pcs_invalid ? "" : " d-none";
                         ?>
                         <div id="min_m2_when_kg_invalid" class="text-danger<?=$min_m2_when_kg_class ?>">
                             Объем заказа не соответствует формуле: <br />
@@ -1709,6 +1709,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             min m2 <= суммарная ширина ручьев / кол-во ручьев * длина этикетки * объем заказа ШТ / 1000 / 1000<br />
                             <?=$min_square.' <= '.$stream_widths_string.' / '.$streams_number.' * '.$length.' * '.$quantity.' / 1000 / 1000' ?><br />
                             <?=$min_square.' <= '.($stream_widths_sum / $streams_number * $length * $quantity / 1000 / 1000) ?><br /><br />
+                        </div>
+                        <?php
+                        $quantity_too_little_class = ($min_m2_when_kg_invalid || $min_kg_when_pcs_invalid || $min_m2_when_pcs_invalid) ? "" : " d-none";
+                        ?>
+                        <div id="quantity_too_little" class="text-danger<?=$quantity_too_little_class ?>">
+                            Слишком малый объём заказа
                         </div>
                         <?php endif; ?>
                         <!-- Количество тиражей -->
@@ -3610,6 +3616,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#min_m2_when_kg_invalid').addClass('d-none');
                 $('#min_kg_when_pcs_invalid').addClass('d-none');
                 $('#min_m2_when_pcs_invalid').addClass('d-none');
+                $('#quantity_too_little').addClass('d-none');
                 SetValidParameters($('#work_type_id').val(), $('#machine_id').val(), $('input[value=kg]').is(':checked'));
             });
             
@@ -3855,6 +3862,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#min_m2_when_kg_invalid').addClass('d-none');
                 $('#min_kg_when_pcs_invalid').addClass('d-none');
                 $('#min_m2_when_pcs_invalid').addClass('d-none');
+                $('#quantity_too_little').addClass('d-none');
                 
                 if($('#unit_kg').is(':checked') && min_weight > 0) {
                     int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
@@ -3875,6 +3883,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#min_m2_when_kg_invalid').addClass('d-none');
                 $('#min_kg_when_pcs_invalid').addClass('d-none');
                 $('#min_m2_when_pcs_invalid').addClass('d-none');
+                $('#quantity_too_little').addClass('d-none');
                 
                 if($('#unit_kg').is(':checked') && min_weight > 0) {
                     int_weight = Number.parseInt($(this).val().replace(/[^0-9\\.]+/g, ''));
