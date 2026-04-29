@@ -5251,6 +5251,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             $('input#streams_number').keyup(function() {
                 GetLaminationRollers();
                 
+                // Скрываем сообщение о валидации ширины материала
+                $('#exceed_max_width').addClass('d-none');
+                
                 // Скрываем / показываем флажок "Разный размер ручьёв"
                 streams_number = Number($(this).val());
                 if(Number.isInteger(streams_number) && streams_number > 1) {
@@ -5282,6 +5285,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             $('input#stream_width').keyup(function() {
                 GetLaminationRollers();
+                
+                // Скрываем сообщение о валидации ширины материала
+                $('#exceed_max_width').addClass('d-none');
             });
             
             $('input.stream_width_of_many').keyup(function() {
