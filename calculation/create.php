@@ -164,20 +164,100 @@ for($i = 1; $i <= 4; $i++) {
     $$percent_run2_valid_var = '';
 }
 
+// СУММАРНАЯ ШИРИНА РУЧЬЁВ
+$stream_widths_string = '';
+$stream_widths_sum = 0;
+
+// УДЕЛЬНЫЙ ВЕС 1, 2, 3
+$density1 = 0; // удельный вес 1
+$density2 = 0; // удельный вес 2
+$density3 = 0; // удельный вес 3
+
+// ПЕРЕМЕННАЯ ДЛЯ ВАЛИДАЦИИ ШИРИНЫ МАТЕРИАЛА
+$exceed_max_width_invalid = false;
+
 // ПЕРЕМЕННЫЕ ДЛЯ ВАЛИДАЦИИ МИНИМАЛЬНОГО ОБЪЁМА ЗАКАЗА
 $min_m2_when_kg_invalid = false; // минимальная квадратура когда кг
 $min_kg_when_pcs_invalid = false; // минимальная масса когда шт
 $min_m2_when_pcs_invalid = false; // минимальная квадратура когда шт
 
-$density1 = 0; // удельный вес 1
-$density2 = 0; // удельный вес 2
-$density3 = 0; // удельный вес 3
-
-$stream_widths_string = '';
-$stream_widths_sum = 0;
-
 // Сохранение в базу расчёта
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
+    // СУММАРНАЯ ШИРИНА РУЧЬЁВ
+    
+    $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+    $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
+    $streams_number = filter_input(INPUT_POST, 'streams_number');
+    $stream_widths = array();
+    
+    // Если тип работы - не самоклейка, а ширина ручья пустая, то должен быть список ширин ручьёв каждого ручья
+    if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
+        $sci = 1;
+        $stream_width_var = "stream_width_$sci";
+        
+        while (filter_input(INPUT_POST, $stream_width_var) !== null) {
+            $stream_widths[$sci] = filter_input(INPUT_POST, $stream_width_var);
+            $sci++;
+            $stream_width_var = "stream_width_$sci";
+        }
+    }
+    
+    if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
+        $stream_widths_string = '('.implode(' + ', $stream_widths).')';
+        $stream_widths_sum = array_sum($stream_widths);
+    }
+    else {
+        $temp_streams = array();
+        for($stream_i = 0; $stream_i < $streams_number; $stream_i++) {
+            array_push($temp_streams, $stream_width);
+        }
+        $stream_widths_string = '('.implode(' + ', $temp_streams).')';
+        $stream_widths_sum = array_sum($temp_streams);
+    }
+    
+    // УДЕЛЬНЫЙ ВЕС 1, 2, 3
+    
+    $individual_density = filter_input(INPUT_POST, 'individual_density');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    if(!empty($individual_density)) {
+        $density1 = $individual_density;
+    }
+    elseif(!empty ($film_variation_id)) {
+        $sql = "select weight from film_variation where id=$film_variation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $density1 = $row[0];
+        }
+    }
+    
+    $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
+    $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
+    if(!empty($lamination1_individual_density)) {
+        $density2 = $lamination1_individual_density;
+    }
+    elseif(!empty ($lamination1_film_variation_id)) {
+        $sql = "select weight from film_variation where id = $lamination1_film_variation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $density2 = $row[0];
+        }
+    }
+    
+    $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
+    $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
+    if(!empty($lamination2_individual_density)) {
+        $density3 = $lamination2_individual_density;
+    }
+    elseif(!empty ($lamination2_film_variation_id)) {
+        $sql = "select weight from film_variation where id = $lamination2_film_variation_id";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $density3 = $row[0];
+        }
+    }
+    
+    // ВАЛИДАЦИЯ
+    
     if(empty(filter_input(INPUT_POST, "customer_id"))) {
         $customer_id_valid = ISINVALID;
         $form_valid = false;
@@ -258,39 +338,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    $work_type_id = filter_input(INPUT_POST, 'work_type_id');
-    $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
-    $streams_number = filter_input(INPUT_POST, 'streams_number');
-    $stream_widths = array();
+    // ВАЛИДАЦИЯ ШИРИНЫ МАТЕРИАЛА
     
-    // Если тип работы - не самоклейка, а ширина ручья пустая, то должен быть список ширин ручьёв каждого ручья
-    if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
-        $sci = 1;
-        $stream_width_var = "stream_width_$sci";
-        
-        while (filter_input(INPUT_POST, $stream_width_var) !== null) {
-            $stream_widths[$sci] = filter_input(INPUT_POST, $stream_width_var);
-            $sci++;
-            $stream_width_var = "stream_width_$sci";
-        }
-    }
-    
-    if(filter_input(INPUT_POST, 'ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_ski')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+    if(filter_input(INPUT_POST, 'ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_ski'))) {
         $width_ski = filter_input(INPUT_POST, 'width_ski');
         
-        if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
-            // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
-            if($width_ski < array_sum($stream_widths)) {
-                $width_ski_valid = ISINVALID;
-                $form_valid = false;
-            }
-        }
-        else {
-            // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
-            if($width_ski < $stream_width * $streams_number) {
-                $width_ski_valid = ISINVALID;
-                $form_valid = false;
-            }
+        // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
+        if($width_ski < $stream_widths_sum) {
+            $width_ski_valid = ISINVALID;
+            $form_valid = false;
         }
         
         // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
@@ -300,58 +356,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
+    // Если суммарная ширина ручьёв (ширина ручья * кол-во ручьёв) больше, чем ширина машины, то плёнка слишком широкая
+    if(filter_input(INPUT_POST, 'ski') != SKI_NONSTANDARD) {
+        if(!empty($machine_width) && $stream_widths_sum > $machine_width) {
+            $exceed_max_width_invalid = true;
+            $form_valid = false;
+        }
+    }
+    
     // ВАЛИДАЦИЯ МИНИМАЛЬНОГО ОБЪЁМА ЗАКАЗА
-    if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
-        $stream_widths_string = '('.implode(' + ', $stream_widths).')';
-        $stream_widths_sum = array_sum($stream_widths);
-    }
-    else {
-        $temp_streams = array();
-        for($stream_i = 0; $stream_i < $streams_number; $stream_i++) {
-            array_push($temp_streams, $stream_width);
-        }
-        $stream_widths_string = '('.implode(' + ', $temp_streams).')';
-        $stream_widths_sum = array_sum($temp_streams);
-    }
-    
-    $individual_density = filter_input(INPUT_POST, 'individual_density');
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
-    if(!empty($individual_density)) {
-        $density1 = $individual_density;
-    }
-    elseif(!empty ($film_variation_id)) {
-        $sql = "select weight from film_variation where id=$film_variation_id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $density1 = $row[0];
-        }
-    }
-    
-    $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
-    $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
-    if(!empty($lamination1_individual_density)) {
-        $density2 = $lamination1_individual_density;
-    }
-    elseif(!empty ($lamination1_film_variation_id)) {
-        $sql = "select weight from film_variation where id = $lamination1_film_variation_id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $density2 = $row[0];
-        }
-    }
-    
-    $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
-    $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
-    if(!empty($lamination2_individual_density)) {
-        $density3 = $lamination2_individual_density;
-    }
-    elseif(!empty ($lamination2_film_variation_id)) {
-        $sql = "select weight from film_variation where id = $lamination2_film_variation_id";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $density3 = $row[0];
-        }
-    }
     
     $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity') ?? '');
     $length = filter_input(INPUT_POST, 'length');
@@ -2671,7 +2684,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <!-- Валидация: сумма ширин ручьёв не больше максимальной ширины машины -->
                         <?php
                         if(null !== filter_input(INPUT_POST, 'create_calculation_submit')):
-                        $exceed_max_width_class = ""; // $exceed_max_width_invalid ? "" : " d-none";
+                        $exceed_max_width_class = $exceed_max_width_invalid ? "" : " d-none";
                         ?>
                         <div id="exceed_max_width" class="text-danger<?=$exceed_max_width_class ?>">
                             Суммарная ширина ручьёв превышает максимальную
