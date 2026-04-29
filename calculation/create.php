@@ -2538,8 +2538,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <label for="stream_width">Ширина ручья, мм</label>
                                     <?php
                                     $disabled_attribute = '';
-                                    if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
-                                            (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
+
+                                    if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
                                         $disabled_attribute = "disabled='disabled' ";
                                     }
                                     ?>
@@ -2561,15 +2561,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <?php
                                 $stream_widths_many_visible_class = "d-none";
                                 $stream_widths_many_checked = "d-block";
-                                if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE) || 
-                                        (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE)) {
-                                    if($streams_number > 1) {
-                                        $stream_widths_many_visible_class = '';
-                                        
-                                        if(empty($stream_width)) {
-                                            $stream_widths_many_checked = " checked='checked'";
-                                        }
-                                    }
+                                
+                                if($streams_number > 1) {
+                                    $stream_widths_many_visible_class = '';
+                                }
+                                
+                                if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {    
+                                    $stream_widths_many_checked = " checked='checked'";
                                 }
                                 ?>
                                 <div class="<?=$stream_widths_many_visible_class ?>" id="stream_widths_many_wrapper">
@@ -2666,20 +2664,25 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <!-- Ширины ручьёв -->
                         <?php
                         $stream_widths_many_row_visible_class = " d-none";
-                        if((null != filter_input(INPUT_GET, 'id') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) || 
-                                (null !== filter_input(INPUT_POST, 'create_calculation_submit') && $work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width))) {
+                        if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
                             $stream_widths_many_row_visible_class = '';
                         }
                         ?>
                         <div class="row<?=$stream_widths_many_row_visible_class ?>" id="stream_widths_many_row">
-                            <?php foreach($stream_widths as $key => $value): ?>
+                            <?php
+                            if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on'):
+                            foreach($stream_widths as $key => $value):
+                            ?>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="stream_width_<?=$key ?>">Ширина ручья <?=$key ?>, мм</label>
                                     <input type="text" class="form-control float-only stream_width_of_many" id="stream_width_<?=$key ?>" name="stream_width_<?=$key ?>" value="<?=$value ?>" required="required" />
                                 </div>
                             </div>
-                            <?php endforeach; ?>
+                            <?php
+                            endforeach;
+                            endif;
+                            ?>
                         </div>
                         <!-- Валидация: сумма ширин ручьёв не больше максимальной ширины машины -->
                         <?php
