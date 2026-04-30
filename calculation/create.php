@@ -2539,7 +2539,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <?php
                                     $disabled_attribute = '';
 
-                                    if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
+                                    if((!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') || count($stream_widths) > 0) {
                                         $disabled_attribute = "disabled='disabled' ";
                                     }
                                     ?>
@@ -2566,7 +2566,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     $stream_widths_many_visible_class = '';
                                 }
                                 
-                                if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {    
+                                if((!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') || count($stream_widths) > 0) {    
                                     $stream_widths_many_checked = " checked='checked'";
                                 }
                                 ?>
@@ -2664,13 +2664,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         <!-- Ширины ручьёв -->
                         <?php
                         $stream_widths_many_row_visible_class = " d-none";
-                        if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
+                        
+                        if((!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') || count($stream_widths) > 0) {
                             $stream_widths_many_row_visible_class = '';
                         }
                         ?>
                         <div class="row<?=$stream_widths_many_row_visible_class ?>" id="stream_widths_many_row">
                             <?php
-                            if(!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on'):
+                            if((!empty(filter_input(INPUT_POST, 'stream_widths_many')) && filter_input(INPUT_POST, 'stream_widths_many') == 'on') || count($stream_widths) > 0):
                             foreach($stream_widths as $key => $value):
                             ?>
                             <div class="col-4">
