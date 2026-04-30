@@ -2526,7 +2526,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            class="form-control float-only self-adhesive-only d-none" 
                                            required="required" 
                                            placeholder="Ширина этикетки, мм" 
-                                           value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
+                                           value="<?= (empty($stream_width) || $work_type_id != WORK_TYPE_SELF_ADHESIVE) ? "" : floatval($stream_width) ?>" 
                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
                                            onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
