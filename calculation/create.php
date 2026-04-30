@@ -1097,15 +1097,17 @@ if(empty($stream_width) && isset($row['stream_width'])) {
 $stream_widths = array();
 
 if($work_type_id != WORK_TYPE_SELF_ADHESIVE && !empty($streams_number)) {
-    for($i = 1; $i <= $streams_number; $i++) {
-        $stream_width_var = "stream_width_$i";
-        $w = filter_input(INPUT_POST, $stream_width_var);
-        if(!empty($w)) {
-            $stream_widths[$i] = $w;
+    if(filter_input(INPUT_POST, 'stream_widths_many') == 'on') {
+        for($i = 1; $i <= $streams_number; $i++) {
+            $stream_width_var = "stream_width_$i";
+            $w = filter_input(INPUT_POST, $stream_width_var);
+            if(!empty($w)) {
+                $stream_widths[$i] = $w;
+            }
         }
     }
-    
-    if(count($stream_widths) == 0 && !empty($id)) {
+
+    if(count($stream_widths) == 0 && !empty($id) && empty(filter_input(INPUT_POST, 'stream_width'))) {
         $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
         $fetcher = new Fetcher($sql);
         while($stream_widths_row = $fetcher->Fetch()) {
