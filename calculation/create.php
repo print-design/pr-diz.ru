@@ -168,6 +168,9 @@ for($i = 1; $i <= 4; $i++) {
 $stream_widths_string = '';
 $stream_widths_sum = 0;
 
+// ШИРИНА МАТЕРИАЛА
+$material_width = 0;
+
 // УДЕЛЬНЫЙ ВЕС 1, 2, 3
 $density1 = 0; // удельный вес 1
 $density2 = 0; // удельный вес 2
@@ -213,6 +216,19 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         $stream_widths_string = '('.implode(' + ', $temp_streams).')';
         $stream_widths_sum = array_sum($temp_streams);
+    }
+    
+    // ШИРИНА МАТЕРИАЛА
+    switch(filter_input(INPUT_POST, 'ski')) {
+        case SKI_STANDARD:
+            $material_width = $stream_widths_sum + 20;
+            break;
+        case SKI_NO:
+            $material_width = $stream_widths_sum;
+            break;
+        case SKI_NONSTANDARD:
+            $material_width = filter_input(INPUT_POST, 'width_ski');
+            break;
     }
     
     // УДЕЛЬНЫЙ ВЕС 1, 2, 3
@@ -356,9 +372,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    // Если суммарная ширина ручьёв (ширина ручья * кол-во ручьёв) больше, чем ширина машины, то плёнка слишком широкая
+    // Если ширина материала больше, чем ширина машины, то плёнка слишком широкая
     if(filter_input(INPUT_POST, 'ski') != SKI_NONSTANDARD) {
-        if(!empty($machine_width) && $stream_widths_sum > $machine_width) {
+        if(!empty($machine_width) && $material_width > $machine_width) {
             $exceed_max_width_invalid = true;
             $form_valid = false;
         }
