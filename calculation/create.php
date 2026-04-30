@@ -2707,7 +2707,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $exceed_max_width_class = $exceed_max_width_invalid ? "" : " d-none";
                         ?>
                         <div id="exceed_max_width" class="text-danger<?=$exceed_max_width_class ?>">
-                            Суммарная ширина ручьёв превышает максимальную
+                            Ширина материала превышает максимальную
                         </div>
                         <?php endif; ?>
                         <!-- Количество красок (для самоклейки возможно 0) -->
