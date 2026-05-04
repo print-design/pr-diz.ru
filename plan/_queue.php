@@ -26,7 +26,7 @@ class Queue {
     }
     
     private function ShowPrint() {
-        // Получаем список валов и красочность для текущей машины
+        // Список валов текущей машины
         $sql = "select value from raport where active = 1 and machine_id = ".$this->machine_id;
         $grabber = new Grabber($sql);
         $result = $grabber->result;
@@ -40,7 +40,17 @@ class Queue {
         }
             
         $str_raports = implode(', ', $raports);
+        
+        // Красочность текущей машины
         $colorfulness = PRINTER_COLORFULLNESSES[$this->machine_id];
+        
+        // Максимальная ширина текущей машины
+        $max_width = 0;
+        $sql = "select width from norm_machine where machine_id = ". $this->machine_id." order by date desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $max_width = $row[0];
+        }
         
         // В список расчётов для каждой машины
         // добавляем также расчёты для других машин,
@@ -74,7 +84,7 @@ class Queue {
                 . " and work_id = ".$this->work_id.")"
                 . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
                 . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
-                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or c.machine_id = ".$this->machine_id.")";
+                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness and cr.width_1 <= $max_width) or c.machine_id = ".$this->machine_id.")";
         
         $run2 = true;
         
