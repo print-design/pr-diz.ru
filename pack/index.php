@@ -13,6 +13,15 @@ if(null !== filter_input(INPUT_GET, 'status_id')) {
     $status_id = filter_input(INPUT_GET, 'status_id');
 }
 
+// Фильтр по дате отгрузки
+$from = filter_input(INPUT_GET, 'from');
+$to = filter_input(INPUT_GET, 'to');
+$date_from = null;
+$date_to = null;
+GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+$diff1day = new DateInterval('P1D');
+$date_to->add($diff1day);
+
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
@@ -115,6 +124,15 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     else {
                         $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
                     }
+                    
+                    if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
+                        $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) >= '".$date_from->format('Y-m-d')."'";
+                    }
+                    
+                    if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
+                        $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) <= '".$date_to->format('Y-m-d')."'";
+                    }
+                    
                     $sql .= $filter;
                     $fetcher = new Fetcher($sql); 
                     
@@ -124,7 +142,33 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     ?>
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
-                <div class="p-1 text-nowrap">
+                <div class="p-1 text-nowrap d-flex justify-content-end">
+                    <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
+                    <form class="form-inline" method="get">
+                        <input type="hidden" name="status_id" value="<?=$status_id ?>" />
+                        <input type="hidden" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" />
+                        <label for="from" style="font-size: larger;">от&nbsp;</label>
+                        <input type="date" 
+                               id="from" 
+                               name="from" 
+                               class="form-control mr-2" 
+                               value="<?= filter_input(INPUT_GET, 'from') ?>" 
+                               style="border: 0; width: 8.5rem;" 
+                               onchange="javascript: this.form.submit();" />
+                    </form>
+                    <form class="form-inline" method="get">
+                        <input type="hidden" name="status_id" value="<?=$status_id ?>" />
+                        <input type="hidden" name="from" value="<?= filter_input(INPUT_GET, 'from') ?>" />
+                        <label for="to" style="font-size: larger;">до&nbsp;</label>
+                        <input type="date" 
+                               id="to" 
+                               name="to" 
+                               class="form-control mr-2" 
+                               value="<?= filter_input(INPUT_GET, 'to') ?>" 
+                               style="border: 0; width: 8.5rem;" 
+                               onchange="javascript: this.form.submit();" />
+                    </form>
+                    <?php endif; ?>
                     <form class="form-inline d-inline" method="get">
                         <?php if(null !== $status_id): ?>
                         <input type="hidden" name="status_id" value="<?=$status_id ?>" />
@@ -232,6 +276,15 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             else {
                 $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
             }
+            
+            if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
+                $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) >= '".$date_from->format('Y-m-d')."'";
+            }
+            
+            if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
+                $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) <= '".$date_to->format('Y-m-d')."'";
+            }
+            
             $sql .= $filter.($status_id == ORDER_STATUS_SHIPPED ? " order by shipping_date desc limit $pager_skip, $pager_take" : " order by time desc limit $pager_skip, $pager_take");
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
