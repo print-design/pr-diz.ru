@@ -684,6 +684,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
         $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = "NULL";
+        $raport_irregular = filter_input(INPUT_POST, 'raport_irregular');
         $number_in_raport = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
         $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
         $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
@@ -751,7 +752,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
                 . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
                 . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
-                . "laminator_id, streams_number, machine_id, length, stream_width, raport, number_in_raport, lamination_roller_width, ink_number, ink_run2_number, manager_id, "
+                . "laminator_id, streams_number, machine_id, length, stream_width, raport, raport_irregular, number_in_raport, lamination_roller_width, ink_number, ink_run2_number, manager_id, "
                 . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
                 . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
                 . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
@@ -770,7 +771,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
                 . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
                 . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
-                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $ink_run2_number, $manager_id, "
+                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $raport_irregular, $number_in_raport, $lamination_roller_width, $ink_number, $ink_run2_number, $manager_id, "
                 . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
                 . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
                 . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
@@ -2439,8 +2440,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <option value="-1">Добавить вручную...</option>
                                             <?php endif; ?>
                                         </select>
+                                        <input type="hidden" id="raport_irregular" name="raport_irregular" value="0" />
                                         <?php else: ?>
                                         <input type="text" id="raport" name="raport" placeholder="Рапорт, мм" value="<?=$raport ?>" class="form-control print-only self-adhesive-only" required="required" />
+                                        <input type="hidden" id="raport_irregular" name="raport_irregular" value="1" />
                                             <?php
                                             endif;
                                             else:
@@ -2448,6 +2451,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <select id="raport" name="raport" class="form-control print-only self-adhesive-only d-none">
                                             <option value="" hidden="hidden">Рапорт...</option>
                                         </select>
+                                        <input type="hidden" id="raport_irregular" name="raport_irregular" value="0" />
                                         <?php endif; ?>
                                         <div class="invalid-feedback">Рапорт обязательно</div>
                                     </div>
@@ -2469,6 +2473,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     </div>
                                 </div>
                             </div>
+                            <!-- Рапорт выбран как "Другой" -->
+                            
                             <!-- Количество этикеток в рапорте -->
                             <div class="col-4 print-only d-none">
                                 <div class="form-group">
@@ -3669,7 +3675,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             
             // Обработка выбора машины, заполнение списка рапортов
             $('#machine_id').change(function() {
-                $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
+                $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select><input type='hidden' id='raport_irregular' name='raport_irregular' value='0' />");
                 
                 if($('#work_type_id').val() != <?= WORK_TYPE_NOPRINT ?>) {
                     $('#raport').attr('required', 'required');
@@ -3797,7 +3803,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     CountNumberInRaport();
                     
                     if($(this).val() == -1) {
-                        $('#raport_control').html("<input type='text' id='raport' name='raport' placeholder='Рапорт, мм' class='form-control float-only print-only self-adhesive-only' required='required' />");
+                        $('#raport_control').html("<input type='text' id='raport' name='raport' placeholder='Рапорт, мм' class='form-control float-only print-only self-adhesive-only' required='required' /><input type='hidden' id='raport_irregular' name='raport_irregular' value='1' />");
                         $('input#raport').focus();
                         SetRaportHandler();
                     }
@@ -3829,7 +3835,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     CountNumberInRaport();
                     
                     if(e.which == 8 && val == '') {
-                        $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select>");
+                        $('#raport_control').html("<select id='raport' name='raport' class='form-control print-only self-adhesive-only'><option value='' hidden='hidden'>Рапорт...</option></select><input type='hidden' id='raport_irregular' name='raport_irregular' value='0' />");
+                        $('#raport_irregular').val(0);
                         $('#machine_id').change();
                         SetRaportOnChange();
                     }
