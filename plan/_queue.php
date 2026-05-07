@@ -84,7 +84,7 @@ class Queue {
                 . " and work_id = ".$this->work_id.")"
                 . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
                 . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
-                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness and cr.width_1 <= $max_width) or c.machine_id = ".$this->machine_id." or raport_irregular = 1)";
+                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness and cr.width_1 <= $max_width) or c.machine_id = ".$this->machine_id." or (raport_irregular = 1 and ". $this->machine_id." <> ". PRINTER_ATLAS."))";
         
         $run2 = true;
         
@@ -136,7 +136,7 @@ class Queue {
                     . " and work_id = ".$this->work_id.")"
                     . " and c.work_type_id <> ". WORK_TYPE_NOPRINT
                     . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ". ORDER_STATUS_CONFIRMED
-                    . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or machine_id = ".$this->machine_id." or raport_irregular = 1)";
+                    . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or machine_id = ".$this->machine_id." or (raport_irregular = 1 and ". $this->machine_id." <> ". PRINTER_ATLAS."))";
         }
         $sql .= " order by position, queue_top desc, status_date";
         $fetcher = new Fetcher($sql);
