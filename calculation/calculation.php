@@ -231,7 +231,9 @@ class DataExtracharge {
 class CalculationBase {
     // Исходные величины для вычислений
     public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-            $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id,
+            $usd, $euro, $weight_cut, $length_cut,
+            
+            $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id,
             $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1,
             $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2,
             $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3,
@@ -268,6 +270,9 @@ class CalculationBase {
             array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
+            $weight_cut, // Сколько нарезано в кг
+            $length_cut, // Сколько нарезано в м
+            
             $date, // Дата
             $customer_id, // ID заказчика
             $name, // Наименование
@@ -373,6 +378,9 @@ class CalculationBase {
         $this->data_extracharge = $data_extracharge;
         $this->usd = $usd; // Курс доллара
         $this->euro = $euro; // Курс евро
+        $this->weight_cut = $weight_cut; // Сколько нарезано в кг
+        $this->length_cut = $length_cut; // Сколько нарезано в м
+        
         $this->date = $date; // Дата
         $this->customer_id = $customer_id; // ID заказчика
         $this->name = $name; // Наименование
@@ -994,6 +1002,35 @@ class CalculationBase {
             }
         }
         
+        // Данные с резки
+        $weight_cut = 0;
+        
+        $sql = "select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $weight_cut = $row[0];
+        }
+        
+        $sql = "select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $weight_cut += $row[0];
+        }
+        
+        $length_cut = 0;
+        
+        $sql = "select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $length_cut = $row[0];
+        }
+        
+        $sql = "select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $length_cut += $row[0];
+        }
+        
         // Размеры тиражей
         $quantities = array();
         
@@ -1113,35 +1150,6 @@ class CalculationBase {
             }
         }
         
-        // Получение данных с резки
-        $weight_cut = 0;
-        
-        $sql = "select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $weight_cut = $row[0];
-        }
-        
-        $sql = "select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $weight_cut += $row[0];
-        }
-        
-        $length_cut = 0;
-        
-        $sql = "select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $length_cut = $row[0];
-        }
-        
-        $sql = "select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $length_cut += $row[0];
-        }
-        
         // Сохраняем данные в дублирующиеся поля (для ускорения загрузки списков)
         $sql = "update calculation set "
                 . "duplicate_quantities = ". count($quantities).", "
@@ -1169,6 +1177,9 @@ class CalculationBase {
                     $data_extracharge,
                     $usd, // Курс доллара
                     $euro, // Курс евро
+                    $weight_cut, // Сколько нарезано в кг
+                    $length_cut, // Сколько нарезано в м
+                    
                     $date, // Дата
                     $customer_id, // ID заказчика
                     $name, // Наименование
@@ -1275,6 +1286,9 @@ class CalculationBase {
                     $data_extracharge,
                     $usd, // Курс доллара
                     $euro, // Курс евро
+                    $weight_cut, // Сколько нарезано в кг
+                    $length_cut, // Сколько нарезано в м
+                    
                     $date, // Дата
                     $customer_id, // ID заказчика
                     $name, // Наименование
@@ -1484,6 +1498,9 @@ class Calculation extends CalculationBase {
             array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
+            $weight_cut, // Сколько нарезано в кг
+            $length_cut, // Сколько нарезано в м
+            
             $date, // Дата
             $customer_id, // ID заказчика
             $name, // Наименование
@@ -1579,7 +1596,8 @@ class Calculation extends CalculationBase {
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-                $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
+                $usd, $euro, $weight_cut, $length_cut,
+                $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
@@ -2551,6 +2569,9 @@ class CalculationSelfAdhesive extends CalculationBase {
             array $data_extracharge,
             $usd, // Курс доллара
             $euro, // Курс евро
+            $weight_cut, // Сколько нарезано в кг
+            $length_cut, // Сколько нарезано в м
+            
             $date, // Дата
             $customer_id, // ID заказчика
             $name, // Наименование
@@ -2646,7 +2667,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
-                $usd, $euro, $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
+                $usd, $euro, $weight_cut, $length_cut,
+                $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
                 $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
                 $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
