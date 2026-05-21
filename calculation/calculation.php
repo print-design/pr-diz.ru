@@ -254,7 +254,7 @@ class CalculationBase {
             $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche,
             $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
             $requirement1, $requirement2, $requirement3, $cut_priladka, 
-            $customer, $last_name, $first_name, $status_id, $status_comment, $num_for_customer;
+            $customer, $last_name, $first_name, $status_id, $status_comment, $status_date, $num_for_customer;
     
     // Конструктор
     public function __construct(DataPriladka $data_priladka, 
@@ -359,6 +359,7 @@ class CalculationBase {
             $first_name, // Имя менеджера
             $status_id, // Статус
             $status_comment, // Комментарий к статусу
+            $status_date, // Дата установления статуса
             $num_for_customer // Номер заказа у данного заказчика
             ) {
         $this->data_priladka = $data_priladka;
@@ -463,6 +464,7 @@ class CalculationBase {
         $this->first_name = $first_name; // Имя менеджера
         $this->status_id = $status_id; // Статус
         $this->status_comment = $status_comment; // Комментарий к статусу
+        $this->status_date = $status_date; // Дата установления статуса
         $this->num_for_customer = $num_for_customer; // Номер заказа у данного заказчика
     }
     
@@ -706,6 +708,7 @@ class CalculationBase {
         $first_name = null; // Имя менеджера
         $status_id = null; // Статус
         $status_comment = ''; // Комментарий к статусу
+        $status_date = null; // Дата установления статуса
         $num_for_customer = null; // Номер заказа у данного заказчика
         
         $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
@@ -737,6 +740,7 @@ class CalculationBase {
                 . "cus.name customer, u.last_name, u.first_name, "
                 . "(select status_id from calculation_status_history where calculation_id = rc.id order by date desc limit 1) status_id, "
                 . "(select comment from calculation_status_history where calculation_id = rc.id order by date desc limit 1) status_comment, "
+                . "(select date from calculation_status_history where calculation_id = rc.id order by date desc limit 1) status_date, "
                 . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
                 . "from calculation rc "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
@@ -953,6 +957,7 @@ class CalculationBase {
             $first_name = $row['first_name']; // Имя менеджера
             $status_id = $row['status_id']; // Статус
             $status_comment = $row['status_comment']; // Комментарий к статусу
+            $status_date = $row['status_date']; // Дата установления статуса
             $num_for_customer = $row['num_for_customer']; // Номер заказа у данного заказчика
             
             // Если тип работы - плёнка без печати, то 
@@ -1107,7 +1112,51 @@ class CalculationBase {
                 array_push($data_extracharge, new DataExtracharge($row['value'], $row['extracharge_type_id'], $row['from_weight'], $row['to_weight']));
             }
         }
+        
+        // Получение данных с резки
+        $weight_cut = 0;
+        
+        $sql = "select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $weight_cut = $row[0];
+        }
+        
+        $sql = "select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $weight_cut += $row[0];
+        }
+        
+        $length_cut = 0;
+        
+        $sql = "select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $length_cut = $row[0];
+        }
+        
+        $sql = "select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $length_cut += $row[0];
+        }
+        
+        // Сохраняем данные в дублирующиеся поля (для ускорения загрузки списков)
+        $sql = "update calculation set "
+                . "duplicate_quantities = ". count($quantities).", "
+                . "duplicate_quantity_sum = ". array_sum($quantities).", "
+                . "duplicate_gap_report = ".$data_gap->gap_raport.", "
+                . "duplicate_length_cut = $length_cut, "
+                . "duplicate_weight_cut = $weight_cut, "
+                . "duplicate_status_id = $status_id, "
+                . "duplicate_status_comment = '$status_comment', "
+                . "duplicate_status_date = '$status_date', "
+                . "duplicate_num_for_customer = $num_for_customer "
+                . "where id = $id";
+        $executer = new Executer($sql);
     
+        // Создаём классы расчётов
         if($work_type_id == WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
             return new CalculationSelfAdhesive($data_priladka, 
                     $data_priladka_laminator,
@@ -1211,6 +1260,7 @@ class CalculationBase {
                     $first_name, // Имя менеджера
                     $status_id, // Статус
                     $status_comment, // Комментарий к статусу
+                    $status_date, // Дата установления статуса
                     $num_for_customer); // Номер заказа у данного заказчика
         }
         elseif(empty ($error_message)) {
@@ -1316,6 +1366,7 @@ class CalculationBase {
                     $first_name, // Имя менеджера
                     $status_id, // Статус
                     $status_comment, // Комментарий к статусу
+                    $status_date, // Дата установления статуса
                     $num_for_customer); // Номер заказа для данного заказчика
         }
         else {
@@ -1524,6 +1575,7 @@ class Calculation extends CalculationBase {
             $first_name, // Имя менеджера
             $status_id, // Статус
             $status_comment, // Комментарий к статусу
+            $status_date, // Дата установления статуса
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
@@ -1547,7 +1599,7 @@ class Calculation extends CalculationBase {
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
                 $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
                 $requirement1, $requirement2, $requirement3, $cut_priladka, 
-                $customer, $last_name, $first_name, $status_id, $status_comment, $num_for_customer);
+                $customer, $last_name, $first_name, $status_id, $status_comment, $status_date, $num_for_customer);
                 
         // Если нет одной ламинации или обеих, то толщина, плотность и цена плёнок для ламинации имеют пустые значения.
         // Присваиваем им значение 0, чтобы программа не сломалась при попытке вычилений с пустым значением.
@@ -2590,6 +2642,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $first_name, // Имя менеджера
             $status_id, // Статус
             $status_comment, // Комментарий к статусу
+            $status_date, // Дата установления статуса
             $num_for_customer // Номер заказа для данного заказчика
             ) {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
@@ -2613,7 +2666,7 @@ class CalculationSelfAdhesive extends CalculationBase {
                 $cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $extracharge, $extracharge_cliche, $customer_pays_for_cliche, 
                 $knife, $extracharge_knife, $knife_in_price, $customer_pays_for_knife, $extra_expense, 
                 $requirement1, $requirement2, $requirement3, $cut_priladka, 
-                $customer, $last_name, $first_name, $status_id, $status_comment, $num_for_customer);
+                $customer, $last_name, $first_name, $status_id, $status_comment, $status_date, $num_for_customer);
         
         // Суммарный размер тиража
         $this->quantity = array_sum($quantities);
