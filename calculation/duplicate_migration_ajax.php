@@ -26,11 +26,25 @@ if(!empty($id) && !empty($date) && !empty($customer_id)) {
             . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)), 0), "
             . "duplicate_status_id = (select status_id from calculation_status_history where calculation_id = $id order by date desc limit 1), "
             . "duplicate_status_comment = (select comment from calculation_status_history where calculation_id = $id order by date desc limit 1), "
-            . "duplicate_status_date = (select date from calculation_status_history where calculation_id = $id order by date desc limit 1), "
-            . "duplicate_num_for_customer = (select count(id) from calculation where customer_id = $customer_id and id <= $id) "
+            . "duplicate_status_date = (select date from calculation_status_history where calculation_id = $id order by date desc limit 1) "
             . "where id = $id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
+    
+    if(empty($error_message)) {
+        $num_for_customer = 0;
+        
+        $sql = "select count(id) from calculation where customer_id = $customer_id and id <= $id";
+        $fetcher = new Fetcher($sql);
+        
+        if($row = $fetcher->Fetch()) {
+            $num_for_customer = $row[0];
+        }
+        
+        $sql = "update calculation set duplicate_num_for_customer = $num_for_customer where id = $id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
     
     if(empty($error_message)) {
         $sql = "select count(id) from calculation where duplicate_status_id is not null";
