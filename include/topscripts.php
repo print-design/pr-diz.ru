@@ -396,6 +396,12 @@ function SetCalculationStatus($calculation_id, $status_id, $comment) {
         $sql = "insert into calculation_status_history (calculation_id, status_id, comment, user_id) values ($calculation_id, $status_id, '$comment_slashes', $user_id)";
         $executer = new Executer($sql);
         $error_message = $executer->error;
+        
+        $sql = "update calculation set duplicate_status_id = $status_id where id = $calculation_id";
+        $executer = new Executer($sql);
+        if(empty($error_message)) {
+            $error_message = $executer->error;
+        }
     }
     
     return $error_message;
