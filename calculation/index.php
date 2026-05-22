@@ -80,16 +80,16 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                    $where = " where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
-                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
+                        $where = " where duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
                     }
                     elseif(!empty ($status_id) && $status_id == ORDER_STATUS_IN_PRODUCTION) {
-                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
+                        $where = " where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                     }
                     elseif(!empty($status_id)) {
-                        $where = " where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id";
+                        $where = " where duplicate_status_id = $status_id";
                     }
                     
                     $unit = filter_input(INPUT_GET, 'unit');
@@ -127,12 +127,12 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             $where .= " and false";
                         }
                         else {
-                            $where .= " and c.customer_id = ".intval($find_substrings[0])." and (select count(id) from calculation where customer_id = c.customer_id and id <= c.id) = ".intval($find_substrings[1]);
+                            $where .= " and c.customer_id = ".intval($find_substrings[0])." and duplicate_num_for_customer = ".intval($find_substrings[1]);
                         }
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
-                    $sql = "select count(c.id) from calculation c left join customer cus on c.customer_id=cus.id$where";
+                    $sql = "select count(c.id) from calculation c left join customer cus on c.customer_id = cus.id$where";
                     $fetcher = new Fetcher($sql);
                     
                     if($row = $fetcher->Fetch()) {
@@ -204,16 +204,16 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             <option value="">Наименование...</option>
                             <?php
                             if($status_id == ORDER_STATUS_NOT_IN_WORK) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
+                                $name_where = "where duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
                             }
                             elseif($status_id == ORDER_STATUS_IN_PRODUCTION) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
+                                $name_where = "where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                             }
                             elseif(!empty ($status_id)) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id";
+                                $name_where = "where duplicate_status_id = $status_id";
                             }
                             else {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                                $name_where = "where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
                             }
                             
                             $customer = filter_input(INPUT_GET, 'customer');
@@ -299,19 +299,10 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     }
                     
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
-                            . "c.duplicate_quantities quantities, c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
-                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length, "
-                            . "(select count(quantity) from calculation_quantity where calculation_id = c.id) quantities1, "
-                            . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum1, "
-                            . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport1, "
-                            . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-                            . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut1, "
-                            . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-                            . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut1, "
-                            . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id1, "
-                            . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment1, "
-                            . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date1, "
-                            . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer1 "
+                            . "c.duplicate_quantities quantities, c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
+                            . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
+                            . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
+                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length "
                             . "from calculation c "
                             . "left join customer cus on c.customer_id = cus.id "
                             . "left join user u on c.manager_id = u.id$where "
