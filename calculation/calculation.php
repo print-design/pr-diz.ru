@@ -1154,7 +1154,7 @@ class CalculationBase {
         $sql = "update calculation set "
                 . "duplicate_quantities = ". count($quantities).", "
                 . "duplicate_quantity_sum = ". array_sum($quantities).", "
-                . "duplicate_gap_report = ".$data_gap->gap_raport.", "
+                . "duplicate_gap_raport = ".$data_gap->gap_raport.", "
                 . "duplicate_length_cut = $length_cut, "
                 . "duplicate_weight_cut = $weight_cut, "
                 . "duplicate_status_id = $status_id, "

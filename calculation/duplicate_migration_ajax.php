@@ -19,7 +19,7 @@ if(!empty($id) && !empty($date) && !empty($customer_id)) {
     $sql = "update calculation set "
             . "duplicate_quantities = (select count(quantity) from calculation_quantity where calculation_id = $id), "
             . "duplicate_quantity_sum = (select sum(quantity) from calculation_quantity where calculation_id = $id), "
-            . "duplicate_gap_report = (select gap_raport from norm_gap where date <= '$date' order by id desc limit 1), "
+            . "duplicate_gap_raport = (select gap_raport from norm_gap where date <= '$date' order by id desc limit 1), "
             . "duplicate_length_cut = ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)), 0) "
             . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)), 0), "
             . "duplicate_weight_cut = ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)), 0) "
