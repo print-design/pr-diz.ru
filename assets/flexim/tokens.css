@@ -1,0 +1,150 @@
+/*
+ * Flexim Design System — CSS-переменные.
+ * Источник: tokens.json (экспорт из Figma).
+ * Использовать для inline HTML-превью без Tailwind.
+ * Naming: `text/secondary` → `--text-secondary`, `primary/shades/50` → `--primary-50`.
+ */
+
+:root {
+  /* Text */
+  --text-primary: #191919;
+  --text-secondary: #6F6E75;
+  --text-tertiary: #A29FAE;
+  --text-disabled: #AAA7B8;
+  --text-contrast: #FFFFFF;
+
+  /* Primary (brand) */
+  --primary-main: #EC3A7A;
+  --primary-light: #FF0E65;
+  --primary-dark: #D32564;
+  --primary-contrast: #FFFFFF;
+  --primary-50: #FBEDF2;
+
+  /* Success */
+  --success-main: #55BC04;
+  --success-contrast: #FFFFFF;
+  --success-5: #55BC040D;
+  --success-20: #55BC0433;
+
+  /* Warning */
+  --warning-main: #F69A2E;
+  --warning-contrast: #FFFFFF;
+  --warning-5: #F69A2E0D;
+  --warning-20: #F69A2E33;
+
+  /* Error */
+  --error-main: #FF2842;
+  --error-light: #FF5A6D;
+  --error-dark: #E2223B;
+  --error-contrast: #FFFFFF;
+  --error-5:    #FF28420D;
+  --error-20:   #FF284233;
+  --error-50:   #FFF0EE;
+  --error-100:  #FFBEC3;
+  --error-200:  #FF8C98;
+  --error-300:  #FF5A6D;
+  --error-400:  #FF2842;
+  --error-500:  #E2223B;
+  --error-600:  #C51D35;
+  --error-700:  #A8172E;
+  --error-800:  #8B1128;
+  --error-900:  #6E0B21;
+  --error-1000: #51061B;
+  --error-1100: #340014;
+
+  /* Info */
+  --info-main: #5C39E5;
+  --info-contrast: #FFFFFF;
+  --info-5: #5C39E50D;
+  --info-20: #5C39E533;
+
+  /* Neutral */
+  --neutral-main: #6F6E75;
+  --neutral-contrast: #FFFFFF;
+  --neutral-5: #6F6E750D;
+  --neutral-20: #6F6E7533;
+
+  /* Surface */
+  --surface-white: #FFFFFF;
+  --surface-disabled: #E7E6ED;
+  --surface-controls: #BDB9CC;
+
+  /* Background */
+  --background-paper: #FFFFFF;
+  --background-bg: #FAFAFC;
+
+  /* Other */
+  --other-lines: #E7E6ED;
+  --other-table-hover: #F0F1FA;
+
+  /* Core */
+  --core-white: #FFFFFF;
+  --core-black: #000000;
+
+  /* Infographic — main + 5 + 20 */
+  --infographic-black: #0B0625;       --infographic-black-5: #0B06250D;       --infographic-black-20: #0B062533;
+  --infographic-blue: #0F78D9;        --infographic-blue-5: #0F78D90D;        --infographic-blue-20: #0F78D933;
+  --infographic-purple: #3847D1;      --infographic-purple-5: #3847D10D;      --infographic-purple-20: #3847D133;
+  --infographic-violet: #AD29DB;      --infographic-violet-5: #AD29DB0D;      --infographic-violet-20: #AD29DB33;
+  --infographic-pink: #DB2992;        --infographic-pink-5: #DB29920D;        --infographic-pink-20: #DB299233;
+  --infographic-orange: #FF7168;      --infographic-orange-5: #FF71680D;      --infographic-orange-20: #FF716833;
+  --infographic-yellow: #FFA600;      --infographic-yellow-5: #FFA6000D;      --infographic-yellow-20: #FFA60033;
+  --infographic-terracot: #D35E0A;    --infographic-terracot-5: #D35E0A0D;    --infographic-terracot-20: #D35E0A33;
+  --infographic-brick: #940A2B;       --infographic-brick-5: #940A2B0D;       --infographic-brick-20: #940A2B33;
+  --infographic-shrek: #78AA0D;       --infographic-shrek-5: #78AA0D0D;       --infographic-shrek-20: #78AA0D33;
+  --infographic-green: #0A9D4E;       --infographic-green-5: #0A9D4E0D;       --infographic-green-20: #0A9D4E33;
+
+  /* Sizes / spacing */
+  --size-xxs: 4px;
+  --size-xs:  8px;
+  --size-s:   12px;
+  --size-m:   16px;
+  --size-l:   20px;
+  --size-xl:  24px;
+  --size-xxl: 32px;
+  --size-xxxl: 40px;
+
+  /* Typography */
+  --font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-size-h1: 30px;
+  --line-height-h1: 36px;
+  --font-size-h2: 24px;
+  --line-height-h2: 28px;
+  --font-size-h3: 18px;
+  --line-height-h3: 24px;
+  --font-size-h4: 14px;
+  --line-height-h4: 20px;
+  --font-size-body: 14px;
+  --font-size-btn: 14px;
+  --font-size-menu: 14px;
+  --font-size-tbl: 14px;
+  --font-size-label: 11px;
+  --line-height-label: 12px;
+  --font-size-label-b: 12px;
+  --line-height-label-b: 14px;
+  --font-size-note: 9px;
+  --line-height-note: 8px;
+
+  /* Effects */
+  --shadow-s:        0 1px 8px 0 rgba(141, 134, 173, 0.2);
+  --shadow-m:        0 2px 16px 0 rgba(141, 134, 173, 0.2);
+  --shadow-l:        0 2px 32px 0 rgba(119, 127, 142, 0.2);
+  --shadow-brand-s:  0 1px 8px 0 rgba(236, 58, 122, 0.2);
+  --shadow-brand-m:  0 2px 16px 0 rgba(236, 58, 122, 0.2);
+}
+
+/* Удобные базовые классы для текста — повторяют Figma typography styles */
+.t-h1      { font: 700 30px/36px var(--font-family); }
+.t-h1-r    { font: 400 30px/36px var(--font-family); }
+.t-h2      { font: 700 24px/28px var(--font-family); }
+.t-h2-r    { font: 500 24px/28px var(--font-family); }
+.t-h3      { font: 700 18px/24px var(--font-family); }
+.t-h3-r    { font: 400 18px/24px var(--font-family); }
+.t-h4      { font: 600 14px/20px var(--font-family); }
+.t-body    { font: 400 14px/20px var(--font-family); }
+.t-btn     { font: 700 14px/20px var(--font-family); }
+.t-menu    { font: 600 14px/16px var(--font-family); }
+.t-tbl     { font: 400 14px/16px var(--font-family); }
+.t-label   { font: 400 11px/12px var(--font-family); }
+.t-label-b { font: 700 12px/14px var(--font-family); letter-spacing: 0.04em; text-transform: uppercase; }
+.t-note    { font: 500 9px/8px  var(--font-family); }
