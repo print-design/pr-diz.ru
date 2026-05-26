@@ -1,0 +1,115 @@
+{
+  "_comment": "Реестр иконок Flexim. Источник — Figma: https://www.figma.com/design/UiLaH9DTg1eFx3d7tC7fyO/Flexim?node-id=4281-54498. Поле `figma_url` — временный CDN-линк (живёт ~7 дней с момента запроса MCP). Поле `local` — путь к локальному SVG (заполняется после ручного экспорта из Figma и загрузки в эту папку).",
+  "_exported_at": "2026-05-05",
+  "_figma_node": "4281:54498",
+  "size_default": 24,
+  "categories": {
+    "navigation": "Навигация и раскладка",
+    "actions": "Действия",
+    "form": "Формы",
+    "sort": "Сортировка и стрелки",
+    "status": "Статусы и индикаторы",
+    "domain": "Производство и ERP",
+    "theme": "Тема и закрепление",
+    "charts": "Графики",
+    "system": "Система и пользователь",
+    "big": "Большие иконки 32px (фотометки)",
+    "organisms": "Составные (badge, status-dot)"
+  },
+  "icons": [
+    { "name": "hamburger", "category": "navigation", "node_id": "1:361", "figma_url": "https://www.figma.com/api/mcp/asset/0f0609ab-e582-465b-9fe6-02018e1eb99f", "local": null },
+    { "name": "search", "category": "navigation", "node_id": "4:462", "figma_url": "https://www.figma.com/api/mcp/asset/802c27b9-815f-4ed7-a892-31ae9db6b2be", "local": null },
+    { "name": "expand", "category": "navigation", "node_id": "3845:64316", "figma_url": "https://www.figma.com/api/mcp/asset/18998b28-d835-4579-a4aa-fe452eba8a98", "local": null },
+    { "name": "collapse", "category": "navigation", "node_id": "3840:61788", "figma_url": "https://www.figma.com/api/mcp/asset/78b8d1af-2f8c-4048-bdc5-943676ae09dd", "local": null },
+    { "name": "x", "category": "navigation", "node_id": "4:1555", "figma_url": "https://www.figma.com/api/mcp/asset/fab8f71f-a453-4f5c-8b5d-57618a28a17d", "local": null },
+    { "name": "x-small", "category": "navigation", "node_id": "11:703", "figma_url": "https://www.figma.com/api/mcp/asset/46041068-0390-42fc-b70c-fcd1a7706e33", "local": null },
+    { "name": "kebab", "category": "navigation", "node_id": "264:35686", "figma_url": "https://www.figma.com/api/mcp/asset/c9a39adc-149f-42ce-8d63-e76310535b61", "local": null },
+    { "name": "move", "category": "navigation", "node_id": "3806:86911", "figma_url": "https://www.figma.com/api/mcp/asset/548ddd2b-c1fa-4fdc-82bc-6081172025ed", "local": null },
+    { "name": "return", "category": "navigation", "node_id": "25:1196", "figma_url": "https://www.figma.com/api/mcp/asset/e9fb6689-e155-44b0-be4b-cb0705ab7c66", "local": null },
+
+    { "name": "edit", "category": "actions", "node_id": "1:369", "figma_url": "https://www.figma.com/api/mcp/asset/f5b36a4b-83eb-4a6c-9f9c-51570097ee1c", "local": null },
+    { "name": "trash", "category": "actions", "node_id": "2:383", "figma_url": "https://www.figma.com/api/mcp/asset/15a9fee3-0b2f-4ccd-b816-69381211e54d", "local": null },
+    { "name": "plus", "category": "actions", "node_id": "4:429", "figma_url": "https://www.figma.com/api/mcp/asset/aefd928a-9c55-430a-8634-8df279c41031", "local": null },
+    { "name": "minus", "category": "actions", "node_id": "7080:80022", "figma_url": "https://www.figma.com/api/mcp/asset/a4784df5-5b93-4501-94da-d9845459c57d", "local": null },
+    { "name": "attach", "category": "actions", "node_id": "7328:23702", "figma_url": "https://www.figma.com/api/mcp/asset/26696ceb-11f2-4e54-b1c7-db16bba7347e", "local": null },
+    { "name": "sync", "category": "actions", "node_id": "600:60952", "figma_url": "https://www.figma.com/api/mcp/asset/9763448d-0635-44ca-a79c-8ad26e483c6f", "local": null },
+    { "name": "download", "category": "actions", "node_id": "4376:165328", "figma_url": "https://www.figma.com/api/mcp/asset/d82a7ace-c97b-406a-bf61-8c8410a54f4d", "local": null },
+    { "name": "upload", "category": "actions", "node_id": "556:12191", "figma_url": "https://www.figma.com/api/mcp/asset/122a87f3-2c5b-4e15-ab41-c1ec22dbf2de", "local": null },
+    { "name": "print", "category": "actions", "node_id": "264:47718", "figma_url": "https://www.figma.com/api/mcp/asset/796adeae-576e-40ee-b45d-11b9d64d5254", "local": null },
+    { "name": "cut", "category": "actions", "node_id": "4206:73755", "figma_url": "https://www.figma.com/api/mcp/asset/9ae5ab6f-dcff-40c6-9984-e6fed1657906", "local": null },
+
+    { "name": "check-big", "category": "form", "node_id": "13:390", "figma_url": "https://www.figma.com/api/mcp/asset/0a77be02-b32f-45d5-9468-86615947ef64", "local": null },
+    { "name": "check-small", "category": "form", "node_id": "2:232", "figma_url": "https://www.figma.com/api/mcp/asset/6237e940-bcbc-4db7-99e8-55b9ecbfc33e", "local": null },
+    { "name": "calendar", "category": "form", "node_id": "6:177", "figma_url": "https://www.figma.com/api/mcp/asset/299f6bf7-6568-46e4-8cef-98e3d26ee95a", "local": null },
+    { "name": "eye-open", "category": "form", "node_id": "6750:80349", "figma_url": "https://www.figma.com/api/mcp/asset/4341310f-2e6c-40fb-b16c-7c373cd6b541", "local": null },
+    { "name": "eye-closed", "category": "form", "node_id": "6750:80350", "figma_url": "https://www.figma.com/api/mcp/asset/e550a221-ee3b-412d-92b8-854444c983db", "local": null },
+
+    { "name": "arrow-up", "category": "sort", "node_id": "4:488", "figma_url": "https://www.figma.com/api/mcp/asset/a6dbb9c5-3426-4f8c-96eb-d0f2d6ce4ea0", "local": null },
+    { "name": "arrow-down", "category": "sort", "node_id": "4:484", "figma_url": "https://www.figma.com/api/mcp/asset/43ee025e-c143-4e10-b412-32513040da87", "local": null },
+    { "name": "arrow-left", "category": "sort", "node_id": "4:482", "figma_url": "https://www.figma.com/api/mcp/asset/31505bb3-858f-4605-ad7a-1ddb5d4c7bf7", "local": null },
+    { "name": "arrow-right", "category": "sort", "node_id": "4:486", "figma_url": "https://www.figma.com/api/mcp/asset/80a9c28f-56bb-48bf-b5cb-abc0fbeca65c", "local": null },
+    { "name": "arrow-up-small", "category": "sort", "node_id": "652:20580", "figma_url": "https://www.figma.com/api/mcp/asset/f6adae63-6bd1-4578-a56d-7284c81d1406", "local": null },
+    { "name": "arrow-down-small", "category": "sort", "node_id": "652:20575", "figma_url": "https://www.figma.com/api/mcp/asset/d02a93c4-d170-4a8d-8fe7-693a98686c3a", "local": null },
+    { "name": "arrow-small-up", "category": "sort", "node_id": "2:170", "figma_url": "https://www.figma.com/api/mcp/asset/9f6b4e23-9cf0-43f9-b623-828f789ff93e", "local": null },
+    { "name": "arrow-small-down", "category": "sort", "node_id": "2:172", "figma_url": "https://www.figma.com/api/mcp/asset/f0b7cc3b-f5b4-48fb-92e8-b3d1a8b328bb", "local": null },
+
+    { "name": "success-circle", "category": "status", "node_id": "4344:95259", "figma_url": "https://www.figma.com/api/mcp/asset/f4bb696e-0697-4073-902a-8f0c9b9277f5", "local": null },
+    { "name": "error-circle", "category": "status", "node_id": "724:24761", "figma_url": "https://www.figma.com/api/mcp/asset/cc39ae59-592b-4762-807c-a463a777b048", "local": null },
+    { "name": "warning", "category": "status", "node_id": "4344:95268", "figma_url": "https://www.figma.com/api/mcp/asset/150ccf28-5e41-4d94-b68a-4ded5f44d9ed", "local": null },
+    { "name": "info-circle", "category": "status", "node_id": "1328:26863", "figma_url": "https://www.figma.com/api/mcp/asset/5d40e3bf-6754-47d6-b103-8b4d6cb9b6c1", "local": null },
+    { "name": "time", "category": "status", "node_id": "652:21992", "figma_url": "https://www.figma.com/api/mcp/asset/2aa42fdd-15f0-4c8b-abb2-80ecc1967eb6", "local": null },
+    { "name": "dot", "category": "status", "node_id": "600:58415", "figma_url": "https://www.figma.com/api/mcp/asset/78ff534f-6ca3-4462-a5b6-1f316422c1e1", "local": null },
+    { "name": "3dots-circle", "category": "status", "node_id": "7052:87647", "figma_url": "https://www.figma.com/api/mcp/asset/25552f13-141f-419d-b3e7-6bfc10f15799", "local": null },
+    { "name": "circle-in-circle", "category": "status", "node_id": "7055:89643", "figma_url": "https://www.figma.com/api/mcp/asset/728e1856-054c-471d-bc17-9017c0911c93", "local": null },
+    { "name": "divide", "category": "status", "node_id": "3831:52082", "figma_url": "https://www.figma.com/api/mcp/asset/2046e65b-cf9c-4590-ba10-702f8819979d", "local": null },
+
+    { "name": "factory", "category": "domain", "node_id": "5484:65280", "figma_url": "https://www.figma.com/api/mcp/asset/27d42c70-373b-4769-8199-6270747fd788", "local": null },
+    { "name": "boxes", "category": "domain", "node_id": "5897:20230", "figma_url": "https://www.figma.com/api/mcp/asset/3080c8d9-466a-430f-bde1-b0f2cf556ef3", "local": null },
+    { "name": "box", "category": "domain", "node_id": "1:464", "figma_url": "https://www.figma.com/api/mcp/asset/ebd5356d-ec47-48a3-b865-df14cc61acd8", "local": null },
+    { "name": "orders", "category": "domain", "node_id": "1:460", "figma_url": "https://www.figma.com/api/mcp/asset/ff3f1e3e-be8b-4853-93b0-b136cf474622", "local": null },
+    { "name": "doc", "category": "domain", "node_id": "4385:14633", "figma_url": "https://www.figma.com/api/mcp/asset/887af6ee-2f44-47f0-8196-32eef9931d17", "local": null },
+    { "name": "calculator", "category": "domain", "node_id": "4542:91924", "figma_url": "https://www.figma.com/api/mcp/asset/84b8470e-46da-4f09-b08c-7790b6c9c7bb", "local": null },
+    { "name": "rub", "category": "domain", "node_id": "1417:27701", "figma_url": "https://www.figma.com/api/mcp/asset/e220adbf-0c5c-426d-bee7-f069712608d9", "local": null },
+    { "name": "loader-machine", "category": "domain", "node_id": "5897:20322", "figma_url": "https://www.figma.com/api/mcp/asset/245c6b63-99fb-49a7-b4e8-b8f585e53e28", "local": null },
+    { "name": "track", "category": "domain", "node_id": "7084:126070", "figma_url": "https://www.figma.com/api/mcp/asset/d78ece2a-ae6b-4c73-bb6b-b3f1f9007453", "local": null },
+
+    { "name": "sun", "category": "theme", "node_id": "6024:89325", "figma_url": "https://www.figma.com/api/mcp/asset/9a312852-976f-4c28-bae1-b710bc9ad07b", "local": null },
+    { "name": "moon", "category": "theme", "node_id": "6024:89341", "figma_url": "https://www.figma.com/api/mcp/asset/68267d59-5ee6-4c3b-90c5-7f325a8e3bfd", "local": null },
+    { "name": "pin", "category": "theme", "node_id": "6338:58602", "figma_url": "https://www.figma.com/api/mcp/asset/be1148f1-7486-459b-b04b-8cc354f87db3", "local": null },
+    { "name": "unpin", "category": "theme", "node_id": "6338:58603", "figma_url": "https://www.figma.com/api/mcp/asset/0b4da2e2-81f4-4e34-8148-d2c48e084286", "local": null },
+
+    { "name": "graph-line", "category": "charts", "node_id": "1:439", "figma_url": "https://www.figma.com/api/mcp/asset/df123654-f144-488b-baf6-00306ce99380", "local": null },
+    { "name": "graph-stolb", "category": "charts", "node_id": "1:467", "figma_url": "https://www.figma.com/api/mcp/asset/223c10b6-09a7-481b-ae96-3c93dc9138f8", "local": null },
+    { "name": "graph-circle", "category": "charts", "node_id": "1:469", "figma_url": "https://www.figma.com/api/mcp/asset/63a0c9e3-417b-469e-827d-5bf51d454693", "local": null },
+
+    { "name": "user", "category": "system", "node_id": "1:431", "figma_url": "https://www.figma.com/api/mcp/asset/2860dba3-b77f-4bcd-97a8-3f60bdf5d114", "local": null },
+    { "name": "settings", "category": "system", "node_id": "1:434", "figma_url": "https://www.figma.com/api/mcp/asset/296304b5-34a3-4cc2-96f3-e635adcee1aa", "local": null },
+    { "name": "settings-2", "category": "system", "node_id": "2012:36965", "figma_url": "https://www.figma.com/api/mcp/asset/83e771f9-9c1c-41dc-b6e1-944ddac1e243", "local": null },
+    { "name": "logout", "category": "system", "node_id": "2:151", "figma_url": "https://www.figma.com/api/mcp/asset/63b8f45d-ce93-45b0-8c7f-846d61be1407", "local": null },
+    { "name": "bell", "category": "system", "node_id": "1:498", "figma_url": "https://www.figma.com/api/mcp/asset/e8c7d3fe-8130-49d9-bed2-a4549139542a", "local": null },
+    { "name": "filter", "category": "system", "node_id": "4:474", "figma_url": "https://www.figma.com/api/mcp/asset/7e4f4b6d-0ec0-40d4-8407-df3fd5cee85f", "local": null }
+  ],
+  "organisms": [
+    {
+      "name": "bell-with-badge",
+      "description": "Колокольчик + цветной кружок-нотификатор в правом верхнем углу. Цвет нотификатора по умолчанию — info-main, можно подменить.",
+      "composes": ["bell", "badge"]
+    },
+    {
+      "name": "filter-on",
+      "description": "Иконка фильтра + точка-нотификатор: фильтр применён.",
+      "composes": ["filter", "badge"]
+    },
+    {
+      "name": "status-dot",
+      "description": "Цветная точка для статуса: success / error / warning / info / neutral. Размер 24×24 (точка в центре 8×8).",
+      "composes": ["dot"]
+    },
+    {
+      "name": "fotometka",
+      "description": "Большая иконка 32×32 для типа фотометки во флексографической печати. Состояния: default / hover / selected (с галочкой и розовым фоном primary-50).",
+      "size": 32,
+      "states": ["default", "hover", "selected"]
+    }
+  ]
+}

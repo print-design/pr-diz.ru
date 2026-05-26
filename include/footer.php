@@ -5,6 +5,7 @@
 <script src='<?=APPLICATION ?>/js/bootstrap.min.js'></script>
 <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
+<script src="<?=APPLICATION ?>/icons/icons.js"></script>
 <script src="<?=APPLICATION ?>/js/calculation.js?version=100"></script>
 
 <?php
@@ -16,6 +17,8 @@ if(file_exists('find.php')) {
 ?>
 
 <script>
+    if (window.fleximIcons) window.fleximIcons.renderAll();
+    
     // Отправка формы по нажатию Enter
     $('input').keypress(function(e) {
         if(e.which === 10 || e.which === 13) {
