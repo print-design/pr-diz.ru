@@ -63,13 +63,13 @@ else $title = ORDER_STATUS_TITLES[$status_id];
         <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
     </head>
     <body>
+        <div class="app-shell">
         <?php
         include '../include/header_zakaz.php';
         include '../include/status_track.php';
         include '../include/pager_top.php';
         $rowcounter = 0;
         ?>
-        <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
@@ -338,6 +338,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
             include '../include/pager_bottom.php';
             ?>
         </div>
+    
         <!-- Информация о заказчике -->
         <div class="modal fixed-left fade" id="customerModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-aside" role="document">
