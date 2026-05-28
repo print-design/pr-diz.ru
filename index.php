@@ -1,6 +1,11 @@
 <?php
 include 'include/topscripts.php';
 
+// Если не залогинен, перенаправляем на страницу логина
+if(!LoggedIn()) {
+    header('Location: '.APPLICATION.'/login.php');
+}
+
 // Карщика и ревизора перенаправляем в раздел car
 if(IsInRole(array(ROLE_NAMES[ROLE_ELECTROCARIST], ROLE_NAMES[ROLE_AUDITOR]))) {
     header('Location: '.APPLICATION.'/car/');

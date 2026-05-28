@@ -1,9 +1,13 @@
+<?php
+if(empty($title_tail)) {
+    $title_tail = "Управление ресурсами предприятия";
+}
+?>
+
 <meta charset="UTF-8">
-<title>Принт-дизайн. Управление ресурсами предприятия</title>
-<link href="<?=APPLICATION ?>/css/bootstrap.min.css" rel="stylesheet">
-<link href="<?=APPLICATION ?>/fontawesome-free-5.15.1-web/css/all.min.css" rel="stylesheet" />
-<link href="<?=APPLICATION ?>/css/jquery-ui.css" rel="stylesheet"/>
-<link href="<?=APPLICATION ?>/css/main.css?version=4" rel="stylesheet">
-<link href="<?=APPLICATION ?>/css/tokens.css" rel="stylesheet">
-<link href="<?=APPLICATION ?>/css/flexim-overrides.css" rel="stylesheet">
-<link rel="shortcut icon" type="image/x-icon" href="<?=APPLICATION ?>/favicon.ico" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Принт-дизайн - <?=$title_tail ?></title>
+<link rel="icon" type="image/svg+xml" href="<?=APPLICATION ?>/favicon.svg">
+<link rel="stylesheet" href="<?=APPLICATION ?>/css/bootstrap.min.css">
+<link rel="stylesheet" href="<?=APPLICATION ?>/css/tokens.css">
+<link rel="stylesheet" href="<?=APPLICATION ?>/css/flexim-overrides.css">
