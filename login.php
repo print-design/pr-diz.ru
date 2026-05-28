@@ -153,7 +153,6 @@ and open the template in the editor.
             
             <!-- ФОРМА ВХОДА -->
             <main class="auth-form">
-                <!-- <? php // POST /login.php — валидация на бэке ?> -->
                 <form class="auth-form__card" method="post" novalidate>
                     <h1 class="t-h2-r auth-form__title">Вход</h1>
                     <div class="auth-form__fields">
