@@ -3,7 +3,7 @@ include 'include/topscripts.php';
 
 // Если залогинен, перенаправляем на основную страницу
 if(LoggedIn()) {
-    header('Location: '.APPLICATION);
+    header('Location: '.APPLICATION.'/');
 }
 
 // Карщика и ревизора перенаправляем в раздел car
