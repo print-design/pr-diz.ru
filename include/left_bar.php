@@ -46,7 +46,7 @@ elseif($folder == "okto") {
 
 ?>
 <aside class="flexim-nav-rail" aria-label="Левое меню">
-    <a class="flexim-logo__mark" href="<?= APPLICATION ?>"></a>
+    <a class="flexim-logo__mark" href="<?= APPLICATION ?>/"></a>
     <nav class="flexim-nav-rail__tabs">
     <?php
     // Расчёты
