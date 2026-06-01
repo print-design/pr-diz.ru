@@ -1867,8 +1867,9 @@ label, .col-form-label {
   border-radius: 0;
   color: var(--text-primary);
 }
+/* Figma 3806:56487 sub menu-item: вторичная навигация (calc-tabs и пр.), h-40. */
 .flexim-tabs--underline.flexim-tabs--m .flexim-tabs__tab {
-  min-height: 56px;
+  min-height: 40px;
   padding: var(--size-s) var(--size-m);
 }
 .flexim-tabs--underline.flexim-tabs--s .flexim-tabs__tab {
@@ -2431,6 +2432,7 @@ label, .col-form-label {
   align-self: stretch;
   border-bottom: 1px solid var(--other-lines);
 }
+/* Таб = ссылка-навигация (<a href>), не кнопка. Стили работают и для <a>, и для <button>. */
 .flexim-header-menu__item {
   display: inline-flex;
   align-items: center;
@@ -2440,10 +2442,11 @@ label, .col-form-label {
   background: transparent;
   font: 600 14px/16px var(--font-family);
   color: var(--text-primary);
+  text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
 }
-.flexim-header-menu__item:hover { color: var(--primary-light); }
+.flexim-header-menu__item:hover { color: var(--primary-light); text-decoration: none; }
 .flexim-header-menu__item--active { border-bottom-color: var(--primary-main); }
 .flexim-header-menu__compact {
   display: flex;

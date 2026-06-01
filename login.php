@@ -53,10 +53,17 @@ and open the template in the editor.
                 align-items: stretch;
             }
 
-            /* HERO — левая колонка 2/3 ширины */
+            /* HERO — левая колонка 2/3 ширины.
+                Фиксируем высоту = 100vh и делаем sticky-top, чтобы при разной высоте
+                форм (03-login.html короткая, 04-login-users.html высокая) изображение
+                всегда было одной высоты — иначе `object-fit: cover` даёт разный
+                масштаб картинки на разных экранах. */
             .auth-hero {
-                position: relative;
+                position: sticky;
+                top: 0;
                 flex: 2 1 0;
+                align-self: flex-start;
+                height: 100vh;
                 min-height: 320px;
                 background: var(--primary-dark);
                 overflow: hidden;
@@ -87,14 +94,19 @@ and open the template in the editor.
                 white-space: nowrap;
             }
 
-            /* ФОРМА — правая колонка 1/3 ширины */
+            /* ФОРМА — правая колонка 1/3 ширины.
+                Прижимаем карточку к верху (`align-items: flex-start`), чтобы на всех
+                трёх экранах входа (03/04-users/04-pattern) верхний отступ был
+                одинаковым — иначе центрирование даёт разный пробел из-за разной
+                высоты содержимого. Горизонтально центрируем. */
             .auth-form {
                 flex: 1 1 0;
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 justify-content: center;
-                /* В Figma padding 60px по горизонтали = size-xxxl + size-l */
-                padding: var(--size-xxxl) calc(var(--size-xxxl) + var(--size-l));
+            /* Top = 4× xxxl = 160px (одинаковый на всех экранах входа, кратно 8).
+                Horiz = size-xxxl + size-l = 60px (Figma). */
+                padding: calc(var(--size-xxxl) * 4) calc(var(--size-xxxl) + var(--size-l));
                 background: var(--background-bg);
             }
             .auth-form__card {
@@ -113,22 +125,48 @@ and open the template in the editor.
             /* В каталоге .flexim-input-field фикс 316px — для карточки логина 360px растягиваем */
             .auth-form .flexim-input-field { width: 100%; max-width: 100%; }
 
-            /* Мобильный вид — стек: hero сверху, форма снизу */
+            /* Группа кнопок входа: тесный gap вместо 40px карточки.
+                Гасим bootstrap-овский .btn-block + .btn-block margin-top, чтобы
+                зазор задавался только через gap. */
+            .auth-form__actions {
+                display: flex;
+                flex-direction: column;
+                gap: var(--size-s);
+            }
+            .auth-form__actions .btn-block + .btn-block { margin-top: 0; }
+
+            /* Мобильный header (лого + бренд-имя) — на десктопе скрыт. */
+            .auth-mobile-header { display: none; }
+
+            /* Мобильный вид (Figma 6750:81405).
+                Hero-картинки нет; вместо неё — лого + «Принт-Дизайн» в строку
+                наверху формы. Padding 32 по периметру, gap 60 до title H2. */
             @media (max-width: 900px) {
                 .auth-shell { flex-direction: column; }
-                .auth-hero {
-                    flex: 0 0 280px;
-                    min-height: 280px;
-                }
-                .auth-hero__brand {
-                    left: var(--size-l);
-                    bottom: var(--size-l);
-                    gap: var(--size-m);
-                }
-                .auth-hero .flexim-logo__mark { width: 40px; height: 40px; }
+                .auth-hero { display: none; }
+
                 .auth-form {
                     flex: 1 1 auto;
-                    padding: var(--size-xl);
+                    padding: var(--size-xxl);   /* 32px по Figma */
+                    align-items: stretch;
+                }
+                .auth-form__card { max-width: 100%; }
+
+                .auth-mobile-header {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--size-xl);        /* 24px между лого и текстом */
+                    margin-bottom: var(--size-l); /* 20px + gap card 40 = 60 до title */
+                }
+                .auth-mobile-header__logo {
+                    width: 40px;
+                    height: 40px;
+                    flex-shrink: 0;
+                }
+                .auth-mobile-header__brand-name {
+                    margin: 0;
+                    color: var(--text-primary);
+                    white-space: nowrap;
                 }
             }
         </style>
@@ -154,7 +192,14 @@ and open the template in the editor.
             
             <!-- ФОРМА ВХОДА -->
             <main class="auth-form">
+                <!-- <? php // POST /login.php — валидация на бэке ?> -->
                 <form class="auth-form__card" method="post" novalidate>
+                    <!-- Мобильный header (Figma 6750:81405) — на десктопе скрыт через CSS.
+                        На мобилке заменяет hero-блок: лого + бренд-имя в строку. -->
+                    <header class="auth-mobile-header" aria-hidden="false">
+                        <span class="flexim-logo__mark auth-mobile-header__logo" aria-hidden="true"></span>
+                        <p class="t-h2 auth-mobile-header__brand-name">Принт-Дизайн</p>
+                    </header>
                     <h1 class="t-h2-r auth-form__title">Вход</h1>
                     <div class="auth-form__fields">
                         <!-- Логин или email — Input (рабочая форма, разметка из #forms «Рабочий пример») -->
@@ -196,8 +241,18 @@ and open the template in the editor.
                             </div>
                         </div>
                     </div>
-                    <!-- Primary Button «Войти» на всю ширину -->
-                    <button type="submit" class="btn btn-primary btn-block" id="login_submit" name="login_submit">Войти</button>
+                    <!-- Кнопки входа: основная (пароль) + альтернатива (графичкский ключ).
+                        Сгруппированы в блок, чтобы между ними был тесный gap, а не 40px
+                        карточки. -->
+                    <div class="auth-form__actions">
+                        <button type="submit" class="btn btn-primary btn-block" id="login_submit" name="login_submit">Войти</button>
+                        
+                        <!-- Вход по графическому ключу (общее устройство в цехе).
+                            Ghost-кнопка btn-outline-primary, ведёт на список юзеров. -->
+                            <a href="login-users.php" class="btn btn-outline-primary btn-block">
+                                Войти по графическому ключу
+                            </a>
+                    </div>
                 </form>
             </main>
         </div>
