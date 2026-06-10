@@ -197,9 +197,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                     </div>
                     <div class="modal-body">
                         <div style="font-size: x-large;">Сотрудник: <span id="graph_key_fio"><?=$graph_key_confirm_fio ?></span></div>
-                        <?php if(null !== filter_input(INPUT_POST, 'graph_key_id') && !$form_valid): ?>
-                        <div class='alert alert-danger'>Этот ключ уже задан другому пользователю</div>
-                        <?php endif; ?>
+                        <div class='alert alert-danger d-none' id="graph_key_exists_alert">Этот ключ уже задан другому пользователю</div>
                         <div id="figure-area" class="mt-3">
                             <div class="figure-point" id="fp1"><div class="figure-drag" data-number="1" style="width: 100%; height: 100%;"></div></div>
                             <div class="figure-point" id="fp2"><div class="figure-drag" data-number="2" style="width: 100%; height: 100%;"></div></div>
@@ -334,6 +332,8 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                 $('#graph_key_fio').text('');
                 $('#graph_key_delete_submit').removeClass('d-none');
                 $('.is-invalid').removeClass('is-invalid');
+                
+                $('#graph_key_exists_alert').addClass('d-none');
             });
             
             // Активирование / деактивирование пользователя
@@ -436,6 +436,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                 
             // Открытие формы задания графического ключа, если задание ключа не было удачным
             <?php if(null !== filter_input(INPUT_POST, 'graph_key_id') && !$form_valid): ?>
+            $('#graph_key_exists_alert').removeClass('d-none');
             $('#graph_key_modal').modal('show');
             <?php endif; ?>
         </script>
