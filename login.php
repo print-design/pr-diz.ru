@@ -192,7 +192,7 @@ and open the template in the editor.
             
             <!-- ФОРМА ВХОДА -->
             <main class="auth-form">
-                <!-- <? php // POST /login.php — валидация на бэке ?> -->
+                <!-- < ? php // POST /login.php — валидация на бэке ? > -->
                 <form class="auth-form__card" method="post" novalidate>
                     <!-- Мобильный header (Figma 6750:81405) — на десктопе скрыт через CSS.
                         На мобилке заменяет hero-блок: лого + бренд-имя в строку. -->
