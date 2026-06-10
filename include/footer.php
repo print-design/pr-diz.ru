@@ -16,6 +16,41 @@ if(file_exists('find.php')) {
 <script>
     if (window.fleximIcons) window.fleximIcons.renderAll();
     
+    // Универсальный обработчик тоггла пароля — НЕ зависит от jQuery
+    // (нативный addEventListener в делегированной форме). Так точно сработает,
+    // даже если что-то выше упало с ошибкой и не дало jQuery-делегированию ожить.
+    function fleximTogglePassword(btn) {
+        var shell = btn.closest('.flexim-input');
+        var input = shell && shell.querySelector('.flexim-input__field');
+        if (!input) {
+            console.warn('[toggle-password] не нашёл .flexim-input__field рядом с кнопкой', btn);
+            return;
+        }
+        var showing = input.getAttribute('type') === 'text';
+        var nextType  = showing ? 'password' : 'text';
+        var nextIcon  = showing ? 'eye-closed' : 'eye-open';
+        var nextLabel = showing ? 'Показать пароль' : 'Скрыть пароль';
+        
+        input.setAttribute('type', nextType);
+        btn.setAttribute('data-flexim-icon', nextIcon);
+        btn.setAttribute('aria-pressed', String(!showing));
+        btn.setAttribute('aria-label', nextLabel);
+        
+        if (window.fleximIcons && typeof window.fleximIcons.create === 'function') {
+            var size = parseInt(btn.getAttribute('data-size') || '24', 10);
+            btn.innerHTML = '';
+            btn.appendChild(window.fleximIcons.create(nextIcon, size));
+        }
+        console.log('[toggle-password] OK →', nextType);
+    }
+    
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-toggle-password]');
+        if (!btn) return;
+        e.preventDefault();
+        fleximTogglePassword(btn);
+    });
+    
     // Отправка формы по нажатию Enter
     $('input').keypress(function(e) {
         if(e.which === 10 || e.which === 13) {

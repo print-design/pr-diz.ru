@@ -2728,7 +2728,7 @@ a.flexim-user-chip__title:hover {
   cursor: url('./assets/lapki/lapki-grabbing.svg') 8 8, grabbing;
 }
 
-/* Каталог prod-mockups/index.html — подсказки и утилиты */
+/* Каталог prod-mockups/components.html — подсказки и утилиты */
 .ds-desc-small {
   margin-top: calc(-1 * var(--size-xs));
   font-size: 13px; /* между label (11) и body (14), только для подписей каталога */
@@ -2927,6 +2927,16 @@ a.flexim-user-chip__title:hover {
 }
 .flexim-input__clear:hover,
 .flexim-input__action:hover { color: var(--primary-light); }
+/* Focus: убираем дефолтный outline браузера (он голубой в Safari/Chrome).
+   Для клавиатурной навигации (focus-visible) — мягкий primary-50 ring. */
+.flexim-input__clear:focus,
+.flexim-input__action:focus { outline: none; }
+.flexim-input__clear:focus-visible,
+.flexim-input__action:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--primary-50);
+  border-radius: var(--size-xxs);
+}
 /* Иконки внутри __clear / __action — flex-центрирование (как у .btn) — чтобы svg
    не сидел на baseline и не давал зазор снизу. */
 .flexim-input__clear [data-flexim-icon],
