@@ -24,7 +24,6 @@ $user_change_password_confirm_valid = '';
 $user_change_password_confirm_message = '';
 
 $user_change_password_confirm_fio = '';
-$graph_key_confirm_fio = '';
 
 if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     if(empty(filter_input(INPUT_POST, "user_change_password_old"))) {
@@ -196,8 +195,8 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                         <button type="button" class="close graph_key_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="modal-body">
-                        <div style="font-size: x-large;">Сотрудник: <span id="graph_key_fio"><?=$graph_key_confirm_fio ?></span></div>
                         <div class='alert alert-danger d-none' id="graph_key_exists_alert">Этот ключ уже задан другому пользователю</div>
+                        <div style="font-size: x-large;">Сотрудник: <span id="graph_key_fio_title"><?=filter_input(INPUT_POST, 'graph_key_fio') ?></span></div>
                         <div id="figure-area" class="mt-3">
                             <div class="figure-point" id="fp1"><div class="figure-drag" data-number="1" style="width: 100%; height: 100%;"></div></div>
                             <div class="figure-point" id="fp2"><div class="figure-drag" data-number="2" style="width: 100%; height: 100%;"></div></div>
@@ -211,13 +210,21 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                         </div>
                         <form method="post" id="graph_key_form">
                             <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id') ?>" />
+                            <input type="hidden" id="graph_key_fio" name="graph_key_fio" />
+                            <input type="hidden" id="old_graph_key" name="old_graph_key" />
                             <input type="hidden" name="graph_key" id="graph_key" />
                         </form>
                     </div>
                     <div class="modal-footer" style="justify-content: flex-start;">
                         <form method="post" id="graph_key_delete_form">
                             <input type="hidden" id="graph_key_delete_id" name="graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'graph_key_delete_id') ?>" />
-                            <button type="submit" class="btn btn-primary" id="graph_key_delete_submit" name="graph_key_delete_submit">Удалить ключ</button>
+                            <?php
+                            $graph_key_delete_class = '';
+                            if(empty(filter_input(INPUT_POST, 'old_graph_key'))) {
+                                $graph_key_delete_class = ' d-none';
+                            }
+                            ?>
+                            <button type="submit" class="btn btn-primary<?=$graph_key_delete_class ?>" id="graph_key_delete_submit" name="graph_key_delete_submit">Удалить ключ</button>
                             <button type="button" class="btn graph_key_dismiss" data-dismiss="modal">Отменить</button>
                         </form>
                     </div>
@@ -318,7 +325,9 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
             $('.graph_key_open').click(function() {
                 $('#graph_key_id').val($(this).attr('data-id'));
                 $('#graph_key_delete_id').val($(this).attr('data-id'));
-                $('#graph_key_fio').text($(this).attr('data-fio'));
+                $('#graph_key_fio').val($(this).attr('data-fio'));
+                $('#graph_key_fio_title').text($(this).attr('data-fio'));
+                $('#old_graph_key').val($(this).attr('data-graph-key'));
                 if($(this).attr('data-graph-key').length === 0) {
                     $('#graph_key_delete_submit').addClass('d-none');
                 }
@@ -329,7 +338,9 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
             $('.graph_key_dismiss').click(function() {
                 $('#graph_key_id').val('');
                 $('#graph_key_delete_id').val('');
-                $('#graph_key_fio').text('');
+                $('#graph_key_fio').val('');
+                $('#graph_key_fio_title').text('');
+                $('#old_graph_key').val('');
                 $('#graph_key_delete_submit').removeClass('d-none');
                 $('.is-invalid').removeClass('is-invalid');
                 
