@@ -217,7 +217,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                     </div>
                     <div class="modal-footer" style="justify-content: flex-start;">
                         <form method="post" id="graph_key_delete_form">
-                            <input type="hidden" id="graph_key_delete_id" name="graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'graph_key_delete_id') ?>" />
+                            <input type="hidden" id="graph_key_delete_id" name="graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'graph_key_delete_id') ?? filter_input(INPUT_POST, 'graph_key_id') ?>" />
                             <?php
                             $graph_key_delete_class = '';
                             if(empty(filter_input(INPUT_POST, 'old_graph_key'))) {
