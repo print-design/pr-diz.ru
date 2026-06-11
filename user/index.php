@@ -331,11 +331,14 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                 if($(this).attr('data-graph-key').length === 0) {
                     $('#graph_key_delete_submit').addClass('d-none');
                 }
+                else {
+                    $('#graph_key_delete_submit').removeClass('d-none');
+                }
                 $(document).trigger('keydown'); // чтобы обнулить защиту от двойного нажатия
             });
             
             // Удаление данных о пользователе при закрытии формы графического ключа
-            $('.graph_key_dismiss').click(function() {
+            $("#graph_key_modal").on("hidden.bs.modal", function () {
                 $('#graph_key_id').val('');
                 $('#graph_key_delete_id').val('');
                 $('#graph_key_fio').val('');
