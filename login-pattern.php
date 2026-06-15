@@ -20,6 +20,30 @@ if(IsInRole(ROLE_NAMES[ROLE_CUTTER])) {
 if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
     header('Location: '.APPLICATION.'/marker/');
 }
+
+$user = filter_input(INPUT_GET, 'user');
+
+if(empty($user)) {
+    header('Location: login-user.php');
+}
+
+const LOGIN_USER_COLORS = array("av-pink", "av-blue", "av-purple", "av-violet", "av-orange", "av-yellow", "av-shrek", "av-green", "av-terracot", "av-brick");
+$login_user_colors_count = count(LOGIN_USER_COLORS);
+$login_user_colors_index = 0;
+$sql = "select id, first_name, last_name, role_id from user where graph_key <> '' order by first_name, last_name";
+$grabber = new Grabber($sql);
+$error_message = $grabber->error;
+$users = $grabber->result;
+
+$users_ext = array();
+
+foreach($users as $item) {
+    if($login_user_colors_index >= $login_user_colors_count) {
+        $login_user_colors_index = 0;
+    }
+    $item['login_user_color'] = $login_user_colors_index++;
+    $users_ext[$item['id']] = $item;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -138,6 +162,18 @@ if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
                 margin: var(--size-xs) 0 0;
                 color: var(--text-secondary);
             }
+            
+            /* Палитра аватарок — берём из infographic, чтобы не вводить новых цветов. */
+            .av-pink     { background: var(--infographic-pink-20);     color: var(--infographic-pink); }
+            .av-blue     { background: var(--infographic-blue-20);     color: var(--infographic-blue); }
+            .av-purple   { background: var(--infographic-purple-20);   color: var(--infographic-purple); }
+            .av-violet   { background: var(--infographic-violet-20);   color: var(--infographic-violet); }
+            .av-orange   { background: var(--infographic-orange-20);   color: var(--infographic-orange); }
+            .av-yellow   { background: var(--infographic-yellow-20);   color: var(--infographic-yellow); }
+            .av-shrek    { background: var(--infographic-shrek-20);    color: var(--infographic-shrek); }
+            .av-green    { background: var(--infographic-green-20);    color: var(--infographic-green); }
+            .av-terracot { background: var(--infographic-terracot-20); color: var(--infographic-terracot); }
+            .av-brick    { background: var(--infographic-brick-20);    color: var(--infographic-brick); }
             
             /* ──────────────────────────────────────────────────────────────────
             ГРАФИЧЕСКИЙ КЛЮЧ — 3×3 сетка точек.
@@ -312,343 +348,344 @@ if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
             }
         </style>
     </head>
-<body>
-    <div class="auth-shell">
-        <!-- HERO: тот же ассет, что у 03-login.html (нода Figma 6750:79644). -->
-        <section class="auth-hero" aria-hidden="true">
-            <img class="auth-hero__image"
-                 src="./assets/login-hero.png"
-                 alt="">
-            <div class="auth-hero__brand">
-                <span class="flexim-logo__mark" aria-hidden="true"></span>
-                <p class="t-h1 auth-hero__brand-name">Принт-Дизайн</p>
-            </div>
-        </section>
+    <body>
+        <div class="auth-shell">
+            <!-- HERO: тот же ассет, что у 03-login.html (нода Figma 6750:79644). -->
+            <section class="auth-hero" aria-hidden="true">
+                <img class="auth-hero__image"
+                     src="./assets/login-hero.png"
+                     alt="">
+                <div class="auth-hero__brand">
+                    <span class="flexim-logo__mark" aria-hidden="true"></span>
+                    <p class="t-h1 auth-hero__brand-name">Принт-Дизайн</p>
+                </div>
+            </section>
+            
+            <!-- ФОРМА: графический ключ -->
+            <main class="auth-form">
+                <!-- < ? php // POST /login_pattern.php — сравнение sha256(pattern) на бэке ? > -->
+                <form class="auth-form__card" id="pattern-form" method="post" action="#" novalidate>
+                    
+                    <!-- Мобильный header (Figma 6750:81405) — на десктопе скрыт через CSS. -->
+                    <header class="auth-mobile-header" aria-hidden="false">
+                        <span class="flexim-logo__mark auth-mobile-header__logo" aria-hidden="true"></span>
+                        <p class="t-h2 auth-mobile-header__brand-name">Принт-Дизайн</p>
+                    </header>
+                    
+                    <!-- Кнопка возврата к списку юзеров. На общем устройстве это основной
+                        путь «выбрал не того» — возвращает на 04-login-users.html. -->
+                    <a href="login-users.php" class="btn btn-link flexim-link-button--m auth-back">
+                        <span data-flexim-icon="arrow-left" data-size="24" aria-hidden="true"></span>
+                        К списку пользователей
+                    </a>
+                    
+                    <!-- Приветствие выбранного пользователя.
+                        Имя/инициалы/роль — приходят query-параметром user_id с 04-login-users.html.
+                        PHP: < ? = $user->name ? >, < ? = $user->initials() ? >, < ? = $user->role_label ? > -->
+                    <?php if(key_exists($user, $users_ext)): ?>
+                    <header class="auth-greet">
+                        <span class="auth-greet__avatar <?= LOGIN_USER_COLORS[$users_ext[$user]['login_user_color']] ?>" aria-hidden="true"><?= (count_chars($users_ext[$user]['first_name']) == 0 ? '' : mb_substr($users_ext[$user]['first_name'], 0, 1)).(count_chars($users_ext[$user]['last_name']) == 0 ? '' : mb_substr($users_ext[$user]['last_name'], 0, 1)) ?></span>
+                        <div>
+                            <p class="t-h4 auth-greet__name"><?=$users_ext[$user]['first_name'] ?> <?=$users_ext[$user]['last_name'] ?></p>
+                            <p class="t-label auth-greet__role"><?= ROLE_LOCAL_NAMES[$users_ext[$user]['role_id']] ?></p>
+                        </div>
+                    </header>
+                    <?php endif; ?>
+                    
+                    <div>
+                        <h1 class="t-h2-r auth-form__title">Введите ключ</h1>
+                        <p class="t-body auth-form__subtitle">Соедините точки в правильном порядке.</p>
+                    </div>
+                    
+                    <!-- Графический ключ: 3×3 сетка + SVG-линия.
+                        data-pattern — эталонный ключ (для прод-интеграции хеш сравнивать на бэке,
+                        тут — демо-проверка на клиенте). Формат: индексы 1..9 в порядке соединения. -->
+                    <div class="pattern-lock"
+                         id="pattern-lock"
+                         data-pattern="1,5,9,6,3"
+                         data-min-length="4"
+                         data-max-attempts="3"
+                         role="application"
+                         aria-label="Графический ключ: соедините точки">
+                        <!-- SVG-слой для линии-соединения -->
+                        <svg class="pattern-lock__svg" viewBox="0 0 240 240" preserveAspectRatio="none">
+                            <polyline class="pattern-lock__line" points=""></polyline>
+                        </svg>
+                        <!-- Сетка точек 3×3 (9 точек, индекс data-i = 1..9 слева-направо, сверху-вниз) -->
+                        <div class="pattern-lock__grid">
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="1"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="2"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="3"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="4"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="5"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="6"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="7"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="8"></span></div>
+                            <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="9"></span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Подпись под ключом: пустая в idle, появляется при ошибке/блокировке/успехе -->
+                    <p class="pattern-hint" id="pattern-hint"></p>
+                    
+                    <!-- Альтернатива ключу — вход по логину и паролю (для админа, нового
+                        сотрудника или того, у кого ключ заблокирован). Видна во всех
+                        состояниях, ведёт на 03-login.html. -->
+                    <div class="auth-alt">
+                        <a href="login.php" class="btn btn-link flexim-link-button--m">
+                            Войти по логину и паролю
+                        </a>
+                    </div>
+                    
+                    <!-- Скрытое поле с собранным ключом — улетит в POST вместе с CSRF-токеном.
+                        PHP должен сравнивать sha256($_POST['pattern']) с хешем в БД. -->
+                    <input type="hidden" name="pattern" id="pattern-value" value="">
+                </form>
+            </main>
+        </div>
         
-        <!-- ФОРМА: графический ключ -->
-        <main class="auth-form">
-            <!-- < ? php // POST /login_pattern.php — сравнение sha256(pattern) на бэке ? > -->
-            <form class="auth-form__card" id="pattern-form" method="post" action="#" novalidate>
-                
-                <!-- Мобильный header (Figma 6750:81405) — на десктопе скрыт через CSS. -->
-                <header class="auth-mobile-header" aria-hidden="false">
-                    <span class="flexim-logo__mark auth-mobile-header__logo" aria-hidden="true"></span>
-                    <p class="t-h2 auth-mobile-header__brand-name">Принт-Дизайн</p>
-                </header>
-                
-                <!-- Кнопка возврата к списку юзеров. На общем устройстве это основной
-                путь «выбрал не того» — возвращает на 04-login-users.html. -->
-                <a href="login-users.php" class="btn btn-link flexim-link-button--m auth-back">
-                    <span data-flexim-icon="arrow-left" data-size="24" aria-hidden="true"></span>
-                    К списку пользователей
-                </a>
-
-      <!-- Приветствие выбранного пользователя.
-           Имя/инициалы/роль — приходят query-параметром user_id с 04-login-users.html.
-           PHP: <?= $user->name ?>, <?= $user->initials() ?>, <?= $user->role_label ?> -->
-      <header class="auth-greet">
-        <span class="auth-greet__avatar" aria-hidden="true">СП</span>
-        <div>
-          <p class="t-h4 auth-greet__name">Сергей Пономарёв</p>
-          <p class="t-label auth-greet__role">Технолог</p>
-        </div>
-      </header>
-
-      <div>
-        <h1 class="t-h2-r auth-form__title">Введите ключ</h1>
-        <p class="t-body auth-form__subtitle">Соедините точки в правильном порядке.</p>
-      </div>
-
-      <!-- Графический ключ: 3×3 сетка + SVG-линия.
-           data-pattern — эталонный ключ (для прод-интеграции хеш сравнивать на бэке,
-           тут — демо-проверка на клиенте). Формат: индексы 1..9 в порядке соединения. -->
-      <div class="pattern-lock"
-           id="pattern-lock"
-           data-pattern="1,5,9,6,3"
-           data-min-length="4"
-           data-max-attempts="3"
-           role="application"
-           aria-label="Графический ключ: соедините точки">
-        <!-- SVG-слой для линии-соединения -->
-        <svg class="pattern-lock__svg" viewBox="0 0 240 240" preserveAspectRatio="none">
-          <polyline class="pattern-lock__line" points=""></polyline>
-        </svg>
-        <!-- Сетка точек 3×3 (9 точек, индекс data-i = 1..9 слева-направо, сверху-вниз) -->
-        <div class="pattern-lock__grid">
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="1"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="2"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="3"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="4"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="5"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="6"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="7"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="8"></span></div>
-          <div class="pattern-lock__cell"><span class="pattern-lock__dot" data-i="9"></span></div>
-        </div>
-      </div>
-
-      <!-- Подпись под ключом: пустая в idle, появляется при ошибке/блокировке/успехе -->
-      <p class="pattern-hint" id="pattern-hint"></p>
-
-      <!-- Альтернатива ключу — вход по логину и паролю (для админа, нового
-           сотрудника или того, у кого ключ заблокирован). Видна во всех
-           состояниях, ведёт на 03-login.html. -->
-      <div class="auth-alt">
-        <a href="./03-login.html" class="btn btn-link flexim-link-button--m">
-          Войти по логину и паролю
-        </a>
-      </div>
-
-      <!-- Скрытое поле с собранным ключом — улетит в POST вместе с CSRF-токеном.
-           PHP должен сравнивать sha256($_POST['pattern']) с хешем в БД. -->
-      <input type="hidden" name="pattern" id="pattern-value" value="">
-    </form>
-  </main>
-
-</div>
-
-<!-- ДЕМО-ПАНЕЛЬ СОСТОЯНИЙ. Только для дизайн-сверки, в прод не переносится. -->
-<!--aside class="demo-states" aria-label="Демо-состояния экрана">
-  <span class="demo-states__label">Демо</span>
-  <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="idle">Idle</button>
-  <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="error">Ошибка</button>
-  <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="last">Последняя попытка</button>
-  <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="locked">Заблокирован</button>
-  <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="success">Успех</button>
-</aside-->
-
-<!-- Скрипты — теми же версиями, что в проде -->
-<?php
+        <!-- ДЕМО-ПАНЕЛЬ СОСТОЯНИЙ. Только для дизайн-сверки, в прод не переносится. -->
+        <!--aside class="demo-states" aria-label="Демо-состояния экрана">
+        <span class="demo-states__label">Демо</span>
+        <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="idle">Idle</button>
+        <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="error">Ошибка</button>
+        <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="last">Последняя попытка</button>
+        <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="locked">Заблокирован</button>
+        <button type="button" class="btn btn-outline-primary flexim-btn-s" data-demo="success">Успех</button>
+        </aside-->
+    
+        <!-- Скрипты — теми же версиями, что в проде -->
+        <?php
         include 'include/footer.php';
         include 'include/footer_cut.php';
         ?>
-<script>
-  if (window.fleximIcons) window.fleximIcons.renderAll();
+        <script>
+            if (window.fleximIcons) window.fleximIcons.renderAll();
+        
+            /* ──────────────────────────────────────────────────────────────────
+                Графический ключ: рисование 3×3.
 
-  /* ──────────────────────────────────────────────────────────────────
-     Графический ключ: рисование 3×3.
+                Поток событий:
+                pointerdown на любой точке → начинаем сбор;
+                pointermove над контейнером → если попали в точку и её ещё нет в
+                    последовательности — добавляем, перерисовываем линию;
+                pointerup в любом месте → проверка ключа.
 
-     Поток событий:
-       pointerdown на любой точке → начинаем сбор;
-       pointermove над контейнером → если попали в точку и её ещё нет в
-         последовательности — добавляем, перерисовываем линию;
-       pointerup в любом месте → проверка ключа.
+                Линия рисуется в SVG-слое поверх сетки координатами в системе viewBox
+                0..240. Центр каждой точки = (col*80+40, row*80+40), индекс 1..9
+                слева-направо, сверху-вниз.
 
-     Линия рисуется в SVG-слое поверх сетки координатами в системе viewBox
-     0..240. Центр каждой точки = (col*80+40, row*80+40), индекс 1..9
-     слева-направо, сверху-вниз.
-
-     Минимальная длина — data-min-length (по умолчанию 4 как в Android).
-     Эталон — data-pattern (CSV индексов). В проде заменить на сравнение
-     хеша на сервере (поле #pattern-value уходит в POST).
-     ────────────────────────────────────────────────────────────────── */
-  (function () {
-    var lock = document.getElementById('pattern-lock');
-    if (!lock) return;
-
-    var svg = lock.querySelector('.pattern-lock__svg');
-    var line = lock.querySelector('.pattern-lock__line');
-    var hint = document.getElementById('pattern-hint');
-    var hiddenInput = document.getElementById('pattern-value');
-
-    var EXPECTED = (lock.getAttribute('data-pattern') || '').split(',').map(Number);
-    var MIN_LEN = parseInt(lock.getAttribute('data-min-length'), 10) || 4;
-    var MAX_ATTEMPTS = parseInt(lock.getAttribute('data-max-attempts'), 10) || 3;
-
-    var sequence = [];           // массив индексов 1..9
-    var dragging = false;
-    var attemptsLeft = MAX_ATTEMPTS;
-    var resetTimer = null;
-
-    // Координаты центров точек (в системе viewBox 240×240).
-    function centerOf(i) {
-      var idx = i - 1;
-      var col = idx % 3;
-      var row = Math.floor(idx / 3);
-      return { x: col * 80 + 40, y: row * 80 + 40 };
-    }
-
-    // Перерисовать линию по текущей последовательности.
-    function renderLine(extraPoint) {
-      if (!sequence.length) {
-        line.setAttribute('points', '');
-        return;
-      }
-      var pts = sequence.map(function (i) {
-        var c = centerOf(i);
-        return c.x + ',' + c.y;
-      });
-      if (extraPoint) pts.push(extraPoint.x + ',' + extraPoint.y);
-      line.setAttribute('points', pts.join(' '));
-    }
-
-    // Подсветить точку как активную / снять подсветку со всех.
-    function activate(i) {
-      lock.querySelector('.pattern-lock__dot[data-i="' + i + '"]').classList.add('is-active');
-    }
-    function deactivateAll() {
-      lock.querySelectorAll('.pattern-lock__dot.is-active').forEach(function (d) {
-        d.classList.remove('is-active');
-      });
-    }
-
-    // Получить координаты события в системе viewBox 240×240.
-    function eventToViewBox(e) {
-      var rect = lock.getBoundingClientRect();
-      var x = (e.clientX - rect.left) * (240 / rect.width);
-      var y = (e.clientY - rect.top) * (240 / rect.height);
-      return { x: x, y: y };
-    }
-
-    // Какая точка попадает под координату (или null).
-    function hitDot(p) {
-      for (var i = 1; i <= 9; i++) {
-        var c = centerOf(i);
-        var dx = p.x - c.x;
-        var dy = p.y - c.y;
-        // Хит-радиус = 32 (чуть больше визуального dot 22 + ring 44/2).
-        if (dx * dx + dy * dy <= 32 * 32) return i;
-      }
-      return null;
-    }
-
-    function startDrag(e) {
-      if (lock.classList.contains('is-disabled')) return;
-      clearTimeout(resetTimer);
-      resetState();
-      dragging = true;
-      lock.setPointerCapture && lock.setPointerCapture(e.pointerId);
-      moveDrag(e);
-    }
-
-    function moveDrag(e) {
-      if (!dragging) return;
-      var p = eventToViewBox(e);
-      var i = hitDot(p);
-      if (i && sequence.indexOf(i) === -1) {
-        sequence.push(i);
-        activate(i);
-      }
-      renderLine(p);
-    }
-
-    function endDrag() {
-      if (!dragging) return;
-      dragging = false;
-      renderLine(); // финальная без «хвоста» к курсору
-      checkSequence();
-    }
-
-    function checkSequence() {
-      hiddenInput.value = sequence.join(',');
-
-      if (!sequence.length) {
-        setHint('');
-        return;
-      }
-      if (sequence.length < MIN_LEN) {
-        setError('Слишком короткий ключ — нужно минимум ' + MIN_LEN + ' точки.');
-        scheduleReset();
-        return;
-      }
-
-      var ok = sequence.length === EXPECTED.length &&
-               sequence.every(function (v, idx) { return v === EXPECTED[idx]; });
-
-      if (ok) {
-        lock.classList.add('is-success');
-        setHint('Вход выполнен.', 'is-success');
-        // В прод: redirect to /. PHP: header('Location: /').
-        // window.location.href = '/';
-      } else {
-        attemptsLeft--;
-        if (attemptsLeft <= 0) {
-          lockOut();
-        } else if (attemptsLeft === 1) {
-          setError('Неверный ключ. Осталась последняя попытка.');
-          scheduleReset();
-        } else {
-          setError('Неверный ключ. Осталось попыток: ' + attemptsLeft + '.');
-          scheduleReset();
-        }
-      }
-    }
-
-    function setHint(text, cls) {
-      hint.textContent = text;
-      hint.className = 'pattern-hint' + (cls ? ' ' + cls : '');
-    }
-    function setError(text) {
-      lock.classList.add('is-error');
-      setHint(text, 'is-error');
-    }
-    function lockOut() {
-      lock.classList.add('is-error', 'is-disabled');
-      // Хинт короткий — длинный fallback («или войдите по логину и паролю»)
-      // уже всегда показан ссылкой ниже в .auth-alt.
-      setHint('Вход заблокирован. Обратитесь к администратору, чтобы сбросить ключ.', 'is-error');
-    }
-    function scheduleReset() {
-      resetTimer = setTimeout(function () { resetState(); }, 1400);
-    }
-    function resetState() {
-      sequence = [];
-      deactivateAll();
-      lock.classList.remove('is-error', 'is-success');
-      line.setAttribute('points', '');
-      hiddenInput.value = '';
-      if (!lock.classList.contains('is-disabled')) {
-        setHint('');
-      }
-    }
-
-    // Pointer events покрывают мышь, тач и стилус.
-    lock.addEventListener('pointerdown', startDrag);
-    lock.addEventListener('pointermove', moveDrag);
-    lock.addEventListener('pointerup', endDrag);
-    lock.addEventListener('pointercancel', endDrag);
-    lock.addEventListener('pointerleave', function (e) {
-      // Если палец/мышь ушли за пределы сетки — заканчиваем как «отпуск».
-      if (dragging) endDrag(e);
-    });
-
-    // ── Демо-панель состояний (только для дизайн-сверки) ──
-    $('.demo-states [data-demo]').on('click', function () {
-      var state = $(this).data('demo');
-      clearTimeout(resetTimer);
-      resetState();
-      lock.classList.remove('is-disabled');
-      attemptsLeft = MAX_ATTEMPTS;
-
-      switch (state) {
-        case 'idle':
-          // Уже сброшено.
-          break;
-        case 'error':
-          [1, 5, 9].forEach(function (i) { sequence.push(i); activate(i); });
-          renderLine();
-          setError('Неверный ключ. Осталось попыток: 2.');
-          break;
-        case 'last':
-          [1, 5, 9].forEach(function (i) { sequence.push(i); activate(i); });
-          renderLine();
-          setError('Неверный ключ. Осталась последняя попытка.');
-          break;
-        case 'locked':
-          lockOut();
-          break;
-        case 'success':
-          EXPECTED.forEach(function (i) { sequence.push(i); activate(i); });
-          renderLine();
-          lock.classList.add('is-success');
-          setHint('Вход выполнен.', 'is-success');
-          break;
-      }
-    });
-
-    // Стартовый хинт.
-    resetState();
-  })();
-</script>
-</body>
+                Минимальная длина — data-min-length (по умолчанию 4 как в Android).
+                Эталон — data-pattern (CSV индексов). В проде заменить на сравнение
+                хеша на сервере (поле #pattern-value уходит в POST).
+                ────────────────────────────────────────────────────────────────── */
+            (function () {
+                var lock = document.getElementById('pattern-lock');
+                if (!lock) return;
+        
+                var svg = lock.querySelector('.pattern-lock__svg');
+                var line = lock.querySelector('.pattern-lock__line');
+                var hint = document.getElementById('pattern-hint');
+                var hiddenInput = document.getElementById('pattern-value');
+                
+                var EXPECTED = (lock.getAttribute('data-pattern') || '').split(',').map(Number);
+                var MIN_LEN = parseInt(lock.getAttribute('data-min-length'), 10) || 4;
+                var MAX_ATTEMPTS = parseInt(lock.getAttribute('data-max-attempts'), 10) || 3;
+        
+                var sequence = [];           // массив индексов 1..9
+                var dragging = false;
+                var attemptsLeft = MAX_ATTEMPTS;
+                var resetTimer = null;
+        
+                // Координаты центров точек (в системе viewBox 240×240).
+                function centerOf(i) {
+                    var idx = i - 1;
+                    var col = idx % 3;
+                    var row = Math.floor(idx / 3);
+                    return { x: col * 80 + 40, y: row * 80 + 40 };
+                }
+        
+                // Перерисовать линию по текущей последовательности.
+                function renderLine(extraPoint) {
+                    if (!sequence.length) {
+                        line.setAttribute('points', '');
+                        return;
+                    }
+                    var pts = sequence.map(function (i) {
+                        var c = centerOf(i);
+                        return c.x + ',' + c.y;
+                    });
+                    if (extraPoint) pts.push(extraPoint.x + ',' + extraPoint.y);
+                    line.setAttribute('points', pts.join(' '));
+                }
+        
+                // Подсветить точку как активную / снять подсветку со всех.
+                function activate(i) {
+                    lock.querySelector('.pattern-lock__dot[data-i="' + i + '"]').classList.add('is-active');
+                }
+                function deactivateAll() {
+                    lock.querySelectorAll('.pattern-lock__dot.is-active').forEach(function (d) {
+                        d.classList.remove('is-active');
+                    });
+                }
+        
+                // Получить координаты события в системе viewBox 240×240.
+                function eventToViewBox(e) {
+                    var rect = lock.getBoundingClientRect();
+                    var x = (e.clientX - rect.left) * (240 / rect.width);
+                    var y = (e.clientY - rect.top) * (240 / rect.height);
+                    return { x: x, y: y };
+                }
+        
+                // Какая точка попадает под координату (или null).
+                function hitDot(p) {
+                    for (var i = 1; i <= 9; i++) {
+                        var c = centerOf(i);
+                        var dx = p.x - c.x;
+                        var dy = p.y - c.y;
+                        // Хит-радиус = 32 (чуть больше визуального dot 22 + ring 44/2).
+                        if (dx * dx + dy * dy <= 32 * 32) return i;
+                    }
+                    return null;
+                }
+        
+                function startDrag(e) {
+                    if (lock.classList.contains('is-disabled')) return;
+                    clearTimeout(resetTimer);
+                    resetState();
+                    dragging = true;
+                    lock.setPointerCapture && lock.setPointerCapture(e.pointerId);
+                    moveDrag(e);
+                }
+        
+                function moveDrag(e) {
+                    if (!dragging) return;
+                    var p = eventToViewBox(e);
+                    var i = hitDot(p);
+                    if (i && sequence.indexOf(i) === -1) {
+                        sequence.push(i);
+                        activate(i);
+                    }
+                    renderLine(p);
+                }
+        
+                function endDrag() {
+                    if (!dragging) return;
+                    dragging = false;
+                    renderLine(); // финальная без «хвоста» к курсору
+                    checkSequence();
+                }
+        
+                function checkSequence() {
+                    hiddenInput.value = sequence.join(',');
+            
+                    if (!sequence.length) {
+                        setHint('');
+                        return;
+                    }
+                    if (sequence.length < MIN_LEN) {
+                        setError('Слишком короткий ключ — нужно минимум ' + MIN_LEN + ' точки.');
+                        scheduleReset();
+                        return;
+                    }
+            
+                    var ok = sequence.length === EXPECTED.length &&
+                            sequence.every(function (v, idx) { return v === EXPECTED[idx]; });
+            
+                    if (ok) {
+                        lock.classList.add('is-success');
+                        setHint('Вход выполнен.', 'is-success');
+                        // В прод: redirect to /. PHP: header('Location: /').
+                        // window.location.href = '/';
+                    } else {
+                        attemptsLeft--;
+                        if (attemptsLeft <= 0) {
+                            lockOut();
+                        } else if (attemptsLeft === 1) {
+                            setError('Неверный ключ. Осталась последняя попытка.');
+                            scheduleReset();
+                        } else {
+                            setError('Неверный ключ. Осталось попыток: ' + attemptsLeft + '.');
+                            scheduleReset();
+                        }
+                    }
+                }
+        
+                function setHint(text, cls) {
+                    hint.textContent = text;
+                    hint.className = 'pattern-hint' + (cls ? ' ' + cls : '');
+                }
+                function setError(text) {
+                    lock.classList.add('is-error');
+                    setHint(text, 'is-error');
+                }
+                function lockOut() {
+                    lock.classList.add('is-error', 'is-disabled');
+                    // Хинт короткий — длинный fallback («или войдите по логину и паролю»)
+                    // уже всегда показан ссылкой ниже в .auth-alt.
+                    setHint('Вход заблокирован. Обратитесь к администратору, чтобы сбросить ключ.', 'is-error');
+                }
+                function scheduleReset() {
+                    resetTimer = setTimeout(function () { resetState(); }, 1400);
+                }
+                function resetState() {
+                    sequence = [];
+                    deactivateAll();
+                    lock.classList.remove('is-error', 'is-success');
+                    line.setAttribute('points', '');
+                    hiddenInput.value = '';
+                    if (!lock.classList.contains('is-disabled')) {
+                        setHint('');
+                    }
+                }
+        
+                // Pointer events покрывают мышь, тач и стилус.
+                lock.addEventListener('pointerdown', startDrag);
+                lock.addEventListener('pointermove', moveDrag);
+                lock.addEventListener('pointerup', endDrag);
+                lock.addEventListener('pointercancel', endDrag);
+                lock.addEventListener('pointerleave', function (e) {
+                    // Если палец/мышь ушли за пределы сетки — заканчиваем как «отпуск».
+                    if (dragging) endDrag(e);
+                });
+        
+                // ── Демо-панель состояний (только для дизайн-сверки) ──
+                $('.demo-states [data-demo]').on('click', function () {
+                    var state = $(this).data('demo');
+                    clearTimeout(resetTimer);
+                    resetState();
+                    lock.classList.remove('is-disabled');
+                    attemptsLeft = MAX_ATTEMPTS;
+            
+                    switch (state) {
+                        case 'idle':
+                            // Уже сброшено.
+                            break;
+                        case 'error':
+                            [1, 5, 9].forEach(function (i) { sequence.push(i); activate(i); });
+                            renderLine();
+                            setError('Неверный ключ. Осталось попыток: 2.');
+                            break;
+                        case 'last':
+                            [1, 5, 9].forEach(function (i) { sequence.push(i); activate(i); });
+                            renderLine();
+                            setError('Неверный ключ. Осталась последняя попытка.');
+                            break;
+                        case 'locked':
+                            lockOut();
+                            break;
+                        case 'success':
+                            EXPECTED.forEach(function (i) { sequence.push(i); activate(i); });
+                            renderLine();
+                            lock.classList.add('is-success');
+                            setHint('Вход выполнен.', 'is-success');
+                            break;
+                    }
+                });
+        
+                // Стартовый хинт.
+                resetState();
+            })();
+        </script>
+    </body>
 </html>

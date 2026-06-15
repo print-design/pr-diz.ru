@@ -22,6 +22,22 @@ if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
 }
 
 const LOGIN_USER_COLORS = array("av-pink", "av-blue", "av-purple", "av-violet", "av-orange", "av-yellow", "av-shrek", "av-green", "av-terracot", "av-brick");
+$login_user_colors_count = count(LOGIN_USER_COLORS);
+$login_user_colors_index = 0;
+$sql = "select id, first_name, last_name, role_id from user where graph_key <> '' order by first_name, last_name";
+$grabber = new Grabber($sql);
+$error_message = $grabber->error;
+$users = $grabber->result;
+
+$users_ext = array();
+
+foreach($users as $item) {
+    if($login_user_colors_index >= $login_user_colors_count) {
+        $login_user_colors_index = 0;
+    }
+    $item['login_user_color'] = $login_user_colors_index++;
+    array_push($users_ext, $item);
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -263,28 +279,18 @@ const LOGIN_USER_COLORS = array("av-pink", "av-blue", "av-purple", "av-violet", 
                         Цвет аватарки (av-*) — детерминированно по user_id (хелпер на бэке).
                         Клик ведёт на 04-login-pattern.html?user=ID — ключ конкретного юзера. -->
                     <ul class="user-list" role="list">
-                        <?php
-                        $login_user_colors_count = count(LOGIN_USER_COLORS);
-                        $login_user_colors_index = 0;
-                        
-                        $sql = "select id, first_name, last_name, role_id from user where graph_key <> '' order by first_name, last_name";
-                        $fetcher = new Fetcher($sql);
-                        while($row = $fetcher->Fetch()):
-                            if($login_user_colors_index >= $login_user_colors_count) {
-                                $login_user_colors_index = 0;
-                            }
-                        ?>
+                        <?php foreach($users_ext as $user): ?>
                         <li>
-                            <button type="button" class="user-card" data-user="<?=$row['id'] ?>" data-href="./login-pattern.php?user=<?=$row['id'] ?>">
-                                <span class="user-card__avatar <?= LOGIN_USER_COLORS[$login_user_colors_index++] ?>" aria-hidden='true'><?= (count_chars($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1)).(count_chars($row['last_name']) == 0 ? '' : mb_substr($row['last_name'], 0, 1)) ?></span>
+                            <button type="button" class="user-card" data-user="<?=$user['id'] ?>" data-href="./login-pattern.php?user=<?=$user['id'] ?>">
+                                <span class="user-card__avatar <?= LOGIN_USER_COLORS[$user['login_user_color']] ?>" aria-hidden='true'><?= (count_chars($user['first_name']) == 0 ? '' : mb_substr($user['first_name'], 0, 1)).(count_chars($user['last_name']) == 0 ? '' : mb_substr($user['last_name'], 0, 1)) ?></span>
                                 <div class="user-card__body">
-                                    <p class="t-h4 user-card__name"><?=$row['first_name'] ?> <?=$row['last_name'] ?></p>
-                                    <p class="t-label user-card__role"><?= ROLE_LOCAL_NAMES[$row['role_id']] ?></p>
+                                    <p class="t-h4 user-card__name"><?=$user['first_name'] ?> <?=$user['last_name'] ?></p>
+                                    <p class="t-label user-card__role"><?= ROLE_LOCAL_NAMES[$user['role_id']] ?></p>
                                 </div>
                                 <span class="user-card__arrow" data-flexim-icon="arrow-right" data-size="24" aria-hidden="true"></span>
                             </button>
                         </li>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </ul>
                     <!-- Fallback для админа / нового сотрудника, которого ещё нет в списке.
                         Малозаметный — это аварийный сценарий, а не основной поток. -->
