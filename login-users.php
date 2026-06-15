@@ -26,8 +26,9 @@ const LOGIN_USER_COLORS = array("av-pink", "av-blue", "av-purple", "av-violet", 
 <!DOCTYPE html>
 <html lang="ru">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <?php
-        $title_tail = "Вход";
+        $title_tail = "Кто входит?";
         include 'include/head.php';
         ?>
         <style>

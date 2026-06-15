@@ -29,6 +29,7 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html lang="ru">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <?php
         $title_tail = "Вход";
         include 'include/head.php';
