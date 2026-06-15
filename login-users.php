@@ -20,6 +20,8 @@ if(IsInRole(ROLE_NAMES[ROLE_CUTTER])) {
 if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
     header('Location: '.APPLICATION.'/marker/');
 }
+
+const LOGIN_USER_COLORS = array("av-pink", "av-blue", "av-purple", "av-violet", "av-orange", "av-yellow", "av-shrek", "av-green", "av-terracot", "av-brick");
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -262,13 +264,19 @@ if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
                         Клик ведёт на 04-login-pattern.html?user=ID — ключ конкретного юзера. -->
                     <ul class="user-list" role="list">
                         <?php
+                        $login_user_colors_count = count(LOGIN_USER_COLORS);
+                        $login_user_colors_index = 0;
+                        
                         $sql = "select id, first_name, last_name, role_id from user where graph_key <> '' order by first_name, last_name";
                         $fetcher = new Fetcher($sql);
                         while($row = $fetcher->Fetch()):
+                            if($login_user_colors_index >= $login_user_colors_count) {
+                                $login_user_colors_index = 0;
+                            }
                         ?>
                         <li>
                             <button type="button" class="user-card" data-user="<?=$row['id'] ?>" data-href="./login-pattern.php?user=<?=$row['id'] ?>">
-                                <span class="user-card__avatar av-pink" aria-hidden='true'><?= (count_chars($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1)).(count_chars($row['last_name']) == 0 ? '' : mb_substr($row['last_name'], 0, 1)) ?></span>
+                                <span class="user-card__avatar <?= LOGIN_USER_COLORS[$login_user_colors_index++] ?>" aria-hidden='true'><?= (count_chars($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1)).(count_chars($row['last_name']) == 0 ? '' : mb_substr($row['last_name'], 0, 1)) ?></span>
                                 <div class="user-card__body">
                                     <p class="t-h4 user-card__name"><?=$row['first_name'] ?> <?=$row['last_name'] ?></p>
                                     <p class="t-label user-card__role"><?= ROLE_LOCAL_NAMES[$row['role_id']] ?></p>
@@ -277,46 +285,6 @@ if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
                             </button>
                         </li>
                         <?php endwhile; ?>
-                        <li>
-                            <button type="button" class="user-card" data-user="42" data-href="./04-login-pattern.html?user=42">
-                                <span class="user-card__avatar av-pink" aria-hidden="true">СП</span>
-                                <div class="user-card__body">
-                                    <p class="t-h4 user-card__name">Сергей Пономарёв</p>
-                                    <p class="t-label user-card__role">Технолог</p>
-                                </div>
-                                <span class="user-card__arrow" data-flexim-icon="arrow-right" data-size="24" aria-hidden="true"></span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="user-card" data-user="51" data-href="./04-login-pattern.html?user=51">
-                                <span class="user-card__avatar av-blue" aria-hidden="true">ИВ</span>
-                                <div class="user-card__body">
-                                    <p class="t-h4 user-card__name">Ирина Власова</p>
-                                    <p class="t-label user-card__role">Упаковщица</p>
-                                </div>
-                                <span class="user-card__arrow" data-flexim-icon="arrow-right" data-size="24" aria-hidden="true"></span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="user-card" data-user="63" data-href="./04-login-pattern.html?user=63">
-                                <span class="user-card__avatar av-shrek" aria-hidden="true">ОБ</span>
-                                <div class="user-card__body">
-                                    <p class="t-h4 user-card__name">Олег Бойков</p>
-                                    <p class="t-label user-card__role">Кладовщик</p>
-                                </div>
-                                <span class="user-card__arrow" data-flexim-icon="arrow-right" data-size="24" aria-hidden="true"></span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="user-card" data-user="74" data-href="./04-login-pattern.html?user=74">
-                                <span class="user-card__avatar av-orange" aria-hidden="true">АН</span>
-                                <div class="user-card__body">
-                                    <p class="t-h4 user-card__name">Алексей Никитин</p>
-                                    <p class="t-label user-card__role">Печатник</p>
-                                </div>
-                                <span class="user-card__arrow" data-flexim-icon="arrow-right" data-size="24" aria-hidden="true"></span>
-                            </button>
-                        </li>
                     </ul>
                     <!-- Fallback для админа / нового сотрудника, которого ещё нет в списке.
                         Малозаметный — это аварийный сценарий, а не основной поток. -->
@@ -331,5 +299,20 @@ if(IsInRole(ROLE_NAMES[ROLE_MARKER])) {
         include 'include/footer.php';
         include 'include/footer_cut.php';
         ?>
+        <script>
+            if (window.fleximIcons) window.fleximIcons.renderAll();
+            
+            // Клик по карточке → переход на экран ключа конкретного юзера.
+            // В прод можно заменить на <a href="..."> вокруг строки и убрать JS.
+            $(document).on('click', '.user-card', function () {
+                var href = $(this).data('href');
+                if (href) window.location.href = href;
+            });
+            
+            // Fallback на пароль.
+            $('#alt-password').on('click', function () {
+                window.location.href = './03-login.html';
+            });
+        </script>
     </body>
 </html>
