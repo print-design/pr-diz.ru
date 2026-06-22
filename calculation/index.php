@@ -60,11 +60,15 @@ else $title = ORDER_STATUS_TITLES[$status_id];
         <?php
         include '../include/head.php';
         ?>
-        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
     </head>
     <body>
         <div class="app-shell">
+            <?php
+            include '../include/left_bar.php';
+            ?>
+            <div class="app-main">
         <?php
+        
         include '../include/header_zakaz.php';
         include '../include/status_track.php';
         include '../include/pager_top.php';
@@ -338,6 +342,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
             include '../include/pager_bottom.php';
             ?>
         </div>
+            </div>
     
         <!-- Информация о заказчике -->
         <div class="modal fixed-left fade" id="customerModal" tabindex="-1" role="dialog">
@@ -348,8 +353,6 @@ else $title = ORDER_STATUS_TITLES[$status_id];
         <?php
         include '../include/footer.php';
         ?>
-        <script src="<?=APPLICATION ?>/js/select2.min.js"></script>
-        <script src="<?=APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
             // Список с  поиском
             $('#unit').select2({

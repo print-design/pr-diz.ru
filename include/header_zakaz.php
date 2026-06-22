@@ -1,6 +1,4 @@
 <?php
-include 'left_bar.php';
-
 $php_self = $_SERVER['PHP_SELF'];
 $substrings = mb_split("/", $php_self);
 $count = count($substrings);
