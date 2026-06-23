@@ -13,7 +13,7 @@ if(filter_input(INPUT_GET, "find") != '') {
     $placeholder = "";
 }
 ?>
-<button type="button" class="btn btn-link mr-2 ml-auto<?=$append_class ?>" id="find-append" style="color: #EC3A7A; height: 35px; line-height: 0;"><i class="fas fa-search"></i></button>
+<button type="button" id="find-append" class="flexim-icon-btn<?=$append_class ?>" aria-label="Поиск"><span data-flexim-icon="search" data-size="24" aria-hidden="true"></span></button>
 <form class="form-inline ml-auto mr-3<?=$find_class ?>" method="get" id="find-form" action="<?=APPLICATION.'/calculation/' ?>">
     <div class="input-group input-group-sm<?=$group_class ?>" id="find-group">
         <input type="text" class="form-control" id="find" name="find" placeholder="<?=$placeholder ?>" />

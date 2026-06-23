@@ -47,54 +47,29 @@ if($folder == 'calculation') {
 }
 ?>
 <div class="app-topbar">
-    <nav class="flexim-header-menu__nav">
-        <?php
-        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
-        ?>
-        <button type="button" class="flexim-header-menu__item<?=$shipped_status ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_SHIPPED] ?></button>
-        <button type="button" class="flexim-header-menu__item<?=$ship_ready_status ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_SHIP_READY] ?></button>
-        <button type="button" class="flexim-header-menu__item<?=$production_status ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_IN_PRODUCTION] ?></button>
-        <button type="button" class="flexim-header-menu__item<?=$calculation_status ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_IN_WORK] ?></button>
-        <button type="button" class="flexim-header-menu__item<?=$not_in_work_status ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_NOT_IN_WORK] ?></button>
-        <button type="button" class="flexim-header-menu__item<?=$draft_status ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_DRAFT] ?></button>
-        <button type="button" class="flexim-header-menu__item<?=$trash_status ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_TRASH] ?></button>
-        <?php endif; ?>
-    </nav>
-        <?php
-        if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
-        ?>
-            <div class="nav-item">
-                <a class="nav-link<?=$shipped_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_SHIPPED] ?></a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link<?=$ship_ready_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_SHIP_READY] ?></a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link<?=$production_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_IN_PRODUCTION, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_IN_PRODUCTION] ?></a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link<?=$calculation_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemoveArray(array("status", "page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_IN_WORK] ?></a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link<?=$not_in_work_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_NOT_IN_WORK, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_NOT_IN_WORK] ?></a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_DRAFT, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_DRAFT] ?></a>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link<?=$trash_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_TRASH, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_TRASH] ?></a>
-            </div>
+    <div class="flexim-header-menu">
+        <nav class="flexim-header-menu__nav">
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))): ?>
+            <a class="flexim-header-menu__item<?=$shipped_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_SHIPPED] ?></a>
+            <a class="flexim-header-menu__item<?=$ship_ready_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_SHIP_READY] ?></a>
+            <a class="flexim-header-menu__item<?=$production_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_IN_PRODUCTION, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_IN_PRODUCTION] ?></a>
+            <a class="flexim-header-menu__item<?=$calculation_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemoveArray(array("status", "page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_IN_WORK] ?></a>
+            <a class="flexim-header-menu__item<?=$not_in_work_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_NOT_IN_WORK, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_NOT_IN_WORK] ?></a>
+            <a class="flexim-header-menu__item<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_DRAFT, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_DRAFT] ?></a>
+            <a class="flexim-header-menu__item<?=$trash_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_TRASH, array("page", "order")) ?>"><?=ORDER_STATUS_TITLES[ORDER_STATUS_TRASH] ?></a>
             <?php endif; ?>
-        <?php
-        if(file_exists('find.php')) {
-            include 'find.php';
-        }
-        else {
-            echo "<div class='ml-auto'></div>";
-        }
-        
-        include 'header_right.php';
-        ?>
-    
+        </nav>
+        <div class="app-topbar__right">
+            <?php
+            if(file_exists('find.php')) {
+                include 'find.php';
+            }
+            else {
+                echo "<div class='ml-auto'></div>";
+            }
+            
+            include 'header_right.php';
+            ?>
+        </div>
+    </div>
 </div>
-<div id="topmost"></div>

@@ -67,13 +67,12 @@ else $title = ORDER_STATUS_TITLES[$status_id];
             include '../include/left_bar.php';
             ?>
             <div class="app-main">
-        <?php
-        
-        include '../include/header_zakaz.php';
-        include '../include/status_track.php';
-        include '../include/pager_top.php';
-        $rowcounter = 0;
-        ?>
+                <?php
+                include '../include/header_zakaz.php';
+                include '../include/status_track.php';
+                include '../include/pager_top.php';
+                $rowcounter = 0;
+                ?>
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
