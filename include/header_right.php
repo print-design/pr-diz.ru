@@ -33,38 +33,9 @@ else:
 endif;
 ?>
 
-<ul class="navbar-nav">
-    <li class="nav-item dropdown" id="nav-user">
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" style="padding: 0; padding-bottom: 0 !important;"><span class="text-nowrap" id="top_user_name" style="color: #EC3A7A;"><?= filter_input(INPUT_COOKIE, LAST_NAME).' '.filter_input(INPUT_COOKIE, FIRST_NAME) ?></span></a>
-        <div id="nav-role" class="text-nowrap"><?= filter_input(INPUT_COOKIE, ROLE_LOCAL) ?></div>
-        <div class="dropdown-menu" id="user-dropdown">
-            <a href="<?=APPLICATION ?>/personal/" class="btn btn-link dropdown-item"><i class="fas fa-user"></i>&nbsp;Мои настройки</a>
-            <form method="post">
-                <button type="submit" class="btn btn-link dropdown-item" id="logout_submit" name="logout_submit"><i class="fas fa-sign-out-alt"></i>&nbsp;Выход</button>
-            </form>
-        </div>
-    </li>
-</ul>
-
-<div class="flexim-user-chip">
-    <ul class="navbar-nav">
-        <li class="nav-item dropdown" id="nav-user">
-            <span class="flexim-avatar flexim-avatar--m flexim-avatar--initials" title="Пономарёв Сергей"><?=(mb_strlen(filter_input(INPUT_COOKIE, LAST_NAME)) == 0 ? '' : mb_substr(filter_input(INPUT_COOKIE, LAST_NAME), 0, 1)).(mb_strlen(filter_input(INPUT_COOKIE, FIRST_NAME)) == 0 ? '' : mb_substr(filter_input(INPUT_COOKIE, FIRST_NAME), 0, 1)) ?></span>
-            <span class="flexim-user-chip__name">
-                <a href="#" class="flexim-user-chip__title"><?= filter_input(INPUT_COOKIE, LAST_NAME).' '.filter_input(INPUT_COOKIE, FIRST_NAME) ?></a>
-                <span class="flexim-user-chip__role"><?= filter_input(INPUT_COOKIE, ROLE_LOCAL) ?></span>
-            </span>
-            <div class="dropdown-menu" id="user-dropdown">
-                <a href="<?=APPLICATION ?>/personal/" class="btn btn-link dropdown-item"><i class="fas fa-user"></i>&nbsp;Мои настройки</a>
-                <form method="post">
-                    <button type="submit" class="btn btn-link dropdown-item" id="logout_submit" name="logout_submit"><i class="fas fa-sign-out-alt"></i>&nbsp;Выход</button>
-                </form>
-        </div>
-        </li>
-    </ul>
-</div>
-
-
+<?php
+if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
+?>
 <div class="flexim-user-chip">
     <span class="flexim-avatar flexim-avatar--m flexim-avatar--initials" title="Пономарёв Сергей"><?=(mb_strlen(filter_input(INPUT_COOKIE, LAST_NAME)) == 0 ? '' : mb_substr(filter_input(INPUT_COOKIE, LAST_NAME), 0, 1)).(mb_strlen(filter_input(INPUT_COOKIE, FIRST_NAME)) == 0 ? '' : mb_substr(filter_input(INPUT_COOKIE, FIRST_NAME), 0, 1)) ?></span>
     <span class="flexim-user-chip__name">
@@ -72,3 +43,6 @@ endif;
         <span class="flexim-user-chip__role"><?= filter_input(INPUT_COOKIE, ROLE_LOCAL) ?></span>
     </span>
 </div>
+<?php
+endif;
+?>
