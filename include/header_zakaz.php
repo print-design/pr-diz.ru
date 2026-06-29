@@ -60,16 +60,20 @@ if($folder == 'calculation') {
             <?php endif; ?>
         </nav>
         <div class="app-topbar__right">
+            <div class="flexim-search-row flexim-search-row--fill" data-flexim-search>
+                <div class="flexim-search flexim-search--fill">
+                    <div class="flexim-search__field">
+                        <span class="flexim-search__icon" data-flexim-icon="search" data-size="24" aria-hidden="true"></span>
+                        <div class="flexim-search__chips"></div>
+                        <input class="flexim-search__input" type="text" placeholder="Поиск">
+                        <button type="button" class="flexim-search__clear-all" aria-label="Очистить всё"><span data-flexim-icon="x-small" data-size="16" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
             <?php
-            if(file_exists('find.php')) {
-                include 'find.php';
-            }
-            else {
-                echo "<div class='ml-auto'></div>";
-            }
-            
             include 'header_right.php';
             ?>
+            
         </div>
     </div>
 </div>
