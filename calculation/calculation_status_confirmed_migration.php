@@ -17,7 +17,7 @@ include '../include/topscripts.php';
             <?php
             $confirmed = 0;
             $sql = "select count(csh.id) from calculation_status_history csh where csh.status_id = ". ORDER_STATUS_CONFIRMED
-                    ." and (select count(id) from calculation_status_history where calculation_id = csh.calculation_id and status_id = ". ORDER_STATUS_CONFIRMED." and id > csh.id) > 0";
+                    ." and (select count(id) from calculation_status_history where calculation_id = csh.calculation_id and status_id = ". ORDER_STATUS_CONFIRMED." and id < csh.id) > 0";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $confirmed = $row[0];
