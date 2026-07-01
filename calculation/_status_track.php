@@ -65,7 +65,7 @@ if($row = $fetcher->Fetch()) {
 $sql = "select pe.work_id, pe.machine_id, pe.date, pe.shift, pe1.last_name "
         . "from plan_edition pe "
         . "left join plan_workshift1 pw on pw.work_id = pe.work_id and pw.machine_id = pe.machine_id and pw.date = pe.date and pw.shift = pe.shift "
-        . "inner join plan_employee pe1 on pw.employee1_id = pe1.id "
+        . "left join plan_employee pe1 on pw.employee1_id = pe1.id "
         . "where pe.calculation_id = $calculation_id";
 
 $grabber = new Grabber($sql);
