@@ -407,6 +407,42 @@ function SetCalculationStatus($calculation_id, $status_id, $comment) {
     return $error_message;
 }
 
+// Удаление последнего статуса заказа
+function RemoveLastCalculationStatus($calculation_id) {
+    $status_history_id = 0;
+    $error_message = '';
+    
+    $sql = "select id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
+    $fetcher = new Fetcher($sql);
+    if($row = $fetcher->Fetch()) {
+        $status_history_id = $row[0];
+    }
+    
+    if(empty($error_message)) {
+        $sql = "delete from calculation_status_history where id = $status_history_id";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        $status_id = 0;
+        
+        $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
+        $fetcher = new Fetcher($sql);
+        if($row = $fetcher->Fetch()) {
+            $status_id = $row[0];
+        }
+        
+        $sql = "update calculation set duplicate_status_id = $status_id where id = $calculation_id";
+        $executer = new Executer($sql);
+        if(empty($error_message)) {
+            $error_message = $executer->error;
+        }
+    }
+    
+    return $error_message;
+}
+
 // Валидация формы логина
 $login_form_valid = true;
 
