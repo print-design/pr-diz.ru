@@ -62,6 +62,35 @@ if($row = $fetcher->Fetch()) {
 <div style="margin-bottom: 20px;"><?= ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) ?></div>
 
 <?php
+// BEGIN DELETE
+
+$sql = "select pe.work_id, pe.machine_id, pe.date, pe.shift, pe1.last_name "
+        . "from plan_edition pe "
+        . "left join plan_workshift1 pw on pw.work_id = pe.work_id and pw.machine_id = pe.machine_id and pw.date = pe.date and pw.shift = pe.shift "
+        . "inner join plan_employee pe1 on pw.employee1_id = pe1.id "
+        . "where pe.calculation_id = $calculation_id";
+
+//$sql = "select pe.work_id, pe.machine_id, pe.date, pe.shift from plan_edition pe where pe.calculation_id = $calculation_id";
+$grabber = new Grabber($sql);
+$plan_editions = $grabber->result;
+
+$editions_by_work = array();
+
+foreach($plan_editions as $plan_edition) {
+    $edition_by_work = array('work_id' => $plan_edition['work_id'], 
+        'machine_id' => ($plan_edition['work_id'] == WORK_PRINTING ? PRINTER_NAMES[$plan_edition['machine_id']] : '').($plan_edition['work_id'] == WORK_LAMINATION ? LAMINATOR_NAMES[$plan_edition['machine_id']] : '').($plan_edition['work_id'] == WORK_CUTTING ? CUTTER_NAMES[$plan_edition['machine_id']] : ''), 
+        'date' => (DateTime::createFromFormat('Y-m-d', $plan_edition['date'])->format('d.m.Y')), 'shift' => $plan_edition['shift'], 'last_name' => $plan_edition['last_name']);
+    $editions_by_work[$plan_edition['work_id']] = $edition_by_work;
+}
+
+foreach ($editions_by_work as $key => $value) {
+    echo "<p>".$key.' '.($value['machine_id']).' '.$value['date'].' '.SHIFT_NAMES[$value['shift']].' '.$value['last_name'];
+    echo "<br />";
+    print_r($value);
+}
+
+// END DELETE
+
 $order_statuses = array_merge(array_reverse(ORDER_STATUSES_END), array_reverse(ORDER_STATUSES_IN_PRODUCTION), array_reverse(ORDER_STATUSES_IN_WORK), array_reverse(ORDER_STATUSES_NOT_IN_WORK), array_reverse(ORDER_STATUSES_BEGIN));
 $order_statuses_dictionary = array();
 $i = 0;
@@ -96,6 +125,7 @@ while($row = $fetcher->Fetch()):
     </div>
     <div style="display: inline-block; vertical-align: top;">
         <?= $row['status_id'] == $status_id ? '<strong>'.ORDER_STATUS_NAMES[$row['status_id']].'</strong>' : ORDER_STATUS_NAMES[$row['status_id']] ?>
+        <?= in_array($row['status_id'], array(ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT)) ? " ZAQ" : "" ?>
         <div style="font-size: smaller;"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y, H:i') ?></div>
     </div>
 </div>
