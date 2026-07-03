@@ -110,7 +110,7 @@ foreach($order_statuses as $order_status):
 endif;
 endforeach;
 
-$sql = "select status_id, date from calculation_status_history where calculation_id = $calculation_id order by date desc";
+$sql = "select status_id, date from calculation_status_history where calculation_id = $calculation_id order by id desc";
 $fetcher = new Fetcher($sql);
 while($row = $fetcher->Fetch()):
 ?>
