@@ -409,24 +409,22 @@ function SetCalculationStatus($calculation_id, $status_id, $comment) {
 
 // Удаление последнего статуса заказа
 function RemoveLastCalculationStatus($calculation_id) {
-    $status_history_id = 0;
+    $status_id = 0;
     $error_message = '';
     
-    $sql = "select id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
+    $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $status_history_id = $row[0];
+        $status_id = $row[0];
     }
     
     if(empty($error_message)) {
-        $sql = "delete from calculation_status_history where id = $status_history_id";
+        $sql = "delete from calculation_status_history where status_id = $status_id and calculation_id = $calculation_id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
-        $status_id = 0;
-        
         $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
