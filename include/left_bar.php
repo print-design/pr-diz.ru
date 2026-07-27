@@ -15,6 +15,7 @@ $sklad_class = '';
 $plan_class = '';
 $cut_class = '';
 $pack_class = '';
+$money_class = '';
 $admin_class = '';
 $improvement_class = '';
 $okto_class = '';
@@ -33,6 +34,9 @@ elseif ($folder == "cut") {
 }
 elseif($folder == "pack") {
     $pack_class = " active";
+}
+elseif($folder == "money") {
+    $money_class = " active";
 }
 elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     $admin_class = " active";
@@ -83,9 +87,15 @@ elseif($folder == "okto") {
     <?php
     endif;
     // Упаковка
-    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))):
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))):
     ?>
     <a href="<?=APPLICATION ?>/pack/" class="left_bar_item ui_tooltip right<?=$pack_class ?>" title="Упаковка"><img src="<?=APPLICATION ?>/images/icons/loader_machine.svg" /></a>
+    <?php
+    endif;
+    // Оплата заказа
+    if(IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
+    ?>
+    <a href="<?= APPLICATION ?>/money/" class="left_bar_item ui_tooltip right<?=$money_class ?>" title="Денежные поступления"><img src="<?= APPLICATION ?>/images/icons/loader_machine.svg" /></a>
     <?php
     endif;
     // Админка
