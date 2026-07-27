@@ -68,7 +68,36 @@ elseif (empty ($error) && $work_id == WORK_LAMINATION) {
     }
 }
 
-// Удаляем из плана.
+// Узнаём последний статус.
+$status_id = 0;
+
+$sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $status_id = $row[0];
+}
+
+// Проверяем, можно ли удалять последний статус.
+// Последний статус нельзя удалять в следующих случаях:
+// 1. Тип работы "резка", а последний статус "В плане ламинации".
+// 2. Тип работы "ламинация", а последний статус "В плане печати".
+// 3. Тип работы "печать", а последний статус "Ждём постановки в план".
+
+$remove_status_allowed = true;
+
+if($work_id == WORK_CUTTING && $status_id == ORDER_STATUS_PLAN_LAMINATE) {
+    $remove_status_allowed = false;
+}
+
+if($work_id == WORK_LAMINATION && $status_id == ORDER_STATUS_PLAN_CUT) {
+    $remove_status_allowed = false;
+}
+
+if($work_id == WORK_PRINTING && $status_id == ORDER_STATUS_CONFIRMED) {
+    $remove_status_allowed = false;
+}
+
+// Удаляем заказ из плана.
 if(empty($error)) {
     $sql = "delete from plan_edition where calculation_id = $calculation_id and lamination = $lamination and run2 = $run2 and work_id = $work_id";
     $executer = new Executer($sql);
@@ -76,7 +105,7 @@ if(empty($error)) {
 }
 
 // Удаляем последний статус
-if(empty($error)) {
+if(empty($error) && $remove_status_allowed) {
     $error = RemoveLastCalculationStatus($calculation_id);
 }
 
