@@ -95,7 +95,11 @@ elseif($folder == "okto") {
     // Оплата заказа
     if(IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
     ?>
-    <a href="<?= APPLICATION ?>/money/" class="left_bar_item ui_tooltip right<?=$money_class ?>" title="Денежные поступления"><img src="<?= APPLICATION ?>/images/icons/loader_machine.svg" /></a>
+    <a href="<?= APPLICATION ?>/money/" class="left_bar_item ui_tooltip right<?=$money_class ?>" title="Готовая продукция">
+        <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="rub" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
+            <path d="M6.125 2V12H4V14H6.125V16H4V18H6.125V22H8.25V18H13.5625V16H8.25V14H14.625C18.1313 14 21 11.3 21 8C21 4.7 18.1313 2 14.625 2H6.125ZM8.25 4H14.625C16.9827 4 18.875 5.781 18.875 8C18.875 10.219 16.9827 12 14.625 12H8.25V4Z" fill="currentColor"></path>
+        </svg>
+    </a>
     <?php
     endif;
     // Админка
