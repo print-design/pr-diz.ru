@@ -412,25 +412,61 @@ function RemoveLastCalculationStatus($calculation_id) {
     $status_id = 0;
     $error_message = '';
     
+    // Узнаём последний статус.
     $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $status_id = $row[0];
     }
     
+    // Удаляем из истории все записи с этим статусом для этого заказа (потому что один и тот же статус могут случайно поставить несколько раз).
     if(empty($error_message)) {
         $sql = "delete from calculation_status_history where status_id = $status_id and calculation_id = $calculation_id";
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
     
+    // Удаляем из истории статус "Приладка на резке", потому что после удаления последнего статуса "Снято с резки",
+    // последним оказывается статус "Приладка на резке", а с этим статусом заказа нет в очереди в план.
     if(empty($error_message)) {
+        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ". ORDER_STATUS_CUT_PRILADKA;
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    // Удаляем из истории статус "В плане резки", если данного заказа нет в плане резки.
+    if(empty($error_message)) {
+        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ". ORDER_STATUS_PLAN_CUT
+                ." and (select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ". WORK_CUTTING.") = 0";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    // Удаляем из истории статус "В плане ламинации", если данного заказа нет в плане ламинации.
+    if(empty($error_message)) {
+        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ". ORDER_STATUS_PLAN_LAMINATE
+                ." and (select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ". WORK_LAMINATION.") = 0";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    // Удаляем из истории статус "В плане печати", если данного заказа нет в плане печати.
+    if(empty($error_message)) {
+        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ".ORDER_STATUS_PLAN_PRINT
+                ." and (select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_PRINTING.") = 0";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+    
+    if(empty($error_message)) {
+        // Узнаём, какой теперь последний статус.
         $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
         $fetcher = new Fetcher($sql);
         if($row = $fetcher->Fetch()) {
             $status_id = $row[0];
         }
         
+        // Устанавливаем этот статус в дублирующее поле (дублирующее поле предназначено для ускорения загрузки).
         $sql = "update calculation set duplicate_status_id = $status_id where id = $calculation_id";
         $executer = new Executer($sql);
         if(empty($error_message)) {
