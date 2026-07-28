@@ -6,6 +6,16 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT])))
     include '../include/_unauthorized.php';
 }
 
+// Формирование ссылки для сортировки по столбцу
+function OrderLink($param) {
+    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
+        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
+    }
+    else {
+        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
+    }
+}
+
 // Статус
 $status_id = null;
 
@@ -236,11 +246,11 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             </div>
             <table class="table table-hover typography">
                 <tr>
-                    <th class="text-nowrap">Дата</th>
+                    <th>№&nbsp;&nbsp;<?= OrderLink('n') ?></th>
                     <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
-                    <th>Дата отгрузки</th>
+                    <th>Дата отгрузки&nbsp;&nbsp;<?= OrderLink('shipment_date') ?></th>
                     <?php endif; ?>
-                    <th>№</th>
+                    <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                     <th>Заказ</th>
                     <th>Метраж</th>
                     <th>Масса</th>
@@ -288,18 +298,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             $sql .= $filter.($status_id == ORDER_STATUS_SHIPPED ? " order by shipping_date desc limit $pager_skip, $pager_take" : " order by time desc limit $pager_skip, $pager_take");
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
-                $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
             ?>
                 <tr>
-                    <td><?=$datetime->format('d.m') ?><br /><span style="font-size: smaller;"><?=$datetime->format('H:i') ?></span></td>
+                    <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                     <?php
                     if($status_id == ORDER_STATUS_SHIPPED):
                         $shipping_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['shipping_date']);
                     ?>
                     <td><?=$shipping_date->format('d.m') ?><br /><span style="font-size: smaller;"><?=$shipping_date->format("H:i") ?></span></td>
                     <?php endif; ?>
-                    <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
-                    <td><?=$row['calculation'] ?><br /><span style="font-size: smaller;"><?=$row['customer'] ?></span></td>
+                    <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
+                    <td><?=$row['calculation'] ?></td>
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
@@ -316,6 +325,12 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             <?php
             include '../include/pager_bottom.php';
             ?>
+        </div>
+        <!-- Информация о заказчике -->
+        <div class="modal fixed-left fade" id="customerModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;"></div>
+            </div>
         </div>
         <?php
         include '../include/footer.php';
@@ -364,6 +379,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             maximumSelectionLength: 1,
             language: "ru",
             width: "15rem"
+        });
+        
+        // Заполнение информации о заказчике
+        $('a.customer').click(function(e) {
+            var customer_id = $(e.target).attr('data-customer-id');
+            if(customer_id !== null) {
+                $.ajax({ url: "_customer.php?id=" + customer_id })
+                        .done(function(data) {
+                            $('#customerModal .modal-dialog .modal-content').html(data);
+                });
+            }
         });
     </script>
 </html>
