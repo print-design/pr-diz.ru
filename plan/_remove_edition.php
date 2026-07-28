@@ -108,10 +108,11 @@ if(empty($error)) {
 if(empty($error) && $remove_status_allowed) {
     $error = RemoveCalculationStatus($calculation_id, $status_id);
     
-    // Если последний статус - "Снято с резки", то удаляем статус "Приладка на резке",
-    // потому что с этим статусом заказы не ставятся на очередь в план.
-    if($status_id == ORDER_STATUS_CUT_REMOVED) {
+    // Если последний статус - "Снято с резки", то удаляем статус "Приладка на резке" и статус "Режется",
+    // потому что с этими статусами заказы не ставятся на очередь в план.
+    if(empty($error) && $status_id == ORDER_STATUS_CUT_REMOVED) {
         $error = RemoveCalculationStatus($calculation_id, ORDER_STATUS_CUT_PRILADKA);
+        $error = RemoveCalculationStatus($calculation_id, ORDER_STATUS_CUTTING);
     }
 }
 
