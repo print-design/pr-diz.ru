@@ -10,7 +10,7 @@ if(!IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])) {
 // Если не указан id, направляем к списку заданий
 $id = filter_input(INPUT_GET, 'id');
 if($id === null) {
-    header('Location: '.APPLICATION.'/money/');
+    header('Location: '.APPLICATION.'/buh/');
 }
 
 // Получение объекта
