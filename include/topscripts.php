@@ -397,6 +397,7 @@ function SetCalculationStatus($calculation_id, $status_id, $comment) {
         $executer = new Executer($sql);
         $error_message = $executer->error;
         
+        // Устанавливаем этот статус в дублирующееся поле.
         $sql = "update calculation set duplicate_status_id = $status_id where id = $calculation_id";
         $executer = new Executer($sql);
         if(empty($error_message)) {
@@ -408,28 +409,12 @@ function SetCalculationStatus($calculation_id, $status_id, $comment) {
 }
 
 // Удаление последнего статуса заказа
-function RemoveLastCalculationStatus($calculation_id) {
-    $status_id = 0;
+function RemoveCalculationStatus($calculation_id, $status_id) {
     $error_message = '';
-    
-    // Узнаём последний статус.
-    $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
-    $fetcher = new Fetcher($sql);
-    if($row = $fetcher->Fetch()) {
-        $status_id = $row[0];
-    }
     
     // Удаляем из истории все записи с этим статусом для этого заказа (потому что один и тот же статус могут случайно поставить несколько раз).
     if(empty($error_message)) {
         $sql = "delete from calculation_status_history where status_id = $status_id and calculation_id = $calculation_id";
-        $executer = new Executer($sql);
-        $error_message = $executer->error;
-    }
-    
-    // Удаляем из истории статус "Приладка на резке", потому что после удаления последнего статуса "Снято с резки",
-    // последним оказывается статус "Приладка на резке", а с этим статусом заказа нет в очереди в план.
-    if(empty($error_message)) {
-        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ". ORDER_STATUS_CUT_PRILADKA;
         $executer = new Executer($sql);
         $error_message = $executer->error;
     }
@@ -458,16 +443,11 @@ function RemoveLastCalculationStatus($calculation_id) {
         $error_message = $executer->error;
     }
     
+    // Устанавливаем этот статус в дублирующее поле (дублирующее поле предназначено для ускорения загрузки).
     if(empty($error_message)) {
-        // Узнаём, какой теперь последний статус.
-        $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
-        if($row = $fetcher->Fetch()) {
-            $status_id = $row[0];
-        }
-        
-        // Устанавливаем этот статус в дублирующее поле (дублирующее поле предназначено для ускорения загрузки).
-        $sql = "update calculation set duplicate_status_id = $status_id where id = $calculation_id";
+        $sql = "update calculation set duplicate_status_id = "
+                . "(select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1) "
+                . "where id = $calculation_id";
         $executer = new Executer($sql);
         if(empty($error_message)) {
             $error_message = $executer->error;

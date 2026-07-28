@@ -89,7 +89,7 @@ if($work_id == WORK_CUTTING && $status_id == ORDER_STATUS_PLAN_LAMINATE) {
     $remove_status_allowed = false;
 }
 
-if($work_id == WORK_LAMINATION && $status_id == ORDER_STATUS_PLAN_CUT) {
+if($work_id == WORK_LAMINATION && $status_id == ORDER_STATUS_PLAN_PRINT) {
     $remove_status_allowed = false;
 }
 
@@ -106,7 +106,13 @@ if(empty($error)) {
 
 // Удаляем последний статус
 if(empty($error) && $remove_status_allowed) {
-    $error = RemoveLastCalculationStatus($calculation_id);
+    $error = RemoveCalculationStatus($calculation_id, $status_id);
+    
+    // Если последний статус - "Снято с резки", то удаляем статус "Приладка на резке",
+    // потому что с этим статусом заказы не ставятся на очередь в план.
+    if($status_id == ORDER_STATUS_CUT_REMOVED) {
+        $error = RemoveCalculationStatus($calculation_id, ORDER_STATUS_CUT_PRILADKA);
+    }
 }
 
 // Устанавливаем расчёт в начало списка очереди
