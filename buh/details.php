@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include '../calculation/calculation.php';
 
 // Авторизация
-if(!IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
     include '../include/_unauthorized.php';
 }
 
