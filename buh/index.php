@@ -124,7 +124,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     $sql = "select count(distinct c.id) "
                             . "from calculation c "
                             . "inner join customer cus on c.customer_id = cus.id "
-                            . "inner join calculation_result cr on cr.calculation_id = c.id "
                             . "inner join user u on c.manager_id = u.id "
                             . "inner join (select calculation_id, max(date) as time from calculation_status_history group by calculation_id) cs on cs.calculation_id = c.id "
                             . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
@@ -183,17 +182,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         <?php if(null !== $status_id): ?>
                         <input type="hidden" name="status_id" value="<?=$status_id ?>" />
                         <?php endif; ?>
-                        <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Шт/кг...</option>
-                            <option value="<?= PIECES ?>"<?= filter_input(INPUT_GET, 'unit') == PIECES ? " selected='selected'" : "" ?>>Шт</option>
-                            <option value="<?= KG ?>"<?= filter_input(INPUT_GET, 'unit') == KG ? " selected='selected'" : "" ?>>Кг</option>
-                        </select>
-                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Тип работы...</option>
-                            <?php foreach(WORK_TYPES as $item): ?>
-                            <option value="<?=$item ?>"<?= ($item == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?= WORK_TYPE_NAMES[$item] ?></option>
-                            <?php endforeach; ?>
-                        </select>
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
@@ -214,32 +202,11 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             <option value="<?=$row['id'] ?>"<?=$row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "" ?>><?=$row['name'] ?></option>
                             <?php endwhile; ?>
                         </select>
-                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Наименование...</option>
-                            <?php
-                            $name_where = "";
-                            
-                            if(!empty($status_id)) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id";
-                            }
-                            
-                            $customer = filter_input(INPUT_GET, 'customer');
-                            if(!empty($customer)) {
-                                $name_where .= " and c.customer_id = $customer";
-                                
-                                $customer_manager = filter_input(INPUT_GET, 'manager');
-                                
-                                if(!empty($customer_manager)) {
-                                    $name_where .= " and c.manager_id = $customer_manager";
-                                }
-                            }
-                            
-                            $sql = "select distinct trim(c.name) name from calculation c $name_where order by trim(c.name)";
-                            $fetcher = new Fetcher($sql);
-                            while($row = $fetcher->Fetch()):
-                            ?>
-                            <option<?=$row['name'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "" ?>><?=$row['name'] ?></option>
-                            <?php endwhile; ?>
+                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Тип работы...</option>
+                            <?php foreach(WORK_TYPES as $item): ?>
+                            <option value="<?=$item ?>"<?= ($item == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?= WORK_TYPE_NAMES[$item] ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </form>
                 </div>
@@ -252,18 +219,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <?php endif; ?>
                     <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                     <th>Заказ</th>
-                    <th>Метраж</th>
-                    <th>Масса</th>
+                    <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
+                    <th class="text-right">Объём&nbsp;&nbsp;<?= OrderLink('weight_cut') ?></th>
+                    <th class="text-right">Оплата&nbsp;&nbsp;<?= OrderLink('payment') ?></th>
+                    <th class="text-right">Поступило / Остаток</th>
+                    <th>Статус&nbsp;&nbsp;<?= OrderLink('status_id') ?></th>
                     <th>Менеджер</th>
-                    <th>Статус</th>
-                    <th>Комментарий</th>
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, ifnull(ifnull(ct.time, cs.time), '1900-01-01') as time, c.customer_id, "
-                    . "(select comment from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING." and comment is not null and comment <> '' limit 1) as comment, "
-                    . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING.") and comment is not null and comment <> '' limit 1) as continuation_comment, "
-                    . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
+            $sql = "select distinct c.id, ifnull(ifnull(ct.time, cs.time), '1900-01-01') as time, c.customer_id, c.work_type_id, "
+                    . "cus.name as customer, c.name as calculation, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . ($status_id == ORDER_STATUS_SHIPPED ? "(select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) as shipping_date, " : "")
                     . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
                     . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
@@ -276,7 +242,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
                     . "from calculation c "
                     . "inner join customer cus on c.customer_id = cus.id "
-                    . "inner join calculation_result cr on cr.calculation_id = c.id "
                     . "inner join user u on c.manager_id = u.id "
                     . "inner join (select calculation_id, max(date) as time from calculation_status_history group by calculation_id) cs on cs.calculation_id = c.id "
                     . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
@@ -309,13 +274,21 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <?php endif; ?>
                     <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
                     <td><?=$row['calculation'] ?></td>
-                    <td class="text-nowrap"><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
-                    <td class="text-nowrap"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
-                    <td class="text-nowrap"><?=$row['manager'] ?></td>
+                    <td class="text-nowrap"><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
+                    <td class="text-nowrap text-right"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
+                    <td class="text-nowrap text-right"><?= DisplayNumber(intval(0), 0) ?> ₽</td>
+                    <td class="text-nowrap text-right">
+                        <?= DisplayNumber(intval(0), 0) ?> ₽
+                        <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(intval(0), 0) ?> ₽</div>
+                    </td>
                     <td data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
-                    <td><?= trim($row['comment'].' '.$row['continuation_comment'], ' ') ?></td>
+                    <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td>
-                        <a href="details.php<?= BuildQuery('id', $row['id']) ?>" class="btn btn-light" style="width: 150px;">Приступить</a>
+                        <a href="order.php<?= BuildQuery('id', $row['id']) ?>">
+                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
+                            </svg>
+                        </a>
                     </td>
                 </tr>
             <?php
