@@ -386,7 +386,7 @@ function SetCalculationStatus($calculation_id, $status_id, $comment) {
     $error_message = '';
     $old_status_id = 0;
     
-    $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by date desc limit 1";
+    $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
         $old_status_id = $row['0'];
@@ -398,7 +398,10 @@ function SetCalculationStatus($calculation_id, $status_id, $comment) {
         $error_message = $executer->error;
         
         // Устанавливаем этот статус в дублирующееся поле.
-        $sql = "update calculation set duplicate_status_id = $status_id where id = $calculation_id";
+        $sql = "update calculation set duplicate_status_id = $status_id, "
+                . "duplicate_status_comment = '$comment_slashes', "
+                . "duplicate_status_date = (select date from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1) "
+                . "where id = $calculation_id";
         $executer = new Executer($sql);
         if(empty($error_message)) {
             $error_message = $executer->error;
@@ -445,8 +448,10 @@ function RemoveCalculationStatus($calculation_id, $status_id) {
     
     // Устанавливаем этот статус в дублирующее поле (дублирующее поле предназначено для ускорения загрузки).
     if(empty($error_message)) {
-        $sql = "update calculation set duplicate_status_id = "
-                . "(select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1) "
+        $sql = "update calculation "
+                . "set duplicate_status_id = (select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1), "
+                . "duplicate_status_comment = (select comment from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1), "
+                . "duplicate_status_date = (select date from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1) "
                 . "where id = $calculation_id";
         $executer = new Executer($sql);
         if(empty($error_message)) {
