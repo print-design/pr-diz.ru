@@ -212,7 +212,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th class="text-right">Объём&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
                     <th class="text-right">Оплата&nbsp;&nbsp;<?= OrderLink('payment') ?></th>
                     <th class="text-right">Поступило / Остаток</th>
-                    <th>Статус&nbsp;&nbsp;<?= OrderLink('status_id') ?></th>
+                    <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
                     <th>Менеджер</th>
                     <th></th>
                 </tr>
@@ -243,7 +243,12 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         break;
                     
                     case 'weight':
-                        $orderby = "order by c.duplicate_weight_cut";
+                        $orderby = "order by c.duplicate_weight_cut desc";
+                        break;
+                    
+                    case 'status':
+                        $orderby = "order by c.duplicate_status_id";
+                        break;
                 }
             }
             
