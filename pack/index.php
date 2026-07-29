@@ -118,18 +118,18 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             . "inner join user u on c.manager_id = u.id "
                             . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
                     if(!empty($status_id)) {
-                        $sql .= "where duplicate_status_id = ".$status_id;
+                        $sql .= "where c.duplicate_status_id = ".$status_id;
                     }
                     else {
-                        $sql .= "where duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                        $sql .= "where c.duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
-                        $sql .= " and duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
+                        $sql .= " and c.duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
-                        $sql .= " and duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
+                        $sql .= " and c.duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
                     }
                     
                     $sql .= $filter;
@@ -249,7 +249,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, ifnull(ifnull(ct.time, duplicate_status_date), '1900-01-01') as time, c.customer_id, "
+            $sql = "select distinct c.id, ifnull(ifnull(ct.time, c.duplicate_status_date), '1900-01-01') as time, c.customer_id, "
                     . "(select comment from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING." and comment is not null and comment <> '' limit 1) as comment, "
                     . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING.") and comment is not null and comment <> '' limit 1) as continuation_comment, "
                     . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
@@ -262,21 +262,21 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "inner join user u on c.manager_id = u.id "
                     . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
             if(!empty($status_id)) {
-                $sql .= "where duplicate_status_id = ".$status_id;
+                $sql .= "where c.duplicate_status_id = ".$status_id;
             }
             else {
-                $sql .= "where duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                $sql .= "where c.duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
-                $sql .= " and duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
+                $sql .= " and c.duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
-                $sql .= " and duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
+                $sql .= " and c.duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
             }
             
-            $sql .= $filter.($status_id == ORDER_STATUS_SHIPPED ? " order by duplicate_status_date desc limit $pager_skip, $pager_take" : " order by time desc limit $pager_skip, $pager_take");
+            $sql .= $filter.($status_id == ORDER_STATUS_SHIPPED ? " order by c.duplicate_status_date desc limit $pager_skip, $pager_take" : " order by time desc limit $pager_skip, $pager_take");
             $fetcher = new Fetcher($sql);
             while($row = $fetcher->Fetch()):
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);

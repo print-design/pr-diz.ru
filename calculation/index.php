@@ -80,16 +80,16 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                    $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
-                        $where = " where duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
+                        $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
                     }
                     elseif(!empty ($status_id) && $status_id == ORDER_STATUS_IN_PRODUCTION) {
-                        $where = " where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
+                        $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                     }
                     elseif(!empty($status_id)) {
-                        $where = " where duplicate_status_id = $status_id";
+                        $where = " where c.duplicate_status_id = $status_id";
                     }
                     
                     $unit = filter_input(INPUT_GET, 'unit');
@@ -127,7 +127,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             $where .= " and false";
                         }
                         else {
-                            $where .= " and c.customer_id = ".intval($find_substrings[0])." and duplicate_num_for_customer = ".intval($find_substrings[1]);
+                            $where .= " and c.customer_id = ".intval($find_substrings[0])." and c.duplicate_num_for_customer = ".intval($find_substrings[1]);
                         }
                     }
 
@@ -204,16 +204,16 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             <option value="">Наименование...</option>
                             <?php
                             if($status_id == ORDER_STATUS_NOT_IN_WORK) {
-                                $name_where = "where duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
+                                $name_where = "where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
                             }
                             elseif($status_id == ORDER_STATUS_IN_PRODUCTION) {
-                                $name_where = "where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
+                                $name_where = "where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                             }
                             elseif(!empty ($status_id)) {
-                                $name_where = "where duplicate_status_id = $status_id";
+                                $name_where = "where c.duplicate_status_id = $status_id";
                             }
                             else {
-                                $name_where = "where duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                                $name_where = "where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
                             }
                             
                             $customer = filter_input(INPUT_GET, 'customer');
