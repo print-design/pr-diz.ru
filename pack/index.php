@@ -116,7 +116,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             . "inner join customer cus on c.customer_id = cus.id "
                             . "inner join calculation_result cr on cr.calculation_id = c.id "
                             . "inner join user u on c.manager_id = u.id "
-                            . "inner join (select calculation_id, max(date) as time from calculation_status_history group by calculation_id) cs on cs.calculation_id = c.id "
                             . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
                     if(!empty($status_id)) {
                         $sql .= "where duplicate_status_id = ".$status_id;
@@ -250,7 +249,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, ifnull(ifnull(ct.time, cs.time), '1900-01-01') as time, c.customer_id, "
+            $sql = "select distinct c.id, ifnull(ifnull(ct.time, duplicate_status_date), '1900-01-01') as time, c.customer_id, "
                     . "(select comment from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING." and comment is not null and comment <> '' limit 1) as comment, "
                     . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING.") and comment is not null and comment <> '' limit 1) as continuation_comment, "
                     . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
@@ -268,21 +267,20 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "inner join customer cus on c.customer_id = cus.id "
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
                     . "inner join user u on c.manager_id = u.id "
-                    . "inner join (select calculation_id, max(date) as time from calculation_status_history group by calculation_id) cs on cs.calculation_id = c.id "
                     . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
             if(!empty($status_id)) {
-                $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".$status_id;
+                $sql .= "where duplicate_status_id = ".$status_id;
             }
             else {
-                $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                $sql .= "where duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
-                $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) >= '".$date_from->format('Y-m-d')."'";
+                $sql .= " and duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
-                $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) <= '".$date_to->format('Y-m-d')."'";
+                $sql .= " and duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
             }
             
             $sql .= $filter.($status_id == ORDER_STATUS_SHIPPED ? " order by shipping_date desc limit $pager_skip, $pager_take" : " order by time desc limit $pager_skip, $pager_take");
