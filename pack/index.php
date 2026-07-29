@@ -252,16 +252,10 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             $sql = "select distinct c.id, ifnull(ifnull(ct.time, duplicate_status_date), '1900-01-01') as time, c.customer_id, "
                     . "(select comment from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING." and comment is not null and comment <> '' limit 1) as comment, "
                     . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING.") and comment is not null and comment <> '' limit 1) as continuation_comment, "
-                    . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, c.duplicate_status_date, "
-                    . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
-                    . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport, "
-                    . "ifnull((select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-                    . "+ ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) length_cut, "
-                    . "ifnull((select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = c.id)), 0) "
-                    . "+ ifnull((select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = c.id)), 0) weight_cut, "
-                    . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
-                    . "(select comment from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_comment, "
-                    . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
+                    . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
+                    . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
+                    . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
+                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer "
                     . "from calculation c "
                     . "inner join customer cus on c.customer_id = cus.id "
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -291,7 +285,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?=$datetime->format('d.m') ?><br /><span style="font-size: smaller;"><?=$datetime->format('H:i') ?></span></td>
                     <?php
                     if($status_id == ORDER_STATUS_SHIPPED):
-                        $shipping_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['duplicate_status_date']);
+                        $shipping_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['status_date']);
                     ?>
                     <td><?=$shipping_date->format('d.m') ?><br /><span style="font-size: smaller;"><?=$shipping_date->format("H:i") ?></span></td>
                     <?php endif; ?>
