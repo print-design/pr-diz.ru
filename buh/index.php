@@ -84,16 +84,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     // Фильтр
                     $filter = '';
                     
-                    $unit = filter_input(INPUT_GET, 'unit');
-                    if(!empty($unit)) {
-                        $filter .= " and c.unit = '$unit'";
-                    }
-                    
-                    $work_type = filter_input(INPUT_GET, 'work_type');
-                    if(!empty($work_type)) {
-                        $filter .= " and c.work_type_id = $work_type";
-                    }
-                    
                     $manager = filter_input(INPUT_GET, 'manager');
                     if(!empty($manager)) {
                         $filter .= " and c.manager_id = $manager";
@@ -104,9 +94,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         $filter .= " and c.customer_id = $customer";
                     }
                     
-                    $name = filter_input(INPUT_GET, 'name');
-                    if(!empty($name)) {
-                        $filter .= " and trim(c.name) = '$name'";
+                    $work_type = filter_input(INPUT_GET, 'work_type');
+                    if(!empty($work_type)) {
+                        $filter .= " and c.work_type_id = $work_type";
                     }
                     
                     $find = trim(filter_input(INPUT_GET, 'find') ?? '');
@@ -128,18 +118,18 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             . "inner join (select calculation_id, max(date) as time from calculation_status_history group by calculation_id) cs on cs.calculation_id = c.id "
                             . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
                     if(!empty($status_id)) {
-                        $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".$status_id;
+                        $sql .= "where duplicate_status_id = ".$status_id;
                     }
                     else {
-                        $sql .= "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                        $sql .= "where duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
-                        $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) >= '".$date_from->format('Y-m-d')."'";
+                        $sql .= " and duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
-                        $sql .= " and (select date from calculation_status_history where calculation_id = c.id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc limit 1) <= '".$date_to->format('Y-m-d')."'";
+                        $sql .= " and duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
                     }
                     
                     $sql .= $filter;
