@@ -276,11 +276,11 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
-                $sql .= " and duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
+                $sql .= " and ifnull(ifnull(ct.time, duplicate_status_date), '1900-01-01') >= '".$date_from->format('Y-m-d')."'";
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
-                $sql .= " and duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
+                $sql .= " and ifnull(ifnull(ct.time, duplicate_status_date), '1900-01-01') <= '".$date_to->format('Y-m-d')."'";
             }
             
             $sql .= $filter.($status_id == ORDER_STATUS_SHIPPED ? " order by shipping_date desc limit $pager_skip, $pager_take" : " order by time desc limit $pager_skip, $pager_take");
