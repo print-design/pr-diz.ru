@@ -748,7 +748,7 @@ class CalculationBase {
                 . "cus.name customer, u.last_name, u.first_name, "
                 . "(select status_id from calculation_status_history where calculation_id = rc.id order by id desc limit 1) status_id, "
                 . "(select comment from calculation_status_history where calculation_id = rc.id order by id desc limit 1) status_comment, "
-                . "(select date from calculation_status_history where calculation_id = rc.id order by id limit 1) status_date, "
+                . "(select date from calculation_status_history where calculation_id = rc.id order by id desc limit 1) status_date, "
                 . "(select count(id) from calculation where customer_id = rc.customer_id and id <= rc.id) num_for_customer "
                 . "from calculation rc "
                 . "left join film_variation fv on rc.film_variation_id = fv.id "
