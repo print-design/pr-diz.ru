@@ -202,7 +202,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             </div>
             <table class="table table-hover typography">
                 <tr>
-                    <th>№&nbsp;&nbsp;<?= OrderLink('n') ?></th>
+                    <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
                     <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
                     <th>Дата отгрузки&nbsp;&nbsp;<?= OrderLink('shipment_date') ?></th>
                     <?php endif; ?>
