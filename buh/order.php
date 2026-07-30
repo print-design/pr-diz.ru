@@ -89,6 +89,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     white-space: nowrap;
                     padding-right: 30px;
                     vertical-align: top;
+                    line-height: 30px;
                 }
                 
                 tr th:nth-child(2) {
@@ -103,7 +104,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 }
             
                 td {
-                    line-height: 22px;
+                    line-height: 30px;
                 }
             
                 tr td:nth-child(2) {
@@ -133,6 +134,13 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
                     padding: 15px;
                     margin: 5px 5px 8px 5px;
+                }
+                
+                #right_part {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 25px;
+                    margin-top: 25px;
                 }
         </style>
     </head>
@@ -283,6 +291,50 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <?php endif; ?>
                     </div>
                     <?php endwhile; ?>
+                </div>
+                <div class="col-7">
+                    <div id="right_part">
+                        <h2>Оплата заказа</h2>
+                        <div class="subtitle">Поступления</div>
+                        <div class="row">
+                            <div class="col-4">
+                                Сумма заказа
+                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval('280000'), 0) ?>  ₽</div>
+                            </div>
+                            <div class="col-4">
+                                Поступило
+                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval('140000'), 0) ?> ₽</div>
+                            </div>
+                            <div class="col-4">
+                                Остаток долга
+                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval('140000'), 0) ?> ₽</div>
+                            </div>
+                        </div>
+                        <div class="mt-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
+                            <table>
+                                <tr>
+                                    <th class="pl-2" style="line-height: 40px;">Дата и время</th>
+                                    <th class="text-left" style="line-height: 40px;">№ платежа</th>
+                                    <th class="pr-2" style="line-height: 40px;">Сумма</th>
+                                </tr>
+                                <tr>
+                                    <td class="pl-2">12.05.2026, 14:32</td>
+                                    <td class="text-left">1043</td>
+                                    <td class="pr-2">100 000,00 ₽</td>
+                                </tr>
+                                <tr>
+                                    <td class="pl-2">18.05.2026, 10:05</td>
+                                    <td class="text-left">1097</td>
+                                    <td class="pr-2">40 000,00 ₽</td>
+                                </tr>
+                                <tr style="border-bottom: 0;">
+                                    <td class="pl-2" style="line-height: 40px;">Итого поступило</td>
+                                    <td class="text-left" style="line-height: 40px;"></td>
+                                    <td class="pr-2" style="line-height: 40px;">140 000,00 ₽</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
