@@ -1,6 +1,7 @@
 <?php
 include '../include/topscripts.php';
 include '../calculation/calculation.php';
+include '../calculation/calculation_result.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
@@ -15,6 +16,7 @@ if($id === null) {
 
 // Получение объекта
 $calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($id);
 
 // Количество новых форм
 $new_forms_number = 0;
@@ -88,12 +90,29 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     padding-right: 30px;
                     vertical-align: top;
                 }
+                
+                tr th:nth-child(2) {
+                    text-align: right;
+                    padding-right: 0;
+                }
+                
+                tr th:nth-child(3) {
+                    text-align: right;
+                    padding-right: 0;
+                    padding-left: 10px;
+                }
             
                 td {
                     line-height: 22px;
                 }
             
                 tr td:nth-child(2) {
+                    text-align: right;
+                    padding-left: 10px;
+                    font-weight: bold;
+                }
+                
+                tr td:nth-child(3) {
                     text-align: right;
                     padding-left: 10px;
                     font-weight: bold;
@@ -145,7 +164,65 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <td>Материал</td>
                             <td><?= $calculation->film_1.(empty($calculation->film_2) ? '' : ' + '.$calculation->film_2).(empty($calculation->film_3) ? '' : ' + '.$calculation->film_3) ?></td>
                         </tr>
+                        <tr>
+                            <td>Кол-во ламинаций</td>
+                            <td><?=$calculation->laminations_number ?></td>
+                        </tr>
+                        <?php if($calculation->status_id == ORDER_STATUS_SHIPPED): ?>
+                        <tr>
+                            <td>Дата отгрузки</td>
+                            <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->status_date)->format('d.m.Y') ?></td>
+                        </tr>
+                        <?php endif; ?>
                     </table>
+                    <h2>Сумма к оплате</h2>
+                    <table>
+                        <tr>
+                            <td>Продукция</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->cost ?? 0), 0) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Клише</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->cliche_cost ?? 0), 0) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Нож</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->knife_cost ?? 0), 0) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Отгрузочная стоимость за 1 кг</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit ?? 0), 0) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Итого к оплате</td>
+                            <td><?= DisplayNumber(floatval(($calculation_result->cost ?? 0) + ($calculation_result->cliche_cost ?? 0) + ($calculation_result->knife_cost ?? 0) + ($calculation_result->shipping_cost_per_unit ?? 0)), 0)  ?> ₽</td>
+                        </tr>
+                    </table>
+                    <h2>Наименования</h2>
+                    <table>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Обрезная ширина</th>
+                            <th>Кол-во</th>
+                        </tr>
+                        <?php 
+                        $sql = "select cs.name, cs.width, "
+                                . "ifnull((select sum(length) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
+                                . "+ "
+                                . "ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id = cs.id), 0) length "
+                                . "from calculation_stream cs where cs.calculation_id = $id "
+                                . "order by cs.position";
+                        $fetcher = new Fetcher($sql);
+                        while($row = $fetcher->Fetch()):
+                        ?>
+                        <tr>
+                            <td><?= $row['name'] ?></td>
+                            <td><?= DisplayNumber(floatval($row['width']), 0) ?> мм</td>
+                            <td><?= DisplayNumber(floatval($row['length']), 0)  ?> шт.</td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </table>
+                    <h2>Оригинал-макеты</h2>
                 </div>
             </div>
         </div>
