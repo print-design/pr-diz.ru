@@ -310,7 +310,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval('140000'), 0) ?> ₽</div>
                             </div>
                         </div>
-                        <div class="mt-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
+                        <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
                             <table>
                                 <tr>
                                     <th class="pl-2" style="line-height: 40px;">Дата и время</th>
@@ -334,6 +334,29 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 </tr>
                             </table>
                         </div>
+                        <div class="subtitle">Добавить поступление</div>
+                        <form method="post">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label for="time">Дата и время</label>
+                                    <input type="datetime-local" name="time" class="form-control" />
+                                </div>
+                                <div class="col-3">
+                                    <label for="payment">№ платежа</label>
+                                    <input type="text" name="payment" placeholder="№" class="form-control" />
+                                </div>
+                                <div class="col-3">
+                                    <label for="sum">Сумма</label>
+                                    <div class="input-group">
+                                        <input type="text" name="sum" placeholder="0,00" class="form-control float-only" />
+                                        <div class="input-group-append"><span class="input-group-text">₽</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-dark">Добавить поступление</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
