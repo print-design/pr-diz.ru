@@ -139,7 +139,16 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
     <body>
         <?php
         include '../include/header_buh.php';
+        
+        include '../include/big_image.php';
         ?>
+        <form id="delete_image_form" method="post">
+            <input type="hidden" id="object" name="object" />
+            <input type="hidden" id="id" name="id" />
+            <input type="hidden" id="image" name="image" />
+            <input type="hidden" name="delete_image_submit" value="1" />
+            <input type="hidden" name="scroll" />
+        </form>
         <div class="container-fluid">
             <?php
             if(!empty($error_message)) {
@@ -231,7 +240,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     </table>
                     <h2>Оригинал-макеты</h2>
                     <?php
-                    $sql = "select cs.name, cs.image1, cs.image2 from calculation_stream cs where cs.calculation_id = $id order by cs.position";
+                    $sql = "select cs.id, cs.name, cs.image1, cs.image2 from calculation_stream cs where cs.calculation_id = $id order by cs.position";
                     $fetcher = new Fetcher($sql);
                     $i = 0;
                     while($row = $fetcher->Fetch()):
@@ -251,22 +260,22 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 $image2_wrapper_class = 'd-none';
                             }
                             ?>
-                            <div id="mini_image_wrapper_stream_<?=$i ?>" class="mr-4 <?=$image1_wrapper_class ?>">
-                                <a id="mini_image1_link_stream_<?=$i ?>" 
+                            <div id="mini_image_wrapper_stream_<?=$row['id'] ?>" class="mr-4 <?=$image1_wrapper_class ?>">
+                                <a id="mini_image1_link_stream_<?=$row['id'] ?>" 
                                    href="javascript: void(0);" 
                                    data-toggle="modal" 
                                    data-target="#big_image" 
-                                   onclick="javascript: ShowImage('stream', <?=$i ?>, 1);">
-                                    <img id="mini_image1_stream_<?=$i ?>" src="../content/stream/mini/<?=$row['image1'].'?'.time() ?>" class="img-fluid" />
+                                   onclick="javascript: ShowImage('stream', <?=$row['id'] ?>, 1, false);">
+                                    <img id="mini_image1_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image1'].'?'.time() ?>" class="img-fluid" />
                                 </a>
                                 <div class="mb-2">С подписью</div>
                             </div>
-                            <div id="mini_image2_wrapper_stream_<?=$i ?>" class="<?=$image2_wrapper_class ?>">
-                                <a id="mini_image2_link_stream_<?=$i ?>" 
+                            <div id="mini_image2_wrapper_stream_<?=$row['id'] ?>" class="<?=$image2_wrapper_class ?>">
+                                <a id="mini_image2_link_stream_<?=$row['id'] ?>" 
                                    href="javascript: void(0);" 
                                    data-toggle="modal" data-target="#big_image" 
-                                   onclick="javascript: ShowImage('stream', <?=$i ?>, 2);">
-                                    <img id="mini_image2_stream_<?=$i ?>" src="../content/stream/mini/<?=$row['image2'].'?'. time() ?>" class="img-fluid" />
+                                   onclick="javascript: ShowImage('stream', <?=$row['id'] ?>, 2, false);">
+                                    <img id="mini_image2_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image2'].'?'. time() ?>" class="img-fluid" />
                                 </a>
                                 <div class="mb-2">Без подписи</div>
                             </div>

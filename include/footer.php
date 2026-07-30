@@ -460,7 +460,7 @@ if(file_exists('find.php')) {
     }
     
     // Показ картинок
-    function ShowImage(object, id, image) {
+    function ShowImage(object, id, image, del = true) {
         $.ajax({ url: "../include/big_image_show.php?object=" + object + "&id=" + id + "&image=" + image,
             dataType: "json", 
             success: function(response) {
@@ -470,14 +470,16 @@ if(file_exists('find.php')) {
                 else {
                     $('#big_image_header').text(response.name);
                     $('#big_image_img').attr('src', '../content/' + object + '/' + response.filename + '?' + Date.now());
-                    $('#big_image_delete').removeClass('d-none');
-                    $('#deleted_file_name').text(response.delete_file_name);
-                    document.forms.delete_image_form.object.value = object;
-                    document.forms.delete_image_form.id.value = id;
-                    document.forms.delete_image_form.image.value = image;
-                    document.forms.download_image_form.object.value = object;
-                    document.forms.download_image_form.id.value = id;
-                    document.forms.download_image_form.image.value = image;
+                    if(del) {
+                        $('#big_image_delete').removeClass('d-none');
+                        $('#deleted_file_name').text(response.delete_file_name);
+                        document.forms.delete_image_form.object.value = object;
+                        document.forms.delete_image_form.id.value = id;
+                        document.forms.delete_image_form.image.value = image;
+                        document.forms.download_image_form.object.value = object;
+                        document.forms.download_image_form.id.value = id;
+                        document.forms.download_image_form.image.value = image;
+                    }
                     ShowImageButtons(object, id, image);
                 }
             },
