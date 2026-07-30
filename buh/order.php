@@ -127,6 +127,13 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     font-weight: bold;
                     text-align: center; 
                 }
+                
+                .original_maket {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 15px;
+                    margin: 5px 5px 8px 5px;
+                }
         </style>
     </head>
     <body>
@@ -146,7 +153,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     <div class="name"><?=$calculation->customer ?></div>
                     <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
                     <?php include '../include/order_status_details.php'; ?>
-                    <h2>О заказе</h2>
+                    <div class="subtitle">О заказе</div>
                     <table>
                         <tr>
                             <td>Объём заказа</td>
@@ -175,7 +182,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         </tr>
                         <?php endif; ?>
                     </table>
-                    <h2>Сумма к оплате</h2>
+                    <div class="subtitle">Сумма к оплате</div>
                     <table>
                         <tr>
                             <td>Продукция</td>
@@ -198,7 +205,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <td><?= DisplayNumber(floatval(($calculation_result->cost ?? 0) + ($calculation_result->cliche_cost ?? 0) + ($calculation_result->knife_cost ?? 0) + ($calculation_result->shipping_cost_per_unit ?? 0)), 0)  ?> ₽</td>
                         </tr>
                     </table>
-                    <h2>Наименования</h2>
+                    <div class="subtitle">Наименования</div>
                     <table>
                         <tr>
                             <th>Наименование</th>
@@ -223,6 +230,50 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <?php endwhile; ?>
                     </table>
                     <h2>Оригинал-макеты</h2>
+                    <?php
+                    $sql = "select cs.name, cs.image1, cs.image2 from calculation_stream cs where cs.calculation_id = $id order by cs.position";
+                    $fetcher = new Fetcher($sql);
+                    $i = 0;
+                    while($row = $fetcher->Fetch()):
+                    ?>
+                    <div class="original_maket">
+                        <div class="subtitle">Ручей <?=(++$i) ?></div>
+                        <p><?=$row['name'] ?></p>
+                        <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                        <div class="d-flex justify-content-start">
+                            <?php
+                            $image1_wrapper_class = 'd-block';
+                            if(empty($row['image1'])) {
+                                $image1_wrapper_class = 'd-none';
+                            }
+                            $image2_wrapper_class = 'd-block';
+                            if(empty($row['image2'])) {
+                                $image2_wrapper_class = 'd-none';
+                            }
+                            ?>
+                            <div id="mini_image_wrapper_stream_<?=$i ?>" class="mr-4 <?=$image1_wrapper_class ?>">
+                                <a id="mini_image1_link_stream_<?=$i ?>" 
+                                   href="javascript: void(0);" 
+                                   data-toggle="modal" 
+                                   data-target="#big_image" 
+                                   onclick="javascript: ShowImage('stream', <?=$i ?>, 1);">
+                                    <img id="mini_image1_stream_<?=$i ?>" src="../content/stream/mini/<?=$row['image1'].'?'.time() ?>" class="img-fluid" />
+                                </a>
+                                <div class="mb-2">С подписью</div>
+                            </div>
+                            <div id="mini_image2_wrapper_stream_<?=$i ?>" class="<?=$image2_wrapper_class ?>">
+                                <a id="mini_image2_link_stream_<?=$i ?>" 
+                                   href="javascript: void(0);" 
+                                   data-toggle="modal" data-target="#big_image" 
+                                   onclick="javascript: ShowImage('stream', <?=$i ?>, 2);">
+                                    <img id="mini_image2_stream_<?=$i ?>" src="../content/stream/mini/<?=$row['image2'].'?'. time() ?>" class="img-fluid" />
+                                </a>
+                                <div class="mb-2">Без подписи</div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endwhile; ?>
                 </div>
             </div>
         </div>
