@@ -335,8 +335,8 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             </table>
                         </div>
                         <div class="subtitle">Добавить поступление</div>
-                        <form method="post">
-                            <div class="row">
+                        <form method="post" class="mb-3">
+                            <div class="row mb-3">
                                 <div class="col-3">
                                     <label for="time">Дата и время</label>
                                     <input type="datetime-local" name="time" class="form-control" />
@@ -353,10 +353,24 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-dark">Добавить поступление</button>
-                            </div>
+                            <button type="submit" class="btn btn-dark"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
                         </form>
+                        <h2>Отгрузка</h2>
+                        <table>
+                            <tr>
+                                <td>Фактически упаковано</td>
+                                <td>510,2 кг из 500</td>
+                            </tr>
+                            <tr>
+                                <td>Дата отгрузки</td>
+                                <td>26.05.2026</td>
+                            </tr>
+                            <tr>
+                                <td>Отгрузочные документы</td>
+                                <td>Не выписаны</td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn btn-light mt-4"><img src="../images/icons/print.svg" class="mr-2" />Печать</button>
                     </div>
                 </div>
             </div>
