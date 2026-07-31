@@ -29,16 +29,16 @@ if($folder == "pack") {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryRemoveArray(array("status", "page", "order")) ?>"><?= ORDER_STATUS_TITLES[ORDER_STATUS_IN_PRODUCTION] ?></a>
+                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryRemoveArray(array("status", "page", "order", "waiting")) ?>"><?= ORDER_STATUS_TITLES[ORDER_STATUS_IN_PRODUCTION] ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, array("page", "order")) ?>">Упаковка</a>
+                <a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, array("page", "order", "waiting")) ?>">Упаковка</a>
             </li>
             <li class="nav-item text-nowrap">
-                <a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("page", "order")) ?>"><?= ORDER_STATUS_TITLES[ORDER_STATUS_SHIP_READY] ?></a>
+                <a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("page", "order", "waiting")) ?>"><?= ORDER_STATUS_TITLES[ORDER_STATUS_SHIP_READY] ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("page", "order")) ?>"><?= ORDER_STATUS_TITLES[ORDER_STATUS_SHIPPED] ?></a>
+                <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("page", "order", "waiting")) ?>"><?= ORDER_STATUS_TITLES[ORDER_STATUS_SHIPPED] ?></a>
             </li>
         </ul>
         <div class="ml-auto"></div>
