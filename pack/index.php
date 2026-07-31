@@ -144,7 +144,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 <div class="p-1 text-nowrap d-flex justify-content-end">
                     <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
                     <form class="form-inline" method="get">
-                        <input type="hidden" name="status_id" value="<?=$status_id ?>" />
+                        <input type="hidden" name="status" value="<?=$status_id ?>" />
                         <input type="hidden" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" />
                         <label for="from" style="font-size: larger;">от&nbsp;</label>
                         <input type="date" 
@@ -156,7 +156,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                                onchange="javascript: this.form.submit();" />
                     </form>
                     <form class="form-inline" method="get">
-                        <input type="hidden" name="status_id" value="<?=$status_id ?>" />
+                        <input type="hidden" name="status" value="<?=$status_id ?>" />
                         <input type="hidden" name="from" value="<?= filter_input(INPUT_GET, 'from') ?>" />
                         <label for="to" style="font-size: larger;">до&nbsp;</label>
                         <input type="date" 
@@ -170,7 +170,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <?php endif; ?>
                     <form class="form-inline d-inline" method="get">
                         <?php if(null !== $status_id): ?>
-                        <input type="hidden" name="status_id" value="<?=$status_id ?>" />
+                        <input type="hidden" name="status" value="<?=$status_id ?>" />
                         <?php endif; ?>
                         <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Шт/кг...</option>
