@@ -294,12 +294,22 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 </div>
                 <div class="col-7">
                     <div id="right_part">
+                        <?php
+                        $buh_order_sum = 0;
+                        
+                        if($calculation->unit == KG) {
+                            $buh_order_sum = $calculation->weight_cut * $calculation_result->shipping_cost_per_unit + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
+                        }
+                        else {
+                            $buh_order_sum = floor($calculation->length_cut * $calculation->number_in_meter) * $calculation_result->shipping_cost_per_unit + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
+                        }
+                        ?>
                         <h2>Оплата заказа</h2>
                         <div class="subtitle">Поступления</div>
                         <div class="row">
                             <div class="col-4">
                                 Сумма заказа
-                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval('280000'), 0) ?>  ₽</div>
+                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($buh_order_sum), 2) ?>  ₽</div>
                             </div>
                             <div class="col-4">
                                 Поступило
