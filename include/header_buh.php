@@ -2,30 +2,44 @@
 include '../include/left_bar.php';
 
 $production_status = '';
-$buh_status = '';
+$pack_status = '';
 $ship_status = '';
 $shipped_status = '';
 
-if(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_PACK_READY || (!empty($calculation) && $calculation->status_id == ORDER_STATUS_PACK_READY)) {
-    $buh_status = ' disabled';
+if(empty($status_id) && !empty($calculation)) {
+    $status_id = $calculation->status_id;
 }
-elseif(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIP_READY || (!empty($calculation) && $calculation->status_id == ORDER_STATUS_SHIP_READY)) {
-    $ship_status = ' disabled';
-}
-elseif(filter_input(INPUT_GET, 'status_id') == ORDER_STATUS_SHIPPED || (!empty ($calculation) && $calculation->status_id == ORDER_STATUS_SHIPPED)) {
-    $shipped_status = ' disabled';
-}
-else {
-    $production_status = ' disabled';
+
+if($folder == "buh") {
+    if($status_id == ORDER_STATUS_PACK_READY) {
+        $pack_status = ' disabled';
+    }
+    elseif($status_id == ORDER_STATUS_SHIP_READY) {
+        $ship_status = ' disabled';
+    }
+    elseif($status_id == ORDER_STATUS_SHIPPED) {
+        $shipped_status = ' disabled';
+    }
+    else {
+        $production_status = ' disabled';
+    }
 }
 ?>
 <div class="container-fluid header">
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link<?=$production_status ?>" href="<?= APPLICATION."/buh/" ?>">Производят</a></li>
-            <li class="nav-item"><a class="nav-link<?=$buh_status ?>" href="<?= APPLICATION."/buh/?status_id=".ORDER_STATUS_PACK_READY ?>">Упаковка</a></li>
-            <li class="nav-item text-nowrap"><a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION."/buh/?status_id=".ORDER_STATUS_SHIP_READY ?>">Ждёт отгрузки</a></li>
-            <li class="nav-item"><a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION."/buh/?status_id=".ORDER_STATUS_SHIPPED ?>">Отгружено</a></li>
+            <li class="nav-item">
+                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryRemove(array("status", "page", "order", "from", "to")) ?>">Производят</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, array("page", "order", "from", "to")) ?>">Упаковка</a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("page", "order", "from", "to")) ?>">Ждёт отгрузки</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("page", "order", "from", "to")) ?>">Отгружено</a>
+            </li>
         </ul>
         <div class="ml-auto"></div>
         <?php
