@@ -124,5 +124,5 @@ elseif($folder == "okto") {
     <a href="<?= APPLICATION ?>/improvement/" class="left_bar_item ui_tooltip right<?=$improvement_class ?>" title="Предложения по улучшению"><i class="far fa-thumbs-up" style="font-size: 1.3rem;"></i></a>
     <?php endif; ?>
     
-    <a href="<?= APPLICATION ?>/okto/" class="left_bar_item ui_tooltip right<?=$okto_class ?>" title="Octopus"><i class="far fa-comments" style="font-size: 1.3rem;"></i></a>
+    <a href="<?= APPLICATION ?>/okto/" class="left_bar_item ui_tooltip right<?=$okto_class ?> d-none" title="Octopus"><i class="far fa-comments" style="font-size: 1.3rem;"></i></a>
 </div>

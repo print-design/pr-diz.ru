@@ -29,7 +29,7 @@ if($folder == "buh") {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryRemove(array("status", "page", "order", "from", "to")) ?>">Производят</a>
+                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryRemoveArray(array("status", "page", "order", "from", "to")) ?>">Производят</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, array("page", "order", "from", "to")) ?>">Упаковка</a>
