@@ -337,11 +337,28 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     <td class="text-left">1097</td>
                                     <td class="pr-2">40 000,00 ₽</td>
                                 </tr>
+                                <?php
+                                $sql = "select paid_at, payment_num, amount from payment where order_id = $id order by id desc";
+                                $fetcher = new Fetcher($sql);
+                                while($row = $fetcher->Fetch()):
+                                ?>
+                                <tr>
+                                    <td class="pl-2"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['paid_at'])->format('d.m.Y H:i') ?></td>
+                                    <td class="text-left"><?=$row['payment_num'] ?></td>
+                                    <td class="pr-2"><?=DisplayNumber($row['amount'], 2) ?> ₽</td>
+                                </tr>
+                                <?php
+                                endwhile;
+                                $sql = "select ifnull(sum(amount), 0) from payment where order_id = $id";
+                                $fetcher = new Fetcher($sql);
+                                if($row = $fetcher->Fetch()):
+                                ?>
                                 <tr style="border-bottom: 0;">
                                     <td class="pl-2" style="line-height: 40px;">Итого поступило</td>
                                     <td class="text-left" style="line-height: 40px;"></td>
-                                    <td class="pr-2" style="line-height: 40px;">140 000,00 ₽</td>
+                                    <td class="pr-2" style="line-height: 40px;"><?=DisplayNumber($row[0], 2) ?> ₽</td>
                                 </tr>
+                                <?php endif; ?>
                             </table>
                         </div>
                         <div class="subtitle">Добавить поступление</div>
@@ -349,16 +366,16 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <div class="row mb-3">
                                 <div class="col-3">
                                     <label for="time">Дата и время</label>
-                                    <input type="datetime-local" name="time" class="form-control" />
+                                    <input type="datetime-local" name="time" class="form-control" required="required" />
                                 </div>
                                 <div class="col-3">
                                     <label for="payment">№ платежа</label>
-                                    <input type="text" name="payment" placeholder="№" class="form-control" />
+                                    <input type="text" name="payment" placeholder="№" class="form-control" required="required" />
                                 </div>
                                 <div class="col-3">
                                     <label for="sum">Сумма</label>
                                     <div class="input-group">
-                                        <input type="text" name="sum" placeholder="0,00" class="form-control float-only" />
+                                        <input type="text" name="sum" placeholder="0,00" class="form-control float-only" required="required" />
                                         <div class="input-group-append"><span class="input-group-text">₽</span></div>
                                     </div>
                                 </div>
@@ -390,7 +407,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     $sql = "select date from calculation_status_history where calculation_id = $id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc";
                                     $fetcher = new Fetcher($sql);
                                     if($row = $fetcher->Fetch()) {
-                                        echo DateTime::createFromFormat('Y-m-d H:i:s', $row[0])->format('d.m.Y H:i') ;
+                                        echo DateTime::createFromFormat('Y-m-d H:i:s', $row[0])->format('d.m.Y H:i');
                                     }
                                     ?>
                                 </td>
