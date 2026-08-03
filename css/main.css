@@ -71,7 +71,9 @@ a.black:active, a.black:hover, .black a:active, .black a:hover {
 }
 
 .left_bar_item {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding-bottom: 20px;
     padding-top: 20px;
 }
