@@ -298,10 +298,10 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         $buh_order_sum = 0;
                         
                         if($calculation->unit == KG) {
-                            $buh_order_sum = $calculation->weight_cut * $calculation_result->shipping_cost_per_unit + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
+                            $buh_order_sum = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3) + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
                         }
                         else {
-                            $buh_order_sum = floor($calculation->length_cut * $calculation->number_in_meter) * $calculation_result->shipping_cost_per_unit + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
+                            $buh_order_sum = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3) + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
                         }
                         ?>
                         <h2>Оплата заказа</h2>
