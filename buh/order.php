@@ -369,11 +369,31 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <table>
                             <tr>
                                 <td>Фактически упаковано</td>
-                                <td>510,2 кг из 500</td>
+                                <td>
+                                    <?php
+                                    $packed_fact = '';
+                                    
+                                    if($calculation->unit == KG) {
+                                        $packed_fact = DisplayNumber($calculation->weight_cut, 2);
+                                    }
+                                    else {
+                                        $packed_fact = DisplayNumber(floor($calculation->length_cut * $calculation->number_in_meter), 0);
+                                    }
+                                    ?>
+                                    <?= $packed_fact.' из '.DisplayNumber($calculation->quantity, 0).' '. UNIT_NAMES[$calculation->unit] ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Дата отгрузки</td>
-                                <td>26.05.2026</td>
+                                <td>
+                                    <?php
+                                    $sql = "select date from calculation_status_history where calculation_id = $id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc";
+                                    $fetcher = new Fetcher($sql);
+                                    if($row = $fetcher->Fetch()) {
+                                        echo DateTime::createFromFormat('Y-m-d H:i:s', $row[0])->format('d.m.Y H:i') ;
+                                    }
+                                    ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Отгрузочные документы</td>
