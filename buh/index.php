@@ -19,8 +19,8 @@ function OrderLink($param) {
 // Статус
 $status_id = null;
 
-if(null !== filter_input(INPUT_GET, 'status_id')) {
-    $status_id = filter_input(INPUT_GET, 'status_id');
+if(null !== filter_input(INPUT_GET, 'status')) {
+    $status_id = filter_input(INPUT_GET, 'status');
 }
 
 // Фильтр по дате отгрузки
