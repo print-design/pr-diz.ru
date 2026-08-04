@@ -207,6 +207,29 @@ if(empty($take_id)) {
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
 }
+
+
+// ЗАПОЛНЯЕМ ДУБЛИРУЮЩЕЕСЯ ПОЛЕ
+
+// Стоимость заказа
+$shipping_order_cost = 0;
+
+if($calculation->unit == KG) {
+    $shipping_order_cost = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3);
+}
+else {
+    $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
+}
+
+// Общая стоимость
+$shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
+
+// Заполняем дублирующееся поле
+if(empty($error_message)) {
+    $sql = "update calculation set duplicate_shipping_cost = $shipping_cost where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
+}
 ?>
 <!DOCTYPE html>
 <html>

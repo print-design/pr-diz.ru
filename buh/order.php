@@ -122,16 +122,16 @@ if($row = $fetcher->Fetch()) {
     $payment_total = $row[0];
 }
 
-if(empty($error_message)) {
-    // Заполняем дублирующиеся поля (используем их только при отображении списка, так как иначе он будет выводиться слишком долго)
-    $sql = "update calculation set duplicate_shipping_cost = $shipping_cost, duplicate_payment_total = $payment_total where id = $id";
-    $executer = new Executer($sql);
-    $error_message = $executer->error;
-}
-
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
+}
+
+// ЗАПОЛНЯЕМ ДУБЛИРУЮЩЕЕСЯ ПОЛЕ
+if(empty($error_message)) {
+    $sql = "update calculation set duplicate_shipping_cost = $shipping_cost, duplicate_payment_total = $payment_total where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
 }
 ?>
 <!DOCTYPE html>
