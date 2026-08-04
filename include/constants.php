@@ -29,6 +29,8 @@ const PIECES = 'pieces';
 const CURRENCY_RUB = "rub";
 const CURRENCY_USD = "usd";
 const CURRENCY_EURO = "euro";
+const CURRENCIES = array(CURRENCY_RUB, CURRENCY_USD, CURRENCY_EURO);
+const CURRENCY_SIGNES = array(CURRENCY_RUB => '₽', CURRENCY_USD => '$', CURRENCY_EURO => '€');
 
 // Лыжи
 const SKI_NO = 1;

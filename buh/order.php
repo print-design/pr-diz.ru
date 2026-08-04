@@ -14,6 +14,10 @@ if($id === null) {
     header('Location: '.APPLICATION.'/buh/');
 }
 
+// Валидация формы
+$form_valid = true;
+$error_message = '';
+
 // Получение объекта
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
@@ -376,24 +380,31 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         </div>
                         <div class="subtitle">Добавить поступление</div>
                         <form method="post" class="mb-3">
+                            <input type="hidden" name="order_id" value="<?=$id ?>" />
                             <div class="row mb-3">
                                 <div class="col-3">
                                     <label for="time">Дата и время</label>
-                                    <input type="datetime-local" name="time" class="form-control" required="required" />
+                                    <input type="datetime-local" name="paid_at" class="form-control" required="required" />
                                 </div>
                                 <div class="col-3">
                                     <label for="payment">№ платежа</label>
-                                    <input type="text" name="payment" placeholder="№" class="form-control" required="required" />
+                                    <input type="text" name="payment_num" placeholder="№" class="form-control" required="required" />
                                 </div>
                                 <div class="col-3">
                                     <label for="sum">Сумма</label>
                                     <div class="input-group">
-                                        <input type="text" name="sum" placeholder="0,00" class="form-control float-only" required="required" />
-                                        <div class="input-group-append"><span class="input-group-text">₽</span></div>
+                                        <input type="text" name="amount" placeholder="0,00" class="form-control float-only" required="required" />
+                                        <div class="input-group-append">
+                                            <select name="currency" required="required">
+                                                <?php foreach(CURRENCIES as $currency): ?>
+                                                <option value="<?=$currency ?>"><?= CURRENCY_SIGNES[$currency] ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-dark"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
+                            <button type="submit" class="btn btn-dark" name="payment_submit"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
                         </form>
                         <h2>Отгрузка</h2>
                         <table>
