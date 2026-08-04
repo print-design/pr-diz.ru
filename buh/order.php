@@ -112,7 +112,11 @@ $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cos
 // Общая оплата
 $payment_total = 0;
 
-$sql = "select sum(amount) from payment where order_id = $id";
+$sql = "select sum(case "
+        . "when p.currency = '". CURRENCY_USD."' then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
+        . "when p.currency = '". CURRENCY_EURO."' then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
+        . "else p.amount "
+        . "end) as amount_rub from payment p where p.order_id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $payment_total = $row[0];
@@ -376,11 +380,11 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             </div>
                             <div class="col-4">
                                 Поступило
-                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval('140000'), 0) ?> ₽</div>
+                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval($payment_total), 2) ?> ₽</div>
                             </div>
                             <div class="col-4">
                                 Остаток долга
-                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval('140000'), 0) ?> ₽</div>
+                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval($shipping_cost - $payment_total), 2) ?> ₽</div>
                             </div>
                         </div>
                         <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
