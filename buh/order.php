@@ -45,6 +45,29 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
     $new_forms_number += ($calculation->cliches_count_flint + $calculation->cliches_count_kodak);
 }
 
+// Всего порезано и упаковано
+$packed_fact = '';
+
+if($calculation->unit == KG) {
+    $packed_fact = DisplayNumber($calculation->weight_cut, 2);
+}
+else {
+    $packed_fact = DisplayNumber(floor($calculation->length_cut * $calculation->number_in_meter), 0);
+}
+
+// Стоимость заказа
+$shipping_order_cost = 0;
+
+if($calculation->unit == KG) {
+    $shipping_order_cost = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3);
+}
+else {
+    $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
+}
+
+// Общая стоимость
+$shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
+
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
@@ -203,23 +226,23 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     <table>
                         <tr>
                             <td>Продукция</td>
-                            <td><?= DisplayNumber(floatval($calculation_result->cost ?? 0), 0) ?> ₽</td>
+                            <td><?= DisplayNumber($shipping_order_cost, 2) ?> ₽</td>
                         </tr>
                         <tr>
-                            <td>Клише</td>
-                            <td><?= DisplayNumber(floatval($calculation_result->cliche_cost ?? 0), 0) ?> ₽</td>
+                            <td>Печатные формы</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost ?? 0), 2) ?> ₽</td>
                         </tr>
                         <tr>
                             <td>Нож</td>
-                            <td><?= DisplayNumber(floatval($calculation_result->knife_cost ?? 0), 0) ?> ₽</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_knife_cost ?? 0), 2) ?> ₽</td>
                         </tr>
                         <tr>
-                            <td>Отгрузочная стоимость за 1 кг</td>
-                            <td><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit ?? 0), 0) ?> ₽</td>
+                            <td>Отгрузочная стоимость за 1 <?= UNIT_NAMES[$calculation->unit] ?></td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit ?? 0), 2) ?> ₽</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Итого к оплате</td>
-                            <td><?= DisplayNumber(floatval(($calculation_result->cost ?? 0) + ($calculation_result->cliche_cost ?? 0) + ($calculation_result->knife_cost ?? 0) + ($calculation_result->shipping_cost_per_unit ?? 0)), 0)  ?> ₽</td>
+                            <td><?= DisplayNumber($shipping_cost, 2)  ?> ₽</td>
                         </tr>
                     </table>
                     <div class="subtitle">Наименования</div>
@@ -294,22 +317,12 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 </div>
                 <div class="col-7">
                     <div id="right_part">
-                        <?php
-                        $buh_order_sum = 0;
-                        
-                        if($calculation->unit == KG) {
-                            $buh_order_sum = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3) + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
-                        }
-                        else {
-                            $buh_order_sum = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3) + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
-                        }
-                        ?>
                         <h2>Оплата заказа</h2>
                         <div class="subtitle">Поступления</div>
                         <div class="row">
                             <div class="col-4">
                                 Сумма заказа
-                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($buh_order_sum), 2) ?>  ₽</div>
+                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($shipping_cost), 2) ?>  ₽</div>
                             </div>
                             <div class="col-4">
                                 Поступило
@@ -386,19 +399,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <table>
                             <tr>
                                 <td>Фактически упаковано</td>
-                                <td>
-                                    <?php
-                                    $packed_fact = '';
-                                    
-                                    if($calculation->unit == KG) {
-                                        $packed_fact = DisplayNumber($calculation->weight_cut, 2);
-                                    }
-                                    else {
-                                        $packed_fact = DisplayNumber(floor($calculation->length_cut * $calculation->number_in_meter), 0);
-                                    }
-                                    ?>
-                                    <?= $packed_fact.' из '.DisplayNumber($calculation->quantity, 0).' '. UNIT_NAMES[$calculation->unit] ?>
-                                </td>
+                                <td><?= $packed_fact.' из '.DisplayNumber(floatval($calculation->quantity ?? 0), 0).' '. UNIT_NAMES[$calculation->unit] ?></td>
                             </tr>
                             <tr>
                                 <td>Дата отгрузки</td>
