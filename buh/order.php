@@ -386,14 +386,27 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
                             <table>
                                 <?php
-                                $sql = "select paid_at, payment_num, amount, currency from payment where order_id = $id order by id desc";
+                                $sql = "select p.paid_at, p.payment_num, p.amount, p.currency, "
+                                        . "case "
+                                        . "when p.currency = '". CURRENCY_USD."' then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
+                                        . "when p.currency = '". CURRENCY_EURO."' then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
+                                        . "else p.amount "
+                                        . "end as amount_rub "
+                                        . "from payment p where p.order_id = $id order by p.id desc";
                                 $fetcher = new Fetcher($sql);
                                 while($row = $fetcher->Fetch()):
                                 ?>
                                 <tr>
                                     <td class="pl-2"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['paid_at'])->format('d.m.Y H:i') ?></td>
                                     <td class="text-left"><?=$row['payment_num'] ?></td>
-                                    <td class="pr-2"><?=DisplayNumber($row['amount'], 2) ?> <?= CURRENCY_SIGNES[$row['currency']] ?></td>
+                                    <td class="pr-2">
+                                        <?=DisplayNumber(floatval($row['amount']), 2) ?> <?= CURRENCY_SIGNES[$row['currency']] ?>
+                                        <?php 
+                                        if($row['currency'] != CURRENCY_RUB) {
+                                            echo " (". DisplayNumber(floatval($row['amount_rub']), 2).' '.CURRENCY_SIGNES[CURRENCY_RUB].')';
+                                        }
+                                        ?>
+                                    </td>
                                 </tr>
                                 <?php
                                 endwhile;
@@ -401,7 +414,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 <tr style="border-bottom: 0;">
                                     <td class="pl-2" style="line-height: 40px;">Итого поступило</td>
                                     <td class="text-left" style="line-height: 40px;"></td>
-                                    <td class="pr-2" style="line-height: 40px;"><?=DisplayNumber($payment_total, 2) ?> ₽</td>
+                                    <td class="pr-2" style="line-height: 40px;"><?=DisplayNumber(floatval($payment_total), 2) ?> ₽</td>
                                 </tr>
                             </table>
                         </div>
