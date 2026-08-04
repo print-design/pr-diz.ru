@@ -20,7 +20,8 @@ include '../include/topscripts.php';
                     . "from calculation_take_stream cts "
                     . "inner join calculation_take ct on cts.calculation_take_id = ct.id "
                     . "inner join calculation c on ct.calculation_id = c.id "
-                    . "where c.duplicate_shipping_cost = 0 and cts.weight > 0 and cts.length > 0";
+                    . "inner join calculation_result cr on cr.calculation_id = c.id "
+                    . "where c.duplicate_shipping_cost = 0 and cts.weight > 0 and cts.length > 0 and cr.shipping_cost_per_unit <> 0 ";
             $fetcher = new Fetcher($sql);
             if($row = $fetcher->Fetch()) {
                 $result = $row[0];
