@@ -18,6 +18,43 @@ if($id === null) {
 $form_valid = true;
 $error_message = '';
 
+$paid_at_valid = '';
+$payment_num_valid = '';
+$amount_valid = '';
+
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'payment_submit')) {
+    $order_id = filter_input(INPUT_POST, 'order_id');
+    
+    $paid_at = filter_input(INPUT_POST, 'paid_at');
+    if(empty($paid_at)) {
+        $paid_at_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $payment_num = filter_input(INPUT_POST, 'payment_num');
+    if(empty($payment_num)) {
+        $payment_num_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $amount = filter_input(INPUT_POST, 'amount');
+    if(empty($amount)) {
+        $amount_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $currency = filter_input(INPUT_POST, 'currency');
+    
+    $created_by = filter_input(INPUT_POST, 'created_by');
+    
+    if($form_valid) {
+        $sql = "insert into payment (order_id, paid_at, payment_num, amount, currency, created_by) values ($order_id, '$paid_at', '$payment_num', $amount, '$currency', $created_by)";
+        $executer = new Executer($sql);
+        $error_message = $executer->error;
+    }
+}
+
 // Получение объекта
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
@@ -71,6 +108,15 @@ else {
 
 // Общая стоимость
 $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
+
+// Общая оплата
+$payment_total = 0;
+
+$sql = "select sum(amount) from payment where order_id = $id";
+$fetcher = new Fetcher($sql);
+if($row = $fetcher->Fetch()) {
+    $payment_total = $row[0];
+}
 
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
@@ -339,56 +385,40 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         </div>
                         <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
                             <table>
-                                <tr>
-                                    <th class="pl-2" style="line-height: 40px;">Дата и время</th>
-                                    <th class="text-left" style="line-height: 40px;">№ платежа</th>
-                                    <th class="pr-2" style="line-height: 40px;">Сумма</th>
-                                </tr>
-                                <tr>
-                                    <td class="pl-2">12.05.2026, 14:32</td>
-                                    <td class="text-left">1043</td>
-                                    <td class="pr-2">100 000,00 ₽</td>
-                                </tr>
-                                <tr>
-                                    <td class="pl-2">18.05.2026, 10:05</td>
-                                    <td class="text-left">1097</td>
-                                    <td class="pr-2">40 000,00 ₽</td>
-                                </tr>
                                 <?php
-                                $sql = "select paid_at, payment_num, amount from payment where order_id = $id order by id desc";
+                                $sql = "select paid_at, payment_num, amount, currency from payment where order_id = $id order by id desc";
                                 $fetcher = new Fetcher($sql);
                                 while($row = $fetcher->Fetch()):
                                 ?>
                                 <tr>
                                     <td class="pl-2"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['paid_at'])->format('d.m.Y H:i') ?></td>
                                     <td class="text-left"><?=$row['payment_num'] ?></td>
-                                    <td class="pr-2"><?=DisplayNumber($row['amount'], 2) ?> ₽</td>
+                                    <td class="pr-2"><?=DisplayNumber($row['amount'], 2) ?> <?= CURRENCY_SIGNES[$row['currency']] ?></td>
                                 </tr>
                                 <?php
                                 endwhile;
-                                $sql = "select ifnull(sum(amount), 0) from payment where order_id = $id";
-                                $fetcher = new Fetcher($sql);
-                                if($row = $fetcher->Fetch()):
                                 ?>
                                 <tr style="border-bottom: 0;">
                                     <td class="pl-2" style="line-height: 40px;">Итого поступило</td>
                                     <td class="text-left" style="line-height: 40px;"></td>
-                                    <td class="pr-2" style="line-height: 40px;"><?=DisplayNumber($row[0], 2) ?> ₽</td>
+                                    <td class="pr-2" style="line-height: 40px;"><?=DisplayNumber($payment_total, 2) ?> ₽</td>
                                 </tr>
-                                <?php endif; ?>
                             </table>
                         </div>
                         <div class="subtitle">Добавить поступление</div>
                         <form method="post" class="mb-3">
                             <input type="hidden" name="order_id" value="<?=$id ?>" />
+                            <input type="hidden" name="created_by" value="<?= GetUserId() ?>" />
                             <div class="row mb-3">
                                 <div class="col-3">
                                     <label for="time">Дата и время</label>
                                     <input type="datetime-local" name="paid_at" class="form-control" required="required" />
+                                    <div class="invalid-feedback">Дата и время обязательно</div>
                                 </div>
                                 <div class="col-3">
                                     <label for="payment">№ платежа</label>
                                     <input type="text" name="payment_num" placeholder="№" class="form-control" required="required" />
+                                    <div class="invalid-feedback">№ платежа обязательно</div>
                                 </div>
                                 <div class="col-3">
                                     <label for="sum">Сумма</label>
@@ -402,6 +432,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="invalid-feedback">Сумма обязательно</div>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-dark" name="payment_submit"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
