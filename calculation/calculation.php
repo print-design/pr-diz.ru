@@ -1151,6 +1151,7 @@ class CalculationBase {
         }
         
         // Сохраняем данные в дублирующиеся поля (для ускорения загрузки списков)
+        $status_comment = addslashes($status_comment);
         $sql = "update calculation set "
                 . "duplicate_quantities = ". count($quantities).", "
                 . "duplicate_quantity_sum = ". array_sum($quantities).", "
