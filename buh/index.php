@@ -256,7 +256,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "cus.name as customer, c.name as calculation, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
-                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer "
+                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
+                    . "duplicate_shipping_cost, duplicate_payment_total "
                     . "from calculation c "
                     . "inner join customer cus on c.customer_id = cus.id "
                     . "inner join user u on c.manager_id = u.id "
@@ -294,8 +295,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td class="text-nowrap text-right"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
                     <td class="text-nowrap text-right"><?= DisplayNumber(intval(0), 0) ?> ₽</td>
                     <td class="text-nowrap text-right">
-                        <?= DisplayNumber(intval(0), 0) ?> ₽
-                        <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(intval(0), 0) ?> ₽</div>
+                        <?= DisplayNumber(floatval($row['duplicate_payment_total']), 2) ?> ₽
+                        <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(floatval($row['duplicate_shipping_cost']) - floatval($row['duplicate_payment_total']), 2) ?> ₽</div>
                     </td>
                     <td data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>

@@ -112,14 +112,21 @@ $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cos
 // Общая оплата
 $payment_total = 0;
 
-$sql = "select sum(case "
+$sql = "select ifnull(sum(case "
         . "when p.currency = '". CURRENCY_USD."' then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
         . "when p.currency = '". CURRENCY_EURO."' then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
         . "else p.amount "
-        . "end) as amount_rub from payment p where p.order_id = $id";
+        . "end), 0) as amount_rub from payment p where p.order_id = $id";
 $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $payment_total = $row[0];
+}
+
+if(empty($error_message)) {
+    // Заполняем дублирующиеся поля (используем их только при отображении списка, так как иначе он будет выводиться слишком долго)
+    $sql = "update calculation set duplicate_shipping_cost = $shipping_cost, duplicate_payment_total = $payment_total where id = $id";
+    $executer = new Executer($sql);
+    $error_message = $executer->error;
 }
 
 // Ошибки при расчётах (если есть)
