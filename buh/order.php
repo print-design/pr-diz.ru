@@ -179,12 +179,13 @@ if(empty($error_message)) {
                 tr th:nth-child(2) {
                     text-align: right;
                     padding-right: 0;
+                    padding-left: 10px;
                 }
                 
                 tr th:nth-child(3) {
                     text-align: right;
-                    padding-right: 0;
                     padding-left: 10px;
+                    padding-right: 10px;
                 }
             
                 td {
@@ -200,6 +201,7 @@ if(empty($error_message)) {
                 tr td:nth-child(3) {
                     text-align: right;
                     padding-left: 10px;
+                    padding-right: 10px;
                     font-weight: bold;
                 }
                 
@@ -396,6 +398,11 @@ if(empty($error_message)) {
                         </div>
                         <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
                             <table>
+                                <tr>
+                                    <th class="pl-2">Дата и время</th>
+                                    <th class="text-left">№ платежа</th>
+                                    <th class="text-right">Сумма</th>
+                                </tr>
                                 <?php
                                 $sql = "select p.paid_at, p.payment_num, p.amount, p.currency, "
                                         . "case "
@@ -409,8 +416,8 @@ if(empty($error_message)) {
                                 ?>
                                 <tr>
                                     <td class="pl-2"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['paid_at'])->format('d.m.Y H:i') ?></td>
-                                    <td class="text-left"><?=$row['payment_num'] ?></td>
-                                    <td class="pr-2">
+                                    <td class="text-left font-weight-normal"><?=$row['payment_num'] ?></td>
+                                    <td class="pr-2 font-weight-normal">
                                         <?=DisplayNumber(floatval($row['amount']), 2) ?> <?= CURRENCY_SIGNES[$row['currency']] ?>
                                         <?php 
                                         if($row['currency'] != CURRENCY_RUB) {
@@ -423,9 +430,9 @@ if(empty($error_message)) {
                                 endwhile;
                                 ?>
                                 <tr style="border-bottom: 0;">
-                                    <td class="pl-2" style="line-height: 40px;">Итого поступило</td>
+                                    <td class="pl-2 font-weight-bold" style="line-height: 40px;">Итого поступило</td>
                                     <td class="text-left" style="line-height: 40px;"></td>
-                                    <td class="pr-2" style="line-height: 40px;"><?=DisplayNumber(floatval($payment_total), 2) ?> ₽</td>
+                                    <td style="line-height: 40px;"><?=DisplayNumber(floatval($payment_total), 2) ?> ₽</td>
                                 </tr>
                             </table>
                         </div>
