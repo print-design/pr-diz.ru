@@ -239,6 +239,9 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             endwhile;
                             ?>
                         </select>
+                        <select id="name1" name="name1" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Наименование1...</option>
+                        </select>
                     </form>
                     <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
@@ -390,6 +393,31 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                 maximumSelectionLength: 1,
                 language: "ru",
                 width: '15rem'
+            });
+            
+            $('#name1').select2({
+                placeholder: "Наименование...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: '15rem',
+                ajax: {
+                    url: '_name_select2.php',
+                    dataType: 'json',
+                    /*data: function(params) {
+                        var query = {
+                            search: params.term
+                        }
+                        
+                        return query;
+                    },*/
+                    processResults: function(data) { alert(data);
+                        /*return {
+                            results: data.items
+                        };*/
+        
+        return data.items;
+                    }
+                }
             });
             
             // Заполнение информации о заказчике
