@@ -201,43 +201,12 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             ?>
                         </select>
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Наименование...</option>
                             <?php
-                            if($status_id == ORDER_STATUS_NOT_IN_WORK) {
-                                $name_where = "where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
-                            }
-                            elseif($status_id == ORDER_STATUS_IN_PRODUCTION) {
-                                $name_where = "where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
-                            }
-                            elseif(!empty ($status_id)) {
-                                $name_where = "where c.duplicate_status_id = $status_id";
-                            }
-                            else {
-                                $name_where = "where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
-                            }
-                            
-                            $customer = filter_input(INPUT_GET, 'customer');
-                            if(!empty($customer)) {
-                                $name_where .= " and c.customer_id = $customer";
-                                
-                                $customer_manager = filter_input(INPUT_GET, 'manager');
-                                if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
-                                    $customer_manager = GetUserId();
-                                }
-                                if(!empty($customer_manager)) {
-                                    $name_where .= " and c.manager_id = $customer_manager";
-                                }
-                            }
-                            
-                            $sql = "select distinct trim(c.name) name from calculation c $name_where order by trim(c.name)";
-                            $fetcher = new Fetcher($sql);
-                            
-                            while ($row = $fetcher->Fetch()):
+                            $get_name = filter_input(INPUT_GET, 'name');
+                            if(null !== $get_name):
                             ?>
-                            <option<?=($row['name'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
-                            <?php
-                            endwhile;
-                            ?>
+                            <option selected='selected'><?= $get_name ?></option>
+                            <?php endif; ?>
                         </select>
                     </form>
                     <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
@@ -387,9 +356,19 @@ else $title = ORDER_STATUS_TITLES[$status_id];
             
             $('#name').select2({
                 placeholder: "Наименование...",
-                maximumSelectionLength: 1,
+                maximumSelectionLength: 1, 
                 language: "ru",
-                width: '15rem'
+                width: '15rem',
+                minimumInputLength: 3,
+                ajax: {
+                    url: '_name_select2.php',
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: true
+                }
             });
             
             // Заполнение информации о заказчике
