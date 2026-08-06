@@ -404,14 +404,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     url: '_name_select2.php',
                     dataType: 'json',
                     delay: 250, // Задержка перед повторной загрузкой (чтобы не грузить данные на каждый клик)
-                    data: function(params) {
-                        return {
-                            q: params.term // поисковый запрос от пользователя
-                        };
-                    },
                     processResults: function(data) {
-                        // Сервер должен вернуть данные в формате, который Select2 ожидает
-                        // Обычно это массив объектов с ключами id и text
                         return { results: data };
                     },
                     cache: true
