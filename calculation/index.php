@@ -405,7 +405,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     dataType: 'json',
                     delay: 250, // Задержка перед повторной загрузкой (чтобы не грузить данные на каждый клик)
                     processResults: function(data) {
-                        return { results: data.items };
+                        return { results: data };
                     },
                     cache: true
                 }
