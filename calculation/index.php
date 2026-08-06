@@ -403,20 +403,18 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                 ajax: {
                     url: '_name_select2.php',
                     dataType: 'json',
-                    /*data: function(params) {
-                        var query = {
-                            search: params.term
-                        }
-                        
-                        return query;
-                    },*/
-                    processResults: function(data) { alert(data);
-                        /*return {
-                            results: data.items
-                        };*/
-        
-        return data.items;
-                    }
+                    delay: 250, // Задержка перед повторной загрузкой (чтобы не грузить данные на каждый клик)
+                    data: function(params) {
+                        return {
+                            q: params.term // поисковый запрос от пользователя
+                        };
+                    },
+                    processResults: function(data) {
+                        // Сервер должен вернуть данные в формате, который Select2 ожидает
+                        // Обычно это массив объектов с ключами id и text
+                        return { results: data };
+                    },
+                    cache: true
                 }
             });
             
