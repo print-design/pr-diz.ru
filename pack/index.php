@@ -72,44 +72,54 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <h1 class="d-inline"><?= key_exists($status_id, ORDER_STATUS_NAMES) ? ORDER_STATUS_NAMES[$status_id] : "Производят" ?></h1>
                     <?php
                     // Фильтр
-                    $filter = '';
-                    
-                    $unit = filter_input(INPUT_GET, 'unit');
-                    if(!empty($unit)) {
-                        $filter .= " and c.unit = '$unit'";
-                    }
-                    
-                    $work_type = filter_input(INPUT_GET, 'work_type');
-                    if(!empty($work_type)) {
-                        $filter .= " and c.work_type_id = $work_type";
-                    }
-                    
-                    $manager = filter_input(INPUT_GET, 'manager');
-                    if(!empty($manager)) {
-                        $filter .= " and c.manager_id = $manager";
-                    }
-                    
-                    $customer = filter_input(INPUT_GET, 'customer');
-                    if(!empty($customer)) {
-                        $filter .= " and c.customer_id = $customer";
-                    }
-                    
-                    $name = filter_input(INPUT_GET, 'name');
-                    if(!empty($name)) {
-                        $filter .= " and trim(c.name) = '$name'";
-                    }
-                    
-                    $find = trim(filter_input(INPUT_GET, 'find') ?? '');
-                    if(!empty($find)) {
-                        $find_substrings = explode('-', $find);
-                        if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
-                            $filter .= " and false";
+                    function GetFilter(&$params) {
+                        $filter = '';
+                        
+                        $unit = filter_input(INPUT_GET, 'unit');
+                        if(!empty($unit)) {
+                            $filter .= " and c.unit = ?";
+                            array_push($params, $unit);
                         }
-                        else {
-                            $filter .= " and c.customer_id = ". intval($find_substrings[0])." and (select count(id) from calculation where customer_id = c.customer_id and id <= c.id) = ". intval($find_substrings[1]);
+                        
+                        $work_type = filter_input(INPUT_GET, 'work_type');
+                        if(!empty($work_type)) {
+                            $filter .= " and c.work_type_id = ?";
+                            array_push($params, $work_type);
                         }
+                        
+                        $manager = filter_input(INPUT_GET, 'manager');
+                        if(!empty($manager)) {
+                            $filter .= " and c.manager_id = ?";
+                            array_push($params, $manager);
+                        }
+                        
+                        $customer = filter_input(INPUT_GET, 'customer');
+                        if(!empty($customer)) {
+                            $filter .= " and c.customer_id = ?";
+                            array_push($params, $customer);
+                        }
+                        
+                        $name = filter_input(INPUT_GET, 'name');
+                        if(!empty($name)) {
+                            $filter .= " and trim(c.name) = ?";
+                            array_push($params, $name);
+                        }
+                        
+                        $find = trim(filter_input(INPUT_GET, 'find') ?? '');
+                        if(!empty($find)) {
+                            $find_substrings = explode('-', $find);
+                            if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
+                                $filter .= " and false";
+                            }
+                            else {
+                                $filter .= " and c.customer_id = ? and (select count(id) from calculation where customer_id = c.customer_id and id <= c.id) = ?";
+                                array_push($params, $find_substrings[0], $find_substrings[1]);
+                            }
+                        }
+                        
+                        return $filter;
                     }
-                    
+
                     // Общее количество работ для установления количества страниц в постраничном выводе
                     $sql = "select count(distinct c.id) "
                             . "from calculation c "
@@ -117,23 +127,29 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             . "inner join calculation_result cr on cr.calculation_id = c.id "
                             . "inner join user u on c.manager_id = u.id "
                             . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
+                    $params = array();
+                    
                     if(!empty($status_id)) {
-                        $sql .= "where c.duplicate_status_id = ".$status_id;
+                        $sql .= "where c.duplicate_status_id = ?";
+                        array_push($params, $status_id);
                     }
                     else {
-                        $sql .= "where c.duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?)";
+                        array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED); echo "<br />3".$sql."<br />"; print_r($params);
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
-                        $sql .= " and c.duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
+                        $sql .= " and c.duplicate_status_date >= ?";
+                        array_push($params, $date_from->format('Y-m-d'));
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
-                        $sql .= " and c.duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
+                        $sql .= " and c.duplicate_status_date <= ?";
+                        array_push($params, $date_to->format('Y-m-d'));
                     }
                     
-                    $sql .= $filter;
-                    $fetcher = new Fetcher($sql); 
+                    $sql .= GetFilter($params);
+                    $fetcher = new Fetcher($sql, $params); 
                     
                     if($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
@@ -197,8 +213,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             <?php
                             $get_customer = filter_input(INPUT_GET, 'customer');
                             if(null !== $get_customer):
-                                $sql = "select name from customer where id = $get_customer";
-                            $fetcher = new Fetcher($sql);
+                                $sql = "select name from customer where id = ?";
+                            $fetcher = new Fetcher($sql, [$get_customer]);
                             if($row = $fetcher->Fetch()):
                             ?>
                             <option selected="selected" value="<?=$get_customer ?>"><?=$row[0] ?></option>
@@ -235,8 +251,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 </tr>
             <?php
             $sql = "select distinct c.id, ifnull(ifnull(ct.time, c.duplicate_status_date), '1900-01-01') as time, c.customer_id, "
-                    . "(select comment from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING." and comment is not null and comment <> '' limit 1) as comment, "
-                    . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = ". WORK_CUTTING.") and comment is not null and comment <> '' limit 1) as continuation_comment, "
+                    . "(select comment from plan_edition where calculation_id = c.id and work_id = ? and comment is not null and comment <> '' limit 1) as comment, "
+                    . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where calculation_id = c.id and work_id = ?) and comment is not null and comment <> '' limit 1) as continuation_comment, "
                     . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
@@ -246,23 +262,38 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
                     . "inner join user u on c.manager_id = u.id "
                     . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
+            $params = [WORK_CUTTING, WORK_CUTTING];
             if(!empty($status_id)) {
-                $sql .= "where c.duplicate_status_id = ".$status_id;
+                $sql .= "where c.duplicate_status_id = ?";
+                array_push($params, $status_id);
             }
             else {
-                $sql .= "where c.duplicate_status_id in (". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.")";
+                $sql .= "where c.duplicate_status_id in (?, ?, ?)";
+                array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
-                $sql .= " and c.duplicate_status_date >= '".$date_from->format('Y-m-d')."'";
+                $sql .= " and c.duplicate_status_date >= ?";
+                array_push($params, $date_from->format('Y-m-d'));
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
-                $sql .= " and c.duplicate_status_date <= '".$date_to->format('Y-m-d')."'";
+                $sql .= " and c.duplicate_status_date <= ?";
+                array_push($params, $date_to->format('Y-m-d'));
             }
             
-            $sql .= $filter.($status_id == ORDER_STATUS_SHIPPED ? " order by c.duplicate_status_date desc limit $pager_skip, $pager_take" : " order by time desc limit $pager_skip, $pager_take");
-            $fetcher = new Fetcher($sql);
+            $sql .= GetFilter($params);
+            
+            if($status_id == ORDER_STATUS_SHIPPED) {
+                $sql .= " order by c.duplicate_status_date desc limit ?, ?";
+                array_push($params, $pager_skip, $pager_take);
+            }
+            else {
+                $sql .= " order by time desc limit ?, ?";
+                array_push($params, $pager_skip, $pager_take);
+            }
+            
+            $fetcher = new Fetcher($sql, $params);
             while($row = $fetcher->Fetch()):
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
             ?>
