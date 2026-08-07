@@ -180,24 +180,17 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         </select>
                         <?php endif; ?>
                         <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Заказчик...</option>
-                            <?php
-                            $customer_where = "";
-                            $customer_manager = filter_input(INPUT_GET, 'manager');
-                            if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
-                                $customer_manager = GetUserId();
-                            }
-                            if(!empty($customer_manager)) {
-                                $customer_where .= "where c.manager_id = $customer_manager";
-                            }
-                            $sql = "select distinct cus.id, cus.name from calculation c inner join customer cus on c.customer_id = cus.id $customer_where order by cus.name";
+                            <?php 
+                            $get_customer = filter_input(INPUT_GET, 'customer');
+                            if(null !== $get_customer):
+                                $sql = "select name from customer where id = $get_customer";
                             $fetcher = new Fetcher($sql);
-                            
-                            while ($row = $fetcher->Fetch()):
+                            if($row = $fetcher->Fetch()):
                             ?>
-                            <option value="<?=$row['id'] ?>"<?=($row['id'] == filter_input(INPUT_GET, 'customer') ? " selected='selected'" : "") ?>><?=$row['name'] ?></option>
+                            <option selected="selected" value="<?=$get_customer ?>"><?=$row[0] ?></option>
                             <?php
-                            endwhile;
+                            endif;
+                            endif;
                             ?>
                         </select>
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
@@ -351,7 +344,17 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                 placeholder: "Заказчик...",
                 maximumSelectionLength: 1,
                 language: "ru",
-                width: '15rem'
+                width: '15rem',
+                minimumInputLength: 3,
+                ajax: {
+                    url: '_customer_select2.php',
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
+                }
             });
             
             $('#name').select2({
@@ -367,7 +370,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     processResults: function(data) {
                         return { results: data };
                     },
-                    cache: true
+                    cache: false
                 }
             });
             
