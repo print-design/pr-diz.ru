@@ -304,12 +304,35 @@ function Array2Csv(array &$array, $titles) {
     return ob_get_clean();
 }
 
+// Автоматически определяет строку типов для bind_param на основе значений параметров
+trait BindParamsTrait {
+    private static function BuildTypes($params) {
+        $types = '';
+        
+        foreach($params as $param) {
+            if(is_int($param)) {
+                $types .= 'i';
+            }
+            elseif(is_float($param)) {
+                $types .= 'd';
+            }
+            else {
+                $types .= 's';
+            }
+        }
+        
+        return $types;
+    }
+}
+
 // Классы
 class Executer {
+    use BindParamsTrait;
+    
     public $error = '';
     public $insert_id = 0;
             
-    function __construct($sql) {
+    function __construct($sql, $params = null) {
         $conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME);
 
         if($conn->connect_error) {
@@ -318,19 +341,43 @@ class Executer {
         }
         
         $conn->query('set names utf8');
-        $conn->query($sql);
-        $this->error = $conn->error;
-        $this->insert_id = $conn->insert_id;
+        
+        if($params !== null) {
+            $stmt = $conn->prepare($sql);
+            
+            if($stmt === false) {
+                $this->error = $conn->error;
+                $conn->close();
+                return;
+            }
+            
+            if(!empty($params)) {
+                $types = self::BuildTypes($params);
+                $stmt->bind_param($types, ...$params);
+            }
+            
+            $stmt->execute();
+            $this->error = $stmt->error;
+            $this->insert_id = $stmt->insert_id;
+            $stmt->close();
+        }
+        else {
+            $conn->query($sql);
+            $this->error = $conn->error;
+            $this->insert_id = $conn->insert_id;
+        }
         
         $conn->close();
     }
 }
 
 class Grabber {
+    use BindParamsTrait;
+    
     public  $error = '';
     public $result = array();
             
-    function __construct($sql) {
+    function __construct($sql, $params = null) {
         $conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME);
         
         if($conn->connect_error) {
@@ -339,13 +386,42 @@ class Grabber {
         }
         
         $conn->query('set names utf8');
-        $result = $conn->query($sql);
         
-        if(is_bool($result)) {
-            $this->error = $conn->error;
+        if($params !== null) {
+            $stmt = $conn->prepare($sql);
+            
+            if($stmt === false) {
+                $this->error = $conn->error;
+                $conn->close();
+                return;
+            }
+            
+            if(!empty($params)) {
+                $types = self::BuildTypes($params);
+                $stmt->bind_param($types, ...$params);
+            }
+            
+            $stmt->execute();
+            $mysqli_result = $stmt->get_result();
+            
+            if($mysqli_result === false) {
+                $this->error = $stmt->error;
+            }
+            else {
+                $this->result = mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC);
+            }
+            
+            $stmt->close();
         }
         else {
-            $this->result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            $result = $conn->query($sql);
+            
+            if(is_bool($result)) {
+                $this->error = $conn->error;
+            }
+            else {
+                $this->result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            }
         }
         
         $conn->close();
@@ -353,10 +429,12 @@ class Grabber {
 }
 
 class Fetcher {
+    use BindParamsTrait;
+    
     public $error = '';
     private $result;
             
-    function __construct($sql) {
+    function __construct($sql, $params = null) {
         $conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME);
         
         if($conn->connect_error) {
@@ -365,10 +443,38 @@ class Fetcher {
         }
         
         $conn->query('set names utf8');
-        $this->result = $conn->query($sql);
         
-        if(is_bool($this->result)) {
-            $this->error = $conn->error;
+        if($params !== null) {
+            // Новый способ - подготовленное выражение
+            $stmt = $conn->prepare($sql);
+            
+            if($stmt === false) {
+                $this->error = $conn->error;
+                $conn->close();
+                return;
+            }
+            
+            if(!empty($params)) {
+                $types = self::BuildTypes($params);
+                $stmt->bind_param($types, ...$params);
+            }
+            
+            $stmt->execute();
+            $this->result = $stmt->get_result();
+            
+            if($this->result === false) {
+                $this->error = $stmt->error;
+            }
+            
+            $stmt->close();
+        }
+        else {
+            // Старый способ - для мест, которые ещё не мигрировали
+            $this->result = $conn->query($sql);
+            
+            if(is_bool($this->result)) {
+                $this->error = $conn->error;
+            }
         }
         
         $conn->close();
