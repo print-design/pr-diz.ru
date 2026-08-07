@@ -331,7 +331,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
         ?>
     </body>
     <script src="<?= APPLICATION ?>/js/select2.min.js"></script>
-    <script src="<?= APPLICATION ?>/js/i18n.js"></script>
+    <script src="<?= APPLICATION ?>/js/i18n/ru.js"></script>
     <script>
         // Список с поиском
         $('#unit').select2({
