@@ -204,31 +204,12 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             <?php endwhile; ?>
                         </select>
                         <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Наименование...</option>
                             <?php
-                            $name_where = "";
-                            
-                            if(!empty($status_id)) {
-                                $name_where = "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = $status_id";
-                            }
-                            
-                            $customer = filter_input(INPUT_GET, 'customer');
-                            if(!empty($customer)) {
-                                $name_where .= " and c.customer_id = $customer";
-                                
-                                $customer_manager = filter_input(INPUT_GET, 'manager');
-                                
-                                if(!empty($customer_manager)) {
-                                    $name_where .= " and c.manager_id = $customer_manager";
-                                }
-                            }
-                            
-                            $sql = "select distinct trim(c.name) name from calculation c $name_where order by trim(c.name)";
-                            $fetcher = new Fetcher($sql);
-                            while($row = $fetcher->Fetch()):
+                            $get_name = filter_input(INPUT_GET, 'name');
+                            if(null !== $get_name):
                             ?>
-                            <option<?=$row['name'] == filter_input(INPUT_GET, 'name') ? " selected='selected'" : "" ?>><?=$row['name'] ?></option>
-                            <?php endwhile; ?>
+                            <option selected="selected"><?=$get_name ?></option>
+                            <?php endif; ?>
                         </select>
                     </form>
                 </div>
@@ -354,7 +335,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             placeholder: "Наименование...",
             maximumSelectionLength: 1,
             language: "ru",
-            width: "15rem"
+            width: "15rem",
+            minimumInputLength: 3,
+            ajax: {
+                url: "../calculation/_name_select2.php",
+                dataType: 'json',
+                delay: 250,
+                processResults: function(data) {
+                    return { results: data };
+                },
+                cache: true
+            }
         });
     </script>
 </html>
