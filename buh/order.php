@@ -49,8 +49,8 @@ if(null !== filter_input(INPUT_POST, 'payment_submit')) {
     $created_by = filter_input(INPUT_POST, 'created_by');
     
     if($form_valid) {
-        $sql = "insert into payment (order_id, paid_at, payment_num, amount, currency, created_by) values ($order_id, '$paid_at', '$payment_num', $amount, '$currency', $created_by)";
-        $executer = new Executer($sql);
+        $sql = "insert into payment (order_id, paid_at, payment_num, amount, currency, created_by) values (?, ?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$order_id, $paid_at, $payment_num, $amount, $currency, $created_by]);
         $error_message = $executer->error;
     }
 }
@@ -113,11 +113,11 @@ $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cos
 $payment_total = 0;
 
 $sql = "select ifnull(sum(case "
-        . "when p.currency = '". CURRENCY_USD."' then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
-        . "when p.currency = '". CURRENCY_EURO."' then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
+        . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
+        . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
         . "else p.amount "
-        . "end), 0) as amount_rub from payment p where p.order_id = $id";
-$fetcher = new Fetcher($sql);
+        . "end), 0) as amount_rub from payment p where p.order_id = ?";
+$fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $id]);
 if($row = $fetcher->Fetch()) {
     $payment_total = $row[0];
 }
@@ -129,10 +129,13 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
 
 // ЗАПОЛНЯЕМ ДУБЛИРУЮЩЕЕСЯ ПОЛЕ
 if(empty($error_message)) {
-    $sql = "update calculation set duplicate_shipping_cost = $shipping_cost, duplicate_payment_total = $payment_total where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set duplicate_shipping_cost = ?, duplicate_payment_total = ? where id = ?";
+    $executer = new Executer($sql, [$shipping_cost, $payment_total, $id]);
     $error_message = $executer->error;
 }
+
+// Оплачено
+$paid = $payment_total >= $shipping_cost;
 ?>
 <!DOCTYPE html>
 <html>
@@ -251,7 +254,19 @@ if(empty($error_message)) {
             ?>
             <div class="row">
                 <div class="col-5">
-                    <a class="btn btn-light backlink" href="<?= APPLICATION ?>/buh/<?= BuildQueryRemove('id') ?>" title="К списку">К списку</a>
+                    <?php
+                    $backlink_url = "";
+                    if($paid) {
+                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["status", "id"]);
+                    }
+                    elseif(!empty ($status_id) && in_array($status_id, [ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED])) {
+                        $backlink_url = BuildQueryAddRemoveArray('status', $status_id, ['paid', 'id']);
+                    }
+                    else {
+                        $backlink_url = BuildQueryRemoveArray(["status", "paid", "id"]);
+                    }
+                    ?>
+                    <a class="btn btn-light backlink" href="<?= APPLICATION ?>/buh/<?= $backlink_url ?>" title="К списку">К списку</a>
                     <h1><?=$calculation->name ?></h1>
                     <div class="name"><?=$calculation->customer ?></div>
                     <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
@@ -320,9 +335,9 @@ if(empty($error_message)) {
                                 . "ifnull((select sum(length) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
                                 . "+ "
                                 . "ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id = cs.id), 0) length "
-                                . "from calculation_stream cs where cs.calculation_id = $id "
+                                . "from calculation_stream cs where cs.calculation_id = ? "
                                 . "order by cs.position";
-                        $fetcher = new Fetcher($sql);
+                        $fetcher = new Fetcher($sql, [$id]);
                         while($row = $fetcher->Fetch()):
                         ?>
                         <tr>
@@ -334,8 +349,8 @@ if(empty($error_message)) {
                     </table>
                     <h2>Оригинал-макеты</h2>
                     <?php
-                    $sql = "select cs.id, cs.name, cs.image1, cs.image2 from calculation_stream cs where cs.calculation_id = $id order by cs.position";
-                    $fetcher = new Fetcher($sql);
+                    $sql = "select cs.id, cs.name, cs.image1, cs.image2 from calculation_stream cs where cs.calculation_id = ? order by cs.position";
+                    $fetcher = new Fetcher($sql, [$id]);
                     $i = 0;
                     while($row = $fetcher->Fetch()):
                     ?>
@@ -406,12 +421,12 @@ if(empty($error_message)) {
                                 <?php
                                 $sql = "select p.paid_at, p.payment_num, p.amount, p.currency, "
                                         . "case "
-                                        . "when p.currency = '". CURRENCY_USD."' then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
-                                        . "when p.currency = '". CURRENCY_EURO."' then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
+                                        . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
+                                        . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
                                         . "else p.amount "
                                         . "end as amount_rub "
-                                        . "from payment p where p.order_id = $id order by p.id desc";
-                                $fetcher = new Fetcher($sql);
+                                        . "from payment p where p.order_id = ? order by p.id desc";
+                                $fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $id]);
                                 while($row = $fetcher->Fetch()):
                                 ?>
                                 <tr>
@@ -454,7 +469,7 @@ if(empty($error_message)) {
                                 <div class="col-3">
                                     <label for="sum">Сумма</label>
                                     <div class="input-group">
-                                        <input type="text" name="amount" placeholder="0,00" class="form-control float-only" required="required" />
+                                        <input type="text" name="amount" placeholder="0,00" class="form-control float-only" required="required" autocomplete="off" />
                                         <div class="input-group-append">
                                             <select name="currency" required="required">
                                                 <?php foreach(CURRENCIES as $currency): ?>
@@ -478,8 +493,8 @@ if(empty($error_message)) {
                                 <td>Дата отгрузки</td>
                                 <td>
                                     <?php
-                                    $sql = "select date from calculation_status_history where calculation_id = $id and status_id = ". ORDER_STATUS_SHIPPED." order by id desc";
-                                    $fetcher = new Fetcher($sql);
+                                    $sql = "select date from calculation_status_history where calculation_id = ? and status_id = ? order by id desc";
+                                    $fetcher = new Fetcher($sql, [$id, ORDER_STATUS_SHIPPED]);
                                     if($row = $fetcher->Fetch()) {
                                         echo DateTime::createFromFormat('Y-m-d H:i:s', $row[0])->format('d.m.Y H:i');
                                     }

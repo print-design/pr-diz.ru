@@ -7,8 +7,8 @@ if(!empty($id)):
 $sql = "select c.date, c.name, c.person, c.phone, c.extension, c.email, u.id user_id, u.last_name, u.first_name "
         . "from customer c "
         . "inner join user u on c.manager_id = u.id "
-        . "where c.id = $id";
-$fetcher = new Fetcher($sql);
+        . "where c.id = ?";
+$fetcher = new Fetcher($sql, [$id]);
 if($row = $fetcher->Fetch()):
 ?>
 <h2><?=$row['name'] ?></h2>
