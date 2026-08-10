@@ -247,7 +247,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
     </head>
     <body>
         <?php
-        include '../include/header_plan.php';
+        include 'header_plan.php';
         include '../include/status_track.php';
         include '../include/big_image.php';
         ?>
