@@ -34,8 +34,9 @@ $comment = '';
 $sql = "select e.comment, pc.comment as continuation_comment "
         . "from plan_edition e "
         . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-        . "where e.work_id = ".WORK_CUTTING." and e.calculation_id = $id";
-$fetcher = new Fetcher($sql);
+        . "where e.work_id = ? and e.calculation_id = ?";
+$params = [WORK_CUTTING, $id];
+$fetcher = new Fetcher($sql, $params);
 
 if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
@@ -331,8 +332,9 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     </div>
                     <?php
                     $machine_id = null;
-                    $sql = "select machine_id from plan_edition where calculation_id = $id and work_id = ".WORK_CUTTING;
-                    $fetcher = new Fetcher($sql);
+                    $sql = "select machine_id from plan_edition where calculation_id = ? and work_id = ?";
+                    $params = [$id, WORK_CUTTING];
+                    $fetcher = new Fetcher($sql, $params);
                     if($row = $fetcher->Fetch()) {
                         $machine_id = $row[0];
                     }

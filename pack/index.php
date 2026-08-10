@@ -135,7 +135,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     }
                     else {
                         $sql .= "where c.duplicate_status_id in (?, ?, ?)";
-                        array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED); echo "<br />3".$sql."<br />"; print_r($params);
+                        array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
