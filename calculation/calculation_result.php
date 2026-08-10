@@ -161,8 +161,8 @@ class CalculationResult {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "left join techmap tm on tm.calculation_id = c.id "
                 . "left join supplier sup on tm.supplier_id = sup.id "
-                . "where c.id = $id";
-        $fetcher = new Fetcher($sql);
+                . "where c.id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             return new CalculationResult($row['usd'], $row['euro'],
                     $row['cost'], $row['cost_per_unit'], $row['shipping_cost'], $row['shipping_cost_per_unit'], $row['income'], $row['income_per_unit'],

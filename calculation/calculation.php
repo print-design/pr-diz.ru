@@ -759,8 +759,8 @@ class CalculationBase {
                 . "left join film lamination2_f on lamination2_fv.film_id = lamination2_f.id "
                 . "left join customer cus on rc.customer_id = cus.id "
                 . "left join user u on rc.manager_id = u.id "
-                . "where rc.id = $id";
-        $fetcher = new Fetcher($sql);
+                . "where rc.id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         
         if ($row = $fetcher->Fetch()) {
             $date = $row['date'];
@@ -791,24 +791,24 @@ class CalculationBase {
             
             // Получаем сумму и валюту экосбора 1
             if($customers_material_1 == true) {
-                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." and date <= '$date' order by id desc limit 1";
-                $fetcher1 = new Fetcher($sql1);
+                $sql1 = "select price, currency from other_price where price_type = ? and date <= ? order by id desc limit 1";
+                $fetcher1 = new Fetcher($sql1, [PRICE_ECO_CUSTOMERS_MATERIAL, $date]);
                 if($row1 = $fetcher1->Fetch()) {
                     $eco_price_1 = $row1['price'];
                     $eco_currency_1 = $row1['currency'];
                 }
             }
             elseif(!empty ($row['individual_film_name'])) {
-                $sql1 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." and date <= '$date' order by id desc limit 1";
-                $fetcher1 = new Fetcher($sql1);
+                $sql1 = "select price, currency from other_price where price_type = ? and date <= ? order by id desc limit 1";
+                $fetcher1 = new Fetcher($sql1, [PRICE_ECO_OTHER_MATERIAL, $date]);
                 if($row1 = $fetcher1->Fetch()) {
                     $eco_price_1 = $row1['price'];
                     $eco_currency_1 = $row1['currency'];
                 }
             }
             elseif(!empty ($row['film_variation_id'])) {
-                $sql1 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['film_variation_id']." and date <= '$date' order by id desc limit 1";
-                $fetcher1 = new Fetcher($sql1);
+                $sql1 = "select eco_price, eco_currency from film_price where film_variation_id = ? and date <= ? order by id desc limit 1";
+                $fetcher1 = new Fetcher($sql1, [$row['film_variation_id'], $date]);
                 if($row1 = $fetcher1->Fetch()) {
                     $eco_price_1 = $row1['eco_price'];
                     $eco_currency_1 = $row1['eco_currency'];
@@ -839,24 +839,24 @@ class CalculationBase {
             
             // Получаем сумму и валюту экосбора 2
             if($customers_material_2 == true) {
-                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." and date <= '$date' order by id desc limit 1";
-                $fetcher2 = new Fetcher($sql2);
+                $sql2 = "select price, currency from other_price where price_type = ? and date <= ? order by id desc limit 1";
+                $fetcher2 = new Fetcher($sql2, [PRICE_ECO_CUSTOMERS_MATERIAL, $date]);
                 if($row2 = $fetcher2->Fetch()) {
                     $eco_price_2 = $row2['price'];
                     $eco_currency_2 = $row2['currency'];
                 }
             }
             elseif(!empty ($row['lamination1_individual_film_name'])) {
-                $sql2 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." and date <= '$date' order by id desc limit 1";
-                $fetcher2 = new Fetcher($sql2);
+                $sql2 = "select price, currency from other_price where price_type = ? and date <= ? order by id desc limit 1";
+                $fetcher2 = new Fetcher($sql2, [PRICE_ECO_OTHER_MATERIAL, $date]);
                 if($row2 = $fetcher2->Fetch()) {
                     $eco_price_2 = $row2['price'];
                     $eco_currency_2 = $row2['currency'];
                 }
             }
             elseif(!empty ($row['lamination1_film_variation_id'])) {
-                $sql2 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination1_film_variation_id']." and date <= '$date' order by id desc limit 1";
-                $fetcher2 = new Fetcher($sql2);
+                $sql2 = "select eco_price, eco_currency from film_price where film_variation_id = ? and date <= ? order by id desc limit 1";
+                $fetcher2 = new Fetcher($sql2, [$row['lamination1_film_variation_id'], $date]);
                 if($row2 = $fetcher2->Fetch()) {
                     $eco_price_2 = $row2['eco_price'];
                     $eco_currency_2 = $row2['eco_currency'];
@@ -887,24 +887,24 @@ class CalculationBase {
             
             // Получаем сумму и валюту экосбора 3
             if($customers_material_3 == true) {
-                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." and date <= '$date' order by id desc limit 1";
-                $fetcher3 = new Fetcher($sql3);
+                $sql3 = "select price, currency from other_price where price_type = ? and date <= ? order by id desc limit 1";
+                $fetcher3 = new Fetcher($sql3, [PRICE_ECO_CUSTOMERS_MATERIAL, $date]);
                 if($row3 = $fetcher3->Fetch()) {
                     $eco_price_3 = $row3['price'];
                     $eco_currency_3 = $row3['currency'];
                 }
             }
             elseif(!empty ($row['lamination2_individual_film_name'])) {
-                $sql3 = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." and date <= '$date' order by id desc limit 1";
-                $fetcher3 = new Fetcher($sql3);
+                $sql3 = "select price, currency from other_price where price_type = ? and date <= ? order by id desc limit 1";
+                $fetcher3 = new Fetcher($sql3, [PRICE_ECO_OTHER_MATERIAL, $date]);
                 if($row3 = $fetcher3->Fetch()) {
                     $eco_price_3 = $row3['price'];
                     $eco_currency_3 = $row3['currency'];
                 }
             }
             elseif(!empty ($row['lamination2_film_variation_id'])) {
-                $sql3 = "select eco_price, eco_currency from film_price where film_variation_id = ".$row['lamination2_film_variation_id']." and date <= '$date' order by id desc limit 1";
-                $fetcher3 = new Fetcher($sql3);
+                $sql3 = "select eco_price, eco_currency from film_price where film_variation_id = ? and date <= ? order by id desc limit 1";
+                $fetcher3 = new Fetcher($sql3, [$row['lamination2_film_variation_id'], $date]);
                 if($row3 = $fetcher3->Fetch()) {
                     $eco_price_3 = $row3['eco_price'];
                     $eco_currency_3 = $row3['eco_currency'];
@@ -994,8 +994,8 @@ class CalculationBase {
         $euro = null;
         
         if(!empty($date)) {
-            $sql = "select usd, euro from currency where date <= '$date' order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+            $sql = "select usd, euro from currency where date <= ? order by id desc limit 1";
+            $fetcher = new Fetcher($sql, [$date]);
             if($row = $fetcher->Fetch()) {
                 $usd = $row['usd'];
                 $euro = $row['euro'];
@@ -1005,28 +1005,28 @@ class CalculationBase {
         // Данные с резки
         $weight_cut = 0;
         
-        $sql = "select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
+        $sql = "select sum(weight) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = ?)";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             $weight_cut = $row[0];
         }
         
-        $sql = "select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
+        $sql = "select sum(weight) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = ?)";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             $weight_cut += $row[0];
         }
         
         $length_cut = 0;
         
-        $sql = "select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
+        $sql = "select sum(length) from calculation_take_stream where calculation_take_id in (select id from calculation_take where calculation_id = ?)";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             $length_cut = $row[0];
         }
         
-        $sql = "select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = $id)";
-        $fetcher = new Fetcher($sql);
+        $sql = "select sum(length) from calculation_not_take_stream where calculation_stream_id in (select id from calculation_stream where calculation_id = ?)";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             $length_cut += $row[0];
         }
@@ -1035,8 +1035,8 @@ class CalculationBase {
         $quantities = array();
         
         if($work_type_id == WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
-            $sql = "select id, quantity from calculation_quantity where calculation_id = $id";
-            $fetcher = new Fetcher($sql);
+            $sql = "select id, quantity from calculation_quantity where calculation_id = ?";
+            $fetcher = new Fetcher($sql, [$id]);
             
             while($row = $fetcher->Fetch()) {
                 $quantities[$row['id']] = $row['quantity'];
@@ -1047,8 +1047,8 @@ class CalculationBase {
         $stream_widths = array();
         
         if(empty($stream_width)) {
-            $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
-            $fetcher = new Fetcher($sql);
+            $sql = "select stream_number, width from calculation_stream_width where calculation_id = ?";
+            $fetcher = new Fetcher($sql, [$id]);
             
             while ($row = $fetcher->Fetch()) {
                 $stream_widths[$row['stream_number']] = $row['width'];
@@ -1071,8 +1071,8 @@ class CalculationBase {
                 $data_priladka = new DataPriladka(0, 0, 0, 0, 0, 0, 0);
             }
             else {
-                $sql = "select time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2 from norm_priladka where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2 from norm_priladka where date <= ? and machine_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$date, $machine_id]);
                 if ($row = $fetcher->Fetch()) {
                     $data_priladka = new DataPriladka($row['time'], $row['length'], $row['stamp'], $row['waste_percent'], $row['time_run2'], $row['length_run2'], $row['waste_percent_run2']);
                 }
@@ -1082,8 +1082,8 @@ class CalculationBase {
                 $data_priladka_laminator = new DataPriladka(0, 0, 0, 0, 0, 0, 0);
             }
             else {
-                $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select time, length, waste_percent from norm_laminator_priladka where date <= ? and laminator_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$date, $laminator_id]);
                 if($row = $fetcher->Fetch()) {
                     $data_priladka_laminator = new DataPriladka($row['time'], $row['length'], 0, $row['waste_percent'], 0, 0, 0);
                 }
@@ -1093,8 +1093,8 @@ class CalculationBase {
                 $data_machine = new DataMachine(0, 0, 0, 0, 0, 0);
             }
             else {
-                $sql = "select price, speed, width, price_run2, speed_run2, vaporization_expense from norm_machine where date <= '$date' and machine_id = $machine_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select price, speed, width, price_run2, speed_run2, vaporization_expense from norm_machine where date <= ? and machine_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$date, $machine_id]);
                 if ($row = $fetcher->Fetch()) {
                     $data_machine = new DataMachine($row['price'], $row['speed'], $row['width'], $row['vaporization_expense'], $row['price_run2'], $row['speed_run2']);
                 }
@@ -1104,22 +1104,22 @@ class CalculationBase {
                 $data_laminator = new DataLaminator(0, 0, 0);
             }
             else {
-                $sql = "select price, speed, max_width from norm_laminator where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select price, speed, max_width from norm_laminator where date <= ? and laminator_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$date, $laminator_id]);
                 if($row = $fetcher->Fetch()) {
                     $data_laminator = new DataLaminator($row['price'], $row['speed'], $row['max_width']);
                 }
             }
             
-            $sql = "select gap_raport, gap_stream, ski from norm_gap where date <= '$date' order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+            $sql = "select gap_raport, gap_stream, ski from norm_gap where date <= ? order by id desc limit 1";
+            $fetcher = new Fetcher($sql, [$date]);
             if($row = $fetcher->Fetch()) {
                 $data_gap = new DataGap($row['gap_raport'], $row['gap_stream'], $row['ski']);
             }
             
             $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, lacquer_selective_price, lacquer_selective_currency, lacquer_selective_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent "
-                    . "from norm_ink where date <= '$date' order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+                    . "from norm_ink where date <= ? order by id desc limit 1";
+            $fetcher = new Fetcher($sql, [$date]);
             if($row = $fetcher->Fetch()) {
                 $data_ink = new DataInk($row['c_price'], $row['c_currency'], $row['c_expense'], $row['m_price'], $row['m_currency'], $row['m_expense'], $row['y_price'], $row['y_currency'], $row['y_expense'], $row['k_price'], $row['k_currency'], $row['k_expense'], $row['white_price'], $row['white_currency'], $row['white_expense'], $row['panton_price'], $row['panton_currency'], $row['panton_expense'], $row['lacquer_glossy_price'], $row['lacquer_glossy_currency'], $row['lacquer_glossy_expense'], $row['lacquer_matte_price'], $row['lacquer_matte_currency'], $row['lacquer_matte_expense'], $row['lacquer_selective_price'], $row['lacquer_selective_currency'], $row['lacquer_selective_expense'], $row['solvent_etoxipropanol_price'], $row['solvent_etoxipropanol_currency'], $row['solvent_flexol82_price'], $row['solvent_flexol82_currency'], $row['solvent_part'], $row['min_price_per_ink'], $row['self_adhesive_laquer_price'], $row['self_adhesive_laquer_currency'], $row['self_adhesive_laquer_expense'], $row['min_percent']);
             }
@@ -1129,16 +1129,16 @@ class CalculationBase {
             }
             else {
                 $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part "
-                        . "from norm_glue where date <= '$date' and laminator_id = $laminator_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                        . "from norm_glue where date <= ? and laminator_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$date, $laminator_id]);
                 if($row = $fetcher->Fetch()) {
                     $data_glue = new DataGlue($row['glue_price'], $row['glue_currency'], $row['glue_expense'], $row['glue_expense_pet'], $row['solvent_price'], $row['solvent_currency'], $row['solvent_part']);
                 }
             }
             
             $sql = "select flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency "
-                    . "from norm_cliche where date <= '$date' order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+                    . "from norm_cliche where date <= ? order by id desc limit 1";
+            $fetcher = new Fetcher($sql, [$date]);
             if($row = $fetcher->Fetch()) {
                 $data_cliche = new DataCliche($row['flint_price'], $row['flint_currency'], $row['kodak_price'], $row['kodak_currency'], $row['scotch_price'], $row['scotch_currency']);
             }
@@ -1152,18 +1152,11 @@ class CalculationBase {
         
         // Сохраняем данные в дублирующиеся поля (для ускорения загрузки списков)
         $status_comment = addslashes($status_comment);
-        $sql = "update calculation set "
-                . "duplicate_quantities = ". count($quantities).", "
-                . "duplicate_quantity_sum = ". array_sum($quantities).", "
-                . "duplicate_gap_raport = ".$data_gap->gap_raport.", "
-                . "duplicate_length_cut = $length_cut, "
-                . "duplicate_weight_cut = $weight_cut, "
-                . "duplicate_status_id = $status_id, "
-                . "duplicate_status_comment = '$status_comment', "
-                . "duplicate_status_date = '$status_date', "
-                . "duplicate_num_for_customer = $num_for_customer "
-                . "where id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation set duplicate_quantities = ?, duplicate_quantity_sum = ?, duplicate_gap_raport = ?, duplicate_length_cut = ?, "
+                . "duplicate_weight_cut = ?, duplicate_status_id = ?, duplicate_status_comment = ?, duplicate_status_date = ?, duplicate_num_for_customer = ? "
+                . "where id = ?";
+        $executer = new Executer($sql, [count($quantities), array_sum($quantities), $data_gap->gap_raport, $length_cut, 
+            $weight_cut, $status_id, $status_comment, $status_date, $num_for_customer, $id]);
     
         // Создаём классы расчётов
         if($work_type_id == WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
