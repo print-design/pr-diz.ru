@@ -233,62 +233,6 @@ function DownloadSendHeaders($filename) {
     header("Content-Transfer-Encoding: binary");
 }
 
-// Выгрузка картинки
-if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
-    $object = filter_input(INPUT_POST, 'object');
-    $id = filter_input(INPUT_POST, 'id');
-    $image = filter_input(INPUT_POST, 'image');
-    
-    if(!empty($object) && !empty($id) && !empty($image)) {
-        $sql = "";
-        
-        if($object == PRINTING) {
-            $sql = "select concat(c.name, cq.id) name, cq.image$image, cq.pdf$image from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
-        }
-        elseif ($object == STREAM) {
-            $sql = "select name, image$image, pdf$image from calculation_stream where id = $id";
-        }
-        
-        if(!empty($sql)) {
-            $targetname = "image";
-            $fetcher = new Fetcher($sql);
-            
-            if($row = $fetcher->Fetch()) {
-                if(!empty($row['name'])) {
-                    $targetname = $row['name'].'_'.$image;
-                    $targetname = str_replace('.', '', $targetname);
-                    $targetname = str_replace(',', '', $targetname);
-                    $targetname = str_replace(';', '', $targetname);
-                    $targetname = str_replace('"', "", $targetname);
-                    $targetname = htmlspecialchars($targetname);
-                }
-                
-                $filename = $row["image$image"];
-                $filepath = "../content/$object/$filename";
-                $extension = "";
-                
-                if(!empty($row["pdf$image"])) {
-                    $filename = $row["pdf$image"];
-                    $filepath = "../content/$object/pdf/$filename";
-                    $extension = "pdf";
-                }
-                else {
-                    $substrings = explode('.', $filename);
-                    if(count($substrings) > 1) {
-                        $extension = $substrings[count($substrings) - 1];
-                    }
-                }
-                
-                $targetname = $targetname.'.'.$extension; //echo $filepath; echo "<br />"; echo $targetname; exit();
-                
-                DownloadSendHeaders($targetname);
-                readfile($filepath);
-                exit();
-            }
-        }
-    }
-}
-
 function Array2Csv(array &$array, $titles) {
     if (count($array) == 0) {
             return null;
@@ -485,30 +429,84 @@ class Fetcher {
     }
 }
 
+// Выгрузка картинки
+if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
+    $object = filter_input(INPUT_POST, 'object');
+    $id = filter_input(INPUT_POST, 'id');
+    $image = filter_input(INPUT_POST, 'image');
+    
+    if(!empty($object) && !empty($id) && !empty($image)) {
+        $sql = "";
+        
+        if($object == PRINTING) {
+            $sql = "select concat(c.name, cq.id) name, cq.image$image, cq.pdf$image from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = ?";
+        }
+        elseif ($object == STREAM) {
+            $sql = "select name, image$image, pdf$image from calculation_stream where id = ?";
+        }
+        
+        if(!empty($sql)) {
+            $targetname = "image";
+            $fetcher = new Fetcher($sql, [$id]);
+            
+            if($row = $fetcher->Fetch()) {
+                if(!empty($row['name'])) {
+                    $targetname = $row['name'].'_'.$image;
+                    $targetname = str_replace('.', '', $targetname);
+                    $targetname = str_replace(',', '', $targetname);
+                    $targetname = str_replace(';', '', $targetname);
+                    $targetname = str_replace('"', "", $targetname);
+                    $targetname = htmlspecialchars($targetname);
+                }
+                
+                $filename = $row["image$image"];
+                $filepath = "../content/$object/$filename";
+                $extension = "";
+                
+                if(!empty($row["pdf$image"])) {
+                    $filename = $row["pdf$image"];
+                    $filepath = "../content/$object/pdf/$filename";
+                    $extension = "pdf";
+                }
+                else {
+                    $substrings = explode('.', $filename);
+                    if(count($substrings) > 1) {
+                        $extension = $substrings[count($substrings) - 1];
+                    }
+                }
+                
+                $targetname = $targetname.'.'.$extension; //echo $filepath; echo "<br />"; echo $targetname; exit();
+                
+                DownloadSendHeaders($targetname);
+                readfile($filepath);
+                exit();
+            }
+        }
+    }
+}
+
 // Добавление статуса заказа
 function SetCalculationStatus($calculation_id, $status_id, $comment) {
-    $comment_slashes = addslashes($comment ?? '');
     $user_id = GetUserId();
     $error_message = '';
     $old_status_id = 0;
     
-    $sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
-    $fetcher = new Fetcher($sql);
+    $sql = "select status_id from calculation_status_history where calculation_id = ? order by id desc limit 1";
+    $fetcher = new Fetcher($sql, [$calculation_id]);
     if($row = $fetcher->Fetch()) {
         $old_status_id = $row['0'];
     }
     
     if($old_status_id != $status_id) {
-        $sql = "insert into calculation_status_history (calculation_id, status_id, comment, user_id) values ($calculation_id, $status_id, '$comment_slashes', $user_id)";
-        $executer = new Executer($sql);
+        $sql = "insert into calculation_status_history (calculation_id, status_id, comment, user_id) values (?, ?, ?, ?)";
+        $executer = new Executer($sql, [$calculation_id, $status_id, $comment, $user_id]);
         $error_message = $executer->error;
         
         // Устанавливаем этот статус в дублирующееся поле.
-        $sql = "update calculation set duplicate_status_id = $status_id, "
-                . "duplicate_status_comment = '$comment_slashes', "
-                . "duplicate_status_date = (select date from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1) "
-                . "where id = $calculation_id";
-        $executer = new Executer($sql);
+        $sql = "update calculation set duplicate_status_id = ?, duplicate_status_comment = ?, "
+                . "duplicate_status_date = (select date from calculation_status_history where calculation_id = ? order by id desc limit 1) "
+                . "where id = ?";
+        $executer = new Executer($sql, [$status_id, $comment, $calculation_id, $calculation_id]);
         if(empty($error_message)) {
             $error_message = $executer->error;
         }
@@ -523,43 +521,43 @@ function RemoveCalculationStatus($calculation_id, $status_id) {
     
     // Удаляем из истории все записи с этим статусом для этого заказа (потому что один и тот же статус могут случайно поставить несколько раз).
     if(empty($error_message)) {
-        $sql = "delete from calculation_status_history where status_id = $status_id and calculation_id = $calculation_id";
-        $executer = new Executer($sql);
+        $sql = "delete from calculation_status_history where status_id = ? and calculation_id = ?";
+        $executer = new Executer($sql, [$status_id, $calculation_id]);
         $error_message = $executer->error;
     }
     
     // Удаляем из истории статус "В плане резки", если данного заказа нет в плане резки.
     if(empty($error_message)) {
-        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ". ORDER_STATUS_PLAN_CUT
-                ." and (select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ". WORK_CUTTING.") = 0";
-        $executer = new Executer($sql);
+        $sql = "delete from calculation_status_history where calculation_id = ? and status_id = ? "
+                . "and (select count(id) from plan_edition where calculation_id = ? and work_id = ?) = 0";
+        $executer = new Executer($sql, [$calculation_id, ORDER_STATUS_PLAN_CUT, $calculation_id, WORK_CUTTING]);
         $error_message = $executer->error;
     }
     
     // Удаляем из истории статус "В плане ламинации", если данного заказа нет в плане ламинации.
     if(empty($error_message)) {
-        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ". ORDER_STATUS_PLAN_LAMINATE
-                ." and (select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ". WORK_LAMINATION.") = 0";
-        $executer = new Executer($sql);
+        $sql = "delete from calculation_status_history where calculation_id = ? and status_id = ? "
+                . "and (select count(id) from plan_edition where calculation_id = ? and work_id = ?) = 0";
+        $executer = new Executer($sql, [$calculation_id, ORDER_STATUS_PLAN_LAMINATE, $calculation_id, WORK_LAMINATION]);
         $error_message = $executer->error;
     }
     
     // Удаляем из истории статус "В плане печати", если данного заказа нет в плане печати.
     if(empty($error_message)) {
-        $sql = "delete from calculation_status_history where calculation_id = $calculation_id and status_id = ".ORDER_STATUS_PLAN_PRINT
-                ." and (select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_PRINTING.") = 0";
-        $executer = new Executer($sql);
+        $sql = "delete from calculation_status_history where calculation_id = ? and status_id = ? "
+                . "and (select count(id) from plan_edition where calculation_id = ? and work_id = ?) = 0";
+        $executer = new Executer($sql, [$calculation_id, ORDER_STATUS_PLAN_PRINT, $calculation_id, WORK_PRINTING]);
         $error_message = $executer->error;
     }
     
     // Устанавливаем этот статус в дублирующее поле (дублирующее поле предназначено для ускорения загрузки).
     if(empty($error_message)) {
         $sql = "update calculation "
-                . "set duplicate_status_id = (select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1), "
-                . "duplicate_status_comment = (select comment from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1), "
-                . "duplicate_status_date = (select date from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1) "
-                . "where id = $calculation_id";
-        $executer = new Executer($sql);
+                . "set duplicate_status_id = (select status_id from calculation_status_history where calculation_id = ? order by id desc limit 1), "
+                . "duplicate_status_comment = (select comment from calculation_status_history where calculation_id = ? order by id desc limit 1), "
+                . "duplicate_status_date = (select date from calculation_status_history where calculation_id = ? order by id desc limit 1) "
+                . "where id = ?";
+        $executer = new Executer($sql, [$calculation_id, $calculation_id, $calculation_id, $calculation_id]);
         if(empty($error_message)) {
             $error_message = $executer->error;
         }
@@ -619,10 +617,8 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         $role_local = '';
         $twofactor = 0;
         
-        $sql = "select id, username, password, last_name, first_name, email, role_id "
-                . "from user where username='$login_username' and password=password('$login_password') and active=true";
-        
-        $users_result = (new Grabber($sql))->result;
+        $sql = "select id, username, password, last_name, first_name, email, role_id from user where username = ? and password = password(?) and active = true";
+        $users_result = (new Grabber($sql, [$login_username, $login_password]))->result;
         
         foreach ($users_result as $row) {
             $user_id = $row['id'];
@@ -668,9 +664,8 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
 // Обработка формы отправки кода безопасности
 if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
     $id = filter_input(INPUT_POST, 'id');
-    $sql = "select id, username, password, last_name, first_name, email, code, role_id "
-            . "from user where id = $id";
-    $result = (new Grabber($sql))->result;
+    $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where id = ?";
+    $result = (new Grabber($sql, [$id]))->result;
     
     foreach ($result as $row) {
         $user_id = $row['id'];
@@ -687,7 +682,7 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
         $code = $row['code'];
         
         if(filter_input(INPUT_POST, 'code') == $code) {
-            $error_message = (new Executer("update user set code=NULL where id=$user_id"))->error;
+            $error_message = (new Executer("update user set code = NULL where id = ?", [$user_id]))->error;
             
             if($error_message == '') {
                 setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100000, "/");
@@ -730,8 +725,8 @@ if(null !== filter_input(INPUT_POST, 'logout_submit')) {
 if(LoggedIn() && !IsInRole(CUTTER_USERS)) {
     $username = filter_input(INPUT_COOKIE, USERNAME);
     $password5 = filter_input(INPUT_COOKIE, PASSWORD5);
-    $sql = "select count(id) from user where username = '$username' and substring(password, 2, 5) = '$password5' and active=true";
-    $row = (new Fetcher($sql))->Fetch();
+    $sql = "select count(id) from user where username = ? and substring(password, 2, 5) = ? and active = true";
+    $row = (new Fetcher($sql, [$username, $password5]))->Fetch();
     
     if($row[0] == 0) {
         Logout();
