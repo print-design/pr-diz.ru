@@ -235,7 +235,7 @@ $paid = $payment_total >= $shipping_cost;
     </head>
     <body>
         <?php
-        include '../include/header_buh.php';
+        include 'header_buh.php';
         
         include '../include/big_image.php';
         ?>
