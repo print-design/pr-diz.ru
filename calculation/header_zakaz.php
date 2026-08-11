@@ -1,5 +1,5 @@
 <?php
-include 'left_bar.php';
+include '../include/left_bar.php';
 
 $php_self = $_SERVER['PHP_SELF'];
 $substrings = mb_split("/", $php_self);
@@ -85,7 +85,7 @@ if($folder == 'calculation') {
             echo "<div class='ml-auto'></div>";
         }
         
-        include 'header_right.php';
+        include '../include/header_right.php';
         ?>
     </nav>
 </div>

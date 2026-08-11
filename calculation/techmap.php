@@ -635,7 +635,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
     </head>
     <body>
         <?php
-        include '../include/header_zakaz.php';
+        include 'header_zakaz.php';
         
         include '../include/big_image.php';
         ?>

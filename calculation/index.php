@@ -64,7 +64,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
     </head>
     <body>
         <?php
-        include '../include/header_zakaz.php';
+        include 'header_zakaz.php';
         include '../include/status_track.php';
         include '../include/pager_top.php';
         $rowcounter = 0;

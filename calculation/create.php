@@ -1457,7 +1457,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             include './right_panel.php';
         }
         
-        include '../include/header_zakaz.php';
+        include 'header_zakaz.php';
         ?>
         <!-- Форма создания заказчика -->
         <div id="new_customer" class="modal fade show">

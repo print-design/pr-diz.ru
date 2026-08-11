@@ -60,7 +60,7 @@ if($folder == 'calculation') {
             echo "<div class='ml-auto'></div>";
         }
         
-        include 'header_right.php';
+        include '../include/header_right.php';
         ?>
     </nav>
 </div>

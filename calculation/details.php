@@ -255,7 +255,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             include './right_panel.php';
         }
         
-        include '../include/header_zakaz.php';
+        include 'header_zakaz.php';
         ?>
         <div class="container-fluid">
             <!-- Левая половина -->
