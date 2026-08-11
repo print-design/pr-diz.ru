@@ -399,7 +399,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             width: "15rem",
             minimumInputLength: 3,
             ajax: {
-                url: '../calculation/_customer_select2.php',
+                url: '_customer_select2.php',
                 dataType: 'json',
                 delay: 250,
                 processResults: function(data) {
