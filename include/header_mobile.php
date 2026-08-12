@@ -7,7 +7,7 @@
     <div class="d-flex d-lg-none">
         <?php if(empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
         <form class="my-2 my-lg-0" method="post">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <div class="form-group">
                 <input class="form-control mr-sm-2<?=$login_username_valid ?>" type="text" id="login_username" name="login_username" placeholder="Логин" value="<?=$_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_username']) ? $_POST['login_username'] : '' ?>" required="required" autocomplete="on" />
                 <div class="invalid-feedback">*</div>

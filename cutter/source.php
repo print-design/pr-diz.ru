@@ -252,7 +252,7 @@ $source_id = filter_input(INPUT_POST, 'source_id');
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
                             <label for="source_id">ID рулона</label>

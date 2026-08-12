@@ -155,7 +155,7 @@ while($row = $fetcher->Fetch()) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Выберите марку пленки</p>
                             <button type="button" class="close create_create_film_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
@@ -220,7 +220,7 @@ while($row = $fetcher->Fetch()) {
                                 <td><?=$film_variation['weight'] ?></td>
                                 <td class="text-right">
                                     <form method="post">
-                                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                         <input type="hidden" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                                         <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
                                         <input type="hidden" name="scroll" id="scroll" />
@@ -231,7 +231,7 @@ while($row = $fetcher->Fetch()) {
                             <?php endforeach; ?>
                         </table>
                         <form class="form-inline" method="post">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" name="film_id" value="<?=$f_key ?>" />
                             <input type="hidden" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                             <input type="hidden" id="scroll" name="scroll" />

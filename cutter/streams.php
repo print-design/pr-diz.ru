@@ -194,7 +194,7 @@ while($row = $fetcher->Fetch()) {
             <h1>Нарезка / <?=date('d.m.Y') ?></h1>
             <p class="mb-3 mt-3" style="font-size: large;">Как режем?</p>
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                 <div class="form-group">
                     <label for="streams_count">Кол-во ручьев</label>

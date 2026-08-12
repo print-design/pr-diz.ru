@@ -445,7 +445,7 @@ if($row = $fetcher->Fetch()) {
             endif;
             ?>
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <div class="row">
                     <div class="col-12 col-md-8 col-lg-4 d-table">
                         <div class="d-table-row">

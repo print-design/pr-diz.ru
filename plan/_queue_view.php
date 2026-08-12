@@ -14,7 +14,7 @@
                 <?php if($row['queue_top'] == 1): ?>
                 <div class="mr-1">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
                         <input type="hidden" name="scroll" />
                         <button type="submit" class="btn btn-link ui_tooltip right" title="Открепить заказ" name="unpin_submit"><img src="../images/icons/unpin.svg" /></button>
@@ -38,7 +38,7 @@
                         </div>
                         <?php if($row['queue_top'] == 0): ?>
                         <form method="post">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" name="calculation_id" value="<?=$row['calculation_id'] ?>" />
                             <input type="hidden" name="scroll" />
                             <button type="submit" class="btn btn-link h-25" name="pin_submit" style="font-size: 14px;">

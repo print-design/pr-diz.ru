@@ -255,7 +255,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" name="work_id" value="<?= filter_input(INPUT_GET, 'work_id') ?>" />
                         <input type="hidden" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
                         <input type="hidden" name="in_plan" value="0" />

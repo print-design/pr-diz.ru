@@ -178,7 +178,7 @@ $name = htmlentities($row['name'] ?? '');
                 <h2 style="font-size: 18px; font-weight: 600;">Пленки поставщика</h2>
                 <div style="margin-top: 10px; margin-bottom: 30px;">
                     <form method="post" class="form-inline" id="add-brand-form">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
                         <input type="hidden" id="scroll" name="scroll" />
                         <div class="form-group">
@@ -246,7 +246,7 @@ $name = htmlentities($row['name'] ?? '');
                         </td>
                         <td>
                             <form method="post" class="form-inline add-variation-form" style="margin-left: 30px;">
-                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
                                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand['id'] ?>"/>
                                 <input type="hidden" id="scroll" name="scroll" />
@@ -311,7 +311,7 @@ $name = htmlentities($row['name'] ?? '');
                         ?>
                         <td>
                             <form method="post">
-                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                 <input type="hidden" id="id" name="id" value="<?=$current_film_brand_variation['id'] ?>"/>
                                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand['id'] ?>"/>
                                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
@@ -327,7 +327,7 @@ $name = htmlentities($row['name'] ?? '');
                 <?php endforeach; ?>                
             </div>
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                 <button class="btn btn-outline-danger confirmable" id="delete-brand-button" name="delete-brand-button"><img src="<?=APPLICATION ?>/images/icons/trash-red.svg" style="vertical-align: top;" />&nbsp;&nbsp;&nbsp;Удалить поставщика</button>
             </form>

@@ -240,7 +240,7 @@ $paid = $payment_total >= $shipping_cost;
         include '../include/big_image.php';
         ?>
         <form id="delete_image_form" method="post">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <input type="hidden" id="object" name="object" />
             <input type="hidden" id="id" name="id" />
             <input type="hidden" id="image" name="image" />
@@ -454,7 +454,7 @@ $paid = $payment_total >= $shipping_cost;
                         </div>
                         <div class="subtitle">Добавить поступление</div>
                         <form method="post" class="mb-3">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" name="order_id" value="<?=$id ?>" />
                             <input type="hidden" name="created_by" value="<?= GetUserId() ?>" />
                             <div class="row mb-3">

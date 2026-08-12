@@ -27,7 +27,7 @@ if(null !== $cutting_id) {
     <div class="modal-dialog" style="width: 100%; height: 100%; margin: 0;">
         <div class="modal-content" style="border: 0; border-radius: 0; height: 100%; overflow: auto;">
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h4 class="modal-title">Характеристики</h4>

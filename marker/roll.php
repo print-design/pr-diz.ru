@@ -142,7 +142,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" id="length" name="length" />
                         <input type="hidden" id="net_weight" name="net_weight" />
                         <div class="form-group">

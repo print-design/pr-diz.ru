@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <input type="hidden" name="id" value="<?=$id ?>" />
                 <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                 <div class="modal-header">

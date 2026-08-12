@@ -4,7 +4,7 @@ include 'constants.php';
 
 session_start();
 
-if(empty(filter_input(INPUT_SESSION, CSRF_TOKEN))) {
+if(empty($_SESSION[CSRF_TOKEN])) {
     $_SESSION[CSRF_TOKEN] = bin2hex(random_bytes(32));
 }
 

@@ -112,7 +112,7 @@ if(empty($phone)) {
                     <a class="btn btn-light backlink" href="<?=APPLICATION ?>/personal/">Назад</a>
                     <h1>Редактирование личных данных</h1>
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <div class="row">
                             <div class="col-6 form-group">
                                 <label for="first_name">Имя</label>

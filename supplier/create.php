@@ -111,7 +111,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
             <a class="btn btn-light backlink" href="<?=APPLICATION ?>/supplier/">Назад</a>
             <h1>Добавление поставщика</h1>
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <div class="form-group" style="padding-bottom: 6px;">
                     <div style="width:319px;">
                         <label for="name">Название поставщика</label>

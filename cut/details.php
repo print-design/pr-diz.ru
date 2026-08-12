@@ -218,7 +218,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     </div>
                     <div style="position: absolute; left: 0px; bottom: 0px; margin: 15px;">
                         <form method="post">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" name="id" value="<?=$id ?>" />
                             <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                             <button type="submit" name="start_cut_submit" class="btn btn-dark" style="width: 175px;">Начать работу</button>

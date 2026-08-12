@@ -120,13 +120,13 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
             </div>
         </div>
         <form id="download_image_dialog_form" method="post">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <input type="hidden" id="id" name="id" />
             <input type="hidden" id="is_user_image" name="is_user_image" />
             <input type="hidden" name="download_image_dialog_submit" value="1" />
         </form>
         <form id="delete_image_dialog_form" method="post">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <input type="hidden" id="id" name="id" />
             <input type="hidden" id="is_user_image" name="is_user_image" />
             <input type="hidden" name="delete_image_dialog_submit" value="1" />
@@ -148,7 +148,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
                         <div id="attach"><div id="waiting_attach" class="d-none"><img src="../images/loading-cargando.gif" /></div></div>
                         <input type="file" accept="image/*,application/pdf" name="dialog_file" id="dialog_file" class="d-none" onchange="UploadAttachImage(300);" />
                         <form method="post" id="message_form" onsubmit="javascript: MessageSubmit(event);">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" name="user_id_from" id="user_id_from" value="<?= $user_id ?>" />
                             <input type="hidden" name="user_id_to" id="user_id_to" />
                             <textarea name="message" id="message" class="form-control" required="required"></textarea>

@@ -71,7 +71,7 @@ if(null !== filter_input(INPUT_POST, 'password_change_submit')) {
                     <a class="btn btn-light backlink" href="<?=APPLICATION ?>/personal/">Назад</a>
                     <h1>Смена пароля</h1>
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <div class="form-group">
                             <label for="old_password">Текущий пароль</label>
                             <input type="password" id="old_password" name="old_password" class="form-control<?=$old_password_valid ?>" required="required"/>

@@ -139,7 +139,7 @@ if(empty($role_id)) {
                     <a class="btn btn-outline-dark backlink" href="<?=APPLICATION ?>/user/">Назад</a>
                     <h1>Редактирование сотрудника</h1>
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
                         <div class="form-group">
                             <select id="role_id" name="role_id" class="form-control" required="required">

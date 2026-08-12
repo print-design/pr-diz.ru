@@ -344,7 +344,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <?php if($calculation->status_id == ORDER_STATUS_PACK_READY): ?>
                         <div>
                             <form method="post">
-                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                 <input type="hidden" name="id" value="<?=$id ?>" />
                                 <input type="hidden" name="status_id" value="<?=ORDER_STATUS_SHIP_READY ?>" />
                                 <button type="submit" name="confirm_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Подтвердить</button>
@@ -354,7 +354,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         <?php elseif($calculation->status_id == ORDER_STATUS_SHIP_READY && null == filter_input(INPUT_GET, 'waiting')): ?>
                         <div>
                             <form method="post">
-                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                 <input type="hidden" name="id" value="<?=$id ?>" />
                                 <input type="hidden" name="status_id" value="<?=ORDER_STATUS_SHIPPED ?>" />
                                 <button type="submit" name="confirm_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Отгружено</button>

@@ -187,7 +187,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <?php include '../include/order_status_details.php'; ?>
                             <div class="name">Приладка</div>
                             <form method="post">
-                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                 <input type="hidden" name="id" value="<?=$id ?>" />
                                 <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                                 <div class="input-group">

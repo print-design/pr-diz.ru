@@ -97,7 +97,7 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                     </table>
                     <h2>Новая ширина вала</h2>
                     <form method="post" class="form-inline">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" name="laminator_id" value="<?=$laminator_id ?>" />
                         <input type="hidden" name="scroll" />
                         <input type="text" class="form-control mr-2 int-only" name="value" placeholder="Ширина вала..." required="required" autocomplete="off" />

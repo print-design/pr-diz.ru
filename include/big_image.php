@@ -17,7 +17,7 @@
     </div>
 </div>
 <form id="download_image_form" method="post">
-    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
     <input type="hidden" id="object" name="object" />
     <input type="hidden" id="id" name="id" />
     <input type="hidden" id="image" name="image" />

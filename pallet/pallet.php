@@ -202,7 +202,7 @@ if(null === $comment) $comment = $row['comment'];
             <div>Время добавления: <?=$time ?></div>
             <?php endif; ?>
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <div style="width: 423px;">
                     <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                     <input type="hidden" id="date" name="date" value="<?= $date ?>" />

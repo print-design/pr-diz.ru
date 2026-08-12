@@ -187,7 +187,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
             <a class="btn btn-light backlink" href="<?=APPLICATION ?>/roll/">Назад</a>
             <h1 style="font-size: 32px; font-weight: 600; margin-bottom: 20px;">Новый рулон</h1>
             <form method="post">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <div style="width: 423px;">
                     <input type="hidden" id="date" name="date" value="<?= date("Y-m-d") ?>" />
                     <input type="hidden" id="storekeeper_id" name="storekeeper_id" value="<?= GetUserId() ?>" />

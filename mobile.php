@@ -124,7 +124,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
                 <div class="figure-point" id="fp9"><div class="figure-drag" data-number="9" style="width: 100%; height: 100%;"></div></div>
             </div>
             <form method="post" id="graph_key_form">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id') ?>" />
                 <input type="hidden" name="graph_key" id="graph_key" />
             </form>

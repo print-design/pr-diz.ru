@@ -159,7 +159,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                         <div style="white-space: pre-wrap;"><?=$comment ?></div>
                         <?php if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])): ?>
                         <form method="post" class="mt-2">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />
                             <div class="form-group">
@@ -172,7 +172,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                         </form>
                         <?php elseif(IsInRole(ROLE_NAMES[ROLE_AUDITOR])): ?>
                         <form method="post" class="mt-2">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" id="id" name="id" value="<?=$id ?>" />
                             <input type="hidden" id="pallet_id" name="pallet_id" value="<?=$pallet_id ?>" />
                             <input type="hidden" id="old_comment" name="old_comment" value="<?=$comment ?>" />

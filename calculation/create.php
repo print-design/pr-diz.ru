@@ -1464,7 +1464,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" name="id" value="<?=$id ?>" />
                         <div class="modal-header">
                             <i class="fas fa-user"></i>&nbsp;&nbsp;Новый заказчик
@@ -1583,7 +1583,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 <!-- Левая половина -->
                 <div id="left_side">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
                         <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>

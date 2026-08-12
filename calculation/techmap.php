@@ -828,7 +828,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
         </div>
         <?php endif; ?>
         <form id="delete_image_form" method="post">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <input type="hidden" id="object" name="object" />
             <input type="hidden" id="id" name="id" />
             <input type="hidden" id="image" name="image" />
@@ -1693,7 +1693,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
             <div id="requirement_validation" class="text-danger<?= empty($requirement_valid) ? " d-none" : " d-block" ?>">Укажите требование по материалу</div>
             <div style="position: relative;">
                 <form class="mt-3" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                     <input type="hidden" name="scroll" />
                     <input type="hidden" name="id" value="<?= $id ?>" />
                     <input type="hidden" name="techmap_id" value="<?=$calculation_result->techmap_id ?>" />
@@ -1970,7 +1970,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                 <?php if(!empty($calculation_result->techmap_id) && $calculation->status_id == ORDER_STATUS_TECHMAP): ?>
                 <div style="position: absolute; right: 0px; bottom: 0px;">
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" name="id" value="<?=$id ?>" />
                         <input type="hidden" name="techmap_id" value="<?= $calculation_result->techmap_id ?>" />
                         <input type="hidden"  name="delete_techmap_submit" value="1" />
@@ -2034,7 +2034,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             <div class="pt-2 font-weight-bold" style="font-size: large;"><?='ТК от '.$c_date ?></div>
                             <div>
                                 <form method="post" action="#form">
-                                    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                                    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                     <input type="hidden" name="<?=FROM_OTHER_TECHMAP ?>" value="1" />
                                     <input type="hidden" name="id" value="<?= $c_id ?>" />
                                     <input type="hidden" name="techmap_id" value="<?=$tm_id ?>" />

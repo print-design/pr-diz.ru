@@ -102,7 +102,7 @@
                     <h1>Код безопасности</h1>
                     <p>Введите код, отправленный на Ваш адрес электронной почты.</p>
                     <form method="post">
-                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" id="id" name="id" value="<?=$user_id ?>"/>
                         <input type="hidden" id="code" name="code" value="<?=$code ?>"/>
                         <div class="form-group">

@@ -315,7 +315,7 @@ function GetSkiNameExt($param, $param_width) {
     <div class="col-6"></div>
     <div class="col-6">
         <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <div class="form-check">
                 <label class="form-check-label text-nowrap mt-2">
                     <?php
@@ -332,7 +332,7 @@ function GetSkiNameExt($param, $param_width) {
     <div class="col-6"></div>
     <div class="col-6">
         <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <div class="form-check">
                 <label class="form-check-label text-nowrap mt-2 mb-2">
                     <?php
@@ -352,7 +352,7 @@ function GetSkiNameExt($param, $param_width) {
     <div class="col-6"></div>
     <div class="col-6" style="border-top: solid 2px lightgray;">
         <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <div class="form-check">
                 <label class="form-check-label text-nowrap mt-2">
                     <?php
@@ -369,7 +369,7 @@ function GetSkiNameExt($param, $param_width) {
     <div class="col-6"></div>
     <div class="col-6">
         <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <div class="form-check">
                 <label class="form-check-label text-nowrap mt-2">
                     <?php
