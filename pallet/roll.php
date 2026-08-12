@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 
 // Пекренаправление на страницу карщика или резчика при чтении QR-кода
 if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
-    header('Location: '.APPLICATION.'/car/pallet_roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
+    header('Location: '.APPLICATION.'/car/pallet_roll_edit.php?id='. filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT));
 }
 
 // Авторизация
@@ -12,7 +12,7 @@ elseif(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPE
 }
 
 // Если не задано значение id, перенаправляем на список
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
@@ -25,7 +25,7 @@ $cell_valid = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
     $sql = "select cell from pallet_cell_history where pallet_id = (select pallet_id from pallet_roll where id = $id) order by id desc limit 1";
@@ -42,7 +42,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
     $sql = "select status_id from pallet_roll_status_history where pallet_roll_id=$id order by id desc limit 1";
     $row = (new Fetcher($sql))->Fetch();
-    $status_id = filter_input(INPUT_POST, 'status_id');
+    $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
     
     if((!$row || $row['status_id'] != $status_id) && !empty($status_id)) {
         $user_id = GetUserId();
@@ -53,7 +53,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     if(empty($error_message)) {
         // Редактирование данных паллета
-        $pallet_id = filter_input(INPUT_POST, 'pallet_id');
+        $pallet_id = filter_input(INPUT_POST, 'pallet_id', FILTER_VALIDATE_INT);
         
         if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
             $cell = filter_input(INPUT_POST, 'cell');
@@ -111,16 +111,16 @@ $time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
-$supplier_id = filter_input(INPUT_POST, 'supplier_id');
+$supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
 if(null === $supplier_id) $supplier_id = $row['supplier_id'];
 
-$film_id = filter_input(INPUT_POST, 'film_id');
+$film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
 if(null === $film_id) $film_id = $row['film_id'];
 
 $width = filter_input(INPUT_POST, 'width');
 if(null === $width) $width = $row['width'];
 
-$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+$film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
 if(null === $film_variation_id) $film_variation_id = $row['film_variation_id'];
 
 $length = filter_input(INPUT_POST, 'length');
@@ -129,7 +129,7 @@ if(null === $length) $length = $row['length'];
 $weight = filter_input(INPUT_POST, 'weight');
 if(null === $weight) $net_weight = $row['weight'];
 
-$pallet_id = filter_input(INPUT_POST, 'pallet_id');
+$pallet_id = filter_input(INPUT_POST, 'pallet_id', FILTER_VALIDATE_INT);
 if(null === $pallet_id) $pallet_id = $row['pallet_id'];
 
 $ordinal = filter_input(INPUT_POST, 'ordinal');
@@ -138,7 +138,7 @@ if(null === $ordinal) $ordinal = $row['ordinal'];
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];
 
-$status_id = filter_input(INPUT_POST, 'status_id');
+$status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
 if(null === $status_id) $status_id = $row['status_id'];
 
 $status_date = $row['status_date'];
@@ -331,7 +331,7 @@ if(null === $comment) $comment = $row['comment'];
                         $sql = "select cstr.width "
                                 . "from cut_source cs "
                                 . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 1";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and cs.is_from_pallet = 1";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
@@ -345,7 +345,7 @@ if(null === $comment) $comment = $row['comment'];
                         $sql = "select cstr.width "
                                 . "from cutting_source cs "
                                 . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 1";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and cs.is_from_pallet = 1";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while($row = $fetcher->Fetch()) {
@@ -386,7 +386,7 @@ if(null === $comment) $comment = $row['comment'];
                         </div>
                         <div class="p-0">
                             <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-                            <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
+                            <a href="roll_print.php?id=<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
                             <?php endif; ?>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$film_variation_id = filter_input(INPUT_GET, 'film_variation_id');
+$film_variation_id = filter_input(INPUT_GET, 'film_variation_id', FILTER_VALIDATE_INT);
 $result = array("text" => "нет данных", "price" => "", "currency" => "", "currency_local" => "");
 
 if(!empty($film_variation_id)) {

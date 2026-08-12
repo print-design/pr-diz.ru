@@ -8,7 +8,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 
 // Обработка отправки формы - удаление пользователя
 if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $error_message = (new Executer("delete from user where id=$id"))->error;
 }
 
@@ -76,8 +76,8 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
 }
 
 // Обработка отправки формы - задание графического ключа
-if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
-    $graph_key_id = filter_input(INPUT_POST, 'graph_key_id');
+if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
+    $graph_key_id = filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT);
     $graph_key = filter_input(INPUT_POST, 'graph_key');
     
     // Проверяем, имеется ли такой графический ключ в базе
@@ -97,7 +97,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
 
 // Обработка отправки формы - удаление графического ключа
 if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
-    $graph_key_delete_id = filter_input(INPUT_POST, 'graph_key_delete_id');
+    $graph_key_delete_id = filter_input(INPUT_POST, 'graph_key_delete_id', FILTER_VALIDATE_INT);
     $sql = "update user set graph_key = '' where id = $graph_key_delete_id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
@@ -157,7 +157,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                 <div class="modal-content">
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" id="user_change_password_id" name="user_change_password_id" value="<?= filter_input(INPUT_POST, 'user_change_password_id') ?>" />
+                        <input type="hidden" id="user_change_password_id" name="user_change_password_id" value="<?= filter_input(INPUT_POST, 'user_change_password_id', FILTER_VALIDATE_INT) ?>" />
                         <div class="modal-header">
                             <div style="font-size: xx-large;">Изменение пароля</div>
                             <button type="button" class="close user_change_password_dismiss" data-dismiss="modal"><i class="fas fa-times"></i></button>
@@ -211,7 +211,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                         </div>
                         <form method="post" id="graph_key_form">
                             <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                            <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id') ?>" />
+                            <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT) ?>" />
                             <input type="hidden" id="graph_key_fio" name="graph_key_fio" />
                             <input type="hidden" id="old_graph_key" name="old_graph_key" />
                             <input type="hidden" name="graph_key" id="graph_key" />
@@ -220,7 +220,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                     <div class="modal-footer" style="justify-content: flex-start;">
                         <form method="post" id="graph_key_delete_form">
                             <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                            <input type="hidden" id="graph_key_delete_id" name="graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'graph_key_delete_id') ?? filter_input(INPUT_POST, 'graph_key_id') ?>" />
+                            <input type="hidden" id="graph_key_delete_id" name="graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'graph_key_delete_id', FILTER_VALIDATE_INT) ?? filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT) ?>" />
                             <?php
                             $graph_key_delete_class = '';
                             if(empty(filter_input(INPUT_POST, 'old_graph_key'))) {
@@ -239,7 +239,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
             if(null !== filter_input(INPUT_POST, 'user_change_password_submit') && $form_valid && empty($error_message)) {
                 echo "<div class='alert alert-success'>Пароль изменен успешно</div>";
             }
-            if(null !== filter_input(INPUT_POST, 'graph_key_id') && $form_valid && empty($error_message)) {
+            if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT) && $form_valid && empty($error_message)) {
                 echo "<div class='alert alert-success'>Графический ключ задан успешно</div>";
             }
             if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit') && $form_valid && empty($error_message)) {
@@ -452,7 +452,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
             <?php endif; ?>
                 
             // Открытие формы задания графического ключа, если задание ключа не было удачным
-            <?php if(null !== filter_input(INPUT_POST, 'graph_key_id') && !$form_valid): ?>
+            <?php if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT) && !$form_valid): ?>
             $('#graph_key_exists_alert').removeClass('d-none');
             $('#graph_key_modal').modal('show');
             <?php endif; ?>

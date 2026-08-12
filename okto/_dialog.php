@@ -4,7 +4,7 @@ include '../include/topscripts.php';
 <div id="dialog_content">
 <?php
 $user_id_self = GetUserId();
-$user_id_contact = filter_input(INPUT_GET, 'id');
+$user_id_contact = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 // Крайнее сообщение
 $sql = "select d.id, d.timestamp, d.message, d.viewed, 0 as inbox, (select count(id) from dialog_image where dialog_id = d.id) images_count from dialog d "

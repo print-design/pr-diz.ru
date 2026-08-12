@@ -6,8 +6,8 @@ $stream_length = '';
 $stream_printed = '';
 $dt_printed = '';
 
-if(null !== filter_input(INPUT_GET, 'stream_id')) {
-    $stream_id = filter_input(INPUT_GET, 'stream_id');
+if(null !== filter_input(INPUT_GET, 'stream_id', FILTER_VALIDATE_INT)) {
+    $stream_id = filter_input(INPUT_GET, 'stream_id', FILTER_VALIDATE_INT);
     
     $sql = "select cts.id, cs.name, cts.weight, cts.length, cts.printed, pe.last_name, pe.first_name "
             . "from calculation_take_stream cts "
@@ -26,8 +26,8 @@ if(null !== filter_input(INPUT_GET, 'stream_id')) {
         $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
     }
 }
-elseif(null !== filter_input(INPUT_GET, 'take_stream_id')) {
-    $take_stream_id = filter_input(INPUT_GET, 'take_stream_id');
+elseif(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT)) {
+    $take_stream_id = filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT);
     
     $sql = "select cts.id, cs.name, cts.weight, cts.length, cts.printed, pe.last_name, pe.first_name "
             . "from calculation_take_stream cts "
@@ -46,8 +46,8 @@ elseif(null !== filter_input(INPUT_GET, 'take_stream_id')) {
         $dt_printed = DateTime::createFromFormat('Y-m-d H:i:s', $stream_printed);
     }
 }
-elseif(null !== filter_input(INPUT_GET, 'not_take_stream_id')) {
-    $not_take_stream_id = filter_input(INPUT_GET, 'not_take_stream_id');
+elseif(null !== filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)) {
+    $not_take_stream_id = filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT);
     
     $sql = "select cnts.id, cs.name, cnts.weight, cnts.length, cnts.printed, pe.last_name, pe.first_name "
             . "from calculation_not_take_stream cnts "

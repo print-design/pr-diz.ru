@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Если не задано значение id, перенаправляем на список
-if(empty(filter_input(INPUT_GET, 'id'))) {
+if(empty(filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT))) {
     header('Location: '.APPLICATION.'/user/');
 }
 
@@ -36,7 +36,7 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
         $form_valid = false;
     }
     
-    $role_id = filter_input(INPUT_POST, 'role_id');
+    $role_id = filter_input(INPUT_POST, 'role_id', FILTER_VALIDATE_INT);
     if(empty($role_id)) {
         $role_id_valid = ISINVALID;
         $form_valid = false;
@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
     }
     
     if($form_valid) {
-        $id = filter_input(INPUT_POST, 'id');
+        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         $first_name = addslashes($first_name ?? '');
         $last_name = addslashes($last_name ?? '');
         $email = addslashes($email ?? '');
@@ -85,7 +85,7 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
 }
 
 // Получение объекта
-$row = (new Fetcher("select username, last_name, first_name, email, phone, role_id from user where id=". filter_input(INPUT_GET, 'id')))->Fetch();
+$row = (new Fetcher("select username, last_name, first_name, email, phone, role_id from user where id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)))->Fetch();
 
 $username = filter_input(INPUT_POST, 'username');
 if(empty($username)) {
@@ -112,7 +112,7 @@ if(empty($phone)) {
     $phone = htmlentities($row['phone'] ?? '');
 }
 
-$role_id = filter_input(INPUT_POST, 'role_id');
+$role_id = filter_input(INPUT_POST, 'role_id', FILTER_VALIDATE_INT);
 if(empty($role_id)) {
     $role_id = $row['role_id'];
 }
@@ -140,7 +140,7 @@ if(empty($role_id)) {
                     <h1>Редактирование сотрудника</h1>
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
+                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>"/>
                         <div class="form-group">
                             <select id="role_id" name="role_id" class="form-control" required="required">
                                 <option value="">...</option>

@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST]
 }
 
 // Если не задано значение id, перенаправляем на Главную
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
@@ -29,7 +29,7 @@ if(empty($id)) {
         ?>
         <div class="container-fluid">
             <?php
-            $title = "П".filter_input(INPUT_GET, 'id');
+            $title = "П".filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
             include '../include/find_mobile.php';
             
             $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, s.name supplier, f.name film, p.width, fv.thickness, p.comment, "

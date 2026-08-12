@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Если не задано значение id, перенаправляем на список
-if(empty(filter_input(INPUT_GET, 'id'))) {
+if(empty(filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT))) {
     header('Location: '.APPLICATION.'/supplier/');
 }
 
@@ -15,8 +15,8 @@ if(empty(filter_input(INPUT_GET, 'id'))) {
 $form_valid = true;
 
 if(null !== filter_input(INPUT_POST, 'film_variation_submit')) {
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     
     if(empty($film_variation_id)) {
         $error_message = "Не выбрана пленка";
@@ -32,15 +32,15 @@ if(null !== filter_input(INPUT_POST, 'film_variation_submit')) {
 
 // Обработка удаления вариации плёнки
 if(null !== filter_input(INPUT_POST, 'delete_submit')) {
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     $sql = "delete from supplier_film_variation where supplier_id = $supplier_id and film_variation_id = $film_variation_id";
     $executer = new Executer($sql);
     $error_message = $executer->error;
 }
 
 // Получение объекта
-$supplier_id = filter_input(INPUT_GET, 'id');
+$supplier_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 // Название поставщика
 $name = '';
@@ -59,7 +59,7 @@ $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness,
         . "where fv.id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) ";
 
 if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
-    $post_film_id = filter_input(INPUT_POST, 'film_id');
+    $post_film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
     
     if(!empty($post_film_id)) {
         $sql .= "union "
@@ -91,7 +91,7 @@ $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness,
         . "and fv.id not in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) ";
 
 if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
-    $post_film_id = filter_input(INPUT_POST, 'film_id');
+    $post_film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
     
     if(!empty($post_film_id)) {
         $sql .= "union "
@@ -221,7 +221,7 @@ while($row = $fetcher->Fetch()) {
                                 <td class="text-right">
                                     <form method="post">
                                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                                        <input type="hidden" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                                        <input type="hidden" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
                                         <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
                                         <input type="hidden" name="scroll" id="scroll" />
                                         <button type="submit" name="delete_submit" id="delete_submit" class="btn btn-link confirmable"><img src="../images/icons/trash2.svg" title="Удалить" /></button>
@@ -233,7 +233,7 @@ while($row = $fetcher->Fetch()) {
                         <form class="form-inline" method="post">
                             <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                             <input type="hidden" name="film_id" value="<?=$f_key ?>" />
-                            <input type="hidden" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                            <input type="hidden" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
                             <input type="hidden" id="scroll" name="scroll" />
                             <div class="d-flex justify-content-between mb-2 w-100">
                                 <div class="form-group w-75">
@@ -262,8 +262,8 @@ while($row = $fetcher->Fetch()) {
                 $('select#film_id').val('');
             });
             
-            <?php if(null !== filter_input(INPUT_POST, 'create_film_submit') && !empty(filter_input(INPUT_POST, 'film_id'))): ?>
-            window.scrollTo(0, $('#f_<?= filter_input(INPUT_POST, 'film_id') ?>').offset().top - $('#topmost').height());
+            <?php if(null !== filter_input(INPUT_POST, 'create_film_submit') && !empty(filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT))): ?>
+            window.scrollTo(0, $('#f_<?= filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT) ?>').offset().top - $('#topmost').height());
             <?php endif; ?>
         </script>
     </body>

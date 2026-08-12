@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Ламинатор
-$laminator_id = filter_input(INPUT_GET, 'laminator_id');
+$laminator_id = filter_input(INPUT_GET, 'laminator_id', FILTER_VALIDATE_INT);
 
 // Валидация формы
 $form_valid = true;
@@ -112,7 +112,7 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" id="laminator_id" name="laminator_id" value="<?= filter_input(INPUT_GET, 'laminator_id') ?>" />
+                        <input type="hidden" id="laminator_id" name="laminator_id" value="<?= filter_input(INPUT_GET, 'laminator_id', FILTER_VALIDATE_INT) ?>" />
                         <div class="form-group">
                             <label for="price">Цена работы оборудования, руб/час</label>
                             <input type="text" class="form-control float-only<?=$price_valid ?>" id="price" name="price" value="<?= empty($price) ? "" : floatval($price) ?>" placeholder="Цена, руб/час" required="required" autocomplete="off" />

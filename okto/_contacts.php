@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $me = GetUserId();
 $sql = "select u.id, u.last_name, u.first_name, "
         . "(select count(id) from dialog where user_id_from = u.id and user_id_to = $me and viewed = 0) unviewed "

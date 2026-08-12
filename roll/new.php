@@ -26,19 +26,19 @@ $length_invalid_message = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     if(empty($supplier_id)) {
         $supplier_id_valid = ISINVALID;
         $form_valid = false;
     }
     
-    $film_id = filter_input(INPUT_POST, 'film_id');
+    $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
     if(empty($film_id)) {
         $film_id_valid = ISINVALID;
         $form_valid = false;
     }
     
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     if(empty($film_variation_id)) {
         $film_variation_id_valid = ISINVALID;
         $form_valid = false;
@@ -126,20 +126,20 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     }
     
     // Выбор менеджера пока необязательный.
-    $manager_id = filter_input(INPUT_POST, 'manager_id');
+    $manager_id = filter_input(INPUT_POST, 'manager_id', FILTER_VALIDATE_INT);
     if(empty($manager_id)) {
         $manager_id = "NULL";
     }
 
     // Статус пока не обязательно.
-    $status_id = filter_input(INPUT_POST, 'status_id');
+    $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
     if(empty($status_id)) {
         $status_id = "NULL";
     }
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
     $date = filter_input(INPUT_POST, 'date');
-    $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
+    $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
@@ -202,7 +202,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 $id = $supplier['id'];
                                 $name = $supplier['name'];
                                 $selected = '';
-                                if(filter_input(INPUT_POST, 'supplier_id') == $supplier['id']) $selected = " selected='selected'";
+                                if(filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT) == $supplier['id']) $selected = " selected='selected'";
                                 echo "<option value='$id'$selected>$name</option>";
                             }
                             ?>
@@ -214,14 +214,14 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                         <select id="film_id" name="film_id" class="form-control" required="required">
                             <option value="">Выберите марку</option>
                             <?php
-                            if(null !== filter_input(INPUT_POST, 'supplier_id')) {
-                                $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+                            if(null !== filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT)) {
+                                $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
                                 $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
                                 foreach ($films as $film) {
                                     $film_id = $film['id'];
                                     $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_POST, 'film_id') == $film_id) $selected = " selected='selected'";
+                                    if(filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT) == $film_id) $selected = " selected='selected'";
                                     echo "<option value='$film_id'$selected>$name</option>";
                                 }
                             }
@@ -240,15 +240,15 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                             <select id="film_variation_id" name="film_variation_id" class="form-control" required="required">
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                if(null !== filter_input(INPUT_POST, 'film_id')) {
-                                    $film_id = filter_input(INPUT_POST, 'film_id');
+                                if(null !== filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT)) {
+                                    $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
                                     $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
                                     foreach ($film_variations as $film_variation) {
                                         $film_variation_id = $film_variation['id'];
                                         $thickness = $film_variation['thickness'];
                                         $weight = $film_variation['weight'];
                                         $selected = '';
-                                        if(filter_input(INPUT_POST, 'film_variation_id') == $film_variation_id) $selected = " selected='selected'";
+                                        if(filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT) == $film_variation_id) $selected = " selected='selected'";
                                         echo "<option value='$film_variation_id'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                     }
                                 }
@@ -322,7 +322,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                                 $first_name = $manager['first_name'];
                                 $last_name = $manager['last_name'];
                                 $selected = '';
-                                if(filter_input(INPUT_POST, 'manager_id') == $manager['id']) $selected = " selected='selected'";
+                                if(filter_input(INPUT_POST, 'manager_id', FILTER_VALIDATE_INT) == $manager['id']) $selected = " selected='selected'";
                                 echo "<option value='$id'$selected>$last_name $first_name</option>";
                             }
                             ?>

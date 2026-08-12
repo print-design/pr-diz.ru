@@ -333,7 +333,7 @@
     
     $hide_table_class = " d-none";
     $show_table_class = "";
-    if(filter_input(INPUT_GET, 'take_id') == $take['id']) {
+    if(filter_input(INPUT_GET, 'take_id', FILTER_VALIDATE_INT) == $take['id']) {
         $hide_table_class = "";
         $show_table_class = " d-none";
     }
@@ -420,7 +420,7 @@
     
     $hide_table_class = " d-none";
     $show_table_class = "";
-    if(!empty(filter_input(INPUT_GET, 'not_take_stream_id')) || !empty(filter_input(INPUT_GET, 'invalid_not_take'))) {
+    if(!empty(filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)) || !empty(filter_input(INPUT_GET, 'invalid_not_take'))) {
         $hide_table_class = "";
         $show_table_class = " d-none";
     }

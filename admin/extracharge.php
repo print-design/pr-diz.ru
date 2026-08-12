@@ -8,7 +8,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 
 // Добавление наценки
 if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
-    $extracharge_type_id = filter_input(INPUT_POST, 'extracharge_type_id');
+    $extracharge_type_id = filter_input(INPUT_POST, 'extracharge_type_id', FILTER_VALIDATE_INT);
     $from_weight = filter_input(INPUT_POST, 'from_weight');
     $to_weight = filter_input(INPUT_POST, 'to_weight');
     if(empty($to_weight)) $to_weight = "NULL";
@@ -23,7 +23,7 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
 
 // Удаление наценки
 if(null !== filter_input(INPUT_POST, 'delete_extracharge_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $sql = "delete from extracharge where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;

@@ -132,11 +132,11 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
 
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
     // Создаём остаточный ролик
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     $last_source = filter_input(INPUT_POST, 'last_source');
     $last_wind = filter_input(INPUT_POST, 'last_wind');
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     $width = filter_input(INPUT_POST, 'width');
     $net_weight = filter_input(INPUT_POST, 'net_weight');
     $length = filter_input(INPUT_POST, 'length');
@@ -182,7 +182,7 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
 }
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $user_id);
     
     if(empty($error_message)) {

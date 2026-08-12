@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 
 // Если машина - не атлас, перекидываем на machine.php
 if($machine_id != PRINTER_ATLAS) {
@@ -117,7 +117,7 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                        <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) ?>" />
                         <div class="form-group">
                             <label for="gap_raport">ЗазорРапорт (минимальное расстояние между этикетками), мм</label>
                             <input type="text" class="form-control float-only<?=$gap_raport_valid ?>" id="gap_raport" name="gap_raport" value="<?= empty($gap_raport) ? "" : floatval($gap_raport) ?>" placeholder="ЗазорРапорт, мм" required="required" autocomplete="off" />

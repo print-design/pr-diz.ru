@@ -9,16 +9,16 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
 }
 
 // Если не указан id или машина, направляем к списку заданий
-$id = filter_input(INPUT_GET, 'id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
 // Начало резки
 if(null !== filter_input(INPUT_POST, 'start_cut_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     
     // При установке статуса "Приладка на резке" происходит переход в раздел "Производят"
     $error_message = SetCalculationStatus($id, ORDER_STATUS_CUT_PRILADKA, '');

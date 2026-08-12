@@ -33,9 +33,9 @@ $source_id_valid = '';
 $source_id_valid_message = 'ID рулона обязательно';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     
-    $source_id = filter_input(INPUT_POST, 'source_id');
+    $source_id = filter_input(INPUT_POST, 'source_id', FILTER_VALIDATE_INT);
     if(empty($source_id)) {
         $source_id_valid = ISINVALID;
         $form_valid = false;
@@ -196,7 +196,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 // Получение объекта
-$source_id = filter_input(INPUT_POST, 'source_id');
+$source_id = filter_input(INPUT_POST, 'source_id', FILTER_VALIDATE_INT);
 ?>
 <!DOCTYPE html>
 <html>

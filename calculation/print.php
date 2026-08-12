@@ -7,7 +7,7 @@ include './calculation_result.php';
 $disabled_attr = " disabled='disabled'";
 
 // Получение объекта
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 

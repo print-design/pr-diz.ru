@@ -5,7 +5,7 @@ require '../vendor/autoload.php';
 use chillerlan\QRCode\QRCode;
 
 // Если не задано значение roll_id, перенаправляем на список
-$roll_id = filter_input(INPUT_GET, 'roll_id');
+$roll_id = filter_input(INPUT_GET, 'roll_id', FILTER_VALIDATE_INT);
 if(empty($roll_id)) {
     header('Location: '.APPLICATION.'/marker/');
 }

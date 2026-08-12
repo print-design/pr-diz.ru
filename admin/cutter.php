@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Резка
-$cutter_id = filter_input(INPUT_GET, 'cutter_id');
+$cutter_id = filter_input(INPUT_GET, 'cutter_id', FILTER_VALIDATE_INT);
 
 // Валидация формы
 $form_valid = true;
@@ -28,7 +28,7 @@ if(null !== filter_input(INPUT_POST, 'norm_cutter_submit')) {
         $form_valid = false;
     }
     
-    $cutter_id = filter_input(INPUT_POST, 'cutter_id');
+    $cutter_id = filter_input(INPUT_POST, 'cutter_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         // Старый объект

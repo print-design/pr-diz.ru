@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 
 // Пекренаправление на страницу карщика при чтении QR-кода
 if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
-    header('Location: '.APPLICATION.'/car/pallet_edit.php?id='. filter_input(INPUT_GET, 'id'));
+    header('Location: '.APPLICATION.'/car/pallet_edit.php?id='. filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT));
 }
 
 // Авторизация
@@ -12,7 +12,7 @@ elseif(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPE
 }
 
 // Если не задано значение id, перенаправляем на список
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
@@ -35,7 +35,7 @@ $length_invalid_message = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
@@ -50,7 +50,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $old_width = $row['width'];
         $old_net_weight = $row['net_weight'];
         
-        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
         if(empty($film_variation_id)) $film_variation_id = $old_film_variation_id;
         
         $length = filter_input(INPUT_POST, 'length');
@@ -93,7 +93,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
     $date = filter_input(INPUT_POST, 'date');
-    $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
+    $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
@@ -145,16 +145,16 @@ $time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
-$supplier_id = filter_input(INPUT_POST, 'supplier_id');
+$supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
 if(null === $supplier_id) $supplier_id = $row['supplier_id'];
 
-$film_id = filter_input(INPUT_POST, 'film_id');
+$film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
 if(null === $film_id) $film_id = $row['film_id'];
 
 $width = filter_input(INPUT_POST, 'width');
 if(null === $width) $width = $row['width'];
 
-$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+$film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
 if(null === $film_variation_id) $film_variation_id = $row['film_variation_id'];
 
 $length = filter_input(INPUT_POST, 'length');
@@ -375,7 +375,7 @@ if(null === $comment) $comment = $row['comment'];
                         </div>
                         <div class="p-0">
                             <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
+                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -393,7 +393,7 @@ if(null === $comment) $comment = $row['comment'];
                         $sql = "select u.last_name, left(u.first_name, 1) first_name, date_format(pch.date, '%d.%m.%Y %H:%i') date, pch.cell "
                                 . "from pallet_cell_history pch "
                                 . "inner join user u on pch.user_id = u.id "
-                                . "where pch.pallet_id = ". filter_input(INPUT_GET, 'id');
+                                . "where pch.pallet_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
                         $fetcher = new Fetcher($sql);
                         while($row = $fetcher->Fetch()):
                         ?>

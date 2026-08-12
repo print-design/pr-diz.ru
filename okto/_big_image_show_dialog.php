@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $is_user_image = filter_input(INPUT_GET, 'is_user_image');
 
 $result = array('error' => '');

@@ -7,11 +7,11 @@ if(!empty($title)) {
 elseif(!empty (filter_input(INPUT_GET, 'cell'))) {
     $find_value = filter_input(INPUT_GET, 'cell');
 }
-elseif(!empty (filter_input(INPUT_POST, 'id'))) {
-    $find_value = filter_input(INPUT_POST, 'id');
+elseif(!empty (filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT))) {
+    $find_value = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 }
-elseif(!empty (filter_input(INPUT_GET, 'id'))) {
-    $find_value = filter_input(INPUT_GET, 'id');
+elseif(!empty (filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT))) {
+    $find_value = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 }
 ?>
 <div class="row">

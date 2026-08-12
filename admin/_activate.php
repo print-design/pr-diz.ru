@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 $type = filter_input(INPUT_GET, 'type');
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if($type == "laminator_roller" && !empty($id)) {
     $sql = "update norm_laminator_roller set active = not active where id = $id";

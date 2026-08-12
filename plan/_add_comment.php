@@ -2,7 +2,7 @@
 require_once '../include/topscripts.php';
 
 $planType = filter_input(INPUT_GET, 'plan_type');
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $text = addslashes(filter_input(INPUT_GET, 'text') ?? '');
 $error = '';
 $result = '';

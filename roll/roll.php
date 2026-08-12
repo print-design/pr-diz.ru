@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 
 // Пекренаправление на страницу карщика или резчика при чтении QR-кода
 if(IsInRole(ROLE_NAMES[ROLE_ELECTROCARIST])) {
-    header('Location: '.APPLICATION.'/car/roll_edit.php?id='. filter_input(INPUT_GET, 'id'));
+    header('Location: '.APPLICATION.'/car/roll_edit.php?id='. filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT));
 }
 
 // Авторизация
@@ -12,7 +12,7 @@ elseif(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPE
 }
 
 // Если не задано значение id, перенаправляем на список
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if(empty($id)) {
     header('Location: '.APPLICATION.'/roll/');
 }
@@ -35,7 +35,7 @@ $length_invalid_message = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
@@ -47,7 +47,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         $old_width = $row['width'];
         $old_net_weight = $row['net_weight'];
         
-        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
         if(empty($film_variation_id)) $film_variation_id = $old_film_variation_id;
         
         $length = filter_input(INPUT_POST, 'length');
@@ -81,7 +81,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     }
     
     if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-        $status_id = filter_input(INPUT_POST, 'status_id');
+        $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
         if(empty($status_id)) {
             if(empty($cell)) {
                 $status_id_valid = ISINVALID;
@@ -92,7 +92,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
     $date = filter_input(INPUT_POST, 'date');
-    $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id');
+    $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
@@ -110,7 +110,7 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
         $sql = "select status_id from roll_status_history where roll_id = $id order by id desc limit 1";
         $row = (new Fetcher($sql))->Fetch();
-        $status_id = filter_input(INPUT_POST, 'status_id');
+        $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
         
         if((!$row || $row['status_id'] != $status_id) && !empty($status_id)) {
             $user_id = GetUserId();
@@ -165,16 +165,16 @@ $time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
 
-$supplier_id = filter_input(INPUT_POST, 'supplier_id');
+$supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
 if(null === $supplier_id) $supplier_id = $row['supplier_id'];
 
-$film_id = filter_input(INPUT_POST, 'film_id');
+$film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
 if(null === $film_id) $film_id = $row['film_id'];
 
 $width = filter_input(INPUT_POST, 'width');
 if(null === $width) $width = $row['width'];
 
-$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+$film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
 if(null === $film_variation_id) $film_variation_id = $row['film_variation_id'];
 
 $length = filter_input(INPUT_POST, 'length');
@@ -186,7 +186,7 @@ if(null === $net_weight) $net_weight = $row['net_weight'];
 $cell = filter_input(INPUT_POST, 'cell');
 if(null === $cell) $cell = $row['cell'];
 
-$status_id = filter_input(INPUT_POST, 'status_id');
+$status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
 if(null === $status_id) $status_id = $row['status_id'];
 
 $status_date = $row['status_date'];
@@ -390,7 +390,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         $sql = "select cstr.width "
                                 . "from cut_source cs "
                                 . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 0";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and cs.is_from_pallet = 0";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
@@ -404,7 +404,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         $sql = "select cstr.width "
                                 . "from cutting_source cs "
                                 . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id')." and cs.is_from_pallet = 0";
+                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and cs.is_from_pallet = 0";
                         $fetcher = new Fetcher($sql);
                         $result = "";
                         while($row = $fetcher->Fetch()) {
@@ -478,7 +478,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     $sql = "select cs.width "
                             . "from cut c "
                             . "inner join cut_stream cs on cs.cut_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id');
+                            . "where c.remain = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
                     $grabber = new Grabber($sql);
                     if(count($grabber->result) > 0):
                     ?>
@@ -505,7 +505,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     $sql = "select cs.width "
                             . "from cutting c "
                             . "inner join cutting_stream cs on cs.cutting_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id');
+                            . "where c.remain = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
                     $grabber = new Grabber($sql);
                     if(count($grabber->result) > 0):
                     ?>
@@ -554,7 +554,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         </div>
                         <div class="p-0">
                             <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))): ?>
-                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id') ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
+                            <a href="print.php?id=<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" class="btn btn-outline-dark" style="width: 175px;">Распечатать бирку</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -572,7 +572,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         $sql = "select u.last_name, left(u.first_name, 1) first_name, date_format(rch.date, '%d.%m.%Y %H:%i') date, rch.cell "
                                 . "from roll_cell_history rch "
                                 . "inner join user u on rch.user_id = u.id "
-                                . "where rch.roll_id = ". filter_input(INPUT_GET, 'id');
+                                . "where rch.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
                         $fetcher = new Fetcher($sql);
                         while($row = $fetcher->Fetch()):
                         ?>

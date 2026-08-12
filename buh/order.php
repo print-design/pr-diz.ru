@@ -9,7 +9,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT])))
 }
 
 // Если не указан id, направляем к списку заказов
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if($id === null) {
     header('Location: '.APPLICATION.'/buh/');
 }
@@ -24,7 +24,7 @@ $amount_valid = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'payment_submit')) {
-    $order_id = filter_input(INPUT_POST, 'order_id');
+    $order_id = filter_input(INPUT_POST, 'order_id', FILTER_VALIDATE_INT);
     
     $paid_at = filter_input(INPUT_POST, 'paid_at');
     if(empty($paid_at)) {

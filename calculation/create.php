@@ -14,7 +14,7 @@ $new_customer_id = null;
 // Создание заказчика
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
     if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
-        $id = filter_input(INPUT_POST, 'id');
+        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name') ?? '');
         $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person') ?? '');
         $customer_phone = filter_input(INPUT_POST, 'customer_phone');
@@ -66,7 +66,7 @@ $time_run2 = null;
 $length_run2 = null;
 $waste_percent_run2 = null;
 
-$machine_id = filter_input(INPUT_POST, 'machine_id');
+$machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
 
 if(!empty($machine_id)) {
     $sql = "select width, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = $machine_id order by date desc limit 1";
@@ -188,7 +188,7 @@ $min_m2_when_pcs_invalid = false; // минимальная квадратура
 if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     // СУММАРНАЯ ШИРИНА РУЧЬЁВ
     
-    $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+    $work_type_id = filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT);
     $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width');
     $streams_number = filter_input(INPUT_POST, 'streams_number');
     $stream_widths = array();
@@ -234,7 +234,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     // УДЕЛЬНЫЙ ВЕС 1, 2, 3
     
     $individual_density = filter_input(INPUT_POST, 'individual_density');
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     if(!empty($individual_density)) {
         $density1 = $individual_density;
     }
@@ -247,7 +247,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density');
-    $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
+    $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id', FILTER_VALIDATE_INT);
     if(!empty($lamination1_individual_density)) {
         $density2 = $lamination1_individual_density;
     }
@@ -260,7 +260,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density');
-    $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
+    $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id', FILTER_VALIDATE_INT);
     if(!empty($lamination2_individual_density)) {
         $density3 = $lamination2_individual_density;
     }
@@ -284,33 +284,33 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'work_type_id'))) {
+    if(empty(filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT))) {
         $work_type_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'film_id'))) {
+    if(empty(filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT))) {
         $film_id_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'work_type_id') != WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity'))) {
+    if(filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT) != WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
     
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'printings_number'))) {
+    if(filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT) == WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'printings_number'))) {
         $printings_number_valid = ISINVALID;
         $form_valid = false;
     }
     
     // Если тип "Самоклеящийся материал", то должен быть добавлен хотя бы один тираж
     // Иначе поле "Размер тиража" не должно быть пустое
-    if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity_1'))) {
+    if(filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT) == WORK_TYPE_SELF_ADHESIVE && empty(filter_input(INPUT_POST, 'quantity_1'))) {
         $printings_number_valid = ISINVALID;
         $form_valid = false;
     }
-    elseif(filter_input(INPUT_POST, 'work_type_id') != WORK_TYPE_SELF_ADHESIVE && empty (filter_input(INPUT_POST, 'quantity'))) {
+    elseif(filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT) != WORK_TYPE_SELF_ADHESIVE && empty (filter_input(INPUT_POST, 'quantity'))) {
         $quantity_valid = ISINVALID;
         $form_valid = false;
     }
@@ -329,7 +329,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(filter_input(INPUT_POST, 'film_id') == INDIVIDUAL) {
+    if(filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT) == INDIVIDUAL) {
         // Проверка валидности параметров, введённых вручную при выборе марки плёнки "Другая"
         if(empty(filter_input(INPUT_POST, 'individual_film_name'))) {
             $individual_film_name_valid = ISINVALID;
@@ -348,7 +348,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     else {
         // Проверка валидности параметров стандартных плёнок
-        if(empty(filter_input(INPUT_POST, 'film_variation_id'))) {
+        if(empty(filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT))) {
             $film_variation_id_valid = ISINVALID;
             $form_valid = false;
         }
@@ -550,7 +550,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 $form_valid = false;
             }
             
-            if(filter_input(INPUT_POST, 'work_type_id') == WORK_TYPE_PRINT) {
+            if(filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT) == WORK_TYPE_PRINT) {
                 if($$ink_var == 'lacquer' && empty($$lacquer_var)) {
                     $lacquer_valid_var = 'lacquer_'.$i.'_valid';
                     $$lacquer_valid_var = ISINVALID;
@@ -613,14 +613,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     if($form_valid) {
-        $customer_id = filter_input(INPUT_POST, 'customer_id');
+        $customer_id = filter_input(INPUT_POST, 'customer_id', FILTER_VALIDATE_INT);
         $name = addslashes(filter_input(INPUT_POST, 'name') ?? '');
-        $work_type_id = filter_input(INPUT_POST, 'work_type_id');
+        $work_type_id = filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT);
         $unit = filter_input(INPUT_POST, 'unit');
-        $machine_id = filter_input(INPUT_POST, 'machine_id'); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = "NULL";
+        $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = "NULL";
         $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity') ?? ''); if(empty($quantity)) $quantity = "NULL";
-        $film_id = filter_input(INPUT_POST, 'film_id');
-        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id'); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
+        $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
+        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
         $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = "NULL";
         $currency = filter_input(INPUT_POST, 'currency');
         $individual_film_name = addslashes(filter_input(INPUT_POST, 'individual_film_name') ?? ''); if($film_id != INDIVIDUAL) $individual_film_name = "";
@@ -639,8 +639,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        $lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id');
-        $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id'); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL"; if($lamination1_film_id == INDIVIDUAL) $lamination1_film_variation_id = "NULL";
+        $lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id', FILTER_VALIDATE_INT);
+        $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL"; if($lamination1_film_id == INDIVIDUAL) $lamination1_film_variation_id = "NULL";
         $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = "NULL";
         $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
         $lamination1_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination1_individual_film_name') ?? ''); if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_film_name = "";
@@ -659,8 +659,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        $lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id');
-        $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id'); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL"; if($lamination2_film_id == INDIVIDUAL) $lamination2_film_variation_id = "NULL";
+        $lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id', FILTER_VALIDATE_INT);
+        $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL"; if($lamination2_film_id == INDIVIDUAL) $lamination2_film_variation_id = "NULL";
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
         $lamination2_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination2_individual_film_name') ?? ''); if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_film_name = "";
@@ -679,7 +679,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             }
         }
         
-        $laminator_id = filter_input(INPUT_POST, 'laminator_id'); if(empty($laminator_id)) $laminator_id = "NULL";
+        $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT); if(empty($laminator_id)) $laminator_id = "NULL";
         $length = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
         $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
         $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
@@ -843,7 +843,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
 }
 
 // Получение объекта
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation_result = null;
 
 if(!empty($id)) {
@@ -886,7 +886,7 @@ if(!empty($id)) {
 $date = null;
 if(isset($row['date'])) $date = $row['date'];
 
-$customer_id = filter_input(INPUT_POST, 'customer_id');
+$customer_id = filter_input(INPUT_POST, 'customer_id', FILTER_VALIDATE_INT);
 if($customer_id === null && isset($row['customer_id'])) {
     $customer_id = $row['customer_id'];
 }
@@ -912,17 +912,17 @@ else {
     $quantity = preg_replace("/\D/", "", $quantity ?? '');
 }
 
-$work_type_id = filter_input(INPUT_POST, 'work_type_id');
+$work_type_id = filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT);
 if($work_type_id === null && isset($row['work_type_id'])) {
     $work_type_id = $row['work_type_id'];
 }
 
-$film_id = filter_input(INPUT_POST, 'film_id');
+$film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
 if($film_id === null && isset($row['film_id'])) {
     $film_id = $row['film_id'];
 }
 
-$film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+$film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
 if($film_variation_id === null && isset($row['film_variation_id'])) {
     $film_variation_id = $row['film_variation_id'];
 }
@@ -970,12 +970,12 @@ if($width_ski === null && isset($row['width_ski'])) {
     $width_ski = $row['width_ski'];
 }
 
-$lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id');
+$lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id', FILTER_VALIDATE_INT);
 if($lamination1_film_id === null && isset($row['lamination1_film_id'])) {
     $lamination1_film_id = $row['lamination1_film_id'];
 }
 
-$lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id');
+$lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id', FILTER_VALIDATE_INT);
 if($lamination1_film_variation_id === null && isset($row['lamination1_film_variation_id'])) {
     $lamination1_film_variation_id = $row['lamination1_film_variation_id'];
 }
@@ -1020,12 +1020,12 @@ if($lamination1_width_ski === null && isset($row['lamination1_width_ski'])) {
     $lamination1_width_ski = $row['lamination1_width_ski'];
 }
 
-$lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id');
+$lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id', FILTER_VALIDATE_INT);
 if($lamination2_film_id === null && isset($row['lamination2_film_id'])) {
     $lamination2_film_id = $row['lamination2_film_id'];
 }
 
-$lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id');
+$lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id', FILTER_VALIDATE_INT);
 if($lamination2_film_variation_id === null && isset($row['lamination2_film_variation_id'])) {
     $lamination2_film_variation_id = $row['lamination2_film_variation_id'];
 }
@@ -1070,7 +1070,7 @@ if($lamination2_width_ski === null && isset($row['lamination2_width_ski'])) {
     $lamination2_width_ski = $row['lamination2_width_ski'];
 }
 
-$laminator_id = filter_input(INPUT_POST, 'laminator_id');
+$laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT);
 if($laminator_id === null && isset($row['laminator_id'])) {
     $laminator_id = $row['laminator_id'];
 }
@@ -1080,7 +1080,7 @@ if($streams_number === null && isset($row['streams_number'])) {
     $streams_number = $row['streams_number'];
 }
 
-$machine_id = filter_input(INPUT_POST, 'machine_id');
+$machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
 if($machine_id === null && isset($row['machine_id'])) {
     $machine_id = $row['machine_id'];
 }
@@ -1142,7 +1142,7 @@ if($ink_run2_number === null && isset($row['ink_run2_number'])) {
     $ink_run2_number = $row['ink_run2_number'];
 }
 
-$manager_id = filter_input(INPUT_POST, 'manager_id');
+$manager_id = filter_input(INPUT_POST, 'manager_id', FILTER_VALIDATE_INT);
 if($manager_id === null && isset($row['manager_id'])) {
     $manager_id = $row['manager_id'];
 }
@@ -1336,7 +1336,7 @@ if($extra_expense === null && isset($row['extra_expense'])) {
     $extra_expense = $row['extra_expense'];
 }
 
-$status_id = filter_input(INPUT_POST, 'status_id');
+$status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
 if($status_id === null && isset($row['status_id'])) {
     $status_id = $row['status_id'];
 }
@@ -1362,7 +1362,7 @@ if(!empty(filter_input(INPUT_POST, 'quantity_1'))) {
         $quantity_var = "quantity_$qi";
     }
 }
-elseif(filter_input(INPUT_GET, 'id') !== null) {
+elseif(filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) !== null) {
     $sql_quantity = "select quantity from calculation_quantity where calculation_id = $id";
     $fetcher_quantity = new Fetcher($sql_quantity);
     $error_message = $fetcher_quantity->error;
@@ -1386,7 +1386,7 @@ elseif(filter_input(INPUT_GET, 'id') !== null) {
 $create_calculation_submit_class = " d-none";
 
 if(null !== filter_input(INPUT_POST, 'create_customer_submit') || 
-        null === filter_input(INPUT_GET, 'id') || 
+        null === filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) || 
         !$form_valid) {
     $create_calculation_submit_class = "";
 }
@@ -1584,9 +1584,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 <div id="left_side">
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                        <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
                         <input type="hidden" id="scroll" name="scroll" />
-                        <?php if(null === filter_input(INPUT_GET, 'id') || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
+                        <?php if(null === filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) || filter_input(INPUT_GET, 'mode') == 'recalc'): ?>
                         <h1>Новый расчет</h1>
                         <?php else: ?>
                         <h1><?= htmlentities($name ?? '') ?></h1>

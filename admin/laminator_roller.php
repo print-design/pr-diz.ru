@@ -7,11 +7,11 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Ламинатор
-$laminator_id = filter_input(INPUT_GET, 'laminator_id');
+$laminator_id = filter_input(INPUT_GET, 'laminator_id', FILTER_VALIDATE_INT);
 
 // Добавление ширины вала
 if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
-    $laminator_id = filter_input(INPUT_POST, 'laminator_id');
+    $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT);
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($value)) {
@@ -41,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
 
 // Удаление ширины вала
 if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $sql = "delete from norm_laminator_roller where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;

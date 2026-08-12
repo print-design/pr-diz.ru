@@ -9,12 +9,12 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE
 }
 
 // Если не указан id, направляем к списку
-if(null === filter_input(INPUT_GET, 'id')) {
+if(null === filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
     header('Location: '.APPLICATION.'/calculation/');
 }
 
 // ПОЛУЧЕНИЕ ОБЪЕКТА
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 

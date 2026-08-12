@@ -7,7 +7,7 @@ if(isset($create_calculation_submit_class) && empty($create_calculation_submit_c
 
 // Редактирование наценки на тираж
 if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $extracharge = filter_input(INPUT_POST, 'extracharge');
     
     $sql = "update calculation set extracharge=$extracharge where id=$id";
@@ -41,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'extracharge-submit')) {
 
 // Редактирование наценки на ПФ
 if(null !== filter_input(INPUT_POST, 'extracharge-cliche-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $extracharge_cliche = filter_input(INPUT_POST, 'extracharge_cliche');
     
     $sql = "update calculation set extracharge_cliche=$extracharge_cliche where id=$id";

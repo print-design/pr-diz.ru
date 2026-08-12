@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 if(null !== filter_input(INPUT_POST, 'edit_take_stream_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $weight = filter_input(INPUT_POST, 'weight');
     $length = filter_input(INPUT_POST, 'length');
     $radius = filter_input(INPUT_POST, 'radius');

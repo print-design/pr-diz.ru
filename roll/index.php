@@ -18,7 +18,7 @@ function OrderLink($param) {
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $error_message = (new Executer("delete from roll_status_history where roll_id = $id"))->error;
     
     $error_message = (new Executer("delete from roll_cell_history where roll_id = $id"))->error;
@@ -31,7 +31,7 @@ if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
 // Фильтр для данных
 $where = "(rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")";
 
-$film_id = filter_input(INPUT_GET, 'film_id');
+$film_id = filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT);
 if(!empty($film_id)) {
     $where .= " and f.id = $film_id";
 }
@@ -277,7 +277,7 @@ $total_weight = $row['total_weight'];
         </div>
         
         <?php
-        $film_id = filter_input(INPUT_GET, 'film_id');
+        $film_id = filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT);
         $thicknesses = array();
         $slider_value = 0;
         $slider_index = 0;
@@ -312,7 +312,7 @@ $total_weight = $row['total_weight'];
                                     $film_id = $film['id'];
                                     $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_GET, 'film_id') == $film_id) $selected = " selected='selected'";
+                                    if(filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT) == $film_id) $selected = " selected='selected'";
                                     echo "<option value='$film_id'$selected>$name</option>";
                                 }
                                 ?>

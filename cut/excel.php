@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
 

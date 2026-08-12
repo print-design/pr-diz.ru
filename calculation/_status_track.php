@@ -6,7 +6,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
     include '../include/order_status_index.php';
 }
 
-$calculation_id = filter_input(INPUT_GET, 'id');
+$calculation_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 $str_name = '';
 $str_customer = '';

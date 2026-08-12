@@ -4,8 +4,8 @@ require_once './_plan_timetable.php';
 $date_from = null;
 $date_to = null;
 GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
-$work_id = filter_input(INPUT_GET, 'work_id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$work_id = filter_input(INPUT_GET, 'work_id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 
 $timetable = new PlanTimetable($work_id, $machine_id, $date_from, $date_to);
 $timetable->Show();

@@ -17,7 +17,7 @@ $phone_valid = '';
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
-    $role_id = filter_input(INPUT_POST, 'role_id');
+    $role_id = filter_input(INPUT_POST, 'role_id', FILTER_VALIDATE_INT);
     if(empty($role_id)) {
         $role_id_valid = ISINVALID;
         $form_valid = false;
@@ -86,7 +86,7 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                             <?php
                             foreach(PLAN_ROLES as $role):
                                 $selected = '';
-                                if(filter_input(INPUT_POST, 'role_id') == $role) $selected = " selected='selected'";
+                                if(filter_input(INPUT_POST, 'role_id', FILTER_VALIDATE_INT) == $role) $selected = " selected='selected'";
                             if(!(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && ($role == PLAN_ROLE_LAMINATE || $role == PLAN_ROLE_CUT)) 
                                     && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $role != PLAN_ROLE_LAMINATE && $role != PLAN_ROLE_CUT)):
                             ?>

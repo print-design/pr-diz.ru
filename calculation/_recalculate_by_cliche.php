@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 include './calculation.php';
 
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $cliche_in_price = filter_input(INPUT_GET, 'cliche_in_price');
 $customer_pays_for_cliche = filter_input(INPUT_GET, 'customer_pays_for_cliche');
 $result = array();

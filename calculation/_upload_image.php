@@ -11,7 +11,7 @@ const IMAGE_WIDTH = 0;
 $result = array('error' => '', 'info' => '', 'filename' => '', 'to_plan_visible' => false);
 
 $object = filter_input(INPUT_POST, 'object');
-$id = filter_input(INPUT_POST, 'id');
+$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 $image = filter_input(INPUT_POST, 'image');
 $resolution = filter_input(INPUT_POST, 'resolution');
 

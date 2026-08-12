@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$pallet_id = filter_input(INPUT_GET, 'id');
+$pallet_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $getstring = filter_input(INPUT_GET, 'getstring');
 $decoded = rawurldecode($getstring);
 $previous_params_string = "?";

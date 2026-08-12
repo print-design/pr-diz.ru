@@ -1,10 +1,10 @@
 <?php
 require_once '../include/topscripts.php';
 
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 
 if(empty($take_id)) {
-    $take_id = filter_input(INPUT_GET, 'take_id');
+    $take_id = filter_input(INPUT_GET, 'take_id', FILTER_VALIDATE_INT);
 }
 
 // Ручьи данного съёма
@@ -41,7 +41,7 @@ foreach($streams as $row):
     $stream_width = $row['stream_width'];
     $spool = $row['spool'];
     
-    if(null !== filter_input(INPUT_POST, 'stream_print_submit') && $stream_id == filter_input(INPUT_POST, 'stream_id')) {
+    if(null !== filter_input(INPUT_POST, 'stream_print_submit') && $stream_id == filter_input(INPUT_POST, 'stream_id', FILTER_VALIDATE_INT)) {
         $stream_weight = filter_input(INPUT_POST, 'weight');
         $stream_length = filter_input(INPUT_POST, 'length');
         $stream_radius = filter_input(INPUT_POST, 'radius');

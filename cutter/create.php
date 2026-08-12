@@ -34,7 +34,7 @@ $width_message = "Ширина обязательно";
 $radius_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     if(empty($supplier_id)) {
         $error_message = "Не указан производитель плёнки";
         $form_valid = false;
@@ -69,7 +69,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $form_valid = false;
     }
     
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     $width = filter_input(INPUT_POST, 'width');
     $cell = 'Цех';
     $comment = addslashes('!');

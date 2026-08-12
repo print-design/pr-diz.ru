@@ -9,16 +9,16 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
 }
 
 // Если не указан id или машина, направляем к списку заданий
-$id = filter_input(INPUT_GET, 'id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
 // Готовность к упаковке
 if(null !== filter_input(INPUT_POST, 'pack_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     
     // При установке статуса "Готово к упаковке" нет перехода в другой раздел
     $error_message = SetCalculationStatus($id, ORDER_STATUS_PACK_READY, '');
@@ -270,7 +270,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null != filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
         <div class="print_only">
             <?php if(false): ?>
             <div class="pagebreak"><?php include './_print.php'; ?></div>
@@ -286,7 +286,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
         include '../include/footer_cut.php';
         ?>
         <script>
-            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null !== filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                         head = document.head || document.getElementsByTagName('head')[0],
                         style = document.createElement('style');

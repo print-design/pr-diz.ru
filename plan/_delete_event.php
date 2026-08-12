@@ -1,7 +1,7 @@
 <?php
 require_once '../include/topscripts.php';
 
-$event_id = filter_input(INPUT_GET, 'event_id');
+$event_id = filter_input(INPUT_GET, 'event_id', FILTER_VALIDATE_INT);
 $error = '';
 
 $sql = "delete from plan_event where id = $event_id";

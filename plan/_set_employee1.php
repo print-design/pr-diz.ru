@@ -1,9 +1,9 @@
 <?php
 require_once '../include/topscripts.php';
 
-$id = filter_input(INPUT_GET, 'id');
-$work_id = filter_input(INPUT_GET, 'work_id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$work_id = filter_input(INPUT_GET, 'work_id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
 

@@ -5,7 +5,7 @@ require '../vendor/autoload.php';
 use chillerlan\QRCode\QRCode;
 
 // Если не задано значение id, перенаправляем на список
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }
@@ -165,7 +165,7 @@ $current_date_time = date("dmYHis");
         <?php
         $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, ".ROLL_STATUS_FREE.") status_id "
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id')." and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
+                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
         $pallet_rolls = (new Grabber($sql))->result;
         $current_roll = 0;
         

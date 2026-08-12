@@ -7,8 +7,8 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE
     include '../include/_unauthorized.php';
 }
 
-$work_id = filter_input(INPUT_GET, 'work_id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$work_id = filter_input(INPUT_GET, 'work_id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 $from = filter_input(INPUT_GET, 'from');
 
 // Если не указаны work_id или machine_id, перенаправляем на печать/Comiflex

@@ -26,21 +26,21 @@ $film_variation_id_valid = '';
 $width_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     if(empty($supplier_id)) {
         $supplier_id_valid = ISINVALID;
         $form_valid = false;
     }
     
-    $film_id = filter_input(INPUT_POST, 'film_id');
+    $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
     if(empty($film_id)) {
         $film_id_valid = ISINVALID;
         $form_valid = false;
     }
     
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     if(empty($film_variation_id)) {
         $film_variation_id_valid = ISINVALID;
         $form_valid = false;
@@ -72,7 +72,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 if(null !== filter_input(INPUT_POST, 'previous-submit')) {
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     
     if(!empty($cutting_id)) {
         $sql = "delete from cutting where id = $cutting_id";

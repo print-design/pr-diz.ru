@@ -14,7 +14,7 @@ include '../include/left_bar.php';
                 if($cutter != CUTTER_ATLAS):
                     $disabled = '';
                 
-                    if(filter_input(INPUT_GET, 'machine_id') == $cutter) {
+                    if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) == $cutter) {
                         $disabled = ' disabled';
                     }
             ?>

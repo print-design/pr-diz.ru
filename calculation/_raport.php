@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 
 echo "<option value='' hidden='hidden'>Рапорт...</option>";
 

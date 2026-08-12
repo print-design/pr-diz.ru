@@ -10,7 +10,7 @@ $user_id = GetUserId();
 
 // Выгрузка картинки
 if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $is_user_image = filter_input(INPUT_POST, 'is_user_image');
     
     if(!empty($id) && $is_user_image !== null) {

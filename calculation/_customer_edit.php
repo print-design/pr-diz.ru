@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 $sql = "";
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 $person = filter_input(INPUT_GET, 'person');
 
@@ -51,7 +51,7 @@ if(null !== $id && null !== $email) {
     }
 }
 
-$manager_id = filter_input(INPUT_GET, 'manager_id');
+$manager_id = filter_input(INPUT_GET, 'manager_id', FILTER_VALIDATE_INT);
 
 if(null !== $id && null !== $manager_id) {
     $sql = "update customer set manager_id = $manager_id where id = $id";

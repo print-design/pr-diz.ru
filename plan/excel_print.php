@@ -9,8 +9,8 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-$work_id = filter_input(INPUT_GET, 'work_id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$work_id = filter_input(INPUT_GET, 'work_id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
 

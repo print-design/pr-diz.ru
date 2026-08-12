@@ -1,7 +1,7 @@
 <?php
 require_once '../include/topscripts.php';
-$source_id = filter_input(INPUT_GET, 'source_id');
-$target_id = filter_input(INPUT_GET, 'target_id');
+$source_id = filter_input(INPUT_GET, 'source_id', FILTER_VALIDATE_INT);
+$target_id = filter_input(INPUT_GET, 'target_id', FILTER_VALIDATE_INT);
 $error = 'Ошибка при перетаскивании ручьёв';
 
 $source_calculation_id = 0;

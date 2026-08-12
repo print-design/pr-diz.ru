@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Если не задано значение cutting_wind_id, перенаправляем на список
-$cutting_wind_id = filter_input(INPUT_GET, 'cutting_wind_id');
+$cutting_wind_id = filter_input(INPUT_GET, 'cutting_wind_id', FILTER_VALIDATE_INT);
 if(empty($cutting_wind_id)) {
     header('Location: '.APPLICATION.'/cutter/');
 }

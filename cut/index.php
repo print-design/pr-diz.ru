@@ -12,7 +12,7 @@ if(IsInRole(CUTTER_USERS)) {
     $machine_id = GetUserId();
 }
 else {
-    $machine_id = filter_input(INPUT_GET, 'machine_id');
+    $machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 }
 
 if(empty($machine_id)) {

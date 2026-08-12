@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST]
 }
 
 // Если не задано значение id, перенаправляем на Главную
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if(empty($id)) {
     header('Location: '.APPLICATION.'/car/');
 }
@@ -21,7 +21,7 @@ $comment_valid = '';
 
 // Обработка формы смены ячейки
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $cell = addslashes(filter_input(INPUT_POST, 'cell') ?? '');
     $user_id = GetUserId();
     
@@ -58,7 +58,7 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
 
 // Обработка формы добавления комментария
 if(null !== filter_input(INPUT_POST, 'comment-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment') ?? '');
     $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
     
@@ -151,7 +151,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="object-card">
-                        <h1>Паллет №П<?= filter_input(INPUT_GET, 'id') ?></h1>
+                        <h1>Паллет №П<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?></h1>
                         <p>от <?= $date ?></p>
                         <p><strong>Поставщик:</strong> <?=$supplier ?></p>
                         <p class="mt-3"><strong>Характеристики</strong></p>

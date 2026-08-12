@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Если не задано значение id, перенаправляем на список
-if(empty(filter_input(INPUT_GET, 'id'))) {
+if(empty(filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT))) {
     header('Location: '.APPLICATION.'/supplier/');
 }
 
@@ -43,7 +43,7 @@ if(null !== filter_input(INPUT_POST, 'film_brand_create_submit')) {
     }
     
     $name = addslashes($name ?? '');
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     
     // Не допускаем повторного создания такой марки для такого поставщика
     $sql = "select count(id) from film_brand where name='$name' and supplier_id=$supplier_id";
@@ -84,8 +84,8 @@ if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
         $form_valid = false;
     }
     
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
-    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
+    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id', FILTER_VALIDATE_INT);
     
     // Не допускаем повторного создания одной и той же вариации для одной марки плёнки
     $sql = "select count(id) from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness and weight=$weight";
@@ -105,15 +105,15 @@ if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
 
 // Обработка отправки формы удаления марки
 if(null !== filter_input(INPUT_POST, 'delete_brand_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $error_message = (new Executer("delete from film_brand where id=$id"))->error;
 }
 
 // Обработка отправки формы удаления вариации
 if(null !== filter_input(INPUT_POST, 'delete_variation_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id');
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $film_brand_id = filter_input(INPUT_POST, 'film_brand_id', FILTER_VALIDATE_INT);
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     $error_message = (new Executer("delete from film_brand_variation where id=$id"))->error;
     
     if(empty($error_message)) {
@@ -132,7 +132,7 @@ if(null !== filter_input(INPUT_POST, 'delete_variation_submit')) {
 
 // Обработка отправки формы удаления поставщика
 if(null !== filter_input(INPUT_POST, 'delete-brand-button')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     // Проверка, присутствует ли он в каком-либо паллете или рулоне
     $sql = "select (select count(id) from pallet where supplier_id = $id) + (select count(id) from roll where supplier_id = $id)";
@@ -152,7 +152,7 @@ if(null !== filter_input(INPUT_POST, 'delete-brand-button')) {
 }
 
 // Получение объекта
-$row = (new Fetcher("select name from supplier where id=". filter_input(INPUT_GET, 'id')))->Fetch();
+$row = (new Fetcher("select name from supplier where id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)))->Fetch();
 $name = htmlentities($row['name'] ?? '');
 ?>
 <!DOCTYPE html>
@@ -179,7 +179,7 @@ $name = htmlentities($row['name'] ?? '');
                 <div style="margin-top: 10px; margin-bottom: 30px;">
                     <form method="post" class="form-inline" id="add-brand-form">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
+                        <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>"/>
                         <input type="hidden" id="scroll" name="scroll" />
                         <div class="form-group">
                             <input type="text" 
@@ -233,8 +233,8 @@ $name = htmlentities($row['name'] ?? '');
                     </button>
                 </div>
                 <?php
-                $film_brands = (new Grabber("select id, name from film_brand where supplier_id=". filter_input(INPUT_GET, 'id')." order by name"))->result;
-                $film_brand_variations = (new Grabber("select v.id, v.film_brand_id, v.thickness, v.weight from film_brand_variation v inner join film_brand b on v.film_brand_id=b.id where b.supplier_id=". filter_input(INPUT_GET, 'id')." order by thickness, weight"))->result;
+                $film_brands = (new Grabber("select id, name from film_brand where supplier_id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." order by name"))->result;
+                $film_brand_variations = (new Grabber("select v.id, v.film_brand_id, v.thickness, v.weight from film_brand_variation v inner join film_brand b on v.film_brand_id=b.id where b.supplier_id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." order by thickness, weight"))->result;
 
                 foreach ($film_brands as $film_brand):
                     $current_film_brand_variations = array_filter($film_brand_variations, function($param) use($film_brand) { return $param['film_brand_id'] == $film_brand['id']; });
@@ -247,7 +247,7 @@ $name = htmlentities($row['name'] ?? '');
                         <td>
                             <form method="post" class="form-inline add-variation-form" style="margin-left: 30px;">
                                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                                <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
+                                <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>"/>
                                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand['id'] ?>"/>
                                 <input type="hidden" id="scroll" name="scroll" />
                                 <div class="form-group">
@@ -314,7 +314,7 @@ $name = htmlentities($row['name'] ?? '');
                                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                 <input type="hidden" id="id" name="id" value="<?=$current_film_brand_variation['id'] ?>"/>
                                 <input type="hidden" id="film_brand_id" name="film_brand_id" value="<?=$film_brand['id'] ?>"/>
-                                <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id') ?>"/>
+                                <input type="hidden" id="supplier_id" name="supplier_id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>"/>
                                 <input type="hidden" id="scroll" name="scroll" />
                                 <button type="submit" class="btn btn-link confirmable" id="delete_variation_submit" name="delete_variation_submit"><img src="<?=APPLICATION ?>/images/icons/trash1.svg" /></button>
                             </form>  
@@ -328,7 +328,7 @@ $name = htmlentities($row['name'] ?? '');
             </div>
             <form method="post">
                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id') ?>" />
+                <input type="hidden" id="id" name="id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
                 <button class="btn btn-outline-danger confirmable" id="delete-brand-button" name="delete-brand-button"><img src="<?=APPLICATION ?>/images/icons/trash-red.svg" style="vertical-align: top;" />&nbsp;&nbsp;&nbsp;Удалить поставщика</button>
             </form>
         </div>

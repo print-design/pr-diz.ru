@@ -6,8 +6,8 @@ if(LoggedIn()) {
 }
 
 // Логин по графическому ключу
-if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
-    $graph_key_id = filter_input(INPUT_POST, 'graph_key_id');
+if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
+    $graph_key_id = filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT);
     $graph_key = filter_input(INPUT_POST, 'graph_key');
     
     $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where graph_key = password('$graph_key')";
@@ -125,7 +125,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id')) {
             </div>
             <form method="post" id="graph_key_form">
                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id') ?>" />
+                <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT) ?>" />
                 <input type="hidden" name="graph_key" id="graph_key" />
             </form>
         </div>

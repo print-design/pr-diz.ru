@@ -8,7 +8,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
 
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'delete-roll-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $error_message = (new Executer("delete from roll_status_history where roll_id = $id"))->error;
     
     if(empty($error_message)) {

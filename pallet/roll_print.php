@@ -5,7 +5,7 @@ require '../vendor/autoload.php';
 use chillerlan\QRCode\QRCode;
 
 // Если не задано значение id, перенаправляем на список
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if(empty($id)) {
     header('Location: '.APPLICATION.'/pallet/');
 }

@@ -10,7 +10,7 @@ const IMAGE_WIDTH = 0;
 
 $result = array('error' => '', 'info' => '', 'filename' => '');
 
-$user_id = filter_input(INPUT_POST, 'user_id');
+$user_id = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
 $resolution = filter_input(INPUT_POST, 'resolution');
 
 if(!empty($user_id) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_name'])) {

@@ -9,15 +9,15 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
 }
 
 // Если не указан id, направляем к списку заданий
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if($id === null) {
     header('Location: '.APPLICATION.'/pack/');
 }
 
 // Смена статуса
 if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $status_id = filter_input(INPUT_POST, 'status_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
     $error_message = SetCalculationStatus($id, $status_id, '');
     
     if(empty($error_message)) {
@@ -371,7 +371,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null != filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
         <div class="print_only">
             <?php if(false): ?>
             <div class="pagebreak"><?php include '../cut/_print.php'; ?></div>
@@ -445,7 +445,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 $('#edit_not_take_stream_alert').addClass('d-none');
             });
                 
-            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null !== filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                     head = document.head || document.getElementsByTagName('head')[0],
                     style = document.createElement('style');

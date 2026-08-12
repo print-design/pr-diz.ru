@@ -1,11 +1,11 @@
 <?php
 require_once '../include/topscripts.php';
 
-$calculation_id = filter_input(INPUT_GET, 'calculation_id');
+$calculation_id = filter_input(INPUT_GET, 'calculation_id', FILTER_VALIDATE_INT);
 $lamination = filter_input(INPUT_GET, 'lamination');
 $run2 = filter_input(INPUT_GET, 'run2');
-$work_id = filter_input(INPUT_GET, 'work_id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$work_id = filter_input(INPUT_GET, 'work_id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
 $before = filter_input(INPUT_GET, 'before');

@@ -9,16 +9,16 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
 }
 
 // Если не указан id или машина, направляем к списку заданий
-$id = filter_input(INPUT_GET, 'id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
 
 // Начало резки
 if(null !== filter_input(INPUT_POST, 'ready_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     $length = filter_input(INPUT_POST, 'length');
     
     // При установке статуса "Режется" нет перехода в другой раздел
@@ -43,8 +43,8 @@ if(null !== filter_input(INPUT_POST, 'ready_submit')) {
 
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     $status_comment = filter_input(INPUT_POST, 'status_comment');
     
     // При установке статуса "Снято с резки" нет перехода в другой раздел

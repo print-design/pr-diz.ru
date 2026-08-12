@@ -9,7 +9,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE
 }
 
 // Если не указан id, направляем к списку
-if(null === filter_input(INPUT_GET, 'id')) {
+if(null === filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
     header('Location: '.APPLICATION.'/calculation/');
 }
 
@@ -34,7 +34,7 @@ $streams_valid = array();
 
 // Создание технологической карты
 if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     if(empty($id)) {
         $error_message == "Не указан ID расчёта";
@@ -43,9 +43,9 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     $calculation = CalculationBase::Create($id);
     
-    $techmap_id = filter_input(INPUT_POST, 'techmap_id');
+    $techmap_id = filter_input(INPUT_POST, 'techmap_id', FILTER_VALIDATE_INT);
     
-    $supplier_id = filter_input(INPUT_POST, 'supplier_id');
+    $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     
     $side = filter_input(INPUT_POST, 'side');
     if(empty($side)) {
@@ -205,7 +205,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
 // Удаление картинки
 if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
     $object = filter_input(INPUT_POST, 'object');
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $image = filter_input(INPUT_POST, 'image');
     
     if(!empty($object) && !empty($id) || !empty($image)) {
@@ -265,7 +265,7 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
 
 // Постановка в план технологической карты
 if(null !== filter_input(INPUT_POST, 'plan_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     if(!empty($id)) {
         $error_message = SetCalculationStatus($id, ORDER_STATUS_WAITING, '');
@@ -278,8 +278,8 @@ if(null !== filter_input(INPUT_POST, 'plan_submit')) {
 
 // Удаление технологической карты
 if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $techmap_id = filter_input(INPUT_POST, 'techmap_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $techmap_id = filter_input(INPUT_POST, 'techmap_id', FILTER_VALIDATE_INT);
     
     if(!empty($id) && !empty($techmap_id)) {
         $sql = "delete from techmap where id = $techmap_id";
@@ -297,7 +297,7 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
 }
 
 // ПОЛУЧЕНИЕ ОБЪЕКТА
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
@@ -352,7 +352,7 @@ if(!empty($calculation->ink_run2_number)) {
 
 $lamination = (empty($calculation->laminations_number) || $calculation->laminations_number == 0) ? "нет" : $calculation->laminations_number;
 
-$supplier_id = filter_input(INPUT_POST, 'supplier_id');
+$supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
 if($supplier_id === null) $supplier_id = $calculation_result->supplier_id;
 
 $side = filter_input(INPUT_POST, 'side');

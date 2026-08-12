@@ -1,7 +1,7 @@
 <?php
 include '../include/constants.php';
 
-$work_type_id = filter_input(INPUT_GET, 'work_type_id');
+$work_type_id = filter_input(INPUT_GET, 'work_type_id', FILTER_VALIDATE_INT);
 
 if(count(WORK_TYPE_PRINTERS[$work_type_id]) > 1):
 ?>

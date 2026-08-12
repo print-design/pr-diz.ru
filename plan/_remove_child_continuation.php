@@ -1,7 +1,7 @@
 <?php
 require_once '../include/topscripts.php';
 
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $error = "";
 
 $plan_edition_id = 0;

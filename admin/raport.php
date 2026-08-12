@@ -7,11 +7,11 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 
 // Добавление рапорта
 if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($value)) {
@@ -41,7 +41,7 @@ if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
 
 // Удаление рапорта
 if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $sql = "delete from raport where id=$id";
     $executer = new Executer($sql);
     $error_message = $executer->error;

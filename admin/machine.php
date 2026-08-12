@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Машина
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 
 // Валидация формы
 $form_valid = true;
@@ -184,7 +184,7 @@ if($row = $fetcher->Fetch()) {
             ?>
             <form method="post">
                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id') ?>" />
+                <input type="hidden" id="machine_id" name="machine_id" value="<?= filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) ?>" />
                 <div class="row">
                     <div class="col-12 col-md-4 col-lg-2">
                         <?php if($machine_id == PRINTER_SOMA_OPTIMA): ?>

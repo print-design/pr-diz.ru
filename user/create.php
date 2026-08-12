@@ -32,7 +32,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         $form_valid = false;
     }
     
-    $role_id = filter_input(INPUT_POST, 'role_id');
+    $role_id = filter_input(INPUT_POST, 'role_id', FILTER_VALIDATE_INT);
     if(empty($role_id)) {
         $role_id_valid = ISINVALID;
         $form_valid = false;
@@ -120,7 +120,7 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
                                 $id = $role;
                                 $local_name = ROLE_LOCAL_NAMES[$role];
                                 $selected = '';
-                                if(filter_input(INPUT_POST, 'role_id') == $role) $selected = " selected='selected'";
+                                if(filter_input(INPUT_POST, 'role_id', FILTER_VALIDATE_INT) == $role) $selected = " selected='selected'";
                                 echo "<option value='$id'$selected>$local_name</option>";
                             }
                             ?>

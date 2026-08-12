@@ -76,7 +76,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         }
     }
     
-    $cutting_id = filter_input(INPUT_POST, 'cutting_id');
+    $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     $width = 0;
     
     $sql = "select width from cutting where id=$cutting_id";

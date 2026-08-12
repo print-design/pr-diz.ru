@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$printing_id = filter_input(INPUT_GET, 'printing_id');
+$printing_id = filter_input(INPUT_GET, 'printing_id', FILTER_VALIDATE_INT);
 $sequence = filter_input(INPUT_GET, 'sequence');
 $repeat_from = filter_input(INPUT_GET, 'repeat_from');
 

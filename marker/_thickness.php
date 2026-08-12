@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Получение толщин плёнки по ID марки для раскрывающегося списка
-$film_id = filter_input(INPUT_GET, 'film_id');
+$film_id = filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT);
 
 if(!empty($film_id)) {
     echo "<option value='' hidden='hidden' selected='selected'>Выберите толщину</option>";

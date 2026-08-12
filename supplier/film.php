@@ -38,7 +38,7 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
 
 // Обработка создания вариации плёнки
 if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
-    $film_id = filter_input(INPUT_POST, 'film_id');
+    $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
     if(empty($film_id)) {
         $error_message = "Не указана марка пленки";
         $form_valid = false;
@@ -74,7 +74,7 @@ if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
 
 // Редактирование цены за материал
 if(null !== filter_input(INPUT_POST, 'price_submit')) {
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     $price = filter_input(INPUT_POST, 'price');
     $currency = filter_input(INPUT_POST, 'currency');
     
@@ -101,7 +101,7 @@ if(null !== filter_input(INPUT_POST, 'price_submit')) {
 
 // Редактирование экосбора
 if(null !== filter_input(INPUT_POST, 'eco_price_submit')) {
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     $eco_price = filter_input(INPUT_POST, 'eco_price');
     $eco_currency = filter_input(INPUT_POST, 'eco_currency');
     
@@ -491,8 +491,8 @@ while($row = $fetcher->Fetch()) {
             $('#create_film_variation').modal('show');
             <?php endif; ?>
             
-            <?php if(null !== filter_input(INPUT_POST, 'film_id') && empty($error_message)): ?>
-            window.scrollTo(0, $('#f_<?= filter_input(INPUT_POST, 'film_id') ?>').offset().top - $('#topmost').height());
+            <?php if(null !== filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT) && empty($error_message)): ?>
+            window.scrollTo(0, $('#f_<?= filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT) ?>').offset().top - $('#topmost').height());
             <?php endif; ?>
         </script>
     </body>

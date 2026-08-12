@@ -14,7 +14,7 @@ $disabled_attr = " disabled='disabled'";
 // Редактирование включения ПФ в стоимость
 if(null !== filter_input(INPUT_POST, 'cliche_in_price_submit')) {
     $cliche_in_price = 0; if(filter_input(INPUT_POST, 'cliche_in_price') == 'on') $cliche_in_price = 1;
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     $sql = "update calculation set cliche_in_price = $cliche_in_price where id = $id";
     $executer = new Executer($sql);
@@ -37,7 +37,7 @@ if(null !== filter_input(INPUT_POST, 'cliche_in_price_submit')) {
 // Редактирование стороны, которая платит за ПФ
 if(null !== filter_input(INPUT_POST, 'customer_pays_for_cliche_submit')) {
     $customer_pays_for_cliche = 0; if(filter_input(INPUT_POST, 'customer_pays_for_cliche') == 'on') $customer_pays_for_cliche = 1;
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     $sql = "update calculation set customer_pays_for_cliche = $customer_pays_for_cliche where id = $id";
     $executer = new Executer($sql);
@@ -60,7 +60,7 @@ if(null !== filter_input(INPUT_POST, 'customer_pays_for_cliche_submit')) {
 // Редактирование включения ножа в стоимость
 if(null !== filter_input(INPUT_POST, 'knife_in_price_submit')) {
     $knife_in_price = 0; if(filter_input(INPUT_POST, 'knife_in_price') == 'on') $knife_in_price = 1;
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     $sql = "update calculation set knife_in_price = $knife_in_price where id = $id";
     $executer = new Executer($sql);
@@ -83,7 +83,7 @@ if(null !== filter_input(INPUT_POST, 'knife_in_price_submit')) {
 // Редактирование стороны, которая платит за нож
 if(null !== filter_input(INPUT_POST, 'customer_pays_for_knife_submit')) {
     $customer_pays_for_knife = 0; if(filter_input(INPUT_POST, 'customer_pays_for_knife') == 'on') $customer_pays_for_knife = 1;
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     $sql = "update calculation set customer_pays_for_knife = $customer_pays_for_knife where id = $id";
     $executer = new Executer($sql);
@@ -105,15 +105,15 @@ if(null !== filter_input(INPUT_POST, 'customer_pays_for_knife_submit')) {
 
 // Смена статуса
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $status_id = filter_input(INPUT_POST, 'status_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
     $user_id = GetUserId();
     
     $error_message = SetCalculationStatus($id, $status_id, '');
 }
 
 // Получение объекта
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 

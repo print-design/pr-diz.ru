@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Ламинатор
-$laminator_id = filter_input(INPUT_GET, 'laminator_id');
+$laminator_id = filter_input(INPUT_GET, 'laminator_id', FILTER_VALIDATE_INT);
 
 // "Растворителя" / "отвердителя"
 $solvent_genitive = "растворителя";
@@ -25,7 +25,7 @@ $solvent_part_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
-    $laminator_id = filter_input(INPUT_POST, 'laminator_id');
+    $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT);
     
     if(empty(filter_input(INPUT_POST, 'glue_price')) || empty(filter_input(INPUT_POST, 'glue_currency'))) {
         $glue_price_valid = ISINVALID;
@@ -156,7 +156,7 @@ if($row = $fetcher->Fetch()) {
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" id="laminator_id" name="laminator_id" value="<?= filter_input(INPUT_GET, 'laminator_id') ?>" />
+                        <input type="hidden" id="laminator_id" name="laminator_id" value="<?= filter_input(INPUT_GET, 'laminator_id', FILTER_VALIDATE_INT) ?>" />
                         <div class="form-group">
                             <label for="glue_price">Цена чистого клея (за кг)</label>
                             <div class="input-group">

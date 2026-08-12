@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$supplier_id = filter_input(INPUT_GET, 'supplier_id');
+$supplier_id = filter_input(INPUT_GET, 'supplier_id', FILTER_VALIDATE_INT);
 if(!empty($supplier_id)) {
     $fetcher = (new Fetcher("select name from supplier where id=$supplier_id"));
     $row = $fetcher->Fetch();

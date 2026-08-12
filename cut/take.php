@@ -9,8 +9,8 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
 }
 
 // Если не указан id или не указана машина, направляем к списку заданий
-$id = filter_input(INPUT_GET, 'id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
@@ -20,10 +20,10 @@ $error_message = '';
 $invalid_stream = 0;
 
 if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
-    $take_id = filter_input(INPUT_POST, 'take_id');
-    $calculation_id = filter_input(INPUT_POST, 'calculation_id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
-    $stream_id = filter_input(INPUT_POST, 'stream_id');
+    $take_id = filter_input(INPUT_POST, 'take_id', FILTER_VALIDATE_INT);
+    $calculation_id = filter_input(INPUT_POST, 'calculation_id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
+    $stream_id = filter_input(INPUT_POST, 'stream_id', FILTER_VALIDATE_INT);
     $stream_width = filter_input(INPUT_POST, 'stream_width');
     $spool = filter_input(INPUT_POST, 'spool');
     $employee_id = null;
@@ -163,8 +163,8 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
 
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     $status_comment = filter_input(INPUT_POST, 'status_comment');
     
     // При установке статуса "Снято с резки" нет перехода в другой раздел
@@ -487,7 +487,7 @@ if(empty($error_message)) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'stream_id', FILTER_VALIDATE_INT) || null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null != filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
         <div class="print_only">
             <?php if(false): ?>
             <div class="pagebreak"><?php include './_print.php'; ?></div>
@@ -616,7 +616,7 @@ if(empty($error_message)) {
                 $(".not_first_radius[value='']").val($('.first_radius').val());
             }
             
-            <?php if(null !== filter_input(INPUT_GET, 'stream_id') || null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'stream_id', FILTER_VALIDATE_INT) || null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null !== filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                         head = document.head || document.getElementsByTagName('head')[0],
                         style = document.createElement('style');

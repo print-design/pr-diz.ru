@@ -438,7 +438,7 @@ class Fetcher {
 // Выгрузка картинки
 if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
     $object = filter_input(INPUT_POST, 'object');
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $image = filter_input(INPUT_POST, 'image');
     
     if(!empty($object) && !empty($id) && !empty($image)) {
@@ -669,7 +669,7 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
 
 // Обработка формы отправки кода безопасности
 if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where id = ?";
     $result = (new Grabber($sql, [$id]))->result;
     

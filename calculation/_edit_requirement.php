@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $i = filter_input(INPUT_GET, 'i');
 $value = addslashes(filter_input(INPUT_GET, 'value') ?? '');
 

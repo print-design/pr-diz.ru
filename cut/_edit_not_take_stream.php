@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 if(null !== filter_input(INPUT_POST, 'edit_not_take_stream_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $weight = filter_input(INPUT_POST, 'weight');
     $location = filter_input(INPUT_POST, 'php_self');
     $location_get = array();

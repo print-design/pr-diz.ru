@@ -2,11 +2,11 @@
 include '../include/topscripts.php';
 
 $object = filter_input(INPUT_GET, 'object');
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $image = filter_input(INPUT_GET, 'image');
 
-$stream_id = filter_input(INPUT_GET, 'stream_id');
-$calculation_id = filter_input(INPUT_GET, 'calculation_id');
+$stream_id = filter_input(INPUT_GET, 'stream_id', FILTER_VALIDATE_INT);
+$calculation_id = filter_input(INPUT_GET, 'calculation_id', FILTER_VALIDATE_INT);
 
 $result = array( 'error' => '' );
 

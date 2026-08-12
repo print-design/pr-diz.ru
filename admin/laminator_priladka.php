@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 }
 
 // Ламинатор
-$laminator_id = filter_input(INPUT_GET, 'laminator_id');
+$laminator_id = filter_input(INPUT_GET, 'laminator_id', FILTER_VALIDATE_INT);
 
 // Валидация формы
 $form_valid = true;
@@ -34,7 +34,7 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_priladka_submit')) {
         $form_valid = false;
     }
     
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         // Старый объект

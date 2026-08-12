@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$printing_id = filter_input(INPUT_GET, 'printing_id');
+$printing_id = filter_input(INPUT_GET, 'printing_id', FILTER_VALIDATE_INT);
 $sequence = filter_input(INPUT_GET, 'sequence');
 $cliche = filter_input(INPUT_GET, 'cliche');
 $machine_coeff = filter_input(INPUT_GET, 'machine_coeff');

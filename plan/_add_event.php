@@ -1,7 +1,7 @@
 <?php
 require_once '../include/topscripts.php';
 
-$event_id = filter_input(INPUT_GET, 'event_id');
+$event_id = filter_input(INPUT_GET, 'event_id', FILTER_VALIDATE_INT);
 $date = filter_input(INPUT_GET, 'date');
 $shift = filter_input(INPUT_GET, 'shift');
 $before = filter_input(INPUT_GET, 'before');

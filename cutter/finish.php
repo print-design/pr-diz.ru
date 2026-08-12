@@ -9,7 +9,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_CUTTER]))) {
 // Текущий пользователь
 $user_id = GetUserId();
 
-$cutting_id = filter_input(INPUT_GET, 'id');
+$cutting_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 ?>
 <!DOCTYPE html>
 <html>

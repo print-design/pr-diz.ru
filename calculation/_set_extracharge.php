@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 include './calculation.php';
 
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $extracharge = filter_input(INPUT_GET, 'extracharge');
 $result = array();
 

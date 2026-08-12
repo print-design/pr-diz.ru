@@ -9,8 +9,8 @@ if(!IsInRole(CUTTER_USERS) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROL
 }
 
 // Если не указан id или машина, направляем к списку заданий
-$id = filter_input(INPUT_GET, 'id');
-$machine_id = filter_input(INPUT_GET, 'machine_id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 if(empty($id) || empty($machine_id)) {
     header('Location: '.APPLICATION.'/cut/');
 }
@@ -19,8 +19,8 @@ if(empty($id) || empty($machine_id)) {
 $error_message = '';
 
 if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     
     $sql = "insert into calculation_take (calculation_id) values ($id)";
     $executer = new Executer($sql);
@@ -33,8 +33,8 @@ if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
 
 // Снятие с резки
 if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     $status_comment = filter_input(INPUT_POST, 'status_comment');
     
     // При установке статуса "Снято с резки" нет перехода в другой раздел
@@ -290,7 +290,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                 </div>
             </div>
         </div>
-        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null != filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+        <?php if(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null != filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
         <div class="print_only">
             <?php if(false): ?>
             <div class="pagebreak"><?php include './_print.php'; ?></div>
@@ -306,7 +306,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
         include '../include/footer_cut.php';
         ?>
         <script>
-            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id') || null !== filter_input(INPUT_GET, 'not_take_stream_id')): ?>
+            <?php if(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT) || null !== filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_INT)): ?>
                 var css = '@page { size: portrait; margin: 2mm; }',
                         head = document.head || document.getElementsByTagName('head')[0],
                         style = document.createElement('style');

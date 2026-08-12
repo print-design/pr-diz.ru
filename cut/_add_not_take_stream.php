@@ -2,13 +2,13 @@
 include '../include/topscripts.php';
 
 if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
-    $id = filter_input(INPUT_POST, 'id');
-    $calculation_stream_id = filter_input(INPUT_POST, 'calculation_stream_id');
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $calculation_stream_id = filter_input(INPUT_POST, 'calculation_stream_id', FILTER_VALIDATE_INT);
     $weight = filter_input(INPUT_POST, 'weight');
     $length = filter_input(INPUT_POST, 'length');
     $employee_id = null;
     $location = filter_input(INPUT_POST, 'php_self');
-    $machine_id = filter_input(INPUT_POST, 'machine_id');
+    $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     $location_get = array();
     
     foreach($_POST as $key=>$value) {

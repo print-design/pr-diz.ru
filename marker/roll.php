@@ -20,13 +20,13 @@ $radius_valid = '';
 $cell_valid = '';
 
 if(null !== filter_input(INPUT_POST, 'create-submit')) {
-    $film_id = filter_input(INPUT_POST, 'film_id');
+    $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
     if(empty($film_id)) {
         $film_id_valid = ISINVALID;
         $form_valid = false;
     }
     
-    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id');
+    $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
     if(empty($film_variation_id)) {
         $film_variation_id_valid = ISINVALID;
         $form_valid = false;
@@ -155,7 +155,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                                     $id = $film['id'];
                                     $name = $film['name'];
                                     $selected = '';
-                                    if(filter_input(INPUT_POST, 'film_id') == $id) $selected = " selected='selected'";
+                                    if(filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT) == $id) $selected = " selected='selected'";
                                     echo "<option value='$id'$selected>$name</option>";
                                 }
                                 ?>
@@ -167,14 +167,14 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                             <select class="form-control<?=$film_variation_id_valid ?>" id="film_variation_id" name="film_variation_id" required="required">
                                 <option value="" hidden="hidden">Выберите толщину</option>
                                 <?php
-                                if(!empty(filter_input(INPUT_POST, 'film_id'))) {
-                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ".filter_input(INPUT_POST, 'film_id')." and id in (select film_variation_id from supplier_film_variation) order by thickness"))->result;
+                                if(!empty(filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT))) {
+                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ".filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT)." and id in (select film_variation_id from supplier_film_variation) order by thickness"))->result;
                                     foreach($film_variations as $film_variation) {
                                         $id = $film_variation['id'];
                                         $thickness = $film_variation['thickness'];
                                         $weight = $film_variation['weight'];
                                         $selected = '';
-                                        if(filter_input(INPUT_POST, 'film_variation_id') == $id) $selected = " selected='selected'";
+                                        if(filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT) == $id) $selected = " selected='selected'";
                                         echo "<option value='$id'$selected>$thickness мкм $weight г/м<sup>2</sup></option>";
                                     }
                                 }

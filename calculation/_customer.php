@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
 
-$id = filter_input(INPUT_GET, 'id');
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if(!empty($id)):
 $sql = "select c.date, c.name, c.person, c.phone, c.extension, c.email, u.id user_id, u.last_name, u.first_name "
