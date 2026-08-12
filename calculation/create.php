@@ -15,24 +15,24 @@ $new_customer_id = null;
 if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
     if(!empty(filter_input(INPUT_POST, 'customer_name'))) {
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        $customer_name = addslashes(filter_input(INPUT_POST, 'customer_name') ?? '');
-        $customer_person = addslashes(filter_input(INPUT_POST, 'customer_person') ?? '');
+        $customer_name = filter_input(INPUT_POST, 'customer_name') ?? '';
+        $customer_person = filter_input(INPUT_POST, 'customer_person') ?? '';
         $customer_phone = filter_input(INPUT_POST, 'customer_phone');
         $customer_extension = filter_input(INPUT_POST, 'customer_extension');
         $customer_email = filter_input(INPUT_POST, 'customer_email');
         $customer_manager_id = GetUserId();
         
         // Если такой заказчик уже есть, просто получаем его ID
-        $sql = "select id from customer where name = '$customer_name' and manager_id = $customer_manager_id limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select id from customer where name = ? and manager_id = ? limit 1";
+        $fetcher = new Fetcher($sql, [$customer_name, $customer_manager_id]);
         if($row = $fetcher->Fetch()) {
             $new_customer_id = $row[0];
         }
         
         // Если такого заказчика нет, создаём его
         if(empty($customer_id)) {
-            $sql = "insert into customer (name, person, phone, extension, email, manager_id) values ('$customer_name', '$customer_person', '$customer_phone', '$customer_extension', '$customer_email', $customer_manager_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into customer (name, person, phone, extension, email, manager_id) values (?, ?, ?, ?, ?, ?)";
+            $executer = new Executer($sql, [$customer_name, $customer_person, $customer_phone, $customer_extension, $customer_email, $customer_manager_id]);
             $error_message = $executer->error;
             $new_customer_id = $executer->insert_id;
         }
@@ -43,7 +43,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
 $gap_raport = null;
 
 $sql = "select gap_raport from norm_gap order by id desc limit 1";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, []);
 if($row = $fetcher->Fetch()) {
     $gap_raport = $row['gap_raport'];
 }
@@ -51,7 +51,7 @@ if($row = $fetcher->Fetch()) {
 $min_percent = null;
 
 $sql = "select min_percent from norm_ink order by id desc limit 1";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, []);
 if($row = $fetcher->Fetch()) {
     $min_percent = $row['min_percent'];
 }
@@ -69,8 +69,8 @@ $waste_percent_run2 = null;
 $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
 
 if(!empty($machine_id)) {
-    $sql = "select width, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = $machine_id order by date desc limit 1";
-    $fetcher = new Fetcher($sql);
+    $sql = "select width, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = ? order by date desc limit 1";
+    $fetcher = new Fetcher($sql, [$machine_id]);
     if($row = $fetcher->Fetch()) {
         $machine_width = $row['width'];
         $price_run2 = $row['price_run2'];
@@ -81,8 +81,8 @@ if(!empty($machine_id)) {
 }
 
 if(!empty($machine_id)) {
-    $query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = $machine_id order by id desc limit 1";
-    $fetcher = new Fetcher($query);
+    $query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ? order by id desc limit 1";
+    $fetcher = new Fetcher($query, [$machine_id]);
     if ($row = $fetcher->Fetch()) {
         $time_run2 = $row['time_run2'];
         $length_run2 = $row['length_run2'];
@@ -239,8 +239,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $density1 = $individual_density;
     }
     elseif(!empty ($film_variation_id)) {
-        $sql = "select weight from film_variation where id=$film_variation_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select weight from film_variation where id = ?";
+        $fetcher = new Fetcher($sql, [$film_variation_id]);
         if($row = $fetcher->Fetch()) {
             $density1 = $row[0];
         }
@@ -252,8 +252,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $density2 = $lamination1_individual_density;
     }
     elseif(!empty ($lamination1_film_variation_id)) {
-        $sql = "select weight from film_variation where id = $lamination1_film_variation_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select weight from film_variation where id = ?";
+        $fetcher = new Fetcher($sql, [$lamination1_film_variation_id]);
         if($row = $fetcher->Fetch()) {
             $density2 = $row[0];
         }
@@ -265,8 +265,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $density3 = $lamination2_individual_density;
     }
     elseif(!empty ($lamination2_film_variation_id)) {
-        $sql = "select weight from film_variation where id = $lamination2_film_variation_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select weight from film_variation where id = ?";
+        $fetcher = new Fetcher($sql, [$lamination2_film_variation_id]);
         if($row = $fetcher->Fetch()) {
             $density3 = $row[0];
         }
@@ -614,81 +614,81 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     if($form_valid) {
         $customer_id = filter_input(INPUT_POST, 'customer_id', FILTER_VALIDATE_INT);
-        $name = addslashes(filter_input(INPUT_POST, 'name') ?? '');
+        $name = filter_input(INPUT_POST, 'name') ?? '';
         $work_type_id = filter_input(INPUT_POST, 'work_type_id', FILTER_VALIDATE_INT);
         $unit = filter_input(INPUT_POST, 'unit');
-        $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT); if(empty($machine_id)) $machine_id = "NULL"; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = "NULL";
-        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity') ?? ''); if(empty($quantity)) $quantity = "NULL";
+        $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT); if(empty($machine_id)) $machine_id = null; if($work_type_id == WORK_TYPE_NOPRINT) $machine_id = null;
+        $quantity = preg_replace("/\D/", "", filter_input(INPUT_POST, 'quantity') ?? ''); if(empty($quantity)) $quantity = null;
         $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
-        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT); if($film_id == INDIVIDUAL) $film_variation_id = "NULL";
-        $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = "NULL";
+        $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT); if($film_id == INDIVIDUAL) $film_variation_id = null;
+        $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = null;
         $currency = filter_input(INPUT_POST, 'currency');
-        $individual_film_name = addslashes(filter_input(INPUT_POST, 'individual_film_name') ?? ''); if($film_id != INDIVIDUAL) $individual_film_name = "";
-        $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = "NULL"; if($film_id != INDIVIDUAL) $individual_thickness = "NULL";
-        $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = "NULL"; if($film_id != INDIVIDUAL) $individual_density = "NULL";
+        $individual_film_name = filter_input(INPUT_POST, 'individual_film_name') ?? ''; if($film_id != INDIVIDUAL) $individual_film_name = "";
+        $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = null; if($film_id != INDIVIDUAL) $individual_thickness = null;
+        $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = null; if($film_id != INDIVIDUAL) $individual_density = null;
         $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
-        $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = "NULL"; if(empty($film_id)) $ski = "NULL";
-        $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = "NULL"; if($ski != SKI_NONSTANDARD) $width_ski = "NULL";
+        $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = null; if(empty($film_id)) $ski = null;
+        $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = null; if($ski != SKI_NONSTANDARD) $width_ski = null;
         
         // Если currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($currency)) {
-            $sql = "select currency from film_price where film_variation_id = $film_variation_id order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+            $sql = "select currency from film_price where film_variation_id = ? order by id desc limit 1";
+            $fetcher = new Fetcher($sql, [$film_variation_id]);
             if($row = $fetcher->Fetch()) {
                 $currency = $row['currency'];
             }
         }
         
         $lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id', FILTER_VALIDATE_INT);
-        $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = "NULL"; if($lamination1_film_id == INDIVIDUAL) $lamination1_film_variation_id = "NULL";
-        $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = "NULL";
+        $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = null; if($lamination1_film_id == INDIVIDUAL) $lamination1_film_variation_id = null;
+        $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = null;
         $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
-        $lamination1_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination1_individual_film_name') ?? ''); if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_film_name = "";
-        $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = "NULL"; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_thickness = "NULL";
-        $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = "NULL"; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_density = "NULL";
+        $lamination1_individual_film_name = filter_input(INPUT_POST, 'lamination1_individual_film_name') ?? ''; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_film_name = "";
+        $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = null; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_thickness = null;
+        $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = null; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_density = null;
         $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
-        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = "NULL"; if(empty($lamination1_film_id)) $lamination1_ski = "NULL";
-        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = "NULL"; if($lamination1_ski != SKI_NONSTANDARD) $lamination1_width_ski = "NULL";
+        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = null; if(empty($lamination1_film_id)) $lamination1_ski = null;
+        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = null; if($lamination1_ski != SKI_NONSTANDARD) $lamination1_width_ski = null;
         
         // Если lamination1_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination1_currency)) {
-            $sql = "select currency from film_price where film_variation_id = $lamination1_film_variation_id order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+            $sql = "select currency from film_price where film_variation_id = ? order by id desc limit 1";
+            $fetcher = new Fetcher($sql, [$lamination1_film_variation_id]);
             if($row = $fetcher->Fetch()) {
                 $lamination1_currency = $row['currency'];
             }
         }
         
         $lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id', FILTER_VALIDATE_INT);
-        $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = "NULL"; if($lamination2_film_id == INDIVIDUAL) $lamination2_film_variation_id = "NULL";
-        $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = "NULL";
+        $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = null; if($lamination2_film_id == INDIVIDUAL) $lamination2_film_variation_id = null;
+        $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = null;
         $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
-        $lamination2_individual_film_name = addslashes(filter_input(INPUT_POST, 'lamination2_individual_film_name') ?? ''); if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_film_name = "";
-        $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_thickness = "NULL";
-        $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = "NULL"; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = "NULL";
+        $lamination2_individual_film_name = filter_input(INPUT_POST, 'lamination2_individual_film_name') ?? ''; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_film_name = "";
+        $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = null; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_thickness = null;
+        $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = null; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = null;
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
-        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = "NULL"; if(empty($lamination2_film_id)) $lamination2_ski = "NULL";
-        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = "NULL"; if($lamination2_ski != SKI_NONSTANDARD) $lamination2_width_ski = "NULL";
+        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = null; if(empty($lamination2_film_id)) $lamination2_ski = null;
+        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = null; if($lamination2_ski != SKI_NONSTANDARD) $lamination2_width_ski = null;
         
         // Если lamination2_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination2_currency)) {
-            $sql = "select currency from film_price where film_variation_id = $lamination2_film_variation_id order by id desc limit 1";
-            $fetcher = new Fetcher($sql);
+            $sql = "select currency from film_price where film_variation_id = ? order by id desc limit 1";
+            $fetcher = new Fetcher($sql, [$lamination2_film_variation_id]);
             if($row = $fetcher->Fetch()) {
                 $lamination2_currency = $row['currency'];
             }
         }
         
-        $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT); if(empty($laminator_id)) $laminator_id = "NULL";
-        $length = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length'); if(empty($length)) $length = "NULL";
-        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = "NULL";
-        $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = "NULL";
-        $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = "NULL";
+        $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT); if(empty($laminator_id)) $laminator_id = null;
+        $length = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'length_2') : filter_input(INPUT_POST, 'length'); if(empty($length)) $length = null;
+        $stream_width = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'stream_width_2') : filter_input(INPUT_POST, 'stream_width'); if(empty($stream_width)) $stream_width = null;
+        $streams_number = filter_input(INPUT_POST, 'streams_number'); if(empty($streams_number)) $streams_number = null;
+        $raport = filter_input(INPUT_POST, 'raport'); if(empty($raport)) $raport = null;
         $raport_irregular = filter_input(INPUT_POST, 'raport_irregular');
-        $number_in_raport = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = "NULL";
-        $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = "NULL";
-        $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = "NULL";
-        $ink_run2_number = filter_input(INPUT_POST, 'ink_run2_number'); if(null == $ink_run2_number) $ink_run2_number = "NULL"; if($machine_id != PRINTER_SOMA_OPTIMA) $ink_run2_number = "NULL";
+        $number_in_raport = $work_type_id == WORK_TYPE_SELF_ADHESIVE ? filter_input (INPUT_POST, 'number_in_raport_2') : filter_input(INPUT_POST, 'number_in_raport'); if(empty($number_in_raport)) $number_in_raport = null;
+        $lamination_roller_width = filter_input(INPUT_POST, 'lamination_roller_width'); if(empty($lamination_roller_width)) $lamination_roller_width = null;
+        $ink_number = filter_input(INPUT_POST, 'ink_number'); if(null == $ink_number) $ink_number = null;
+        $ink_run2_number = filter_input(INPUT_POST, 'ink_run2_number'); if(null == $ink_run2_number) $ink_run2_number = null; if($machine_id != PRINTER_SOMA_OPTIMA) $ink_run2_number = null;
         
         $manager_id = GetUserId();
         
@@ -708,7 +708,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
                 
             $percent_var = "percent_$i";
             $$percent_var = filter_input(INPUT_POST, "percent_$i");
-            if(empty($$percent_var)) $$percent_var = "NULL";
+            if(empty($$percent_var)) $$percent_var = null;
             
             $cliche_var = "cliche_$i";
             $$cliche_var = filter_input(INPUT_POST, "cliche_$i");
@@ -730,16 +730,16 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             
             $percent_run2_var = "percent_run2_$i";
             $$percent_run2_var = filter_input(INPUT_POST, "percent_run2_$i");
-            if(empty($$percent_run2_var)) $$percent_run2_var = "NULL";
+            if(empty($$percent_run2_var)) $$percent_run2_var = null;
             
             $cliche_run2_var = "cliche_run2_$i";
             $$cliche_run2_var = filter_input(INPUT_POST, "cliche_run2_$i");
         }
         
         $cliche_in_price = 0; if(filter_input(INPUT_POST, 'cliche_in_price') == 'on') $cliche_in_price = 1;
-        $cliches_count_flint = filter_input(INPUT_POST, 'cliches_count_flint'); if($cliches_count_flint === null) $cliches_count_flint = "NULL";
-        $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = "NULL";
-        $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = "NULL";
+        $cliches_count_flint = filter_input(INPUT_POST, 'cliches_count_flint'); if($cliches_count_flint === null) $cliches_count_flint = null;
+        $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = null;
+        $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = null;
         $customer_pays_for_cliche = 0; if(filter_input(INPUT_POST, 'customer_pays_for_cliche') == 'on') $customer_pays_for_cliche = 1;
         
         $knife = filter_input(INPUT_POST, 'knife'); if(empty($knife)) $knife = 0;
@@ -748,45 +748,86 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $extra_expense = filter_input(INPUT_POST, 'extra_expense'); if(empty($extra_expense)) $extra_expense = 0;
         $status_id = ORDER_STATUS_DRAFT; // Статус "Черновик"
         
-        $sql = "insert into calculation (customer_id, name, unit, quantity, work_type_id, "
-                . "film_variation_id, price, currency, individual_film_name, individual_thickness, individual_density, customers_material, ski, width_ski, "
-                . "lamination1_film_variation_id, lamination1_price, lamination1_currency, lamination1_individual_film_name, lamination1_individual_thickness, lamination1_individual_density, lamination1_customers_material, lamination1_ski, lamination1_width_ski, "
-                . "lamination2_film_variation_id, lamination2_price, lamination2_currency, lamination2_individual_film_name, lamination2_individual_thickness, lamination2_individual_density, lamination2_customers_material, lamination2_ski, lamination2_width_ski, "
-                . "laminator_id, streams_number, machine_id, length, stream_width, raport, raport_irregular, number_in_raport, lamination_roller_width, ink_number, ink_run2_number, manager_id, "
-                . "ink_1, ink_2, ink_3, ink_4, ink_5, ink_6, ink_7, ink_8, "
-                . "color_1, color_2, color_3, color_4, color_5, color_6, color_7, color_8, "
-                . "cmyk_1, cmyk_2, cmyk_3, cmyk_4, cmyk_5, cmyk_6, cmyk_7, cmyk_8, "
-                . "lacquer_1, lacquer_2, lacquer_3, lacquer_4, lacquer_5, lacquer_6, lacquer_7, lacquer_8, "
-                . "percent_1, percent_2, percent_3, percent_4, percent_5, percent_6, percent_7, percent_8, "
-                . "cliche_1, cliche_2, cliche_3, cliche_4, cliche_5, cliche_6, cliche_7, cliche_8, "
-                . "ink_run2_1, ink_run2_2, ink_run2_3, ink_run2_4, "
-                . "color_run2_1, color_run2_2, color_run2_3, color_run2_4, "
-                . "cmyk_run2_1, cmyk_run2_2, cmyk_run2_3, cmyk_run2_4, "
-                . "lacquer_run2_1, lacquer_run2_2, lacquer_run2_3, lacquer_run2_4, "
-                . "percent_run2_1, percent_run2_2, percent_run2_3, percent_run2_4, "
-                . "cliche_run2_1, cliche_run2_2, cliche_run2_3, cliche_run2_4, "
-                . "cliche_in_price, cliches_count_flint, cliches_count_kodak, cliches_count_old, customer_pays_for_cliche, "
-                . "knife, knife_in_price, customer_pays_for_knife, extra_expense) "
-                . "values($customer_id, '$name', '$unit', $quantity, $work_type_id, "
-                . "$film_variation_id, $price, '$currency', '$individual_film_name', $individual_thickness, $individual_density, $customers_material, $ski, $width_ski, "
-                . "$lamination1_film_variation_id, $lamination1_price, '$lamination1_currency', '$lamination1_individual_film_name', $lamination1_individual_thickness, $lamination1_individual_density, $lamination1_customers_material, $lamination1_ski, $lamination1_width_ski, "
-                . "$lamination2_film_variation_id, $lamination2_price, '$lamination2_currency', '$lamination2_individual_film_name', $lamination2_individual_thickness, $lamination2_individual_density, $lamination2_customers_material, $lamination2_ski, $lamination2_width_ski, "
-                . "$laminator_id, $streams_number, $machine_id, $length, $stream_width, $raport, $raport_irregular, $number_in_raport, $lamination_roller_width, $ink_number, $ink_run2_number, $manager_id, "
-                . "'$ink_1', '$ink_2', '$ink_3', '$ink_4', '$ink_5', '$ink_6', '$ink_7', '$ink_8', "
-                . "'$color_1', '$color_2', '$color_3', '$color_4', '$color_5', '$color_6', '$color_7', '$color_8', "
-                . "'$cmyk_1', '$cmyk_2', '$cmyk_3', '$cmyk_4', '$cmyk_5', '$cmyk_6', '$cmyk_7', '$cmyk_8', "
-                . "'$lacquer_1', '$lacquer_2', '$lacquer_3', '$lacquer_4', '$lacquer_5', '$lacquer_6', '$lacquer_7', '$lacquer_8', "
-                . "'$percent_1', '$percent_2', '$percent_3', '$percent_4', '$percent_5', '$percent_6', '$percent_7', '$percent_8', "
-                . "'$cliche_1', '$cliche_2', '$cliche_3', '$cliche_4', '$cliche_5', '$cliche_6', '$cliche_7', '$cliche_8', "
-                . "'$ink_run2_1', '$ink_run2_2', '$ink_run2_3', '$ink_run2_4', "
-                . "'$color_run2_1', '$color_run2_2', '$color_run2_3', '$color_run2_4', "
-                . "'$cmyk_run2_1', '$cmyk_run2_2', '$cmyk_run2_3', '$cmyk_run2_4', "
-                . "'$lacquer_run2_1', '$lacquer_run2_2', '$lacquer_run2_3', '$lacquer_run2_4', "
-                . "'$percent_run2_1', '$percent_run2_2', '$percent_run2_3', '$percent_run2_4', "
-                . "'$cliche_run2_1', '$cliche_run2_2', '$cliche_run2_3', '$cliche_run2_4', "
-                . "$cliche_in_price, $cliches_count_flint, $cliches_count_kodak, $cliches_count_old, $customer_pays_for_cliche, "
-                . "$knife, $knife_in_price, $customer_pays_for_knife, $extra_expense)";
-        $executer = new Executer($sql);
+        // Собираем пары "колонка => значение" в одном массиве, чтобы список колонок и список
+        // параметров формировались из одного и того же источника и не могли разъехаться по порядку.
+        $insert_fields = array(
+            'customer_id' => $customer_id,
+            'name' => $name,
+            'unit' => $unit,
+            'quantity' => $quantity,
+            'work_type_id' => $work_type_id,
+            'film_variation_id' => $film_variation_id,
+            'price' => $price,
+            'currency' => $currency,
+            'individual_film_name' => $individual_film_name,
+            'individual_thickness' => $individual_thickness,
+            'individual_density' => $individual_density,
+            'customers_material' => $customers_material,
+            'ski' => $ski,
+            'width_ski' => $width_ski,
+            'lamination1_film_variation_id' => $lamination1_film_variation_id,
+            'lamination1_price' => $lamination1_price,
+            'lamination1_currency' => $lamination1_currency,
+            'lamination1_individual_film_name' => $lamination1_individual_film_name,
+            'lamination1_individual_thickness' => $lamination1_individual_thickness,
+            'lamination1_individual_density' => $lamination1_individual_density,
+            'lamination1_customers_material' => $lamination1_customers_material,
+            'lamination1_ski' => $lamination1_ski,
+            'lamination1_width_ski' => $lamination1_width_ski,
+            'lamination2_film_variation_id' => $lamination2_film_variation_id,
+            'lamination2_price' => $lamination2_price,
+            'lamination2_currency' => $lamination2_currency,
+            'lamination2_individual_film_name' => $lamination2_individual_film_name,
+            'lamination2_individual_thickness' => $lamination2_individual_thickness,
+            'lamination2_individual_density' => $lamination2_individual_density,
+            'lamination2_customers_material' => $lamination2_customers_material,
+            'lamination2_ski' => $lamination2_ski,
+            'lamination2_width_ski' => $lamination2_width_ski,
+            'laminator_id' => $laminator_id,
+            'streams_number' => $streams_number,
+            'machine_id' => $machine_id,
+            'length' => $length,
+            'stream_width' => $stream_width,
+            'raport' => $raport,
+            'raport_irregular' => $raport_irregular,
+            'number_in_raport' => $number_in_raport,
+            'lamination_roller_width' => $lamination_roller_width,
+            'ink_number' => $ink_number,
+            'ink_run2_number' => $ink_run2_number,
+            'manager_id' => $manager_id,
+            'ink_1' => $ink_1, 'ink_2' => $ink_2, 'ink_3' => $ink_3, 'ink_4' => $ink_4,
+            'ink_5' => $ink_5, 'ink_6' => $ink_6, 'ink_7' => $ink_7, 'ink_8' => $ink_8,
+            'color_1' => $color_1, 'color_2' => $color_2, 'color_3' => $color_3, 'color_4' => $color_4,
+            'color_5' => $color_5, 'color_6' => $color_6, 'color_7' => $color_7, 'color_8' => $color_8,
+            'cmyk_1' => $cmyk_1, 'cmyk_2' => $cmyk_2, 'cmyk_3' => $cmyk_3, 'cmyk_4' => $cmyk_4,
+            'cmyk_5' => $cmyk_5, 'cmyk_6' => $cmyk_6, 'cmyk_7' => $cmyk_7, 'cmyk_8' => $cmyk_8,
+            'lacquer_1' => $lacquer_1, 'lacquer_2' => $lacquer_2, 'lacquer_3' => $lacquer_3, 'lacquer_4' => $lacquer_4,
+            'lacquer_5' => $lacquer_5, 'lacquer_6' => $lacquer_6, 'lacquer_7' => $lacquer_7, 'lacquer_8' => $lacquer_8,
+            'percent_1' => $percent_1, 'percent_2' => $percent_2, 'percent_3' => $percent_3, 'percent_4' => $percent_4,
+            'percent_5' => $percent_5, 'percent_6' => $percent_6, 'percent_7' => $percent_7, 'percent_8' => $percent_8,
+            'cliche_1' => $cliche_1, 'cliche_2' => $cliche_2, 'cliche_3' => $cliche_3, 'cliche_4' => $cliche_4,
+            'cliche_5' => $cliche_5, 'cliche_6' => $cliche_6, 'cliche_7' => $cliche_7, 'cliche_8' => $cliche_8,
+            'ink_run2_1' => $ink_run2_1, 'ink_run2_2' => $ink_run2_2, 'ink_run2_3' => $ink_run2_3, 'ink_run2_4' => $ink_run2_4,
+            'color_run2_1' => $color_run2_1, 'color_run2_2' => $color_run2_2, 'color_run2_3' => $color_run2_3, 'color_run2_4' => $color_run2_4,
+            'cmyk_run2_1' => $cmyk_run2_1, 'cmyk_run2_2' => $cmyk_run2_2, 'cmyk_run2_3' => $cmyk_run2_3, 'cmyk_run2_4' => $cmyk_run2_4,
+            'lacquer_run2_1' => $lacquer_run2_1, 'lacquer_run2_2' => $lacquer_run2_2, 'lacquer_run2_3' => $lacquer_run2_3, 'lacquer_run2_4' => $lacquer_run2_4,
+            'percent_run2_1' => $percent_run2_1, 'percent_run2_2' => $percent_run2_2, 'percent_run2_3' => $percent_run2_3, 'percent_run2_4' => $percent_run2_4,
+            'cliche_run2_1' => $cliche_run2_1, 'cliche_run2_2' => $cliche_run2_2, 'cliche_run2_3' => $cliche_run2_3, 'cliche_run2_4' => $cliche_run2_4,
+            'cliche_in_price' => $cliche_in_price,
+            'cliches_count_flint' => $cliches_count_flint,
+            'cliches_count_kodak' => $cliches_count_kodak,
+            'cliches_count_old' => $cliches_count_old,
+            'customer_pays_for_cliche' => $customer_pays_for_cliche,
+            'knife' => $knife,
+            'knife_in_price' => $knife_in_price,
+            'customer_pays_for_knife' => $customer_pays_for_knife,
+            'extra_expense' => $extra_expense,
+        );
+        
+        $insert_columns = implode(', ', array_keys($insert_fields));
+        $insert_placeholders = implode(', ', array_fill(0, count($insert_fields), '?'));
+        $sql = "insert into calculation ($insert_columns) values ($insert_placeholders)";
+        $executer = new Executer($sql, array_values($insert_fields));
         $error_message = $executer->error;
         $insert_id = $executer->insert_id;
         
@@ -803,8 +844,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             while(filter_input(INPUT_POST, $quantity_var) !== null) {
                 $$quantity_var = filter_input(INPUT_POST, $quantity_var);
                 
-                $sql = "insert into calculation_quantity (calculation_id, quantity) values($insert_id, ".$$quantity_var.")";
-                $executer = new Executer($sql);
+                $sql = "insert into calculation_quantity (calculation_id, quantity) values(?, ?)";
+                $executer = new Executer($sql, [$insert_id, $$quantity_var]);
                 $error_message = $executer->error;
                 
                 $qi++;
@@ -813,15 +854,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Если разная ширина ручьёв, заполняем таблицу ширин ручьёв
-        if(empty($error_message) && $work_type_id != WORK_TYPE_SELF_ADHESIVE && $stream_width == "NULL") {
+        if(empty($error_message) && $work_type_id != WORK_TYPE_SELF_ADHESIVE && $stream_width === null) {
             $sci = 1;
             $stream_width_var = "stream_width_$sci";
             
             while (filter_input(INPUT_POST, $stream_width_var) !== null) {
                 $$stream_width_var = filter_input(INPUT_POST, $stream_width_var);
                 
-                $sql = "insert into calculation_stream_width (calculation_id, stream_number, width) values($insert_id, $sci, ".$$stream_width_var.")";
-                $executer = new Executer($sql);
+                $sql = "insert into calculation_stream_width (calculation_id, stream_number, width) values(?, ?, ?)";
+                $executer = new Executer($sql, [$insert_id, $sci, $$stream_width_var]);
                 $error_message = $executer->error;
                 
                 $sci++;
@@ -831,8 +872,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         
         // Удаляем все двойные или тройные пробелы в названиях расчётов (иначе будут проблемы в поиске по названию).
         if(empty($error_message)) {
-            $sql = "update calculation set name = replace(name, '  ', ' ') where id = $insert_id";
-            $executer = new Executer($sql);
+            $sql = "update calculation set name = replace(name, '  ', ' ') where id = ?";
+            $executer = new Executer($sql, [$insert_id]);
             $error_message = $executer->error;
         }
         
@@ -877,8 +918,8 @@ if(!empty($id)) {
             . "knife, extracharge_knife, knife_in_price, customer_pays_for_knife, extra_expense, "
             . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
             . "(select count(id) from calculation where customer_id = c.customer_id and id <= c.id) num_for_customer "
-            . "from calculation c where c.id = $id";
-    $fetcher = new Fetcher($sql);
+            . "from calculation c where c.id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     $row = $fetcher->Fetch();
     $error_message = $fetcher->error;
 }
@@ -1109,8 +1150,8 @@ if($work_type_id != WORK_TYPE_SELF_ADHESIVE && !empty($streams_number)) {
     }
 
     if(count($stream_widths) == 0 && !empty($id) && empty(filter_input(INPUT_POST, 'stream_width'))) {
-        $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select stream_number, width from calculation_stream_width where calculation_id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         while($stream_widths_row = $fetcher->Fetch()) {
             $stream_widths[intval($stream_widths_row['stream_number'])] = intval($stream_widths_row['width']);
         }
@@ -1363,8 +1404,8 @@ if(!empty(filter_input(INPUT_POST, 'quantity_1'))) {
     }
 }
 elseif(filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) !== null) {
-    $sql_quantity = "select quantity from calculation_quantity where calculation_id = $id";
-    $fetcher_quantity = new Fetcher($sql_quantity);
+    $sql_quantity = "select quantity from calculation_quantity where calculation_id = ?";
+    $fetcher_quantity = new Fetcher($sql_quantity, [$id]);
     $error_message = $fetcher_quantity->error;
 
     $qi = 1;
@@ -1601,7 +1642,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <option value="">Заказчик...</option>
                                         <?php
                                         $sql = "select id, name from customer order by name";
-                                        $fetcher = new Fetcher($sql);
+                                        $fetcher = new Fetcher($sql, []);
                                         
                                         while ($row = $fetcher->Fetch()):
                                         $selected = '';
@@ -1827,7 +1868,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <option value="" hidden="hidden" selected="selected">Марка пленки...</option>
                                             <?php
                                             $sql = "select id, name from film order by name";
-                                            $film_ids = (new Grabber($sql))->result;
+                                            $film_ids = (new Grabber($sql, []))->result;
                                             
                                             foreach ($film_ids as $row):
                                             $selected = '';
@@ -1856,8 +1897,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                         <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                             <?php
                                             if(!empty($film_id)) {
-                                                $sql = "select id, thickness, weight from film_variation where film_id='$film_id' order by thickness";
-                                                $thicknesses = (new Grabber($sql))->result;
+                                                $sql = "select id, thickness, weight from film_variation where film_id = ? order by thickness";
+                                                $thicknesses = (new Grabber($sql, [$film_id]))->result;
                                             
                                                 foreach ($thicknesses as $row):
                                                 $selected = '';
@@ -2052,8 +2093,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                 <?php
                                                 if(!empty($lamination1_film_id)) {
-                                                    $sql = "select id, thickness, weight from film_variation where film_id='$lamination1_film_id' order by thickness";
-                                                    $thicknesses = (new Grabber($sql))->result;
+                                                    $sql = "select id, thickness, weight from film_variation where film_id = ? order by thickness";
+                                                    $thicknesses = (new Grabber($sql, [$lamination1_film_id]))->result;
                                                 
                                                     foreach ($thicknesses as $row):
                                                     $selected = '';
@@ -2260,8 +2301,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                 <option value="" hidden="hidden" selected="selected">Толщина...</option>
                                                     <?php
                                                     if(!empty($lamination2_film_id)):
-                                                    $sql = "select id, thickness, weight from film_variation where film_id='$lamination2_film_id' order by thickness";
-                                                    $variations = (new Grabber($sql))->result;
+                                                    $sql = "select id, thickness, weight from film_variation where film_id = ? order by thickness";
+                                                    $variations = (new Grabber($sql, [$lamination2_film_id]))->result;
                                                     
                                                     foreach ($variations as $row):
                                                     $selected = "";
@@ -2405,12 +2446,15 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div id="raport_control">
                                         <?php
                                         if(!empty($machine_id)):
-                                            $sql = "select value from raport where active = 1 and machine_id = $machine_id ";
+                                            $sql = "select value from raport where active = 1 and machine_id = ? ";
+                                            $params = [$machine_id];
                                             if(!empty($raport)) {
-                                                $sql .= "union select value from raport where active = 0 and machine_id = $machine_id and value = $raport ";
+                                                $sql .= "union select value from raport where active = 0 and machine_id = ? and value = ? ";
+                                                $params[] = $machine_id;
+                                                $params[] = $raport;
                                             }
                                             $sql .= "order by value";
-                                            $grabber = new Grabber($sql);
+                                            $grabber = new Grabber($sql, $params);
                                             $raports = $grabber->result;
                                             $in_list = false;
                                             
@@ -2630,16 +2674,21 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     <div id="lamination_roller_width_control">
                                         <?php
                                         if(!empty($laminator_id)):
-                                            $sql = "select value from norm_laminator_roller where laminator_id = $laminator_id and active = 1 ";
+                                            $sql = "select value from norm_laminator_roller where laminator_id = ? and active = 1 ";
+                                            $params = [$laminator_id];
                                             if(!empty($stream_width) && !empty($streams_number)) {
                                                 $min_width = $stream_width * $streams_number;
-                                                $sql .= "and value >= $min_width + 5 and value <= $min_width + 12 ";
+                                                $sql .= "and value >= ? and value <= ? ";
+                                                $params[] = $min_width + 5;
+                                                $params[] = $min_width + 12;
                                             }
                                             if(!empty($lamination_roller_width)) {
-                                                $sql .= "union select value from norm_laminator_roller where laminator_id = $laminator_id and active = 0 and value = $lamination_roller_width ";
+                                                $sql .= "union select value from norm_laminator_roller where laminator_id = ? and active = 0 and value = ? ";
+                                                $params[] = $laminator_id;
+                                                $params[] = $lamination_roller_width;
                                             }
                                             $sql .= "order by value";
-                                            $grabber = new Grabber($sql);
+                                            $grabber = new Grabber($sql, $params);
                                             $lamination_roller_widths = $grabber->result;
                                             $in_list = false;
                                             
@@ -3389,7 +3438,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     <?php
                     $customer_names = array();
                     $sql = "select name from customer order by name";
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, []);
                     while($row = $fetcher->Fetch()) {
                         array_push($customer_names, "'". addslashes($row['name'])."'");
                     }
