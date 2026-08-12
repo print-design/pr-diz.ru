@@ -214,6 +214,7 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                         <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                         <input type="hidden" id="film_variation_id" name="film_variation_id" value="<?=$film_variation_id ?>" />

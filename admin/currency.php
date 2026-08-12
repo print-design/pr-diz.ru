@@ -95,6 +95,7 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <div class="form-group">
                             <label for="usd">Доллар</label>
                             <div class="input-group">

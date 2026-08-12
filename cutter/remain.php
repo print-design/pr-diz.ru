@@ -241,6 +241,7 @@ if($row = $fetcher->Fetch()) {
             ?>
             <h1>Закрытие заявки</h1>
             <form method="post">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                 <input type="hidden" id="last_source" name="last_source" value="<?=$last_source ?>" />
                 <input type="hidden" id="last_wind" name="last_wind" value="<?=$last_wind ?>" />

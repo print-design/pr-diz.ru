@@ -155,6 +155,7 @@ if($row = $fetcher->Fetch()) {
             <div class="row">
                 <div class="col-12 col-md-4 col-lg-2">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <input type="hidden" id="laminator_id" name="laminator_id" value="<?= filter_input(INPUT_GET, 'laminator_id') ?>" />
                         <div class="form-group">
                             <label for="glue_price">Цена чистого клея (за кг)</label>

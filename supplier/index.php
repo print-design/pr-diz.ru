@@ -66,6 +66,7 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Поставщик</p>
                             <button type="button" class="close create_supplier_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>

@@ -119,6 +119,7 @@ if(!empty($cutting_id)) {
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <form method="post">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <?php if(!empty($cutting_id)): ?>
                             <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                             <?php endif; ?>
@@ -144,6 +145,7 @@ if(!empty($cutting_id)) {
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <input type="hidden" id="cutting_id" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
                             <label for="supplier_id">Поставщик</label>

@@ -268,6 +268,7 @@ while ($row = $fetcher->Fetch()) {
                     <li class="nav-item">
                         <?php if(empty($last_wind)): ?>
                         <form method="post">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <input type="hidden" name="last_source" value="<?=$last_source ?>" />
                             <button class="btn btn-link nav-link" type="submit" name="previous-submit"><i class="fas fa-chevron-left"></i>&nbsp;Назад</button>
                         </form>
@@ -307,6 +308,7 @@ while ($row = $fetcher->Fetch()) {
                 endfor;
                 ?>
             <form method="post" class="mt-3">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <input type="hidden" id="supplier_id" name="supplier_id" value="<?=$supplier_id ?>" />
                 <input type="hidden" id="film_variation_id" name="film_variation_id" value="<?=$film_variation_id ?>" />
                 <input type="hidden" id="width" name="width" value="<?=$width ?>" />

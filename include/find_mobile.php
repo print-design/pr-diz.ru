@@ -17,6 +17,7 @@ elseif(!empty (filter_input(INPUT_GET, 'id'))) {
 <div class="row">
     <div class="col-12 col-md-6 col-lg-4">
         <form method="post" action="index.php">
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
             <div class="form-group">
                 <label for="id">Введите ID</label>
                 <div class="input-group">

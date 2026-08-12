@@ -156,6 +156,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <input type="hidden" id="user_change_password_id" name="user_change_password_id" value="<?= filter_input(INPUT_POST, 'user_change_password_id') ?>" />
                         <div class="modal-header">
                             <div style="font-size: xx-large;">Изменение пароля</div>
@@ -209,6 +210,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                             <div class="figure-point" id="fp9"><div class="figure-drag" data-number="9" style="width: 100%; height: 100%;"></div></div>
                         </div>
                         <form method="post" id="graph_key_form">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <input type="hidden" id="graph_key_id" name="graph_key_id" value="<?= filter_input(INPUT_POST, 'graph_key_id') ?>" />
                             <input type="hidden" id="graph_key_fio" name="graph_key_fio" />
                             <input type="hidden" id="old_graph_key" name="old_graph_key" />
@@ -217,6 +219,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                     </div>
                     <div class="modal-footer" style="justify-content: flex-start;">
                         <form method="post" id="graph_key_delete_form">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <input type="hidden" id="graph_key_delete_id" name="graph_key_delete_id" value="<?= filter_input(INPUT_POST, 'graph_key_delete_id') ?? filter_input(INPUT_POST, 'graph_key_id') ?>" />
                             <?php
                             $graph_key_delete_class = '';

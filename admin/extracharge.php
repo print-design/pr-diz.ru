@@ -91,6 +91,7 @@ if(empty($error_message)) {
                             <td class="pl-0"><?= floatval($row['value']).'%' ?></td>
                             <td class="text-right">
                                 <form method="post">
+                                    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                                     <input type="hidden" name="scroll" />
                                     <input type="hidden" name="id" value="<?=$row['id'] ?>" />
                                     <button type="submit" name="delete_extracharge_submit" class="btn btn-link fas fa-trash-alt confirmable" />
@@ -104,6 +105,7 @@ if(empty($error_message)) {
                     </table>
                     <button type="button" class="btn btn-light mb-4 show-btn"><i class="fas fa-plus"></i>&nbsp;&nbsp;Добавить</button>
                     <form method="post" class="form-inline d-none add-form">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <input type="hidden" name="scroll" />
                         <input type="hidden" name="extracharge_type_id" value="<?=$extracharge_type_id ?>" />
                         <input type="text" name="from_weight" class="form-control float-only mr-2 w-25" placeholder="От, кг" required="required" autocomplete="off" />

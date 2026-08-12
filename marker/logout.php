@@ -51,6 +51,7 @@ $user_id = GetUserId();
             endif;
             ?>
             <form method="post" id="form_logout">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <button type="submit" class="btn btn-outline-danger form-control" id="logout_submit" name="logout_submit">Выйти</button>
             </form>
         </div>

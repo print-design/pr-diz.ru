@@ -79,6 +79,7 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
             <div style="width: 387px;">
                 <h1 style="font-size: 24px; font-weight: 600;">Добавление сотрудника</h1>
                 <form method="post">
+                    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                     <div class="form-group">
                         <select id="role_id" name="role_id" class="form-control" required="required">
                             <option value="" hidden="hidden">ВЫБЕРИТЕ ДОЛЖНОСТЬ</option>

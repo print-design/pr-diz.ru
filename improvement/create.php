@@ -82,6 +82,7 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
             <?php else: ?>
             <h1>Предложение по улучшению</h1>
             <form method="post">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <div class="form-group">
                     <label for="employee">Имя, фамилия</label>
                     <input type="text" class="form-control" id="employee" name="employee" required="required" />

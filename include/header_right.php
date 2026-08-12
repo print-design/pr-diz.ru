@@ -8,6 +8,7 @@ if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
         <div class="dropdown-menu" id="user-dropdown">
             <a href="<?=APPLICATION ?>/personal/" class="btn btn-link dropdown-item"><i class="fas fa-user"></i>&nbsp;Мои настройки</a>
             <form method="post">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <button type="submit" class="btn btn-link dropdown-item" id="logout_submit" name="logout_submit"><i class="fas fa-sign-out-alt"></i>&nbsp;Выход</button>
             </form>
         </div>
@@ -17,6 +18,7 @@ if(!empty(filter_input(INPUT_COOKIE, USERNAME))):
 else:
 ?>
 <form class="form-inline my-2 my-lg-0" method="post">
+    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
     <div class="form-group">
         <input class="form-control mr-sm-2<?=$login_username_valid ?>" type="text" id="login_username" name="login_username" placeholder="Логин" value="<?=$_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login_username']) ? $_POST['login_username'] : '' ?>" required="required" autocomplete="off" />
         <div class="invalid-feedback">*</div>

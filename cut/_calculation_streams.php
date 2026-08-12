@@ -119,6 +119,7 @@ foreach($streams as $row):
         <?php endif; ?>
     </div>
     <form method="post" action="<?=APPLICATION ?>/cut/take.php?id=<?=$calculation_id ?>&machine_id=<?=$machine_id ?>">
+        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
         <input type="hidden" name="take_id" value="<?=$take_id ?>" />
         <input type="hidden" name="calculation_id" value="<?=$calculation_id ?>" />
         <input type="hidden" name="machine_id" value="<?= $machine_id ?>" />

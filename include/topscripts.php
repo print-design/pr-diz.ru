@@ -2,6 +2,12 @@
 include 'define.php';
 include 'constants.php';
 
+session_start();
+
+if(empty(filter_input(INPUT_SESSION, CSRF_TOKEN))) {
+    $_SESSION[CSRF_TOKEN] = bin2hex(random_bytes(32));
+}
+
 global $weekdays;
 
 $weekdays = array();

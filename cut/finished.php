@@ -256,6 +256,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     <div class="d-flex justify-content-start mb-4 mt-4">
                         <div>
                             <form method="post">
+                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                                 <input type="hidden" name="id" value="<?=$id ?>" />
                                 <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                                 <button type="submit" name="pack_submit" class="btn btn-dark pl-4 pr-4 mr-4">Тираж выполнен</button>

@@ -97,6 +97,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                     </table>
                     <h2>Новый рапорт</h2>
                     <form method="post" class="form-inline">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <input type="hidden" name="machine_id" value="<?=$machine_id ?>" />
                         <input type="hidden" name="scroll" />
                         <input type="text" class="form-control mr-2 float-only" name="value" placeholder="Шаг..." required="required" autocomplete="off" />

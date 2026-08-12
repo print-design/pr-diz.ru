@@ -236,4 +236,5 @@ const UNIT_NAMES = array(UNIT_M => "м", UNIT_KG => "кг", UNIT_PC => "шт");
 
 // Другое
 const ISINVALID = ' is-invalid';
+const CSRF_TOKEN = "ddf44tyyh_oljoih_hhy6dr";
 ?>

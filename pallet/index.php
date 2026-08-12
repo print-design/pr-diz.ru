@@ -257,6 +257,7 @@ $total_weight = $row[0];
                                 ?>
                                 <div class="command">
                                     <form method="post">
+                                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                                         <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
                                         <input type="hidden" id="scroll" name="scroll" />
                                         <button type="submit" class="btn btn-link m-0 p-0 h-25 confirmable" id="delete-pallet-submit" name="delete-pallet-submit" style="font-size: 14px;">Удалить</button>

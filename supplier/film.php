@@ -197,6 +197,7 @@ while($row = $fetcher->Fetch()) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Добавить пленку</p>
                             <button type="button" class="close create_film_variation_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
@@ -237,6 +238,7 @@ while($row = $fetcher->Fetch()) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                         <div class="modal-header">
                             <p class="font-weight-bold" style="font-size: x-large;">Введите марку пленки</p>
                             <button type="button" class="close create_film_dismiss" data-dismiss="modal"><i class="fas fa-times" style="color: #EC3A7A;"></i></button>
@@ -297,6 +299,7 @@ while($row = $fetcher->Fetch()) {
                     <td style="width: 10%;<?=$no_border_top ?>"><?=$film_variation['weight'] ?> г/м<sup>2</sup></td>
                     <td style="width: 15%;<?=$no_border_top ?>">
                         <form class="form-inline" method="post">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <input type="hidden" name="scroll" />
                             <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
                             <div class="input-group">
@@ -316,6 +319,7 @@ while($row = $fetcher->Fetch()) {
                     </td>
                     <td style="width: auto;<?=$no_border_top ?>">
                         <form class="form-inline" method="post">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <input type="hidden" name="scroll" />
                             <input type="hidden" name="film_variation_id" value="<?=$fv_key ?>" />
                             <div class="input-group">
@@ -363,6 +367,7 @@ while($row = $fetcher->Fetch()) {
                     <td style="width: 15%; border-top: 0;"></td>
                     <td style="border-top: 0;">
                         <form class="form-inline" method="post">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <input type="hidden" name="scroll" />
                             <input type="hidden" name="price_type" value="<?=PRICE_ECO_CUSTOMERS_MATERIAL ?>" />
                             <div class="input-group">
@@ -399,6 +404,7 @@ while($row = $fetcher->Fetch()) {
                     <td style="width: 15%;"></td>
                     <td>
                         <form class="form-inline" method="post">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                             <input type="hidden" name="scroll" />
                             <input type="hidden" name="price_type" value="<?=PRICE_ECO_OTHER_MATERIAL ?>" />
                             <div class="input-group">

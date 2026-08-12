@@ -3,6 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" action="<?=APPLICATION ?>/cut/_edit_take_stream.php" onsubmit="javascript: return CutValidate();">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <input type="hidden" name="id" id="take_stream_id" />
                 <input type="hidden" name="scroll" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
@@ -62,6 +63,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php" onsubmit="javascript: return ANTCutValidate();">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <input type="hidden" name="id" value="<?=$id ?>" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
                 <input type="hidden" name="add_not_take_stream_sum_weight" id="add_not_take_stream_sum_weight" />
@@ -133,6 +135,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" action="<?=APPLICATION ?>/cut/_edit_not_take_stream.php" onsubmit="javascript: return NTCutValidate();">
+                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                 <input type="hidden" name="id" id="not_take_stream_id" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
                 <input type="hidden" name="not_take_stream_old_weight" id="not_take_stream_old_weight" />

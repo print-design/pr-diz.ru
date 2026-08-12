@@ -313,6 +313,7 @@ $total_weight = $row[0];
                                 ?>
                                 <div class="command">
                                     <form method="post">
+                                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= filter_input(INPUT_SESSION, CSRF_TOKEN) ?>" />
                                         <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
                                         <input type="hidden" id="scroll" name="scroll" />
                                         <input type="hidden" id="type" name="type" value="<?=$row['type'] ?>" />
