@@ -23,6 +23,13 @@ if(null !== filter_input(INPUT_GET, 'status')) {
     $status_id = filter_input(INPUT_GET, 'status');
 }
 
+// В производстве
+$production = false;
+
+if(filter_input(INPUT_GET, 'production') == 1) {
+    $production = true;
+}
+
 // Оплачено
 $paid = false;
 
@@ -133,13 +140,23 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
                     $params = array();
                     
-                    if(!empty($status_id)) {
-                        $sql .= "where c.duplicate_status_id = ?";
+                    if($paid) {
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
+                        array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                                ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                                ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+                    }
+                    elseif($production) {
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?) and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
+                        array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
+                    }
+                    elseif(!empty($status_id)) {
+                        $sql .= "where c.duplicate_status_id = ? and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
                         array_push($params, $status_id);
                     }
                     else {
-                        $sql .= "where c.duplicate_status_id in (?, ?, ?)";
-                        array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?) and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
+                        array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT);
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
@@ -189,7 +206,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     </form>
                     <?php endif; ?>
                     <form class="form-inline d-inline" method="get">
-                        <?php if(null !== $status_id): ?>
+                        <?php if($production == 1): ?>
+                        <input type="hidden" name="production" value="<?=$production ?>" />
+                        <?php
+                        endif;
+                        if($paid == 1):
+                        ?>
+                        <input type="hidden" name="paid" value="<?=$paid ?>" />
+                        <?php
+                        endif;
+                        if(null !== $status_id):
+                        ?>
                         <input type="hidden" name="status" value="<?=$status_id ?>" />
                         <?php endif; ?>
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
@@ -254,16 +281,22 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
             $params = [];
             if($paid) {
-                $sql .= "where c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost and c.duplicate_status_id in (?, ?, ?, ?, ?, ?)";
-                array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
+                array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                        ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                        ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+            }
+            elseif($production) {
+                $sql .= "where c.duplicate_status_id in (?, ?, ?) and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
+                array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
             }
             elseif(!empty($status_id)) {
-                $sql .= "where c.duplicate_status_id = ? and c.duplicate_payment_total < c.duplicate_shipping_cost";
+                $sql .= "where c.duplicate_status_id = ? and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
                 array_push($params, $status_id);
             }
             else {
-                $sql .= "where c.duplicate_status_id in (?, ?, ?) and c.duplicate_payment_total < c.duplicate_shipping_cost";
-                array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
+                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?) and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
+                array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT);
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
