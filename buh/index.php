@@ -136,8 +136,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     $sql = "select count(distinct c.id) "
                             . "from calculation c "
                             . "inner join customer cus on c.customer_id = cus.id "
-                            . "inner join user u on c.manager_id = u.id "
-                            . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
+                            . "inner join user u on c.manager_id = u.id ";
                     $params = array();
                     
                     if($paid) {
@@ -262,14 +261,13 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th>Заказ</th>
                     <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
                     <th class="text-right">Объём&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
-                    <th class="text-right">Оплата&nbsp;&nbsp;<?= OrderLink('payment') ?></th>
                     <th class="text-right">Поступило / Остаток</th>
                     <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
                     <th>Менеджер</th>
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, ifnull(ifnull(ct.time, c.duplicate_status_date), '1900-01-01') as time, c.customer_id, c.work_type_id, "
+            $sql = "select distinct c.id, c.customer_id, c.work_type_id, "
                     . "cus.name as customer, c.name as calculation, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
@@ -277,8 +275,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "duplicate_shipping_cost, duplicate_payment_total "
                     . "from calculation c "
                     . "inner join customer cus on c.customer_id = cus.id "
-                    . "inner join user u on c.manager_id = u.id "
-                    . "left join (select calculation_id, max(timestamp) as time from calculation_take group by calculation_id) ct on ct.calculation_id = c.id ";
+                    . "inner join user u on c.manager_id = u.id ";
             $params = [];
             if($paid) {
                 $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
@@ -312,10 +309,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             $sql .= GetFilter($params);
             
             // Сортировка
-            if($status_id == ORDER_STATUS_SHIPPED) {
-                $sql .= " order by c.duplicate_status_date desc";
-            }
-            
             if(array_key_exists('order', $_REQUEST)) {
                 switch ($_REQUEST['order']) {
                     case 'id':
@@ -343,6 +336,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         break;
                 }
             }
+            else {
+                $sql .= " order by c.duplicate_status_date desc";
+            }
             
             $sql .= " limit ?, ?";
             array_push($params, $pager_skip, $pager_take);
@@ -361,7 +357,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?=$row['calculation'] ?></td>
                     <td class="text-nowrap"><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                     <td class="text-nowrap text-right"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
-                    <td class="text-nowrap text-right"><?= DisplayNumber(intval(0), 0) ?> ₽</td>
                     <td class="text-nowrap text-right">
                         <?= DisplayNumber(floatval($row['duplicate_payment_total']), 2) ?> ₽
                         <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(floatval($row['duplicate_shipping_cost']) - floatval($row['duplicate_payment_total']), 2) ?> ₽</div>

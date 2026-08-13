@@ -134,8 +134,11 @@ if(empty($error_message)) {
     $error_message = $executer->error;
 }
 
+// В производстве
+$production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED]);
+
 // Оплачено
-$paid = $payment_total >= $shipping_cost;
+$paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $shipping_cost;
 ?>
 <!DOCTYPE html>
 <html>
@@ -257,14 +260,17 @@ $paid = $payment_total >= $shipping_cost;
                 <div class="col-5">
                     <?php
                     $backlink_url = "";
-                    if($paid) {
-                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["status", "id"]);
+                    if($production) {
+                        $backlink_url = BuildQueryAddRemoveArray('production', 1, ['status', 'paid', 'id']);
+                    }
+                    elseif($paid) {
+                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["status", "production", "id"]);
                     }
                     elseif(!empty ($status_id) && in_array($status_id, [ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED])) {
-                        $backlink_url = BuildQueryAddRemoveArray('status', $status_id, ['paid', 'id']);
+                        $backlink_url = BuildQueryAddRemoveArray('status', $status_id, ['production', 'paid', 'id']);
                     }
                     else {
-                        $backlink_url = BuildQueryRemoveArray(["status", "paid", "id"]);
+                        $backlink_url = BuildQueryRemoveArray(["status", "production", "paid", "id"]);
                     }
                     ?>
                     <a class="btn btn-light backlink" href="<?= APPLICATION ?>/buh/<?= $backlink_url ?>" title="К списку">К списку</a>
