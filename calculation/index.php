@@ -367,6 +367,13 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     url: '_name_select2.php',
                     dataType: 'json',
                     delay: 250,
+                    data: function(params) {
+                        var customerVal = $('#customer').val();
+                        return {
+                            q: params.term,
+                            customer: (customerVal && customerVal.length > 0) ? customerVal[0] : ''
+                        };
+                    },
                     processResults: function(data) {
                         return { results: data };
                     },
