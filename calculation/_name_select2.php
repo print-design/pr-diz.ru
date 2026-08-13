@@ -10,12 +10,13 @@ $params = ['%'.$q.'%'];
 
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
     $manager = GetUserId();
-    $filter .= " and manager_id = $manager";
+    $filter .= " and manager_id = ?";
     array_push($params, $manager);
 }
 
 if(!empty($customer)) {
-    $filter .= " and customer_id = $customer";
+    $filter .= " and customer_id = ?";
+    array_push($params, $customer);
 }
 
 $sql = "select distinct trim(name) from calculation where name like ?$filter order by name";
