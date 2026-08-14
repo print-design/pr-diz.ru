@@ -28,9 +28,9 @@ if(!empty($object) && !empty($id) && !empty($image)) {
     
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $result["name"] = htmlentities($row["name"]);
+        $result["name"] = html_entity_decode($row["name"]);
         $result["filename"] = $row["image$image"];
-        $result["delete_file_name"] = htmlentities($row['name']).", ".($image == 1 ? "с подписью заказчика" : "без подписи заказчика");
+        $result["delete_file_name"] = html_entity_decode($row['name']).", ".($image == 1 ? "с подписью заказчика" : "без подписи заказчика");
     }
 }
 
@@ -39,7 +39,7 @@ if(!empty($stream_id)) {
     $sql = "select name, image1, image2 from calculation_stream where id = $stream_id";
     $fetcher = new Fetcher($sql);
     if($row = $fetcher->Fetch()) {
-        $result["name"] = htmlentities($row["name"]);
+        $result["name"] = html_entity_decode($row["name"]);
         if(!empty($row['image1'])) {
             $result["filename"] = $row["image1"];
             $result["image"] = 1;
@@ -62,7 +62,7 @@ if(!empty($calculation_id)) {
     $sql = "select id, name, image1, image2 from calculation_stream where calculation_id = $calculation_id and (image1 <> '' or image2 <> '')";
     $fetcher = new Fetcher($sql);
     while (($row = $fetcher->Fetch()) && empty($result['name'])) {
-        $result['name'] = $row['name'];
+        $result['name'] = html_entity_decode($row['name']);
         $result['id'] = $row['id'];
         $result['object'] = STREAM;
         if(!empty($row['image1'])) {
@@ -82,7 +82,7 @@ if(!empty($calculation_id)) {
                 . "where c.id = $calculation_id and (image1 <> '' or image2 <> '')";
         $fetcher = new Fetcher($sql);
         while (($row = $fetcher->Fetch()) && empty($result['name'])) {
-            $result['name'] = $row['name'];
+            $result['name'] = html_entity_decode($row['name']);
             $result['id'] = $row['id'];
             $result['object'] = PRINTING;
             if(!empty($row['image1'])) {
