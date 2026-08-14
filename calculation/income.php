@@ -399,6 +399,7 @@ if(empty($error_message)) {
                                 </tr>
                             </table>
                         </div>
+                        <p style="font-size: small; color: gray;">Поступления вносит бухгалтер. Менеджер только наблюдает.</p>
                         <h2>Отгрузка</h2>
                         <table>
                             <tr>
@@ -422,6 +423,7 @@ if(empty($error_message)) {
                                 <td>Не выписаны</td>
                             </tr>
                         </table>
+                        <button type="button" class="btn btn-light mt-4"><img src="../images/icons/print.svg" class="mr-2" />Печать</button>
                     </div>
                 </div>
             </div>
