@@ -85,6 +85,21 @@ if(file_exists('find.php')) {
         }
     });
     
+    $('.float-only').keyup(function(e) {
+        if($(this).hasClass('float-format')) {
+            var val = $(this).val();
+            val = val.replace(',', '.');
+            val = val.replace(/[^\.\d]/g, '');
+            
+            if(val === '' || val === '.') {
+                $(this).val(val);
+            }
+            else {
+                $(this).val(FloatFormat(val));
+            }
+        }
+    });
+    
     $('.float-only').change(function(e) {
         var val = $(this).val();
         val = val.replace(',', '.');
@@ -95,7 +110,13 @@ if(file_exists('find.php')) {
         }
         else {
             val = parseFloat(val);
-            $(this).val(val);
+            
+            if($(this).hasClass('float-format')) {
+                $(this).val(FloatFormat(val.toString()));
+            }
+            else {
+                $(this).val(val);
+            }
         }
     });
     
@@ -301,6 +322,14 @@ if(file_exists('find.php')) {
             val = Intl.NumberFormat('ru-RU').format(replv);
             textbox.val(val);
         }
+    }
+    
+    // Форматирование дробного поля (например, денежной суммы) для отображения разрядов целой части,
+    // с сохранением дробной части как есть (без округления при вводе)
+    function FloatFormat(rawVal) {
+        var parts = rawVal.split('.');
+        var intPart = Intl.NumberFormat('ru-RU').format(parts[0] === '' ? 0 : parts[0]);
+        return parts.length > 1 ? (intPart + ',' + parts[1]) : intPart;
     }
     
     // Запрет на изменение размеров всех многострочных текстовых полей вручную

@@ -38,8 +38,11 @@ if(null !== filter_input(INPUT_POST, 'payment_submit')) {
         $form_valid = false;
     }
     
-    $amount = filter_input(INPUT_POST, 'amount');
-    if(empty($amount)) {
+    $amount = filter_input(INPUT_POST, 'amount') ?? '';
+    // Убираем пробелы/неразрывные пробелы-разделители разрядов и приводим запятую к точке,
+    // так как на клиенте сумма может отображаться сгруппированной по разрядам (например, "12 500,50")
+    $amount = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $amount);
+    if(empty($amount) || !is_numeric($amount)) {
         $amount_valid = ISINVALID;
         $form_valid = false;
     }
@@ -477,7 +480,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                                 <div class="col-3">
                                     <label for="sum">Сумма</label>
                                     <div class="input-group">
-                                        <input type="text" name="amount" placeholder="0,00" class="form-control float-only" required="required" autocomplete="off" />
+                                        <input type="text" name="amount" placeholder="0,00" class="form-control float-only float-format" required="required" autocomplete="off" />
                                         <div class="input-group-append">
                                             <select name="currency" required="required">
                                                 <?php foreach(CURRENCIES as $currency): ?>
