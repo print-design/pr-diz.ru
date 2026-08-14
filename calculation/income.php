@@ -1,64 +1,20 @@
 <?php
 include '../include/topscripts.php';
-include '../calculation/calculation.php';
-include '../calculation/calculation_result.php';
+include './calculation.php';
+include './calculation_result.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD]))) {
     include '../include/_unauthorized.php';
 }
 
-// Если не указан id, направляем к списку заказов
+// Если не указан id, направляем к списку
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if($id === null) {
-    header('Location: '.APPLICATION.'/buh/');
+    header('Location: '.APPLICATION.'/calculation/');
 }
 
-// Валидация формы
-$form_valid = true;
-$error_message = '';
-
-$paid_at_valid = '';
-$payment_num_valid = '';
-$amount_valid = '';
-
-// Обработка отправки формы
-if(null !== filter_input(INPUT_POST, 'payment_submit')) {
-    $order_id = filter_input(INPUT_POST, 'order_id', FILTER_VALIDATE_INT);
-    
-    $paid_at = filter_input(INPUT_POST, 'paid_at');
-    if(empty($paid_at)) {
-        $paid_at_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $payment_num = filter_input(INPUT_POST, 'payment_num');
-    if(empty($payment_num)) {
-        $payment_num_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $amount = filter_input(INPUT_POST, 'amount') ?? '';
-    // Убираем пробелы/неразрывные пробелы-разделители разрядов и приводим запятую к точке,
-    // так как на клиенте сумма может отображаться сгруппированной по разрядам (например, "12 500,50")
-    $amount = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $amount);
-    if(empty($amount) || !is_numeric($amount)) {
-        $amount_valid = ISINVALID;
-        $form_valid = false;
-    }
-    
-    $currency = filter_input(INPUT_POST, 'currency');
-    
-    $created_by = filter_input(INPUT_POST, 'created_by');
-    
-    if($form_valid) {
-        $sql = "insert into payment (order_id, paid_at, payment_num, amount, currency, created_by) values (?, ?, ?, ?, ?, ?)";
-        $executer = new Executer($sql, [$order_id, $paid_at, $payment_num, $amount, $currency, $created_by]);
-        $error_message = $executer->error;
-    }
-}
-
-// Получение объекта
+// ПОЛУЧЕНИЕ ОБЪЕКТА
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
@@ -136,12 +92,6 @@ if(empty($error_message)) {
     $executer = new Executer($sql, [$shipping_cost, $payment_total, $id]);
     $error_message = $executer->error;
 }
-
-// В производстве
-$production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED]);
-
-// Оплачено
-$paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $shipping_cost;
 ?>
 <!DOCTYPE html>
 <html>
@@ -151,97 +101,97 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
         ?>
         <style>
             h1 {
-                    font-size: 33px;
-                }
+                font-size: 33px;
+            }
             
-                h2, .name {
-                    font-size: 26px;
-                    font-weight: bold;
-                    line-height: 45px;
-                }
+            h2, .name {
+                font-size: 26px;
+                font-weight: bold;
+                line-height: 45px;
+            }
             
-                h3 {
-                    font-size: 20px;
-                }
-                
-                .subtitle {
-                    font-weight: bold;
-                    font-size: 20px;
-                    line-height: 40px
-                }
-                
-                table {
-                    width: 100%;
-                }
+            h3 {
+                font-size: 20px;
+            }
             
-                tr {
-                    border-bottom: solid 1px #e3e3e3;
-                }
+            .subtitle {
+                font-weight: bold;
+                font-size: 20px;
+                line-height: 40px
+            }
             
-                th {
-                    white-space: nowrap;
-                    padding-right: 30px;
-                    vertical-align: top;
-                    line-height: 30px;
-                }
-                
-                tr th:nth-child(2) {
-                    text-align: right;
-                    padding-right: 0;
-                    padding-left: 10px;
-                }
-                
-                tr th:nth-child(3) {
-                    text-align: right;
-                    padding-left: 10px;
-                    padding-right: 10px;
-                }
+            table {
+                width: 100%;
+            }
             
-                td {
-                    line-height: 30px;
-                }
+            tr {
+                border-bottom: solid 1px #e3e3e3;
+            }
             
-                tr td:nth-child(2) {
-                    text-align: right;
-                    padding-left: 10px;
-                    font-weight: bold;
-                }
-                
-                tr td:nth-child(3) {
-                    text-align: right;
-                    padding-left: 10px;
-                    padding-right: 10px;
-                    font-weight: bold;
-                }
-                
-                #status {
-                    width: 100%;
-                    padding: 12px;
-                    margin-top: 40p;
-                    margin-bottom: 20px;
-                    border-radius: 10px;
-                    font-weight: bold;
-                    text-align: center; 
-                }
-                
-                .original_maket {
-                    border-radius: 15px;
-                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
-                    padding: 15px;
-                    margin: 5px 5px 8px 5px;
-                }
-                
-                #right_part {
-                    border-radius: 15px;
-                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
-                    padding: 25px;
-                    margin-top: 25px;
-                }
+            th {
+                white-space: nowrap;
+                padding-right: 30px;
+                vertical-align: top;
+                line-height: 30px;
+            }
+            
+            tr th:nth-child(2) {
+                text-align: right;
+                padding-right: 0;
+                padding-left: 10px;
+            }
+            
+            tr th:nth-child(3) {
+                text-align: right;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            
+            td {
+                line-height: 30px;
+            }
+            
+            tr td:nth-child(2) {
+                text-align: right;
+                padding-left: 10px;
+                font-weight: bold;
+            }
+            
+            tr td:nth-child(3) {
+                text-align: right;
+                padding-left: 10px;
+                padding-right: 10px;
+                font-weight: bold;
+            }
+            
+            #status {
+                width: 100%;
+                padding: 12px;
+                margin-top: 40p;
+                margin-bottom: 20px;
+                border-radius: 10px;
+                font-weight: bold;
+                text-align: center; 
+            }
+            
+            .original_maket {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                margin: 5px 5px 8px 5px;
+            }
+            
+            #right_part {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 25px;
+                margin-top: 25px;
+            }
         </style>
     </head>
     <body>
         <?php
-        include 'header_buh.php';
+        include 'header.php';
         
         include '../include/big_image.php';
         ?>
@@ -254,6 +204,10 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
             <input type="hidden" name="scroll" />
         </form>
         <div class="container-fluid">
+            <div class="text-nowrap nav2">
+                <?php include './subheader.php'; ?>
+            </div>
+            <hr />
             <?php
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
@@ -261,22 +215,6 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
             ?>
             <div class="row">
                 <div class="col-5">
-                    <?php
-                    $backlink_url = "";
-                    if($production) {
-                        $backlink_url = BuildQueryAddRemoveArray('production', 1, ['status', 'paid', 'id']);
-                    }
-                    elseif($paid) {
-                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["status", "production", "id"]);
-                    }
-                    elseif(!empty ($status_id) && in_array($status_id, [ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED])) {
-                        $backlink_url = BuildQueryAddRemoveArray('status', $status_id, ['production', 'paid', 'id']);
-                    }
-                    else {
-                        $backlink_url = BuildQueryRemoveArray(["status", "production", "paid", "id"]);
-                    }
-                    ?>
-                    <a class="btn btn-light backlink" href="<?= APPLICATION ?>/buh/<?= $backlink_url ?>" title="К списку">К списку</a>
                     <h1><?=$calculation->name ?></h1>
                     <div class="name"><?=$calculation->customer ?></div>
                     <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
@@ -461,39 +399,6 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                                 </tr>
                             </table>
                         </div>
-                        <div class="subtitle">Добавить поступление</div>
-                        <form method="post" class="mb-3">
-                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                            <input type="hidden" name="order_id" value="<?=$id ?>" />
-                            <input type="hidden" name="created_by" value="<?= GetUserId() ?>" />
-                            <div class="row mb-3">
-                                <div class="col-3">
-                                    <label for="time">Дата и время</label>
-                                    <input type="datetime-local" name="paid_at" class="form-control" required="required" />
-                                    <div class="invalid-feedback">Дата и время обязательно</div>
-                                </div>
-                                <div class="col-3">
-                                    <label for="payment">№ платежа</label>
-                                    <input type="text" name="payment_num" placeholder="№" class="form-control" required="required" />
-                                    <div class="invalid-feedback">№ платежа обязательно</div>
-                                </div>
-                                <div class="col-3">
-                                    <label for="sum">Сумма</label>
-                                    <div class="input-group">
-                                        <input type="text" name="amount" placeholder="0,00" class="form-control float-only float-format" required="required" autocomplete="off" />
-                                        <div class="input-group-append">
-                                            <select name="currency" required="required">
-                                                <?php foreach(CURRENCIES as $currency): ?>
-                                                <option value="<?=$currency ?>"><?= CURRENCY_SIGNES[$currency] ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="invalid-feedback">Сумма обязательно</div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-dark" name="payment_submit"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
-                        </form>
                         <h2>Отгрузка</h2>
                         <table>
                             <tr>
@@ -517,7 +422,6 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                                 <td>Не выписаны</td>
                             </tr>
                         </table>
-                        <button type="button" class="btn btn-light mt-4"><img src="../images/icons/print.svg" class="mr-2" />Печать</button>
                     </div>
                 </div>
             </div>

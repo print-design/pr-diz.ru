@@ -8,6 +8,12 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE
     include '../include/_unauthorized.php';
 }
 
+// Если не указан id, направляем к списку
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if($id === null) {
+    header('Location: '.APPLICATION.'/calculation/');
+}
+
 // Атрибут "поле неактивно"
 $disabled_attr = " disabled='disabled'";
 
@@ -113,7 +119,6 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
 }
 
 // Получение объекта
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
@@ -255,19 +260,13 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             include './right_panel.php';
         }
         
-        include 'header_zakaz.php';
+        include 'header.php';
         ?>
         <div class="container-fluid">
             <!-- Левая половина -->
             <div id="left_side">
                 <div class="text-nowrap nav2">
-                    <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Расчёт</a>
-                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
-                    <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4">Тех. карта</a>
-                    <?php endif; ?>
-                    <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_STOREKEEPER])) && in_array($calculation->status_id, ORDER_STATUSES_IN_CUT)): ?>
-                    <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4">Результаты</a>
-                    <?php endif; ?>
+                    <?php include './subheader.php'; ?>
                 </div>
                 <hr />
                 <?php

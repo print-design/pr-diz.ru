@@ -9,7 +9,8 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE
 }
 
 // Если не указан id, направляем к списку
-if(null === filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if($id === null) {
     header('Location: '.APPLICATION.'/calculation/');
 }
 
@@ -297,7 +298,6 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
 }
 
 // ПОЛУЧЕНИЕ ОБЪЕКТА
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 
@@ -635,7 +635,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
     </head>
     <body>
         <?php
-        include 'header_zakaz.php';
+        include 'header.php';
         
         include '../include/big_image.php';
         ?>
@@ -837,13 +837,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
         </form>
         <div class="container-fluid">
             <div class="text-nowrap nav2">
-                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))): ?>
-                <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4">Расчёт</a>
-                <?php endif; ?>
-                <a href="techmap.php?<?= http_build_query($_GET) ?>" class="mr-4 active">Тех. карта</a>
-                <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_STOREKEEPER])) && in_array($calculation->status_id, ORDER_STATUSES_IN_CUT)): ?>
-                <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4">Результаты</a>
-                <?php endif; ?>
+                <?php include './subheader.php'; ?>
             </div>
             <hr />
             <?php
