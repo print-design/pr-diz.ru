@@ -242,15 +242,15 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <table>
                                 <tr>
                                     <td>Отгр. стоимость</td>
-                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cost), 0) ?> &#8381;</td>
+                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cost), 2) ?> &#8381;</td>
                                 </tr>
                                 <tr>
                                     <td>Отгр. стоимость за <?=(empty($calculation->unit) || $calculation->unit == KG ? "кг" : "шт") ?></td>
-                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit), 0) ?> &#8381;</td>
+                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit), 3) ?> &#8381;</td>
                                 </tr>
                                 <tr>
                                     <td>Отгр. стоимость ПФ</td>
-                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost), 0) ?> &#8381;</td>
+                                    <td><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost), 2) ?> &#8381;</td>
                                 </tr>
                                 <tr>
                                     <td>Новые ПФ</td>
