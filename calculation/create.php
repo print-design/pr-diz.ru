@@ -607,7 +607,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     // Если есть второй прогон, но нет норм по второму прогону для данной машины, запрещаем создавать расчёт
-    if($ink_run2_number == "NULL" && (empty($price_run2) || empty($speed_run2) || empty($time_run2) || empty($length_run2) || empty($waste_percent_run2))) {
+    if(!empty($ink_run2_number) && (empty($price_run2) || empty($speed_run2) || empty($time_run2) || empty($length_run2) || empty($waste_percent_run2))) {
         $error_message = "Не заполнены 'Нормы' для второго прогона по этой машине";
         $form_valid = false;
     }
