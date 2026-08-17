@@ -386,6 +386,13 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 url: "_name_select2.php",
                 dataType: 'json',
                 delay: 250,
+                data: function(params) {
+                    var customerVal = $('#customer').val();
+                    return {
+                        q: params.term,
+                        customer: (customerVal && customerVal.length > 0) ? customerVal[0] : ''
+                    };
+                },
                 processResults: function(data) {
                     return { results: data };
                 },
