@@ -33,8 +33,8 @@ $has_run2 = false;
 $sql = "select c.work_type_id, c.ink_number, c.ink_run2_number, cr.length_pure_1, cr.length_pure_2, cr.length_pure_3, c.lamination1_film_variation_id, c.lamination1_individual_film_name, c.lamination2_film_variation_id, c.lamination2_individual_film_name, c.ink_run2_1 "
         . "from calculation c "
         . "inner join calculation_result cr on cr.calculation_id = c.id "
-        . "where c.id = $calculation_id";
-$fetcher = new Fetcher($sql);
+        . "where c.id = ?";
+$fetcher = new Fetcher($sql, [$calculation_id]);
 if($row = $fetcher->Fetch()) {
     $work_type_id = $row['work_type_id'];
     if($run2) {
@@ -74,8 +74,8 @@ if($work_id == WORK_PRINTING) {
     $machine_speed = 0;
     $machine_tuning_time = 0;
     $machine_waste_percent = 0;
-    $sql = "select speed, speed_run2 from norm_machine where machine_id = ".$edition->MachineId." order by date desc limit 1";
-    $fetcher = new Fetcher($sql);
+    $sql = "select speed, speed_run2 from norm_machine where machine_id = ? order by date desc limit 1";
+    $fetcher = new Fetcher($sql, [$edition->MachineId]);
     if($row = $fetcher->Fetch()) {
         if($run2) {
             $machine_speed = $row['speed_run2'];
@@ -84,8 +84,8 @@ if($work_id == WORK_PRINTING) {
             $machine_speed = $row['speed'];
         }
     }
-    $sql = "select time, waste_percent, time_run2, waste_percent_run2 from norm_priladka where machine_id = ".$edition->MachineId." order by date desc limit 1";
-    $fetcher = new Fetcher($sql);
+    $sql = "select time, waste_percent, time_run2, waste_percent_run2 from norm_priladka where machine_id = ? order by date desc limit 1";
+    $fetcher = new Fetcher($sql, [$edition->MachineId]);
     if($row = $fetcher->Fetch()) {
         if($run2) {
             $machine_tuning_time = $row['time_run2'];
@@ -106,12 +106,13 @@ elseif($work_id == WORK_LAMINATION) {
     $laminator_speed = 0;
     $laminator_tuning_time = 0;
     $laminator_waste_percent = 0;
-    $sql = "select speed from norm_laminator where laminator_id = ".$edition->MachineId." order by date desc limit 1";
-    $fetcher = new Fetcher($sql);
+    $sql = "select speed from norm_laminator where laminator_id = ? order by date desc limit 1";
+    $fetcher = new Fetcher($sql, [$edition->MachineId]);
     if($row = $fetcher->Fetch()) {
         $laminator_speed = $row['speed'];
     }
-    $sql = "select time, waste_percent from norm_laminator_priladka where laminator_id = ".$edition->MachineId." order by date desc limit 1";
+    $sql = "select time, waste_percent from norm_laminator_priladka where laminator_id = ? order by date desc limit 1";
+    $fetcher = new Fetcher($sql, [$edition->MachineId]);
     if($row = $fetcher->Fetch()) {
         $laminator_tuning_time = $row['time'];
         $laminator_waste_percent = $row['waste_percent'];
@@ -121,8 +122,8 @@ elseif($work_id == WORK_LAMINATION) {
 elseif($work_id == WORK_CUTTING) {
     $cutter_time = 0;
     $cutter_speed = 0;
-    $sql = "select time, speed from norm_cutter where cutter_id = ".$edition->MachineId." order by date desc limit 1";
-    $fetcher = new Fetcher($sql);
+    $sql = "select time, speed from norm_cutter where cutter_id = ? order by date desc limit 1";
+    $fetcher = new Fetcher($sql, [$edition->MachineId]);
     if($row = $fetcher->Fetch()) {
         $cutter_time = floatval($row['time']);
         $cutter_speed = floatval($row['speed']);
@@ -137,8 +138,8 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_event = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
-            . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-    $fetcher = new Fetcher($sql);
+            . "where work_id = ? and machine_id = ? and date = ? and shift = ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
     $row = $fetcher->Fetch();
     if(!$row) {
         $error = "Ошибка при определении позиции тиража";
@@ -150,8 +151,8 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $sql = "select count(pc.id) "
             . "from plan_continuation pc "
             . "inner join plan_edition e on pc.plan_edition_id = e.id "
-            . "where e.work_id = $work_id and e.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
-    $fetcher = new Fetcher($sql);
+            . "where e.work_id = ? and e.machine_id = ? and pc.date = ? and pc.shift = ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
     $row = $fetcher->Fetch();
     if(!$row) {
         $error = "Ошибка при определении позиции тиража";
@@ -161,8 +162,8 @@ if(empty($before) && $before !== 0 && $before !== '0') {
     $max_continuation = $row[0];
     
     $sql = "select max(ifnull(position, 0)) from plan_event "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-    $fetcher = new Fetcher($sql);
+            . "where in_plan = 1 and work_id = ? and machine_id = ? and date = ? and shift = ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
     $row = $fetcher->Fetch();
     if(!$row) {
         $error = "Ошибка при определении позиции события";
@@ -175,9 +176,9 @@ if(empty($before) && $before !== 0 && $before !== '0') {
 }
 else {
     $sql = "update plan_edition set position = ifnull(position, 0) + 1 "
-            . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
-            . "and position >= $before";
-    $executer = new Executer($sql);
+            . "where work_id = ? and machine_id = ? and date = ? and shift = ? "
+            . "and position >= ?";
+    $executer = new Executer($sql, [$work_id, $machine_id, $date, $shift, $before]);
     $error = $executer->error;
     if(!empty($error)) {
         echo json_encode(array('error' => $error));
@@ -185,9 +186,9 @@ else {
     }
     
     $sql = "update plan_event set position = ifnull(position, 0) + 1 "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
-            . "and position >= $before";
-    $executer = new Executer($sql);
+            . "where in_plan = 1 and work_id = ? and machine_id = ? and date = ? and shift = ? "
+            . "and position >= ?";
+    $executer = new Executer($sql, [$work_id, $machine_id, $date, $shift, $before]);
     $error = $executer->error;
     if(!empty($error)) {
         echo json_encode(array('error' => $error));
@@ -199,9 +200,9 @@ else {
     $max_event = 0;
     
     $sql = "select max(ifnull(position, 0)) from plan_edition "
-            . "where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
-            . "and position < $before";
-    $fetcher = new Fetcher($sql);
+            . "where work_id = ? and machine_id = ? and date = ? and shift = ? "
+            . "and position < ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift, $before]);
     $row = $fetcher->Fetch();
     if(!$row) {
         $error = $fetcher->error;
@@ -213,8 +214,8 @@ else {
     $sql = "select count(pc.id) "
             . "from plan_continuation pc "
             . "inner join plan_edition e on pc.plan_edition_id = e.id "
-            . "where e.work_id = $work_id and e.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
-    $fetcher = new Fetcher($sql);
+            . "where e.work_id = ? and e.machine_id = ? and pc.date = ? and pc.shift = ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
     $row = $fetcher->Fetch();
     if(!$row) {
         $error = "Ошибка при определении позиции тиража";
@@ -225,9 +226,9 @@ else {
     
     $sql = "select max(ifnull(position, 0)) "
             . "from plan_event "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift' "
-            . "and position < $before";
-    $fetcher = new Fetcher($sql);
+            . "where in_plan = 1 and work_id = ? and machine_id = ? and date = ? and shift = ? "
+            . "and position < ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift, $before]);
     $row = $fetcher->Fetch();
     if(!$row) {
         $error = $fetcher->error;
@@ -241,22 +242,21 @@ else {
 
 $plan_edition_id = 0;
 
-$sql = "select id from plan_edition where calculation_id = $calculation_id and lamination = $lamination and run2 = $run2 and work_id = $work_id and machine_id = $machine_id" ;
-$fetcher = new Fetcher($sql);
+$sql = "select id from plan_edition where calculation_id = ? and lamination = ? and run2 = ? and work_id = ? and machine_id = ?";
+$fetcher = new Fetcher($sql, [$calculation_id, $lamination, $run2, $work_id, $machine_id]);
 if($row = $fetcher->Fetch()) {
     $plan_edition_id = $row[0];
 }
 
 if($plan_edition_id > 0) {
-    $sql = "update plan_edition set work_id = ".$edition->WorkId.", machine_id = ".$edition->MachineId.", date = '".$edition->Date."', shift = '".$edition->Shift."', worktime = ".$edition->WorkTime.", position = ".$edition->Position
-            ." where id = $plan_edition_id";
-    $executer = new Executer($sql);
+    $sql = "update plan_edition set work_id = ?, machine_id = ?, date = ?, shift = ?, worktime = ?, position = ? where id = ?";
+    $executer = new Executer($sql, [$edition->WorkId, $edition->MachineId, $edition->Date, $edition->Shift, $edition->WorkTime, $edition->Position, $plan_edition_id]);
     $error = $executer->error;
 }
 else {
     $sql = "insert into plan_edition (calculation_id, lamination, run2, work_id, machine_id, date, shift, worktime, position) "
-            . "values ($calculation_id, $lamination, $run2, ".$edition->WorkId.", ".$edition->MachineId.", '".$edition->Date."', '".$edition->Shift."', ".$edition->WorkTime.", ".$edition->Position.")";
-    $executer = new Executer($sql);
+            . "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $executer = new Executer($sql, [$calculation_id, $lamination, $run2, $edition->WorkId, $edition->MachineId, $edition->Date, $edition->Shift, $edition->WorkTime, $edition->Position]);
     $error = $executer->error;
     
     if(empty($error) && $work_id == WORK_PRINTING && !$has_run2) {
@@ -270,8 +270,8 @@ else {
         // - два тиража
         $editions_count = 0;
         
-        $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select count(id) from plan_edition where calculation_id = ? and work_id = ?";
+        $fetcher = new Fetcher($sql, [$calculation_id, $work_id]);
         if($row = $fetcher->Fetch()) {
             $editions_count = $row[0];
         }
@@ -291,8 +291,8 @@ else {
         // - два тиража,
         $editions_count = 0;
         
-        $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = $work_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select count(id) from plan_edition where calculation_id = ? and work_id = ?";
+        $fetcher = new Fetcher($sql, [$calculation_id, $work_id]);
         if($row = $fetcher->Fetch()) {
             $editions_count = $row[0];
         }
