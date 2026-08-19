@@ -122,11 +122,7 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                                value="<?= filter_input(INPUT_POST, 'name') ?>" 
                                placeholder="Название поставщика" 
                                required="required" 
-                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                               onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика');" 
-                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                               onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика');" 
-                               onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название поставщика);"  />
+                               autocomplete="new-password" />
                         <div class="invalid-feedback">Название поставщика обязательно</div>                            
                     </div>
                 </div>
@@ -139,33 +135,21 @@ if(null !== filter_input(INPUT_POST, 'supplier_create_submit')) {
                                class="form-control" 
                                placeholder="Марка пленки" 
                                style="width:215px; margin-right: 13px;" 
-                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                               onmouseup="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');" 
-                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                               onkeyup="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');" 
-                               onfocusout="javascript: $(this).attr('id', 'film_brand'); $(this).attr('name', 'film_brand'); $(this).attr('placeholder', 'Марка пленки');"  />
+                               autocomplete="new-password" />
                         <input type="text" 
                                id="thickness" 
                                name="thickness" 
                                class="form-control int-only" 
                                placeholder="Толщина" 
                                style="width: 100px; margin-right: 13px;" 
-                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                               onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
-                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                               onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
-                               onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');"  />
+                               autocomplete="new-password" />
                         <input type="text" 
                                id="weight" 
                                name="weight" 
                                class="form-control float-only" 
                                placeholder="Удельный вес" 
                                style="width: 129px; margin-right: 13px;" 
-                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                               onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
-                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                               onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
-                               onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');"  />
+                               autocomplete="new-password" />
                         <button type="button" class="btn btn-link" id="add-brand-link">Добавить</button>
                     </div>
                     <button type="button" class="btn btn-outline-dark" id="add-brand-button">

@@ -76,7 +76,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="ru">
+<html>
     <head>
         <?php
         include '../include/head.php';
@@ -273,12 +273,7 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                                            class="form-control float-only" 
                                            required="required" 
                                            autocomplete="off"
-                                           onmousedown="javascript: $(this).removeAttr('name');" 
-                                           onfocus="javascript: $(this).removeAttr('name');" 
-                                           onmouseup="javascript: $(this).attr('name', 'worktime');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('name'); }" 
-                                           onkeyup="javascript: $(this).attr('name', 'worktime');" 
-                                           onfocusout="javascript: $(this).attr('name', 'worktime');" />
+                                           autocomplete="new-password" />
                                 </div>
                             </div>
                             <div class="form-group">

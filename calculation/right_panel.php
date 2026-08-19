@@ -346,11 +346,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                            value="<?= round($calculation->extracharge ?? 0) ?>" 
                            required="required"
-                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                           onmouseup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
-                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                           onkeyup="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');" 
-                           onfocusout="javascript: $(this).attr('id', 'extracharge'); $(this).attr('name', 'extracharge');"<?=$disabled_attr ?> />
+                           autocomplete="new-password"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
@@ -363,11 +359,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                            value="<?= round(floatval($calculation_result->shipping_cost_per_unit ?? 0), 3)  ?>" 
                            required="required"
-                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                           onmouseup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
-                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                           onkeyup="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');" 
-                           onfocusout="javascript: $(this).attr('id', 'input_shipping_cost_per_unit'); $(this).attr('name', 'input_shipping_cost_per_unit');"<?=$disabled_attr ?> />
+                           autocomplete="new-password"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">&#8381;</span>
                     </div>
@@ -391,11 +383,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                            value="<?= round($calculation->extracharge_cliche ?? 0) ?>" 
                            required="required" 
-                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                           onmouseup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
-                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                           onkeyup="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');" 
-                           onfocusout="javascript: $(this).attr('id', 'extracharge_cliche'); $(this).attr('name', 'extracharge_cliche');"<?=$disabled_attr ?> />
+                           autocomplete="new-password"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">%</span>
                     </div>
@@ -408,11 +396,7 @@ if(!empty($calculation) && is_a($calculation, Calculation::class)):
                            style="width: 75px; height: 28px; border: 1px solid #ced4da; font-size: 16px;" 
                            value="<?= round(floatval($calculation_result->shipping_cliche_cost ?? 0), 0) ?>" 
                            required="required" 
-                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                           onmouseup="javascript: $(this).attr('id', 'input_shipping_cliche_cost'); $(this).attr('name', 'input_shipping_cliche_cost');" 
-                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                           onkeyup="javascript: $(this).attr('id', 'input_shipping_cliche_cost'); $(this).attr('name', 'input_shipping_cliche_cost');" 
-                           onfocusout="javascript: $(this).attr('id', 'input_shipping_cliche_cost'); $(this).attr('name', 'input_shipping_cliche_cost');"<?=$disabled_attr ?> />
+                           autocomplete="new-password"<?=$disabled_attr ?> />
                     <div class="input-group-append" style="height: 28px;">
                         <span class="input-group-text">&#8381;</span>
                     </div>

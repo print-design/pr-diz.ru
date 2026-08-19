@@ -541,7 +541,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="ru">
+<html>
     <head>
         <?php
         include '../include/head.php';
@@ -1731,12 +1731,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                         placeholder="Намотка до" 
                                         value="<?= $winding ?>" 
                                         required="required" 
-                                        onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                        onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                        onmouseup="javascript: $(this).attr('id', 'winding'); $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
-                                        onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                        onkeyup="javascript: $(this).attr('id', 'winding'); $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" 
-                                        onfocusout="javascript: $(this).attr('id', 'winding'); $(this).attr('name', 'winding'); $(this).attr('placeholder', 'Намотка до');" />
+                                        autocomplete="new-password" />
                                     <div class="input-group-append">
                                         <select id="winding_unit" name="winding_unit" required="required">
                                             <option value="" hidden="hidden">...</option>
@@ -2237,11 +2232,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                 $('#edit_requirement_form_' + i).addClass('d-inline');
                     
                     
-                $('#requirement_input_' + i).attr('onmousedown', "javascript: $(this).removeAttr('id'); $(this).removeAttr('name');");
-                $('#requirement_input_' + i).attr('onmouseup', "javascript: $(this).attr('id', 'requirement_input_" + i + "'); $(this).attr('name', 'requirement');");
-                $('#requirement_input_' + i).attr('onkeydown', "javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }");
-                $('#requirement_input_' + i).attr('onkeyup', "javascript: $(this).attr('id', 'requirement_input_" + i + "'); $(this).attr('name', 'requirement');");
-                $('#requirement_input_' + i).attr('onfocusout', "javascript: $(this).attr('id', 'requirement_input_" + i + "'); $(this).attr('name', 'requirement');");
+                $('#requirement_input_' + i).attr('autocomplete', 'new-password');
                 
                 $('#requirement_input_' + i).focus();
             }

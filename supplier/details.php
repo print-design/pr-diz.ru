@@ -188,11 +188,7 @@ $name = htmlentities($row['name'] ?? '');
                                    name="name" 
                                    required="required" 
                                    placeholder="Марка пленки" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" 
-                                   onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Марка пленки');" />
+                                   autocomplete="new-password" />
                             <div class="invalid-feedback">Марка пленки обязательно</div>
                         </div>
                         <div class="form-group">
@@ -203,11 +199,7 @@ $name = htmlentities($row['name'] ?? '');
                                    placeholder="Толщина" 
                                    style="width: 100px; margin-left: 12px;" 
                                    required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
-                                   onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" />
+                                   autocomplete="new-password" />
                             <div class="invalid-feedback">Толщина обязательно</div>
                         </div>
                         <div class="form-group">
@@ -218,11 +210,7 @@ $name = htmlentities($row['name'] ?? '');
                                    placeholder="Удельный вес" 
                                    style="width: 120px; margin-left: 12px;" 
                                    required="required" 
-                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                   onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
-                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                   onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
-                                   onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" />
+                                   autocomplete="new-password" />
                             <div class="invalid-feedback">Удельный вес обязательно</div>
                         </div>
                         <button type="submit" class="btn btn-link" id="film_brand_create_submit" name="film_brand_create_submit" style="padding-left: 10px; padding-right: 0;"><i class="fas fa-plus" style="font-size: 10px;"></i>&nbsp;Добавить</button>
@@ -258,11 +246,7 @@ $name = htmlentities($row['name'] ?? '');
                                            placeholder="Толщина" 
                                            required="required" 
                                            style="width:100px;" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" 
-                                           onfocusout="javascript: $(this).attr('id', 'thickness'); $(this).attr('name', 'thickness'); $(this).attr('placeholder', 'Толщина');" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Толщина обязательно</div>
                                 </div>
                                 <div class="form-group">
@@ -273,11 +257,7 @@ $name = htmlentities($row['name'] ?? '');
                                            placeholder="Удельный вес" 
                                            required="required" 
                                            style="width:120px;" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" 
-                                           onfocusout="javascript: $(this).attr('id', 'weight'); $(this).attr('name', 'weight'); $(this).attr('placeholder', 'Удельный вес');" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Удельный вес обязательно</div>
                                 </div>
                                 <button type="submit" class="btn btn-link ml-2" id="film_brand_variation_create_submit" name="film_brand_variation_create_submit" style="padding-left: 0; padding-right: 0;"><i class="fas fa-plus" style="font-size: 8px; vertical-align: top; padding-top: 8px;"></i>&nbsp;Добавить</button>

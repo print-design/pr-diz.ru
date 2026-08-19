@@ -1439,7 +1439,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
 }
 ?>
 <!DOCTYPE html>
-<html lang="ru">
+<html>
     <head>
         <?php
         include '../include/head.php';
@@ -1539,11 +1539,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                        class="form-control" 
                                        placeholder="Имя представителя" 
                                        required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');"
-                                       onfocusout="javascript: $(this).attr('id', 'customer_person'); $(this).attr('name', 'customer_person'); $(this).attr('placeholder', 'Имя представителя');" />
+                                       autocomplete="new-password" />
                                 <div class="invalid-feedback">Имя представителя обязательно</div>
                             </div>
                             <div class="row">
@@ -1555,11 +1551,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                class="form-control" 
                                                placeholder="Номер телефона" 
                                                required="required" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" 
-                                               onfocusout="javascript: $(this).attr('id', 'customer_phone'); $(this).attr('name', 'customer_phone'); $(this).attr('placeholder', 'Номер телефона');" />
+                                               autocomplete="new-password" />
                                         <div class="invalid-feedback">Номер телефона обязательно</div>
                                     </div>
                                 </div>
@@ -1570,11 +1562,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                name="customer_extension" 
                                                class="form-control" 
                                                placeholder="Добавочный" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'customer_extension'); $(this).attr('name', 'customer_extension'); $(this).attr('placeholder', 'Добавочный');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'customer_extension'); $(this).attr('name', 'customer_extension'); $(this).attr('placeholder', 'Добавочный');" 
-                                               onfocusout="javascript: $(this).attr('id', 'customer_extension'); $(this).attr('name', 'customer_extension'); $(this).attr('placeholder', 'Добавочный');" />
+                                               autocomplete="new-password" />
                                     </div>
                                 </div>
                             </div>
@@ -1585,11 +1573,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                        class="form-control" 
                                        placeholder="E-Mail" 
                                        required="required" 
-                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                       onmouseup="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" 
-                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                       onkeyup="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" 
-                                       onfocusout="javascript: $(this).attr('id', 'customer_email'); $(this).attr('name', 'customer_email'); $(this).attr('placeholder', 'E-Mail');" />
+                                       autocomplete="new-password" />
                                 <div class="invalid-feedback">E-Mail обязательно</div>
                             </div>
                         </div>
@@ -1683,11 +1667,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 value="<?= htmlentities($name ?? '') ?>" 
                                 required="required" 
                                 autocomplete="off" 
-                                onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                onmouseup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
-                                onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                onkeyup="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" 
-                                onfocusout="javascript: $(this).attr('id', 'name'); $(this).attr('name', 'name'); $(this).attr('placeholder', 'Название заказа');" />
+                                autocomplete="new-password" />
                             <div class="invalid-feedback">Название заказа обязательно</div>
                         </div>
                         <!-- Тип работы -->
@@ -1758,11 +1738,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            placeholder="Объем заказа" 
                                            value="<?= empty($quantity) ? "" : number_format($quantity ?? 0, 0, ",", " ") ?>" 
                                            required="required" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" 
-                                           onfocusout="javascript: $(this).attr('id', 'quantity'); $(this).attr('name', 'quantity'); $(this).attr('placeholder', 'Объем заказа');" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback" id="quantity_invalid_feedback">Объём заказа обязательно</div>
                                 </div>
                             </div>
@@ -1826,11 +1802,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            class="form-control int-only self-adhesive-only<?=$printings_number_valid ?>" 
                                            placeholder="Количество тиражей" 
                                            value="<?= empty($printings_number) ? '' : $printings_number ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" 
-                                           onfocusout="javascript: $(this).attr('id', 'printings_number'); $(this).attr('name', 'printings_number'); $(this).attr('placeholder', 'Количество тиражей');" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Укажите тиражи</div>
                                 </div>
                                 <div>
@@ -1931,11 +1903,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            class="form-control int-only" 
                                            placeholder="Толщина" 
                                            value="<?= $individual_thickness ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                           onfocusout="javascript: $(this).attr('id', 'individual_thickness'); $(this).attr('name', 'individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Толщина обязательно</div>
                                 </div>
                             </div>
@@ -1948,11 +1916,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            class="form-control" 
                                            placeholder="Название пленки" 
                                            value="<?=$individual_film_name ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                           onfocusout="javascript: $(this).attr('id', 'individual_film_name'); $(this).attr('name', 'individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Название пленки обязательно</div>
                                 </div>
                             </div>
@@ -1965,12 +1929,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            class="form-control float-only" 
                                            placeholder="Удельный вес" 
                                            value="<?= empty($individual_density) ? '' : floatval($individual_density) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                           onfocusout="javascript: $(this).attr('id', 'individual_density'); $(this).attr('name', 'individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Удельный вес обязательно</div>
                                 </div>
                             </div>
@@ -1985,12 +1944,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                placeholder="Цена" 
                                                value="<?= empty($price) ? "" : round($price ?? 0, 2) ?>"
                                                required="required" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" 
-                                               onfocusout="javascript: $(this).attr('id', 'price'); $(this).attr('name', 'price'); $(this).attr('placeholder', 'Цена');" />
+                                               autocomplete="new-password" />
                                         <div class="input-group-append">
                                             <select id="currency" name="currency" class="film-currency">
                                                 <option value="" hidden="">...</option>
@@ -2127,11 +2081,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                class="form-control int-only" 
                                                placeholder="Толщина" 
                                                value="<?= $lamination1_individual_thickness ?>" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_thickness'); $(this).attr('name', 'lamination1_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_thickness'); $(this).attr('name', 'lamination1_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_thickness'); $(this).attr('name', 'lamination1_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                               autocomplete="new-password" />
                                         <div class="invalid-feedback">Толщина обязательно</div>
                                     </div>
                                 </div>
@@ -2144,11 +2094,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                class="form-control" 
                                                placeholder="Название пленки" 
                                                value="<?=$lamination1_individual_film_name ?>" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_film_name'); $(this).attr('name', 'lamination1_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_film_name'); $(this).attr('name', 'lamination1_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_film_name'); $(this).attr('name', 'lamination1_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                               autocomplete="new-password" />
                                         <div class="invalid-feedback">Название пленки обязательно</div>
                                     </div>
                                 </div>
@@ -2161,11 +2107,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                class="form-control float-only" 
                                                placeholder="Удельный вес" 
                                                value="<?= empty($lamination1_individual_density) ? '' : floatval($lamination1_individual_density) ?>" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'lamination1_individual_density'); $(this).attr('name', 'lamination1_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'lamination1_individual_density'); $(this).attr('name', 'lamination1_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                               onfocusout="javascript: $(this).attr('id', 'lamination1_individual_density'); $(this).attr('name', 'lamination1_individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
+                                               autocomplete="new-password" />
                                         <div class="invalid-feedback">Удельный вес обязательно</div>
                                     </div>
                                 </div>
@@ -2179,12 +2121,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                    class="form-control float-only film-price<?=$lamination1_price_valid ?>" 
                                                    placeholder="Цена" 
                                                    value="<?= empty($lamination1_price) ? "" : round($lamination1_price ?? 0, 2) ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination1_price'); $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination1_price'); $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination1_price'); $(this).attr('name', 'lamination1_price'); $(this).attr('placeholder', 'Цена');" />
+                                                   autocomplete="new-password" />
                                             <div class="input-group-append">
                                                 <select id="lamination1_currency" name="lamination1_currency" class="film-currency">
                                                     <option value="" hidden="">...</option>
@@ -2335,11 +2272,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                    class="form-control int-only" 
                                                    placeholder="Толщина" 
                                                    value="<?= $lamination2_individual_thickness ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_thickness'); $(this).attr('name', 'lamination2_individual_thickness'); $(this).attr('placeholder', 'Толщина, мкм')" />
+                                                   autocomplete="new-password" />
                                             <div class="invalid-feedback">Толщина обязательно</div>
                                         </div>
                                     </div>
@@ -2352,11 +2285,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                    class="form-control" 
                                                    placeholder="Название пленки" 
                                                    value="<?=$lamination2_individual_film_name ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_film_name'); $(this).attr('name', 'lamination2_individual_film_name'); $(this).attr('placeholder', 'Название пленки')" />
+                                                   autocomplete="new-password" />
                                             <div class="invalid-feedback">Название пленки обязательно</div>
                                         </div>
                                     </div>
@@ -2369,11 +2298,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                    class="form-control float-only" 
                                                    placeholder="Удельный вес" 
                                                    value="<?= empty($lamination2_individual_density) ? '' : floatval($lamination2_individual_density) ?>" 
-                                                   onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                   onmouseup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                                   onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                   onkeyup="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" 
-                                                   onfocusout="javascript: $(this).attr('id', 'lamination2_individual_density'); $(this).attr('name', 'lamination2_individual_density'); $(this).attr('placeholder', 'Удельный вес')" />
+                                                   autocomplete="new-password" />
                                             <div class="invalid-feedback">Удельный вес обязательно</div>
                                         </div>
                                     </div>
@@ -2387,12 +2312,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                        class="form-control float-only film-price<?=$lamination2_price_valid ?>" 
                                                        placeholder="Цена" 
                                                        value="<?= empty($lamination2_price) ? "" : round($lamination2_price ?? 0, 2) ?>" 
-                                                       onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                       onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                                       onmouseup="javascript: $(this).attr('id', 'lamination2_price'); $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
-                                                       onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                                       onkeyup="javascript: $(this).attr('id', 'lamination2_price'); $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" 
-                                                       onfocusout="javascript: $(this).attr('id', 'lamination2_price'); $(this).attr('name', 'lamination2_price'); $(this).attr('placeholder', 'Цена');" />
+                                                       autocomplete="new-password" />
                                                 <div class="input-group-append">
                                                     <select id="lamination2_currency" name="lamination2_currency" class="film-currency">
                                                         <option value="" hidden="">...</option>
@@ -2572,11 +2492,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            required="required" 
                                            placeholder="Длина этикетки, мм" 
                                            value="<?= empty($length) ? "" : floatval($length) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'length_2'); $(this).attr('name', 'length_2'); $(this).attr('placeholder', 'Длина этикетки, мм');" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Длина этикетки обязательно</div>
                                 </div>
                             </div>
@@ -2591,11 +2507,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            required="required" 
                                            placeholder="Ширина этикетки, мм" 
                                            value="<?= (empty($stream_width) || $work_type_id != WORK_TYPE_SELF_ADHESIVE) ? "" : floatval($stream_width) ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" 
-                                           onfocusout="javascript: $(this).attr('id', 'stream_width_2'); $(this).attr('name', 'stream_width_2'); $(this).attr('placeholder', 'Ширина этикетки, мм');" />
+                                           autocomplete="new-password" />
                                 </div>
                             </div>
                             <!-- Длина этикетки -->
@@ -2630,11 +2542,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             required="required" 
                                             placeholder="Ширина ручья, мм" 
                                             value="<?= empty($stream_width) ? "" : floatval($stream_width) ?>" 
-                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                            onmouseup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
-                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                            onkeyup="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" 
-                                            onfocusout="javascript: $(this).attr('id', 'stream_width'); $(this).attr('name', 'stream_width'); $(this).attr('placeholder', 'Ширина ручья, мм');" />
+                                            autocomplete="new-password" />
                                     <div class="invalid-feedback">Ширина ручья обязательно</div>
                                 </div>
                                 <!-- Разная ширина ручьёв -->
@@ -2669,11 +2577,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            required="required"
                                            placeholder="Количество ручьев" 
                                            value="<?=$streams_number ?>" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                           onmouseup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" 
-                                           onfocusout="javascript: $(this).attr('id', 'streams_number'); $(this).attr('name', 'streams_number'); $(this).attr('placeholder', 'Количество ручьев');" />
+                                           autocomplete="new-password" />
                                     <div class="invalid-feedback">Количество ручьев обязательно</div>
                                 </div>
                             </div>
@@ -2824,12 +2728,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            name="cliches_count_flint" 
                                            value="<?=$cliches_count_flint ?>" 
                                            class="form-control int-only self-adhesive-only d-none" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                           onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                           onmouseup="javascript: $(this).attr('id', 'cliches_count_flint'); $(this).attr('name', 'cliches_count_flint');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'cliches_count_flint'); $(this).attr('name', 'cliches_count_flint');" 
-                                           onfocusout="javascript: $(this).attr('id', 'cliches_count_flint'); $(this).attr('name', 'cliches_count_flint');" />
+                                           autocomplete="new-password" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-kodak">
                                     <label for="cliches_count_kodak">Кол-во новых Кодак</label>
@@ -2838,12 +2737,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                            name="cliches_count_kodak" 
                                            value="<?=$cliches_count_kodak ?>" 
                                            class="form-control int-only self-adhesive-only d-none" 
-                                           onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                           onfocus="javascript: $(this).removeAttr('id'); $(this).removeAttr('name');" 
-                                           onmouseup="javascript: $(this).attr('id', 'cliches_count_kodak'); $(this).attr('name', 'cliches_count_kodak');" 
-                                           onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); }" 
-                                           onkeyup="javascript: $(this).attr('id', 'cliches_count_kodak'); $(this).attr('name', 'cliches_count_kodak');" 
-                                           onfocusout="javascript: $(this).attr('id', 'cliches_count_kodak'); $(this).attr('name', 'cliches_count_kodak');" />
+                                           autocomplete="new-password" />
                                 </div>
                                 <div class="form-group col-3 self-adhesive-only" id="ink-col-cliche-old">
                                     <label for="cliches_count_old">Кол-во старых форм</label>
@@ -2959,11 +2853,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             class="form-control panton color<?=$$color_var_valid ?>" 
                                             placeholder="Номер пантона..." 
                                             value="<?= empty($$color_var) ? "" : $$color_var?>" 
-                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                            onmouseup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
-                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                            onkeyup="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
-                                            onfocusout="javascript: $(this).attr('id', 'color_<?=$i ?>'); $(this).attr('name', 'color_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" />
+                                            autocomplete="new-password" />
                                     </div>
                                     <div class="invalid-feedback">Код цвета обязательно</div>
                                 </div>
@@ -3027,11 +2917,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             style="width: 80px;" 
                                             value="<?= empty($$percent_var) ? "" : $$percent_var ?>" 
                                             placeholder="Процент..." 
-                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                            onmouseup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
-                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                            onkeyup="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
-                                            onfocusout="javascript: $(this).attr('id', 'percent_<?=$i ?>'); $(this).attr('name', 'percent_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
+                                            autocomplete="new-password" />
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -3177,11 +3063,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                class="form-control panton_run2 color_run2<?=$$color_run2_valid_var ?>" 
                                                placeholder="Номер пантона" 
                                                value="<?= empty($$color_run2_var) ? "" : $$color_run2_var ?>" 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'color_run2_<?=$i ?>'); $(this).attr('name', 'color_run2_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'color_run2_<?=$i ?>'); $(this).attr('name', 'color_run2_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" 
-                                               onfocusout="javascript: $(this).attr('id', 'color_run2_<?=$i ?>'); $(this).attr('name', 'color_run2_<?=$i ?>'); $(this).attr('placeholder', 'Номер пантона...');" />
+                                               autocomplete="new-password" />
                                     </div>
                                     <div class="invalid-feedback">Код цвета обязательно</div>
                                 </div>
@@ -3245,11 +3127,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                                style="width: 80px;" 
                                                value="<?= empty($$percent_run2_var) ? "" : $$percent_run2_var ?>" 
                                                placeholder="Процент..." 
-                                               onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                               onmouseup="javascript: $(this).attr('id', 'percent_run2_<?=$i ?>'); $(this).attr('name', 'percent_run2_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
-                                               onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                               onkeyup="javascript: $(this).attr('id', 'percent_run2_<?=$i ?>'); $(this).attr('name', 'percent_run2_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" 
-                                               onfocusout="javascript: $(this).attr('id', 'percent_run2_<?=$i ?>'); $(this).attr('name', 'percent_run2_<?=$i ?>'); $(this).attr('placeholder', 'Процент...');" />
+                                               autocomplete="new-password" />
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -3288,11 +3166,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             class="form-control float-only" 
                                             value="<?= round($extra_expense ?? 0, 2) ?>" 
                                             placeholder="Дополнительные расходы, руб" 
-                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                            onmouseup="javascript: $(this).attr('id', 'extra_expense'); $(this).attr('name', 'extra_expense'); $(this).attr('placeholder', 'Дополнительные расходы, руб');" 
-                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                            onkeyup="javascript: $(this).attr('id', 'extra_expense'); $(this).attr('name', 'extra_expense'); $(this).attr('placeholder', 'Дополнительные расходы, руб');" 
-                                            onfocusout="javascript: $(this).attr('id', 'extra_expense'); $(this).attr('name', 'extra_expense'); $(this).attr('palceholder', 'Дополнительные расходы, руб');" />
+                                            autocomplete="new-password" />
                                 </div>
                             </div>
                             <div class="col-6 print-only self-adhesive-only d-none">
@@ -3324,11 +3198,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                             class="form-control float-only self-adhesive-only d-none"
                                             value="<?=round($knife ?? 0, 2) ?>"
                                             placeholder="Стоимость ножа, руб"
-                                            onmousedown="javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');" 
-                                            onmouseup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
-                                            onkeydown="javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder'); }" 
-                                            onkeyup="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножа, руб');" 
-                                            onfocusout="javascript: $(this).attr('id', 'knife'); $(this).attr('name', 'knife'); $(this).attr('placeholder', 'Стоимость ножи, руб');" />
+                                            autocomplete="new-password" />
                                     <div class="invalid-feedback">Стоимость ножа обязательно</div>
                                 </div>
                             </div>
@@ -3456,7 +3326,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 quantities_html = '';
                 
                 for(i=1; i<=num; i++) {
-                    quantities_html += "<div class='form-group mb-3'><input type='text' id='quantity_" + i + "' name='quantity_" + i + "' class='form-control int-format' placeholder='Тираж " + i + " (кол-во этикеток)' value='" + (!$('#quantity_' + i).val() ? '' : Intl.NumberFormat('ru-RU').format($('#quantity_' + i).val())) + "' required='required' /><div class='invalid-feedback'>Указать значение</div></div>";
+                    quantities_html += "<div class='form-group mb-3'><input type='text' id='quantity_" + i + "' name='quantity_" + i + "' class='form-control int-format' placeholder='Тираж " + i + " (кол-во этикеток)' autocomplete='new-password' value='" + (!$('#quantity_' + i).val() ? '' : Intl.NumberFormat('ru-RU').format($('#quantity_' + i).val())) + "' required='required' /><div class='invalid-feedback'>Указать значение</div></div>";
                 }
                 
                 $('#quantities_form_body').html(quantities_html);
@@ -3491,12 +3361,6 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#quantity_' + i).change(function() {
                         $('#quantity_' + i).keyup();
                     });
-                    
-                    $('#quantity_' + i).attr('onmousedown', "javascript: $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');");
-                    $('#quantity_' + i).attr('onmouseup', "javascript: $(this).attr('id', 'quantity_" + i + "'); $(this).attr('name', 'quantity_" + i + "'); $(this).attr('placeholder', 'Тираж " + i + " (кол-во этикеток)');");
-                    $('#quantity_' + i).attr('onkeydown', "javascript: if(event.which != 10 && event.which != 13) { $(this).removeAttr('id'); $(this).removeAttr('name'); $(this).removeAttr('placeholder');");
-                    $('#quantity_' + i).attr('onkeyup', "javascript: $(this).attr('id', 'quantity_" + i + "'); $(this).attr('name', 'quantity_" + i + "'); $(this).attr('placeholder', 'Тираж " + i + " (кол-во этикеток)');");
-                    $('#quantity_' + i).attr('onfocusout', "javascript: $(this).attr('id', 'quantity_" + i + "'); $(this).attr('name', 'quantity_" + i + "'); $(this).attr('placeholder', 'Тираж " + i + " (кол-во этикеток)');");
                 }
             });
             
