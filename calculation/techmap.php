@@ -38,7 +38,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     if(empty($id)) {
-        $error_message == "Не указан ID расчёта";
+        $error_message = "Не указан ID расчёта";
         $form_valid = false;
     }
     
@@ -104,9 +104,9 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
         $sql = "select count(distinct cq.id) * c.ink_number - count(cc.id) "
                 . "from calculation_cliche cc "
                 . "right join calculation_quantity cq on cc.calculation_quantity_id = cq.id "
-                . "inner join calculation c on cq.calculation_id = c.id where c.id = $id";
+                . "inner join calculation c on cq.calculation_id = c.id where c.id = ?";
         
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$id]);
         $row = $fetcher->Fetch();
         
         if($row[0] === null || $row[0] > 0) {
@@ -116,8 +116,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     }
     
     // Проверяем, чтобы были заполнены все требования для материалов
-    $sql = "select requirement1, requirement2, requirement3 from calculation where id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select requirement1, requirement2, requirement3 from calculation where id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $laminations_number = 0;
         if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
@@ -148,27 +148,29 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
     
     if($form_valid) {
         if(empty($supplier_id)) {
-            $supplier_id = "NULL";
+            $supplier_id = null;
         }
-        $comment = addslashes($comment ?? '');
         
         $sql = "";
+        $params = [];
         
         if(empty($techmap_id)) {
             $sql = "insert into techmap (calculation_id, supplier_id, side, winding, winding_unit, spool, labels, package, photolabel, roll_type, comment) "
-                    . "values($id, $supplier_id, $side, $winding, '$winding_unit', $spool, $labels, $package, '$photolabel', $roll_type, '$comment')";
+                    . "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $params = [$id, $supplier_id, $side, $winding, $winding_unit, $spool, $labels, $package, $photolabel, $roll_type, $comment];
         }
         else {
-            $sql = "update techmap set supplier_id = $supplier_id, side = $side, winding = $winding, winding_unit = '$winding_unit', spool = $spool, "
-                    . "labels = $labels, package = $package, photolabel = '$photolabel', roll_type = $roll_type, comment = '$comment' where id = $techmap_id";
+            $sql = "update techmap set supplier_id = ?, side = ?, winding = ?, winding_unit = ?, spool = ?, "
+                    . "labels = ?, package = ?, photolabel = ?, roll_type = ?, comment = ? where id = ?";
+            $params = [$supplier_id, $side, $winding, $winding_unit, $spool, $labels, $package, $photolabel, $roll_type, $comment, $techmap_id];
         }
         
-        $executer = new Executer($sql);
+        $executer = new Executer($sql, $params);
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            $sql = "select id, position, name from calculation_stream where calculation_id = $id order by position";
-            $grabber = new Grabber($sql);
+            $sql = "select id, position, name from calculation_stream where calculation_id = ? order by position";
+            $grabber = new Grabber($sql, [$id]);
             $result = $grabber->result;
             $error_message = $grabber->error;
             
@@ -187,9 +189,8 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
                         
                         if(count($substrings) > 1) {
                             $stream_id = $substrings[1];
-                            $name = addslashes($value);
-                            $sql = "update calculation_stream set name = '$name' where id = $stream_id";
-                            $executer = new Executer($sql);
+                            $sql = "update calculation_stream set name = ? where id = ?";
+                            $executer = new Executer($sql, [$value, $stream_id]);
                             $error_message = $executer->error;
                         }
                     }
@@ -209,18 +210,24 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $image = filter_input(INPUT_POST, 'image');
     
+    // $image используется как часть имени колонки (image1/image2, pdf1/pdf2), поэтому его нельзя
+    // передать через параметр prepared statement -- вместо этого проверяем по строгому списку допустимых значений
+    if(!in_array($image, ['1', '2'], true)) {
+        $image = null;
+    }
+    
     if(!empty($object) && !empty($id) || !empty($image)) {
         $sql = "";
         
         if($object == PRINTING) {
-            $sql = "select image$image, pdf$image from calculation_quantity where id = $id";
+            $sql = "select image$image, pdf$image from calculation_quantity where id = ?";
         }
         elseif($object == STREAM) {
-            $sql = "select image$image, pdf$image from calculation_stream where id = $id";
+            $sql = "select image$image, pdf$image from calculation_stream where id = ?";
         }
         
         if(!empty($sql)) {
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, [$id]);
             
             if($row = $fetcher->Fetch()) {
                 $filename = $row["image$image"];
@@ -251,13 +258,13 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
                 $sql = "";
                 
                 if($object == PRINTING) {
-                    $sql = "update calculation_quantity set image$image = '', pdf$image = '' where id = $id";
+                    $sql = "update calculation_quantity set image$image = '', pdf$image = '' where id = ?";
                 }
                 elseif($object == STREAM) {
-                    $sql = "update calculation_stream set image$image = '', pdf$image = '' where id = $id";
+                    $sql = "update calculation_stream set image$image = '', pdf$image = '' where id = ?";
                 }
                 
-                $executer = new Executer($sql);
+                $executer = new Executer($sql, [$id]);
                 $error_message = $executer->error;
             }
         }
@@ -283,8 +290,8 @@ if(null !== filter_input(INPUT_POST, 'delete_techmap_submit')) {
     $techmap_id = filter_input(INPUT_POST, 'techmap_id', FILTER_VALIDATE_INT);
     
     if(!empty($id) && !empty($techmap_id)) {
-        $sql = "delete from techmap where id = $techmap_id";
-        $executer = new Executer($sql);
+        $sql = "delete from techmap where id = ?";
+        $executer = new Executer($sql, [$techmap_id]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {
@@ -446,13 +453,13 @@ $cliches_used_kodak = 0;
 $cliches_used_old = 0;
 
 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-    $sql = "select id, quantity, length, image1, image2 from calculation_quantity where calculation_id = $id";
-    $grabber = new Grabber($sql);
+    $sql = "select id, quantity, length, image1, image2 from calculation_quantity where calculation_id = ?";
+    $grabber = new Grabber($sql, [$id]);
     $error_message = $grabber->error;
     $printings = $grabber->result;
     
-    $sql = "select calculation_quantity_id, sequence, name, repeat_from from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
-    $fetcher = new Fetcher($sql);
+    $sql = "select calculation_quantity_id, sequence, name, repeat_from from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = ?)";
+    $fetcher = new Fetcher($sql, [$id]);
     $error_message = $fetcher->error;
     while($row = $fetcher->Fetch()) {
         $cliches[$row['calculation_quantity_id']][$row['sequence']] = $row['name'];
@@ -476,16 +483,16 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
 if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
     $streams_count = 0;
     
-    $sql = "select count(id) from calculation_stream where calculation_id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from calculation_stream where calculation_id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $streams_count = $row[0];
     }
     
     if($streams_count == 0) {
         $widths_count = 0;
-        $sql = "select stream_number, width from calculation_stream_width where calculation_id = $id";
-        $grabber = new Grabber($sql);
+        $sql = "select stream_number, width from calculation_stream_width where calculation_id = ?";
+        $grabber = new Grabber($sql, [$id]);
         $stream_widths = $grabber->result;
         $error_message = $grabber->error;
         
@@ -493,16 +500,16 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
             foreach ($stream_widths as $item) {
                 $stream_position = $item['stream_number'];
                 $stream_width =  $item['width'];
-                $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $stream_position, $stream_width)";
-                $executer = new Executer($sql);
+                $sql = "insert into calculation_stream(calculation_id, position, width) values (?, ?, ?)";
+                $executer = new Executer($sql, [$id, $stream_position, $stream_width]);
                 $error_message = $executer->error;
             }
         }
         else {
             for($i = 0; $i < $calculation->streams_number; ++$i) {
                 $stream_width = $calculation->stream_width;
-                $sql = "insert into calculation_stream(calculation_id, position, width) values ($id, $i, $stream_width)";
-                $executer = new Executer($sql);
+                $sql = "insert into calculation_stream(calculation_id, position, width) values (?, ?, ?)";
+                $executer = new Executer($sql, [$id, $i, $stream_width]);
                 $error_message = $executer->error;
             }
         }
@@ -516,8 +523,8 @@ $streams = array();
 $stream_names = array();
 
 if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
-    $sql = "select id, position, name, width, image1, image2 from calculation_stream where calculation_id = $id order by position";
-    $fetcher = new Fetcher($sql);
+    $sql = "select id, position, name, width, image1, image2 from calculation_stream where calculation_id = ? order by position";
+    $fetcher = new Fetcher($sql, [$id]);
     
     while($row = $fetcher->Fetch()) {
         $post_name = filter_input(INPUT_POST, 'stream_'.$row['id']);
@@ -1025,8 +1032,8 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 }
                                 else {
                                     $count = 0;
-                                    $sql = "select count(id) from raport where active = 1 and machine_id = ".$calculation->machine_id." and value = ".$calculation->raport;
-                                    $fetcher = new Fetcher($sql);
+                                    $sql = "select count(id) from raport where active = 1 and machine_id = ? and value = ?";
+                                    $fetcher = new Fetcher($sql, [$calculation->machine_id, $calculation->raport]);
                                     if($row = $fetcher->Fetch()) {
                                         if($row[0] == 0) {
                                             echo "Да";
@@ -1700,8 +1707,8 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                                 <select id="supplier_id" name="supplier_id" class="form-control">
                                     <option value="">Любой</option>
                                     <?php
-                                    $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = (select film_variation_id from calculation where id = $id))";
-                                    $fetcher = new Fetcher($sql);
+                                    $sql = "select id, name from supplier where id in (select supplier_id from supplier_film_variation where film_variation_id = (select film_variation_id from calculation where id = ?))";
+                                    $fetcher = new Fetcher($sql, [$id]);
                                     while($row = $fetcher->Fetch()):
                                         $checked = $supplier_id == $row['id'] ? " selected='selected'" : "";
                                     ?>
@@ -1979,10 +1986,11 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             . "tm.id tm_id, tm.supplier_id tm_supplier_id, tm.side tm_side, tm.winding tm_winding, tm.winding_unit tm_winding_unit, tm.spool tm_spool, tm.labels tm_labels, tm.package tm_package, tm.photolabel tm_photolabel, tm.roll_type tm_roll_type, tm.comment tm_comment "
                             . "from calculation c "
                             . "inner join techmap tm on tm.calculation_id = c.id "
-                            . "where customer_id = ".$calculation->customer_id
-                            . " and work_type_id = ".$calculation->work_type_id." ";
+                            . "where customer_id = ? and work_type_id = ? ";
+                    $params = [$calculation->customer_id, $calculation->work_type_id];
                     if(!empty($calculation_result->techmap_id)) {
-                        $sql .= "and tm.id <> ".$calculation_result->techmap_id." ";
+                        $sql .= "and tm.id <> ? ";
+                        $params[] = $calculation_result->techmap_id;
                     }
                     switch($lamination) {
                         case "нет":
@@ -2000,7 +2008,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
                             break;
                     }
                     $sql .= "order by c.date desc";
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, $params);
                     
                     while($row = $fetcher->Fetch()):
                     $c_id = $row['c_id'];
