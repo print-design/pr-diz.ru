@@ -118,10 +118,12 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                                 case "0":
                                     this_el.html("<i class='fas fa-eye-slash'></i>");
                                     this_el.attr("title", "Неактивный");
+                                    this_el.tooltip('dispose').tooltip();
                                     break;
                                 case "1":
                                     this_el.html("<i class='fas fa-eye'></i>");
                                     this_el.attr("title", "Активный");
+                                    this_el.tooltip('dispose').tooltip();
                                     break;
                                 default:
                                     alert('Ошибка при активации / деактивации');
