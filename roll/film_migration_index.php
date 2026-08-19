@@ -63,7 +63,7 @@ $row = (new Fetcher($sql))->Fetch();
 $total_weight = $row['total_weight'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';
@@ -280,7 +280,7 @@ $total_weight = $row['total_weight'];
                                 }
                                 ?>
                             </div>
-                            <div id="slider"></div>
+                            <input type="range" id="slider" class="custom-range" min="0" max="<?= count($thicknesses) ?>" step="1" value="<?= $slider_value ?>" />
                         </div>
                         <input type="hidden" id="thickness" name="thickness" value="<?= filter_input(INPUT_GET, 'thickness') ?>" />
                         <h2 style="font-size: 24px; line-height: 32px; font-weight: 600; margin-top: 43px; margin-bottom: 18px;">Ширина</h2>
@@ -314,57 +314,33 @@ $total_weight = $row['total_weight'];
         <script>
             var thicknesses = JSON.parse('<?=$json_thicknesses ?>');
             
-            $("#slider").slider({
-                range: false,
-                min: 0,
-                max: <?= count($thicknesses) ?>,
-                step: 1,
-                value: <?=$slider_value ?>,
-                slide: function(event, ui) {
-                    if(ui.value === '') {
-                        $("#thickness").val('');
-                    }
-                    else {
-                        $("#thickness").val(thicknesses[ui.value - 1]);
-                    }
+            // Нативный HTML5 range-слайдер вместо виджета jQuery UI: убирает зависимость от jquery-ui.js
+            $('#slider').on('input', function() {
+                var val = parseInt($(this).val());
+                if(val === 0) {
+                    $("#thickness").val('');
+                }
+                else {
+                    $("#thickness").val(thicknesses[val - 1]);
                 }
             });
             
             $('#film_brand_name').change(function(){
                 if($(this).val() === '') {
                     $('#width_slider_values').html("<div class='p-1'>все</div>");
-                    $("#slider").slider({
-                        range: false,
-                        min: 0,
-                        max: 0,
-                        step: 1
-                    });
+                    $('#slider').attr('max', 0).val(0);
                     $("#thickness").val('');
                 }
                 else {
                     $.ajax({ url: "../supplier/_thickness.php?film_brand_name="+$(this).val() })
                             .done(function(data){
-                                var thicknesses = JSON.parse(data);
+                                thicknesses = JSON.parse(data);
                         
                                 var slider_labels = "<div class='p-1'>все</div>";
                                 thicknesses.forEach(thickness => slider_labels = slider_labels + "<div class='p-1'>" + thickness + "</div>");
                                 $('#width_slider_values').html(slider_labels);
                                 
-                                $("#slider").slider({
-                                    range: false,
-                                    min: 0,
-                                    max: thicknesses.length,
-                                    step: 1,
-                                    value: 0,
-                                    slide: function(event, ui) {
-                                        if(ui.value === '') {
-                                            $("#thickness").val('');
-                                        }
-                                        else {
-                                            $("#thickness").val(thicknesses[ui.value - 1]);
-                                        }
-                                    }
-                                });
+                                $('#slider').attr('max', thicknesses.length).val(0);
                                 
                                 $("#thickness").val('');
                             })

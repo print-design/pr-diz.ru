@@ -57,7 +57,7 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

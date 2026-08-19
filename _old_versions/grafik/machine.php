@@ -16,7 +16,7 @@ $timetable = new GrafikTimetable($date_from, $date_to, filter_input(INPUT_GET, '
 $error_message = $timetable->error_message;
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <title>График - <?=$timetable->name ?></title>
         <?php

@@ -62,7 +62,7 @@ if ($row = (new Fetcher("select fio, quit, username from user where id=$id"))->F
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

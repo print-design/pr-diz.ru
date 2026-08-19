@@ -238,7 +238,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 $source_id = filter_input(INPUT_POST, 'source_id');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

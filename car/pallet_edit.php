@@ -86,7 +86,7 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

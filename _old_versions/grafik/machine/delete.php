@@ -47,7 +47,7 @@ $is_cutter = $row['is_cutter'];
 $role = $row['role'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

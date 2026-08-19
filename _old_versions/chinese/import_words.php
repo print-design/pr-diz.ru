@@ -26,7 +26,7 @@ foreach ($result as $item) {
     $words[$item['line']] = array('word' => $item['word'], 'transcription' => $item['transcription'], 'translation' => $item['translation']);
 }
 ?>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

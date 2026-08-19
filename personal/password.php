@@ -50,7 +50,7 @@ if(null !== filter_input(INPUT_POST, 'password_change_submit')) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

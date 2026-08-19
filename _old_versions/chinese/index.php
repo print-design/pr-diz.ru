@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 include './database_chinese.php';
 ?>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

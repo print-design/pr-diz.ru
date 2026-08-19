@@ -20,7 +20,7 @@ $grafik_machine = new GrafikTimetableReadonly($date_from, $date_to, filter_input
 $error_message = $grafik_machine->error_message;
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include 'include/head.php';;

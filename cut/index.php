@@ -60,7 +60,7 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
 //*******************************************************************
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

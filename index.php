@@ -22,7 +22,7 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include 'include/head.php';

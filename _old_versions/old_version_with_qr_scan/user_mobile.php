@@ -7,7 +7,7 @@ if(!IsInRole(array('technologist', 'dev', 'electrocarist', 'cutter', 'marker', '
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include 'include/head.php';

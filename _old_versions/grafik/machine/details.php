@@ -73,7 +73,7 @@ $workshifts_count = $row['workshifts_count'];
 $rollers_count = $row['rollers_count'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

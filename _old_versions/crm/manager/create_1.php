@@ -58,7 +58,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['manager_create_submit']
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

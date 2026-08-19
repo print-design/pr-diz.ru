@@ -192,7 +192,7 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

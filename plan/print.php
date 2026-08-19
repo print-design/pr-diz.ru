@@ -35,7 +35,7 @@ if(empty($work_id) || empty($machine_id)) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

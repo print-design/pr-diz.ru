@@ -41,7 +41,7 @@ $fio = $row['fio'];
 $username = $row['username'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

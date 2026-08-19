@@ -49,7 +49,7 @@ $sticker_top = 0;
 $current_date_time = date("dmYHis");
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

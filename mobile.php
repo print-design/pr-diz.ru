@@ -40,7 +40,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include 'include/head.php';
@@ -52,7 +52,6 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
         <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
         <script src="<?=APPLICATION ?>/js/popper.min.js"></script>
         <script src='<?=APPLICATION ?>/js/bootstrap.min.js'></script>
-        <script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
         <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
         <script src="<?=APPLICATION ?>/js/calculation.js?version=100"></script>
         <style>

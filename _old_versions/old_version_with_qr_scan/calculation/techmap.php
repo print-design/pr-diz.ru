@@ -510,7 +510,7 @@ if($work_type_id == CalculationBase::WORK_TYPE_SELF_ADHESIVE) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

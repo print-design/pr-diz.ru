@@ -30,7 +30,7 @@ $fio = $row['fio'];
 $quit = $row['quit'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

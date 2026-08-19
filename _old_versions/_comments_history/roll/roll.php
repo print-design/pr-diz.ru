@@ -194,7 +194,7 @@ $cut_wind_id = $row['cut_wind_id'];
 $cutting_wind_id = $row['cutting_wind_id'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

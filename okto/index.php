@@ -62,7 +62,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
 }
 ?> 
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';
@@ -153,7 +153,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
                             <input type="hidden" name="user_id_to" id="user_id_to" />
                             <textarea name="message" id="message" class="form-control" required="required"></textarea>
                             <div class="d-flex justify-content-between mt-3">
-                                <div><button type="button" class="btn btn-dark ui_tooltip top" title="Загрузить изображение" tabindex="1" onclick="javascript: $('#dialog_file').click();"><i class="fas fa-image"></i></button></div>
+                                <div><button type="button" class="btn btn-dark ui_tooltip top" data-placement="top" title="Загрузить изображение" tabindex="1" onclick="javascript: $('#dialog_file').click();"><i class="fas fa-image"></i></button></div>
                                 <div><button type='submit' class='btn btn-dark' style="width: 100px;" tabindex="0"><i class="fas fa-chevron-right"></i></button></div>
                             </div>
                         </form>

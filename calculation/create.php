@@ -1439,7 +1439,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';
@@ -1517,9 +1517,19 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 <input type="text" 
                                        id="customer_name" 
                                        name="customer_name" 
-                                       class="form-control customer_names" 
+                                       class="form-control" 
                                        placeholder="Название компании" 
-                                       required="required" />
+                                       required="required" 
+                                       list="customer_names_datalist" />
+                                <datalist id="customer_names_datalist">
+                                    <?php
+                                    $sql = "select name from customer order by name";
+                                    $fetcher = new Fetcher($sql, []);
+                                    while($row = $fetcher->Fetch()) {
+                                        echo '<option value="' . htmlspecialchars($row['name']) . '"></option>';
+                                    }
+                                    ?>
+                                </datalist>
                                 <div class="invalid-feedback">Название компании обязательно</div>
                             </div>
                             <div class="form-group">
@@ -3374,16 +3384,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 }
             }
             
-            // Всплывающая подсказка
-            $(function() {
-                $("i.fa-info-circle").tooltip({
-                    position: {
-                        my: "left center",
-                        at: "right+10 center"
-                    }
-                });
-            });
-    
+
             // Маска телефона заказчика
             $.mask.definitions['~'] = "[+-]";
             $("#customer_phone").mask("+7 (999) 999-99-99");
@@ -3432,27 +3433,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#btn_quantities').removeAttr('disabled');
             }
             
-            // Автозаполнение названий заказчика при открытии окна заказчика.
-            function CustomerNamesAutocomplete() {
-                var customer_names = [
-                    <?php
-                    $customer_names = array();
-                    $sql = "select name from customer order by name";
-                    $fetcher = new Fetcher($sql, []);
-                    while($row = $fetcher->Fetch()) {
-                        array_push($customer_names, "'". addslashes($row['name'])."'");
-                    }
-                    
-                    echo implode(",", $customer_names);
-                    ?>
-                ];
-                $("input.customer_names").autocomplete({
-                    source: customer_names
-                });
-            }
-            
-            CustomerNamesAutocomplete();
-            
+
             // При открытии окна создания заказчика устанавливаем фокус на первом поле.
             $('#new_customer').on('shown.bs.modal', function() {
                 $('input:text:visible:first').focus();

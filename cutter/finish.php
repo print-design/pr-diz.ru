@@ -12,7 +12,7 @@ $user_id = GetUserId();
 $cutting_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

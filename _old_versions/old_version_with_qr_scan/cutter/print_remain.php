@@ -55,7 +55,7 @@ $status = $row['status'];
 $comment = $row['comment'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

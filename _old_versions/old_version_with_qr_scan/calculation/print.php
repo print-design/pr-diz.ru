@@ -157,7 +157,7 @@ if((!empty($lamination1_film_name) || !empty($lamination1_individual_film_name))
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

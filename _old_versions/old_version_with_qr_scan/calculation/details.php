@@ -274,7 +274,7 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

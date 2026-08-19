@@ -113,7 +113,7 @@ if ($result->num_rows > 0 && $row = $result->fetch_assoc()) {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

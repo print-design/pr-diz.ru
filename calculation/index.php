@@ -55,7 +55,7 @@ if(empty($status_id)) $title = ORDER_STATUS_TITLES[ORDER_STATUS_IN_WORK];
 else $title = ORDER_STATUS_TITLES[$status_id];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

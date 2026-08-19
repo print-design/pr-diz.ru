@@ -144,7 +144,7 @@ $production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDE
 $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $shipping_cost;
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

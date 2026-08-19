@@ -84,7 +84,7 @@ $free_status_id = 1;
 const AUDITOR = 'auditor';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

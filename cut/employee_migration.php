@@ -7,7 +7,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
     <?php
     include '../include/head.php';

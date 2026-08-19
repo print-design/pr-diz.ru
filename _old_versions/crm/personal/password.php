@@ -59,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['password_change_submit'
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

@@ -439,7 +439,7 @@ if(!empty($work_id) && !empty($machine_id)) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <body>
         <h1 style="text-decoration: underline;">Чтобы выгрузить в Excel, надо нажать на кнопку "Выгрузка" в верхней правой части страницы.</h1>
     </body>

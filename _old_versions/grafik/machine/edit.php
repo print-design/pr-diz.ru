@@ -93,7 +93,7 @@ $has_comment = $row['has_comment'];
 $is_cutter = $row['is_cutter'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

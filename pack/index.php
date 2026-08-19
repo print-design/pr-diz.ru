@@ -33,7 +33,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

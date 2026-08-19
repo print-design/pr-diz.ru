@@ -262,7 +262,7 @@
             <?php endif; ?>
             <td style="text-align: right;">
                 <?php if(!empty($row['image1']) || !empty($row['image2'])): ?>
-                <a href="javascript: void(0);" class="ui_tooltip left" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImageStream(<?=$row['id'] ?>);"><img src="../images/icons/attach.svg" /></a>
+                <a href="javascript: void(0);" class="ui_tooltip left" data-placement="left" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImageStream(<?=$row['id'] ?>);"><img src="../images/icons/attach.svg" /></a>
                 <?php endif; ?>
             </td>
         </tr>

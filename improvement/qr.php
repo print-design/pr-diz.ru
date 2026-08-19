@@ -4,7 +4,7 @@ require '../vendor/autoload.php';
 use chillerlan\QRCode\QRCode;
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <body>
         <?php
         $data = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].APPLICATION."/improvement/create.php";

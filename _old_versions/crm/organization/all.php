@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include '../include/restrict_logged_in.php';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

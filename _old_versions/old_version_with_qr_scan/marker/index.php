@@ -10,7 +10,7 @@ if(!IsInRole(array('technologist', 'dev', 'marker'))) {
 $user_id = GetUserId();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

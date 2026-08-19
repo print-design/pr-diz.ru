@@ -34,7 +34,7 @@ else {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <title>График, печать</title>
         <?php

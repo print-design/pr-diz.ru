@@ -119,7 +119,7 @@ if(empty($role_id)) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

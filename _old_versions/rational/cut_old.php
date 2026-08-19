@@ -1,4 +1,4 @@
-<html>
+<html lang="ru">
     <body>
         <a href="cut_old.php" title="Очистить">Очистить</a>
         <h1>Раскрой</h1>

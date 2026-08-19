@@ -46,7 +46,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['organization_create_sub
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

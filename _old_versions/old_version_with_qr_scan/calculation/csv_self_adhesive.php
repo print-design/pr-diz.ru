@@ -521,7 +521,7 @@ if($id !== null) {
     die();
 }
 ?>
-<html>
+<html lang="ru">
     <body>
         <h1 style="text-decoration: underline;">Чтобы экспортировать в CSV надо нажать на кнопку "Экспорт" в верхней правой части страницы.</h1>
     </body>

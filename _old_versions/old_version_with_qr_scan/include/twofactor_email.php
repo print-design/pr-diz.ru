@@ -1,4 +1,4 @@
-<html>
+<html lang="ru">
     <head>
         <?php
         include 'head.php';

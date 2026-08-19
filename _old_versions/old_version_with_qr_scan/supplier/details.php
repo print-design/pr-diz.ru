@@ -157,7 +157,7 @@ $row = (new Fetcher("select name from supplier where id=". filter_input(INPUT_GE
 $name = htmlentities($row['name']);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

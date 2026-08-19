@@ -102,7 +102,7 @@ if($row = $fetcher->Fetch()) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

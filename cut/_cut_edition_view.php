@@ -62,7 +62,7 @@
     </td>
     <td class="<?=$this->cut_shift->shift ?>">
         <?php if($this->edition['images_count']): ?>
-        <a href="javascript: void(0);" class="btn btn-link ui_tooltip left d-inline" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImageCalculation(<?=$this->edition['calculation_id'] ?>);"><img src="../images/icons/attach.svg" /></a>
+        <a href="javascript: void(0);" class="btn btn-link ui_tooltip left d-inline" data-placement="left" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImageCalculation(<?=$this->edition['calculation_id'] ?>);"><img src="../images/icons/attach.svg" /></a>
         <?php endif; ?>
     </td>
     <td class="<?=$this->cut_shift->shift ?>">

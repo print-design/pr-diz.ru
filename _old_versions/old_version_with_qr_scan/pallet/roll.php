@@ -150,7 +150,7 @@ $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

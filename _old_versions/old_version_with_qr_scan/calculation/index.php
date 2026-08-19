@@ -58,7 +58,7 @@ elseif($status_id == ORDER_STATUS_NOT_IN_WORK) $title = $status_titles[2];
 else $title = $status_titles[1];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';

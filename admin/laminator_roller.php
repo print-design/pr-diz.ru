@@ -48,7 +48,7 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';
@@ -132,16 +132,6 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                         .fail(function() {
                             alert('Ошибка при активации / деактивации');
                         });
-            });
-            
-            // Всплывающая подсказка
-            $(function() {
-                $("a.activate").tooltip({
-                    position: {
-                        my: "left center",
-                        at: "right+10 center"
-                    }
-                });
             });
         </script>
     </body>

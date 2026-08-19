@@ -3,7 +3,6 @@
 <script src='<?=APPLICATION ?>/js/jquery-3.5.1.min.js'></script>
 <script src="<?=APPLICATION ?>/js/popper.min.js"></script>
 <script src='<?=APPLICATION ?>/js/bootstrap.min.js'></script>
-<script src="<?=APPLICATION ?>/js/jquery-ui.js"></script>
 <script src="<?=APPLICATION ?>/js/jquery.maskedinput.js"></script>
 <script src="<?=APPLICATION ?>/js/calculation.js?version=100"></script>
 
@@ -366,38 +365,8 @@ if(file_exists('find.php')) {
         return false;
     });
     
-    // Всплывающая подсказка
-    $(".ui_tooltip.left").tooltip({
-        position: {
-            my: "right center",
-            at: "left-10 center"
-        },
-        tooltipClass: "left"
-    });
-    
-    $(".ui_tooltip.right").tooltip({
-        position: {
-            my: "left center",
-            at: "right+10 center"
-        },
-        tooltipClass: "right"
-    });
-    
-    $(".ui_tooltip.top").tooltip({
-        position: {
-            my: "center bottom",
-            at: "center top-10"
-        },
-        tooltipClass: "top"
-    });
-    
-    $(".ui_tooltip.bottom").tooltip({
-        position: {
-            my: "center top",
-            at: "center bottom+10"
-        },
-        tooltipClass: "bottom"
-    });
+    // Всплывающая подсказка (Bootstrap tooltip)
+    $('[data-toggle="tooltip"], .ui_tooltip').tooltip();
     
     // Защита от двойного нажатия
     var submit_clicked = false;

@@ -48,7 +48,7 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';
@@ -118,12 +118,12 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                                 case "0":
                                     this_el.html("<i class='fas fa-eye-slash'></i>");
                                     this_el.attr("title", "Неактивный");
-                                    this_el.tooltip();
+                                    this_el.tooltip('dispose').tooltip();
                                     break;
                                 case "1":
                                     this_el.html("<i class='fas fa-eye'></i>");
                                     this_el.attr("title", "Активный");
-                                    this_el.tooltip();
+                                    this_el.tooltip('dispose').tooltip();
                                     break;
                                 default:
                                     alert('Ошибка при активации / деактивации');
@@ -134,16 +134,6 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                         .fail(function() {
                             alert('Ошибка при активации / деактивации');
                         });
-            });
-            
-            // Всплывающая подсказка
-            $(function() {
-                $("a.activate").tooltip({
-                    position: {
-                        my: "left center",
-                        at: "right+10 center"
-                    }
-                });
             });
         </script>
     </body>

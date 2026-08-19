@@ -80,7 +80,7 @@ $row = (new Fetcher($sql))->Fetch();
 $total_weight = $row[0];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';
