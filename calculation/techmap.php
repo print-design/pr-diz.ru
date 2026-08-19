@@ -207,7 +207,7 @@ if(null !== filter_input(INPUT_POST, 'techmap_submit')) {
 // Удаление картинки
 if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
     $object = filter_input(INPUT_POST, 'object');
-    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $image_owner_id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $image = filter_input(INPUT_POST, 'image');
     
     // $image используется как часть имени колонки (image1/image2, pdf1/pdf2), поэтому его нельзя
@@ -216,7 +216,7 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
         $image = null;
     }
     
-    if(!empty($object) && !empty($id) || !empty($image)) {
+    if(!empty($object) && !empty($image_owner_id) || !empty($image)) {
         $sql = "";
         
         if($object == PRINTING) {
@@ -227,18 +227,20 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
         }
         
         if(!empty($sql)) {
-            $fetcher = new Fetcher($sql, [$id]);
+            $fetcher = new Fetcher($sql, [$image_owner_id]);
             
             if($row = $fetcher->Fetch()) {
                 $filename = $row["image$image"];
-                $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/$filename";
-                if(file_exists($filepath)) {
-                    unlink($filepath);
-                }
-                
-                $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/$filename";
-                if(file_exists($filepath)) {
-                    unlink($filepath);
+                if(!empty($filename)) {
+                    $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/mini/$filename";
+                    if(file_exists($filepath)) {
+                        unlink($filepath);
+                    }
+                    
+                    $filepath = $_SERVER['DOCUMENT_ROOT'].APPLICATION."/content/$object/$filename";
+                    if(file_exists($filepath)) {
+                        unlink($filepath);
+                    }
                 }
                 
                 $filename = $row["pdf$image"];
@@ -264,7 +266,7 @@ if(null !== filter_input(INPUT_POST, 'delete_image_submit')) {
                     $sql = "update calculation_stream set image$image = '', pdf$image = '' where id = ?";
                 }
                 
-                $executer = new Executer($sql, [$id]);
+                $executer = new Executer($sql, [$image_owner_id]);
                 $error_message = $executer->error;
             }
         }
