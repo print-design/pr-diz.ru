@@ -541,7 +541,7 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <?php
         include '../include/head.php';
