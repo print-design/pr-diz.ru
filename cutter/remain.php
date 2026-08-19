@@ -28,8 +28,8 @@ $radius_valid = '';
 
 function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
     // Закрываем нарезку
-    $sql = "update cutting set date=now() where id=$cutting_id";
-    $fetcher = new Fetcher($sql);
+    $sql = "update cutting set date=now() where id=?";
+    $fetcher = new Fetcher($sql, [$cutting_id]);
     $error = $fetcher->error;
     
     // Удаляем последний исходный ролик, если у него не было ни одной намотки.
@@ -42,46 +42,46 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
             $last_source_history_id = null;
             $last_source_status_id = null;
             
-            $sql = "select roll_id, is_from_pallet from cutting_source where id = $last_source";
-            $fetcher = new Fetcher($sql);
+            $sql = "select roll_id, is_from_pallet from cutting_source where id = ?";
+            $fetcher = new Fetcher($sql, [$last_source]);
             if($row = $fetcher->Fetch()) {
                 $last_source_roll_id = $row['roll_id'];
                 $last_source_is_from_pallet = $row['is_from_pallet'];
             }
             
             if(!empty($last_source_roll_id) && $last_source_is_from_pallet == 0) {
-                $sql = "select id, status_id from roll_status_history where roll_id = $last_source_roll_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select id, status_id from roll_status_history where roll_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$last_source_roll_id]);
                 if($row = $fetcher->Fetch()) {
                     $last_source_history_id = $row['id'];
                     $last_source_status_id = $row['status_id'];
                 }
                 
                 if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-                    $sql = "delete from roll_status_history where id = $last_source_history_id";
-                    $executer = new Executer($sql);
+                    $sql = "delete from roll_status_history where id = ?";
+                    $executer = new Executer($sql, [$last_source_history_id]);
                     $error = $executer->error;
                 }
             }
             elseif(!empty ($last_source_roll_id) && $last_source_is_from_pallet == 1) {
-                $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = $last_source_roll_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$last_source_roll_id]);
                 if($row = $fetcher->Fetch()) {
                     $last_source_history_id = $row['id'];
                     $last_source_status_id = $row['status_id'];
                 }
                 
                 if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-                    $sql = "delete from pallet_roll_status_history where id = $last_source_history_id";
-                    $executer = new Executer($sql);
+                    $sql = "delete from pallet_roll_status_history where id = ?";
+                    $executer = new Executer($sql, [$last_source_history_id]);
                     $error = $executer->error;
                 }
             }
             
             // Удаляем запись об исходном ролике
             if(empty($error)) {
-                $sql = "delete from cutting_source where id = $last_source";
-                $executer = new Executer($sql);
+                $sql = "delete from cutting_source where id = ?";
+                $executer = new Executer($sql, [$last_source]);
                 $error = $executer->error;
             }
         }
@@ -91,8 +91,8 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
     $cut_sources = null;
     
     if(empty($error)) {
-        $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
-        $grabber = new Grabber($sql);
+        $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=?";
+        $grabber = new Grabber($sql, [$cutting_id]);
         $cut_sources = $grabber->result;
         $error = $grabber->error;
     }
@@ -103,24 +103,24 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
             $source_roll_id = $cut_source['roll_id'];
         
             if($source_is_from_pallet == 0) {
-                $sql = "select status_id from roll_status_history where roll_id = $source_roll_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select status_id from roll_status_history where roll_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$source_roll_id]);
                 $row = $fetcher->Fetch();
                 
                 if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
-                    $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
-                    $executer = new Executer($sql);
+                    $sql = "insert into roll_status_history (roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)";
+                    $executer = new Executer($sql, [$source_roll_id, $user_id]);
                     $error = $executer->error;
                 }
             }
             else {
-                $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = $source_roll_id order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1";
+                $fetcher = new Fetcher($sql, [$source_roll_id]);
                 $row = $fetcher->Fetch();
                 
                 if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
-                    $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
-                    $executer = new Executer($sql);
+                    $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)";
+                    $executer = new Executer($sql, [$source_roll_id, $user_id]);
                     $error = $executer->error;
                 }
             }
@@ -142,32 +142,32 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $length = filter_input(INPUT_POST, 'length');
     $spool = filter_input(INPUT_POST, 'spool');
     $cell = "Цех";
-    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
+    $comment = filter_input(INPUT_POST, 'comment') ?? '';
             
     $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
-            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$comment', '$user_id')";
-    $executer = new Executer($sql);
+            . "values (?, ?, ?, ?, ?, ?, ?)";
+    $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $user_id]);
     $error_message = $executer->error;
     $roll_id = $executer->insert_id;
     
     // Устанавливаем этому ролику ячейку "Цех"
     if(empty($error_message)) {
-        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($roll_id, '$cell', $user_id)";
-        $executer = new Executer($sql);
+        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
+        $executer = new Executer($sql, [$roll_id, $cell, $user_id]);
         $error_message = $executer->error;
     }
             
     // Устанавливаем этому ролику статус "Свободный"
     if(empty($error_message)) {
-        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, ".ROLL_STATUS_FREE.", $user_id)";
-        $executer = new Executer($sql);
+        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values (?, ".ROLL_STATUS_FREE.", ?)";
+        $executer = new Executer($sql, [$roll_id, $user_id]);
         $error_message = $executer->error;
     }
             
     // Добавляем остаточный ролик к последней закрытой нарезке данного пользователя
     if(empty($error_message)) {
-        $sql = "update cutting set remain = $roll_id where id = $cutting_id";
-        $executer = new Executer($sql);
+        $sql = "update cutting set remain = ? where id = ?";
+        $executer = new Executer($sql, [$roll_id, $cutting_id]);
         $error_message = $executer->error;
     }
     
@@ -195,8 +195,8 @@ $supplier_id = null;
 $film_variation_id = null;
 $width = null;
 
-$sql = "select supplier_id, film_variation_id, width from cutting where id = $cutting_id";
-$fetcher = new Fetcher($sql);
+$sql = "select supplier_id, film_variation_id, width from cutting where id = ?";
+$fetcher = new Fetcher($sql, [$cutting_id]);
 if($row = $fetcher->Fetch()) {
     $supplier_id = $row['supplier_id'];
     $film_variation_id = $row['film_variation_id'];
@@ -340,7 +340,7 @@ if($row = $fetcher->Fetch()) {
             
             <?php
             $sql = "SELECT id, thickness, weight from film_variation";
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, []);
             while ($row = $fetcher->Fetch()):
             ?>
                 if(films.get(<?=$row['id'] ?>) == undefined) {
