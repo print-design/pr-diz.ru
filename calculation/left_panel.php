@@ -314,74 +314,50 @@ function GetSkiNameExt($param, $param_width) {
 <div class="row">
     <div class="col-6"></div>
     <div class="col-6">
-        <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-            <div class="form-check">
-                <label class="form-check-label text-nowrap mt-2">
-                    <?php
-                    $checked = $calculation->cliche_in_price == 1 ? " checked='checked'" : "";
-                    ?>
-                    <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); } RecalculateByCliche();" />Включить ПФ в себестоимость
-                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
-                    <input type="hidden" id="cliche_in_price_submit" name="cliche_in_price_submit" value="1" />
-                    <input type="hidden" name="scroll" />
-                </label>
-            </div>
-        </form>
+        <div class="form-check form-inline">
+            <label class="form-check-label text-nowrap mt-2">
+                <?php
+                $checked = $calculation->cliche_in_price == 1 ? " checked='checked'" : "";
+                ?>
+                <input type="checkbox" class="form-check-input" id="cliche_in_price" name="cliche_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_cliche').prop('checked', true); } RecalculateByCliche();" />Включить ПФ в себестоимость
+            </label>
+        </div>
     </div>
     <div class="col-6"></div>
     <div class="col-6">
-        <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-            <div class="form-check">
-                <label class="form-check-label text-nowrap mt-2 mb-2">
-                    <?php
-                    $checked = $calculation->customer_pays_for_cliche == 1 ? " checked='checked'" : "";
-                    ?>
-                    <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); } RecalculateByCliche();" />Заказчик платит за ПФ
-                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
-                    <input type="hidden" id="customer_pays_for_cliche_submit" name="customer_pays_for_cliche_submit" value="1" />
-                    <input type="hidden" name="scroll" />
-                </label>
-            </div>
-        </form>
+        <div class="form-check form-inline">
+            <label class="form-check-label text-nowrap mt-2 mb-2">
+                <?php
+                $checked = $calculation->customer_pays_for_cliche == 1 ? " checked='checked'" : "";
+                ?>
+                <input type="checkbox" class="form-check-input" id="customer_pays_for_cliche" name="customer_pays_for_cliche" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#cliche_in_price').prop('checked', false); } RecalculateByCliche();" />Заказчик платит за ПФ
+            </label>
+        </div>
     </div>
 </div>
 <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
 <div class="row">
     <div class="col-6"></div>
     <div class="col-6" style="border-top: solid 2px lightgray;">
-        <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-            <div class="form-check">
-                <label class="form-check-label text-nowrap mt-2">
-                    <?php
-                    $checked = $calculation->knife_in_price == 1 ? " checked='checked'" : "";
-                    ?>
-                    <input type="checkbox" class="form-check-input" id="knife_in_price" name="knife_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_knife').prop('checked', true); } RecalculateByKnife();" />Включить нож в себестоимость
-                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
-                    <input type="hidden" id="knife_in_price_submit" name="knife_in_price_submit" value="1" />
-                    <input type="hidden" name="scroll" />
-                </label>
-            </div>
-        </form>
+        <div class="form-check form-inline">
+            <label class="form-check-label text-nowrap mt-2">
+                <?php
+                $checked = $calculation->knife_in_price == 1 ? " checked='checked'" : "";
+                ?>
+                <input type="checkbox" class="form-check-input" id="knife_in_price" name="knife_in_price" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if($(this).is(':checked')) { $('#customer_pays_for_knife').prop('checked', true); } RecalculateByKnife();" />Включить нож в себестоимость
+            </label>
+        </div>
     </div>
     <div class="col-6"></div>
     <div class="col-6">
-        <form method="post" class="form-inline">
-            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-            <div class="form-check">
-                <label class="form-check-label text-nowrap mt-2">
-                    <?php
-                    $checked = $calculation->customer_pays_for_knife == 1 ? " checked='checked'" : "";
-                    ?>
-                    <input type="checkbox" class="form-check-input" id="customer_pays_for_knife" name="customer_pays_for_knife" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#knife_in_price').prop('checked', false); } RecalculateByKnife();" />Заказчик платит за нож
-                    <input type="hidden" name="id" value="<?= filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT) ?>" />
-                    <input type="hidden" id="customer_pays_for_knife_submit" name="customer_pays_for_knife_submit" value="1" />
-                    <input type="hidden" name="scroll" />
-                </label>
-            </div>
-        </form>
+        <div class="form-check form-inline">
+            <label class="form-check-label text-nowrap mt-2">
+                <?php
+                $checked = $calculation->customer_pays_for_knife == 1 ? " checked='checked'" : "";
+                ?>
+                <input type="checkbox" class="form-check-input" id="customer_pays_for_knife" name="customer_pays_for_knife" value="on"<?=$checked ?><?=$disabled_attr ?> onchange="javascript: if(!$(this).is(':checked')) { $('#knife_in_price').prop('checked', false); } RecalculateByKnife();" />Заказчик платит за нож
+            </label>
+        </div>
     </div>
 </div>
 <?php endif; ?>
