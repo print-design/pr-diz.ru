@@ -1,12 +1,10 @@
 <?php
-define('HOST', '');
-define('APPLICATION', '');
+define('APPLICATION', '/pr-diz.ru');
 
 define('DATABASE_HOST', 'localhost');
-define('DATABASE_USER', 'u1228765_default');
-define('DATABASE_PASSWORD', 'Cf8_16_26_38_a6');
-define('DATABASE_NAME', 'u1228765_erp');
-define('DATABASE_NAME_GRAFIK', 'u1228765_grafik');
+define('DATABASE_USER', 'root');
+define('DATABASE_PASSWORD', '');
+define('DATABASE_NAME', 'erp');
 
 define('USER_ID', '8uh_87HHGyt_675fr_oolkj_u76TY__iju76ggV');
 define('USERNAME', 'kjUhyg-iJJuuggy___--yh7YYTR5412jN-98JIU');
