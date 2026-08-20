@@ -388,64 +388,64 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
         <?php
         include '../include/footer.php';
         ?>
+        <script src="<?= APPLICATION ?>/js/select2.min.js"></script>
+        <script src="<?= APPLICATION ?>/js/i18n/ru.js"></script>
+        <script>
+            // Список с поиском
+            $('#unit').select2({
+                placeholder: "Шт/кг...",
+                maximumStatusLength: 1,
+                language: "ru",
+                width: '4rem'
+            });
+            
+            $('#status').select2({
+                placeholder: "Статус...",
+                maximumSelectionLength: 1,
+                language: "ru"
+            });
+            
+            $('#work_type').select2({
+                placeholder: "Тип работы...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: '8rem'
+            });
+            
+            $('#manager').select2({
+                placeholder: "Менеджер...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "8rem"
+            });
+            
+            $('#customer').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "15rem",
+                minimumInputLength: 3,
+                ajax: {
+                    url: '_customer_select2.php',
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
+                }
+            });
+            
+            // Заполнение информации о заказчике
+            $('a.customer').click(function(e) {
+                var customer_id = $(e.target).attr('data-customer-id');
+                if(customer_id !== null) {
+                    $.ajax({ url: "_customer.php?id=" + customer_id })
+                            .done(function(data) {
+                                $('#customerModal .modal-dialog .modal-content').html(data);
+                    });
+                }
+            });
+        </script>
     </body>
-    <script src="<?= APPLICATION ?>/js/select2.min.js"></script>
-    <script src="<?= APPLICATION ?>/js/i18n/ru.js"></script>
-    <script>
-        // Список с поиском
-        $('#unit').select2({
-            placeholder: "Шт/кг...",
-            maximumStatusLength: 1,
-            language: "ru",
-            width: '4rem'
-        });
-        
-        $('#status').select2({
-            placeholder: "Статус...",
-            maximumSelectionLength: 1,
-            language: "ru"
-        });
-        
-        $('#work_type').select2({
-            placeholder: "Тип работы...",
-            maximumSelectionLength: 1,
-            language: "ru",
-            width: '8rem'
-        });
-        
-        $('#manager').select2({
-            placeholder: "Менеджер...",
-            maximumSelectionLength: 1,
-            language: "ru",
-            width: "8rem"
-        });
-        
-        $('#customer').select2({
-            placeholder: "Заказчик...",
-            maximumSelectionLength: 1,
-            language: "ru",
-            width: "15rem",
-            minimumInputLength: 3,
-            ajax: {
-                url: '_customer_select2.php',
-                dataType: 'json',
-                delay: 250,
-                processResults: function(data) {
-                    return { results: data };
-                },
-                cache: false
-            }
-        });
-        
-        // Заполнение информации о заказчике
-        $('a.customer').click(function(e) {
-            var customer_id = $(e.target).attr('data-customer-id');
-            if(customer_id !== null) {
-                $.ajax({ url: "_customer.php?id=" + customer_id })
-                        .done(function(data) {
-                            $('#customerModal .modal-dialog .modal-content').html(data);
-                });
-            }
-        });
-    </script>
 </html>

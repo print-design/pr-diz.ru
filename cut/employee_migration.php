@@ -58,37 +58,37 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
             <div id="progress_not" style="font-size: 22px;">0</div>
             <button id="StartNot" onclick="StartNot();">Старт</button>
         </div>
-    </body>
-    <?php
-    include '../include/footer.php';
-    ?>
-    <script>
-        function Start() {
-            $.ajax({ url: 'employee_migration_ajax.php' })
-                    .done(function(data) {
-                        $('#progress').text(data + ' из <?=$total_count ?>');
-                
-                        if(data <= <?=$total_count ?>) {
-                            Start();
-                        }
-                    })
-                    .fail(function() {
-                        $('#progress').text("Ошибка");
-                    });
-        }
-        
-        function StartNot() {
-            $.ajax({ url: 'employee_migration_ajax_not.php' })
-                    .done(function(data) {
-                        $('#progress_not').text(data + ' из <?=$total_count_not ?>');
-                
-                        if(data <= <?=$total_count ?>) {
-                            StartNot();
-                        }
-                    })
-                    .fail(function() {
-                        $('#progress').text("Ошибка");
-                    });
-        }
+        <?php
+        include '../include/footer.php';
+        ?>
+        <script>
+            function Start() {
+                $.ajax({ url: 'employee_migration_ajax.php' })
+                        .done(function(data) {
+                            $('#progress').text(data + ' из <?=$total_count ?>');
+                    
+                            if(data <= <?=$total_count ?>) {
+                                Start();
+                            }
+                        })
+                        .fail(function() {
+                            $('#progress').text("Ошибка");
+                        });
+            }
+            
+            function StartNot() {
+                $.ajax({ url: 'employee_migration_ajax_not.php' })
+                        .done(function(data) {
+                            $('#progress_not').text(data + ' из <?=$total_count_not ?>');
+                    
+                            if(data <= <?=$total_count ?>) {
+                                StartNot();
+                            }
+                        })
+                        .fail(function() {
+                            $('#progress').text("Ошибка");
+                        });
+            }
         </script>
+    </body>
 </html>

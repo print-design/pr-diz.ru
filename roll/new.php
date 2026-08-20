@@ -474,5 +474,5 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
                 $('.is-invalid').first().focus();
             }
         </script>
-   </body>
+    </body>
 </html>

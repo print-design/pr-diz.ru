@@ -522,8 +522,8 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                 </div>
             </div>
         </div>
+        <?php
+        include '../include/footer.php';
+        ?>
     </body>
-    <?php
-    include '../include/footer.php';
-    ?>
 </html>

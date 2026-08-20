@@ -26,23 +26,23 @@ include '../include/topscripts.php';
             <div id="result" style="font-size: xx-large;"><?=$confirmed ?></div>
             <button type="button" class="btn" onclick="javascript: Migrate();">Старт</button>
         </div>
+        <?php
+        include '../include/footer.php';
+        ?>
+        <script>
+            function Migrate() {
+                $.ajax({ url: 'calculation_status_confirmed_migration_ajax.php' })
+                        .done(function(data) {
+                            $('#result').text(data);
+                    
+                            if(data != 0 && data != '0') {
+                                Migrate();
+                            }
+                        })
+                        .fail(function() {
+                            $('#result').text('ERROR');
+                        });
+            }
+        </script>
     </body>
-    <?php
-    include '../include/footer.php';
-    ?>
-    <script>
-        function Migrate() {
-            $.ajax({ url: 'calculation_status_confirmed_migration_ajax.php' })
-                    .done(function(data) {
-                        $('#result').text(data);
-                
-                        if(data != 0 && data != '0') {
-                            Migrate();
-                        }
-                    })
-                    .fail(function() {
-                        $('#result').text('ERROR');
-                    });
-        }
-    </script>
 </html>

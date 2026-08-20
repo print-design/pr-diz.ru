@@ -128,47 +128,44 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
                 <input type="hidden" name="graph_key" id="graph_key" />
             </form>
         </div>
-    </body>
-    <script>
-    previous_point = 0;
+        <script>
+            previous_point = 0;
             
-            
-    function AddPoint(sender) {
-        let number = sender.attr('data-number');
+            function AddPoint(sender) {
+                let number = sender.attr('data-number');
                 
-        if(number !== previous_point) {
-            let figure_val = $('input#graph_key').val();
-            $('input#graph_key').val(figure_val + sender.attr('data-number'));
+                if(number !== previous_point) {
+                    let figure_val = $('input#graph_key').val();
+                    $('input#graph_key').val(figure_val + sender.attr('data-number'));
                     
-            let figure_area_top = $('#figure-area').offset().top;
-            let figure_area_left = $('#figure-area').offset().left;
+                    let figure_area_top = $('#figure-area').offset().top;
+                    let figure_area_left = $('#figure-area').offset().left;
                     
-            let current_width = $('#fp' + number).width();
-            let current_height = $('#fp' + number).height();
+                    let current_width = $('#fp' + number).width();
+                    let current_height = $('#fp' + number).height();
                     
-            if(previous_point > 0) {
-                previous_top = $('#fp' + previous_point).offset().top - figure_area_top + (current_height / 2) - (current_height / 8);
-                current_top = $('#fp' + number).offset().top - figure_area_top + (current_height / 2) - (current_height / 8);
-                previous_left = $('#fp' + previous_point).offset().left - figure_area_left + (current_width / 2) - (current_width / 8);
-                current_left = $('#fp' + number).offset().left - figure_area_left + (current_width / 2) - (current_width / 8);
+                    if(previous_point > 0) {
+                        previous_top = $('#fp' + previous_point).offset().top - figure_area_top + (current_height / 2) - (current_height / 8);
+                        current_top = $('#fp' + number).offset().top - figure_area_top + (current_height / 2) - (current_height / 8);
+                        previous_left = $('#fp' + previous_point).offset().left - figure_area_left + (current_width / 2) - (current_width / 8);
+                        current_left = $('#fp' + number).offset().left - figure_area_left + (current_width / 2) - (current_width / 8);
                         
-                line_top = previous_top < current_top ? previous_top : current_top;
-                line_left = previous_left < current_left ? previous_left : current_left;
-                line_width = Math.abs(previous_point - number) > 2 ? current_width / 4 : current_width + (current_width / 4);
-                line_height = Math.abs(previous_point - number) > 2 ? current_height + (current_height / 4) : current_height / 4;
+                        line_top = previous_top < current_top ? previous_top : current_top;
+                        line_left = previous_left < current_left ? previous_left : current_left;
+                        line_width = Math.abs(previous_point - number) > 2 ? current_width / 4 : current_width + (current_width / 4);
+                        line_height = Math.abs(previous_point - number) > 2 ? current_height + (current_height / 4) : current_height / 4;
                         
-                $('#figure-area').append($("<div class='figure-line' style='position: absolute; " + 
-                        "top: " + line_top + "px;" + 
-                        "left: " + line_left + "px;" + 
-                        "width: " + line_width + "px;" + 
-                        "height: " + line_height + "px;'>"));
+                        $('#figure-area').append($("<div class='figure-line' style='position: absolute; " + 
+                                "top: " + line_top + "px;" + 
+                                "left: " + line_left + "px;" + 
+                                "width: " + line_width + "px;" + 
+                                "height: " + line_height + "px;'>"));
+                    }
+                    
+                    previous_point = sender.attr('data-number');
+                }
             }
             
-            previous_point = sender.attr('data-number');
-        }
-    }
-            
-        $(document).ready(function(){
             $('.figure-drag').on('mousedown', function() {
                 if(event.which === 1) {
                     AddPoint($(this));
@@ -206,6 +203,6 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
             $('.figure-drag').on('touchend', function() {
                 $('form#graph_key_form').submit();
             });
-        });
-    </script>
+        </script>
+    </body>
 </html>

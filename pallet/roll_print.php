@@ -110,15 +110,15 @@ $current_date_time = date("dmYHis");
                 </tbody>
             </table>
         </div>
+        <script>
+            let shareData = {
+                url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
+            }
+            
+            const sharelink = document.getElementById("sharelink");
+            sharelink.addEventListener('click', () => {
+                navigator.share(shareData)
+            });
+        </script>
     </body>
-    <script>
-        let shareData = {
-            url: '<?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ?>'
-        }
-        
-        const sharelink = document.getElementById("sharelink");
-        sharelink.addEventListener('click', () => {
-            navigator.share(shareData)
-        });
-    </script>
 </html>

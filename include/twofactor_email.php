@@ -119,6 +119,4 @@
         ?>
     </body>
 </html>
-<?php
-die();
-?>
+<?php die(); ?>

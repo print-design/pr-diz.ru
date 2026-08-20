@@ -140,8 +140,7 @@ if(empty($work_id) || empty($machine_id)) {
         $timetable = new PlanTimetable($work_id, $machine_id, $date_from, $date_to);
         $timetable->Print();
         ?>
-    </body>
-    <script>
+        <script>
             var css = '@page { size: landscape; margin: 8mm; }',
                     head = document.head || document.getElementsByTagName('head')[0],
                     style = document.createElement('style');
@@ -159,4 +158,5 @@ if(empty($work_id) || empty($machine_id)) {
             
             window.print();
         </script>
+    </body>
 </html>

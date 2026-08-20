@@ -111,17 +111,17 @@ while($row = $fetcher->Fetch()) {
             endforeach;
             ?>
         </div>
-    </body>
-    <?php
-    include '../include/footer.php';
-    ?>
-    <script>
-        // Активирование / деактивирование пользователя
-        $(".switch input[type='checkbox']").change(function() {
-            $.ajax({ url: "_plan_employee.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
-                    .fail(function() {
-                        alert('Ошибка при установке / снятии флага активности пользователя');
+        <?php
+        include '../include/footer.php';
+        ?>
+        <script>
+            // Активирование / деактивирование пользователя
+            $(".switch input[type='checkbox']").change(function() {
+                $.ajax({ url: "_plan_employee.php?id=" + $(this).attr('data-id') + "&active=" + $(this).is(':checked') })
+                        .fail(function() {
+                            alert('Ошибка при установке / снятии флага активности пользователя');
+                });
             });
-        });
-    </script>
+        </script>
+    </body>
 </html>

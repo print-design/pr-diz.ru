@@ -37,13 +37,12 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
             <div id="progress" style="padding: 10px; border: solid gray 2px; font-size: 50px; width: 500px;"><?=$ok_count ?> из <?=$total_count ?></div>
             <button class="btn btn-dark mt-5" onclick="javascript: Start();">Старт</button>
         </div>
-    </body>
-    <?php
-    include '../include/footer.php';
-    ?>
-    <script>
-        function Start() {
-            $.ajax({ url: 'cell_migration_ajax.php' })
+        <?php
+        include '../include/footer.php';
+        ?>
+        <script>
+            function Start() {
+                $.ajax({ url: 'cell_migration_ajax.php' })
                         .done(function(data) {
                             $('#progress').text(data + ' из <?=$total_count ?>');
                     
@@ -54,6 +53,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER], 
                         .fail(function() {
                             $('#progress').text("Ошибка");
                         });
-        }
-    </script>
+            }
+        </script>
+    </body>
 </html>

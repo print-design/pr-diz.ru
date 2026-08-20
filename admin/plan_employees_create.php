@@ -122,8 +122,8 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
                 </form>
             </div>
         </div>
+        <?php
+        include '../include/footer.php';
+        ?>
     </body>
-    <?php
-    include '../include/footer.php';
-    ?>
 </html>

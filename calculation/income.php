@@ -428,8 +428,8 @@ if(empty($error_message)) {
                 </div>
             </div>
         </div>
+        <?php
+        include '../include/footer.php';
+        ?>
     </body>
-    <?php
-    include '../include/footer.php';
-    ?>
 </html>

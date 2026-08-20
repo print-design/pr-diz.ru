@@ -32,23 +32,23 @@ include '../include/topscripts.php';
             <div id="result" style="font-size: xx-large;"><?=$in_history.' из '.$total ?></div>
             <button type="button" class="btn" onclick="javascript: Migrate();">Старт</button>
         </div>
+        <?php
+        include '../include/footer.php';
+        ?>
+        <script>
+            function Migrate() {
+                $.ajax({ url: 'calculation_status_comment_migration_ajax.php' })
+                        .done(function(data) {
+                            $('#result').text(data + ' из <?=$total ?>');
+                    
+                            if(data < <?=$total ?>) {
+                                Migrate();
+                            }
+                        })
+                        .fail(function() {
+                            $('#result').text('ERROR');
+                        });
+            }
+        </script>
     </body>
-    <?php
-    include '../include/footer.php';
-    ?>
-    <script>
-        function Migrate() {
-            $.ajax({ url: 'calculation_status_comment_migration_ajax.php' })
-                    .done(function(data) {
-                        $('#result').text(data + ' из <?=$total ?>');
-                
-                        if(data < <?=$total ?>) {
-                            Migrate();
-                        }
-                    })
-                    .fail(function() {
-                        $('#result').text('ERROR');
-                    });
-        }
-    </script>
 </html>
