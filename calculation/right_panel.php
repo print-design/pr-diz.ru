@@ -14,219 +14,166 @@ if(!empty($id) && (empty($calculation_result) || !is_a($calculation_result, Calc
         
     // Курс доллара
     $new_usd = $calculation->usd;
-    if($new_usd === null) $new_usd = null;
         
     // Курс евро
     $new_euro = $calculation->euro;
-    if($new_euro === null) $new_euro = null;
     
     // Себестоимость форм
     $new_cliche_cost = $calculation->cliche_cost;
-    if($new_cliche_cost === null) $new_cliche_cost = null;
         
     // Себестоимость
     $new_cost = $calculation->cost;
-    if($new_cost === null) $new_cost = null;
     
     // Себестоимость на 1 шт/кг = Себестоимость / массу тиража или кол-во штук
     $new_cost_per_unit = $calculation->cost_per_unit;
-    if($new_cost_per_unit === null) $new_cost_per_unit = null;
         
     // Наценка на тираж
     $new_extracharge = $calculation->extracharge;
-    if($new_extracharge === null) $new_extracharge = null;
         
     // Наценка на ПФ
     $new_extracharge_cliche = $calculation->extracharge_cliche;
         
     // Отгрузочная стоимость
     $new_shipping_cost = $calculation->shipping_cost;
-    if($new_shipping_cost === null) $new_shipping_cost = null;
         
     // Отгрузочная стоимость за единицу
     $new_shipping_cost_per_unit = $calculation->shipping_cost_per_unit;
-    if($new_shipping_cost_per_unit === null) $new_shipping_cost_per_unit = null;
         
     // Прибыль
     $new_income = $calculation->income;
-    if($new_income === null) $new_income = null;
         
     // Прибыль за единицу
     $new_income_per_unit = $calculation->income_per_unit;
-    if($new_income_per_unit === null) $new_income_per_unit = null;
         
     // Отгрузочная стоимость ПФ
     $new_shipping_cliche_cost = $calculation->shipping_cliche_cost;
-    if($new_shipping_cliche_cost === null) $new_shipping_cliche_cost = null;
         
     // Прибыль ПФ
     $new_income_cliche = $calculation->income_cliche;
-    if($new_income_cliche === null) $new_income_cliche = null;
     
     // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
     $new_total_weight_dirty = $calculation->total_weight_dirty;
-    if($new_total_weight_dirty === null) $new_total_weight_dirty = null;
     
     // Основная пленка цена = стоимость основной плёнки
     $new_film_cost_1 = $calculation->film_cost_1;
-    if($new_film_cost_1 === null) $new_film_cost_1 = null;
     
     // Основная плёнка цена за кг = стоимость основной плёнки / вес
     $new_film_cost_per_unit_1 = $calculation->film_cost_per_unit_1;
-    if($new_film_cost_per_unit_1 === null) $new_film_cost_per_unit_1 = null;
     
     // Ширина основной плёнки = ширина осн. плёнки
     $new_width_1 = $calculation->width_1;
-    if($new_width_1 === null) $new_width_1 = null;
     
     // Масса без приладки = масса плёнки чистая
     $new_weight_pure_1 = $calculation->weight_pure_1;
-    if($new_weight_pure_1 === null) $new_weight_pure_1 = null;
     
     // Длина без приладки = длина плёнки чистая
     $new_length_pure_1 = $calculation->length_pure_1;
-    if($new_length_pure_1 === null) $new_length_pure_1 = null;
     
     // Масса с приладкой = масса плёнки грязная
     $new_weight_dirty_1 = $calculation->weight_dirty_1;
-    if($new_weight_dirty_1 === null) $new_weight_dirty_1 = null;
     
     // Длина с приладкой = метры погонные грязные
     $new_length_dirty_1 = $calculation->length_dirty_1;
-    if($new_length_dirty_1 === null) $new_length_dirty_1 = null;
     
     // Длина с приладкой второй прогон = метры погонные грязные второй прогон
     $new_length_dirty_1_run2 = $calculation->length_dirty_start_1_run2;
-    if($new_length_dirty_1_run2 === null) $new_length_dirty_1_run2 = null;
     
     // Лам 1 цена = лам 1 цена
     $new_film_cost_2 = $calculation->film_cost_2;
-    if($new_film_cost_2 === null) $new_film_cost_2 = null;
     
     // Лам 1 цена за кг = лам 1 цена / вес
     $new_film_cost_per_unit_2 = $calculation->film_cost_per_unit_2;
-    if($new_film_cost_per_unit_2 === null) $new_film_cost_per_unit_2 = null;
     
     // Лам 1 ширина = лам 1 ширина
     $new_width_2 = $calculation->width_2;
-    if($new_width_2 === null) $new_width_2 = null;
         
     // Лам 1 масса без приладки = лам 1 масса чистая
     $new_weight_pure_2 = $calculation->weight_pure_2;
-    if($new_weight_pure_2 === null) $new_weight_pure_2 = null;
     
     // Лам 1 длина без приладки = лам 1 длина чистая
     $new_length_pure_2 = $calculation->length_pure_2;
-    if($new_length_pure_2 === null) $new_length_pure_2 = null;
     
     // Лам 1 масса с приладкой = лам 1 масса грязная
     $new_weight_dirty_2 = $calculation->weight_dirty_2;
-    if($new_weight_dirty_2 === null) $new_weight_dirty_2 = null;
     
     // Лам 1 длина с приладкой = лам 1 длина грязная
     $new_length_dirty_2 = $calculation->length_dirty_2;
-    if($new_length_dirty_2 === null) $new_length_dirty_2 = null;
     
     // Лам 2 плёнка цена
     $new_film_cost_3 = $calculation->film_cost_3;
-    if($new_film_cost_3 === null) $new_film_cost_3 = null;
     
     // Лам 2 цена за кг = лам 2 плёнка цена / вес
     $new_film_cost_per_unit_3 = $calculation->film_cost_per_unit_3;
-    if($new_film_cost_per_unit_3 === null) $new_film_cost_per_unit_3 = null;
     
     // Лам 2 ширина = лам 2 ширина
     $new_width_3 = $calculation->width_3;
-    if($new_width_3 === null) $new_width_3 = null;
     
     // Лам 2 масса без приладки
     $new_weight_pure_3 = $calculation->weight_pure_3;
-    if($new_weight_pure_3 === null) $new_weight_pure_3 = null;
     
     // Лам 2 длина без приладки
     $new_length_pure_3 = $calculation->length_pure_3;
-    if($new_length_pure_3 === null) $new_length_pure_3 = null;
     
     // Лам 2 масса с приладкой = лам 2 масса грязная
     $new_weight_dirty_3 = $calculation->weight_dirty_3;
-    if($new_weight_dirty_3 === null) $new_weight_dirty_3 = null;
     
     // Лам 2 длина с приладкой = лам 2 длина грязная
     $new_length_dirty_3 = $calculation->length_dirty_3;
-    if($new_length_dirty_3 === null) $new_length_dirty_3 = null;
     
     // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
     $new_film_waste_cost_1 = $calculation->film_waste_cost_1;
-    if($new_film_waste_cost_1 === null) $new_film_waste_cost_1 = null;
     
     // Отходы плёнка масса = масса грязная - масса чистая
     $new_film_waste_weight_1 = $calculation->film_waste_weight_1;
-    if($new_film_waste_weight_1 === null) $new_film_waste_weight_1 = null;
     
     // Стоимость всех красок
     $new_ink_cost = null;
     if(!empty($calculation->ink_cost)) $new_ink_cost = $calculation->ink_cost;
-    if($new_ink_cost === null) $new_ink_cost = null;
     
     // Расход всех красок
     $new_ink_weight = $calculation->ink_expense;
-    if($new_ink_weight === null) $new_ink_weight = null;
     
     // Работа по печати тиража, руб
     $new_work_cost_1 = $calculation->work_cost_1;
-    if($new_work_cost_1 === null) $new_work_cost_1 = null;
     
     // Работа по печати тиража, ч
     $new_work_time_1 = $calculation->work_time_1;
-    if($new_work_time_1 === null) $new_work_time_1 = null;
     
     // Отходы плёнки ламинации 1, руб
     $new_film_waste_cost_2 = $calculation->film_waste_cost_2;
-    if($new_film_waste_cost_2 === null) $new_film_waste_cost_2 = null;
     
     // Отходы плёнки ламинации 1, кг
     $new_film_waste_weight_2 = $calculation->film_waste_weight_2;
-    if($new_film_waste_weight_2 === null) $new_film_waste_weight_2 = null;
     
     // Стоимость клея лам 1
     $new_glue_cost_2 = $calculation->glue_cost2;
-    if($new_glue_cost_2 === null) $new_glue_cost_2 = null;
     
     // Расход клея лам 1
     $new_glue_expense_2 = $calculation->glue_expense2;
-    if($new_glue_expense_2 === null) $new_glue_expense_2 = null;
     
     // Работа лам 1, руб
     $new_work_cost_2 = $calculation->work_cost_2;
-    if($new_work_cost_2 === null) $new_work_cost_2 = null;
     
     // Работа лам 1, ч
     $new_work_time_2 = $calculation->work_time_2;
-    if($new_work_time_2 === null) $new_work_time_2 = null;
     
     // Отходы плёнки лам 2, руб
     $new_film_waste_cost_3 = $calculation->film_waste_cost_3;
-    if($new_film_waste_cost_3 === null) $new_film_waste_cost_3 = null;
     
     // Отходы плёнки лам 2, кг
     $new_film_waste_weight_3 = $calculation->film_waste_weight_3;
-    if($new_film_waste_weight_3 === null) $new_film_waste_weight_3 = null;
     
     // Стоимость клея лам 2
     $new_glue_cost_3 = $calculation->glue_cost3;
-    if($new_glue_cost_3 === null) $new_glue_cost_3 = null;
     
     // Расход клея лам 2
     $new_glue_expense_3 = $calculation->glue_expense3;
-    if($new_glue_expense_3 === null) $new_glue_expense_3 = null;
     
     // Работа лам 2, руб
     $new_work_cost_3 = $calculation->work_cost_3;
-    if($new_work_cost_3 === null) $new_work_cost_3 = null;
     
     // Работа лам 2, ч
     $new_work_time_3 = $calculation->work_time_3;
-    if($new_work_time_3 === null) $new_work_time_3 = null;
         
     //****************************************************
     // ПОМЕЩАЕМ НАЦЕНКУ В БАЗУ

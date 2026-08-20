@@ -737,9 +737,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         $cliche_in_price = 0; if(filter_input(INPUT_POST, 'cliche_in_price') == 'on') $cliche_in_price = 1;
-        $cliches_count_flint = filter_input(INPUT_POST, 'cliches_count_flint'); if($cliches_count_flint === null) $cliches_count_flint = null;
-        $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak'); if($cliches_count_kodak === null) $cliches_count_kodak = null;
-        $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old'); if($cliches_count_old === null) $cliches_count_old = null;
+        $cliches_count_flint = filter_input(INPUT_POST, 'cliches_count_flint');
+        $cliches_count_kodak = filter_input(INPUT_POST, 'cliches_count_kodak');
+        $cliches_count_old = filter_input(INPUT_POST, 'cliches_count_old');
         $customer_pays_for_cliche = 0; if(filter_input(INPUT_POST, 'customer_pays_for_cliche') == 'on') $customer_pays_for_cliche = 1;
         
         $knife = filter_input(INPUT_POST, 'knife'); if(empty($knife)) $knife = 0;

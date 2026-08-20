@@ -14,23 +14,18 @@ if(!empty($id) && (empty($calculation_result) || !is_a($calculation_result, Calc
         
     // Курс доллара
     $new_usd = $calculation->usd;
-    if($new_usd === null) $new_usd = null;
         
     // Курс евро
     $new_euro = $calculation->euro;
-    if($new_euro === null) $new_euro = null;
         
     // Себестоимость
     $new_cost = $calculation->cost;
-    if($new_cost === null) $new_cost = null;
     
     // Себестоимость на 1 шт/кг = Себестоимость / массу тиража или кол-во штук
     $new_cost_per_unit = $calculation->cost_per_unit;
-    if($new_cost_per_unit === null) $new_cost_per_unit = null;
         
     // Наценка на тираж
     $new_extracharge = $calculation->extracharge;
-    if($new_extracharge === null) $new_extracharge = null;
         
     // Наценка на ПФ
     $new_extracharge_cliche = $calculation->extracharge_cliche;
@@ -40,108 +35,82 @@ if(!empty($id) && (empty($calculation_result) || !is_a($calculation_result, Calc
         
     // Отгрузочная стоимость
     $new_shipping_cost = $calculation->shipping_cost;
-    if($new_shipping_cost === null) $new_shipping_cost = null;
         
     // Отгрузочная стоимость за единицу
     $new_shipping_cost_per_unit = $calculation->shipping_cost_per_unit;
-    if($new_shipping_cost_per_unit === null) $new_shipping_cost_per_unit = null;
         
     // Прибыль
     $new_income = $calculation->income;
-    if($new_income === null) $new_income = null;
         
     // Прибыль за единицу
     $new_income_per_unit = $calculation->income_per_unit;
-    if($new_income_per_unit === null) $new_income_per_unit = null;
         
     // Себестоимость ПФ
     $new_cliche_cost = $calculation->cliche_cost;
-    if($new_cliche_cost === null) $new_cliche_cost = null;
         
     // Отгрузочная стоимость ПФ
     $new_shipping_cliche_cost = $calculation->shipping_cliche_cost;
-    if($new_shipping_cliche_cost === null) $new_shipping_cliche_cost = null;
         
     // Прибыль ПФ
     $new_income_cliche = $calculation->income_cliche;
-    if($new_income_cliche === null) $new_income_cliche = null;
         
     // Себестоимость ножа
     $new_knife_cost = $calculation->knife_cost;
-    if($new_knife_cost === null) $new_knife_cost = null;
         
     // Отгрузочная стоимость ножа
     $new_shipping_knife_cost = $calculation->shipping_knife_cost;
-    if($new_shipping_knife_cost === null) $new_shipping_knife_cost = null;
         
     // Прибыль на нож
     $new_income_knife = $calculation->income_knife;
-    if($new_income_knife === null) $new_income_knife = null;
     
     // Материалы = масса с приладкой осн. + масса с приладкой лам. 1 + масса с приладкой лам. 2
     $new_total_weight_dirty = $calculation->total_weight_dirty;
-    if($new_total_weight_dirty === null) $new_total_weight_dirty = null;
     
     // Цена материала
     $new_film_cost = $calculation->film_cost;
-    if($new_film_cost === null) $new_film_cost = null;
     
     // Цена материала за 1 шт
     $new_film_cost_per_unit = $calculation->film_cost_per_unit;
-    if($new_film_cost_per_unit === null) $new_film_cost_per_unit = null;
     
     // Ширина материала
     $new_width = $calculation->width_mat;
-    if($new_width === null) $new_width = null;
     
     // Масса без приладки = масса плёнки чистая
     $new_weight_pure = $calculation->weight_pure;
-    if($new_weight_pure === null) $new_weight_pure = null;
     
     // Длина без приладки = длина плёнки чистая
     $new_length_pure = $calculation->length_pure;
-    if($new_length_pure === null) $new_length_pure = null;
     
     // Масса с приладкой = масса плёнки грязная
     $new_weight_dirty = $calculation->weight_dirty;
-    if($new_weight_dirty === null) $new_weight_dirty = null;
     
     // Длина с приладкой = метры погонные грязные
     $new_length_dirty = $calculation->length_dirty;
-    if($new_length_dirty === null) $new_length_dirty = null;
     
     // Отходы плёнка цена = (масса грязная - масса чистая) * стоимость за 1 кг * курс валюты
     $new_film_waste_cost = $calculation->film_waste_cost;
-    if($new_film_waste_cost === null) $new_film_waste_cost = null;
     
     // Отходы плёнка масса = масса грязная - масса чистая
     $new_film_waste_weight = $calculation->film_waste_weight;
-    if($new_film_waste_weight === null) $new_film_waste_weight = null;
     
     // Стоимость всех красок
     $new_ink_cost = null;
     if(!empty($calculation->ink_cost)) $new_ink_cost = $calculation->ink_cost;
-    if($new_ink_cost === null) $new_ink_cost = null;
 
     // Расход всех красок
     $new_ink_weight = $calculation->ink_expense;
-    if($new_ink_weight === null) $new_ink_weight = null;
     
     // Работа по печати тиража, руб
     $new_work_cost = $calculation->work_cost;
-    if($new_work_cost === null) $new_work_cost = null;
     
     // Работа по печати тиража, ч
     $new_work_time = $calculation->work_time;
-    if($new_work_time === null) $new_work_time = null;
         
     // Фактический зазор, мм
     $new_gap = $calculation->gap;
-    if($new_gap === null) $new_gap = null;
         
     // Метраж приладки одного тиража, м
     $new_priladka_printing = $calculation->priladka_printing;
-    if($new_priladka_printing === null) $new_priladka_printing = null;
         
     //****************************************************
     // ПОМЕЩАЕМ НАЦЕНКУ В БАЗУ
