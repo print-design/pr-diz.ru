@@ -29,28 +29,28 @@ elseif(empty ($streams_count)) {
 $form_valid = true;
 $error_message = '';
 
-$source_id_valid = '';
-$source_id_valid_message = 'ID рулона обязательно';
+$source_code_valid = '';
+$source_code_valid_message = 'ID рулона обязательно';
 
 if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     
-    $source_id = filter_input(INPUT_POST, 'source_id', FILTER_VALIDATE_INT);
-    if(empty($source_id)) {
-        $source_id_valid = ISINVALID;
+    $source_code = filter_input(INPUT_POST, 'source_id');
+    if(empty($source_code)) {
+        $source_code_valid = ISINVALID;
         $form_valid = false;
     }
     
     // Распознавание исходного ролика
-    $source_id = trim($source_id);
+    $source_code = trim($source_code);
     $is_from_pallet = null;
     $roll_id = null;
     
     // Если первый символ р или Р, ищем среди рулонов (временно убираем проверку по статусу).
-    if((mb_substr($source_id, 0, 1) == "р" || mb_substr($source_id, 0, 1) == "Р") && is_numeric(mb_substr($source_id, 1))) {
-        $source_roll_id = mb_substr($source_id, 1);
-        $sql = "select r.id from roll r where r.id = '$source_roll_id' limit 1";
-        $fetcher = new Fetcher($sql);
+    if((mb_substr($source_code, 0, 1) == "р" || mb_substr($source_code, 0, 1) == "Р") && is_numeric(mb_substr($source_code, 1))) {
+        $source_roll_id = mb_substr($source_code, 1);
+        $sql = "select r.id from roll r where r.id = ? limit 1";
+        $fetcher = new Fetcher($sql, [$source_roll_id]);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = 0;
             $roll_id = $row['id'];
@@ -58,15 +58,15 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     // Если первый символ п или П, ищем сначала среди свободных роликов в паллете,
     // если свободных нет, берём, какие есть.
-    elseif((mb_substr($source_id, 0, 1) == "п" || mb_substr($source_id, 0, 1) == "П") && is_numeric(mb_substr($source_id, 1))) {
-        $pallet_id = mb_substr($source_id, 1);
+    elseif((mb_substr($source_code, 0, 1) == "п" || mb_substr($source_code, 0, 1) == "П") && is_numeric(mb_substr($source_code, 1))) {
+        $pallet_id = mb_substr($source_code, 1);
         $sql = "select pr.id id, ifnull(prsh.status_id, 0) status_id "
                 . "from pallet_roll pr "
                 . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                . "where pr.pallet_id = '$pallet_id' "
+                . "where pr.pallet_id = ? "
                 . "order by status_id "
                 . "limit 1";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$pallet_id]);
         if($row = $fetcher->Fetch()) {
             $is_from_pallet = 1;
             $roll_id = $row['id'];
@@ -81,46 +81,46 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $sql = "";
         
         if($is_from_pallet == 0) {
-            $sql = "select film_variation_id from roll where id=$roll_id";
+            $sql = "select film_variation_id from roll where id=?";
         }
         else {
-            $sql = "select film_variation_id from pallet where id in (select pallet_id from pallet_roll where id=$roll_id)";
+            $sql = "select film_variation_id from pallet where id in (select pallet_id from pallet_roll where id=?)";
         }
         
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$roll_id]);
         if($row = $fetcher->Fetch()) {
             $source_film_variation = $row['film_variation_id'];
         }
         else {
-            $source_id_valid_message = "Параметры исходного ролика не найдены";
-            $source_id_valid = ISINVALID;
+            $source_code_valid_message = "Параметры исходного ролика не найдены";
+            $source_code_valid = ISINVALID;
             $form_valid = false;
         }
     }
     else {
-        $source_id_valid_message = "Объект отсутствует в базе";
-        $source_id_valid = ISINVALID;
+        $source_code_valid_message = "Объект отсутствует в базе";
+        $source_code_valid = ISINVALID;
         $form_valid = false;
     }
     
     $cutting_film_variation = null;
     
     if($form_valid) {
-        $sql = "select film_variation_id from cutting where id=$cutting_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select film_variation_id from cutting where id=?";
+        $fetcher = new Fetcher($sql, [$cutting_id]);
         if($row = $fetcher->Fetch()) {
             $cutting_film_variation = $row['film_variation_id'];
         }
         else {
-            $source_id_valid_message = "Параметры нарезки не найдены";
-            $source_id_valid = ISINVALID;
+            $source_code_valid_message = "Параметры нарезки не найдены";
+            $source_code_valid = ISINVALID;
             $form_valid = false;
         }
     }
     
     if($source_film_variation != $cutting_film_variation) {
-        $source_id_valid_message = "Не совпадают характеристики";
-        $source_id_valid = ISINVALID;
+        $source_code_valid_message = "Не совпадают характеристики";
+        $source_code_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -129,32 +129,32 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $last_is_from_pallet = null;
         $last_roll_id = null;
             
-        $sql = "select is_from_pallet, roll_id from cutting_source where id = $last_source";
-        $fetcher = new Fetcher($sql);
+        $sql = "select is_from_pallet, roll_id from cutting_source where id = ?";
+        $fetcher = new Fetcher($sql, [$last_source]);
         if($row = $fetcher->Fetch()) {
             $last_is_from_pallet = $row['is_from_pallet'];
             $last_roll_id = $row['roll_id'];
         }
         
         if($last_is_from_pallet !== null && $last_roll_id !== null && $last_is_from_pallet == $is_from_pallet && $last_roll_id == $roll_id) {
-            $source_id_valid_message = "Этот ролик уже использован";
-            $source_id_valid = ISINVALID;
+            $source_code_valid_message = "Этот ролик уже использован";
+            $source_code_valid = ISINVALID;
             $form_valid = false;
         }
     }
     
     if($form_valid) {
         // Добавляем новый исходный ролик
-        $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values ($cutting_id, $is_from_pallet, $roll_id)";
-        $executer = new Executer($sql);
-        $error_message == $executer->error;
+        $sql = "insert into cutting_source (cutting_id, is_from_pallet, roll_id) values (?, ?, ?)";
+        $executer = new Executer($sql, [$cutting_id, $is_from_pallet, $roll_id]);
+        $error_message = $executer->error;
         
         // Меняем статусы всех исходных роликов (включая и новый) на "Раскроили" (если он ещё не установлен)
         if(empty($error_message)) {
             $cut_sources = null;
     
-            $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=$cutting_id";
-            $grabber = new Grabber($sql);
+            $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=?";
+            $grabber = new Grabber($sql, [$cutting_id]);
             $cut_sources = $grabber->result;
             $error_message = $grabber->error;
     
@@ -164,24 +164,24 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
                     $source_roll_id = $cut_source['roll_id'];
         
                     if($source_is_from_pallet == 0) {
-                        $sql = "select status_id from roll_status_history where roll_id = $source_roll_id order by id desc limit 1";
-                        $fetcher = new Fetcher($sql);
+                        $sql = "select status_id from roll_status_history where roll_id = ? order by id desc limit 1";
+                        $fetcher = new Fetcher($sql, [$source_roll_id]);
                         $row = $fetcher->Fetch();
                 
                         if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
-                            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
-                            $executer = new Executer($sql);
+                            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)";
+                            $executer = new Executer($sql, [$source_roll_id, $user_id]);
                             $error_message = $executer->error;
                         }
                     }
                     else {
-                        $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = $source_roll_id order by id desc limit 1";
-                        $fetcher = new Fetcher($sql);
+                        $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1";
+                        $fetcher = new Fetcher($sql, [$source_roll_id]);
                         $row = $fetcher->Fetch();
                 
                         if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
-                            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values($source_roll_id, ".ROLL_STATUS_CUT.", $user_id)";
-                            $executer = new Executer($sql);
+                            $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)";
+                            $executer = new Executer($sql, [$source_roll_id, $user_id]);
                             $error_message = $executer->error;
                         }
                     }
@@ -196,7 +196,7 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 // Получение объекта
-$source_id = filter_input(INPUT_POST, 'source_id', FILTER_VALIDATE_INT);
+$source_code = filter_input(INPUT_POST, 'source_id');
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -241,7 +241,7 @@ $source_id = filter_input(INPUT_POST, 'source_id', FILTER_VALIDATE_INT);
             $next_submit_disabled = '';
             $create_submit_disabled = '';
             
-            if(empty($source_id)) {
+            if(empty($source_code)) {
                 $next_submit_disabled = " disabled";
             }
             else {
@@ -256,8 +256,8 @@ $source_id = filter_input(INPUT_POST, 'source_id', FILTER_VALIDATE_INT);
                         <input type="hidden" name="cutting_id" value="<?=$cutting_id ?>" />
                         <div class="form-group">
                             <label for="source_id">ID рулона</label>
-                            <input type="text" id="source_id" name="source_id" value="<?= $source_id ?>" class="form-control<?=$source_id_valid ?>" required="required" autocomplete="off" />
-                            <div class="invalid-feedback order-last"><?=$source_id_valid_message ?></div>
+                            <input type="text" id="source_id" name="source_id" value="<?= $source_code ?>" class="form-control<?=$source_code_valid ?>" required="required" autocomplete="off" />
+                            <div class="invalid-feedback order-last"><?=$source_code_valid_message ?></div>
                             <div style='position: absolute; top: 2.1rem; right: 1.2rem;'>
                                 <button type='button' id="clear" class="d-none" style='background-color: white; border: 0;'><i class='fas fa-times'></i></button>
                             </div>
