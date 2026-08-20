@@ -76,13 +76,13 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $sql = "select sum(r.length) length, count(r.id) count "
                 . "from cutting_source cs "
                 . "inner join roll r on cs.roll_id = r.id "
-                . "where cs.cutting_id = $cutting_id and cs.is_from_pallet = 0 "
+                . "where cs.cutting_id = ? and cs.is_from_pallet = 0 "
                 . "union "
                 . "select sum(pr.length) length, count(pr.id) count "
                 . "from cutting_source cs "
                 . "inner join pallet_roll pr on cs.roll_id = pr.id "
-                . "where cs.cutting_id = $cutting_id and cs.is_from_pallet = 1";
-        $fetcher = new Fetcher($sql);
+                . "where cs.cutting_id = ? and cs.is_from_pallet = 1";
+        $fetcher = new Fetcher($sql, [$cutting_id, $cutting_id]);
         
         while($row = $fetcher->Fetch()) {
             $source_length += $row['length'];
@@ -91,8 +91,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         
         $wind_lengths = 0;
         
-        $sql = "select sum(length) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = $cutting_id)";
-        $fetcher = new Fetcher($sql);
+        $sql = "select sum(length) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = ?)";
+        $fetcher = new Fetcher($sql, [$cutting_id]);
         if($row = $fetcher->Fetch()) {
             $wind_lengths = $row[0];
         }
@@ -110,8 +110,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         // Создание намотки
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         
-        $sql = "insert into cutting_wind (cutting_source_id, length, radius) values ($last_source, $length, $radius)";
-        $executer = new Executer($sql);
+        $sql = "insert into cutting_wind (cutting_source_id, length, radius) values (?, ?, ?)";
+        $executer = new Executer($sql, [$last_source, $length, $radius]);
         $error_message = $executer->error;
         $cutting_wind_id = $executer->insert_id;
         
@@ -120,8 +120,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
         $film_variation_id = 0;
         
         if(empty($error_message)) {
-            $sql = "select supplier_id, film_variation_id from cutting where id=$cutting_id";
-            $fetcher = new Fetcher($sql);
+            $sql = "select supplier_id, film_variation_id from cutting where id=?";
+            $fetcher = new Fetcher($sql, [$cutting_id]);
             $error_message = $fetcher->error;
             
             if($row = $fetcher->Fetch()) {
@@ -135,27 +135,27 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
             for($i = 1; $i <= 19; $i++) {
                 if(key_exists('stream_'.$i, $_POST)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
-                    $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i) ?? '');
-                    $cell = addslashes(filter_input(INPUT_POST, 'cell_'.$i) ?? '');
+                    $comment = filter_input(INPUT_POST, 'comment_'.$i) ?? '';
+                    $cell = filter_input(INPUT_POST, 'cell_'.$i) ?? '';
                     $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
         
                     $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id, cutting_wind_id) "
-                            . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$comment', '$user_id', $cutting_wind_id)";
-                    $executer = new Executer($sql);
+                            . "values (?, ?, ?, ?, ?, ?, ?, ?)";
+                    $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $user_id, $cutting_wind_id]);
                     $error_message = $executer->error;
                     $insert_id = $executer->insert_id;
                     
                     // Заполнение истории ячеек
                     if(empty($error_message)) {
-                        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($insert_id, '$cell', $user_id)";
-                        $executer = new Executer($sql);
+                        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
+                        $executer = new Executer($sql, [$insert_id, $cell, $user_id]);
                         $error_message = $executer->error;
                     }
                     
                     // Заполнение истории статусов
                     if(empty($error_message)) {
-                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values($insert_id, ".ROLL_STATUS_FREE.", $user_id)";
-                        $executer = new Executer($sql);
+                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values(?, ".ROLL_STATUS_FREE.", ?)";
+                        $executer = new Executer($sql, [$insert_id, $user_id]);
                         $error_message = $executer->error;
                     }
                 }
@@ -176,38 +176,38 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
     $last_source_history_id = null;
     $last_source_status_id = null;
     
-    $sql = "select roll_id, is_from_pallet from cutting_source where id = $last_source";
-    $fetcher = new Fetcher($sql);
+    $sql = "select roll_id, is_from_pallet from cutting_source where id = ?";
+    $fetcher = new Fetcher($sql, [$last_source]);
     if($row = $fetcher->Fetch()) {
         $last_source_roll_id = $row['roll_id'];
         $last_source_is_from_pallet = $row['is_from_pallet'];
     }
             
     if(!empty($last_source_roll_id) && $last_source_is_from_pallet == 0) {
-        $sql = "select id, status_id from roll_status_history where roll_id = $last_source_roll_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select id, status_id from roll_status_history where roll_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($sql, [$last_source_roll_id]);
         if($row = $fetcher->Fetch()) {
             $last_source_history_id = $row['id'];
             $last_source_status_id = $row['status_id'];
         }
                 
         if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-            $sql = "delete from roll_status_history where id = $last_source_history_id";
-            $executer = new Executer($sql);
+            $sql = "delete from roll_status_history where id = ?";
+            $executer = new Executer($sql, [$last_source_history_id]);
             $error_message = $executer->error;
         }
     }
     elseif(!empty ($last_source_roll_id) && $last_source_is_from_pallet == 1) {
-        $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = $last_source_roll_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($sql, [$last_source_roll_id]);
         if($row = $fetcher->Fetch()) {
             $last_source_history_id = $row['id'];
             $last_source_status_id = $row['status_id'];
         }
                 
         if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-            $sql = "delete from pallet_roll_status_history where id = $last_source_history_id";
-            $executer = new Executer($sql);
+            $sql = "delete from pallet_roll_status_history where id = ?";
+            $executer = new Executer($sql, [$last_source_history_id]);
             $error_message = $executer->error;
         }
     }
@@ -215,8 +215,8 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
     // Удаляем запись о последнем исходном ролике
     if(empty($error_message)) {
         $last_source = filter_input(INPUT_POST, 'last_source');
-        $sql = "delete from cutting_source where id = $last_source";
-        $executer = new Executer($sql);
+        $sql = "delete from cutting_source where id = ?";
+        $executer = new Executer($sql, [$last_source]);
         $error_message = $executer->error;
     }
     
@@ -232,8 +232,8 @@ $width = null;
 $winds_count = 0;
 
 $sql = "select c.supplier_id, c.film_variation_id, c.width, (select count(id) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id=c.id)) winds_count "
-        . "from cutting c where c.id=$cutting_id";
-$fetcher = new Fetcher($sql);
+        . "from cutting c where c.id=?";
+$fetcher = new Fetcher($sql, [$cutting_id]);
 if($row = $fetcher->Fetch()) {
     $supplier_id = $row['supplier_id'];
     $film_variation_id = $row['film_variation_id'];
@@ -241,8 +241,8 @@ if($row = $fetcher->Fetch()) {
     $winds_count = $row['winds_count'];
 }
 
-$sql = "select width, comment, cell from cutting_stream where cutting_id=$cutting_id order by id";
-$fetcher = new Fetcher($sql);
+$sql = "select width, comment, cell from cutting_stream where cutting_id=? order by id";
+$fetcher = new Fetcher($sql, [$cutting_id]);
 $i = 0;
 while ($row = $fetcher->Fetch()) {
     $stream = 'stream_'.++$i;
@@ -374,7 +374,7 @@ while ($row = $fetcher->Fetch()) {
             
             <?php
             $sql = "SELECT id, thickness, weight FROM film_variation";
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, []);
             while ($row = $fetcher->Fetch()):
             ?>
                 if(films.get(<?=$row['id'] ?>) === undefined) {
