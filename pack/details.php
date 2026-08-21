@@ -2,6 +2,7 @@
 include '../include/topscripts.php';
 include '../calculation/calculation.php';
 include '../calculation/calculation_result.php';
+include '../calculation/calculation_rolls.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
@@ -28,6 +29,7 @@ if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
 // Получение объекта
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
+$calculation_rolls = CalculationRolls::Create($id);
 
 $comment = '';
 
@@ -220,7 +222,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                             <table>
                                 <tr>
                                     <td>Объём заказа</td>
-                                    <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м</td>
+                                    <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation_rolls->volume), 2) ?> м<sup>2</sup></td>
                                 </tr>
                                 <tr>
                                     <td>Менеджер</td>
