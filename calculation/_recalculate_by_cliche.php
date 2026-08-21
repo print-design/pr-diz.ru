@@ -17,8 +17,8 @@ elseif($customer_pays_for_cliche === null || $customer_pays_for_cliche === '') {
     $result['error'] = "Не указан параметр Заказчик платит за ПФ";
 }
 else {
-    $sql = "update calculation set cliche_in_price = $cliche_in_price, customer_pays_for_cliche = $customer_pays_for_cliche where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set cliche_in_price = ?, customer_pays_for_cliche = ? where id = ?";
+    $executer = new Executer($sql, [$cliche_in_price, $customer_pays_for_cliche, $id]);
     $error_message = $executer->error;
     
     $cost = 0;
@@ -49,8 +49,8 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set cost = $cost, cost_per_unit = $cost_per_unit, shipping_cost = $shipping_cost, shipping_cost_per_unit = $shipping_cost_per_unit, income = $income, income_per_unit = $income_per_unit, shipping_cliche_cost = $shipping_cliche_cost, income_cliche = $income_cliche where calculation_id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation_result set cost = ?, cost_per_unit = ?, shipping_cost = ?, shipping_cost_per_unit = ?, income = ?, income_per_unit = ?, shipping_cliche_cost = ?, income_cliche = ? where calculation_id = ?";
+        $executer = new Executer($sql, [$cost, $cost_per_unit, $shipping_cost, $shipping_cost_per_unit, $income, $income_per_unit, $shipping_cliche_cost, $income_cliche, $id]);
         $error_message = $executer->error;
     }
     
@@ -58,9 +58,9 @@ else {
         $sql = "select c.cliche_in_price, c.customer_pays_for_cliche, c.extracharge, "
                 . "cr.cost, cr.cost_per_unit, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, cr.shipping_cliche_cost, cr.income_cliche, cr.income_knife "
                 . "from calculation c inner join calculation_result cr on cr.calculation_id = c.id "
-                . "where c.id = $id "
+                . "where c.id = ? "
                 . "order by c.id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
