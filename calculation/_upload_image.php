@@ -15,6 +15,12 @@ $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 $image = filter_input(INPUT_POST, 'image');
 $resolution = filter_input(INPUT_POST, 'resolution');
 
+// $image используется как часть имени колонки (image1/image2, pdf1/pdf2), поэтому его нельзя
+// передать через параметр prepared statement -- вместо этого проверяем по строгому списку допустимых значений
+if(!in_array($image, ['1', '2'], true)) {
+    $image = null;
+}
+
 if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_name'])) {
     $myimage = null;
     $input_file = null;
@@ -27,13 +33,13 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             $filename = $id."_".$image.".pdf";
             
             if($object == STREAM) {
-                $sql = "update calculation_stream set pdf$image = '$filename' where id = $id";
-                $executer = new Executer($sql);
+                $sql = "update calculation_stream set pdf$image = ? where id = ?";
+                $executer = new Executer($sql, [$filename, $id]);
                 $result['error'] = $executer->error;
             }
             elseif($object == PRINTING) {
-                $sql = "update calculation_quantity set pdf$image = '$filename' where id = $id";
-                $executer = new Executer($sql);
+                $sql = "update calculation_quantity set pdf$image = ? where id = ?";
+                $executer = new Executer($sql, [$filename, $id]);
                 $result['error'] = $executer->error;
             }
             
@@ -83,8 +89,8 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
         
         if($file_uploaded && $object == PRINTING) {
             $filename = $myimage->filename;
-            $sql = "update calculation_quantity set image$image = '$filename' where id = $id";
-            $executer = new Executer($sql);
+            $sql = "update calculation_quantity set image$image = ? where id = ?";
+            $executer = new Executer($sql, [$filename, $id]);
             
             if(empty($executer->error)) {
                 $database_updated = true;
@@ -97,8 +103,8 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
         
         if($file_uploaded && $object == STREAM) {
             $filename = $myimage->filename;
-            $sql = "update calculation_stream set image$image = '$filename' where id = $id";
-            $executer = new Executer($sql);
+            $sql = "update calculation_stream set image$image = ? where id = ?";
+            $executer = new Executer($sql, [$filename, $id]);
             
             if(empty($executer->error)) {
                 $database_updated = true;
@@ -121,15 +127,15 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
                 $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id "
                         . "from calculation_stream cs "
                         . "inner join calculation c on cs.calculation_id = c.id "
-                        . "where cs.id = $id";
-                $fetcher = new Fetcher($sql);
+                        . "where cs.id = ?";
+                $fetcher = new Fetcher($sql, [$id]);
                 if($row = $fetcher->Fetch()) {
                     $work_type_id = $row['work_type_id'];
                     $status_id = $row['status_id'];
                 }
             
-                $sql = "select name, image1, image2 from calculation_stream where calculation_id = (select calculation_id from calculation_stream where id = $id)";
-                $grabber = new Grabber($sql);
+                $sql = "select name, image1, image2 from calculation_stream where calculation_id = (select calculation_id from calculation_stream where id = ?)";
+                $grabber = new Grabber($sql, [$id]);
                 $streams = $grabber->result;
                 $result['error'] = $grabber->error;
                 
@@ -149,15 +155,15 @@ if(!empty($object) && !empty($id) && !empty($image) && !empty($_FILES['file']) &
             }
             elseif($object == PRINTING) {
                 $sql = "select c.work_type_id, (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id "
-                        . "from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
-                $fetcher = new Fetcher($sql);
+                        . "from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = ?";
+                $fetcher = new Fetcher($sql, [$id]);
                 if($row = $fetcher->Fetch()) {
                     $work_type_id = $row['work_type_id'];
                     $status_id = $row['status_id'];
                 }
                 
-                $sql = "select image1, image2 from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $id)";
-                $grabber = new Grabber($sql);
+                $sql = "select image1, image2 from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = ?)";
+                $grabber = new Grabber($sql, [$id]);
                 $printings = $grabber->result;
                 $result['error'] = $grabber->error;
             }
