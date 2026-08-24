@@ -13,15 +13,15 @@ elseif($shipping_cliche_cost === null || $shipping_cliche_cost === '') {
     $result['error'] = "Не указана отгрузочная стоимость ПФ";
 }
 else {
-    $sql = "update calculation_result set shipping_cliche_cost = $shipping_cliche_cost where calculation_id = $id";
-    $executer = new Executer($sql);
+    $sql = "update calculation_result set shipping_cliche_cost = ? where calculation_id = ?";
+    $executer = new Executer($sql, [$shipping_cliche_cost, $id]);
     $error_message = $executer->error;
     
     $cliche_cost = 0;
     
     if(empty($error_message)) {
-        $sql = "select cliche_cost from calculation_result where calculation_id = $id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select cliche_cost from calculation_result where calculation_id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         if($row = $fetcher->Fetch()) {
             $cliche_cost = $row['cliche_cost'];
@@ -36,8 +36,8 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge_cliche = (100 * ($shipping_cliche_cost - $cliche_cost) / ($cliche_cost + $uk_costpf)) where c.id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge_cliche = (100 * (? - ?) / (? + $uk_costpf)) where c.id = ?";
+        $executer = new Executer($sql, [$shipping_cliche_cost, $cliche_cost, $cliche_cost, $id]);
         $error_message = $executer->error;
     }
     
@@ -55,14 +55,14 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set income_cliche = $income_cliche where calculation_id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation_result set income_cliche = ? where calculation_id = ?";
+        $executer = new Executer($sql, [$income_cliche, $id]);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
-        $sql = "select c.extracharge_cliche, cr.shipping_cliche_cost, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id order by cr.id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select c.extracharge_cliche, cr.shipping_cliche_cost, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = ? order by cr.id desc limit 1";
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
