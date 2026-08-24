@@ -6,7 +6,7 @@ class CalculationRolls {
     public $volume = 0;
     
     public function __construct($id) {
-        $sql = "select sum((ifnull(cts.radius, 0) * 2 + ifnull(tm.spool, 0)) * ifnull(cs.width, 0) / 1000000) as volume "
+        $sql = "select sum(power(ifnull(cts.radius, 0) * 2 + ifnull(tm.spool, 0), 2) * ifnull(cs.width, 0) / 1000000000) as volume "
                 . "from calculation c "
                 . "inner join techmap tm on tm.calculation_id = c.id "
                 . "inner join calculation_stream cs on cs.calculation_id = c.id "
