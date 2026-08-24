@@ -7,9 +7,8 @@ $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $person = filter_input(INPUT_GET, 'person');
 
 if(null !== $id && null !== $person) {
-    $str_person = addslashes($person ?? '');
-    $sql = "update customer set person = '$str_person' where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update customer set person = ? where id = ?";
+    $executer = new Executer($sql, [$person, $id]);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
@@ -24,8 +23,8 @@ $phone = filter_input(INPUT_GET, 'phone');
 $extension = filter_input(INPUT_GET, 'extension');
 
 if(null !== $id && null !== $phone) {
-    $sql = "update customer set phone = '$phone', extension = '$extension' where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update customer set phone = ?, extension = ? where id = ?";
+    $executer = new Executer($sql, [$phone, $extension, $id]);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
@@ -39,8 +38,8 @@ if(null !== $id && null !== $phone) {
 $email = filter_input(INPUT_GET, 'email');
 
 if(null !== $id && null !== $email) {
-    $sql = "update customer set email = '$email' where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update customer set email = ? where id = ?";
+    $executer = new Executer($sql, [$email, $id]);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
@@ -54,13 +53,13 @@ if(null !== $id && null !== $email) {
 $manager_id = filter_input(INPUT_GET, 'manager_id', FILTER_VALIDATE_INT);
 
 if(null !== $id && null !== $manager_id) {
-    $sql = "update customer set manager_id = $manager_id where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update customer set manager_id = ? where id = ?";
+    $executer = new Executer($sql, [$manager_id, $id]);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "select last_name, first_name from user where id = $manager_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select last_name, first_name from user where id = ?";
+        $fetcher = new Fetcher($sql, [$manager_id]);
         if($row = $fetcher->Fetch()) {
             echo json_encode(array("id" => $manager_id, "last_name" => $row['last_name'], "first_name" => $row['first_name']));
         }
