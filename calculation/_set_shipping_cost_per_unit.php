@@ -13,19 +13,19 @@ elseif($shipping_cost_per_unit === null || $shipping_cost_per_unit === '') {
     $result['error'] = "Не указана отгрузочная стоимость за единицу";
 }
 else {
-    $sql = "update calculation_result set shipping_cost_per_unit = $shipping_cost_per_unit where calculation_id = $id";
-    $executer = new Executer($sql);
+    $sql = "update calculation_result set shipping_cost_per_unit = ? where calculation_id = ?";
+    $executer = new Executer($sql, [$shipping_cost_per_unit, $id]);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * (select sum(quantity) from calculation_quantity where calculation_id = $id)) - cr.cost) / cr.cost) * 100 where c.id = $id and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE;
-        $executer = new Executer($sql);
+        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * (select sum(quantity) from calculation_quantity where calculation_id = ?)) - cr.cost) / cr.cost) * 100 where c.id = ? and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE;
+        $executer = new Executer($sql, [$id, $id]);
         $error_message = $executer->error;
     }
     
     if(empty ($error_message)) {
-        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * c.quantity) - cr.cost) / cr.cost) * 100 where c.id = $id and c.work_type_id <> ".WORK_TYPE_SELF_ADHESIVE;
-        $executer = new Executer($sql);
+        $sql = "update calculation c inner join calculation_result cr on c.id = cr.calculation_id set c.extracharge = (((cr.shipping_cost_per_unit * c.quantity) - cr.cost) / cr.cost) * 100 where c.id = ? and c.work_type_id <> ".WORK_TYPE_SELF_ADHESIVE;
+        $executer = new Executer($sql, [$id]);
         $error_message = $executer->error;
     }
     
@@ -47,14 +47,14 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set shipping_cost = $shipping_cost, income = $income, income_per_unit = $income_per_unit where calculation_id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation_result set shipping_cost = ?, income = ?, income_per_unit = ? where calculation_id = ?";
+        $executer = new Executer($sql, [$shipping_cost, $income, $income_per_unit, $id]);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
-        $sql = "select c.extracharge, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = $id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select c.extracharge, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, cr.income_cliche, cr.income_knife from calculation_result cr inner join calculation c on cr.calculation_id = c.id where c.id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         
         // Значения shipping_cost, income, income_total дополнительно корректируем, чтобы не было "разницы в 1 рубль"
