@@ -13,8 +13,8 @@ elseif($extracharge === null || $extracharge === '') {
     $result['error'] = "Не указан размер наценки";
 }
 else {
-    $sql = "update calculation set extracharge = $extracharge where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set extracharge = ? where id = ?";
+    $executer = new Executer($sql, [$extracharge, $id]);
     $error_message = $executer->error;
     
     $shipping_cost = 0;
@@ -37,14 +37,14 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set shipping_cost = $shipping_cost, shipping_cost_per_unit = $shipping_cost_per_unit, income = $income, income_per_unit = $income_per_unit where calculation_id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation_result set shipping_cost = ?, shipping_cost_per_unit = ?, income = ?, income_per_unit = ? where calculation_id = ?";
+        $executer = new Executer($sql, [$shipping_cost, $shipping_cost_per_unit, $income, $income_per_unit, $id]);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
-        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit, income_cliche, income_knife from calculation_result where calculation_id = $id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select shipping_cost, shipping_cost_per_unit, income, income_per_unit, income_cliche, income_knife from calculation_result where calculation_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {

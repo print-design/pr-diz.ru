@@ -13,8 +13,8 @@ elseif($extracharge_knife === null || $extracharge_knife === '') {
     $result['error'] = "Не указан размер наценки";
 }
 else {
-    $sql = "update calculation set extracharge_knife=$extracharge_knife where id=$id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set extracharge_knife=? where id=?";
+    $executer = new Executer($sql, [$extracharge_knife, $id]);
     $error_message = $executer->error;
     
     $shipping_knife_cost = 0;
@@ -33,14 +33,14 @@ else {
     }
     
     if(empty($error_message)) {
-        $sql = "update calculation_result set shipping_knife_cost = $shipping_knife_cost, income_knife = $income_knife where calculation_id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation_result set shipping_knife_cost = ?, income_knife = ? where calculation_id = ?";
+        $executer = new Executer($sql, [$shipping_knife_cost, $income_knife, $id]);
         $error_message = $executer->error;
     }
     
     if(empty($error_message)) {
-        $sql = "select shipping_knife_cost, income, income_per_unit, income_cliche, income_knife from calculation_result where calculation_id = $id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select shipping_knife_cost, income, income_per_unit, income_cliche, income_knife from calculation_result where calculation_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
