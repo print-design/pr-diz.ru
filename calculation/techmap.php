@@ -548,6 +548,12 @@ if($calculation->work_type_id != WORK_TYPE_SELF_ADHESIVE) {
         }
     }
 }
+
+// Производят
+$production = in_array($calculation->status_id, ORDER_STATUSES_IN_PRODUCTION);
+
+// Расчёты
+$calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
 ?>
 <!DOCTYPE html>
 <html lang="ru">

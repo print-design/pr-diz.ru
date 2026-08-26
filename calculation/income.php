@@ -92,6 +92,12 @@ if(empty($error_message)) {
     $executer = new Executer($sql, [$shipping_cost, $payment_total, $id]);
     $error_message = $executer->error;
 }
+
+// Производят
+$production = in_array($calculation->status_id, ORDER_STATUSES_IN_PRODUCTION);
+
+// Расчёты
+$calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
 ?>
 <!DOCTYPE html>
 <html lang="ru">

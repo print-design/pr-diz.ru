@@ -271,8 +271,8 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                     elseif($paid) {
                         $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["status", "production", "id"]);
                     }
-                    elseif(!empty ($status_id) && in_array($status_id, [ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED])) {
-                        $backlink_url = BuildQueryAddRemoveArray('status', $status_id, ['production', 'paid', 'id']);
+                    elseif(!empty ($calculation->status_id) && in_array($calculation->status_id, [ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED])) {
+                        $backlink_url = BuildQueryAddRemoveArray('status', $calculation->status_id, ['production', 'paid', 'id']);
                     }
                     else {
                         $backlink_url = BuildQueryRemoveArray(["status", "production", "paid", "id"]);

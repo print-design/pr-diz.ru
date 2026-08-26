@@ -15,7 +15,7 @@ if($id === null) {
 }
 
 // Атрибут "поле неактивно"
-$disabled_attr = " disabled='disabled'";
+$disabled_attr = " disabled = 'disabled'";
 
 // Смена статуса
 if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
@@ -98,6 +98,12 @@ if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
 if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == ORDER_STATUS_CALCULATION) {
     $disabled_attr = "";
 }
+
+// Производят
+$production = in_array($calculation->status_id, ORDER_STATUSES_IN_PRODUCTION);
+
+// Расчёты
+$calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -182,22 +188,21 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
                     echo "<div class='alert alert-danger'>$error_message</div>";
                 }
             
-                $backlink_get = '';
-            
-                if(in_array($calculation->status_id, ORDER_STATUSES_CALCULATED)) {
-                    $backlink_get = BuildQueryAddRemove('status', "ORDER STATUS NOT IN WORK", 'id');
+                $backlink_url = '';
+                if($production) {
+                    $backlink_url = BuildQueryAddRemoveArray('production', 1, ['status', 'calculated', 'id']);
                 }
-                elseif(in_array($calculation->status_id, ORDER_STATUSES_IN_PRODUCTION)) {
-                    $backlink_get = BuildQueryAddRemove('status', "ORDER STATUS IN PRODUCTION", 'id');
+                elseif($calculated) {
+                    $backlink_url = BuildQueryAddRemoveArray('calculated', 1, ['status', 'production', 'id']);
                 }
-                elseif(in_array ($calculation->status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED))) {
-                    $backlink_get = BuildQueryAddRemove('status', $calculation->status_id, 'id');
+                elseif(in_array($calculation->status_id, [ORDER_STATUS_TRASH, ORDER_STATUS_DRAFT, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED])) {
+                    $backlink_url = BuildQueryAddRemoveArray('status', $calculation->status_id, ['production', 'calculated', 'id']);
                 }
                 else {
-                    $backlink_get = BuildQueryRemoveArray(array('status', 'id'));
+                    $backlink_url = BuildQueryRemoveArray(['status', 'production', 'calculated', 'id']);
                 }
                 ?>
-                <a class="btn btn-light backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_get ?>">К списку</a>
+                <a class="btn btn-light backlink" href="<?=APPLICATION ?>/calculation/<?= $backlink_url ?>">К списку</a>
                 <h1><?=$calculation->name ?></h1>
                 <h2>№<?=$calculation->customer_id."-".$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></h2>
                 <?php
