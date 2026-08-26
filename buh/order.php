@@ -243,7 +243,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
     </head>
     <body>
         <?php
-        include 'header_buh.php';
+        include 'header.php';
         
         include '../include/big_image.php';
         ?>
