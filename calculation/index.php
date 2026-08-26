@@ -81,6 +81,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                     <?php
                     // Фильтр
                     $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
+                    $params = [];
                     
                     if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
                         $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
@@ -89,17 +90,20 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
                     }
                     elseif(!empty($status_id)) {
-                        $where = " where c.duplicate_status_id = $status_id";
+                        $where = " where c.duplicate_status_id = ?";
+                        $params[] = $status_id;
                     }
                     
                     $unit = filter_input(INPUT_GET, 'unit');
                     if(!empty($unit)) {
-                        $where .= " and c.unit='$unit'";
+                        $where .= " and c.unit=?";
+                        $params[] = $unit;
                     }
                     
                     $work_type = filter_input(INPUT_GET, 'work_type');
                     if(!empty($work_type)) {
-                        $where .= " and c.work_type_id=$work_type";
+                        $where .= " and c.work_type_id=?";
+                        $params[] = $work_type;
                     }
                     
                     $manager = filter_input(INPUT_GET, 'manager');
@@ -107,17 +111,20 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                         $manager = GetUserId();
                     }
                     if(!empty($manager)) {
-                        $where .= " and c.manager_id=$manager";
+                        $where .= " and c.manager_id=?";
+                        $params[] = $manager;
                     }
                     
                     $customer = filter_input(INPUT_GET, 'customer');
                     if(!empty($customer)) {
-                        $where .= " and c.customer_id=$customer";
+                        $where .= " and c.customer_id=?";
+                        $params[] = $customer;
                     }
                     
                     $name = filter_input(INPUT_GET, 'name');
                     if(!empty($name)) {
-                        $where .= " and trim(c.name)='$name'";
+                        $where .= " and trim(c.name)=?";
+                        $params[] = $name;
                     }
                     
                     $find = trim(filter_input(INPUT_GET, 'find') ?? '');
@@ -127,13 +134,15 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             $where .= " and false";
                         }
                         else {
-                            $where .= " and c.customer_id = ".intval($find_substrings[0])." and c.duplicate_num_for_customer = ".intval($find_substrings[1]);
+                            $where .= " and c.customer_id = ? and c.duplicate_num_for_customer = ?";
+                            $params[] = intval($find_substrings[0]);
+                            $params[] = intval($find_substrings[1]);
                         }
                     }
 
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
                     $sql = "select count(c.id) from calculation c left join customer cus on c.customer_id = cus.id$where";
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, $params);
                     
                     if($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
@@ -169,7 +178,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             <option value="">Менеджер...</option>
                             <?php
                             $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join user u on c.manager_id = u.id order by u.last_name";
-                            $fetcher = new Fetcher($sql);
+                            $fetcher = new Fetcher($sql, []);
                             
                             while ($row = $fetcher->Fetch()):
                             ?>
@@ -183,8 +192,8 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             <?php 
                             $get_customer = filter_input(INPUT_GET, 'customer');
                             if(null !== $get_customer):
-                                $sql = "select name from customer where id = $get_customer";
-                            $fetcher = new Fetcher($sql);
+                                $sql = "select name from customer where id = ?";
+                            $fetcher = new Fetcher($sql, [$get_customer]);
                             if($row = $fetcher->Fetch()):
                             ?>
                             <option selected="selected" value="<?=$get_customer ?>"><?=$row[0] ?></option>
@@ -269,7 +278,7 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             . "left join customer cus on c.customer_id = cus.id "
                             . "left join user u on c.manager_id = u.id$where "
                             . "$orderby limit $pager_skip, $pager_take";
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, $params);
                     
                     while ($row = $fetcher->Fetch()):
                         
