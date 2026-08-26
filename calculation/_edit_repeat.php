@@ -8,19 +8,19 @@ $repeat_from = filter_input(INPUT_GET, 'repeat_from');
 $result = array();
 $result['error'] = '';
 
-$sql = "select id from calculation_cliche where calculation_quantity_id = $printing_id and sequence = $sequence";
-$fetcher = new Fetcher($sql);
+$sql = "select id from calculation_cliche where calculation_quantity_id = ? and sequence = ?";
+$fetcher = new Fetcher($sql, [$printing_id, $sequence]);
 $error_message = $fetcher->error;
 
 if(empty($error_message) && $row = $fetcher->Fetch()) {
     $id = $row[0];
-    $sql = "update calculation_cliche set repeat_from = $repeat_from where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update calculation_cliche set repeat_from = ? where id = ?";
+    $executer = new Executer($sql, [$repeat_from, $id]);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
-        $sql = "select repeat_from from calculation_cliche where id = $id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select repeat_from from calculation_cliche where id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         
         if(empty($error_message) && $row = $fetcher->Fetch()) {
