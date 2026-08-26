@@ -34,6 +34,12 @@ $fetcher = new Fetcher($sql);
 if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
 }
+
+// Производят
+$production = in_array($calculation->status_id, ORDER_STATUSES_IN_PRODUCTION);
+
+// Расчёты
+$calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
 ?>
 <!DOCTYPE html>
 <html lang="ru">

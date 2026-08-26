@@ -56,7 +56,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
     </head>
     <body>
         <?php
-        include 'header_pack.php';
+        include 'header.php';
         include '../include/status_track.php';
         include '../include/pager_top.php';
         $rowcounter = 0;
