@@ -184,11 +184,11 @@ if($calculation->status_id == ORDER_STATUS_DRAFT || $calculation->status_id == O
             
                 $backlink_get = '';
             
-                if(in_array($calculation->status_id, ORDER_STATUSES_NOT_IN_WORK)) {
-                    $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_NOT_IN_WORK, 'id');
+                if(in_array($calculation->status_id, ORDER_STATUSES_CALCULATED)) {
+                    $backlink_get = BuildQueryAddRemove('status', "ORDER STATUS NOT IN WORK", 'id');
                 }
                 elseif(in_array($calculation->status_id, ORDER_STATUSES_IN_PRODUCTION)) {
-                    $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_IN_PRODUCTION, 'id');
+                    $backlink_get = BuildQueryAddRemove('status', "ORDER STATUS IN PRODUCTION", 'id');
                 }
                 elseif(in_array ($calculation->status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED))) {
                     $backlink_get = BuildQueryAddRemove('status', $calculation->status_id, 'id');

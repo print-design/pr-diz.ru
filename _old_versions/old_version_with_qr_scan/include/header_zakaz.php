@@ -24,7 +24,7 @@ if($folder == 'calculation') {
     elseif($status_id == ORDER_STATUS_DRAFT) {
         $draft_status = ' disabled';
     }
-    elseif(in_array ($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP, ORDER_STATUS_NOT_IN_WORK))) {
+    elseif(in_array ($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP, "ORDER STATUS NOT IN WORK"))) {
         $not_in_work_status = ' disabled';
     }
     else {
@@ -42,7 +42,7 @@ if($folder == 'calculation') {
                 <a class="nav-link<?=$calculation_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?=  BuildQueryRemoveArray(array("status", "page")) ?>">В работе</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$not_in_work_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_NOT_IN_WORK, "page") ?>">Расчеты</a>
+                <a class="nav-link<?=$not_in_work_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", "ORDER STATUS NOT IN WORK", "page") ?>">Расчеты</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemove("status", ORDER_STATUS_DRAFT, "page") ?>">Черновики</a>

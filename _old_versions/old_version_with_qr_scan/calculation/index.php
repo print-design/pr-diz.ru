@@ -54,7 +54,7 @@ $status_id = filter_input(INPUT_GET, 'status');
 $ready = filter_input(INPUT_GET, 'ready');
 if($status_id == ORDER_STATUS_TRASH) $title = $status_titles[4];
 elseif($status_id == ORDER_STATUS_DRAFT) $title = $status_titles[3];
-elseif($status_id == ORDER_STATUS_NOT_IN_WORK) $title = $status_titles[2];
+elseif($status_id == "ORDER STATUS NOT IN WORK") $title = $status_titles[2];
 else $title = $status_titles[1];
 ?>
 <!DOCTYPE html>
@@ -84,7 +84,7 @@ else $title = $status_titles[1];
                     // Фильтр
                     $where = " where c.status_id <> ".ORDER_STATUS_CALCULATION." and c.status_id <> ".ORDER_STATUS_TECHMAP." and c.status_id <> ".ORDER_STATUS_DRAFT." and c.status_id <> ".ORDER_STATUS_TRASH;
                     
-                    if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
+                    if(!empty($status_id) && $status_id == "ORDER STATUS NOT IN WORK") {
                         $where = " where (c.status_id = ".ORDER_STATUS_CALCULATION." or c.status_id = ".ORDER_STATUS_TECHMAP.")";
                     }
                     elseif(!empty($status_id)) {

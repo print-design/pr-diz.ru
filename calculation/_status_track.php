@@ -87,7 +87,7 @@ foreach($plan_editions as $plan_edition) {
     }
 }
 
-$order_statuses = array_merge(array_reverse(ORDER_STATUSES_END), array_reverse(ORDER_STATUSES_IN_PRODUCTION), array_reverse(ORDER_STATUSES_IN_WORK), array_reverse(ORDER_STATUSES_NOT_IN_WORK), array_reverse(ORDER_STATUSES_BEGIN));
+$order_statuses = array_merge(array_reverse(ORDER_STATUSES_END), array_reverse(ORDER_STATUSES_IN_PRODUCTION), array_reverse(ORDER_STATUSES_IN_WORK), array_reverse(ORDER_STATUSES_CALCULATED), array_reverse(ORDER_STATUSES_BEGIN));
 $order_statuses_dictionary = array();
 $i = 0;
 

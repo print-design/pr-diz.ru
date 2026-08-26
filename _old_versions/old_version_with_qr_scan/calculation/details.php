@@ -357,7 +357,7 @@ if($status_id == ORDER_STATUS_DRAFT || $status_id == ORDER_STATUS_CALCULATION) {
             $backlink_get = '';
             
             if(in_array($status_id, array(ORDER_STATUS_CALCULATION, ORDER_STATUS_TECHMAP))) {
-                $backlink_get = BuildQueryAddRemove('status', ORDER_STATUS_NOT_IN_WORK, 'id');
+                $backlink_get = BuildQueryAddRemove('status', "ORDER STATUS NOT IN WORK", 'id');
             }
             elseif(in_array ($status_id, array(ORDER_STATUS_DRAFT, ORDER_STATUS_TRASH))) {
                 $backlink_get = BuildQueryAddRemove('status', $status_id, 'id');

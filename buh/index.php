@@ -19,21 +19,21 @@ function OrderLink($param) {
 // Статус
 $status_id = null;
 
-if(null !== filter_input(INPUT_GET, 'status')) {
-    $status_id = filter_input(INPUT_GET, 'status');
+if(null !== filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT)) {
+    $status_id = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
 }
 
 // В производстве
 $production = false;
 
-if(filter_input(INPUT_GET, 'production') == 1) {
+if(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
     $production = true;
 }
 
 // Оплачено
 $paid = false;
 
-if(filter_input(INPUT_GET, 'paid') == 1) {
+if(filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1) {
     $paid = true;
 }
 
@@ -93,7 +93,20 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1 text-nowrap">
-                    <h1 class="d-inline"><?= key_exists($status_id, ORDER_STATUS_NAMES) ? ORDER_STATUS_NAMES[$status_id] : "Производят" ?></h1>
+                    <?php
+                    $title = "Все";
+                    
+                    if(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
+                        $title = "Производят";
+                    }
+                    elseif(filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1) {
+                        $title = "Оплачено";
+                    }
+                    elseif(!empty ($status_id)) {
+                        $title = ORDER_STATUS_NAMES[$status_id];
+                    }
+                    ?>
+                    <h1 class="d-inline"><?= $title ?></h1>
                     <?php
                     // Фильтр
                     function GetFilter(&$params) {
@@ -124,7 +137,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                                 $filter .= " and false";
                             }
                             else {
-                                $filter .= " and c.customer_id = ? and (select count(id) from calculation where customer_id = c.customer_id and id <= c.id) = ?";
+                                $filter .= " and c.customer_id = ? and c.duplicate_num_for_customer = ?";
                                 array_push($params, $find_substrings[0], $find_substrings[1]);
                             }
                         }
@@ -135,8 +148,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     // Общее количество работ для установления количества страниц в постраничном выводе
                     $sql = "select count(distinct c.id) "
                             . "from calculation c "
-                            . "inner join customer cus on c.customer_id = cus.id "
-                            . "inner join user u on c.manager_id = u.id ";
+                            . "left join customer cus on c.customer_id = cus.id ";
                     $params = array();
                     
                     if($paid) {
@@ -274,8 +286,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
                     . "duplicate_shipping_cost, duplicate_payment_total "
                     . "from calculation c "
-                    . "inner join customer cus on c.customer_id = cus.id "
-                    . "inner join user u on c.manager_id = u.id ";
+                    . "left join customer cus on c.customer_id = cus.id "
+                    . "left join user u on c.manager_id = u.id ";
             $params = [];
             if($paid) {
                 $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
@@ -364,7 +376,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td>
-                        <a href="order.php<?= BuildQuery('id', $row['id']) ?>">
+                        <a href="details.php<?= BuildQuery('id', $row['id']) ?>">
                             <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
                             </svg>

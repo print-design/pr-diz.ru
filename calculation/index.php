@@ -45,14 +45,31 @@ function GetPrintingsWithCases($number) {
     return $result;
 }
 
+// Статус
+$status_id = null;
+
+if(null !== filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT)) {
+    $status_id = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
+}
+
+// Производят
+$production = false;
+
+if(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
+    $production = true;
+}
+
+// Расчёты
+$calculated = false;
+
+if(filter_input(INPUT_GET, 'calculated', FILTER_VALIDATE_INT) == 1) {
+    $calculated = true;
+}
+
 // Отображение статуса
 function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) {
     include '../include/order_status_index.php';
 }
-
-$status_id = filter_input(INPUT_GET, 'status');
-if(empty($status_id)) $title = ORDER_STATUS_TITLES[ORDER_STATUS_IN_WORK];
-else $title = ORDER_STATUS_TITLES[$status_id];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -77,71 +94,100 @@ else $title = ORDER_STATUS_TITLES[$status_id];
             ?>
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1 text-nowrap">
+                    <?php
+                    $title = "В работе";
+                    
+                    if($production) {
+                        $title = "Производят";
+                    }
+                    elseif($calculated) {
+                        $title = "Расчёты";
+                    }
+                    elseif(!empty ($status_id)) {
+                        $title = ORDER_STATUS_NAMES[$status_id];
+                    }
+                    ?>
                     <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
-                    $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_WORK).")";
-                    $params = [];
-                    
-                    if(!empty($status_id) && $status_id == ORDER_STATUS_NOT_IN_WORK) {
-                        $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_NOT_IN_WORK).")";
-                    }
-                    elseif(!empty ($status_id) && $status_id == ORDER_STATUS_IN_PRODUCTION) {
-                        $where = " where c.duplicate_status_id in (". implode(', ', ORDER_STATUSES_IN_PRODUCTION).")";
-                    }
-                    elseif(!empty($status_id)) {
-                        $where = " where c.duplicate_status_id = ?";
-                        $params[] = $status_id;
-                    }
-                    
-                    $unit = filter_input(INPUT_GET, 'unit');
-                    if(!empty($unit)) {
-                        $where .= " and c.unit=?";
-                        $params[] = $unit;
-                    }
-                    
-                    $work_type = filter_input(INPUT_GET, 'work_type');
-                    if(!empty($work_type)) {
-                        $where .= " and c.work_type_id=?";
-                        $params[] = $work_type;
-                    }
-                    
-                    $manager = filter_input(INPUT_GET, 'manager');
-                    if(empty($manager) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
-                        $manager = GetUserId();
-                    }
-                    if(!empty($manager)) {
-                        $where .= " and c.manager_id=?";
-                        $params[] = $manager;
-                    }
-                    
-                    $customer = filter_input(INPUT_GET, 'customer');
-                    if(!empty($customer)) {
-                        $where .= " and c.customer_id=?";
-                        $params[] = $customer;
-                    }
-                    
-                    $name = filter_input(INPUT_GET, 'name');
-                    if(!empty($name)) {
-                        $where .= " and trim(c.name)=?";
-                        $params[] = $name;
-                    }
-                    
-                    $find = trim(filter_input(INPUT_GET, 'find') ?? '');
-                    if(!empty($find)) {
-                        $find_substrings = explode('-', $find);
-                        if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
-                            $where .= " and false";
+                    function GetFilter(&$params) {
+                        $filter = '';
+                        
+                        $unit = filter_input(INPUT_GET, 'unit');
+                        if(!empty($unit)) {
+                            $filter .= " and c.unit = ?";
+                            $params[] = $unit;
                         }
-                        else {
-                            $where .= " and c.customer_id = ? and c.duplicate_num_for_customer = ?";
-                            $params[] = intval($find_substrings[0]);
-                            $params[] = intval($find_substrings[1]);
+                        
+                        $work_type = filter_input(INPUT_GET, 'work_type', FILTER_VALIDATE_INT);
+                        if(!empty($work_type)) {
+                            $filter .= " and c.work_type_id = ?";
+                            $params[] = $work_type;
                         }
+                        
+                        $manager = filter_input(INPUT_GET, 'manager', FILTER_VALIDATE_INT);
+                        if(empty($manager) && !IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR]))) {
+                            $manager = GetUserId();
+                        }
+                        if(!empty($manager)) {
+                            $filter .= " and c.manager_id = ?";
+                            $params[] = $manager;
+                        }
+                        
+                        $customer = filter_input(INPUT_GET, 'customer');
+                        if(!empty($customer)) {
+                            $filter .= " and c.customer_id=?";
+                            $params[] = $customer;
+                        }
+                        
+                        $name = filter_input(INPUT_GET, 'name');
+                        if(!empty($name)) {
+                            $filter .= " and trim(c.name)=?";
+                            $params[] = $name;
+                        }
+                        
+                        $find = trim(filter_input(INPUT_GET, 'find') ?? '');
+                        if(!empty($find)) {
+                            $find_substrings = explode('-', $find);
+                            if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
+                                $filter .= " and false";
+                            }
+                            else {
+                                $filter .= " and c.customer_id = ? and c.duplicate_num_for_customer = ?";
+                                $params[] = intval($find_substrings[0]);
+                                $params[] = intval($find_substrings[1]);
+                            }
+                        }
+                        
+                        return $filter;
                     }
-
+                    
                     // Общее количество расчётов для установления количества страниц в постраничном выводе
-                    $sql = "select count(c.id) from calculation c left join customer cus on c.customer_id = cus.id$where";
+                    $sql = "select count(c.id) "
+                            . "from calculation c "
+                            . "left join customer cus on c.customer_id = cus.id ";
+                    
+                    if($production) {
+                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_PRODUCTION), '?'));
+                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                        $params = ORDER_STATUSES_IN_PRODUCTION;
+                    }
+                    elseif($calculated) {
+                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_CALCULATED), '?'));
+                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                        $params = ORDER_STATUSES_CALCULATED;
+                    }
+                    elseif(!empty ($status_id)) {
+                        $sql .= "where c.duplicate_status_id = ?";
+                        $params = [$status_id];
+                    }
+                    else {
+                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_WORK), '?'));
+                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                        $params = ORDER_STATUSES_IN_WORK;
+                    }
+                    
+                    $sql .= GetFilter($params);
                     $fetcher = new Fetcher($sql, $params);
                     
                     if($row = $fetcher->Fetch()) {
@@ -230,45 +276,6 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                 </thead>
                 <tbody>
                     <?php
-                    // Сортировка
-                    $orderby = "order by status_date desc, c.id desc";
-                    
-                    if(array_key_exists('order', $_REQUEST)) {
-                        switch ($_REQUEST['order']) {
-                            case 'id':
-                                $orderby = "order by c.customer_id desc, c.id desc";
-                                break;
-                            
-                            case 'date':
-                                $orderby = "order by c.id desc";
-                                break;
-                            
-                            case 'customer':
-                                $orderby = "order by cus.name asc";
-                                break;
-                            
-                            case 'name':
-                                $orderby = "order by c.name asc";
-                                break;
-                            
-                            case 'quantity':
-                                $orderby = "order by c.quantity desc";
-                                break;
-                            
-                            case 'work_type':
-                                $orderby = "order by c.work_type_id";
-                                break;
-                            
-                            case 'manager':
-                                $orderby = "order by u.last_name asc, u.first_name asc";
-                                break;
-                            
-                            case 'status':
-                                $orderby = "order by status_id";
-                                break;
-                        }
-                    }
-                    
                     $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
                             . "c.duplicate_quantities quantities, c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
                             . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
@@ -276,10 +283,74 @@ else $title = ORDER_STATUS_TITLES[$status_id];
                             . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length "
                             . "from calculation c "
                             . "left join customer cus on c.customer_id = cus.id "
-                            . "left join user u on c.manager_id = u.id$where "
-                            . "$orderby limit $pager_skip, $pager_take";
-                    $fetcher = new Fetcher($sql, $params);
+                            . "left join user u on c.manager_id = u.id ";
                     
+                    if($production) {
+                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_PRODUCTION), '?'));
+                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                        $params = ORDER_STATUSES_IN_PRODUCTION;
+                    }
+                    elseif($calculated) {
+                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_CALCULATED), '?'));
+                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                        $params = ORDER_STATUSES_CALCULATED;
+                    }
+                    elseif(!empty ($status_id)) {
+                        $sql .= "where c.duplicate_status_id = ?";
+                        $params = [$status_id];
+                    }
+                    else {
+                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_WORK), '?'));
+                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                        $params = ORDER_STATUSES_IN_WORK;
+                    }
+                    
+                    $sql .= GetFilter($params);
+                    
+                    // Сортировка
+                    if(array_key_exists('order', $_REQUEST)) {
+                        switch ($_REQUEST['order']) {
+                            case 'id':
+                                $sql .= "order by c.customer_id desc, c.id desc";
+                                break;
+                            
+                            case 'date':
+                                $sql .= "order by c.id desc";
+                                break;
+                            
+                            case 'customer':
+                                $sql .= "order by cus.name asc";
+                                break;
+                            
+                            case 'name':
+                                $sql .= "order by c.name asc";
+                                break;
+                            
+                            case 'quantity':
+                                $sql .= "order by c.quantity desc";
+                                break;
+                            
+                            case 'work_type':
+                                $sql .= "order by c.work_type_id";
+                                break;
+                            
+                            case 'manager':
+                                $sql .= "order by u.last_name asc, u.first_name asc";
+                                break;
+                            
+                            case 'status':
+                                $sql .= "order by status_id";
+                                break;
+                        }
+                    }
+                    else {
+                        $sql .= " order by status_date desc, c.id desc";
+                    }
+                    
+                    $sql .= " limit ?, ?";
+                    array_push($params, $pager_skip, $pager_take);
+                    
+                    $fetcher = new Fetcher($sql, $params);
                     while ($row = $fetcher->Fetch()):
                         
                     $rowcounter++;

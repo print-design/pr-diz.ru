@@ -55,7 +55,6 @@ if($folder == "buh") {
                 <a class="nav-link<?=$paid_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("paid", 1, ["production", "status", "page", "order", "from", "to"]) ?>">Оплачено</a>
             </li>
         </ul>
-        <div class="ml-auto"></div>
         <?php
         if(file_exists('find.php')) {
             include 'find.php';
