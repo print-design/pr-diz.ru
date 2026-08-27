@@ -8,8 +8,8 @@ $result['min_weight'] = 0;
 $result['min_square'] = 0;
 $result['error'] = '';
 
-$sql = "select min_weight, min_square from norm_machine where machine_id = $machine_id order by id desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select min_weight, min_square from norm_machine where machine_id = ? order by id desc limit 1";
+$fetcher = new Fetcher($sql, [$machine_id]);
 $error_message = $fetcher->error;
 
 if(empty($error_message)) {

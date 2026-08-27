@@ -6,8 +6,8 @@ $machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 echo "<option value='' hidden='hidden'>Рапорт...</option>";
 
 if(!empty($machine_id)) {
-    $sql = "select value from raport where active = 1 and machine_id = $machine_id order by value";
-    $grabber = new Grabber($sql);
+    $sql = "select value from raport where active = 1 and machine_id = ? order by value";
+    $grabber = new Grabber($sql, [$machine_id]);
     $result = $grabber->result;
     
     foreach($result as $row) {

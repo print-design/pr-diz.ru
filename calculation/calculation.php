@@ -1144,7 +1144,7 @@ class CalculationBase {
             }
             
             $sql = "select extracharge_type_id, from_weight, to_weight, value from extracharge";
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, []);
             while($row = $fetcher->Fetch()) {
                 array_push($data_extracharge, new DataExtracharge($row['value'], $row['extracharge_type_id'], $row['from_weight'], $row['to_weight']));
             }
