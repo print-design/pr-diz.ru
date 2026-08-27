@@ -36,8 +36,8 @@ $sql = "select c.name, c.date, c.customer_id, c.quantity, c.unit, c.raport, c.le
         . "(select gap_raport from norm_gap where date <= c.date order by id desc limit 1) as gap_raport "
         . "from calculation c "
         . "inner join customer cus on c.customer_id = cus.id "
-        . "where c.id = $calculation_id";
-$fetcher = new Fetcher($sql);
+        . "where c.id = ?";
+$fetcher = new Fetcher($sql, [$calculation_id]);
 if($row = $fetcher->Fetch()) {
     $str_name = $row['name'];
     $str_customer = $row['customer'];
@@ -66,9 +66,9 @@ $sql = "select pe.work_id, pe.machine_id, pe.date, pe.shift, pe1.last_name "
         . "from plan_edition pe "
         . "left join plan_workshift1 pw on pw.work_id = pe.work_id and pw.machine_id = pe.machine_id and pw.date = pe.date and pw.shift = pe.shift "
         . "left join plan_employee pe1 on pw.employee1_id = pe1.id "
-        . "where pe.calculation_id = $calculation_id";
+        . "where pe.calculation_id = ?";
 
-$grabber = new Grabber($sql);
+$grabber = new Grabber($sql, [$calculation_id]);
 $plan_editions = $grabber->result;
 
 $editions_by_work = array();
@@ -110,8 +110,8 @@ foreach($order_statuses as $order_status):
 endif;
 endforeach;
 
-$sql = "select status_id, date from calculation_status_history where calculation_id = $calculation_id order by id desc";
-$fetcher = new Fetcher($sql);
+$sql = "select status_id, date from calculation_status_history where calculation_id = ? order by id desc";
+$fetcher = new Fetcher($sql, [$calculation_id]);
 while($row = $fetcher->Fetch()):
 ?>
 <div>
