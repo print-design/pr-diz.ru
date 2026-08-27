@@ -10,37 +10,45 @@ $repeat_from = filter_input(INPUT_GET, 'repeat_from');
 $result = array();
 $result['error'] = '';
 
-$sql = "select id from calculation_cliche where calculation_quantity_id = $printing_id and sequence = $sequence";
-$fetcher = new Fetcher($sql);
+$sql = "select id from calculation_cliche where calculation_quantity_id = ? and sequence = ?";
+$fetcher = new Fetcher($sql, [$printing_id, $sequence]);
 $error_message = $fetcher->error;
 
 if(empty($error_message)) {
     if($row = $fetcher->Fetch()) {
         $id = $row[0];
         if(empty($cliche)) {
-            $sql = "delete from calculation_cliche where id = $id";
+            $sql = "delete from calculation_cliche where id = ?";
+            $params = [$id];
         }
         elseif($cliche == CLICHE_REPEAT) {
-            $sql = "update calculation_cliche set name = '$cliche', repeat_from = $repeat_from where id = $id";
+            $sql = "update calculation_cliche set name = ?, repeat_from = ? where id = ?";
+            $params = [$cliche, $repeat_from, $id];
         }
         else {
-            $sql = "update calculation_cliche set name = '$cliche', repeat_from = NULL where id = $id";
+            $sql = "update calculation_cliche set name = ?, repeat_from = NULL where id = ?";
+            $params = [$cliche, $id];
         }
     }
     elseif(!empty ($repeat_from)) {
-        $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name, repeat_from) values($printing_id, $sequence, '$cliche', $repeat_from)";
+        $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name, repeat_from) values(?, ?, ?, ?)";
+        $params = [$printing_id, $sequence, $cliche, $repeat_from];
     }
     else {
-        $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name, repeat_from) values($printing_id, $sequence, '$cliche', NULL)";
+        $sql = "insert into calculation_cliche(calculation_quantity_id, sequence, name, repeat_from) values(?, ?, ?, NULL)";
+        $params = [$printing_id, $sequence, $cliche];
     }
     
-    $executer = new Executer($sql);
+    $executer = new Executer($sql, $params);
     $error_message = $executer->error;
 }
 
 if(empty($error_message)) {
-    $sql = "select(select count(id) FROM calculation_cliche WHERE name = '".CLICHE_FLINT."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) flint_used, (select count(id) FROM calculation_cliche WHERE name = '".CLICHE_KODAK."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) kodak_used, (select count(id) FROM calculation_cliche WHERE name = '".CLICHE_OLD."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = $printing_id))) old_used";
-    $fetcher = new Fetcher($sql);
+    $sql = "select"
+            . " (select count(id) FROM calculation_cliche WHERE name = '".CLICHE_FLINT."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = ?))) flint_used,"
+            . " (select count(id) FROM calculation_cliche WHERE name = '".CLICHE_KODAK."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = ?))) kodak_used,"
+            . " (select count(id) FROM calculation_cliche WHERE name = '".CLICHE_OLD."' and calculation_quantity_id in (select id from calculation_quantity where calculation_id = (select calculation_id from calculation_quantity where id = ?))) old_used";
+    $fetcher = new Fetcher($sql, [$printing_id, $printing_id, $printing_id]);
     $error_message = $fetcher->error;
     
     if($row = $fetcher->Fetch()) {
