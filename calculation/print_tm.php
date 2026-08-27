@@ -138,13 +138,13 @@ $quantities_sum = 0;
 $lengths_sum = 0;
 
 if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
-    $sql = "select id, quantity, length from calculation_quantity where calculation_id = $id";
-    $grabber = new Grabber($sql);
+    $sql = "select id, quantity, length from calculation_quantity where calculation_id = ?";
+    $grabber = new Grabber($sql, [$id]);
     $error_message = $grabber->error;
     $printings = $grabber->result;
     
-    $sql = "select calculation_quantity_id, sequence, name, repeat_from from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = $id)";
-    $fetcher = new Fetcher($sql);
+    $sql = "select calculation_quantity_id, sequence, name, repeat_from from calculation_cliche where calculation_quantity_id in (select id from calculation_quantity where calculation_id = ?)";
+    $fetcher = new Fetcher($sql, [$id]);
     $error_message = $fetcher->error;
     while($row = $fetcher->Fetch()) {
         $cliches[$row['calculation_quantity_id']][$row['sequence']] = $row['name'];
@@ -899,8 +899,8 @@ $current_date_time = date("dmYHis");
                                     </td>
                                 </tr>
                                 <?php
-                                $sql = "select name, image1, image2 from calculation_stream where calculation_id = $id order by position";
-                                $grabber = new Grabber($sql);
+                                $sql = "select name, image1, image2 from calculation_stream where calculation_id = ? order by position";
+                                $grabber = new Grabber($sql, [$id]);
                                 $streams = $grabber->result;
                                 $i = 0;
                                 
