@@ -9,14 +9,6 @@ if(empty($cutting_wind_id)) {
 
 // Текущее время
 $current_date_time = date("dmYHis");
-
-// Находим id раскроя
-$cut_id = 0;
-$sql = "select cut_id from cut_wind where id=$cutting_wind_id";
-$fetcher = new Fetcher($sql);
-if($row = $fetcher->Fetch()) {
-    $cut_id = $row[0];
-}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -47,9 +39,9 @@ if($row = $fetcher->Fetch()) {
                 . "left join supplier s on r.supplier_id = s.id "
                 . "left join film_variation fv on r.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
-                . "where r.cutting_wind_id=$cutting_wind_id";
+                . "where r.cutting_wind_id=?";
         $current_roll = 0;
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$cutting_wind_id]);
 
         while($row = $fetcher->Fetch()):
         $id = $row['id'];
