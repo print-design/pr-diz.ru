@@ -129,7 +129,7 @@ $total_weight = $row['total_weight'];
                         <?php
                         $get_count = 0;
                         foreach ($_GET as $get_key=>$get_value) {
-                            if(!empty($get_value) && $get_key != PAGE && $get_key != "order" && $get_key != "find") {
+                            if(!empty($get_value) && $get_key != PAGE && $get_key != "order" && $get_key != "find" && $get_key != "status") {
                                 $get_count++;
                             }
                         }
@@ -349,7 +349,7 @@ $total_weight = $row['total_weight'];
                                 </td>
                             </tr>
                         </table>
-                        <a href="<?=APPLICATION ?>/roll/" type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 5px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</a>
+                        <a href="<?=APPLICATION ?>/roll/<?= empty(filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT)) ? '' : '?status='. filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT) ?>" type="button" class="btn" name="filter_clear" style="margin-top: 20px; margin-bottom: 35px; padding: 5px; border-radius: 8px; background-color: #E4E1ED;"><img src="../images/icons/white-times.svg" />&nbsp;&nbsp;Очистить</a>
                         <button type="button" class="btn" data-dismiss="modal" style="margin-top: 20px; margin-bottom: 35px; padding: 5px; border-radius: 8px; background-color: #EEEEEE;">Отменить</button>
                         <button type="submit" class="btn" style="margin-top: 20px; margin-bottom: 35px; padding: 5px; border-radius: 8px; background-color: #CECACA;">Применить</button>
                     </form>
