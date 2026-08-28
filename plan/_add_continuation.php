@@ -41,8 +41,8 @@ function GetNextDateShift($date, $shift) {
 }
 
 // Проверяем, точно ли у этого тиража нет допечатки
-$sql = "select worktime_continued from plan_edition where id = $id";
-$fetcher = new Fetcher($sql);
+$sql = "select worktime_continued from plan_edition where id = ?";
+$fetcher = new Fetcher($sql, [$id]);
 if($row = $fetcher->Fetch()) {
     if(!empty($row[0])) {
         echo json_encode(array('error' => 'Сначала удалите все допечатки'));
@@ -57,8 +57,8 @@ $worktime = 0;
 $work_id = 0;
 $machine_id = 0;
 
-$sql = "select date, shift, worktime, work_id, machine_id from plan_edition where id = $id";
-$fetcher = new Fetcher($sql);
+$sql = "select date, shift, worktime, work_id, machine_id from plan_edition where id = ?";
+$fetcher = new Fetcher($sql, [$id]);
 if($row = $fetcher->Fetch()) {
     $date = $row['date'];
     $shift = $row['shift'];
@@ -72,8 +72,8 @@ $sum_edition = 0;
 $sum_continuation = 0;
 $sum_event = 0;
 
-$sql = "select sum(worktime) from plan_edition where id <> $id and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-$fetcher = new Fetcher($sql);
+$sql = "select sum(worktime) from plan_edition where id <> ? and work_id = ? and machine_id = ? and date = ? and shift = ?";
+$fetcher = new Fetcher($sql, [$id, $work_id, $machine_id, $date, $shift]);
 if($row = $fetcher->Fetch()) {
     $sum_edition = $row[0];
     
@@ -85,8 +85,8 @@ if($row = $fetcher->Fetch()) {
 $sql = "select sum(pc.worktime) "
         . "from plan_continuation pc "
         . "inner join plan_edition pe on pc.plan_edition_id = pe.id "
-        . "where pe.work_id = $work_id and pe.machine_id = $machine_id and pc.date = '$date' and pc.shift = '$shift'";
-$fetcher = new Fetcher($sql);
+        . "where pe.work_id = ? and pe.machine_id = ? and pc.date = ? and pc.shift = ?";
+$fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
 if($row = $fetcher->Fetch()) {
     $sum_continuation = $row[0];
     
@@ -95,8 +95,8 @@ if($row = $fetcher->Fetch()) {
     }
 }
 
-$sql = "select sum(worktime) from plan_event where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-$fetcher = new Fetcher($sql);
+$sql = "select sum(worktime) from plan_event where in_plan = 1 and work_id = ? and machine_id = ? and date = ? and shift = ?";
+$fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
 if($row = $fetcher->Fetch()) {
     $sum_event = $row[0];
     
@@ -112,8 +112,8 @@ if($start_time < 0) {
 }
 
 // Указываем оставшееся в текущей смене время для этого тиража
-$sql = "update plan_edition set worktime_continued = $start_time where id = $id";
-$executer = new Executer($sql);
+$sql = "update plan_edition set worktime_continued = ? where id = ?";
+$executer = new Executer($sql, [$start_time, $id]);
 $error = $executer->error;
 
 // Вычисляем, сколько времени нужно для допечаток
@@ -126,20 +126,20 @@ if($continuation_time > 0) {
     
     // Увеличиваем position у всех тиражей данной смены
     $sql = "update plan_edition set position = ifnull(position, 1) + 1 "
-            . "where work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
-    $executer = new Executer($sql);
+            . "where work_id = ? and machine_id = ? and date = ? and shift = ?";
+    $executer = new Executer($sql, [$work_id, $machine_id, $plan_continuation->date, $plan_continuation->shift]);
     $error = $executer->error;
     
     // Увеличиваем position у всех событий данной смены
     $sql = "update plan_event set position = ifnull(position, 1) + 1 "
-            . "where in_plan = 1 and work_id = $work_id and machine_id = $machine_id and date = '".$plan_continuation->date."' and shift = '".$plan_continuation->shift."'";
-    $executer = new Executer($sql);
+            . "where in_plan = 1 and work_id = ? and machine_id = ? and date = ? and shift = ?";
+    $executer = new Executer($sql, [$work_id, $machine_id, $plan_continuation->date, $plan_continuation->shift]);
     $error = $executer->error;
         
     // Создаём допечатку
     $sql = "insert into plan_continuation (date, shift, plan_edition_id, worktime, has_continuation) "
-            . "values ('".$plan_continuation->date."', '".$plan_continuation->shift."', ".$plan_continuation->plan_edition_id.", ".$plan_continuation->worktime.", ".$plan_continuation->has_continuation.")";
-    $executer = new Executer($sql);
+            . "values (?, ?, ?, ?, ?)";
+    $executer = new Executer($sql, [$plan_continuation->date, $plan_continuation->shift, $plan_continuation->plan_edition_id, $plan_continuation->worktime, $plan_continuation->has_continuation]);
     $error = $executer->error;
 }
 
