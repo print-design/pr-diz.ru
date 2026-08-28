@@ -18,9 +18,9 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
         $form_valid = false;
     }
     
-    $name = addslashes($name ?? '');
-    $sql = "select count(id) from film where name = '$name'";
-    $fetcher = new Fetcher($sql);
+    $name = $name ?? '';
+    $sql = "select count(id) from film where name = ?";
+    $fetcher = new Fetcher($sql, [$name]);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
             $error_message = "Такая марка пленки уже есть";
@@ -29,8 +29,8 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
     }
     
     if($form_valid) {
-        $sql = "insert into film(name) values('$name')";
-        $executer = new Executer($sql);
+        $sql = "insert into film(name) values(?)";
+        $executer = new Executer($sql, [$name]);
         $error_message = $executer->error;
         $film_insert_id = $executer->insert_id;
     }
@@ -56,8 +56,8 @@ if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
         $form_valid = false;
     }
     
-    $sql = "select count(id) from film_variation where film_id = $film_id and thickness = $thickness and round(weight, 4) = $weight";
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from film_variation where film_id = ? and thickness = ? and round(weight, 4) = ?";
+    $fetcher = new Fetcher($sql, [$film_id, $thickness, $weight]);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
             $error_message = "Для этой марки пленки уже есть такие параметры";
@@ -66,8 +66,8 @@ if(null !== filter_input(INPUT_POST, 'create_film_variation_submit')) {
     }
     
     if($form_valid) {
-        $sql = "insert into film_variation(film_id, thickness, weight) values($film_id, $thickness, $weight)";
-        $executer = new Executer($sql);
+        $sql = "insert into film_variation(film_id, thickness, weight) values(?, ?, ?)";
+        $executer = new Executer($sql, [$film_id, $thickness, $weight]);
         $error_message = $executer->error;
     }
 }
@@ -82,19 +82,19 @@ if(null !== filter_input(INPUT_POST, 'price_submit')) {
         $eco_price = null;
         $eco_currency = '';
     
-        $sql = "select eco_price, eco_currency from film_price where film_variation_id = $film_variation_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select eco_price, eco_currency from film_price where film_variation_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($sql, [$film_variation_id]);
         if($row = $fetcher->Fetch()) {
             $eco_price = $row['eco_price'];
             $eco_currency = $row['eco_currency'];
         }
     
         if(empty($eco_price)) {
-            $eco_price = "NULL";
+            $eco_price = null;
         }
     
-        $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values ($film_variation_id, $price, '$currency', $eco_price, '$eco_currency')";
-        $executer = new Executer($sql);
+        $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values (?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$film_variation_id, $price, $currency, $eco_price, $eco_currency]);
         $error_message = $executer->error;
     }
 }
@@ -106,22 +106,18 @@ if(null !== filter_input(INPUT_POST, 'eco_price_submit')) {
     $eco_currency = filter_input(INPUT_POST, 'eco_currency');
     
     if(!empty($film_variation_id) && !empty($eco_price) && !empty($eco_currency)) {
-        $price = "NULL";
+        $price = null;
         $currency = '';
         
-        $sql = "select price, currency from film_price where film_variation_id = $film_variation_id order by id desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select price, currency from film_price where film_variation_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($sql, [$film_variation_id]);
         if($row = $fetcher->Fetch()) {
             $price = $row['price'];
             $currency = $row['currency'];
         }
         
-        if($price == null) {
-            $price = "NULL";
-        }
-        
-        $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values ($film_variation_id, $price, '$currency', $eco_price, '$eco_currency')";
-        $executer = new Executer($sql);
+        $sql = "insert into film_price (film_variation_id, price, currency, eco_price, eco_currency) values (?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$film_variation_id, $price, $currency, $eco_price, $eco_currency]);
         $error_message = $executer->error;
     }
 }
@@ -133,8 +129,8 @@ if(null !== filter_input(INPUT_POST, 'other_price_submit')) {
     $currency = filter_input(INPUT_POST, 'currency');
     
     if(!empty($price_type) && !empty($price) && !empty($currency)) {
-        $sql = "insert into other_price (price_type, price, currency) values ($price_type, $price, '$currency')";
-        $executer = new Executer($sql);
+        $sql = "insert into other_price (price_type, price, currency) values (?, ?, ?)";
+        $executer = new Executer($sql, [$price_type, $price, $currency]);
         $error_message = $executer->error;
     }
 }
@@ -145,7 +141,7 @@ $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness,
         . "left join film_variation fv on fv.film_id = f.id "
         . "left join (select film_variation_id, price, currency, eco_price, eco_currency from film_price where id in (select max(id) from film_price group by film_variation_id)) fp on fp.film_variation_id = fv.id "
         . "order by f.name, fv.thickness, fv.weight";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, []);
 $films = array();
 while($row = $fetcher->Fetch()) {
     $film_id = $row['film_id'];
@@ -353,7 +349,7 @@ while($row = $fetcher->Fetch()) {
                 $customers_eco_currency = '';
                 
                 $sql = "select price, currency from other_price where price_type = ".PRICE_ECO_CUSTOMERS_MATERIAL." order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $fetcher = new Fetcher($sql, []);
                 
                 if($row = $fetcher->Fetch()) {
                     $customers_eco_price = $row['price'];
@@ -390,7 +386,7 @@ while($row = $fetcher->Fetch()) {
                 $other_eco_currency = '';
                 
                 $sql = "select price, currency from other_price where price_type = ".PRICE_ECO_OTHER_MATERIAL." order by id desc limit 1";
-                $fetcher = new Fetcher($sql);
+                $fetcher = new Fetcher($sql, []);
                 
                 if($row = $fetcher->Fetch()) {
                     $other_eco_price = $row['price'];
