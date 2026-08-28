@@ -39,8 +39,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Проверяем правильность веса, для всех ролей
     // Определяем имеющуюся длину и ширину
-    $sql = "select film_variation_id, length, width, net_weight from roll where id=$id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select film_variation_id, length, width, net_weight from roll where id=?";
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $old_film_variation_id = $row['film_variation_id'];
         $old_length = $row['length'];
@@ -90,33 +90,33 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
+    $comment = filter_input(INPUT_POST, 'comment') ?? '';
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
-        $sql = "select cell from roll_cell_history where roll_id = $id order by id desc limit 1";
-        $row = (new Fetcher($sql))->Fetch();
+        $sql = "select cell from roll_cell_history where roll_id = ? order by id desc limit 1";
+        $row = (new Fetcher($sql, [$id]))->Fetch();
         $cell = filter_input(INPUT_POST, 'cell');
         
         if((!$row || $row['cell'] != $cell) && !empty($cell)) {
             $user_id = GetUserId();
             
-            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($id, '$cell', $user_id)";
-            $error_message = (new Executer($sql))->error;
+            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
+            $error_message = (new Executer($sql, [$id, $cell, $user_id]))->error;
         }
         
         // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
-        $sql = "select status_id from roll_status_history where roll_id = $id order by id desc limit 1";
-        $row = (new Fetcher($sql))->Fetch();
+        $sql = "select status_id from roll_status_history where roll_id = ? order by id desc limit 1";
+        $row = (new Fetcher($sql, [$id]))->Fetch();
         $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
         
         if((!$row || $row['status_id'] != $status_id) && !empty($status_id)) {
             $user_id = GetUserId();
             
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($id, $status_id, $user_id)";
-            $error_message = (new Executer($sql))->error;
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values (?, ?, ?)";
+            $error_message = (new Executer($sql, [$id, $status_id, $user_id]))->error;
         }
         
         if(empty($error_message)) {
@@ -124,13 +124,13 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             
             // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql = "update roll set comment = '$comment' where id = $id";
+                $sql = "update roll set comment = ? where id = ?";
             }
             else {
-                $sql = "update roll set comment = concat(comment, ' ', '$comment') where id = $id";
+                $sql = "update roll set comment = concat(comment, ' ', ?) where id = ?";
             }
             
-            $error_message = (new Executer($sql))->error;
+            $error_message = (new Executer($sql, [$comment, $id]))->error;
         }
         
         if(empty($error_message)) {
@@ -157,9 +157,9 @@ $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i'
         . "inner join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
         . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
-        . "where r.id = $id";
+        . "where r.id = ?";
 
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher($sql, [$id]))->Fetch();
 $date = $row['date'];
 $time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
@@ -250,7 +250,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <select id="supplier_id" name="supplier_id" class="form-control<?=$supplier_id_valid ?>"<?=$supplier_id_disabled ?>>
                             <option value="">Выберите поставщика</option>
                             <?php
-                            $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
+                            $suppliers = (new Grabber("select id, name from supplier order by name", []))->result;
                             foreach ($suppliers as $supplier) {
                                 $id = $supplier['id'];
                                 $name = $supplier['name'];
@@ -270,7 +270,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <select id="film_id" name="film_id" class="form-control<?=$film_id_valid ?>"<?=$film_id_disabled ?>>
                             <option value="">Выберите марку</option>
                             <?php
-                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
+                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = ?))", [$supplier_id]))->result;
                             foreach ($films as $film) {
                                 $id = $film['id'];
                                 $name = $film['name'];
@@ -299,7 +299,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
                             <select id="film_variation_id" name="film_variation_id" class="form-control<?=$film_variation_id_valid ?>"<?=$film_variation_id_disabled ?>>
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ? and id in (select film_variation_id from supplier_film_variation where supplier_id = ?) order by thickness", [$film_id, $supplier_id]))->result;
                                 foreach ($film_variations as $film_variation) {
                                     $_id = $film_variation['id'];
                                     $thickness = $film_variation['thickness'];
@@ -390,8 +390,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         $sql = "select cstr.width "
                                 . "from cut_source cs "
                                 . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and cs.is_from_pallet = 0";
-                        $fetcher = new Fetcher($sql);
+                                . "where cs.roll_id = ? and cs.is_from_pallet = 0";
+                        $fetcher = new Fetcher($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
                             if($result != "") {
@@ -404,8 +404,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         $sql = "select cstr.width "
                                 . "from cutting_source cs "
                                 . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and cs.is_from_pallet = 0";
-                        $fetcher = new Fetcher($sql);
+                                . "where cs.roll_id = ? and cs.is_from_pallet = 0";
+                        $fetcher = new Fetcher($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
                         $result = "";
                         while($row = $fetcher->Fetch()) {
                             if($result != "") {
@@ -430,8 +430,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                                 . "from cut_wind cw "
                                 . "inner join cut c on cw.cut_id = c.id "
                                 . "inner join cut_stream cstr on cw.cut_id = cstr.cut_id "
-                                . "where cw.id = $cut_wind_id";
-                        $fetcher = new Fetcher($sql);
+                                . "where cw.id = ?";
+                        $fetcher = new Fetcher($sql, [$cut_wind_id]);
                         $result = "";
                         while ($row = $fetcher->Fetch()) {
                             if($result != "") {
@@ -458,8 +458,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                                     . "inner join cutting_source cs on cw.cutting_source_id = cs.id "
                                     . "inner join cutting c on cs.cutting_id = c.id "
                                     . "inner join cutting_stream cstr on cstr.cutting_id = c.id "
-                                    . "where cw.id = $cutting_wind_id";
-                            $fetcher = new Fetcher($sql);
+                                    . "where cw.id = ?";
+                            $fetcher = new Fetcher($sql, [$cutting_wind_id]);
                             $result = "";
                             while ($row = $fetcher->Fetch()) {
                                 if($result != "") {
@@ -478,8 +478,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     $sql = "select cs.width "
                             . "from cut c "
                             . "inner join cut_stream cs on cs.cut_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                    $grabber = new Grabber($sql);
+                            . "where c.remain = ?";
+                    $grabber = new Grabber($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
                     if(count($grabber->result) > 0):
                     ?>
                     <div class="form-group">
@@ -505,8 +505,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                     $sql = "select cs.width "
                             . "from cutting c "
                             . "inner join cutting_stream cs on cs.cutting_id = c.id "
-                            . "where c.remain = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                    $grabber = new Grabber($sql);
+                            . "where c.remain = ?";
+                    $grabber = new Grabber($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
                     if(count($grabber->result) > 0):
                     ?>
                     <div class="form-group">
@@ -572,8 +572,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         $sql = "select u.last_name, left(u.first_name, 1) first_name, date_format(rch.date, '%d.%m.%Y %H:%i') date, rch.cell "
                                 . "from roll_cell_history rch "
                                 . "inner join user u on rch.user_id = u.id "
-                                . "where rch.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                        $fetcher = new Fetcher($sql);
+                                . "where rch.roll_id = ?";
+                        $fetcher = new Fetcher($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
                         while($row = $fetcher->Fetch()):
                         ?>
                         <tr><td><?=$row['last_name'].' '.$row['first_name'].'.' ?></td><td><?=$row['date'] ?></td><td>Ячейка: <?=$row['cell'] ?></td></tr>
@@ -595,7 +595,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
             
             <?php
             $sql = "SELECT fv.film_id, fv.id, fv.thickness, fv.weight FROM film_variation fv";
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, []);
             while ($row = $fetcher->Fetch()):
             ?>
             if(films.get(<?= $row['film_id'] ?>) === undefined) {
