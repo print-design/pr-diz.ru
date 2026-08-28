@@ -152,7 +152,7 @@ $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, DATE_FORMAT(r.date, '%H:%i'
         . "(select film_id from film_variation where id = r.film_variation_id) film_id, "
         . "r.net_weight, rch.cell, "
         . "rsh.status_id status_id, DATE_FORMAT(rsh.date, '%d.%m.%Y') status_date, DATE_FORMAT(rsh.date, '%H.%i') status_time, "
-        . "r.comment, r.cut_wind_id, r.cutting_wind_id "
+        . "r.comment, r.cutting_wind_id "
         . "from roll r "
         . "inner join user u on r.storekeeper_id = u.id "
         . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
@@ -195,7 +195,6 @@ $status_time = $row['status_time'];
 $comment = filter_input(INPUT_POST, 'comment');
 if(null === $comment) $comment = $row['comment'];
 
-$cut_wind_id = $row['cut_wind_id'];
 $cutting_wind_id = $row['cutting_wind_id'];
 ?>
 <!DOCTYPE html>
@@ -388,20 +387,6 @@ $cutting_wind_id = $row['cutting_wind_id'];
                         <?=$status_date.' в '.$status_time ?><br />
                         <?php
                         $sql = "select cstr.width "
-                                . "from cut_source cs "
-                                . "inner join cut_stream cstr on cs.cut_id = cstr.cut_id "
-                                . "where cs.roll_id = ? and cs.is_from_pallet = 0";
-                        $fetcher = new Fetcher($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
-                        $result = "";
-                        while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row[0].' мм';
-                        }
-                        echo $result;
-                        
-                        $sql = "select cstr.width "
                                 . "from cutting_source cs "
                                 . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
                                 . "where cs.roll_id = ? and cs.is_from_pallet = 0";
@@ -413,33 +398,6 @@ $cutting_wind_id = $row['cutting_wind_id'];
                             }
                             $result .= $row[0].' мм';
                         }
-                        echo $result;
-                        ?>
-                        </div>
-                    </div>
-                    <?php
-                    // Если этот рулон появился в результате нарезки (старая версия)
-                    elseif(!empty($cut_wind_id)):
-                    ?>
-                    <div class="form-group">
-                        <label>Получился из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?php
-                        $sql = "select cstr.width "
-                                . "from cut_wind cw "
-                                . "inner join cut c on cw.cut_id = c.id "
-                                . "inner join cut_stream cstr on cw.cut_id = cstr.cut_id "
-                                . "where cw.id = ?";
-                        $fetcher = new Fetcher($sql, [$cut_wind_id]);
-                        $result = "";
-                        while ($row = $fetcher->Fetch()) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row['width'].' мм';
-                        }
-                        echo "$date в $time<br />";
                         echo $result;
                         ?>
                         </div>
@@ -470,33 +428,6 @@ $cutting_wind_id = $row['cutting_wind_id'];
                             echo "$date в $time<br />";
                             echo $result;
                             ?>
-                        </div>
-                    </div>
-                    <?php
-                    endif;
-                    // Если этот рулон появился в результате нарезки (старая версия)
-                    $sql = "select cs.width "
-                            . "from cut c "
-                            . "inner join cut_stream cs on cs.cut_id = c.id "
-                            . "where c.remain = ?";
-                    $grabber = new Grabber($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
-                    if(count($grabber->result) > 0):
-                    ?>
-                    <div class="form-group">
-                        <label>Остаток из раскроя:</label>
-                        <br />
-                        <div style="font-size: 1rem;">
-                        <?php
-                        $result = "";
-                        foreach($grabber->result as $row) {
-                            if($result != "") {
-                                $result .= " - ";
-                            }
-                            $result .= $row['width'].' мм';
-                        }
-                        echo "$date в $time<br />";
-                        echo $result;
-                        ?>
                         </div>
                     </div>
                     <?php
