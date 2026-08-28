@@ -28,27 +28,27 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
-    $sql = "select cell from pallet_cell_history where pallet_id = (select pallet_id from pallet_roll where id = $id) order by id desc limit 1";
-    $row = (new Fetcher($sql))->Fetch();
+    $sql = "select cell from pallet_cell_history where pallet_id = (select pallet_id from pallet_roll where id = ?) order by id desc limit 1";
+    $row = (new Fetcher($sql, [$id]))->Fetch();
     $cell = filter_input(INPUT_POST, 'cell');
             
     if((!$row || $row['cell'] != $cell) && !empty($cell)) {
         $user_id = GetUserId();
             
-        $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ((select pallet_id from pallet_roll where id = $id), '$cell', $user_id)";
-        $error_message = (new Executer($sql))->error;
+        $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ((select pallet_id from pallet_roll where id = ?), ?, ?)";
+        $error_message = (new Executer($sql, [$id, $cell, $user_id]))->error;
     }
     
     // Получаем имеющийся статус и проверяем, совпадает ли он с новым статусом
-    $sql = "select status_id from pallet_roll_status_history where pallet_roll_id=$id order by id desc limit 1";
-    $row = (new Fetcher($sql))->Fetch();
+    $sql = "select status_id from pallet_roll_status_history where pallet_roll_id=? order by id desc limit 1";
+    $row = (new Fetcher($sql, [$id]))->Fetch();
     $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
     
     if((!$row || $row['status_id'] != $status_id) && !empty($status_id)) {
         $user_id = GetUserId();
         
-        $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values ($id, $status_id, $user_id)";
-        $error_message = (new Executer($sql))->error;
+        $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values (?, ?, ?)";
+        $error_message = (new Executer($sql, [$id, $status_id, $user_id]))->error;
     }
     
     if(empty($error_message)) {
@@ -63,19 +63,19 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             }
         }
         
-        $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
+        $comment = filter_input(INPUT_POST, 'comment') ?? '';
         
         if($form_valid) {
             $sql = "";
             
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql .= "update pallet set comment = '$comment' where id = $pallet_id";
+                $sql .= "update pallet set comment = ? where id = ?";
             }
             else {
-                $sql .= "update pallet set comment = concat(comment, ' ', '$comment') where id = $pallet_id";
+                $sql .= "update pallet set comment = concat(comment, ' ', ?) where id = ?";
             }
 
-            $executer = new Executer($sql);
+            $executer = new Executer($sql, [$comment, $pallet_id]);
             $error_message = $executer->error;
         
             if(empty($error_message)) {
@@ -103,9 +103,9 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i'
         . "inner join user u on p.storekeeper_id = u.id "
         . "inner join pallet_roll pr on pr.pallet_id = p.id "
         . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-        . "where pr.id = $id";
+        . "where pr.id = ?";
 
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher($sql, [$id]))->Fetch();
 $date = $row['date'];
 $time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
@@ -200,7 +200,7 @@ if(null === $comment) $comment = $row['comment'];
                         <select id="supplier_id" name="supplier_id" class="form-control"<?=$supplier_id_disabled ?>>
                             <option value="">Выберите поставщика</option>
                             <?php
-                            $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
+                            $suppliers = (new Grabber("select id, name from supplier order by name", []))->result;
                             foreach ($suppliers as $supplier) {
                                 $id = $supplier['id'];
                                 $name = $supplier['name'];
@@ -220,7 +220,7 @@ if(null === $comment) $comment = $row['comment'];
                         <select id="film_id" name="film_id" class="form-control"<?=$film_id_disabled ?>>
                             <option value="">Выберите марку</option>
                             <?php
-                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
+                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = ?))", [$supplier_id]))->result;
                             foreach ($films as $film) {
                                 $id = $film['id'];
                                 $name = $film['name'];
@@ -249,7 +249,7 @@ if(null === $comment) $comment = $row['comment'];
                             <select id="film_variation_id" name="film_variation_id" class="form-control"<?=$film_variation_id_disabled ?>>
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ? and id in (select film_variation_id from supplier_film_variation where supplier_id = ?) order by thickness", [$film_id, $supplier_id]))->result;
                                 foreach ($film_variations as $film_variation) {
                                     $_id = $film_variation['id'];
                                     $thickness = $film_variation['thickness'];
@@ -331,8 +331,8 @@ if(null === $comment) $comment = $row['comment'];
                         $sql = "select cstr.width "
                                 . "from cutting_source cs "
                                 . "inner join cutting_stream cstr on cs.cutting_id = cstr.cutting_id "
-                                . "where cs.roll_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and cs.is_from_pallet = 1";
-                        $fetcher = new Fetcher($sql);
+                                . "where cs.roll_id = ? and cs.is_from_pallet = 1";
+                        $fetcher = new Fetcher($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
                         $result = "";
                         while($row = $fetcher->Fetch()) {
                             if($result != "") {
@@ -390,8 +390,8 @@ if(null === $comment) $comment = $row['comment'];
                         $sql = "select u.last_name, left(u.first_name, 1) first_name, date_format(pch.date, '%d.%m.%Y %H:%i') date, pch.cell "
                                 . "from pallet_cell_history pch "
                                 . "inner join user u on pch.user_id = u.id "
-                                . "where pch.pallet_id = $pallet_id";
-                        $fetcher = new Fetcher($sql);
+                                . "where pch.pallet_id = ?";
+                        $fetcher = new Fetcher($sql, [$pallet_id]);
                         while($row = $fetcher->Fetch()):
                         ?>
                         <tr><td><?=$row['last_name'].' '.$row['first_name'].'.' ?></td><td><?=$row['date'] ?></td><td>Ячейка: <?=$row['cell'] ?></td></tr>
