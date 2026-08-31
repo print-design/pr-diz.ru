@@ -23,7 +23,7 @@ $okto_class = '';
 if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
     $zakaz_class = " active";
 }
-elseif($folder == "pallet" || $folder == "roll" || $folder == "cut_source" || $folder == "utilized") {
+elseif($folder == "pallet" || $folder == "roll") {
     $sklad_class = " active";
 }
 elseif($folder == "plan") {
