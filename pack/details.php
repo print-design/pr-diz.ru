@@ -16,12 +16,44 @@ if($id === null) {
 }
 
 // Смена статуса
+$gross_weight_valid = '';
+$pallet_count_valid = '';
+
 if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
-    $error_message = SetCalculationStatus($id, $status_id, '');
+    $form_valid = true;
     
-    if(empty($error_message)) {
+    // При подтверждении из статуса "Готов к упаковке" вес брутто и количество паллетов обязательны
+    if($status_id == ORDER_STATUS_SHIP_READY) {
+        $gross_weight = filter_input(INPUT_POST, 'gross_weight') ?? '';
+        $gross_weight = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $gross_weight);
+        if(empty($gross_weight) || !is_numeric($gross_weight)) {
+            $gross_weight_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        $pallet_count = filter_input(INPUT_POST, 'pallet_count', FILTER_VALIDATE_INT);
+        if(empty($pallet_count)) {
+            $pallet_count_valid = ISINVALID;
+            $form_valid = false;
+        }
+        
+        if($form_valid) {
+            $sql = "update calculation set gross_weight = ?, pallet_count = ? where id = ?";
+            $executer = new Executer($sql, [$gross_weight, $pallet_count, $id]);
+            $error_message = $executer->error;
+        }
+        else {
+            $error_message = "Заполните вес брутто и количество паллетов";
+        }
+    }
+    
+    if($form_valid && empty($error_message)) {
+        $error_message = SetCalculationStatus($id, $status_id, '');
+    }
+    
+    if($form_valid && empty($error_message)) {
         header("Location: details.php?id=$id&waiting=1");
     }
 }
@@ -30,6 +62,17 @@ if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
 $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 $calculation_rolls = CalculationRolls::Create($id);
+
+// Вес брутто и количество паллетов, введённые упаковщицей при отгрузке
+$gross_weight = null;
+$pallet_count = null;
+
+$sql = "select gross_weight, pallet_count from calculation where id = ?";
+$fetcher = new Fetcher($sql, [$id]);
+if($row = $fetcher->Fetch()) {
+    $gross_weight = $row['gross_weight'];
+    $pallet_count = $row['pallet_count'];
+}
 
 $comment = '';
 
@@ -224,6 +267,12 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     <td>Объём заказа</td>
                                     <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&asymp;<?= DisplayNumber(floatval($calculation_rolls->volume), 2) ?> м<sup>3</sup> <small class="text-muted">(<?= DisplayNumber(floatval($calculation_rolls->volume_min), 2) ?>&ndash;<?= DisplayNumber(floatval($calculation_rolls->volume_max), 2) ?> м<sup>3</sup>)</small></td>
                                 </tr>
+                                <?php if($gross_weight !== null && $pallet_count !== null): ?>
+                                <tr>
+                                    <td>Вес брутто</td>
+                                    <td><?= DisplayNumber(floatval($gross_weight), 0) ?> кг, <?= DisplayNumber(intval($pallet_count), 0) ?> <?= PluralForm($pallet_count, 'паллет', 'паллета', 'паллетов') ?></td>
+                                </tr>
+                                <?php endif; ?>
                                 <tr>
                                     <td>Менеджер</td>
                                     <td><?=$calculation->last_name.' '.$calculation->first_name ?></td>
@@ -345,10 +394,12 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                     <div class="d-flex justify-content-xl-start mt-4">
                         <?php if($calculation->status_id == ORDER_STATUS_PACK_READY): ?>
                         <div>
-                            <form method="post">
+                            <form method="post" class="form-inline">
                                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                                 <input type="hidden" name="id" value="<?=$id ?>" />
                                 <input type="hidden" name="status_id" value="<?=ORDER_STATUS_SHIP_READY ?>" />
+                                <input type="text" name="gross_weight" placeholder="Вес брутто, кг" class="form-control float-only float-format mr-2<?=$gross_weight_valid ?>" style="width: 140px;" value="<?= DisplayNumber($gross_weight, 0) ?>" required="required" autocomplete="off" />
+                                <input type="text" name="pallet_count" placeholder="Кол-во паллетов" class="form-control int-only mr-2<?=$pallet_count_valid ?>" style="width: 140px;" value="<?=$pallet_count ?>" required="required" autocomplete="off" />
                                 <button type="submit" name="confirm_submit" class="btn btn-dark pl-4 pr-4 mr-4"><i class="fas fa-check mr-2"></i>Подтвердить</button>
                             </form>
                         </div>

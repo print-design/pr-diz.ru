@@ -89,6 +89,25 @@ function DisplayNumber($value, $decimals) {
     }
 }
 
+// Возвращает нужную по правилам русского языка форму слова для числа $number.
+// Пример: PluralForm(3, "паллет", "паллета", "паллетов") вернёт "паллета"
+function PluralForm($number, $one, $few, $many) {
+    $number = abs(intval($number));
+    $last_two = $number % 100;
+    $last_one = $number % 10;
+    
+    if($last_two >= 11 && $last_two <= 14) {
+        return $many;
+    }
+    if($last_one == 1) {
+        return $one;
+    }
+    if($last_one >= 2 && $last_one <= 4) {
+        return $few;
+    }
+    return $many;
+}
+
 function Initials() {
     $last_name = filter_input(INPUT_COOKIE, LAST_NAME);
     $first_name = filter_input(INPUT_COOKIE, FIRST_NAME);

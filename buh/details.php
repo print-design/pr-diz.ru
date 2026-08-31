@@ -64,6 +64,17 @@ $calculation = CalculationBase::Create($id);
 $calculation_result = CalculationResult::Create($id);
 $calculation_rolls = CalculationRolls::Create($id);
 
+// Вес брутто и количество паллетов, введённые упаковщицей при отгрузке
+$gross_weight = null;
+$pallet_count = null;
+
+$sql = "select gross_weight, pallet_count from calculation where id = ?";
+$fetcher = new Fetcher($sql, [$id]);
+if($row = $fetcher->Fetch()) {
+    $gross_weight = $row['gross_weight'];
+    $pallet_count = $row['pallet_count'];
+}
+
 // Количество новых форм
 $new_forms_number = 0;
 
@@ -289,6 +300,12 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                             <td>Объём заказа</td>
                             <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?= UNIT_NAMES[$calculation->unit] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&asymp;<?= DisplayNumber(floatval($calculation_rolls->volume), 2) ?> м<sup>3</sup> <small class="text-muted">(<?= DisplayNumber(floatval($calculation_rolls->volume_min), 2) ?>&ndash;<?= DisplayNumber(floatval($calculation_rolls->volume_max), 2) ?> м<sup>3</sup>)</small></td>
                         </tr>
+                        <?php if($gross_weight !== null && $pallet_count !== null): ?>
+                        <tr>
+                            <td>Вес брутто</td>
+                            <td><?= DisplayNumber(floatval($gross_weight), 0) ?> кг, <?= DisplayNumber(intval($pallet_count), 0) ?> <?= PluralForm($pallet_count, 'паллет', 'паллета', 'паллетов') ?></td>
+                        </tr>
+                        <?php endif; ?>
                         <tr>
                             <td>Менеджер</td>
                             <td><?=$calculation->last_name.' '.$calculation->first_name ?></td>
