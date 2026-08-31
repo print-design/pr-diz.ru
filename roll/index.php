@@ -365,8 +365,8 @@ else {
                                 <input type="text" 
                                        class="form-control comment_input_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>" 
                                        value="<?= htmlentities($row['comment'] ?? '') ?>" 
-                                       onkeydown="if(event.key === 'Enter') { SaveComment(event, <?=$row['type'] ?>, <?=$row['id'] ?>, <?=$row['pallet_id'] ?>); }" 
-                                       onfocusout="SaveComment(event, <?=$row['type'] ?>, <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" />
+                                       onkeydown="if(event.key === 'Enter') { SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>); }" 
+                                       onfocusout="SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" />
                             </div>
                         </td>
                         <td style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper"><?= $row['comment'] ?></td>
@@ -508,7 +508,7 @@ else {
                 if(type === 'pallet_roll') {
                     ajax_path = "../pallet/_edit_comment.php?id=" + pallet_id;
                     comment_text_class = '.comment_text_' + type + '_' + pallet_id;
-                    comment_input_class = '.comment_imput_' + type + '_' + pallet_id;
+                    comment_input_class = '.comment_input_' + type + '_' + pallet_id;
                 }
                 else if(type === 'roll') {
                     ajax_path = "../roll/_edit_comment.php?id=" + id;

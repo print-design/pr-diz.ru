@@ -135,10 +135,10 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         
         if(empty($error_message)) {
             if(!empty($row) && key_exists('status_id', $row) && $row['status_id'] == ROLL_STATUS_UTILIZED) {
-                header('Location: '.APPLICATION.'/utilized/'. BuildQueryRemove('id'));
+                header('Location: '.APPLICATION.'/roll/'.BuildQueryAddRemove('status', ROLL_STATUS_UTILIZED, 'id'));
             }
             elseif(!empty ($row) && key_exists('status_id', $row) && $row['status_id'] == ROLL_STATUS_CUT) {
-                header('Location: '.APPLICATION.'/cut_source/'. BuildQueryRemove('id'));
+                header('Location: '.APPLICATION.'/roll/'.BuildQueryAddRemove('status', ROLL_STATUS_CUT, 'id'));
             }
             else {
                 header('Location: '.APPLICATION.'/roll/'. BuildQueryRemove('id'));
