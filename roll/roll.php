@@ -206,7 +206,7 @@ $cutting_wind_id = $row['cutting_wind_id'];
     </head>
     <body>
         <?php
-        include '../include/header_sklad.php';
+        include 'header.php';
         ?>
         <div class="container-fluid">
             <?php

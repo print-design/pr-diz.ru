@@ -176,7 +176,7 @@ if(null !== filter_input(INPUT_POST, 'create-roll-submit')) {
     </head>
     <body>
         <?php
-        include '../include/header_sklad.php';
+        include 'header.php';
         ?>
         <div class="container-fluid">
             <?php

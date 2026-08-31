@@ -100,7 +100,7 @@ $total_weight = $row['total_weight'];
     </head>
     <body>
         <?php
-        include '../include/header_sklad.php';
+        include 'header.php';
         include '../include/pager_top.php';
         $rowcounter = 0;
         ?>
