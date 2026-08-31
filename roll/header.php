@@ -28,13 +28,7 @@ else {
                 <a class="nav-link<?=$cut_sources_status ?>" href="<?= APPLICATION ?>/roll/?status=<?= ROLL_STATUS_CUT ?>">Раскроили</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/cut_source/">Раскроили</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?= APPLICATION ?>/roll/?status=<?= ROLL_STATUS_UTILIZED ?>">Сработанная пленка</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-nowrap" href="<?= APPLICATION ?>/utilized/">Сработанная пленка</a>
             </li>
             <?php
             if($_SERVER['HTTP_HOST'] == "pr-diz-test.ru") {

@@ -19,7 +19,15 @@ function OrderLink($param) {
 // Обработка отправки формы
 if(null !== filter_input(INPUT_POST, 'delete-pallet-submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $error_message = (new Executer("delete from pallet where id = $id"))->error;
+    $error_message = (new Executer("delete from pallet_roll_status_history where pallet_roll_id in (select id from pallet_roll where pallet_id = ?)", [$id]))->error;
+    
+    if(empty($error_message)) {
+        $error_message = (new Executer("delete from pallet_cell_history where pallet_id = ?", [$id]))->error;
+    }
+    
+    if(empty($error_message)) {
+        $error_message = (new Executer("delete from pallet where id = $id"))->error;
+    }
 }
 
 // Фильтр для данных

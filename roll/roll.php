@@ -213,17 +213,8 @@ $cutting_wind_id = $row['cutting_wind_id'];
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
-            
-            // Если плёнка сработанная, то кнопка "Назад" переводит нас в раздел "Сработанная плёнка",
-            // иначе - в раздел "Рулоны".
-            if(isset($status_id) && $status_id == ROLL_STATUS_UTILIZED):
             ?>
-            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/utilized/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php elseif(isset($status_id) && $status_id == ROLL_STATUS_CUT): ?>
-            <a class="btn btn-light backlink" href="<?=APPLICATION ?>/cut_source/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php else: ?>
             <a class="btn btn-light backlink" href="<?=APPLICATION ?>/roll/<?= BuildQueryRemove('id') ?>">Назад</a>
-            <?php endif; ?>
             <button class="btn btn-light ml-4 mb-2 mt-1" data-toggle="modal" data-target="#history"><i class="fas fa-history"></i>&nbsp;&nbsp;&nbsp;История</button>
             <h1 style="font-size: 24px; font-weight: 600;">Информация о рулоне № <?="Р".$id ?> от <?= $date ?></h1>
             <?php if(!empty($time) && $time != '00:00'): ?>
