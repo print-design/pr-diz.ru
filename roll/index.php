@@ -38,7 +38,15 @@ function BuildRollFilter($status_id) {
     $wherefindpallet = "prsh.status_id = ?";
     $paramspallet = [$status_id];
     
-    $wherefindroll = "rsh.status_id = ?";
+    // Для статуса "Свободный" (страница без параметров) заодно показываем ролики, у которых
+    // вообще нет записи в истории статусов -- такого в норме быть не должно, но если это
+    // всё-таки случится из-за ошибки в программе, такой ролик не должен потеряться из виду
+    if($status_id == ROLL_STATUS_FREE) {
+        $wherefindroll = "(rsh.status_id is null or rsh.status_id = ?)";
+    }
+    else {
+        $wherefindroll = "rsh.status_id = ?";
+    }
     $paramsroll = [$status_id];
     
     $film_id = filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT);
