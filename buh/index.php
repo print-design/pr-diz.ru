@@ -272,7 +272,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                     <th>Заказ</th>
                     <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
-                    <th class="text-right">Объём&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
+                    <th class="text-right">Вес нетто&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
+                    <th class="text-right">Вес брутто</th>
                     <th class="text-right">Поступило / Остаток</th>
                     <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
                     <th>Менеджер</th>
@@ -283,7 +284,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "cus.name as customer, c.name as calculation, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
-                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
+                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, c.gross_weight, "
                     . "duplicate_shipping_cost, duplicate_payment_total "
                     . "from calculation c "
                     . "left join customer cus on c.customer_id = cus.id "
@@ -369,6 +370,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?=$row['calculation'] ?></td>
                     <td class="text-nowrap"><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                     <td class="text-nowrap text-right"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
+                    <td class="text-nowrap text-right"><?= $row['gross_weight'] !== null ? DisplayNumber(floatval($row['gross_weight']), 0).' кг' : '—' ?></td>
                     <td class="text-nowrap text-right">
                         <?= DisplayNumber(floatval($row['duplicate_payment_total']), 2) ?> ₽
                         <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(floatval($row['duplicate_shipping_cost']) - floatval($row['duplicate_payment_total']), 2) ?> ₽</div>

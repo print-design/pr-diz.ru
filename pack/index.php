@@ -243,7 +243,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th>№</th>
                     <th>Заказ</th>
                     <th>Метраж</th>
-                    <th>Масса</th>
+                    <th>Вес нетто</th>
+                    <th>Вес брутто</th>
                     <th>Менеджер</th>
                     <th>Статус</th>
                     <th>Комментарий</th>
@@ -256,7 +257,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
-                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer "
+                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, c.gross_weight "
                     . "from calculation c "
                     . "inner join customer cus on c.customer_id = cus.id "
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -309,6 +310,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?=$row['calculation'] ?><br /><span style="font-size: smaller;"><?=$row['customer'] ?></span></td>
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['length_pure_1']), 0) ?> м</td>
                     <td class="text-nowrap"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
+                    <td class="text-nowrap"><?= $row['gross_weight'] !== null ? DisplayNumber(floatval($row['gross_weight']), 0).' кг' : '—' ?></td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td><?= trim($row['comment'].' '.$row['continuation_comment'], ' ') ?></td>
