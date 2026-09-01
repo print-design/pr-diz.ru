@@ -91,8 +91,8 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
     }
     else {
         $take_stream_id = 0;
-        $sql = "select id from calculation_take_stream where calculation_take_id = $take_id and calculation_stream_id = $stream_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select id from calculation_take_stream where calculation_take_id = ? and calculation_stream_id = ?";
+        $fetcher = new Fetcher($sql, [$take_id, $stream_id]);
         if($row = $fetcher->Fetch()) {
             $take_stream_id = $row['id'];
         }
@@ -115,33 +115,29 @@ if(null !== filter_input(INPUT_POST, 'stream_print_submit')) {
         }
         
         $machine_id = null;
-        $sql = "select machine_id from plan_edition where work_id = ". WORK_CUTTING." and calculation_id = ".$id;
-        $fetcher = new Fetcher($sql);
+        $sql = "select machine_id from plan_edition where work_id = ".WORK_CUTTING." and calculation_id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             $machine_id = $row['machine_id'];
             
             if(!empty($machine_id)) {
                 $employee_id = null;
-                $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')='".$working_time->format('d-m-Y')."' and shift = '$working_shift' and work_id = ". WORK_CUTTING." and machine_id = $machine_id";
-                $fetcher = new Fetcher($sql);
+                $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')=? and shift = ? and work_id = ".WORK_CUTTING." and machine_id = ?";
+                $fetcher = new Fetcher($sql, [$working_time->format('d-m-Y'), $working_shift, $machine_id]);
                 if($row = $fetcher->Fetch()) {
                     $employee_id = $row[0];
                 }
             }
         }
         
-        if($employee_id == null) {
-            $employee_id = "NULL";
-        }
-        
         if(empty($take_stream_id)) {
-            $sql = "insert into calculation_take_stream (calculation_take_id, calculation_stream_id, weight, length, radius, printed, plan_employee_id) values($take_id, $stream_id, $weight, $length, $radius, now(), $employee_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into calculation_take_stream (calculation_take_id, calculation_stream_id, weight, length, radius, printed, plan_employee_id) values(?, ?, ?, ?, ?, now(), ?)";
+            $executer = new Executer($sql, [$take_id, $stream_id, $weight, $length, $radius, $employee_id]);
             $error_message = $executer->error;
         }
         else {
-            $sql = "update calculation_take_stream set weight = $weight, length = $length, radius = $radius, printed = now(), plan_employee_id = $employee_id where id = $take_stream_id";
-            $executer = new Executer($sql);
+            $sql = "update calculation_take_stream set weight = ?, length = ?, radius = ?, printed = now(), plan_employee_id = ? where id = ?";
+            $executer = new Executer($sql, [$weight, $length, $radius, $employee_id, $take_stream_id]);
             $error_message = $executer->error;
         }
         
@@ -189,8 +185,8 @@ $sql = "select (select max(id) from calculation_take where calculation_id = c.id
         . "(select count(id) from calculation_take_stream where calculation_take_id = (select max(id) from calculation_take where calculation_id = c.id)) printed_streams_count, "
         . "(select comment from plan_edition where work_id = ".WORK_CUTTING." and calculation_id = c.id limit 1) comment, "
         . "(select comment from plan_continuation where plan_edition_id in (select id from plan_edition where work_id = ".WORK_CUTTING." and calculation_id = c.id) limit 1) continuation_comment "
-        . "from calculation c where c.id = $id";
-$fetcher = new Fetcher($sql);
+        . "from calculation c where c.id = ?";
+$fetcher = new Fetcher($sql, [$id]);
 if($row = $fetcher->Fetch()) {
     $take_id = $row['take_id'];
     $take_number = $row['take_number'];
@@ -225,8 +221,8 @@ $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cos
 
 // Заполняем дублирующееся поле
 if(empty($error_message)) {
-    $sql = "update calculation set duplicate_shipping_cost = $shipping_cost where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set duplicate_shipping_cost = ? where id = ?";
+    $executer = new Executer($sql, [$shipping_cost, $id]);
     $error_message = $executer->error;
 }
 ?>
