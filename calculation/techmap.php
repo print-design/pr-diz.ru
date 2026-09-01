@@ -1062,7 +1062,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                         <?php else: ?>
                         <?php foreach($calculation->stream_widths as $stream_width_index => $stream_width_value): ?>
                         <tr>
-                            <td><?= ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки " : "Ширина ручья ").($stream_width_index) ?></td>
+                            <td><?= ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки " : "Ширина ручья ").$stream_width_index ?></td>
                             <td><?= rtrim(rtrim(number_format(floatval($stream_width_value), 2, ",", ""), "0"), ",") ?> мм</td>
                         </tr>
                         <?php endforeach; ?>
