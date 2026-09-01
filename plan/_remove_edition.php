@@ -12,8 +12,8 @@ $work_type_id = 0;
 $has_lamination = false;
 $two_laminations = false;
 
-$sql = "select work_type_id, lamination1_film_variation_id, lamination1_individual_film_name, lamination2_film_variation_id, lamination2_individual_film_name from calculation where id = $calculation_id";
-$fetcher = new Fetcher($sql);
+$sql = "select work_type_id, lamination1_film_variation_id, lamination1_individual_film_name, lamination2_film_variation_id, lamination2_individual_film_name from calculation where id = ?";
+$fetcher = new Fetcher($sql, [$calculation_id]);
 if($row = $fetcher->Fetch()) {
     $work_type_id = $row['work_type_id'];
     
@@ -32,14 +32,14 @@ if(empty($error) && $work_id == WORK_PRINTING) {
     $in_lamination = 0;
     $in_cutting = 0;
     
-    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_LAMINATION;
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from plan_edition where calculation_id = ? and work_id = ?";
+    $fetcher = new Fetcher($sql, [$calculation_id, WORK_LAMINATION]);
     if($row = $fetcher->Fetch()) {
         $in_lamination = $row[0];
     }
     
-    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from plan_edition where calculation_id = ? and work_id = ?";
+    $fetcher = new Fetcher($sql, [$calculation_id, WORK_CUTTING]);
     if($row = $fetcher->Fetch()) {
         $in_cutting = $row[0];
     }
@@ -57,8 +57,8 @@ if(empty($error) && $work_id == WORK_PRINTING) {
 elseif (empty ($error) && $work_id == WORK_LAMINATION) {
     $in_cutting = 0;
     
-    $sql = "select count(id) from plan_edition where calculation_id = $calculation_id and work_id = ".WORK_CUTTING;
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from plan_edition where calculation_id = ? and work_id = ?";
+    $fetcher = new Fetcher($sql, [$calculation_id, WORK_CUTTING]);
     if($row = $fetcher->Fetch()) {
         $in_cutting = $row[0];
     }
@@ -71,8 +71,8 @@ elseif (empty ($error) && $work_id == WORK_LAMINATION) {
 // Узнаём последний статус.
 $status_id = 0;
 
-$sql = "select status_id from calculation_status_history where calculation_id = $calculation_id order by id desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select status_id from calculation_status_history where calculation_id = ? order by id desc limit 1";
+$fetcher = new Fetcher($sql, [$calculation_id]);
 if($row = $fetcher->Fetch()) {
     $status_id = $row[0];
 }
@@ -99,8 +99,8 @@ if($work_id == WORK_PRINTING && $status_id == ORDER_STATUS_CONFIRMED) {
 
 // Удаляем заказ из плана.
 if(empty($error)) {
-    $sql = "delete from plan_edition where calculation_id = $calculation_id and lamination = $lamination and run2 = $run2 and work_id = $work_id";
-    $executer = new Executer($sql);
+    $sql = "delete from plan_edition where calculation_id = ? and lamination = ? and run2 = ? and work_id = ?";
+    $executer = new Executer($sql, [$calculation_id, $lamination, $run2, $work_id]);
     $error = $executer->error;
 }
 
@@ -118,8 +118,8 @@ if(empty($error) && $remove_status_allowed) {
 
 // Устанавливаем расчёт в начало списка очереди
 if(empty($error)) {
-    $sql = "update calculation set queue_top = 1 where id = $calculation_id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set queue_top = 1 where id = ?";
+    $executer = new Executer($sql, [$calculation_id]);
     $error = $executer->error;
 }
 
