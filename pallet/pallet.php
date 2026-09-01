@@ -42,8 +42,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     $sql = "select p.film_variation_id, p.width, "
             . "(select sum(length) from pallet_roll where pallet_id = p.id) length, "
             . "(select sum(weight) from pallet_roll where pallet_id = p.id) net_weight "
-            . "from pallet p where p.id=$id";
-    $fetcher = new Fetcher($sql);
+            . "from pallet p where p.id=?";
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $old_film_variation_id = $row['film_variation_id'];
         $old_length = $row['length'];
@@ -65,8 +65,8 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
     
     // Определяем удельный вес
     $ud_ves = null;
-    $sql = "select weight from film_variation where id=$film_variation_id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select weight from film_variation where id=?";
+    $fetcher = new Fetcher($sql, [$film_variation_id]);
     if($row = $fetcher->Fetch()) {
         $ud_ves = $row[0];
     }
@@ -91,21 +91,21 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
         }
     }
     
-    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
+    $comment = filter_input(INPUT_POST, 'comment') ?? '';
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         // Получаем имеющуюся ячейку и проверяем, совпадает ли она с новой ячейкой
-        $sql = "select cell from pallet_cell_history where pallet_id = $id order by id desc limit 1";
-        $row = (new Fetcher($sql))->Fetch();
+        $sql = "select cell from pallet_cell_history where pallet_id = ? order by id desc limit 1";
+        $row = (new Fetcher($sql, [$id]))->Fetch();
         $cell = filter_input(INPUT_POST, 'cell');
         
         if((!$row || $row['cell'] != $cell) && !empty($cell)) {
             $user_id = GetUserId();
             
-            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ($id, '$cell', $user_id)";
-            $error_message = (new Executer($sql))->error;
+            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values (?, ?, ?)";
+            $error_message = (new Executer($sql, [$id, $cell, $user_id]))->error;
         }
         
         if(empty($error_message)) {
@@ -113,13 +113,13 @@ if(null !== filter_input(INPUT_POST, 'change-status-submit')) {
             
             // Стирать старый комментарий может только технолог, остальные - только добавлять новый комментарий к старому
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER]))) {
-                $sql = "update pallet set comment = '$comment' where id = $id";
+                $sql = "update pallet set comment = ? where id = ?";
             }
             else {
-                $sql = "update pallet set comment = concat(comment, ' ', '$comment') where id = $id";
+                $sql = "update pallet set comment = concat(comment, ' ', ?) where id = ?";
             }
             
-            $error_message = (new Executer($sql))->error;
+            $error_message = (new Executer($sql, [$comment, $id]))->error;
         }
         
         if(empty($error_message)) {
@@ -137,9 +137,9 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, DATE_FORMAT(p.date, '%H:%i'
         . "(select cell from pallet_cell_history where pallet_id = p.id order by id desc limit 0, 1) cell, "
         . "p.comment "
         . "from pallet p inner join user u on p.storekeeper_id = u.id "
-        . "where p.id=$id";
+        . "where p.id=?";
 
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher($sql, [$id]))->Fetch();
 $date = $row['date'];
 $time = $row['time'];
 $storekeeper_id = $row['storekeeper_id'];
@@ -220,7 +220,7 @@ if(null === $comment) $comment = $row['comment'];
                         <select id="supplier_id" name="supplier_id" class="form-control<?=$supplier_id_valid ?>"<?=$supplier_id_disabled ?>>
                             <option value="">Выберите поставщика</option>
                             <?php
-                            $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
+                            $suppliers = (new Grabber("select id, name from supplier order by name", []))->result;
                             foreach ($suppliers as $supplier) {
                                 $id = $supplier['id'];
                                 $name = $supplier['name'];
@@ -240,7 +240,7 @@ if(null === $comment) $comment = $row['comment'];
                         <select id="film_id" name="film_id" class="form-control<?=$film_id_valid ?>"<?=$film_id_disabled ?>>
                             <option value="">Выберите марку</option>
                             <?php
-                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
+                            $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = ?))", [$supplier_id]))->result;
                             foreach ($films as $film) {
                                 $id = $film['id'];
                                 $name = $film['name'];
@@ -269,7 +269,7 @@ if(null === $comment) $comment = $row['comment'];
                             <select id="film_variation_id" name="film_variation_id" class="form-control<?=$film_variation_id_valid ?>"<?=$film_variation_id_disabled ?>>
                                 <option value="">Выберите толщину</option>
                                 <?php
-                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+                                $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ? and id in (select film_variation_id from supplier_film_variation where supplier_id = ?) order by thickness", [$film_id, $supplier_id]))->result;
                                 foreach ($film_variations as $film_variation) {
                                     $_id = $film_variation['id'];
                                     $thickness = $film_variation['thickness'];
@@ -393,8 +393,8 @@ if(null === $comment) $comment = $row['comment'];
                         $sql = "select u.last_name, left(u.first_name, 1) first_name, date_format(pch.date, '%d.%m.%Y %H:%i') date, pch.cell "
                                 . "from pallet_cell_history pch "
                                 . "inner join user u on pch.user_id = u.id "
-                                . "where pch.pallet_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-                        $fetcher = new Fetcher($sql);
+                                . "where pch.pallet_id = ?";
+                        $fetcher = new Fetcher($sql, [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]);
                         while($row = $fetcher->Fetch()):
                         ?>
                         <tr><td><?=$row['last_name'].' '.$row['first_name'].'.' ?></td><td><?=$row['date'] ?></td><td>Ячейка: <?=$row['cell'] ?></td></tr>
