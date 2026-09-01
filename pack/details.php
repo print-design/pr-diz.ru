@@ -255,7 +255,16 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
             ?>
             <div class="row">
                 <div class="col-8">
-                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?php if(!empty($calculation->status_id) && $calculation->status_id != ORDER_STATUS_PACK_READY) { echo BuildQueryRemove('id'); } ?>">К списку</a>
+                    <?php
+                    $backlink_url = '';
+                    if(in_array($calculation->status_id, [ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED])) {
+                        $backlink_url = BuildQueryAddRemove('status', $calculation->status_id, 'id');
+                    }
+                    else {
+                        $backlink_url = BuildQueryRemove('id');
+                    }
+                    ?>
+                    <a class="btn btn-light backlink" href="<?=APPLICATION ?>/pack/<?=$backlink_url ?>">К списку</a>
                     <h1><?=$calculation->name ?></h1>
                     <div class="name"><?=$calculation->customer ?></div>
                     <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от  <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
