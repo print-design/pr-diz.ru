@@ -1054,14 +1054,19 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                                 ?>
                             </td>
                         </tr>
+                        <?php if(!empty($calculation->stream_width)): ?>
                         <tr>
                             <td><?= $calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки" : "Ширина ручья" ?></td>
-                            <?php if(!empty($calculation->stream_width)): ?>
-                            <td><?=$calculation->stream_width.(empty($calculation->stream_width) ? "" : " мм") ?></td>
-                            <?php else: ?>
-                            <td style="white-space: nowrap;">Разная ≈ <?=rtrim(rtrim(number_format(array_sum($calculation->stream_widths) / $calculation->streams_number, 2, ",", ""), "0"), ",") ?> мм</td>
-                            <?php endif; ?>
+                            <td><?=$calculation->stream_width." мм" ?></td>
                         </tr>
+                        <?php else: ?>
+                        <?php foreach($calculation->stream_widths as $stream_width_index => $stream_width_value): ?>
+                        <tr>
+                            <td><?= ($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? "Ширина этикетки " : "Ширина ручья ").($stream_width_index + 1) ?></td>
+                            <td><?= rtrim(rtrim(number_format(floatval($stream_width_value), 2, ",", ""), "0"), ",") ?> мм</td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
                         <tr>
                             <td>Длина этикетки</td>
                             <td><?= rtrim(rtrim(number_format($calculation->length ?? 0, 2, ",", ""), "0"), ",").(empty($calculation->length) ? "" : " мм") ?></td>
