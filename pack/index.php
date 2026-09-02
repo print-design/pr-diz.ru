@@ -236,6 +236,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             </div>
             <table class="table table-hover typography">
                 <tr>
+                    <th></th>
                     <th class="text-nowrap">Дата</th>
                     <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
                     <th>Дата отгрузки</th>
@@ -299,6 +300,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
             ?>
                 <tr>
+                    <td><input type="checkbox" class="order-select-checkbox" value="<?=$row['id'] ?>" /></td>
                     <td><?=$datetime->format('d.m') ?><br /><span style="font-size: smaller;"><?=$datetime->format('H:i') ?></span></td>
                     <?php
                     if($status_id == ORDER_STATUS_SHIPPED):
@@ -327,6 +329,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             ?>
         </div>
         <?php
+        include '../include/selected_orders_panel.php';
         include '../include/footer.php';
         ?>
         <script src="<?= APPLICATION ?>/js/select2.min.js"></script>

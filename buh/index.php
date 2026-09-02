@@ -265,6 +265,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             </div>
             <table class="table table-hover typography">
                 <tr>
+                    <th></th>
                     <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
                     <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
                     <th>Дата отгрузки&nbsp;&nbsp;<?= OrderLink('date') ?></th>
@@ -359,6 +360,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             while($row = $fetcher->Fetch()):
             ?>
                 <tr>
+                    <td><input type="checkbox" class="order-select-checkbox" value="<?=$row['id'] ?>" /></td>
                     <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                     <?php
                     if($status_id == ORDER_STATUS_SHIPPED):
@@ -400,6 +402,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             </div>
         </div>
         <?php
+        include '../include/selected_orders_panel.php';
         include '../include/footer.php';
         ?>
         <script src="<?= APPLICATION ?>/js/select2.min.js"></script>
