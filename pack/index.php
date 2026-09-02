@@ -258,7 +258,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "cus.name as customer, c.name as calculation, cr.length_pure_1, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
-                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, c.gross_weight "
+                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, c.gross_weight, c.pallet_shared_with_id "
                     . "from calculation c "
                     . "inner join customer cus on c.customer_id = cus.id "
                     . "inner join calculation_result cr on cr.calculation_id = c.id "
@@ -300,7 +300,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $row['time']);
             ?>
                 <tr>
-                    <td><input type="checkbox" class="order-select-checkbox" value="<?=$row['id'] ?>" /></td>
+                    <td><?php if(empty($row['pallet_shared_with_id'])): ?><input type="checkbox" class="order-select-checkbox" value="<?=$row['id'] ?>" /><?php else: ?><span class="text-muted" style="font-size: smaller;">с др. зак.</span><?php endif; ?></td>
                     <td><?=$datetime->format('d.m') ?><br /><span style="font-size: smaller;"><?=$datetime->format('H:i') ?></span></td>
                     <?php
                     if($status_id == ORDER_STATUS_SHIPPED):

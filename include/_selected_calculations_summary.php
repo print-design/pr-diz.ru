@@ -19,24 +19,50 @@ $result = array(
     'volume' => 0,
     'volume_min' => 0,
     'volume_max' => 0,
+    'has_shared_pallet_orders' => false,
 );
 
 if(!empty($ids)) {
     $placeholders = implode(', ', array_fill(0, count($ids), '?'));
     
-    // Суммарный вес нетто (из данных резки), вес брутто и количество паллетов
-    // (для заказов, где упаковщица их ещё не ввела, считаем как 0)
-    $sql = "select sum(duplicate_weight_cut) net_weight, sum(ifnull(gross_weight, 0)) gross_weight, sum(ifnull(pallet_count, 0)) pallet_count "
-            . "from calculation where id in ($placeholders)";
+    // Вес нетто -- собственная величина производства каждого заказа, не привязана к паллету,
+    // поэтому считаем по исходному списку отмеченных id, без дедупликации
+    $sql = "select sum(duplicate_weight_cut) net_weight from calculation where id in ($placeholders)";
     $fetcher = new Fetcher($sql, $ids);
     if($row = $fetcher->Fetch()) {
         $result['net_weight'] = floatval($row['net_weight'] ?? 0);
-        $result['gross_weight'] = floatval($row['gross_weight'] ?? 0);
-        $result['pallet_count'] = intval($row['pallet_count'] ?? 0);
     }
     
-    // Суммарный объём готовых роликов по всей группе заказов -- та же формула,
-    // что и в конструкторе CalculationRolls, только не для одного id, а сразу для всех выбранных
+    // Вес брутто и количество паллетов -- атрибуты самого физического паллета, а не заказа.
+    // Если несколько отмеченных заказов физически лежат на одном паллете (через pallet_shared_with_id),
+    // их нельзя суммировать по отдельности -- сначала находим "владельца" паллета для каждого
+    // отмеченного заказа (сам заказ, если он ни с кем не связан, либо тот заказ, на который он ссылается),
+    // затем берём каждого владельца только один раз
+    $sql = "select id, coalesce(pallet_shared_with_id, id) owner_id, pallet_shared_with_id from calculation where id in ($placeholders)";
+    $grabber = new Grabber($sql, $ids);
+    $owner_ids = array();
+    foreach($grabber->result as $row) {
+        $owner_ids[$row['owner_id']] = true;
+        if(!empty($row['pallet_shared_with_id'])) {
+            $result['has_shared_pallet_orders'] = true;
+        }
+    }
+    $owner_ids = array_keys($owner_ids);
+    
+    if(!empty($owner_ids)) {
+        $owner_placeholders = implode(', ', array_fill(0, count($owner_ids), '?'));
+        $sql = "select sum(ifnull(gross_weight, 0)) gross_weight, sum(ifnull(pallet_count, 0)) pallet_count "
+                . "from calculation where id in ($owner_placeholders)";
+        $fetcher = new Fetcher($sql, $owner_ids);
+        if($row = $fetcher->Fetch()) {
+            $result['gross_weight'] = floatval($row['gross_weight'] ?? 0);
+            $result['pallet_count'] = intval($row['pallet_count'] ?? 0);
+        }
+    }
+    
+    // Суммарный объём готовых роликов -- собственная величина производства каждого заказа
+    // (сколько всего напечатано), тоже не привязана к паллету -- считаем по исходному списку,
+    // без дедупликации по владельцу паллета
     $sql = "select sum(power(ifnull(cts.radius, 0) * 2 + ifnull(tm.spool, 0), 2) * ifnull(cs.width, 0) / 1000000000) as volume "
             . "from calculation c "
             . "inner join techmap tm on tm.calculation_id = c.id "

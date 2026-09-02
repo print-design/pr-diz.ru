@@ -58,10 +58,11 @@
         $.ajax({ url: "<?=APPLICATION ?>/include/_selected_calculations_summary.php?ids=" + ids.join(',') })
                 .done(function(data) {
                     var result = JSON.parse(data);
+                    var sharedNote = result.has_shared_pallet_orders ? ' <small class="text-muted">(с другим заказом)</small>' : '';
                     $('#selected_orders_count').text(result.count);
                     $('#selected_orders_net_weight').text(FormatNumberRu(result.net_weight, 0) + ' кг');
-                    $('#selected_orders_gross_weight').text(FormatNumberRu(result.gross_weight, 0) + ' кг');
-                    $('#selected_orders_pallet_count').text(result.pallet_count);
+                    $('#selected_orders_gross_weight').html(FormatNumberRu(result.gross_weight, 0) + ' кг' + sharedNote);
+                    $('#selected_orders_pallet_count').html(result.pallet_count + sharedNote);
                     $('#selected_orders_volume').html('&asymp;' + FormatNumberRu(result.volume, 2) + ' м<sup>3</sup> <small class="text-muted">(' + FormatNumberRu(result.volume_min, 2) + '&ndash;' + FormatNumberRu(result.volume_max, 2) + ' м<sup>3</sup>)</small>');
                     $('#selected_orders_panel').addClass('open');
                 })

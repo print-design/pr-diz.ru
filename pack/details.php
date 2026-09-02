@@ -5,7 +5,7 @@ include '../calculation/calculation_result.php';
 include '../calculation/calculation_rolls.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
     include '../include/_unauthorized.php';
 }
 
@@ -22,11 +22,19 @@ if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
     $form_valid = true;
     
     // Перед отгрузкой проверяем, что вес брутто, количество паллетов и габариты паллета
-    // уже сохранены отдельной формой "Сохранить" -- саму смену статуса это больше не затрагивает
+    // уже сохранены отдельной формой "Сохранить" (либо напрямую, либо через связанный заказ) --
+    // саму смену статуса это больше не затрагивает
     if($status_id == ORDER_STATUS_SHIPPED) {
-        $sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height from calculation where id = ?";
+        $sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height, pallet_shared_with_id from calculation where id = ?";
         $fetcher = new Fetcher($sql, [$id]);
         $pallet_data_row = $fetcher->Fetch();
+        
+        if($pallet_data_row && !empty($pallet_data_row['pallet_shared_with_id'])) {
+            // Данные хранятся у связанного заказа -- проверяем их там
+            $sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height from calculation where id = ?";
+            $fetcher = new Fetcher($sql, [$pallet_data_row['pallet_shared_with_id']]);
+            $pallet_data_row = $fetcher->Fetch();
+        }
         
         if(!$pallet_data_row || $pallet_data_row['gross_weight'] === null || $pallet_data_row['pallet_count'] === null
                 || $pallet_data_row['pallet_length'] === null || $pallet_data_row['pallet_width'] === null || $pallet_data_row['pallet_height'] === null) {
@@ -58,40 +66,31 @@ if(null !== filter_input(INPUT_POST, 'save_pallet_data_submit')) {
     
     $gross_weight = filter_input(INPUT_POST, 'gross_weight') ?? '';
     $gross_weight = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $gross_weight);
-    if(empty($gross_weight) || !is_numeric($gross_weight)) {
-        $gross_weight_valid = ISINVALID;
-        $form_valid = false;
-    }
+    $gross_weight_ok = !empty($gross_weight) && is_numeric($gross_weight);
     
     $pallet_count = filter_input(INPUT_POST, 'pallet_count', FILTER_VALIDATE_INT);
-    if(empty($pallet_count)) {
-        $pallet_count_valid = ISINVALID;
-        $form_valid = false;
-    }
+    $pallet_count_ok = !empty($pallet_count);
     
     $pallet_length = filter_input(INPUT_POST, 'pallet_length') ?? '';
     $pallet_length = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $pallet_length);
-    if(empty($pallet_length) || !is_numeric($pallet_length)) {
-        $pallet_length_valid = ISINVALID;
-        $form_valid = false;
-    }
+    $pallet_length_ok = !empty($pallet_length) && is_numeric($pallet_length);
     
     $pallet_width = filter_input(INPUT_POST, 'pallet_width') ?? '';
     $pallet_width = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $pallet_width);
-    if(empty($pallet_width) || !is_numeric($pallet_width)) {
-        $pallet_width_valid = ISINVALID;
-        $form_valid = false;
-    }
+    $pallet_width_ok = !empty($pallet_width) && is_numeric($pallet_width);
     
     $pallet_height = filter_input(INPUT_POST, 'pallet_height') ?? '';
     $pallet_height = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $pallet_height);
-    if(empty($pallet_height) || !is_numeric($pallet_height)) {
-        $pallet_height_valid = ISINVALID;
-        $form_valid = false;
-    }
+    $pallet_height_ok = !empty($pallet_height) && is_numeric($pallet_height);
     
-    if($form_valid) {
-        $sql = "update calculation set gross_weight = ?, pallet_count = ?, pallet_length = ?, pallet_width = ?, pallet_height = ? where id = ?";
+    $all_five_filled = $gross_weight_ok && $pallet_count_ok && $pallet_length_ok && $pallet_width_ok && $pallet_height_ok;
+    
+    $pallet_shared_with_id = filter_input(INPUT_POST, 'pallet_shared_with_id', FILTER_VALIDATE_INT);
+    
+    if($all_five_filled) {
+        // Если все пять полей заполнены -- сохраняем собственные значения, независимо от того,
+        // что выбрано в раскрывающемся списке, и обнуляем ссылку на другой заказ
+        $sql = "update calculation set gross_weight = ?, pallet_count = ?, pallet_length = ?, pallet_width = ?, pallet_height = ?, pallet_shared_with_id = NULL where id = ?";
         $executer = new Executer($sql, [$gross_weight, $pallet_count, $pallet_length, $pallet_width, $pallet_height, $id]);
         $error_message = $executer->error;
         
@@ -99,8 +98,24 @@ if(null !== filter_input(INPUT_POST, 'save_pallet_data_submit')) {
             header("Location: details.php?id=$id");
         }
     }
+    elseif(!empty($pallet_shared_with_id)) {
+        // Выбран другой заказ -- собственные значения не нужны, обнуляем их
+        $sql = "update calculation set gross_weight = NULL, pallet_count = NULL, pallet_length = NULL, pallet_width = NULL, pallet_height = NULL, pallet_shared_with_id = ? where id = ?";
+        $executer = new Executer($sql, [$pallet_shared_with_id, $id]);
+        $error_message = $executer->error;
+        
+        if(empty($error_message)) {
+            header("Location: details.php?id=$id");
+        }
+    }
     else {
-        $error_message = "Заполните вес брутто, количество паллетов и габариты паллета";
+        // Ни все поля не заполнены, ни заказ не выбран -- показываем, каких полей не хватает
+        if(!$gross_weight_ok) $gross_weight_valid = ISINVALID;
+        if(!$pallet_count_ok) $pallet_count_valid = ISINVALID;
+        if(!$pallet_length_ok) $pallet_length_valid = ISINVALID;
+        if(!$pallet_width_ok) $pallet_width_valid = ISINVALID;
+        if(!$pallet_height_ok) $pallet_height_valid = ISINVALID;
+        $error_message = "Заполните вес брутто, количество паллетов и габариты паллета, либо выберите заказ, с которым отгружается этот паллет";
     }
 }
 
@@ -110,13 +125,15 @@ $calculation_result = CalculationResult::Create($id);
 $calculation_rolls = CalculationRolls::Create($id);
 
 // Вес брутто, количество паллетов и габариты паллета, введённые упаковщицей при отгрузке
+// (собственные значения этого заказа -- используются для предзаполнения формы)
 $gross_weight = null;
 $pallet_count = null;
 $pallet_length = null;
 $pallet_width = null;
 $pallet_height = null;
+$pallet_shared_with_id = null;
 
-$sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height from calculation where id = ?";
+$sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height, pallet_shared_with_id from calculation where id = ?";
 $fetcher = new Fetcher($sql, [$id]);
 if($row = $fetcher->Fetch()) {
     $gross_weight = $row['gross_weight'];
@@ -124,6 +141,27 @@ if($row = $fetcher->Fetch()) {
     $pallet_length = $row['pallet_length'];
     $pallet_width = $row['pallet_width'];
     $pallet_height = $row['pallet_height'];
+    $pallet_shared_with_id = $row['pallet_shared_with_id'];
+}
+
+// Значения для отображения в сводной строке таблицы -- если заказ отгружается вместе с другим,
+// берём данные того, другого, заказа
+$display_gross_weight = $gross_weight;
+$display_pallet_count = $pallet_count;
+$display_pallet_length = $pallet_length;
+$display_pallet_width = $pallet_width;
+$display_pallet_height = $pallet_height;
+
+if(!empty($pallet_shared_with_id)) {
+    $sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height from calculation where id = ?";
+    $fetcher = new Fetcher($sql, [$pallet_shared_with_id]);
+    if($row = $fetcher->Fetch()) {
+        $display_gross_weight = $row['gross_weight'];
+        $display_pallet_count = $row['pallet_count'];
+        $display_pallet_length = $row['pallet_length'];
+        $display_pallet_width = $row['pallet_width'];
+        $display_pallet_height = $row['pallet_height'];
+    }
 }
 
 $comment = '';
@@ -328,10 +366,10 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                     <td>Объём заказа</td>
                                     <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?=$calculation->unit == 'kg' ? 'кг' : 'шт' ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&asymp;<?= DisplayNumber(floatval($calculation_rolls->volume), 2) ?> м<sup>3</sup> <small class="text-muted">(<?= DisplayNumber(floatval($calculation_rolls->volume_min), 2) ?>&ndash;<?= DisplayNumber(floatval($calculation_rolls->volume_max), 2) ?> м<sup>3</sup>)</small></td>
                                 </tr>
-                                <?php if($gross_weight !== null && $pallet_count !== null && $pallet_length !== null && $pallet_width !== null && $pallet_height !== null): ?>
+                                <?php if($display_gross_weight !== null && $display_pallet_count !== null && $display_pallet_length !== null && $display_pallet_width !== null && $display_pallet_height !== null): ?>
                                 <tr>
                                     <td>Вес брутто</td>
-                                    <td><?= DisplayNumber(floatval($gross_weight), 0) ?> кг, <?= DisplayNumber(intval($pallet_count), 0) ?> <?= PluralForm($pallet_count, 'паллет', 'паллета', 'паллетов') ?>, <?= DisplayNumber(floatval($pallet_length), 2) ?>&times;<?= DisplayNumber(floatval($pallet_width), 2) ?>&times;<?= DisplayNumber(floatval($pallet_height), 2) ?> м</td>
+                                    <td><?= DisplayNumber(floatval($display_gross_weight), 0) ?> кг, <?= DisplayNumber(intval($display_pallet_count), 0) ?> <?= PluralForm($display_pallet_count, 'паллет', 'паллета', 'паллетов') ?>, <?= DisplayNumber(floatval($display_pallet_length), 2) ?>&times;<?= DisplayNumber(floatval($display_pallet_width), 2) ?>&times;<?= DisplayNumber(floatval($display_pallet_height), 2) ?> м</td>
                                 </tr>
                                 <?php endif; ?>
                                 <tr>
@@ -449,25 +487,17 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                         $machine_id = $row[0];
                     }
                     include '../cut/_table.php';
-                    
-                    if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
                     ?>
                     <div class="d-flex justify-content-xl-start mt-4">
-                        <?php if($calculation->status_id == ORDER_STATUS_SHIP_READY): ?>
-                        <div class="w-100">
-                            <form method="post" class="form-inline">
-                                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                                <input type="hidden" name="id" value="<?=$id ?>" />
-                                <input type="text" name="gross_weight" placeholder="Вес брутто, кг" class="form-control float-only float-format mb-2 mr-2<?=$gross_weight_valid ?>" style="width: 140px;" value="<?= DisplayNumber($gross_weight, 0) ?>" required="required" autocomplete="off" />
-                                <input type="text" name="pallet_count" placeholder="Кол-во паллетов" class="form-control int-only mb-2 mr-2<?=$pallet_count_valid ?>" style="width: 140px;" value="<?=$pallet_count ?>" required="required" autocomplete="off" />
-                                <input type="text" name="pallet_length" placeholder="Длина, м" class="form-control float-only float-format mb-2 mr-2<?=$pallet_length_valid ?>" style="width: 110px;" value="<?= DisplayNumber($pallet_length, 2) ?>" required="required" autocomplete="off" />
-                                <input type="text" name="pallet_width" placeholder="Ширина, м" class="form-control float-only float-format mb-2 mr-2<?=$pallet_width_valid ?>" style="width: 110px;" value="<?= DisplayNumber($pallet_width, 2) ?>" required="required" autocomplete="off" />
-                                <input type="text" name="pallet_height" placeholder="Высота, м" class="form-control float-only float-format mb-2 mr-2<?=$pallet_height_valid ?>" style="width: 110px;" value="<?= DisplayNumber($pallet_height, 2) ?>" required="required" autocomplete="off" />
-                                <button type="submit" name="save_pallet_data_submit" class="btn btn-outline-dark pl-4 pr-4 mr-4 mb-2"><i class="fas fa-save mr-2"></i>Сохранить</button>
-                            </form>
-                        </div>
-                        <?php endif; ?>
+                        <?php
+                        if($calculation->status_id == ORDER_STATUS_SHIP_READY) {
+                            include '../include/pallet_shipping_form.php';
+                        }
+                        ?>
                     </div>
+                    <?php
+                    if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
+                    ?>
                     <div class="d-flex justify-content-xl-start mt-4">
                         <?php if($calculation->status_id == ORDER_STATUS_PACK_READY): ?>
                         <div>
@@ -511,6 +541,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
         <?php endif; ?>
         <?php
         include '../include/footer.php';
+        include '../include/pallet_shipping_form_script.php';
         include '../include/footer_cut_validate.php';
         include '../include/footer_cut.php';
         ?>
