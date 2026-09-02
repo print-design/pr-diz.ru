@@ -9,7 +9,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
 // Обработка отправки формы - удаление пользователя
 if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $error_message = (new Executer("delete from user where id=$id"))->error;
+    $error_message = (new Executer("delete from user where id=?", [$id]))->error;
 }
 
 // Обработка отправки формы - смена пароля
@@ -53,24 +53,24 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     // Проверка старого пароля
     $user_change_password_id = filter_input(INPUT_POST, "user_change_password_id");
     $user_change_password_old = filter_input(INPUT_POST, "user_change_password_old");
-    $sql = "select count(id) count from user where id=$user_change_password_id and password=password('$user_change_password_old')";
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) count from user where id=? and password=password(?)";
+    $fetcher = new Fetcher($sql, [$user_change_password_id, $user_change_password_old]);
     $row = $fetcher->Fetch();
     if($row['count'] == 0) {
         $user_change_password_old_valid = ISINVALID;
         $user_change_password_old_message = "Неправильный текущий пароль";
         $form_valid = false;
         
-        $sql = "select last_name, first_name from user where id=$user_change_password_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select last_name, first_name from user where id=?";
+        $fetcher = new Fetcher($sql, [$user_change_password_id]);
         $row = $fetcher->Fetch();
         $user_change_password_confirm_fio = $row['last_name'].' '.$row['first_name'];
     }
     
     if($form_valid) {
         $user_change_password_new = filter_input(INPUT_POST, "user_change_password_new");
-        $sql = "update user set password=password('$user_change_password_new') where id=$user_change_password_id";
-        $executer = new Executer($sql);
+        $sql = "update user set password=password(?) where id=?";
+        $executer = new Executer($sql, [$user_change_password_new, $user_change_password_id]);
         $error_message = $executer->error;
     }
 }
@@ -81,16 +81,16 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
     $graph_key = filter_input(INPUT_POST, 'graph_key');
     
     // Проверяем, имеется ли такой графический ключ в базе
-    $sql = "select count(id) from user where graph_key = password('$graph_key')";
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from user where graph_key = password(?)";
+    $fetcher = new Fetcher($sql, [$graph_key]);
     $row = $fetcher->Fetch();
     if($row[0] > 0) {
         $form_valid = false;
     }
     
     if($form_valid) {
-        $sql = "update user set graph_key = password('$graph_key') where id = $graph_key_id";
-        $executer = new Executer($sql);
+        $sql = "update user set graph_key = password(?) where id = ?";
+        $executer = new Executer($sql, [$graph_key, $graph_key_id]);
         $error_message = $executer->error;
     }
 }
@@ -98,8 +98,8 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
 // Обработка отправки формы - удаление графического ключа
 if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
     $graph_key_delete_id = filter_input(INPUT_POST, 'graph_key_delete_id', FILTER_VALIDATE_INT);
-    $sql = "update user set graph_key = '' where id = $graph_key_delete_id";
-    $executer = new Executer($sql);
+    $sql = "update user set graph_key = '' where id = ?";
+    $executer = new Executer($sql, [$graph_key_delete_id]);
     $error_message = $executer->error;
 }
 ?>
@@ -275,7 +275,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                 <tbody>
                     <?php
                     $sql = "select id, role_id, first_name, last_name, username, email, phone, active, graph_key from user order by first_name asc";
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, []);
                     $error_message = $fetcher->error;
                     
                     while ($row = $fetcher->Fetch()):
