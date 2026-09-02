@@ -329,8 +329,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             ?>
         </div>
         <?php
-        include '../include/selected_orders_panel.php';
         include '../include/footer.php';
+        include '../include/selected_orders_panel.php';
         ?>
         <script src="<?= APPLICATION ?>/js/select2.min.js"></script>
         <script src="<?= APPLICATION ?>/js/i18n/ru.js"></script>
