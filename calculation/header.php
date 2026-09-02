@@ -9,7 +9,7 @@ $calculated_status = '';
 $draft_status = '';
 $trash_status = '';
 
-if(empty($status_id) && !empty($calculation)) {
+if(!empty($calculation)) {
     $status_id = $calculation->status_id;
 }
 
