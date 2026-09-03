@@ -22,6 +22,7 @@ $pallet_fields_disabled = !empty($pallet_shared_with_id);
     <form method="post">
         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
         <input type="hidden" name="id" value="<?=$id ?>" />
+        <input type="hidden" name="scroll" />
         <div class="form-group" style="width: 100%;">
             <label for="pallet_shared_with_id_<?=$id ?>" class="d-block">В одном паллете с</label>
             <select id="pallet_shared_with_id_<?=$id ?>" name="pallet_shared_with_id" class="form-control pallet-shared-with-select">
