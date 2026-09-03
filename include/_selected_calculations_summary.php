@@ -26,9 +26,12 @@ if(!empty($ids)) {
     $placeholders = implode(', ', array_fill(0, count($ids), '?'));
     
     // Вес нетто -- собственная величина производства каждого заказа, не привязана к паллету,
-    // поэтому считаем по исходному списку отмеченных id, без дедупликации
-    $sql = "select sum(duplicate_weight_cut) net_weight from calculation where id in ($placeholders)";
-    $fetcher = new Fetcher($sql, $ids);
+    // поэтому считаем по исходному списку отмеченных id, без дедупликации по владельцу паллета.
+    // Но заказы, ссылающиеся на отмеченный заказ через pallet_shared_with_id, сами никогда не
+    // могут быть отмечены (у них нет чекбокса на странице списка) -- поэтому их вес нетто
+    // тоже нужно приплюсовать, иначе он вообще никогда не попадёт в сумму
+    $sql = "select sum(duplicate_weight_cut) net_weight from calculation where id in ($placeholders) or pallet_shared_with_id in ($placeholders)";
+    $fetcher = new Fetcher($sql, array_merge($ids, $ids));
     if($row = $fetcher->Fetch()) {
         $result['net_weight'] = floatval($row['net_weight'] ?? 0);
     }
