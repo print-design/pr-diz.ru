@@ -71,6 +71,11 @@ if(null !== filter_input(INPUT_POST, 'save_pallet_data_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $form_valid = true;
     
+    // Позиция прокрутки страницы -- редирект ниже теряет обычные POST-данные,
+    // поэтому передаём её явно через строку запроса, чтобы footer.php смог прокрутить обратно
+    $scroll = filter_input(INPUT_POST, 'scroll');
+    $scroll_param = !empty($scroll) ? '&scroll='.intval($scroll) : '';
+    
     $gross_weight = filter_input(INPUT_POST, 'gross_weight') ?? '';
     $gross_weight = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $gross_weight);
     $gross_weight_ok = !empty($gross_weight) && is_numeric($gross_weight);
@@ -102,7 +107,7 @@ if(null !== filter_input(INPUT_POST, 'save_pallet_data_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header("Location: details.php?id=$id");
+            header("Location: details.php?id=$id$scroll_param");
         }
     }
     elseif(!empty($pallet_shared_with_id)) {
@@ -112,7 +117,7 @@ if(null !== filter_input(INPUT_POST, 'save_pallet_data_submit')) {
         $error_message = $executer->error;
         
         if(empty($error_message)) {
-            header("Location: details.php?id=$id");
+            header("Location: details.php?id=$id$scroll_param");
         }
     }
     else {
