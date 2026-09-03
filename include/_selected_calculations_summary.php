@@ -20,6 +20,7 @@ $result = array(
     'volume_min' => 0,
     'volume_max' => 0,
     'has_shared_pallet_orders' => false,
+    'orders' => array(),
 );
 
 if(!empty($ids)) {
@@ -79,6 +80,21 @@ if(!empty($ids)) {
     
     $result['volume_min'] = $result['volume_max'] * (sqrt(3) / 2);
     $result['volume'] = ($result['volume_min'] + $result['volume_max']) / 2;
+    
+    // Разбивка по каждому отмеченному заказу для нижней таблицы -- сортировка по весу брутто,
+    // чтобы заказы из одного и того же (физически) паллета оказались рядом друг с другом
+    $sql = "select id, customer_id, duplicate_num_for_customer, gross_weight, pallet_count "
+            . "from calculation where id in ($placeholders) order by gross_weight";
+    $grabber = new Grabber($sql, $ids);
+    foreach($grabber->result as $row) {
+        $result['orders'][] = array(
+            'id' => intval($row['id']),
+            'customer_id' => intval($row['customer_id']),
+            'num_for_customer' => intval($row['duplicate_num_for_customer']),
+            'gross_weight' => $row['gross_weight'] !== null ? floatval($row['gross_weight']) : null,
+            'pallet_count' => $row['pallet_count'] !== null ? intval($row['pallet_count']) : null,
+        );
+    }
 }
 
 echo json_encode($result);
