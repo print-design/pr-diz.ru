@@ -39,7 +39,7 @@ if(null !== filter_input(INPUT_POST, 'confirm_submit')) {
         if(!$pallet_data_row || $pallet_data_row['gross_weight'] === null || $pallet_data_row['pallet_count'] === null
                 || $pallet_data_row['pallet_length'] === null || $pallet_data_row['pallet_width'] === null || $pallet_data_row['pallet_height'] === null) {
             $form_valid = false;
-            $error_message = "Перед отгрузкой заполните и сохраните вес брутто, количество паллетов и габариты паллета";
+            $error_message = "Перед отгрузкой заполните и сохраните вес брутто, количество паллетов и габариты паллета, либо выберите заказ, с которым вместе он будет отгружаться";
         }
     }
     
