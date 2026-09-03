@@ -65,6 +65,10 @@
             <td>Паллетов (отмеченные)</td>
             <td class="text-right" id="selected_orders_pallet_count_sum">0</td>
         </tr>
+        <tr>
+            <td>Максимальный (отмеченные)</td>
+            <td class="text-right" id="selected_orders_max_volume_order">&mdash;</td>
+        </tr>
     </table>
 </div>
 <script>
@@ -72,18 +76,28 @@
         return parseFloat(value || 0).toLocaleString('ru-RU', {minimumFractionDigits: decimals, maximumFractionDigits: decimals});
     }
     
-    // Пересчёт нижней таблицы (суммы) по тем строкам разбивки, у которых флажок остался отмеченным
+    // Пересчёт нижней таблицы (суммы и максимум по габаритам) по тем строкам разбивки,
+    // у которых флажок остался отмеченным
     function RecalculateSelectedOrdersBreakdown() {
         var grossWeightSum = 0;
         var palletCountSum = 0;
+        var maxVolume = -1;
+        var maxVolumeOrderNumber = null;
         
         $('.selected_orders_breakdown_checkbox:checked').each(function() {
             grossWeightSum += parseFloat($(this).data('gross-weight')) || 0;
             palletCountSum += parseInt($(this).data('pallet-count')) || 0;
+            
+            var volume = parseFloat($(this).data('pallet-volume')) || 0;
+            if(volume > maxVolume) {
+                maxVolume = volume;
+                maxVolumeOrderNumber = $(this).data('order-number');
+            }
         });
         
         $('#selected_orders_gross_weight_sum').text(FormatNumberRu(grossWeightSum, 0) + ' кг');
         $('#selected_orders_pallet_count_sum').text(palletCountSum);
+        $('#selected_orders_max_volume_order').text(maxVolumeOrderNumber !== null ? maxVolumeOrderNumber : '\u2014');
     }
     
     function UpdateSelectedOrdersPanel() {
@@ -106,7 +120,7 @@
                         var grossWeightText = order.gross_weight !== null ? FormatNumberRu(order.gross_weight, 0) + ' кг' : '&mdash;';
                         var palletCountText = order.pallet_count !== null ? order.pallet_count : '&mdash;';
                         rowsHtml += '<tr>'
-                                + '<td><input type="checkbox" class="selected_orders_breakdown_checkbox" checked="checked" data-gross-weight="' + (order.gross_weight || 0) + '" data-pallet-count="' + (order.pallet_count || 0) + '" /></td>'
+                                + '<td><input type="checkbox" class="selected_orders_breakdown_checkbox" checked="checked" data-gross-weight="' + (order.gross_weight || 0) + '" data-pallet-count="' + (order.pallet_count || 0) + '" data-pallet-volume="' + (order.pallet_volume || 0) + '" data-order-number="' + order.customer_id + '-' + order.num_for_customer + '" /></td>'
                                 + '<td>' + order.customer_id + '-' + order.num_for_customer + '</td>'
                                 + '<td class="text-right">' + grossWeightText + '</td>'
                                 + '<td class="text-right">' + palletCountText + '</td>'

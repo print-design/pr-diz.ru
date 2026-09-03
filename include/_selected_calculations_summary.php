@@ -83,7 +83,7 @@ if(!empty($ids)) {
     
     // Разбивка по каждому отмеченному заказу для нижней таблицы -- сортировка по весу брутто,
     // чтобы заказы из одного и того же (физически) паллета оказались рядом друг с другом
-    $sql = "select id, customer_id, duplicate_num_for_customer, gross_weight, pallet_count "
+    $sql = "select id, customer_id, duplicate_num_for_customer, gross_weight, pallet_count, pallet_length, pallet_width, pallet_height "
             . "from calculation where id in ($placeholders) order by gross_weight";
     $grabber = new Grabber($sql, $ids);
     foreach($grabber->result as $row) {
@@ -93,6 +93,9 @@ if(!empty($ids)) {
             'num_for_customer' => intval($row['duplicate_num_for_customer']),
             'gross_weight' => $row['gross_weight'] !== null ? floatval($row['gross_weight']) : null,
             'pallet_count' => $row['pallet_count'] !== null ? intval($row['pallet_count']) : null,
+            'pallet_volume' => ($row['pallet_length'] !== null && $row['pallet_width'] !== null && $row['pallet_height'] !== null)
+                    ? floatval($row['pallet_length']) * floatval($row['pallet_width']) * floatval($row['pallet_height'])
+                    : null,
         );
     }
 }
