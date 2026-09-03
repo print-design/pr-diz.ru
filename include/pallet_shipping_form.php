@@ -9,11 +9,11 @@
 // значениями (то есть они сами ни с кем не связаны), и не сам текущий заказ
 $pallet_shared_candidates = (new Grabber(
         "select c.id, c.name, cus.name customer from calculation c left join customer cus on c.customer_id = cus.id "
-        . "where c.duplicate_status_id in (?, ?) and c.gross_weight is not null and c.pallet_count is not null "
+        . "where c.duplicate_status_id = ? and c.gross_weight is not null and c.pallet_count is not null "
         . "and c.pallet_length is not null and c.pallet_width is not null and c.pallet_height is not null "
         . "and c.pallet_shared_with_id is null and c.id != ? "
         . "order by c.name",
-        [ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED, $id]
+        [ORDER_STATUS_SHIP_READY, $id]
 ))->result;
 
 $pallet_fields_disabled = !empty($pallet_shared_with_id);

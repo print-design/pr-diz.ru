@@ -517,7 +517,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                         <?php endif; ?>
                     </div>
                     <?php endwhile; ?>
-                    <?php if($calculation->status_id == ORDER_STATUS_SHIP_READY || $calculation->status_id == ORDER_STATUS_SHIPPED): ?>
+                    <?php if($calculation->status_id == ORDER_STATUS_SHIP_READY): ?>
                     <div class="d-flex justify-content-xl-start mt-4">
                         <?php include '../include/pallet_shipping_form.php'; ?>
                     </div>
