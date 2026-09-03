@@ -8,12 +8,12 @@
 // в статусе "Готов к отгрузке", у которых уже заполнены все пять полей своими собственными
 // значениями (то есть они сами ни с кем не связаны), и не сам текущий заказ
 $pallet_shared_candidates = (new Grabber(
-        "select id, name from calculation "
-        . "where duplicate_status_id = ? and gross_weight is not null and pallet_count is not null "
-        . "and pallet_length is not null and pallet_width is not null and pallet_height is not null "
-        . "and pallet_shared_with_id is null and id != ? "
-        . "order by name",
-        [ORDER_STATUS_SHIP_READY, $id]
+        "select c.id, c.name, cus.name customer from calculation c left join customer cus on c.customer_id = cus.id "
+        . "where c.duplicate_status_id in (?, ?) and c.gross_weight is not null and c.pallet_count is not null "
+        . "and c.pallet_length is not null and c.pallet_width is not null and c.pallet_height is not null "
+        . "and c.pallet_shared_with_id is null and c.id != ? "
+        . "order by c.name",
+        [ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED, $id]
 ))->result;
 
 $pallet_fields_disabled = !empty($pallet_shared_with_id);
@@ -27,7 +27,7 @@ $pallet_fields_disabled = !empty($pallet_shared_with_id);
             <select id="pallet_shared_with_id_<?=$id ?>" name="pallet_shared_with_id" class="form-control pallet-shared-with-select">
                 <option value="">-- не выбрано --</option>
                 <?php foreach($pallet_shared_candidates as $pallet_shared_candidate): ?>
-                <option value="<?=$pallet_shared_candidate['id'] ?>"<?= $pallet_shared_with_id == $pallet_shared_candidate['id'] ? " selected='selected'" : "" ?>><?=htmlspecialchars($pallet_shared_candidate['name']) ?></option>
+                <option value="<?=$pallet_shared_candidate['id'] ?>"<?= $pallet_shared_with_id == $pallet_shared_candidate['id'] ? " selected='selected'" : "" ?>><?=htmlspecialchars($pallet_shared_candidate['name']) ?> (<?= htmlspecialchars($pallet_shared_candidate['customer']) ?>)</option>
                 <?php endforeach; ?>
             </select>
         </div>
