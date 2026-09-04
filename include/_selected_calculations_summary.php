@@ -93,6 +93,9 @@ if(!empty($ids)) {
             'num_for_customer' => intval($row['duplicate_num_for_customer']),
             'gross_weight' => $row['gross_weight'] !== null ? floatval($row['gross_weight']) : null,
             'pallet_count' => $row['pallet_count'] !== null ? intval($row['pallet_count']) : null,
+            'pallet_length' => $row['pallet_length'] !== null ? floatval($row['pallet_length']) : null,
+            'pallet_width' => $row['pallet_width'] !== null ? floatval($row['pallet_width']) : null,
+            'pallet_height' => $row['pallet_height'] !== null ? floatval($row['pallet_height']) : null,
             'pallet_volume' => ($row['pallet_length'] !== null && $row['pallet_width'] !== null && $row['pallet_height'] !== null)
                     ? floatval($row['pallet_length']) * floatval($row['pallet_width']) * floatval($row['pallet_height'])
                     : null,

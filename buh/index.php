@@ -290,7 +290,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             </div>
             <table class="table table-hover typography">
                 <tr>
-                    <th></th>
+                    <th><input type="checkbox" id="select_all_orders_checkbox" /></th>
                     <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
                     <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
                     <th>Дата отгрузки&nbsp;&nbsp;<?= OrderLink('date') ?></th>
