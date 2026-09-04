@@ -112,6 +112,18 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     function GetFilter(&$params) {
                         $filter = '';
                         
+                        $unit = filter_input(INPUT_GET, 'unit');
+                        if(!empty($unit)) {
+                            $filter .= " and c.unit = ?";
+                            array_push($params, $unit);
+                        }
+                        
+                        $work_type = filter_input(INPUT_GET, 'work_type');
+                        if(!empty($work_type)) {
+                            $filter .= " and c.work_type_id = ?";
+                            array_push($params, $work_type);
+                        }
+                        
                         $manager = filter_input(INPUT_GET, 'manager');
                         if(!empty($manager)) {
                             $filter .= " and c.manager_id = ?";
@@ -124,10 +136,10 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             array_push($params, $customer);
                         }
                         
-                        $work_type = filter_input(INPUT_GET, 'work_type');
-                        if(!empty($work_type)) {
-                            $filter .= " and c.work_type_id = ?";
-                            array_push($params, $work_type);
+                        $name = filter_input(INPUT_GET, 'name');
+                        if(!empty($name)) {
+                            $filter .= " and trim(c.name) = ?";
+                            array_push($params, $name);
                         }
                         
                         $find = trim(filter_input(INPUT_GET, 'find') ?? '');
@@ -230,6 +242,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         ?>
                         <input type="hidden" name="status" value="<?=$status_id ?>" />
                         <?php endif; ?>
+                        <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Шт/кг...</option>
+                            <option value="<?= PIECES ?>"<?= filter_input(INPUT_GET, 'unit') == PIECES ? " selected='selected'" : "" ?>>Шт</option>
+                            <option value="<?= KG ?>"<?= filter_input(INPUT_GET, 'unit') == KG ? " selected='selected'" : "" ?>>Кг</option>
+                        </select>
+                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Тип работы...</option>
+                            <?php foreach(WORK_TYPES as $item): ?>
+                            <option value="<?=$item ?>"<?= ($item == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?= WORK_TYPE_NAMES[$item] ?></option>
+                            <?php endforeach; ?>
+                        </select>
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
@@ -254,11 +277,13 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             endif;
                             ?>
                         </select>
-                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                            <option value="">Тип работы...</option>
-                            <?php foreach(WORK_TYPES as $item): ?>
-                            <option value="<?=$item ?>"<?= ($item == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?= WORK_TYPE_NAMES[$item] ?></option>
-                            <?php endforeach; ?>
+                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <?php
+                            $get_name = filter_input(INPUT_GET, 'name');
+                            if(null !== $get_name):
+                            ?>
+                            <option selected="selected"><?=$get_name ?></option>
+                            <?php endif; ?>
                         </select>
                     </form>
                 </div>
@@ -446,6 +471,30 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     url: '_customer_select2.php',
                     dataType: 'json',
                     delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
+                }
+            });
+            
+            $('#name').select2({
+                placeholder: "Наименование...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "15rem",
+                minimumInputLength: 3,
+                ajax: {
+                    url: "_name_select2.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        var customerVal = $('#customer').val();
+                        return {
+                            q: params.term,
+                            customer: (customerVal && customerVal.length > 0) ? customerVal[0] : ''
+                        };
+                    },
                     processResults: function(data) {
                         return { results: data };
                     },
