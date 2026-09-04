@@ -24,8 +24,8 @@ if(null !== filter_input(INPUT_POST, 'film_variation_submit')) {
     }
     
     if($form_valid) {
-        $sql = "insert into supplier_film_variation(supplier_id, film_variation_id) values($supplier_id, $film_variation_id)";
-        $executer = new Executer($sql);
+        $sql = "insert into supplier_film_variation(supplier_id, film_variation_id) values(?, ?)";
+        $executer = new Executer($sql, [$supplier_id, $film_variation_id]);
         $error_message = $executer->error;
     }
 }
@@ -34,8 +34,8 @@ if(null !== filter_input(INPUT_POST, 'film_variation_submit')) {
 if(null !== filter_input(INPUT_POST, 'delete_submit')) {
     $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT);
-    $sql = "delete from supplier_film_variation where supplier_id = $supplier_id and film_variation_id = $film_variation_id";
-    $executer = new Executer($sql);
+    $sql = "delete from supplier_film_variation where supplier_id = ? and film_variation_id = ?";
+    $executer = new Executer($sql, [$supplier_id, $film_variation_id]);
     $error_message = $executer->error;
 }
 
@@ -44,8 +44,8 @@ $supplier_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 // Название поставщика
 $name = '';
-$sql = "select name from supplier where id = $supplier_id";
-$fetcher = new Fetcher($sql);
+$sql = "select name from supplier where id = ?";
+$fetcher = new Fetcher($sql, [$supplier_id]);
 if($row = $fetcher->Fetch()) {
     $name = $row['name'];
 }
@@ -56,7 +56,8 @@ $films = array();
 $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
         . "from film f "
         . "inner join film_variation fv on fv.film_id = f.id "
-        . "where fv.id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) ";
+        . "where fv.id in (select film_variation_id from supplier_film_variation where supplier_id = ?) ";
+$params = [$supplier_id];
 
 if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
     $post_film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
@@ -65,12 +66,13 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
         $sql .= "union "
                 . "select f.id film_id, f.name film, null film_variation_id, null thickness, null weight "
                 . "from film f "
-                . "where f.id = $post_film_id ";
+                . "where f.id = ? ";
+        $params[] = $post_film_id;
     }
 }
 
 $sql .= "order by film, thickness, weight";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, $params);
 while($row = $fetcher->Fetch()) {
     $film_id = $row['film_id'];
     if(!isset($films[$film_id])) {
@@ -87,8 +89,9 @@ while($row = $fetcher->Fetch()) {
 $sql = "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
         . "from film f "
         . "inner join film_variation fv on fv.film_id = f.id "
-        . "where f.id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id)) "
-        . "and fv.id not in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) ";
+        . "where f.id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = ?)) "
+        . "and fv.id not in (select film_variation_id from supplier_film_variation where supplier_id = ?) ";
+$params = [$supplier_id, $supplier_id];
 
 if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
     $post_film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
@@ -98,13 +101,14 @@ if(null !== filter_input(INPUT_POST, 'create_film_submit')) {
                 . "select f.id film_id, f.name film, fv.id film_variation_id, fv.thickness, fv.weight "
                 . "from film f "
                 . "inner join film_variation fv on fv.film_id = f.id "
-                . "where f.id = $post_film_id ";
+                . "where f.id = ? ";
+        $params[] = $post_film_id;
     }
 }
 
 $sql .= "order by thickness, weight";
 
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, $params);
 while($row = $fetcher->Fetch()) {
     $film_id = $row['film_id'];
     if(!isset($films[$film_id])) {
@@ -167,9 +171,9 @@ while($row = $fetcher->Fetch()) {
                                     <?php
                                     $sql = "select id, name "
                                             . "from film "
-                                            . "where id not in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id)) "
+                                            . "where id not in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = ?)) "
                                             . "order by name";
-                                    $fetcher = new Fetcher($sql);
+                                    $fetcher = new Fetcher($sql, [$supplier_id]);
                                     while($row = $fetcher->Fetch()):
                                     ?>
                                     <option value="<?=$row['id'] ?>"><?=$row['name'] ?></option>
