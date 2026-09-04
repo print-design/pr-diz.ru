@@ -27,8 +27,8 @@ class Queue {
     
     private function ShowPrint() {
         // Список валов текущей машины
-        $sql = "select value from raport where active = 1 and machine_id = ".$this->machine_id;
-        $grabber = new Grabber($sql);
+        $sql = "select value from raport where active = 1 and machine_id = ?";
+        $grabber = new Grabber($sql, [$this->machine_id]);
         $result = $grabber->result;
         $raports = array();
         foreach($result as $item) {
@@ -38,16 +38,16 @@ class Queue {
         if(count($raports) == 0) {
             array_push($raports, 0);
         }
-            
-        $str_raports = implode(', ', $raports);
+        
+        $raport_placeholders = implode(', ', array_fill(0, count($raports), '?'));
         
         // Красочность текущей машины
         $colorfulness = PRINTER_COLORFULLNESSES[$this->machine_id];
         
         // Максимальная ширина текущей машины
         $max_width = 0;
-        $sql = "select width from norm_machine where machine_id = ". $this->machine_id." order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select width from norm_machine where machine_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$this->machine_id]);
         if($row = $fetcher->Fetch()) {
             $max_width = $row[0];
         }
@@ -64,8 +64,8 @@ class Queue {
                 . "0 as status_id, now() as status_date, 0 as images_count "
                 . "from plan_event "
                 . "where in_plan = 0"
-                . " and work_id = ".$this->work_id
-                . " and machine_id = ".$this->machine_id
+                . " and work_id = ?"
+                . " and machine_id = ?"
                 . " union "
                 . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, cus.name customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.queue_top, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
@@ -81,17 +81,23 @@ class Queue {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "where c.id not in (select calculation_id from plan_edition where run2 = 0"
-                . " and work_id = ".$this->work_id.")"
+                . " and work_id = ?)"
                 . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
                 . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
-                . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness and cr.width_1 <= $max_width) or c.machine_id = ".$this->machine_id." or (raport_irregular = 1 and ". $this->machine_id." <> ". PRINTER_ATLAS." and ".$this->machine_id." <> ". PRINTER_ZBS_1." and ".$this->machine_id." <> ". PRINTER_ZBS_2." and ".$this->machine_id." <> ". PRINTER_ZBS_3."))";
+                . " and ((c.raport in ($raport_placeholders) and c.ink_number <= ? and cr.width_1 <= ?) or c.machine_id = ? or (raport_irregular = 1 and ? <> ". PRINTER_ATLAS." and ? <> ". PRINTER_ZBS_1." and ? <> ". PRINTER_ZBS_2." and ? <> ". PRINTER_ZBS_3."))";
+        
+        $params = array_merge(
+                [$this->work_id, $this->machine_id, $this->work_id],
+                $raports,
+                [$colorfulness, $max_width, $this->machine_id, $this->machine_id, $this->machine_id, $this->machine_id, $this->machine_id]
+        );
         
         $run2 = true;
         
         $price_run2 = null;
         $speed_run2 = null;
-        $query = "select price_run2, speed_run2 from norm_machine where machine_id = ". $this->machine_id." order by id desc limit 1";
-        $fetcher = new Fetcher($query);
+        $query = "select price_run2, speed_run2 from norm_machine where machine_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($query, [$this->machine_id]);
         if ($row = $fetcher->Fetch()) {
             $price_run2 = $row['price_run2'];
             $speed_run2 = $row['speed_run2'];
@@ -104,8 +110,8 @@ class Queue {
         $time_run2 = null;
         $length_run2 = null;
         $waste_percent_run2 = null;
-        $query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ". $this->machine_id." order by id desc limit 1";
-        $fetcher = new Fetcher($query);
+        $query = "select time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ? order by id desc limit 1";
+        $fetcher = new Fetcher($query, [$this->machine_id]);
         if ($row = $fetcher->Fetch()) {
             $time_run2 = $row['time_run2'];
             $length_run2 = $row['length_run2'];
@@ -133,13 +139,20 @@ class Queue {
                     . "inner join user u on c.manager_id = u.id "
                     . "where c.ink_run2_1 <> ''"
                     . " and c.id not in (select calculation_id from plan_edition where run2 = 1"
-                    . " and work_id = ".$this->work_id.")"
+                    . " and work_id = ?)"
                     . " and c.work_type_id <> ". WORK_TYPE_NOPRINT
                     . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ". ORDER_STATUS_CONFIRMED
-                    . " and ((c.raport in ($str_raports) and c.ink_number <= $colorfulness) or machine_id = ".$this->machine_id." or (raport_irregular = 1 and ". $this->machine_id." <> ". PRINTER_ATLAS."))";
+                    . " and ((c.raport in ($raport_placeholders) and c.ink_number <= ?) or machine_id = ? or (raport_irregular = 1 and ? <> ". PRINTER_ATLAS."))";
+            
+            $params = array_merge(
+                    $params,
+                    [$this->work_id],
+                    $raports,
+                    [$colorfulness, $this->machine_id, $this->machine_id]
+            );
         }
         $sql .= " order by position, queue_top desc, status_date";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, $params);
         
         while($row = $fetcher->Fetch()) {
             $laminations_number = 0;
@@ -168,7 +181,7 @@ class Queue {
                 . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position, "
                 . "0 as status_id, now() as status_date, 0 as images_count "
                 . "from plan_event "
-                . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id
+                . "where in_plan = 0 and work_id = ? and machine_id = ?"
                 . " union "
                 . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_2 as length, c.ink_number, c.raport, c.lamination_roller_width, c.queue_top, "
                 . "f.name film_name, fv.thickness, c.individual_film_name, c.individual_thickness, "
@@ -192,7 +205,7 @@ class Queue {
                 . "left join film_variation fv2 on c.lamination2_film_variation_id = fv2.id "
                 . "left join film f2 on fv2.film_id = f2.id "
                 . "left join plan_edition peprint on peprint.calculation_id = c.id and peprint.work_id = ".WORK_PRINTING." "
-                . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 1)"
+                . "where c.id not in (select calculation_id from plan_edition where work_id = ? and lamination = 1)"
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " and (("
                 . "c.work_type_id = ".WORK_TYPE_PRINT
@@ -227,7 +240,7 @@ class Queue {
                 . "left join film_variation fv2 on c.lamination2_film_variation_id = fv2.id "
                 . "left join film f2 on fv2.film_id = f2.id "
                 . "left join plan_edition peprint on peprint.calculation_id = c.id and peprint.work_id = ".WORK_PRINTING." "
-                . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id." and lamination = 2)"
+                . "where c.id not in (select calculation_id from plan_edition where work_id = ? and lamination = 2)"
                 . " and (c.lamination2_film_variation_id is not null or (c.lamination2_individual_film_name is not null and c.lamination2_individual_film_name <> ''))"
                 . " and (("
                 . "c.work_type_id = ".WORK_TYPE_PRINT
@@ -240,7 +253,7 @@ class Queue {
                 . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT
                 . "))"
                 . " order by position, queue_top desc, work_type_id, print_date, print_shift, print_position, status_date";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$this->work_id, $this->machine_id, $this->work_id, $this->work_id]);
         
         while($row = $fetcher->Fetch()) {
             $laminations_number = 0;
@@ -268,7 +281,7 @@ class Queue {
                 . "'' as first_name, '' as last_name, null as print_date, '' as print_shift, 0 as print_position, null as lamination_date, '' as lamination_shift, 0 as lamination_position, "
                 . "0 as status_id, now() as status_date, 0 as images_count "
                 . "from plan_event "
-                . "where in_plan = 0 and work_id = ".$this->work_id." and machine_id = ".$this->machine_id;
+                . "where in_plan = 0 and work_id = ? and machine_id = ?";
         $sql .= " union "
                 . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name as calculation, c.work_type_id, cus.name as customer, cr.length_dirty_1 as length, c.ink_number, c.raport, c.queue_top, "
                 . "c.lamination1_film_variation_id, c.lamination1_individual_film_name, "
@@ -287,7 +300,7 @@ class Queue {
                 . "inner join user u on c.manager_id = u.id "
                 . "left join plan_edition peprint on peprint.calculation_id = c.id and peprint.work_id = ".WORK_PRINTING." "
                 . "left join plan_edition pelam on pelam.calculation_id = c.id and pelam.work_id = ".WORK_LAMINATION." and (select count(id) from plan_edition where calculation_id = pelam.calculation_id and work_id = pelam.work_id and id < pelam.id) = 0 "
-                . "where c.id not in (select calculation_id from plan_edition where work_id = ".$this->work_id.")";
+                . "where c.id not in (select calculation_id from plan_edition where work_id = ?)";
         if($this->machine_id == CUTTER_ATLAS) {
             $sql .= " and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE
                     . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT;
@@ -312,7 +325,7 @@ class Queue {
                     . "))";
         }
         $sql .= " order by position, queue_top desc, work_type_id, print_date, print_shift, print_position, lamination_date, lamination_shift, lamination_position, status_date";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$this->work_id, $this->machine_id, $this->work_id]);
         
         while($row = $fetcher->Fetch()) {
             $laminations_number = 0;
