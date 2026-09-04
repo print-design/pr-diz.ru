@@ -140,11 +140,10 @@
     }
     
     $(document).on('change', '.order-select-checkbox', function() {
-        // Если хоть один флажок в столбце снят -- главный флажок в заголовке тоже снимается,
-        // чтобы не показывать его отмеченным, когда на самом деле отмечены не все строки
-        var total = $('.order-select-checkbox').length;
+        // Верхний флажок автоматически устанавливается, если отмечена хотя бы одна строка,
+        // и снимается только тогда, когда не отмечено ни одной строки
         var checked = $('.order-select-checkbox:checked').length;
-        $('#select_all_orders_checkbox').prop('checked', total > 0 && total === checked);
+        $('#select_all_orders_checkbox').prop('checked', checked > 0);
         
         UpdateSelectedOrdersPanel();
     });
