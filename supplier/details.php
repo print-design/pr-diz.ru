@@ -42,12 +42,11 @@ if(null !== filter_input(INPUT_POST, 'film_brand_create_submit')) {
         $form_valid = false;
     }
     
-    $name = addslashes($name ?? '');
     $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
     
     // Не допускаем повторного создания такой марки для такого поставщика
-    $sql = "select count(id) from film_brand where name='$name' and supplier_id=$supplier_id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from film_brand where name=? and supplier_id=?";
+    $fetcher = new Fetcher($sql, [$name, $supplier_id]);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
             $error_message = "У одного поставщика не должно быть двух плёнок с одинаковым названием";
@@ -56,12 +55,12 @@ if(null !== filter_input(INPUT_POST, 'film_brand_create_submit')) {
     }
     
     if($form_valid) {
-        $executer = new Executer("insert into film_brand (name, supplier_id) values ('$name', $supplier_id)");
+        $executer = new Executer("insert into film_brand (name, supplier_id) values (?, ?)", [$name, $supplier_id]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {
             $insert_id = $executer->insert_id;
-            $variation_executer = new Executer("insert into film_brand_variation (film_brand_id, thickness, weight) values ($insert_id, $thickness, $weight)");
+            $variation_executer = new Executer("insert into film_brand_variation (film_brand_id, thickness, weight) values (?, ?, ?)", [$insert_id, $thickness, $weight]);
             $error_message = $variation_executer->error;
         }
     }
@@ -88,8 +87,8 @@ if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
     $film_brand_id = filter_input(INPUT_POST, 'film_brand_id', FILTER_VALIDATE_INT);
     
     // Не допускаем повторного создания одной и той же вариации для одной марки плёнки
-    $sql = "select count(id) from film_brand_variation where film_brand_id=$film_brand_id and thickness=$thickness and weight=$weight";
-    $fetcher = new Fetcher($sql);
+    $sql = "select count(id) from film_brand_variation where film_brand_id=? and thickness=? and weight=?";
+    $fetcher = new Fetcher($sql, [$film_brand_id, $thickness, $weight]);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
             $error_message = "У одной марки плёнки не должно быть двух одинаковых сочетаний толщины и веса";
@@ -98,7 +97,7 @@ if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
     }
     
     if($form_valid) {
-        $executer = new Executer("insert into film_brand_variation (film_brand_id, thickness, weight) values ($film_brand_id, $thickness, $weight)");
+        $executer = new Executer("insert into film_brand_variation (film_brand_id, thickness, weight) values (?, ?, ?)", [$film_brand_id, $thickness, $weight]);
         $error_message = $executer->error;
     }
 }
@@ -106,7 +105,7 @@ if(null !== filter_input(INPUT_POST, 'film_brand_variation_create_submit')) {
 // Обработка отправки формы удаления марки
 if(null !== filter_input(INPUT_POST, 'delete_brand_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $error_message = (new Executer("delete from film_brand where id=$id"))->error;
+    $error_message = (new Executer("delete from film_brand where id=?", [$id]))->error;
 }
 
 // Обработка отправки формы удаления вариации
@@ -114,16 +113,16 @@ if(null !== filter_input(INPUT_POST, 'delete_variation_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $film_brand_id = filter_input(INPUT_POST, 'film_brand_id', FILTER_VALIDATE_INT);
     $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
-    $error_message = (new Executer("delete from film_brand_variation where id=$id"))->error;
+    $error_message = (new Executer("delete from film_brand_variation where id=?", [$id]))->error;
     
     if(empty($error_message)) {
         // Если не остаётся ни одной вариации, то удаляем марку
-        $sql = "select count(id) from film_brand_variation where film_brand_id=$film_brand_id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select count(id) from film_brand_variation where film_brand_id=?";
+        $fetcher = new Fetcher($sql, [$film_brand_id]);
         if($row = $fetcher->Fetch()) {
             if($row[0] == 0) {
-                $sql = "delete from film_brand where id=$film_brand_id";
-                $executer = new Executer($sql);
+                $sql = "delete from film_brand where id=?";
+                $executer = new Executer($sql, [$film_brand_id]);
                 $error_message = $executer->error;
             }
         }
@@ -135,15 +134,15 @@ if(null !== filter_input(INPUT_POST, 'delete-brand-button')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     
     // Проверка, присутствует ли он в каком-либо паллете или рулоне
-    $sql = "select (select count(id) from pallet where supplier_id = $id) + (select count(id) from roll where supplier_id = $id)";
-    $fetcher = new Fetcher($sql);
+    $sql = "select (select count(id) from pallet where supplier_id = ?) + (select count(id) from roll where supplier_id = ?)";
+    $fetcher = new Fetcher($sql, [$id, $id]);
     $row = $fetcher->Fetch();
     if(intval($row[0]) > 0) {
         $error_message = "В базе есть продукты этого поставщика";
     }
 
     if(empty($error_message)) {
-        $error_message = (new Executer("delete from supplier where id = $id"))->error;
+        $error_message = (new Executer("delete from supplier where id = ?", [$id]))->error;
     }
 
     if(empty($error_message)) {
@@ -152,7 +151,7 @@ if(null !== filter_input(INPUT_POST, 'delete-brand-button')) {
 }
 
 // Получение объекта
-$row = (new Fetcher("select name from supplier where id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)))->Fetch();
+$row = (new Fetcher("select name from supplier where id=?", [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]))->Fetch();
 $name = htmlentities($row['name'] ?? '');
 ?>
 <!DOCTYPE html>
@@ -221,8 +220,8 @@ $name = htmlentities($row['name'] ?? '');
                     </button>
                 </div>
                 <?php
-                $film_brands = (new Grabber("select id, name from film_brand where supplier_id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." order by name"))->result;
-                $film_brand_variations = (new Grabber("select v.id, v.film_brand_id, v.thickness, v.weight from film_brand_variation v inner join film_brand b on v.film_brand_id=b.id where b.supplier_id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." order by thickness, weight"))->result;
+                $film_brands = (new Grabber("select id, name from film_brand where supplier_id=? order by name", [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]))->result;
+                $film_brand_variations = (new Grabber("select v.id, v.film_brand_id, v.thickness, v.weight from film_brand_variation v inner join film_brand b on v.film_brand_id=b.id where b.supplier_id=? order by thickness, weight", [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]))->result;
 
                 foreach ($film_brands as $film_brand):
                     $current_film_brand_variations = array_filter($film_brand_variations, function($param) use($film_brand) { return $param['film_brand_id'] == $film_brand['id']; });
