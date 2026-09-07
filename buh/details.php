@@ -374,7 +374,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
             }
             ?>
             <div class="row">
-                <div class="col-5">
+                <div class="col-6">
                     <?php
                     $backlink_url = "";
                     if($production) {
@@ -522,13 +522,8 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                         <?php endif; ?>
                     </div>
                     <?php endwhile; ?>
-                    <?php if($calculation->status_id == ORDER_STATUS_SHIP_READY): ?>
-                    <div class="d-flex justify-content-xl-start mt-4">
-                        <?php include '../include/pallet_shipping_form.php'; ?>
-                    </div>
-                    <?php endif; ?>
                 </div>
-                <div class="col-7">
+                <div class="col-6">
                     <div id="right_part">
                         <h2>Оплата заказа</h2>
                         <div class="subtitle">Поступления</div>
@@ -649,7 +644,6 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
         </div>
         <?php
         include '../include/footer.php';
-        include '../include/pallet_shipping_form_script.php';
         ?>
     </body>
 </html>
