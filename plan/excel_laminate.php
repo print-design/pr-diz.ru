@@ -60,10 +60,10 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "inner join calculation c on pe.calculation_id = c.id "
                 . "inner join user u on c.manager_id = u.id "
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
-                . "where pe.work_id = ".WORK_LAMINATION." and pe.machine_id = ".$laminator
-                ." and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
+                . "where pe.work_id = ".WORK_LAMINATION." and pe.machine_id = ?"
+                ." and pe.date >= ? and pe.date <= ? "
                 . "order by date, shift";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$laminator, $date_from->format('Y/m/d'), $date_to->format('Y/m/d')]);
         while($row = $fetcher->Fetch()) {
             $rowindex++;
             

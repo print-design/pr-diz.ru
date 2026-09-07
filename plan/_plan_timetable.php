@@ -31,7 +31,7 @@ class PlanTimetable {
         
         // Работники
         $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, []);
         while ($row = $fetcher->Fetch()) {
             $this->employees[$row['id']] = array("first_name" => mb_substr($row['first_name'], 0, 1).'.', "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']);
         }
@@ -40,9 +40,9 @@ class PlanTimetable {
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
                 . "left join plan_employee e on ws.employee1_id = e.id "
-                . "where ws.work_id = ".$this->work_id." and ws.machine_id = ".$this->machine_id
-                ." and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
-        $fetcher = new Fetcher($sql);
+                . "where ws.work_id = ? and ws.machine_id = ?"
+                ." and ws.date >= ? and ws.date <= ?";
+        $fetcher = new Fetcher($sql, [$this->work_id, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d')]);
         while($row = $fetcher->Fetch()) {
             $this->workshifts1[$this->work_id.'_'.$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
         }
@@ -52,9 +52,9 @@ class PlanTimetable {
             $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                     . "from plan_workshift2 ws "
                     . "left join plan_employee e on ws.employee2_id = e.id "
-                    . "where ws.work_id = ".$this->work_id." and ws.machine_id = ".$this->machine_id
-                    ." and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
-            $fetcher = new Fetcher($sql);
+                    . "where ws.work_id = ? and ws.machine_id = ?"
+                    ." and ws.date >= ? and ws.date <= ?";
+            $fetcher = new Fetcher($sql, [$this->work_id, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d')]);
             while ($row = $fetcher->Fetch()) {
                 $this->workshifts2[$this->work_id.'_'.$this->machine_id.'_'.$row['date'].'_'.$row['shift']] = $row['id'];
             }
@@ -101,7 +101,7 @@ class PlanTimetable {
                 . "left join film f1 on fv1.film_id = f1.id "
                 . "left join film_variation fv2 on c.lamination2_film_variation_id = fv2.id "
                 . "left join film f2 on fv2.film_id = f2.id "
-                . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ? and e.machine_id = ? and e.date >= ? and e.date <= ? "
                 . "union "
                 . "select ev.id, ev.date, ev.shift, ".PLAN_TYPE_EVENT." as type, 0 as has_continuation, ev.worktime, ev.position, ev.id calculation_id, ev.text calculation, 0 as raport, 0 as lamination_roller_width, 0 as length, 0 as stream_width, 0 as streams_number, 0 as ink_number, 0 as ink_run2_number, '' as unit, 0 as quantity, "
                 . "0 as quantity_sum, "
@@ -127,7 +127,7 @@ class PlanTimetable {
                 . "0 as length_cut, "
                 . "0 as weight_cut, "
                 . "0 as images_count "
-                . "from plan_event ev where ev.in_plan = 1 and ev.work_id = ".$this->work_id." and ev.machine_id = ".$this->machine_id." and ev.date >= '".$this->dateFrom->format('Y-m-d')."' and ev.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "from plan_event ev where ev.in_plan = 1 and ev.work_id = ? and ev.machine_id = ? and ev.date >= ? and ev.date <= ? "
                 . "union "
                 . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, c.id calculation_id, c.name calculation, c.raport, c.lamination_roller_width, c.length, c.stream_width, c.streams_number, c.ink_number, c.ink_run2_number, c.unit, c.quantity, "
                 . "(select sum(quantity) from calculation_quantity where calculation_id = c.id) quantity_sum, "
@@ -170,9 +170,13 @@ class PlanTimetable {
                 . "left join film f1 on fv1.film_id = f1.id "
                 . "left join film_variation fv2 on c.lamination2_film_variation_id = fv2.id "
                 . "left join film f2 on fv2.film_id = f2.id "
-                . "where e.work_id = ".$this->work_id." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ? and e.machine_id = ? and pc.date >= ? and pc.date <= ? "
                 . "order by position";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [
+            $this->work_id, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d'),
+            $this->work_id, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d'),
+            $this->work_id, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d'),
+        ]);
         while($row = $fetcher->Fetch()) {
             if(!array_key_exists($row['date'], $this->editions)) {
                 $this->editions[$row['date']] = array();
@@ -250,7 +254,7 @@ class PlanTimetable {
         
         // Расход краски на 1 м2
         $sql_ink = "select c_expense, m_expense, y_expense, k_expense, white_expense, panton_expense, lacquer_glossy_expense, lacquer_matte_expense, lacquer_selective_expense, self_adhesive_laquer_expense from norm_ink order by id desc limit 1";
-        $fetcher_ink = new Fetcher($sql_ink);
+        $fetcher_ink = new Fetcher($sql_ink, []);
         if($row = $fetcher_ink->Fetch()) {
             $this->ink_expenses[CMYK_CYAN] = $row['c_expense'];
             $this->ink_expenses[CMYK_MAGENDA] = $row['m_expense'];

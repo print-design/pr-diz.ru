@@ -47,13 +47,13 @@ class PlanShift {
             foreach($this->editions as $key => $value)  {
                 if($previous_position == $value['position']) {
                     if($value['type'] == PLAN_TYPE_EVENT) {
-                        $sql = "update plan_event set position = ifnull(position, 0) + 1 where id = ".$value['id'];
-                        $executer = new Executer($sql);
+                        $sql = "update plan_event set position = ifnull(position, 0) + 1 where id = ?";
+                        $executer = new Executer($sql, [$value['id']]);
                         $error = $executer->error;
                         
                         if(empty($error)) {
-                            $sql = "select position from plan_event where id = ".$value['id'];
-                            $fetcher = new Fetcher($sql);
+                            $sql = "select position from plan_event where id = ?";
+                            $fetcher = new Fetcher($sql, [$value['id']]);
                             if($row = $fetcher->Fetch()) {
                                 $edition = $value;
                                 $edition['position'] = $row['position'];
@@ -62,13 +62,13 @@ class PlanShift {
                         }
                     }
                     elseif($value['type'] == PLAN_TYPE_EDITION) {
-                        $sql = "update plan_edition set position = ifnull(position, 0) + 1 where id = ".$value['id'];
-                        $executer = new Executer($sql);
+                        $sql = "update plan_edition set position = ifnull(position, 0) + 1 where id = ?";
+                        $executer = new Executer($sql, [$value['id']]);
                         $error = $executer->error;
                         
                         if(empty($error)) {
-                            $sql = "select position from plan_edition where id = ".$value['id'];
-                            $fetcher = new Fetcher($sql);
+                            $sql = "select position from plan_edition where id = ?";
+                            $fetcher = new Fetcher($sql, [$value['id']]);
                             if($row = $fetcher->Fetch()) {
                                 $edition = $value;
                                 $edition['position'] = $row['position'];

@@ -40,20 +40,20 @@ if(empty($work_id) || empty($machine_id)) {
 if(null !== filter_input(INPUT_POST, 'add_event_submit')) {
     $work_id = filter_input(INPUT_POST, 'work_id', FILTER_VALIDATE_INT);
     $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
-    $text = addslashes(filter_input(INPUT_POST, 'text') ?? '');
+    $text = filter_input(INPUT_POST, 'text') ?? '';
     $worktime = filter_input(INPUT_POST, 'worktime');
     $in_plan = filter_input(INPUT_POST, 'in_plan');
     
-    $sql = "insert into plan_event (work_id, machine_id, text, worktime, in_plan) values ($work_id, $machine_id, '$text', $worktime, $in_plan)";
-    $executer = new Executer($sql);
+    $sql = "insert into plan_event (work_id, machine_id, text, worktime, in_plan) values (?, ?, ?, ?, ?)";
+    $executer = new Executer($sql, [$work_id, $machine_id, $text, $worktime, $in_plan]);
     $error_message = $executer->error;
 }
 
 // Удаление события
 if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $sql = "delete from plan_event where id = $id";
-    $executer = new Executer($sql);
+    $sql = "delete from plan_event where id = ?";
+    $executer = new Executer($sql, [$id]);
     $error_message = $executer->error;
 }
 
@@ -61,8 +61,8 @@ if(null !== filter_input(INPUT_POST, 'delete_event_submit')) {
 if(null !== filter_input(INPUT_POST, 'pin_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id', FILTER_VALIDATE_INT);
     
-    $sql = "update calculation set queue_top = 1 where id = $calculation_id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set queue_top = 1 where id = ?";
+    $executer = new Executer($sql, [$calculation_id]);
     $error_message = $executer->error;
 }
 
@@ -70,8 +70,8 @@ if(null !== filter_input(INPUT_POST, 'pin_submit')) {
 if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
     $calculation_id = filter_input(INPUT_POST, 'calculation_id', FILTER_VALIDATE_INT);
     
-    $sql = "update calculation set queue_top = 0 where id = $calculation_id";
-    $executer = new Executer($sql);
+    $sql = "update calculation set queue_top = 0 where id = ?";
+    $executer = new Executer($sql, [$calculation_id]);
     $error_message = $executer->error;
 }
 ?>

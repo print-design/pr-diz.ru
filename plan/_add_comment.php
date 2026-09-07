@@ -3,7 +3,7 @@ require_once '../include/topscripts.php';
 
 $planType = filter_input(INPUT_GET, 'plan_type');
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$text = addslashes(filter_input(INPUT_GET, 'text') ?? '');
+$text = filter_input(INPUT_GET, 'text') ?? '';
 $error = '';
 $result = '';
 
@@ -12,24 +12,24 @@ $sql_select = '';
 
 switch ($planType) {
     case PLAN_TYPE_EVENT:
-        $sql_update = "update plan_event set comment = '$text' where id = $id";
-        $sql_select = "select comment from plan_event where id = $id";
+        $sql_update = "update plan_event set comment = ? where id = ?";
+        $sql_select = "select comment from plan_event where id = ?";
         break;
     case PLAN_TYPE_EDITION:
-        $sql_update = "update plan_edition set comment = '$text' where id = $id";
-        $sql_select = "select comment from plan_edition where id = $id";
+        $sql_update = "update plan_edition set comment = ? where id = ?";
+        $sql_select = "select comment from plan_edition where id = ?";
         break;
     case PLAN_TYPE_CONTINUATION:
-        $sql_update = "update plan_continuation set comment = '$text' where id = $id";
-        $sql_select = "select comment from plan_continuation where id = $id";
+        $sql_update = "update plan_continuation set comment = ? where id = ?";
+        $sql_select = "select comment from plan_continuation where id = ?";
         break;
 }
 
-$executer = new Executer($sql_update);
+$executer = new Executer($sql_update, [$text, $id]);
 $error = $executer->error;
 
 if(empty($error)) {
-    $fetcher = new Fetcher($sql_select);
+    $fetcher = new Fetcher($sql_select, [$id]);
     if($row = $fetcher->Fetch()) {
         $result = $row[0];
     }
