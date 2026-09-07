@@ -15,27 +15,27 @@ if(empty($machine_id) || empty($date) || empty($shift)) {
 $error_message = '';
 
 if(empty($id)) {
-    $sql = "delete from plan_workshift2 where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-    $executer = new Executer($sql);
+    $sql = "delete from plan_workshift2 where work_id = ? and machine_id = ? and date = ? and shift = ?";
+    $executer = new Executer($sql, [$work_id, $machine_id, $date, $shift]);
     $error_message = $executer->error;
 }
 else {
     $workshift_id = null;
     
-    $sql = "select id from plan_workshift2 where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-    $fetcher = new Fetcher($sql);
+    $sql = "select id from plan_workshift2 where work_id = ? and machine_id = ? and date = ? and shift = ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
     if($row = $fetcher->Fetch()) {
         $workshift_id = $row['id'];
     }
     
     if(empty($workshift_id)) {
-        $sql = "insert into plan_workshift2 (work_id, machine_id, date, shift, employee2_id) values ($work_id, $machine_id, '$date', '$shift', $id)";
-        $executer = new Executer($sql);
+        $sql = "insert into plan_workshift2 (work_id, machine_id, date, shift, employee2_id) values (?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$work_id, $machine_id, $date, $shift, $id]);
         $error_message = $executer->error;
     }
     else {
-        $sql = "update plan_workshift2 set employee2_id = $id where id = $workshift_id";
-        $executer = new Executer($sql);
+        $sql = "update plan_workshift2 set employee2_id = ? where id = ?";
+        $executer = new Executer($sql, [$id, $workshift_id]);
         $error_message = $executer->error;
     }
 }
@@ -43,8 +43,8 @@ else {
 $result = '';
 
 if(empty($error_message)) {
-    $sql = "select employee2_id from plan_workshift2 where work_id = $work_id and machine_id = $machine_id and date = '$date' and shift = '$shift'";
-    $fetcher = new Fetcher($sql);
+    $sql = "select employee2_id from plan_workshift2 where work_id = ? and machine_id = ? and date = ? and shift = ?";
+    $fetcher = new Fetcher($sql, [$work_id, $machine_id, $date, $shift]);
     if($row = $fetcher->Fetch()) {
         $result = $row[0];
     }
