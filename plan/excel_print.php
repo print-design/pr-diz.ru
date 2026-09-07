@@ -96,10 +96,10 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "left join film_variation fv on c.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
-                . "where pe.work_id = ".WORK_PRINTING." and pe.machine_id = ".$printer
-                . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
+                . "where pe.work_id = ".WORK_PRINTING." and pe.machine_id = ?"
+                . " and pe.date >= ? and pe.date <= ? "
                 . "order by date, shift";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$printer, $date_from->format('Y/m/d'), $date_to->format('Y/m/d')]);
         while($row = $fetcher->Fetch()) {
             $rowindex++;
             
@@ -212,9 +212,9 @@ if(!empty($work_id) && !empty($machine_id)) {
         $editions_count = 0;
         
         $sql = "select count(id) from plan_edition pe "
-                . "where pe.work_id = ". WORK_PRINTING." and pe.machine_id = ".$printer
-                . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."'";
-        $fetcher = new Fetcher($sql);
+                . "where pe.work_id = ". WORK_PRINTING." and pe.machine_id = ?"
+                . " and pe.date >= ? and pe.date <= ?";
+        $fetcher = new Fetcher($sql, [$printer, $date_from->format('Y/m/d'), $date_to->format('Y/m/d')]);
         if($row = $fetcher->Fetch()) {
             $editions_count = $row[0];
         }
@@ -227,10 +227,10 @@ if(!empty($work_id) && !empty($machine_id)) {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "left join film_variation fv on c.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
-                . "where pe.work_id = ". WORK_PRINTING." and pe.machine_id = ".$printer
-                . " and pe.date >= '".$date_from->format('Y/m/d')."' and pe.date <= '".$date_to->format('Y/m/d')."' "
+                . "where pe.work_id = ". WORK_PRINTING." and pe.machine_id = ?"
+                . " and pe.date >= ? and pe.date <= ? "
                 . "order by date, shift";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$printer, $date_from->format('Y/m/d'), $date_to->format('Y/m/d')]);
         while($row = $fetcher->Fetch()) {
             $rowindex++;
             
@@ -253,10 +253,10 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sql = "select distinct concat(pe.last_name, ' ', substring(pe.first_name, 1, 1), '.') name "
                 . "from plan_workshift1 pw "
                 . "inner join plan_employee pe on pw.employee1_id = pe.id "
-                . "where pw.work_id = ". WORK_PRINTING." and pw.machine_id = ".$printer
-                . " and pw.date >= '".$date_from->format('Y/m/d')."' and pw.date <= '".$date_to->format('Y/m/d')."' "
+                . "where pw.work_id = ". WORK_PRINTING." and pw.machine_id = ?"
+                . " and pw.date >= ? and pw.date <= ? "
                 . "order by pe.last_name, pe.first_name";
-        $grabber = new Grabber($sql);
+        $grabber = new Grabber($sql, [$printer, $date_from->format('Y/m/d'), $date_to->format('Y/m/d')]);
         $workers = $grabber->result;
         $workers_string = implode(",", array_column($workers, 'name'));
         
@@ -391,9 +391,9 @@ if(!empty($work_id) && !empty($machine_id)) {
             . "from plan_workshift1 pw "
             . "inner join plan_employee pe on pw.employee1_id = pe.id "
             . "where pw.work_id = ". WORK_PRINTING." "
-            . "and pw.date >= '".$date_from->format('Y/m/d')."' and pw.date <= '".$date_to->format('Y/m/d')."' "
+            . "and pw.date >= ? and pw.date <= ? "
             . "order by pe.last_name, pe.first_name";
-    $fetcher = new Fetcher($sql);
+    $fetcher = new Fetcher($sql, [$date_from->format('Y/m/d'), $date_to->format('Y/m/d')]);
     while($row = $fetcher->Fetch()) {
         $sheet->setCellValue('A'.$row_number, $row['name']);
         //$sheet->getStyle('B'.$row_number)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);        
