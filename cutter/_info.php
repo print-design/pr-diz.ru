@@ -12,8 +12,8 @@ if(null !== $cutting_id) {
             . "inner join supplier s on c.supplier_id = s.id "
             . "inner join film_variation fv on c.film_variation_id = fv.id "
             . "inner join film f on fv.film_id = f.id "
-            . "where c.id = $cutting_id and fv.id = c.film_variation_id";
-    $fetcher = new Fetcher($sql);
+            . "where c.id = ? and fv.id = c.film_variation_id";
+    $fetcher = new Fetcher($sql, [$cutting_id]);
     if($row = $fetcher->Fetch()) {
         $supplier = $row['supplier'];
         $film = $row['film'];
@@ -52,8 +52,8 @@ if(null !== $cutting_id) {
                     
                     // Для всех остальных окон
                     if(null !== $cutting_id):
-                    $sql = "select width, comment from cutting_stream where cutting_id = $cutting_id";
-                    $fetcher = new Fetcher($sql);
+                    $sql = "select width, comment from cutting_stream where cutting_id = ?";
+                    $fetcher = new Fetcher($sql, [$cutting_id]);
                     $i = 0;
                     while ($row = $fetcher->Fetch()):
                     ?>
@@ -66,15 +66,15 @@ if(null !== $cutting_id) {
                     $sql = "select cs.id, cs.roll_id, cs.is_from_pallet, concat('Р', r.id) name, r.length "
                             . "from cutting_source cs "
                             . "inner join roll r on cs.roll_id = r.id "
-                            . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 0 "
+                            . "where cs.cutting_id=? and cs.is_from_pallet = 0 "
                             . "union "
                             . "select cs.id, cs.roll_id, cs.is_from_pallet, concat('П', p.id) name, pr.length "
                             . "from cutting_source cs "
                             . "inner join pallet_roll pr on cs.roll_id = pr.id "
                             . "inner join pallet p on pr.pallet_id = p.id "
-                            . "where cs.cutting_id=$cutting_id and cs.is_from_pallet = 1 "
+                            . "where cs.cutting_id=? and cs.is_from_pallet = 1 "
                             . "order by id";
-                    $grabber = new Grabber($sql);
+                    $grabber = new Grabber($sql, [$cutting_id, $cutting_id]);
                     $sources = $grabber->result;
                     
                     $i=0;
@@ -82,8 +82,8 @@ if(null !== $cutting_id) {
                     ?>
                     <p class="font-weight-bold font-italic" style="color: #888888;">Исходный ролик <?=$source['name'] ?> (<?=$source['length'] ?> метров)</p>
                     <?php
-                    $sql = "select length from cutting_wind where cutting_source_id=".$source['id'];
-                    $fetcher = new Fetcher($sql);
+                    $sql = "select length from cutting_wind where cutting_source_id=?";
+                    $fetcher = new Fetcher($sql, [$source['id']]);
                     
                     while ($row = $fetcher->Fetch()):
                     ?>
@@ -92,8 +92,8 @@ if(null !== $cutting_id) {
                     endwhile;
                     endforeach;
                     
-                    $sql = "select ifnull(sum(length), 0) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = $cutting_id)";
-                    $fetcher = new Fetcher($sql);
+                    $sql = "select ifnull(sum(length), 0) from cutting_wind where cutting_source_id in (select id from cutting_source where cutting_id = ?)";
+                    $fetcher = new Fetcher($sql, [$cutting_id]);
                     if($row = $fetcher->Fetch()):
                     ?>
                     <p class="font-weight-bold" style="font-size: large;">Всего нарезали: <?=$row[0] ?> метров</p>
