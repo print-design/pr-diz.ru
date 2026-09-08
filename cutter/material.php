@@ -54,14 +54,14 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     
     if($form_valid) {
         if(empty($cutting_id)) {
-            $sql = "insert into cutting (supplier_id, film_variation_id, width, cutter_id) values ($supplier_id, $film_variation_id, $width, $user_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into cutting (supplier_id, film_variation_id, width, cutter_id) values (?, ?, ?, ?)";
+            $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $user_id]);
             $error_message = $executer->error;
             $cutting_id = $executer->insert_id;
         }
         else {
-            $sql = "update cutting set supplier_id = $supplier_id, film_variation_id = $film_variation_id, width = $width where id = $cutting_id";
-            $executer = new Executer($sql);
+            $sql = "update cutting set supplier_id = ?, film_variation_id = ?, width = ? where id = ?";
+            $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $cutting_id]);
             $error_message = $executer->error;
         }
         
@@ -75,8 +75,8 @@ if(null !== filter_input(INPUT_POST, 'previous-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     
     if(!empty($cutting_id)) {
-        $sql = "delete from cutting where id = $cutting_id";
-        $executer = new Executer($sql);
+        $sql = "delete from cutting where id = ?";
+        $executer = new Executer($sql, [$cutting_id]);
         $error_message = $executer->error;
     }
     
@@ -95,8 +95,8 @@ if(!empty($cutting_id)) {
     $sql = "select c.supplier_id, fv.film_id, c.film_variation_id, c.width "
             . "from cutting c "
             . "inner join film_variation fv on c.film_variation_id=fv.id "
-            . "where c.id=$cutting_id";
-    $fetcher = new Fetcher($sql);
+            . "where c.id=?";
+    $fetcher = new Fetcher($sql, [$cutting_id]);
     if($row = $fetcher->Fetch()) {
         $supplier_id = $row['supplier_id'];
         $film_id = $row['film_id'];
@@ -152,7 +152,7 @@ if(!empty($cutting_id)) {
                             <select class="form-control<?=$supplier_id_valid ?>" id="supplier_id" name="supplier_id" required="required">
                                 <option value="" hidden="hidden">Выберите поставщика</option>
                                     <?php
-                                    $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
+                                    $suppliers = (new Grabber("select id, name from supplier order by name", []))->result;
                                     foreach ($suppliers as $supplier) {
                                         $id = $supplier['id'];
                                         $name = $supplier['name'];
@@ -170,7 +170,7 @@ if(!empty($cutting_id)) {
                                 <option value="" hidden="hidden">Выберите марку</option>
                                     <?php
                                     if(!empty($supplier_id)) {
-                                        $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
+                                        $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = ?))", [$supplier_id]))->result;
                                         foreach ($films as $film) {
                                             $id = $film['id'];
                                             $name = $film['name'];
@@ -189,7 +189,7 @@ if(!empty($cutting_id)) {
                                 <option value="" hidden="hidden">Выберите толщину</option>
                                     <?php
                                     if(!empty($supplier_id) && !empty($film_id)) {
-                                        $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+                                        $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ? and id in (select film_variation_id from supplier_film_variation where supplier_id = ?) order by thickness", [$film_id, $supplier_id]))->result;
                                         foreach ($film_variations as $film_variation) {
                                             $id = $film_variation['id'];
                                             $thickness = $film_variation['thickness'];

@@ -44,8 +44,8 @@ $user_id = GetUserId();
             ?>
             <p class="mt-4" style="font-size: 18px; line-height: 24px; font-weight: 600;"><?=$position ?>:</p>
                 <?php
-                $sql = "select last_name, first_name from user where id=". GetUserId();
-                $fetcher = new Fetcher($sql);
+                $sql = "select last_name, first_name from user where id=?";
+                $fetcher = new Fetcher($sql, [GetUserId()]);
                 if($row = $fetcher->Fetch()):
                     $last_name = $row['last_name'];
                     $first_name = $row['first_name'];

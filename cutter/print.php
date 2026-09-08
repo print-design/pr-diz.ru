@@ -96,9 +96,9 @@ elseif (empty ($last_wind)) {
                 . "from roll r "
                 . "left join film_variation fv on r.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
-                . "where r.cutting_wind_id=$last_wind";
+                . "where r.cutting_wind_id=?";
         $current_roll = 0;
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$last_wind]);
 
         while($row = $fetcher->Fetch()):
         $id = $row['id'];

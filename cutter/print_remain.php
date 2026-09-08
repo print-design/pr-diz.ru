@@ -16,8 +16,8 @@ $current_date_time = date("dmYHis");
 $cutting_id = null;
 $id = null;
 
-$sql = "select id, remain from cutting where cutter_id=$user_id and date is not null and remain is not null order by id desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select id, remain from cutting where cutter_id=? and date is not null and remain is not null order by id desc limit 1";
+$fetcher = new Fetcher($sql, [$user_id]);
 if($row = $fetcher->Fetch()) {
     $cutting_id = $row['id'];
     $id = $row['remain'];
@@ -29,9 +29,9 @@ $sql = "select DATE_FORMAT(r.date, '%d.%m.%Y') date, "
         . "from roll r "
         . "left join film_variation fv on r.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
-        . "where r.id=$id";
+        . "where r.id=?";
 
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher($sql, [$id]))->Fetch();
 $date = $row['date'];
 $film_variation_id = $row['film_variation_id'];
 $film = $row['film'];

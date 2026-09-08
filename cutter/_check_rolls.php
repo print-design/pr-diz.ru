@@ -17,9 +17,9 @@ function CheckOpenedRolls($user_id) {
             . "(select cs.id from cutting_source cs where cs.cutting_id=c.id order by cs.id desc limit 1) last_source, "
             . "(select cw.id from cutting_wind cw where cw.cutting_source_id=(select id from cutting_source where cutting_id=c.id order by id desc limit 1) order by cw.id desc limit 1) last_wind "
             . "from cutting c "
-            . "where c.date is null and c.cutter_id = $user_id "
+            . "where c.date is null and c.cutter_id = ? "
             . "order by c.id desc";
-    $fetcher = new Fetcher($sql);
+    $fetcher = new Fetcher($sql, [$user_id]);
     if($row = $fetcher->Fetch()) {
         $id = $row['id'];
         $streams_count = $row['streams_count'];

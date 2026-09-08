@@ -79,8 +79,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
     $width = 0;
     
-    $sql = "select width from cutting where id=$cutting_id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select width from cutting where id=?";
+    $fetcher = new Fetcher($sql, [$cutting_id]);
     if($row = $fetcher->Fetch()) {
         $width = $row['width'];
     }
@@ -118,18 +118,18 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        $sql = "delete from cutting_stream where cutting_id = $cutting_id";
-        $executer = new Executer($sql);
+        $sql = "delete from cutting_stream where cutting_id = ?";
+        $executer = new Executer($sql, [$cutting_id]);
         $error_message = $executer->error;
     
         if(empty($error_message)) {
             for($i = 1; $i <= $streams_count; $i++) {
                 if(!empty(filter_input(INPUT_POST, 'stream_'.$i)) && empty($error_message)) {
                     $width = filter_input(INPUT_POST, 'stream_'.$i);
-                    $comment = addslashes(filter_input(INPUT_POST, 'comment_'.$i) ?? '');
-                    $cell = addslashes(filter_input(INPUT_POST, 'cell_'.$i) ?? '');
-                    $sql = "insert into cutting_stream (cutting_id, width, comment, cell) values ($cutting_id, $width, '$comment', '$cell')";
-                    $executer = new Executer($sql);
+                    $comment = filter_input(INPUT_POST, 'comment_'.$i) ?? '';
+                    $cell = filter_input(INPUT_POST, 'cell_'.$i) ?? '';
+                    $sql = "insert into cutting_stream (cutting_id, width, comment, cell) values (?, ?, ?, ?)";
+                    $executer = new Executer($sql, [$cutting_id, $width, $comment, $cell]);
                     $error_message = $executer->error;
                     $insert_id = $executer->insert_id;
                 }
@@ -143,8 +143,8 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
 }
 
 // Получение объекта
-$sql = "select width, comment, cell from cutting_stream where cutting_id = $cutting_id";
-$fetcher = new Fetcher($sql);
+$sql = "select width, comment, cell from cutting_stream where cutting_id = ?";
+$fetcher = new Fetcher($sql, [$cutting_id]);
 $i = 0;
 while($row = $fetcher->Fetch()) {
     $stream_name = "stream_".(++$i);
