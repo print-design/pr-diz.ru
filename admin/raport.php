@@ -16,8 +16,8 @@ if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
     
     if(!empty($value)) {
         // Проверка, имеется ли такой рапорт у данной машины
-        $sql = "select count(id) from raport where machine_id=$machine_id and value=$value";
-        $fetcher = new Fetcher($sql);
+        $sql = "select count(id) from raport where machine_id=? and value=?";
+        $fetcher = new Fetcher($sql, [$machine_id, $value]);
         
         $count = 0;
         if($row = $fetcher->Fetch()) {
@@ -29,8 +29,8 @@ if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "insert into raport (machine_id, value) values ($machine_id, $value)";
-            $executer = new Executer($sql);
+            $sql = "insert into raport (machine_id, value) values (?, ?)";
+            $executer = new Executer($sql, [$machine_id, $value]);
             $error_message = $executer->error;
         }
     }
@@ -42,8 +42,8 @@ if(null !== filter_input(INPUT_POST, 'raport_create_submit')) {
 // Удаление рапорта
 if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $sql = "delete from raport where id=$id";
-    $executer = new Executer($sql);
+    $sql = "delete from raport where id=?";
+    $executer = new Executer($sql, [$id]);
     $error_message = $executer->error;
 }
 ?>
@@ -74,8 +74,8 @@ if(null !== filter_input(INPUT_POST, 'raport_delete_submit')) {
                             <th style="border-top: 0;" class="text-right">Активный</th>
                         </tr>
                         <?php
-                        $sql = "select id, value, active from raport where machine_id = $machine_id order by value";
-                        $grabber = new Grabber($sql);
+                        $sql = "select id, value, active from raport where machine_id = ? order by value";
+                        $grabber = new Grabber($sql, [$machine_id]);
                         $raports_of_machine = $grabber->result;
                         foreach ($raports_of_machine as $row):
                         ?>

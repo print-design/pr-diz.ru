@@ -16,8 +16,8 @@ if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
     
     if(!empty($value)) {
         // Проверка, имеется ли такой вал
-        $sql = "select count(id) from norm_laminator_roller where laminator_id=$laminator_id and value=$value";
-        $fetcher = new Fetcher($sql);
+        $sql = "select count(id) from norm_laminator_roller where laminator_id=? and value=?";
+        $fetcher = new Fetcher($sql, [$laminator_id, $value]);
         
         $count = 0;
         if($row = $fetcher->Fetch()) {
@@ -29,8 +29,8 @@ if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "insert into norm_laminator_roller (laminator_id, value) values($laminator_id, $value)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_laminator_roller (laminator_id, value) values(?, ?)";
+            $executer = new Executer($sql, [$laminator_id, $value]);
             $error_message = $executer->error;
         }
     }
@@ -42,8 +42,8 @@ if(null !== filter_input(INPUT_POST, 'roller_create_submit')) {
 // Удаление ширины вала
 if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $sql = "delete from norm_laminator_roller where id=$id";
-    $executer = new Executer($sql);
+    $sql = "delete from norm_laminator_roller where id=?";
+    $executer = new Executer($sql, [$id]);
     $error_message = $executer->error;
 }
 ?>
@@ -74,8 +74,8 @@ if(null !== filter_input(INPUT_POST, 'roller_delete_submit')) {
                             <th style="border-top: 0;" class="text-right">Активный</th>
                         </tr>
                         <?php
-                        $sql = "select id, value, active from norm_laminator_roller where laminator_id = $laminator_id order by value";
-                        $grabber = new Grabber($sql);
+                        $sql = "select id, value, active from norm_laminator_roller where laminator_id = ? order by value";
+                        $grabber = new Grabber($sql, [$laminator_id]);
                         $rollers = $grabber->result;
                         foreach ($rollers as $row):
                         ?>

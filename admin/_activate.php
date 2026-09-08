@@ -5,14 +5,14 @@ $type = filter_input(INPUT_GET, 'type');
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 if($type == "laminator_roller" && !empty($id)) {
-    $sql = "update norm_laminator_roller set active = not active where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update norm_laminator_roller set active = not active where id = ?";
+    $executer = new Executer($sql, [$id]);
     if(!empty($executer->error)) {
         exit(-1);
     }
     else {
-        $sql = "select active from norm_laminator_roller where id = $id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select active from norm_laminator_roller where id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             exit($row[0]);
         }
@@ -23,14 +23,14 @@ if($type == "laminator_roller" && !empty($id)) {
 }
 
 if($type == "raport" && !empty($id)) {
-    $sql = "update raport set active = not active where id = $id";
-    $executer = new Executer($sql);
+    $sql = "update raport set active = not active where id = ?";
+    $executer = new Executer($sql, [$id]);
     if(!empty($executer->error)) {
         exit(-1);
     }
     else {
-        $sql = "select active from raport where id = $id";
-        $fetcher = new Fetcher($sql);
+        $sql = "select active from raport where id = ?";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             exit($row[0]);
         }
