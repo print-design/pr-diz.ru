@@ -203,7 +203,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             <option value="">Менеджер...</option>
                             <?php
                             $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join user u on c.manager_id = u.id order by u.last_name, u.first_name";
-                            $fetcher = new Fetcher($sql);
+                            $fetcher = new Fetcher($sql, []);
                             while ($row = $fetcher->Fetch()):
                             ?>
                             <option value="<?=$row['id'] ?>"<?=$row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "" ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>

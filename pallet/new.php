@@ -61,8 +61,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     // Определяем толщину и удельный вес
     $thickness = null;
     $ud_ves = null;
-    $sql = "select thickness, weight from film_variation where id=$film_variation_id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select thickness, weight from film_variation where id=?";
+    $fetcher = new Fetcher($sql, [$film_variation_id]);
     if($row = $fetcher->Fetch()) {
         $thickness = $row['thickness'];
         $ud_ves = $row['weight'];
@@ -149,24 +149,24 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     // Выбор менеджера пока не обязательный.
     $manager_id = filter_input(INPUT_POST, 'manager_id', FILTER_VALIDATE_INT);
     if(empty($manager_id)) {
-        $manager_id = "NULL";
+        $manager_id = null;
     }
 
-    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
+    $comment = filter_input(INPUT_POST, 'comment') ?? '';
     $date = filter_input(INPUT_POST, 'date');
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
         $sql = "insert into pallet (supplier_id, film_variation_id, width, comment, storekeeper_id) "
-                . "values ($supplier_id, $film_variation_id, $width, '$comment', '$storekeeper_id')";
-        $executer = new Executer($sql);
+                . "values (?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $comment, $storekeeper_id]);
         $error_message = $executer->error;
         $pallet_id = $executer->insert_id;
         $user_id = GetUserId();
         
         if(empty($error_message)) {
-            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ($pallet_id, '$cell', $user_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values (?, ?, ?)";
+            $executer = new Executer($sql, [$pallet_id, $cell, $user_id]);
             $error_message = $executer->error;
         }
         
@@ -178,8 +178,8 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                 $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
                 $length = filter_input(INPUT_POST, "length_roll$roll_number");
                 $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
-                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values ($pallet_id, $weight, $length, $ordinal)";
-                $executer = new Executer($sql);
+                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values (?, ?, ?, ?)";
+                $executer = new Executer($sql, [$pallet_id, $weight, $length, $ordinal]);
                 $error_message = $executer->error;
                 $roll_number++;
             }
@@ -221,7 +221,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         <select id="supplier_id" name="supplier_id" class="form-control" required="required">
                             <option value="" hidden="hidden">Выберите поставщика</option>
                             <?php
-                            $suppliers = (new Grabber("select id, name from supplier order by name"))->result;
+                            $suppliers = (new Grabber("select id, name from supplier order by name", []))->result;
                             foreach ($suppliers as $supplier) {
                                 $id = $supplier['id'];
                                 $name = $supplier['name'];
@@ -240,7 +240,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                             <?php
                             if(null !== filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT)) {
                                 $supplier_id = filter_input(INPUT_POST, 'supplier_id', FILTER_VALIDATE_INT);
-                                $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id))"))->result;
+                                $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = ?))", [$supplier_id]))->result;
                                 foreach ($films as $film) {
                                     $film_id = $film['id'];
                                     $name = $film['name'];
@@ -266,7 +266,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                                 <?php
                                 if(null !== filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT)) {
                                     $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
-                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = $film_id order by thickness"))->result;
+                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ? order by thickness", [$film_id]))->result;
                                     foreach ($film_variations as $film_variation) {
                                         $film_variation_id = $film_variation['id'];
                                         $thickness = $film_variation['thickness'];
