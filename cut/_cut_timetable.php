@@ -24,7 +24,7 @@ class CutTimetable {
         
         // Работники
         $sql = "select id, first_name, last_name, role_id, active from plan_employee order by last_name, first_name";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, []);
         while($row = $fetcher->Fetch()) {
             $this->employees[$row['id']] = array("first_name" => mb_substr($row['first_name'], 0, 1).'.', "last_name" => $row['last_name'], "role_id" => $row['role_id'], "active" => $row['active']);
         }
@@ -33,9 +33,9 @@ class CutTimetable {
         $sql = "select ws.date, ws.shift, e.id, e.first_name, e.last_name "
                 . "from plan_workshift1 ws "
                 . "left join plan_employee e on ws.employee1_id = e.id "
-                . "where ws.work_id = ".WORK_CUTTING." and ws.machine_id = ".$this->machine_id
-                . " and ws.date >= '".$this->dateFrom->format('Y-m-d')."' and ws.date <= '".$this->dateTo->format('Y-m-d')."'";
-        $fetcher = new Fetcher($sql);
+                . "where ws.work_id = ? and ws.machine_id = ?"
+                . " and ws.date >= ? and ws.date <= ?";
+        $fetcher = new Fetcher($sql, [WORK_CUTTING, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d')]);
         while($row = $fetcher->Fetch()) {
             $this->workshifts[$row['date'].'_'.$row['shift']] = $row['id'];
         }
@@ -65,7 +65,7 @@ class CutTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and e.date >= '".$this->dateFrom->format('Y-m-d')."' and e.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ? and e.machine_id = ? and e.date >= ? and e.date <= ? "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "union "
                 . "select pc.id, pc.date, pc.shift, ".PLAN_TYPE_CONTINUATION." as type, pc.has_continuation, pc.worktime, 1 as position, pc.comment, c.id calculation_id, c.name calculation, c.raport, c.length, c.unit, c.quantity, "
@@ -89,10 +89,13 @@ class CutTimetable {
                 . "inner join calculation_result cr on cr.calculation_id = c.id "
                 . "inner join customer cus on c.customer_id = cus.id "
                 . "inner join user u on c.manager_id = u.id "
-                . "where e.work_id = ".WORK_CUTTING." and e.machine_id = ".$this->machine_id." and pc.date >= '".$this->dateFrom->format('Y-m-d')."' and pc.date <= '".$this->dateTo->format('Y-m-d')."' "
+                . "where e.work_id = ? and e.machine_id = ? and pc.date >= ? and pc.date <= ? "
                 . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                 . "order by date, shift, position";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [
+            WORK_CUTTING, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d'),
+            WORK_CUTTING, $this->machine_id, $this->dateFrom->format('Y-m-d'), $this->dateTo->format('Y-m-d'),
+        ]);
         while($row = $fetcher->Fetch()) {
             if(!array_key_exists($row['date'], $this->editions)) {
                 $this->editions[$row['date']] = array();

@@ -8,8 +8,8 @@ $result = array('error' => '');
 
 // Картинка пользователя
 if(!empty($id) && $is_user_image !== null && $is_user_image == 1) {
-    $sql = "select image from dialog_user_image where id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select image from dialog_user_image where id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $result['name'] = "Изображение";
         $result['filename'] = $row['image'];
@@ -20,8 +20,8 @@ if(!empty($id) && $is_user_image !== null && $is_user_image == 1) {
 
 // Картинка сообщения
 if(!empty($id) && $is_user_image !== null && $is_user_image == 0) {
-    $sql = "select image from dialog_image where id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select image from dialog_image where id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $result['name'] = "Изображение";
         $result['filename'] = $row['image'];

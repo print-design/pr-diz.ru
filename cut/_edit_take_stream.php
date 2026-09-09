@@ -23,13 +23,13 @@ if(null !== filter_input(INPUT_POST, 'edit_take_stream_submit')) {
     $location_get['take_stream_id'] = $id;
     $location_get['scroll'] = filter_input(INPUT_POST, 'scroll');
     
-    $sql = "select calculation_take_id from calculation_take_stream where id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select calculation_take_id from calculation_take_stream where id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     
     if($row = $fetcher->Fetch()) {
         $location_get['take_id'] = $row['calculation_take_id'];
-        $sql = "update calculation_take_stream set weight = $weight, length = $length, radius = $radius where id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation_take_stream set weight = ?, length = ?, radius = ? where id = ?";
+        $executer = new Executer($sql, [$weight, $length, $radius, $id]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {

@@ -19,9 +19,9 @@ $sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cs.wi
         . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
         . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
         . "left join calculation_take_stream cts on cts.calculation_take_id = ct.id and calculation_stream_id = cs.id "
-        . "where ct.id = $take_id "
+        . "where ct.id = ? "
         . "order by cs.position";
-$grabber = new Grabber($sql);
+$grabber = new Grabber($sql, [$take_id]);
 $streams = $grabber->result;
 $is_first = false;
 

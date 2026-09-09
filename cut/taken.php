@@ -22,8 +22,8 @@ if(null !== filter_input(INPUT_POST, 'new_take_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $machine_id = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     
-    $sql = "insert into calculation_take (calculation_id) values ($id)";
-    $executer = new Executer($sql);
+    $sql = "insert into calculation_take (calculation_id) values (?)";
+    $executer = new Executer($sql, [$id]);
     $error_message = $executer->error;
     
     if(empty($error_message)) {
@@ -54,8 +54,8 @@ $comment = '';
 $sql = "select e.comment, pc.comment as continuation_comment "
         . "from plan_edition e "
         . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-        . "where e.work_id = ".WORK_CUTTING." and e.calculation_id = $id";
-$fetcher = new Fetcher($sql);
+        . "where e.work_id = ? and e.calculation_id = ?";
+$fetcher = new Fetcher($sql, [WORK_CUTTING, $id]);
 
 if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');

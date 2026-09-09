@@ -2,8 +2,8 @@
 include '../include/topscripts.php';
 
 $user_id = GetUserId();
-$sql = "select id, image, pdf from dialog_user_image where user_id = $user_id";
-$fetcher = new Fetcher($sql);
+$sql = "select id, image, pdf from dialog_user_image where user_id = ?";
+$fetcher = new Fetcher($sql, [$user_id]);
 while($row = $fetcher->Fetch()):
 ?>
 <a href="javascript: void(0);" 

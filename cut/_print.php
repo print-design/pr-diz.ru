@@ -13,8 +13,8 @@ if(null !== filter_input(INPUT_GET, 'stream_id', FILTER_VALIDATE_INT)) {
             . "from calculation_take_stream cts "
             . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
             . "left join plan_employee pe on cts.plan_employee_id = pe.id "
-            . "where cts.calculation_stream_id = $stream_id and cts.calculation_take_id = (select max(id) from calculation_take where calculation_id = cs.calculation_id)";
-    $fetcher = new Fetcher($sql);
+            . "where cts.calculation_stream_id = ? and cts.calculation_take_id = (select max(id) from calculation_take where calculation_id = cs.calculation_id)";
+    $fetcher = new Fetcher($sql, [$stream_id]);
     if($row = $fetcher->Fetch()) {
         $stream_id = $row['id'];
         $stream_name = $row['name'];
@@ -33,8 +33,8 @@ elseif(null !== filter_input(INPUT_GET, 'take_stream_id', FILTER_VALIDATE_INT)) 
             . "from calculation_take_stream cts "
             . "inner join calculation_stream cs on cts.calculation_stream_id = cs.id "
             . "left join plan_employee pe on cts.plan_employee_id = pe.id "
-            . "where cts.id = $take_stream_id";
-    $fetcher = new Fetcher($sql);
+            . "where cts.id = ?";
+    $fetcher = new Fetcher($sql, [$take_stream_id]);
     if($row = $fetcher->Fetch()) {
         $stream_id = $row['id'];
         $stream_name = $row['name'];
@@ -53,8 +53,8 @@ elseif(null !== filter_input(INPUT_GET, 'not_take_stream_id', FILTER_VALIDATE_IN
             . "from calculation_not_take_stream cnts "
             . "inner join calculation_stream cs on cnts.calculation_stream_id = cs.id "
             . "left join plan_employee pe on cnts.plan_employee_id = pe.id "
-            . "where cnts.id = $not_take_stream_id";
-    $fetcher = new Fetcher($sql);
+            . "where cnts.id = ?";
+    $fetcher = new Fetcher($sql, [$not_take_stream_id]);
     if($row = $fetcher->Fetch()) {
         $stream_id = $row['id'];
         $stream_name = $row['name'];

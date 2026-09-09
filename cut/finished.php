@@ -37,8 +37,8 @@ $comment = '';
 $sql = "select e.comment, pc.comment as continuation_comment "
         . "from plan_edition e "
         . "left join plan_continuation pc on pc.plan_edition_id = e.id "
-        . "where e.work_id = ".WORK_CUTTING." and e.calculation_id = $id";
-$fetcher = new Fetcher($sql);
+        . "where e.work_id = ? and e.calculation_id = ?";
+$fetcher = new Fetcher($sql, [WORK_CUTTING, $id]);
 
 if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');

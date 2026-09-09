@@ -22,8 +22,8 @@ if(null !== filter_input(INPUT_POST, 'edit_not_take_stream_submit')) {
     $location_get['not_take_stream_id'] = $id;
     
     if(empty($weight)) {
-        $sql = "delete from calculation_not_take_stream where id = $id";
-        $executer = new Executer($sql);
+        $sql = "delete from calculation_not_take_stream where id = ?";
+        $executer = new Executer($sql, [$id]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {
@@ -34,8 +34,8 @@ if(null !== filter_input(INPUT_POST, 'edit_not_take_stream_submit')) {
         }
     }
     
-    $sql = "select weight, length from calculation_not_take_stream where id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select weight, length from calculation_not_take_stream where id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     
     if($row = $fetcher->Fetch()) {
         $old_weight = $row['weight'];
@@ -43,8 +43,8 @@ if(null !== filter_input(INPUT_POST, 'edit_not_take_stream_submit')) {
         
         $length = $weight * $old_length / $old_weight;
         
-        $sql = "update calculation_not_take_stream set weight = $weight, length = $length where id = $id";
-        $executer = new Executer($sql);
+        $sql = "update calculation_not_take_stream set weight = ?, length = ? where id = ?";
+        $executer = new Executer($sql, [$weight, $length, $id]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {

@@ -4,10 +4,10 @@ include '../include/topscripts.php';
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $me = GetUserId();
 $sql = "select u.id, u.last_name, u.first_name, "
-        . "(select count(id) from dialog where user_id_from = u.id and user_id_to = $me and viewed = 0) unviewed "
-        . "from user u where u.active = 1 and u.id <> $me "
+        . "(select count(id) from dialog where user_id_from = u.id and user_id_to = ? and viewed = 0) unviewed "
+        . "from user u where u.active = 1 and u.id <> ? "
         . "order by u.last_name, u.first_name";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, [$me, $me]);
 while($row = $fetcher->Fetch()):
     $button_class = (!empty($id) && $row['id'] == $id) ? "btn-dark" : "btn-light";
 ?>

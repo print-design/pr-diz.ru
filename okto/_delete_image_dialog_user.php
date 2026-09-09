@@ -6,8 +6,8 @@ $error_message = '';
 $result = array('error' => '', 'id' => $id);
 
 if(!empty($id)) {
-    $sql = "select image, pdf from dialog_user_image where id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select image, pdf from dialog_user_image where id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     $error_message = $fetcher->error;
     
     if(empty($error_message) && $row = $fetcher->Fetch()) {
@@ -37,8 +37,8 @@ if(!empty($id)) {
         }
         
         if(empty($error_message)) {
-            $sql = "delete from dialog_user_image where id = $id";
-            $executer = new Executer($sql);
+            $sql = "delete from dialog_user_image where id = ?";
+            $executer = new Executer($sql, [$id]);
             $error_message = $executer->error;
         }
     }

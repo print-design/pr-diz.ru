@@ -70,8 +70,8 @@ if(!empty($user_id) && !empty($_FILES['file']) && !empty($_FILES['file']['tmp_na
         
         if($file_uploaded) {
             $filename = $myimage->filename;
-            $sql = "insert into dialog_user_image (user_id, image, pdf) values ($user_id, '$filename', '$pdf')";
-            $executer = new Executer($sql);
+            $sql = "insert into dialog_user_image (user_id, image, pdf) values (?, ?, ?)";
+            $executer = new Executer($sql, [$user_id, $filename, $pdf]);
             
             if(empty($executer->error)) {
                 $result['filename'] = $filename;

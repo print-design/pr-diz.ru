@@ -57,28 +57,24 @@ if(null !== filter_input(INPUT_POST, 'add_not_take_stream_submit')) {
     }
     
     $machine_id = null;
-    $sql = "select machine_id from plan_edition where work_id = ". WORK_CUTTING." and calculation_id = ".$id;
-    $fetcher = new Fetcher($sql);
+    $sql = "select machine_id from plan_edition where work_id = ? and calculation_id = ?";
+    $fetcher = new Fetcher($sql, [WORK_CUTTING, $id]);
     if($row = $fetcher->Fetch()) {
         $machine_id = $row['machine_id'];
         
         if(!empty($machine_id)) {
             $employee_id = null;
-            $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')='".$working_time->format('d-m-Y')."' and shift = '$working_shift' and work_id = ". WORK_CUTTING." and machine_id = $machine_id";
-            $fetcher = new Fetcher($sql);
+            $sql = "select employee1_id from plan_workshift1 where date_format(date, '%d-%m-%Y')=? and shift = ? and work_id = ? and machine_id = ?";
+            $fetcher = new Fetcher($sql, [$working_time->format('d-m-Y'), $working_shift, WORK_CUTTING, $machine_id]);
             if($row = $fetcher->Fetch()) {
                 $employee_id = $row[0];
             }
         }
     }
     
-    if($employee_id == null) {
-        $employee_id = "NULL";
-    }
-    
     // Сохраняем рулон не из съёма
-    $sql = "insert into calculation_not_take_stream (calculation_stream_id, weight, length, printed, plan_employee_id) values ($calculation_stream_id, $weight, $length, now(), $employee_id)";
-    $executer = new Executer($sql);
+    $sql = "insert into calculation_not_take_stream (calculation_stream_id, weight, length, printed, plan_employee_id) values (?, ?, ?, now(), ?)";
+    $executer = new Executer($sql, [$calculation_stream_id, $weight, $length, $employee_id]);
     $not_take_stream_id = $executer->insert_id;
     
     $location_get['not_take_stream_id'] = $not_take_stream_id;

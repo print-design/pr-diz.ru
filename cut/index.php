@@ -29,15 +29,15 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
 if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
     $today = date('Y-m-d');
     $sql = "select id, name, streams_number from calculation where (id in "
-            . "(select calculation_id from plan_edition where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id) "
+            . "(select calculation_id from plan_edition where date >= ? and work_id = ? and machine_id = ?) "
             . "or id in "
-            . "(select calculation_id from plan_edition where id in (select plan_edition_id from plan_continuation where date >= '$today' and work_id = ".WORK_CUTTING." and machine_id = $machine_id))) "
+            . "(select calculation_id from plan_edition where id in (select plan_edition_id from plan_continuation where date >= ? and work_id = ? and machine_id = ?))) "
             . "and id not in (select calculation_id from calculation_stream)";
-    $grabber = new Grabber($sql);
+    $grabber = new Grabber($sql, [$today, WORK_CUTTING, $machine_id, $today, WORK_CUTTING, $machine_id]);
     $slits = $grabber->result;
     foreach ($slits as $slit) {
-        $sql = "select id, position, name from calculation_stream where calculation_id = ".$slit['id'];
-        $grabber = new Grabber($sql);
+        $sql = "select id, position, name from calculation_stream where calculation_id = ?";
+        $grabber = new Grabber($sql, [$slit['id']]);
         $result = $grabber->result;
         
         $stream_position_ids_names = array();
@@ -50,8 +50,8 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
         
         for($stream_i = 1; $stream_i <= $streams_number; $stream_i++) {
             if(empty($stream_position_ids_names[$stream_i])) {
-                $sql = "insert into calculation_stream (calculation_id, position, name) values (".$slit['id'].", $stream_i, 'ручей $stream_i')";
-                $executer = new Executer($sql);
+                $sql = "insert into calculation_stream (calculation_id, position, name) values (?, ?, ?)";
+                $executer = new Executer($sql, [$slit['id'], $stream_i, 'ручей '.$stream_i]);
                 $error_message = $executer->error;
             }
         }
@@ -148,12 +148,12 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
             // отображаем список, начиная с этой работы.
             $sql = "select e.date "
                     . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
-                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (". ORDER_STATUS_PLAN_CUT.", ". ORDER_STATUS_CUT_PRILADKA.", ". ORDER_STATUS_CUTTING.", ". ORDER_STATUS_CUT_REMOVED.") "
-                    . "and e.work_id = ".WORK_CUTTING." and e.machine_id = $machine_id and "
-                    . "e.date between '".$start_work_date->format('Y-m-d')."' and '".$date_from->format('Y-m-d')."' "
+                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (?, ?, ?, ?) "
+                    . "and e.work_id = ? and e.machine_id = ? and "
+                    . "e.date between ? and ? "
                     . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "
                     . "order by e.date asc";
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, [ORDER_STATUS_PLAN_CUT, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, WORK_CUTTING, $machine_id, $start_work_date->format('Y-m-d'), $date_from->format('Y-m-d')]);
             if($row = $fetcher->Fetch()) {
                 $date_from = DateTime::createFromFormat('Y-m-d', $row['date']);
             }

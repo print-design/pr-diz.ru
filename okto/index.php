@@ -17,15 +17,15 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
         $sql = "";
         
         if($is_user_image == 1) {
-            $sql = "select image, pdf from dialog_user_image where id = $id";
+            $sql = "select image, pdf from dialog_user_image where id = ?";
         }
         else {
-            $sql = "select image, pdf from dialog_image where id = $id";
+            $sql = "select image, pdf from dialog_image where id = ?";
         }
         
         if(!empty($sql)) {
             $targetname = "image";
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, [$id]);
             
             if($row = $fetcher->Fetch()) {
                 $targetname = "Изображение $id";

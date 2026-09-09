@@ -8,12 +8,12 @@ $user_id_contact = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 // Крайнее сообщение
 $sql = "select d.id, d.timestamp, d.message, d.viewed, 0 as inbox, (select count(id) from dialog_image where dialog_id = d.id) images_count from dialog d "
-        . "where d.user_id_from = $user_id_self and d.user_id_to = $user_id_contact "
+        . "where d.user_id_from = ? and d.user_id_to = ? "
         . "union "
         . "select d.id, d.timestamp, d.message, d.viewed, 1 as inbox, (select count(id) from dialog_image where dialog_id = d.id) images_count from dialog d "
-        . "where d.user_id_from = $user_id_contact and d.user_id_to = $user_id_self "
+        . "where d.user_id_from = ? and d.user_id_to = ? "
         . "order by timestamp";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, [$user_id_self, $user_id_contact, $user_id_contact, $user_id_self]);
 while($row = $fetcher->Fetch()):
     $inoutclass = $row['inbox'] == 1 ? "inbox" : "outbox";
     $viewedclass = $row['viewed'] == 1 ? "viewed" : "unviewed";
@@ -37,8 +37,8 @@ while($row = $fetcher->Fetch()):
         </p>
         <?php
         if($row['images_count'] > 0):
-            $sql1 = "select id, image, pdf from dialog_image where dialog_id = ".$row['id'];
-            $fetcher1 = new Fetcher($sql1);
+            $sql1 = "select id, image, pdf from dialog_image where dialog_id = ?";
+            $fetcher1 = new Fetcher($sql1, [$row['id']]);
             while($row1 = $fetcher1->Fetch()):
         ?>
         <a href="javascript: void(0);" 

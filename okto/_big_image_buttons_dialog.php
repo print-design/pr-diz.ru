@@ -9,8 +9,8 @@ $next_id = 0;
 
 // Картинка пользователя
 if(!empty($id) && $is_user_image !== null && $is_user_image == 1):
-    $sql = "select dui.id as previous_id, dui.image as filename from dialog_user_image dui where dui.id < $id and user_id = (select user_id from dialog_user_image where id = $id) order by dui.id desc limit 1";
-$fetcher = new Fetcher($sql);
+    $sql = "select dui.id as previous_id, dui.image as filename from dialog_user_image dui where dui.id < ? and user_id = (select user_id from dialog_user_image where id = ?) order by dui.id desc limit 1";
+$fetcher = new Fetcher($sql, [$id, $id]);
     
 if($row = $fetcher->Fetch()) {
     $previous_id = $row['previous_id'];
@@ -26,8 +26,8 @@ $target_text = "&lt;";
 <?php
 endif;
 
-$sql = "select dui.id as next_id, dui.image as filename from dialog_user_image dui where dui.id > $id and user_id = (select user_id from dialog_user_image where id = $id) order by dui.id asc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select dui.id as next_id, dui.image as filename from dialog_user_image dui where dui.id > ? and user_id = (select user_id from dialog_user_image where id = ?) order by dui.id asc limit 1";
+$fetcher = new Fetcher($sql, [$id, $id]);
 
 if($row = $fetcher->Fetch()) {
     $next_id = $row['next_id'];
@@ -46,8 +46,8 @@ endif;
 
 // Картинка диалога
 if(!empty($id) && $is_user_image !== null && $is_user_image == 0):
-    $sql = "select di.id as previous_id, di.image as filename from dialog_image di where di.id < $id and di.dialog_id = (select dialog_id from dialog_image where id = $id) order by di.id desc limit 1";
-$fetcher = new Fetcher($sql);
+    $sql = "select di.id as previous_id, di.image as filename from dialog_image di where di.id < ? and di.dialog_id = (select dialog_id from dialog_image where id = ?) order by di.id desc limit 1";
+$fetcher = new Fetcher($sql, [$id, $id]);
 
 if($row = $fetcher->Fetch()) {
     $previous_id = $row['previous_id'];
@@ -63,8 +63,8 @@ $target_text = "&lt;";
 <?php
 endif;
 
-$sql = "select di.id as next_id, di.image as filename from dialog_image di where di.id > $id and di.dialog_id = (select dialog_id from dialog_image where id = $id) order by di.id asc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select di.id as next_id, di.image as filename from dialog_image di where di.id > ? and di.dialog_id = (select dialog_id from dialog_image where id = ?) order by di.id asc limit 1";
+$fetcher = new Fetcher($sql, [$id, $id]);
 
 if($row = $fetcher->Fetch()) {
     $next_id = $row['next_id'];
