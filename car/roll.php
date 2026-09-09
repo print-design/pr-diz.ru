@@ -39,9 +39,9 @@ if(empty($id)) {
                     . "inner join film f on fv.film_id = f.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                     . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
-                    . "where r.id=$id"
+                    . "where r.id=?"
                     . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")");
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, [$id]);
             if($row = $fetcher->Fetch()):
                 $date = $row['date'];
                 $supplier = $row['supplier'];

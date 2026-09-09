@@ -22,7 +22,7 @@ $comment_valid = '';
 // Обработка формы смены ячейки
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $cell = addslashes(filter_input(INPUT_POST, 'cell') ?? '');
+    $cell = filter_input(INPUT_POST, 'cell') ?? '';
     $user_id = GetUserId();
     
     if(empty($cell)) {
@@ -33,15 +33,15 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     if($form_valid) {
         // Проверяем, совпадают ячейки или нет
         $old_cell = null;
-        $sql = "select cell from pallet_cell_history where pallet_id = $id order by id desc";
-        $fetcher = new Fetcher($sql);
+        $sql = "select cell from pallet_cell_history where pallet_id = ? order by id desc";
+        $fetcher = new Fetcher($sql, [$id]);
         if($row = $fetcher->Fetch()) {
             $old_cell = $row['cell'];
         }
         
         if($cell != $old_cell) {
-            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values ($id, '$cell', $user_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values (?, ?, ?)";
+            $executer = new Executer($sql, [$id, $cell, $user_id]);
             $error_message = $executer->error;
         }
         
@@ -59,8 +59,8 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
 // Обработка формы добавления комментария
 if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment') ?? '');
-    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
+    $old_comment = filter_input(INPUT_POST, 'old_comment') ?? '';
+    $comment = filter_input(INPUT_POST, 'comment') ?? '';
     
     if(empty($comment)) {
         $comment_valid = ISINVALID;
@@ -70,8 +70,8 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     if(!empty($old_comment)) $comment = $old_comment.' '.$comment;
     
     if($form_valid) {
-        $sql = "update pallet set comment = '$comment' where id = $id";
-        $executer = new Executer($sql);
+        $sql = "update pallet set comment = ? where id = ?";
+        $executer = new Executer($sql, [$comment, $id]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {
@@ -132,8 +132,8 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                     . "inner join supplier s on p.supplier_id=s.id "
                     . "inner join film_variation fv on p.film_variation_id=fv.id "
                     . "inner join film f on fv.film_id = f.id "
-                    . "where p.id=$id";
-            $fetcher = new Fetcher($sql);
+                    . "where p.id=?";
+            $fetcher = new Fetcher($sql, [$id]);
             $row = $fetcher->Fetch();
             
             if($row && $row['rolls_number']):

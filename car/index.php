@@ -10,17 +10,17 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ELECTROCARIST]
 function FindByCell($id) {
     $sql = "select (select count(p.id) "
             . "from pallet p "
-            . "where p.cell='$id' "
+            . "where p.cell=? "
             . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
             . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
             . ")) + "
             . "(select count(r.id) "
             . "from roll r "
             . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-            . "where r.cell='$id'"
+            . "where r.cell=?"
             . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")")
             . ")";
-    $fetcher = new Fetcher($sql);
+    $fetcher = new Fetcher($sql, [$id, $id]);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
             header('Location: '.APPLICATION.'/car/by_cell.php?cell='.$id);
@@ -37,7 +37,7 @@ function FindByCell($id) {
 }
 
 if(null !== filter_input(INPUT_POST, 'find-submit')) {
-    $id = trim(filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT) ?? '');
+    $id = trim(filter_input(INPUT_POST, 'id') ?? '');
     
     // Если первый символ р или Р, ищем среди рулонов
     if((mb_substr($id, 0, 1) == "р" || mb_substr($id, 0, 1) == "Р") && is_numeric(mb_substr($id, 1))) {
@@ -45,10 +45,10 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         $sql = "select r.id "
                 . "from roll r "
                 . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                . "where r.id='$roll_id' "
+                . "where r.id=? "
                 . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : "and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.") ")
                 . "limit 1";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$roll_id]);
         if($row = $fetcher->Fetch()) {
             header('Location: '.APPLICATION.'/car/roll.php?id='.$row[0]);
         }
@@ -62,11 +62,11 @@ if(null !== filter_input(INPUT_POST, 'find-submit')) {
         
         $sql = "select p.id "
                 . "from pallet p "
-                . "where p.id=$pallet_id "
+                . "where p.id=? "
                 . "and p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id"
                 . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE.")")
                 . ")";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$pallet_id]);
         if($row = $fetcher->Fetch()) {
             header('Location: '.APPLICATION.'/car/pallet.php?id='.$row[0]);
         }

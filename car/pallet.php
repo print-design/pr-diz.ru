@@ -47,8 +47,8 @@ if(empty($id)) {
                     . "inner join supplier s on p.supplier_id=s.id "
                     . "inner join film_variation fv on p.film_variation_id=fv.id "
                     . "inner join film f on fv.film_id = f.id "
-                    . "where p.id=$id";
-            $fetcher = new Fetcher($sql);
+                    . "where p.id=?";
+            $fetcher = new Fetcher($sql, [$id]);
             $row = $fetcher->Fetch();
             
             if($row && $row['rolls_number'] != 0):

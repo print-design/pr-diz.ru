@@ -22,7 +22,7 @@ $comment_valid = '';
 // Обработка формы смены ячейки
 if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $cell = addslashes(filter_input(INPUT_POST, 'cell') ?? '');
+    $cell = filter_input(INPUT_POST, 'cell') ?? '';
     $user_id = GetUserId();
     
     if(empty($cell)) {
@@ -33,16 +33,16 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
     if($form_valid) {
         // Проверяем, изменилось значение или нет.
         $old_cell = null;
-        $sql = "select cell from roll_cell_history where roll_id = $id order by id desc";
-        $fetcher = new Fetcher($sql);
+        $sql = "select cell from roll_cell_history where roll_id = ? order by id desc";
+        $fetcher = new Fetcher($sql, [$id]);
         $error_message = $fetcher->error;
         if($row = $fetcher->Fetch()) {
             $old_cell = $row['cell'];
         }
         
         if($cell != $old_cell) {
-            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($id, '$cell', $user_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
+            $executer = new Executer($sql, [$id, $cell, $user_id]);
             $error_message = $executer->error;
         }
         
@@ -60,8 +60,8 @@ if(null !== filter_input(INPUT_POST, 'cell-submit')) {
 // Обработка формы добавления комментария
 if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $old_comment = addslashes(filter_input(INPUT_POST, 'old_comment') ?? '');
-    $comment = addslashes(filter_input(INPUT_POST, 'comment') ?? '');
+    $old_comment = filter_input(INPUT_POST, 'old_comment') ?? '';
+    $comment = filter_input(INPUT_POST, 'comment') ?? '';
     
     if(empty($comment)) {
         $comment_valid = ISINVALID;
@@ -71,8 +71,8 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
     if(!empty($old_comment)) $comment = $old_comment.' '.$comment;
     
     if($form_valid) {
-        $sql = "update roll set comment = '$comment' where id = $id";
-        $executer = new Executer($sql);
+        $sql = "update roll set comment = ? where id = ?";
+        $executer = new Executer($sql, [$comment, $id]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {
@@ -125,9 +125,9 @@ if(null !== filter_input(INPUT_POST, 'comment-submit')) {
                     . "inner join film f on fv.film_id = f.id "
                     . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
                     . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id "
-                    . "where r.id=$id"
+                    . "where r.id=?"
                     . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : " and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.")");
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, [$id]);
             if($row = $fetcher->Fetch()):
             $date = $row['date'];
             $supplier = $row['supplier'];

@@ -48,7 +48,7 @@ if(empty($cell)) {
                             . "inner join supplier s on p.supplier_id=s.id "
                             . "inner join film_variation fv on p.film_variation_id=fv.id "
                             . "inner join film f on fv.film_id = f.id "
-                            . "where p.cell='$cell' "
+                            . "where p.cell=? "
                             . "union "
                             . "select 'roll' type, DATE_FORMAT(r.date, '%d.%m.%Y') date, r.id, s.name supplier, f.name film, r.width, fv.thickness, r.cell, r.comment, "
                             . "r.length length, "
@@ -59,10 +59,10 @@ if(empty($cell)) {
                             . "inner join supplier s on r.supplier_id=s.id "
                             . "inner join film_variation fv on r.film_variation_id=fv.id "
                             . "inner join film f on fv.film_id = f.id "
-                            . "where r.cell='$cell' "
+                            . "where r.cell=? "
                             . (IsInRole(ROLE_NAMES[ROLE_AUDITOR]) ? '' : "and (rsh.status_id is null or rsh.status_id = ".ROLL_STATUS_FREE.") ")
                             . "order by id desc";
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, [$cell, $cell]);
                     while ($row = $fetcher->Fetch()):
                     $type = $row['type'];
                     $date = $row['date'];
