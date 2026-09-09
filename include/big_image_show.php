@@ -11,22 +11,22 @@ $calculation_id = filter_input(INPUT_GET, 'calculation_id', FILTER_VALIDATE_INT)
 $result = array( 'error' => '' );
 
 // Вариант 1. object + id + image
-if(!empty($object) && !empty($id) && !empty($image)) {
+if(!empty($object) && !empty($id) && !empty($image) && in_array($image, ['1', '2'])) {
     $sql = "";
     
     if($object == STREAM) {
         $sql = "select name, image$image "
                 . "from calculation_stream "
-                . "where id = $id";
+                . "where id = ?";
     }
     elseif($object == PRINTING) {
         $sql = "select concat(c.name, cq.id) name, cq.image$image "
                 . "from calculation_quantity cq "
                 . "inner join calculation c on cq.calculation_id = c.id "
-                . "where cq.id = $id";
+                . "where cq.id = ?";
     }
     
-    $fetcher = new Fetcher($sql);
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $result["name"] = html_entity_decode($row["name"]);
         $result["filename"] = $row["image$image"];
@@ -36,8 +36,8 @@ if(!empty($object) && !empty($id) && !empty($image)) {
 
 // Вариант 2. stream_id
 if(!empty($stream_id)) {
-    $sql = "select name, image1, image2 from calculation_stream where id = $stream_id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select name, image1, image2 from calculation_stream where id = ?";
+    $fetcher = new Fetcher($sql, [$stream_id]);
     if($row = $fetcher->Fetch()) {
         $result["name"] = html_entity_decode($row["name"]);
         if(!empty($row['image1'])) {
@@ -59,8 +59,8 @@ if(!empty($calculation_id)) {
     $result['id'] = null;
     $result['image'] = null;
     
-    $sql = "select id, name, image1, image2 from calculation_stream where calculation_id = $calculation_id and (image1 <> '' or image2 <> '')";
-    $fetcher = new Fetcher($sql);
+    $sql = "select id, name, image1, image2 from calculation_stream where calculation_id = ? and (image1 <> '' or image2 <> '')";
+    $fetcher = new Fetcher($sql, [$calculation_id]);
     while (($row = $fetcher->Fetch()) && empty($result['name'])) {
         $result['name'] = html_entity_decode($row['name']);
         $result['id'] = $row['id'];
@@ -79,8 +79,8 @@ if(!empty($calculation_id)) {
         $sql = "select cq.id, concat(c.name, cq.id) name, cq.image1, cq.image2 "
                 . "from calculation_quantity cq "
                 . "inner join calculation c on cq.calculation_id = c.id "
-                . "where c.id = $calculation_id and (image1 <> '' or image2 <> '')";
-        $fetcher = new Fetcher($sql);
+                . "where c.id = ? and (image1 <> '' or image2 <> '')";
+        $fetcher = new Fetcher($sql, [$calculation_id]);
         while (($row = $fetcher->Fetch()) && empty($result['name'])) {
             $result['name'] = html_entity_decode($row['name']);
             $result['id'] = $row['id'];

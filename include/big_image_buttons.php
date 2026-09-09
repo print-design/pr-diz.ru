@@ -13,19 +13,19 @@ if(!empty($object) && !empty($id) && !empty($image)):
     $sql = "";
     
     if($object == STREAM && $image == 1) {
-        $sql = "select name, image2 as filename from calculation_stream where id = $id";
+        $sql = "select name, image2 as filename from calculation_stream where id = ?";
     }
     elseif($object == STREAM && $image == 2) {
-        $sql = "select name, image1 as filename from calculation_stream where id = $id";
+        $sql = "select name, image1 as filename from calculation_stream where id = ?";
     }
     elseif($object == PRINTING && $image == 1) {
-        $sql = "select concat(c.name, cq.id) name, cq.image2 as filename from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
+        $sql = "select concat(c.name, cq.id) name, cq.image2 as filename from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = ?";
     }
     elseif($object == PRINTING && $image == 2) {
-        $sql = "select concat(c.name, cq.id) name, cq.image1 as filename from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = $id";
+        $sql = "select concat(c.name, cq.id) name, cq.image1 as filename from calculation_quantity cq inner join calculation c on cq.calculation_id = c.id where cq.id = ?";
     }
     
-    $fetcher = new Fetcher($sql);
+    $fetcher = new Fetcher($sql, [$id]);
     
 if($row = $fetcher->Fetch()):
     $name = $row['name'];
@@ -55,8 +55,8 @@ endif;
 
 // Вариант 2. stream_id + image
 if(!empty($stream_id) && !empty($image)):
-    $sql = "select name, image1, image2 from calculation_stream where id = $stream_id";
-$fetcher = new Fetcher($sql);
+    $sql = "select name, image1, image2 from calculation_stream where id = ?";
+$fetcher = new Fetcher($sql, [$stream_id]);
 
 if($row = $fetcher->Fetch()):
     $name = $row['name'];
@@ -83,8 +83,8 @@ endif;
 // Вариант 3. calculation_id + ordinal
 if(!empty($calculation_id) && !empty($ordinal)):
     $current_ordinal = 0;
-$sql = "select id, name, image1, image2 from calculation_stream where calculation_id = $calculation_id and (image1 <> '' or image2 <> '')";
-$fetcher = new Fetcher($sql);
+$sql = "select id, name, image1, image2 from calculation_stream where calculation_id = ? and (image1 <> '' or image2 <> '')";
+$fetcher = new Fetcher($sql, [$calculation_id]);
 while($row = $fetcher->Fetch()):
     $id = $row['id'];
     $name = $row['name'];
@@ -117,8 +117,8 @@ endwhile;
 $sql = "select cq.id, concat(c.name, cq.id) name, cq.image1, cq.image2 "
         . "from calculation_quantity cq "
         . "inner join calculation c on cq.calculation_id = c.id "
-        . "where c.id = $calculation_id and (image1 <> '' or image2 <> '')";
-$fetcher = new Fetcher($sql);
+        . "where c.id = ? and (image1 <> '' or image2 <> '')";
+$fetcher = new Fetcher($sql, [$calculation_id]);
 while($row = $fetcher->Fetch()):
     $id = $row['id'];
     $name = $row['name'];

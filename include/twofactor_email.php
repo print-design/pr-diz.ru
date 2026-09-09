@@ -12,7 +12,7 @@
         
         if($code_valid == '') {
             $code = random_int(100000, 999999);
-            $error_message = (new Executer("update user set code=$code where id=$user_id"))->error;
+            $error_message = (new Executer("update user set code=? where id=?", [$code, $user_id]))->error;
         
             include __DIR__.'/../PHPMailer/Exception.php';
             include __DIR__.'/../PHPMailer/PHPMailer.php';
