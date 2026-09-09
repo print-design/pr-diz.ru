@@ -268,6 +268,7 @@ if(null !== filter_input(INPUT_POST, 'download_image_dialog_submit')) {
                 $('#waiting_attach').removeClass('d-none');
                 
                 var formData = new FormData();
+                formData.set('<?= CSRF_TOKEN ?>', '<?= $_SESSION[CSRF_TOKEN] ?>');
                 formData.set('user_id', <?=$user_id ?>);
                 formData.set('resolution', resolution);
                 formData.set('file', $('#dialog_file')[0].files[0]);

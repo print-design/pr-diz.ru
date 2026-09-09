@@ -8,6 +8,26 @@ if(empty($_SESSION[CSRF_TOKEN])) {
     $_SESSION[CSRF_TOKEN] = bin2hex(random_bytes(32));
 }
 
+// Защита от CSRF: для каждого POST-запроса проверяем, что пришедший токен совпадает
+// с тем, что хранится в сессии пользователя. Токен уже выводится во все формы проекта,
+// здесь мы впервые начинаем его реально проверять.
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $submitted_csrf_token = filter_input(INPUT_POST, CSRF_TOKEN);
+    
+    if(empty($submitted_csrf_token) || empty($_SESSION[CSRF_TOKEN]) || !hash_equals($_SESSION[CSRF_TOKEN], $submitted_csrf_token)) {
+        http_response_code(403);
+        
+        if(($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
+            header('Content-Type: application/json');
+            die(json_encode(array('error' => 'Истекла сессия. Обновите страницу и попробуйте снова.')));
+        }
+        
+        die('<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>Истекла сессия</title></head><body>'
+                . '<div style="font-family: sans-serif; max-width: 500px; margin: 100px auto; text-align: center;">'
+                . '<h2>Истекла сессия</h2><p>Пожалуйста, обновите страницу и попробуйте снова.</p></div></body></html>');
+    }
+}
+
 global $weekdays;
 
 $weekdays = array();

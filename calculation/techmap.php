@@ -2298,6 +2298,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                 $('#mini_image' + image + '_wrapper_' + object + '_' + id).addClass('d-block');
                 
                 var formData = new FormData();
+                formData.set('<?= CSRF_TOKEN ?>', '<?= $_SESSION[CSRF_TOKEN] ?>');
                 formData.set('object', object);
                 formData.set('id', id);
                 formData.set('image', image);
