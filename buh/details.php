@@ -71,9 +71,8 @@ $pallet_count = null;
 $pallet_length = null;
 $pallet_width = null;
 $pallet_height = null;
-$pallet_shared_with_id = null;
 
-$sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height, pallet_shared_with_id from calculation where id = ?";
+$sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height from calculation where id = ?";
 $fetcher = new Fetcher($sql, [$id]);
 if($row = $fetcher->Fetch()) {
     $gross_weight = $row['gross_weight'];
@@ -81,27 +80,6 @@ if($row = $fetcher->Fetch()) {
     $pallet_length = $row['pallet_length'];
     $pallet_width = $row['pallet_width'];
     $pallet_height = $row['pallet_height'];
-    $pallet_shared_with_id = $row['pallet_shared_with_id'];
-}
-
-// Значения для отображения в сводной строке таблицы -- если заказ отгружается вместе с другим,
-// берём данные того, другого, заказа
-$display_gross_weight = $gross_weight;
-$display_pallet_count = $pallet_count;
-$display_pallet_length = $pallet_length;
-$display_pallet_width = $pallet_width;
-$display_pallet_height = $pallet_height;
-
-if(!empty($pallet_shared_with_id)) {
-    $sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height from calculation where id = ?";
-    $fetcher = new Fetcher($sql, [$pallet_shared_with_id]);
-    if($row = $fetcher->Fetch()) {
-        $display_gross_weight = $row['gross_weight'];
-        $display_pallet_count = $row['pallet_count'];
-        $display_pallet_length = $row['pallet_length'];
-        $display_pallet_width = $row['pallet_width'];
-        $display_pallet_height = $row['pallet_height'];
-    }
 }
 
 // Количество новых форм
@@ -329,10 +307,10 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                             <td>Объём заказа</td>
                             <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?= UNIT_NAMES[$calculation->unit] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&asymp;<?= DisplayNumber(floatval($calculation_rolls->volume), 2) ?> м<sup>3</sup> <small class="text-muted">(<?= DisplayNumber(floatval($calculation_rolls->volume_min), 2) ?>&ndash;<?= DisplayNumber(floatval($calculation_rolls->volume_max), 2) ?> м<sup>3</sup>)</small></td>
                         </tr>
-                        <?php if($display_gross_weight !== null && $display_pallet_count !== null && $display_pallet_length !== null && $display_pallet_width !== null && $display_pallet_height !== null): ?>
+                        <?php if($gross_weight !== null && $pallet_count !== null && $pallet_length !== null && $pallet_width !== null && $pallet_height !== null): ?>
                         <tr>
                             <td>Вес брутто</td>
-                            <td><?= DisplayNumber(floatval($display_gross_weight), 0) ?> кг, <?= DisplayNumber(intval($display_pallet_count), 0) ?> <?= PluralForm($display_pallet_count, 'паллет', 'паллета', 'паллетов') ?>, <?= DisplayNumber(floatval($display_pallet_length), 2) ?>&times;<?= DisplayNumber(floatval($display_pallet_width), 2) ?>&times;<?= DisplayNumber(floatval($display_pallet_height), 2) ?> м</td>
+                            <td><?= DisplayNumber(floatval($gross_weight), 0) ?> кг, <?= DisplayNumber(intval($pallet_count), 0) ?> <?= PluralForm($pallet_count, 'паллет', 'паллета', 'паллетов') ?>, <?= DisplayNumber(floatval($pallet_length), 2) ?>&times;<?= DisplayNumber(floatval($pallet_width), 2) ?>&times;<?= DisplayNumber(floatval($pallet_height), 2) ?> м</td>
                         </tr>
                         <?php endif; ?>
                         <tr>
