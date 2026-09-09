@@ -6,8 +6,8 @@ $film_id = filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT);
 
 if(!empty($film_id)) {
     echo "<option value='' hidden='hidden' selected='selected'>Выберите толщину</option>";
-    $sql = "select id, thickness, weight from film_variation where film_id = $film_id and id in (select film_variation_id from supplier_film_variation) order by thickness";
-    $grabber = (new Grabber($sql))->result;
+    $sql = "select id, thickness, weight from film_variation where film_id = ? and id in (select film_variation_id from supplier_film_variation) order by thickness";
+    $grabber = (new Grabber($sql, [$film_id]))->result;
     
     foreach ($grabber as $row) {
         $film_variation_id = intval($row['id']);

@@ -38,8 +38,8 @@ $user_id = GetUserId();
             $last_name = "";
             $first_name = "";
             
-            $sql = "select last_name, first_name, role_id from user u where id=". GetUserId();
-            $fetcher = new Fetcher($sql);
+            $sql = "select last_name, first_name, role_id from user u where id=?";
+            $fetcher = new Fetcher($sql, [GetUserId()]);
             if($row = $fetcher->Fetch()):
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];

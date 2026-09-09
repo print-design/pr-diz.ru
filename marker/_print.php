@@ -43,9 +43,9 @@ $current_date_time = date("dmYHis");
                 . "left join supplier s on r.supplier_id = s.id "
                 . "left join film_variation fv on r.film_variation_id = fv.id "
                 . "left join film f on fv.film_id = f.id "
-                . "where r.id=$roll_id";
+                . "where r.id=?";
         $current_roll = 0;
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, [$roll_id]);
 
         while($row = $fetcher->Fetch()):
         $id = $row['id'];

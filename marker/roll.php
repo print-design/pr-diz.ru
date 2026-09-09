@@ -44,7 +44,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
         $form_valid = false;
     }
     
-    $cell = addslashes(filter_input(INPUT_POST, 'cell') ?? '');
+    $cell = filter_input(INPUT_POST, 'cell') ?? '';
     if(empty($cell)) {
         $cell_valid = ISINVALID;
         $form_valid = false;
@@ -70,8 +70,8 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     $supplier_id = null;
     
     if(!empty($film_variation_id)) {
-        $sql = "select supplier_id from supplier_film_variation where film_variation_id = $film_variation_id order by rand() limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select supplier_id from supplier_film_variation where film_variation_id = ? order by rand() limit 1";
+        $fetcher = new Fetcher($sql, [$film_variation_id]);
         
         if($row = $fetcher->Fetch()) {
             $supplier_id = $row[0];
@@ -85,20 +85,20 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
     
     if($form_valid) {    
         $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
-                . "values ($supplier_id, $film_variation_id, $width, $length, $net_weight, '$comment', '$storekeeper_id')";
-        $executer = new Executer($sql);
+                . "values (?, ?, ?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $storekeeper_id]);
         $error_message = $executer->error;
         $roll_id = $executer->insert_id;
         
         if(empty($error_message)) {
-            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values ($roll_id, '$cell', $user_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
+            $executer = new Executer($sql, [$roll_id, $cell, $user_id]);
             $error_message = $executer->error;
         }
         
         if(empty($error_message)) {
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values ($roll_id, $status_id, $user_id)";
-            $executer = new Executer($sql);
+            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values (?, ?, ?)";
+            $executer = new Executer($sql, [$roll_id, $status_id, $user_id]);
             $error_message = $executer->error;            
         }
         
@@ -150,7 +150,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                             <select class="form-control<?=$film_id_valid ?>" id="film_id" name="film_id" required="required">
                                 <option value="" hidden="hidden">Выберите марку</option>
                                 <?php
-                                $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation)) order by name"))->result;
+                                $films = (new Grabber("select id, name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation)) order by name", []))->result;
                                 foreach($films as $film) {
                                     $id = $film['id'];
                                     $name = $film['name'];
@@ -168,7 +168,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
                                 <option value="" hidden="hidden">Выберите толщину</option>
                                 <?php
                                 if(!empty(filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT))) {
-                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ".filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT)." and id in (select film_variation_id from supplier_film_variation) order by thickness"))->result;
+                                    $film_variations = (new Grabber("select id, thickness, weight from film_variation where film_id = ? and id in (select film_variation_id from supplier_film_variation) order by thickness", [filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT)]))->result;
                                     foreach($film_variations as $film_variation) {
                                         $id = $film_variation['id'];
                                         $thickness = $film_variation['thickness'];
@@ -275,7 +275,7 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
             
             <?php
             $sql = "SELECT id, thickness, weight FROM film_variation";
-            $fetcher = new Fetcher($sql);
+            $fetcher = new Fetcher($sql, []);
             while ($row = $fetcher->Fetch()):
             ?>
             if(films.get(<?=$row['id'] ?>) === undefined) {
