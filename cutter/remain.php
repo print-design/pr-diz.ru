@@ -26,15 +26,13 @@ $error_message = '';
 
 $radius_valid = '';
 
-function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
+function CloseCutting($transaction, $cutting_id, $last_source, $last_wind, $user_id) {
     // Закрываем нарезку
-    $sql = "update cutting set date=now() where id=?";
-    $fetcher = new Fetcher($sql, [$cutting_id]);
-    $error = $fetcher->error;
+    $transaction->Execute("update cutting set date=now() where id=?", [$cutting_id]);
     
     // Удаляем последний исходный ролик, если у него не было ни одной намотки.
     // (то есть если его ввели и сразу стали закрывать заявку)
-    if(empty($error)) {
+    if(empty($transaction->error)) {
         if(!empty($last_source) && empty($last_wind)) {
             // Удаляем запись о статусе "Раскроили"
             $last_source_roll_id = null;
@@ -42,92 +40,62 @@ function CloseCutting($cutting_id, $last_source, $last_wind, $user_id) {
             $last_source_history_id = null;
             $last_source_status_id = null;
             
-            $sql = "select roll_id, is_from_pallet from cutting_source where id = ?";
-            $fetcher = new Fetcher($sql, [$last_source]);
-            if($row = $fetcher->Fetch()) {
-                $last_source_roll_id = $row['roll_id'];
-                $last_source_is_from_pallet = $row['is_from_pallet'];
+            $rows = $transaction->Fetch("select roll_id, is_from_pallet from cutting_source where id = ?", [$last_source]);
+            if(!empty($rows)) {
+                $last_source_roll_id = $rows[0]['roll_id'];
+                $last_source_is_from_pallet = $rows[0]['is_from_pallet'];
             }
             
             if(!empty($last_source_roll_id) && $last_source_is_from_pallet == 0) {
-                $sql = "select id, status_id from roll_status_history where roll_id = ? order by id desc limit 1";
-                $fetcher = new Fetcher($sql, [$last_source_roll_id]);
-                if($row = $fetcher->Fetch()) {
-                    $last_source_history_id = $row['id'];
-                    $last_source_status_id = $row['status_id'];
+                $rows = $transaction->Fetch("select id, status_id from roll_status_history where roll_id = ? order by id desc limit 1", [$last_source_roll_id]);
+                if(!empty($rows)) {
+                    $last_source_history_id = $rows[0]['id'];
+                    $last_source_status_id = $rows[0]['status_id'];
                 }
                 
                 if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-                    $sql = "delete from roll_status_history where id = ?";
-                    $executer = new Executer($sql, [$last_source_history_id]);
-                    $error = $executer->error;
+                    $transaction->Execute("delete from roll_status_history where id = ?", [$last_source_history_id]);
                 }
             }
             elseif(!empty ($last_source_roll_id) && $last_source_is_from_pallet == 1) {
-                $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1";
-                $fetcher = new Fetcher($sql, [$last_source_roll_id]);
-                if($row = $fetcher->Fetch()) {
-                    $last_source_history_id = $row['id'];
-                    $last_source_status_id = $row['status_id'];
+                $rows = $transaction->Fetch("select id, status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1", [$last_source_roll_id]);
+                if(!empty($rows)) {
+                    $last_source_history_id = $rows[0]['id'];
+                    $last_source_status_id = $rows[0]['status_id'];
                 }
                 
                 if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-                    $sql = "delete from pallet_roll_status_history where id = ?";
-                    $executer = new Executer($sql, [$last_source_history_id]);
-                    $error = $executer->error;
+                    $transaction->Execute("delete from pallet_roll_status_history where id = ?", [$last_source_history_id]);
                 }
             }
             
             // Удаляем запись об исходном ролике
-            if(empty($error)) {
-                $sql = "delete from cutting_source where id = ?";
-                $executer = new Executer($sql, [$last_source]);
-                $error = $executer->error;
-            }
+            $transaction->Execute("delete from cutting_source where id = ?", [$last_source]);
         }
     }
     
     // Меняем статусы исходных роликов на "Раскроили" (если он ещё не установлен)
-    $cut_sources = null;
+    $cut_sources = $transaction->Fetch("select is_from_pallet, roll_id from cutting_source where cutting_id=?", [$cutting_id]);
     
-    if(empty($error)) {
-        $sql = "select is_from_pallet, roll_id from cutting_source where cutting_id=?";
-        $grabber = new Grabber($sql, [$cutting_id]);
-        $cut_sources = $grabber->result;
-        $error = $grabber->error;
-    }
+    foreach($cut_sources as $cut_source) {
+        $source_is_from_pallet = $cut_source['is_from_pallet'];
+        $source_roll_id = $cut_source['roll_id'];
     
-    if($cut_sources !== null) {
-        foreach($cut_sources as $cut_source) {
-            $source_is_from_pallet = $cut_source['is_from_pallet'];
-            $source_roll_id = $cut_source['roll_id'];
-        
-            if($source_is_from_pallet == 0) {
-                $sql = "select status_id from roll_status_history where roll_id = ? order by id desc limit 1";
-                $fetcher = new Fetcher($sql, [$source_roll_id]);
-                $row = $fetcher->Fetch();
-                
-                if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
-                    $sql = "insert into roll_status_history (roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)";
-                    $executer = new Executer($sql, [$source_roll_id, $user_id]);
-                    $error = $executer->error;
-                }
+        if($source_is_from_pallet == 0) {
+            $rows = $transaction->Fetch("select status_id from roll_status_history where roll_id = ? order by id desc limit 1", [$source_roll_id]);
+            
+            if(empty($rows) || $rows[0]['status_id'] != ROLL_STATUS_CUT) {
+                $transaction->Execute("insert into roll_status_history (roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)", [$source_roll_id, $user_id]);
             }
-            else {
-                $sql = "select status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1";
-                $fetcher = new Fetcher($sql, [$source_roll_id]);
-                $row = $fetcher->Fetch();
-                
-                if(!$row || $row['status_id'] != ROLL_STATUS_CUT) {
-                    $sql = "insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)";
-                    $executer = new Executer($sql, [$source_roll_id, $user_id]);
-                    $error = $executer->error;
-                }
+        }
+        else {
+            $rows = $transaction->Fetch("select status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1", [$source_roll_id]);
+            
+            if(empty($rows) || $rows[0]['status_id'] != ROLL_STATUS_CUT) {
+                $transaction->Execute("insert into pallet_roll_status_history (pallet_roll_id, status_id, user_id) values(?, ".ROLL_STATUS_CUT.", ?)", [$source_roll_id, $user_id]);
             }
         }
     }
-    
-    return $error;
 }
 
 if(null !== filter_input(INPUT_POST, 'close-submit')) {
@@ -143,50 +111,56 @@ if(null !== filter_input(INPUT_POST, 'close-submit')) {
     $spool = filter_input(INPUT_POST, 'spool');
     $cell = "Цех";
     $comment = filter_input(INPUT_POST, 'comment') ?? '';
-            
-    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
-            . "values (?, ?, ?, ?, ?, ?, ?)";
-    $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $user_id]);
-    $error_message = $executer->error;
-    $roll_id = $executer->insert_id;
+    
+    // Всё, что ниже -- создание остаточного ролика и закрытие нарезки -- выполняется
+    // в рамках одной транзакции. Если что-то из этой цепочки сломается посередине
+    // (например, оборвётся соединение с базой), откатится вся цепочка целиком, а не
+    // только её часть -- поэтому явные проверки $error перед каждым шагом больше не
+    // нужны: Execute()/Fetch() сами по себе ничего не делают, если в транзакции уже
+    // была ошибка на одном из предыдущих шагов.
+    $transaction = new Transaction();
+    
+    $roll_id = $transaction->Execute(
+            "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
+            . "values (?, ?, ?, ?, ?, ?, ?)",
+            [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $user_id]);
     
     // Устанавливаем этому ролику ячейку "Цех"
-    if(empty($error_message)) {
-        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
-        $executer = new Executer($sql, [$roll_id, $cell, $user_id]);
-        $error_message = $executer->error;
-    }
-            
+    $transaction->Execute("insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)", [$roll_id, $cell, $user_id]);
+    
     // Устанавливаем этому ролику статус "Свободный"
-    if(empty($error_message)) {
-        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values (?, ".ROLL_STATUS_FREE.", ?)";
-        $executer = new Executer($sql, [$roll_id, $user_id]);
-        $error_message = $executer->error;
-    }
-            
+    $transaction->Execute("insert into roll_status_history (roll_id, status_id, user_id) values (?, ".ROLL_STATUS_FREE.", ?)", [$roll_id, $user_id]);
+    
     // Добавляем остаточный ролик к последней закрытой нарезке данного пользователя
-    if(empty($error_message)) {
-        $sql = "update cutting set remain = ? where id = ?";
-        $executer = new Executer($sql, [$roll_id, $cutting_id]);
-        $error_message = $executer->error;
-    }
+    $transaction->Execute("update cutting set remain = ? where id = ?", [$roll_id, $cutting_id]);
     
     // Закрываем нарезку
-    if(empty($error_message)) {
-        $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $user_id);
-    }
+    CloseCutting($transaction, $cutting_id, $last_source, $last_wind, $user_id);
+    
+    $error_message = $transaction->error;
     
     if(empty($error_message)) {
+        $transaction->Commit();
         header("Location: print_remain.php");
+    }
+    else {
+        $transaction->Rollback();
     }
 }
 
 if(null !== filter_input(INPUT_POST, 'no-remain-submit')) {
     $cutting_id = filter_input(INPUT_POST, 'cutting_id', FILTER_VALIDATE_INT);
-    $error_message = CloseCutting($cutting_id, $last_source, $last_wind, $user_id);
+    
+    $transaction = new Transaction();
+    CloseCutting($transaction, $cutting_id, $last_source, $last_wind, $user_id);
+    $error_message = $transaction->error;
     
     if(empty($error_message)) {
+        $transaction->Commit();
         header("Location: finish.php?id=$cutting_id");
+    }
+    else {
+        $transaction->Rollback();
     }
 }
 

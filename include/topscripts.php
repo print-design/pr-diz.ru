@@ -474,6 +474,116 @@ class Fetcher {
     }
 }
 
+// Транзакция: держит одно соединение открытым на всю цепочку связанных запросов,
+// в отличие от Executer/Fetcher/Grabber, которые открывают и сразу закрывают своё
+// собственное соединение на каждый отдельный вызов (и поэтому не годятся для транзакций).
+//
+// Использование:
+//   $transaction = new Transaction();
+//   $transaction->Execute($sql1, $params1);
+//   if(empty($transaction->error)) { $transaction->Execute($sql2, $params2); }
+//   if(empty($transaction->error)) { $transaction->Commit(); } else { $transaction->Rollback(); }
+class Transaction {
+    use BindParamsTrait;
+    
+    private $conn;
+    public $error = '';
+    public $insert_id = 0;
+    
+    function __construct() {
+        $this->conn = new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME);
+        
+        if($this->conn->connect_error) {
+            $this->error = 'Ошибка соединения: '.$this->conn->connect_error;
+            return;
+        }
+        
+        $this->conn->query('set names utf8');
+        $this->conn->begin_transaction();
+    }
+    
+    // insert/update/delete в рамках этой транзакции. Если в транзакции уже была ошибка на
+    // предыдущем шаге, ничего не делает -- защита на случай, если вызывающий код забудет
+    // проверить $transaction->error перед следующим шагом
+    function Execute($sql, $params = array()) {
+        if(!empty($this->error)) {
+            return 0;
+        }
+        
+        $stmt = $this->conn->prepare($sql);
+        
+        if($stmt === false) {
+            $this->error = $this->conn->error;
+            return 0;
+        }
+        
+        if(!empty($params)) {
+            $types = self::BuildTypes($params);
+            $stmt->bind_param($types, ...$params);
+        }
+        
+        $stmt->execute();
+        $this->error = $stmt->error;
+        $this->insert_id = $stmt->insert_id;
+        $stmt->close();
+        
+        return $this->insert_id;
+    }
+    
+    // select в рамках этой транзакции -- возвращает массив всех найденных строк
+    // (как Grabber; для одной строки берите $rows[0])
+    function Fetch($sql, $params = array()) {
+        if(!empty($this->error)) {
+            return array();
+        }
+        
+        $stmt = $this->conn->prepare($sql);
+        
+        if($stmt === false) {
+            $this->error = $this->conn->error;
+            return array();
+        }
+        
+        if(!empty($params)) {
+            $types = self::BuildTypes($params);
+            $stmt->bind_param($types, ...$params);
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if($result === false) {
+            $this->error = $stmt->error;
+            $stmt->close();
+            return array();
+        }
+        
+        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $stmt->close();
+        
+        return $rows;
+    }
+    
+    // Фиксирует изменения, если ошибок не было; иначе откатывает всё как есть
+    function Commit() {
+        if(empty($this->error)) {
+            $this->conn->commit();
+        }
+        else {
+            $this->conn->rollback();
+        }
+        
+        $this->conn->close();
+    }
+    
+    // Откатывает изменения явно (например, если вызывающий код решил отменить всё
+    // по причине, не связанной с ошибкой SQL как таковой)
+    function Rollback() {
+        $this->conn->rollback();
+        $this->conn->close();
+    }
+}
+
 // Выгрузка картинки
 if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
     $object = filter_input(INPUT_POST, 'object');
