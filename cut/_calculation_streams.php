@@ -7,92 +7,110 @@ if(empty($take_id)) {
     $take_id = filter_input(INPUT_GET, 'take_id', FILTER_VALIDATE_INT);
 }
 
-// Ручьи данного съёма
-$sql = "select ct.id take_id, cs.calculation_id, cs.id stream_id, cs.name, cs.width stream_width, cts.weight, cts.length, cts.radius, cts.printed, tm.spool, "
-        . "c.individual_thickness, fv1.thickness thickness1, c.lamination1_individual_thickness, fv2.thickness thickness2, c.lamination2_individual_thickness, fv3.thickness thickness3, "
-        . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3 "
-        . "from calculation_take ct "
-        . "inner join calculation c on ct.calculation_id = c.id "
-        . "inner join calculation_stream cs on cs.calculation_id = c.id "
-        . "inner join techmap tm on tm.calculation_id = c.id "
-        . "left join film_variation fv1 on c.film_variation_id = fv1.id "
-        . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
-        . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
-        . "left join calculation_take_stream cts on cts.calculation_take_id = ct.id and calculation_stream_id = cs.id "
-        . "where ct.id = ? "
-        . "order by cs.position";
-$grabber = new Grabber($sql, [$take_id]);
-$streams = $grabber->result;
-$is_first = false;
-
-if(count($streams) > 0) {
-    $is_first = true;
+// Если объекты заказа ещё не переданы вызывающей страницей (это происходит при AJAX-обновлении
+// списка ручьёв без полной перезагрузки страницы -- см. cut/take.php) -- определяем calculation_id
+// по take_id отдельным лёгким запросом. Сам id заказа может быть уже известен вызывающей странице
+// либо как $calculation_id, либо как $id (так называется в cut/take.php).
+if(!isset($calculation_id) && isset($id)) {
+    $calculation_id = $id;
 }
 
-foreach($streams as $row):
-    $take_id = $row['take_id'];
-    $calculation_id = $row['calculation_id'];
-    $stream_id = $row['stream_id'];
-    $stream_name = $row['name'];
-    $stream_weight = $row['weight'];
-    $stream_length = $row['length'];
-    $stream_radius = $row['radius'];
-    $stream_printed = $row['printed'];
-    $stream_width = $row['stream_width'];
-    $spool = $row['spool'];
+if(!isset($calculation_id)) {
+    $sql = "select calculation_id from calculation_take where id = ?";
+    $fetcher = new Fetcher($sql, [$take_id]);
+    if($row = $fetcher->Fetch()) {
+        $calculation_id = $row['calculation_id'];
+    }
+}
+
+// Толщина, плотность плёнки (всех трёх слоёв) и spool -- одинаковы для всех ручьёв заказа,
+// поэтому определяются один раз, а не при каждой итерации цикла.
+// Если объекты $calculation/$calculation_result уже созданы вызывающей страницей -- берём готовые
+// значения оттуда. Если нет (AJAX-случай) -- создавать эти объекты заново не стоит: внутри их
+// конструкторов выполняются десятки запросов ради всего расчёта стоимости заказа, а нужны нам
+// всего несколько чисел, поэтому в этом случае забираем их отдельным, узким запросом.
+if(isset($calculation) && isset($calculation_result)) {
+    $thickness1 = $calculation->thickness_1;
+    $density1 = $calculation->density_1;
+    $thickness2 = $calculation->thickness_2;
+    $density2 = $calculation->density_2;
+    $thickness3 = $calculation->thickness_3;
+    $density3 = $calculation->density_3;
+    $spool = $calculation_result->spool;
+}
+else {
+    $sql = "select c.individual_thickness, fv1.thickness thickness1, c.lamination1_individual_thickness, fv2.thickness thickness2, c.lamination2_individual_thickness, fv3.thickness thickness3, "
+            . "c.individual_density, fv1.weight density1, c.lamination1_individual_density, fv2.weight density2, c.lamination2_individual_density, fv3.weight density3, tm.spool "
+            . "from calculation c "
+            . "inner join techmap tm on tm.calculation_id = c.id "
+            . "left join film_variation fv1 on c.film_variation_id = fv1.id "
+            . "left join film_variation fv2 on c.lamination1_film_variation_id = fv2.id "
+            . "left join film_variation fv3 on c.lamination2_film_variation_id = fv3.id "
+            . "where c.id = ?";
+    $fetcher = new Fetcher($sql, [$calculation_id]);
+    
+    $thickness1 = 0;
+    $density1 = 0;
+    $thickness2 = 0;
+    $density2 = 0;
+    $thickness3 = 0;
+    $density3 = 0;
+    $spool = 0;
+    
+    if($row = $fetcher->Fetch()) {
+        $thickness1 = !empty($row['individual_thickness']) ? $row['individual_thickness'] : ($row['thickness1'] ?? 0);
+        $density1 = !empty($row['individual_density']) ? $row['individual_density'] : ($row['density1'] ?? 0);
+        $thickness2 = !empty($row['lamination1_individual_thickness']) ? $row['lamination1_individual_thickness'] : ($row['thickness2'] ?? 0);
+        $density2 = !empty($row['lamination1_individual_density']) ? $row['lamination1_individual_density'] : ($row['density2'] ?? 0);
+        $thickness3 = !empty($row['lamination2_individual_thickness']) ? $row['lamination2_individual_thickness'] : ($row['thickness3'] ?? 0);
+        $density3 = !empty($row['lamination2_individual_density']) ? $row['lamination2_individual_density'] : ($row['density3'] ?? 0);
+        $spool = $row['spool'];
+    }
+}
+
+// Список ручьёв заказа (id, наименование, ширина) -- если $calculation_rolls уже загружен
+// и в нём уже есть сводка по ручьям, берём оттуда, не запрашивая повторно
+if(isset($calculation_rolls) && !empty($calculation_rolls->streams)) {
+    $stream_list = $calculation_rolls->streams;
+}
+else {
+    $sql = "select id, name, width from calculation_stream where calculation_id = ? order by position";
+    $grabber = new Grabber($sql, [$calculation_id]);
+    $stream_list = $grabber->result;
+}
+
+// Данные конкретно этого съёма для каждого ручья -- то, что резчик уже ввёл (или ещё не ввёл)
+// именно в этом съёме. Единственное, что действительно нельзя получить из существующих
+// объектов, поскольку это как раз то, что вводится прямо сейчас, в реальном времени
+$sql = "select cs.id stream_id, cts.weight, cts.length, cts.radius, cts.printed "
+        . "from calculation_stream cs "
+        . "left join calculation_take_stream cts on cts.calculation_take_id = ? and cts.calculation_stream_id = cs.id "
+        . "where cs.calculation_id = ? "
+        . "order by cs.position";
+$grabber = new Grabber($sql, [$take_id, $calculation_id]);
+
+$take_stream_data = array();
+foreach($grabber->result as $row) {
+    $take_stream_data[$row['stream_id']] = $row;
+}
+
+$is_first = count($stream_list) > 0;
+
+foreach($stream_list as $stream):
+    $stream_id = $stream['id'];
+    $stream_name = $stream['name'];
+    $stream_width = $stream['width'];
+    
+    $data = $take_stream_data[$stream_id] ?? array('weight' => null, 'length' => null, 'radius' => null, 'printed' => null);
+    $stream_weight = $data['weight'];
+    $stream_length = $data['length'];
+    $stream_radius = $data['radius'];
+    $stream_printed = $data['printed'];
     
     if(null !== filter_input(INPUT_POST, 'stream_print_submit') && $stream_id == filter_input(INPUT_POST, 'stream_id', FILTER_VALIDATE_INT)) {
         $stream_weight = filter_input(INPUT_POST, 'weight');
         $stream_length = filter_input(INPUT_POST, 'length');
         $stream_radius = filter_input(INPUT_POST, 'radius');
-    }
-    
-    $thickness1 = $row['individual_thickness'];
-    if(empty($thickness1)) {
-        $thickness1 = $row['thickness1'];
-    }
-    if(empty($thickness1)) {
-        $thickness1 = 0;
-    }
-    
-    $density1 = $row['individual_density'];
-    if(empty($density1)) {
-        $density1 = $row['density1'];
-    }
-    if(empty($density1)) {
-        $density1 = 0;
-    }
-    
-    $thickness2 = $row['lamination1_individual_thickness'];
-    if(empty($thickness2)) {
-        $thickness2 = $row['thickness2'];
-    }
-    if(empty($thickness2)) {
-        $thickness2 = 0;
-    }
-    
-    $density2 = $row['lamination1_individual_density'];
-    if(empty($density2)) {
-        $density2 = $row['density2'];
-    }
-    if(empty($density2)) {
-        $density2 = 0;
-    }
-    
-    $thickness3 = $row['lamination2_individual_thickness'];
-    if(empty($thickness3)) {
-        $thickness3 = $row['thickness3'];
-    }
-    if(empty($thickness3)) {
-        $thickness3 = 0;
-    }
-    
-    $density3 = $row['lamination2_individual_density'];
-    if(empty($density3)) {
-        $density3 = $row['density3'];
-    }
-    if(empty($density3)) {
-        $density3 = 0;
     }
     
     $length_class = "not_first_length";
