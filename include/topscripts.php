@@ -641,29 +641,47 @@ if(null !== filter_input(INPUT_POST, 'download_image_submit')) {
 }
 
 // Добавление статуса заказа
-function SetCalculationStatus($calculation_id, $status_id, $comment) {
+// $transaction -- необязательный параметр. Если не передан, функция сама открывает
+// свою собственную транзакцию и сама же её фиксирует/откатывает (так вызывалась эта
+// функция раньше, и так продолжают работать все существующие вызовы по всему проекту).
+// Если передан -- это значит, что вызывающий код ведёт СВОЮ собственную, более крупную
+// транзакцию, частью которой должна стать смена статуса; тогда commit/rollback остаётся
+// на усмотрение вызывающего кода, а не этой функции.
+function SetCalculationStatus($calculation_id, $status_id, $comment, $transaction = null) {
     $user_id = GetUserId();
-    $error_message = '';
     $old_status_id = 0;
     
-    $sql = "select status_id from calculation_status_history where calculation_id = ? order by id desc limit 1";
-    $fetcher = new Fetcher($sql, [$calculation_id]);
-    if($row = $fetcher->Fetch()) {
-        $old_status_id = $row['0'];
+    $own_transaction = false;
+    
+    if($transaction === null) {
+        $transaction = new Transaction();
+        $own_transaction = true;
+    }
+    
+    $rows = $transaction->Fetch("select status_id from calculation_status_history where calculation_id = ? order by id desc limit 1", [$calculation_id]);
+    if(!empty($rows)) {
+        $old_status_id = $rows[0]['status_id'];
     }
     
     if($old_status_id != $status_id) {
-        $sql = "insert into calculation_status_history (calculation_id, status_id, comment, user_id) values (?, ?, ?, ?)";
-        $executer = new Executer($sql, [$calculation_id, $status_id, $comment, $user_id]);
-        $error_message = $executer->error;
+        $transaction->Execute("insert into calculation_status_history (calculation_id, status_id, comment, user_id) values (?, ?, ?, ?)", [$calculation_id, $status_id, $comment, $user_id]);
         
         // Устанавливаем этот статус в дублирующееся поле.
-        $sql = "update calculation set duplicate_status_id = ?, duplicate_status_comment = ?, "
+        $transaction->Execute(
+                "update calculation set duplicate_status_id = ?, duplicate_status_comment = ?, "
                 . "duplicate_status_date = (select date from calculation_status_history where calculation_id = ? order by id desc limit 1) "
-                . "where id = ?";
-        $executer = new Executer($sql, [$status_id, $comment, $calculation_id, $calculation_id]);
+                . "where id = ?",
+                [$status_id, $comment, $calculation_id, $calculation_id]);
+    }
+    
+    $error_message = $transaction->error;
+    
+    if($own_transaction) {
         if(empty($error_message)) {
-            $error_message = $executer->error;
+            $transaction->Commit();
+        }
+        else {
+            $transaction->Rollback();
         }
     }
     

@@ -827,26 +827,25 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $insert_columns = implode(', ', array_keys($insert_fields));
         $insert_placeholders = implode(', ', array_fill(0, count($insert_fields), '?'));
         $sql = "insert into calculation ($insert_columns) values ($insert_placeholders)";
-        $executer = new Executer($sql, array_values($insert_fields));
-        $error_message = $executer->error;
-        $insert_id = $executer->insert_id;
+        
+        // Создание заказа, сохранение статуса, и (при наличии) заполнение тиражей или ширин
+        // ручьёв -- одна связанная цепочка, выполняется в рамках одной транзакции
+        $transaction = new Transaction();
+        
+        $insert_id = $transaction->Execute($sql, array_values($insert_fields));
         
         // Сохраняем статус
-        if(empty($error_message)) {
-            $error_message = SetCalculationStatus($insert_id, $status_id, '');
-        }
+        SetCalculationStatus($insert_id, $status_id, '', $transaction);
         
         // Для самоклеящейся бумаги заполняем список тиражей
-        if(empty($error_message) && $work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+        if($work_type_id == WORK_TYPE_SELF_ADHESIVE) {
             $qi = 1;
             $quantity_var = "quantity_$qi";
             
             while(filter_input(INPUT_POST, $quantity_var) !== null) {
                 $$quantity_var = filter_input(INPUT_POST, $quantity_var);
                 
-                $sql = "insert into calculation_quantity (calculation_id, quantity) values(?, ?)";
-                $executer = new Executer($sql, [$insert_id, $$quantity_var]);
-                $error_message = $executer->error;
+                $transaction->Execute("insert into calculation_quantity (calculation_id, quantity) values(?, ?)", [$insert_id, $$quantity_var]);
                 
                 $qi++;
                 $quantity_var = "quantity_$qi";
@@ -854,16 +853,14 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Если разная ширина ручьёв, заполняем таблицу ширин ручьёв
-        if(empty($error_message) && $work_type_id != WORK_TYPE_SELF_ADHESIVE && $stream_width === null) {
+        if($work_type_id != WORK_TYPE_SELF_ADHESIVE && $stream_width === null) {
             $sci = 1;
             $stream_width_var = "stream_width_$sci";
             
             while (filter_input(INPUT_POST, $stream_width_var) !== null) {
                 $$stream_width_var = filter_input(INPUT_POST, $stream_width_var);
                 
-                $sql = "insert into calculation_stream_width (calculation_id, stream_number, width) values(?, ?, ?)";
-                $executer = new Executer($sql, [$insert_id, $sci, $$stream_width_var]);
-                $error_message = $executer->error;
+                $transaction->Execute("insert into calculation_stream_width (calculation_id, stream_number, width) values(?, ?, ?)", [$insert_id, $sci, $$stream_width_var]);
                 
                 $sci++;
                 $stream_width_var = "stream_width_$sci";
@@ -871,14 +868,16 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
         
         // Удаляем все двойные или тройные пробелы в названиях расчётов (иначе будут проблемы в поиске по названию).
-        if(empty($error_message)) {
-            $sql = "update calculation set name = replace(name, '  ', ' ') where id = ?";
-            $executer = new Executer($sql, [$insert_id]);
-            $error_message = $executer->error;
-        }
+        $transaction->Execute("update calculation set name = replace(name, '  ', ' ') where id = ?", [$insert_id]);
+        
+        $error_message = $transaction->error;
         
         if(empty($error_message)) {
+            $transaction->Commit();
             header('Location: create.php?id='.$insert_id);
+        }
+        else {
+            $transaction->Rollback();
         }
     }
 }
