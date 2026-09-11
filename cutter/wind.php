@@ -107,121 +107,111 @@ if(null !== filter_input(INPUT_POST, 'next-submit')) {
     }
     
     if($form_valid) {
-        // Создание намотки
+        // Создание намотки, данные о материале и создание рулона на каждый ручей --
+        // одна связанная цепочка, поэтому выполняется в рамках одной транзакции:
+        // либо всё целиком применяется, либо ничего (без явных проверок $error перед
+        // каждым шагом -- Execute()/Fetch() сами ничего не делают после первой ошибки)
         $net_weight = filter_input(INPUT_POST, 'net_weight');
         
-        $sql = "insert into cutting_wind (cutting_source_id, length, radius) values (?, ?, ?)";
-        $executer = new Executer($sql, [$last_source, $length, $radius]);
-        $error_message = $executer->error;
-        $cutting_wind_id = $executer->insert_id;
+        $transaction = new Transaction();
+        
+        $cutting_wind_id = $transaction->Execute("insert into cutting_wind (cutting_source_id, length, radius) values (?, ?, ?)", [$last_source, $length, $radius]);
         
         // Получение данных о материале
         $supplier_id = 0;
         $film_variation_id = 0;
         
-        if(empty($error_message)) {
-            $sql = "select supplier_id, film_variation_id from cutting where id=?";
-            $fetcher = new Fetcher($sql, [$cutting_id]);
-            $error_message = $fetcher->error;
-            
-            if($row = $fetcher->Fetch()) {
-                $supplier_id = $row['supplier_id'];
-                $film_variation_id = $row['film_variation_id'];
-            }
+        $rows = $transaction->Fetch("select supplier_id, film_variation_id from cutting where id=?", [$cutting_id]);
+        if(!empty($rows)) {
+            $supplier_id = $rows[0]['supplier_id'];
+            $film_variation_id = $rows[0]['film_variation_id'];
         }
         
         // Создание рулона на каждый ручей
-        if(empty($error_message)) {
-            for($i = 1; $i <= 19; $i++) {
-                if(key_exists('stream_'.$i, $_POST)) {
-                    $width = filter_input(INPUT_POST, 'stream_'.$i);
-                    $comment = filter_input(INPUT_POST, 'comment_'.$i) ?? '';
-                    $cell = filter_input(INPUT_POST, 'cell_'.$i) ?? '';
-                    $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
-        
-                    $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id, cutting_wind_id) "
-                            . "values (?, ?, ?, ?, ?, ?, ?, ?)";
-                    $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $user_id, $cutting_wind_id]);
-                    $error_message = $executer->error;
-                    $insert_id = $executer->insert_id;
-                    
-                    // Заполнение истории ячеек
-                    if(empty($error_message)) {
-                        $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
-                        $executer = new Executer($sql, [$insert_id, $cell, $user_id]);
-                        $error_message = $executer->error;
-                    }
-                    
-                    // Заполнение истории статусов
-                    if(empty($error_message)) {
-                        $sql = "insert into roll_status_history (roll_id, status_id, user_id) values(?, ".ROLL_STATUS_FREE.", ?)";
-                        $executer = new Executer($sql, [$insert_id, $user_id]);
-                        $error_message = $executer->error;
-                    }
-                }
+        for($i = 1; $i <= 19; $i++) {
+            if(key_exists('stream_'.$i, $_POST)) {
+                $width = filter_input(INPUT_POST, 'stream_'.$i);
+                $comment = filter_input(INPUT_POST, 'comment_'.$i) ?? '';
+                $cell = filter_input(INPUT_POST, 'cell_'.$i) ?? '';
+                $net_weight = filter_input(INPUT_POST, 'net_weight_'.$i);
+                
+                $insert_id = $transaction->Execute(
+                        "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id, cutting_wind_id) "
+                        . "values (?, ?, ?, ?, ?, ?, ?, ?)",
+                        [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $user_id, $cutting_wind_id]);
+                
+                // Заполнение истории ячеек
+                $transaction->Execute("insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)", [$insert_id, $cell, $user_id]);
+                
+                // Заполнение истории статусов
+                $transaction->Execute("insert into roll_status_history (roll_id, status_id, user_id) values(?, ".ROLL_STATUS_FREE.", ?)", [$insert_id, $user_id]);
             }
         }
         
+        $error_message = $transaction->error;
+        
         // Переход на страницу печати рулонов
         if(empty($error_message)) {
+            $transaction->Commit();
             header("Location: print.php");
+        }
+        else {
+            $transaction->Rollback();
         }
     }
 }
 
 if(null !== filter_input(INPUT_POST, 'previous-submit')) {
-    // Удаляем запись о статусе "Рескроили" последнего исходного ролика
+    // Удаляем запись о статусе "Рескроили" последнего исходного ролика, и саму запись
+    // о последнем исходном ролике -- связанная цепочка, выполняется в одной транзакции
     $last_source_roll_id = null;
     $last_source_is_from_pallet = null;
     $last_source_history_id = null;
     $last_source_status_id = null;
     
-    $sql = "select roll_id, is_from_pallet from cutting_source where id = ?";
-    $fetcher = new Fetcher($sql, [$last_source]);
-    if($row = $fetcher->Fetch()) {
-        $last_source_roll_id = $row['roll_id'];
-        $last_source_is_from_pallet = $row['is_from_pallet'];
+    $transaction = new Transaction();
+    
+    $rows = $transaction->Fetch("select roll_id, is_from_pallet from cutting_source where id = ?", [$last_source]);
+    if(!empty($rows)) {
+        $last_source_roll_id = $rows[0]['roll_id'];
+        $last_source_is_from_pallet = $rows[0]['is_from_pallet'];
     }
             
     if(!empty($last_source_roll_id) && $last_source_is_from_pallet == 0) {
-        $sql = "select id, status_id from roll_status_history where roll_id = ? order by id desc limit 1";
-        $fetcher = new Fetcher($sql, [$last_source_roll_id]);
-        if($row = $fetcher->Fetch()) {
-            $last_source_history_id = $row['id'];
-            $last_source_status_id = $row['status_id'];
+        $rows = $transaction->Fetch("select id, status_id from roll_status_history where roll_id = ? order by id desc limit 1", [$last_source_roll_id]);
+        if(!empty($rows)) {
+            $last_source_history_id = $rows[0]['id'];
+            $last_source_status_id = $rows[0]['status_id'];
         }
                 
         if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-            $sql = "delete from roll_status_history where id = ?";
-            $executer = new Executer($sql, [$last_source_history_id]);
-            $error_message = $executer->error;
+            $transaction->Execute("delete from roll_status_history where id = ?", [$last_source_history_id]);
         }
     }
     elseif(!empty ($last_source_roll_id) && $last_source_is_from_pallet == 1) {
-        $sql = "select id, status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1";
-        $fetcher = new Fetcher($sql, [$last_source_roll_id]);
-        if($row = $fetcher->Fetch()) {
-            $last_source_history_id = $row['id'];
-            $last_source_status_id = $row['status_id'];
+        $rows = $transaction->Fetch("select id, status_id from pallet_roll_status_history where pallet_roll_id = ? order by id desc limit 1", [$last_source_roll_id]);
+        if(!empty($rows)) {
+            $last_source_history_id = $rows[0]['id'];
+            $last_source_status_id = $rows[0]['status_id'];
         }
                 
         if(!empty($last_source_history_id) && !empty($last_source_status_id) && $last_source_status_id == ROLL_STATUS_CUT) {
-            $sql = "delete from pallet_roll_status_history where id = ?";
-            $executer = new Executer($sql, [$last_source_history_id]);
-            $error_message = $executer->error;
+            $transaction->Execute("delete from pallet_roll_status_history where id = ?", [$last_source_history_id]);
         }
     }
     
     // Удаляем запись о последнем исходном ролике
-    if(empty($error_message)) {
-        $last_source = filter_input(INPUT_POST, 'last_source');
-        $sql = "delete from cutting_source where id = ?";
-        $executer = new Executer($sql, [$last_source]);
-        $error_message = $executer->error;
-    }
+    $last_source = filter_input(INPUT_POST, 'last_source');
+    $transaction->Execute("delete from cutting_source where id = ?", [$last_source]);
+    
+    $error_message = $transaction->error;
     
     if(empty($error_message)) {
+        $transaction->Commit();
         header("Location: source.php");
+    }
+    else {
+        $transaction->Rollback();
     }
 }
 
