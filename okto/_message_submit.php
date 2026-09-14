@@ -12,33 +12,23 @@ if(empty($user_id_from) || empty($user_id_to) || empty($message)) {
     $result['error'] = "Пустые исходные данные -- $user_id_from -- $user_id_to -- $message";
 }
 else {
-    $sql = "insert into dialog (user_id_from, user_id_to, message) values (?, ?, ?)";
-    $executer = new Executer($sql, [$user_id_from, $user_id_to, $message]);
-    $error = $executer->error;
-    $insert_id = $executer->insert_id;
+    // Само сообщение, перенос вложений из "черновика" (dialog_user_image) в сообщение,
+    // и очистка этого черновика -- одна связанная цепочка, выполняется в рамках одной
+    // транзакции: либо сообщение уходит со всеми вложениями, либо не уходит вообще
+    $transaction = new Transaction();
     
-    if(!empty($error)) {
-        $result['error'] = $executer->error;        
-    }
+    $insert_id = $transaction->Execute("insert into dialog (user_id_from, user_id_to, message) values (?, ?, ?)", [$user_id_from, $user_id_to, $message]);
+    $transaction->Execute("insert into dialog_image (dialog_id, image, pdf) select ?, image, pdf from dialog_user_image where user_id = ?", [$insert_id, $user_id_from]);
+    $transaction->Execute("delete from dialog_user_image where user_id = ?", [$user_id_from]);
     
-    if(empty($error)) {
-        $sql = "insert into dialog_image (dialog_id, image, pdf) select ?, image, pdf from dialog_user_image where user_id = ?";
-        $executer = new Executer($sql, [$insert_id, $user_id_from]);
-        $error = $executer->error;
-        
-        if(!empty($error)) {
-            $result['error'] = $executer->error;
-        }
-    }
+    $error = $transaction->error;
     
     if(empty($error)) {
-        $sql = "delete from dialog_user_image where user_id = ?";
-        $executer = new Executer($sql, [$user_id_from]);
-        $error = $executer->error;
-        
-        if(!empty($error)) {
-            $result['error'] = $executer->error;
-        }
+        $transaction->Commit();
+    }
+    else {
+        $transaction->Rollback();
+        $result['error'] = $error;
     }
 }
 

@@ -83,27 +83,27 @@ if(null !== filter_input(INPUT_POST, 'create-submit')) {
         $form_valid = false;
     }
     
-    if($form_valid) {    
-        $sql = "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
-                . "values (?, ?, ?, ?, ?, ?, ?)";
-        $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $storekeeper_id]);
-        $error_message = $executer->error;
-        $roll_id = $executer->insert_id;
+    if($form_valid) {
+        // Создание ролика, его ячейка и статус -- одна связанная цепочка,
+        // выполняется в рамках одной транзакции
+        $transaction = new Transaction();
+        
+        $roll_id = $transaction->Execute(
+                "insert into roll (supplier_id, film_variation_id, width, length, net_weight, comment, storekeeper_id) "
+                . "values (?, ?, ?, ?, ?, ?, ?)",
+                [$supplier_id, $film_variation_id, $width, $length, $net_weight, $comment, $storekeeper_id]);
+        
+        $transaction->Execute("insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)", [$roll_id, $cell, $user_id]);
+        $transaction->Execute("insert into roll_status_history (roll_id, status_id, user_id) values (?, ?, ?)", [$roll_id, $status_id, $user_id]);
+        
+        $error_message = $transaction->error;
         
         if(empty($error_message)) {
-            $sql = "insert into roll_cell_history (roll_id, cell, user_id) values (?, ?, ?)";
-            $executer = new Executer($sql, [$roll_id, $cell, $user_id]);
-            $error_message = $executer->error;
-        }
-        
-        if(empty($error_message)) {
-            $sql = "insert into roll_status_history (roll_id, status_id, user_id) values (?, ?, ?)";
-            $executer = new Executer($sql, [$roll_id, $status_id, $user_id]);
-            $error_message = $executer->error;            
-        }
-        
-        if(empty($error_message)) {
+            $transaction->Commit();
             header('Location: print.php');
+        }
+        else {
+            $transaction->Rollback();
         }
     }
 }
