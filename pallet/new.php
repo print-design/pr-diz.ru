@@ -157,36 +157,37 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
     $storekeeper_id = filter_input(INPUT_POST, 'storekeeper_id', FILTER_VALIDATE_INT);
     
     if($form_valid) {
-        $sql = "insert into pallet (supplier_id, film_variation_id, width, comment, storekeeper_id) "
-                . "values (?, ?, ?, ?, ?)";
-        $executer = new Executer($sql, [$supplier_id, $film_variation_id, $width, $comment, $storekeeper_id]);
-        $error_message = $executer->error;
-        $pallet_id = $executer->insert_id;
+        // Создание паллета, его ячейка и ролики на этом паллете -- одна связанная
+        // цепочка, выполняется в рамках одной транзакции
+        $transaction = new Transaction();
         $user_id = GetUserId();
         
-        if(empty($error_message)) {
-            $sql = "insert into pallet_cell_history (pallet_id, cell, user_id) values (?, ?, ?)";
-            $executer = new Executer($sql, [$pallet_id, $cell, $user_id]);
-            $error_message = $executer->error;
+        $pallet_id = $transaction->Execute(
+                "insert into pallet (supplier_id, film_variation_id, width, comment, storekeeper_id) "
+                . "values (?, ?, ?, ?, ?)",
+                [$supplier_id, $film_variation_id, $width, $comment, $storekeeper_id]);
+        
+        $transaction->Execute("insert into pallet_cell_history (pallet_id, cell, user_id) values (?, ?, ?)", [$pallet_id, $cell, $user_id]);
+        
+        // Заполнение роликов этого паллета
+        $roll_number = 1;
+        
+        while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
+            $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
+            $length = filter_input(INPUT_POST, "length_roll$roll_number");
+            $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
+            $transaction->Execute("insert into pallet_roll (pallet_id, weight, length, ordinal) values (?, ?, ?, ?)", [$pallet_id, $weight, $length, $ordinal]);
+            $roll_number++;
         }
         
-        if(empty($error_message)) {
-            // Заполнение роликов этого паллета
-            $roll_number = 1;
-            
-            while (filter_input(INPUT_POST, "weight_roll$roll_number") !== null && filter_input(INPUT_POST, "length_roll$roll_number") !== null && filter_input(INPUT_POST, "ordinal_roll$roll_number") != null) {
-                $weight = filter_input(INPUT_POST, "weight_roll$roll_number");
-                $length = filter_input(INPUT_POST, "length_roll$roll_number");
-                $ordinal = filter_input(INPUT_POST, "ordinal_roll$roll_number");
-                $sql = "insert into pallet_roll (pallet_id, weight, length, ordinal) values (?, ?, ?, ?)";
-                $executer = new Executer($sql, [$pallet_id, $weight, $length, $ordinal]);
-                $error_message = $executer->error;
-                $roll_number++;
-            }
-        }
+        $error_message = $transaction->error;
         
         if(empty($error_message)) {
+            $transaction->Commit();
             header('Location: '.APPLICATION."/pallet/print.php?id=$pallet_id");
+        }
+        else {
+            $transaction->Rollback();
         }
     }
 }
