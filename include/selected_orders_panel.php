@@ -70,6 +70,10 @@
             <td class="text-right" id="selected_orders_max_volume_order">&mdash;</td>
         </tr>
     </table>
+    
+    <div class="d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-dark" id="create_shipment_button" onclick="javascript: CreateShipment();">Создать отгрузку</button>
+    </div>
 </div>
 <script>
     function FormatNumberRu(value, decimals) {
@@ -123,7 +127,7 @@
                         var grossWeightText = order.gross_weight !== null ? FormatNumberRu(order.gross_weight, 0) + ' кг' : '&mdash;';
                         var palletCountText = order.pallet_count !== null ? order.pallet_count : '&mdash;';
                         rowsHtml += '<tr>'
-                                + '<td><input type="checkbox" class="selected_orders_breakdown_checkbox" checked="checked" data-gross-weight="' + (order.gross_weight || 0) + '" data-pallet-count="' + (order.pallet_count || 0) + '" data-pallet-volume="' + (order.pallet_volume || 0) + '" data-pallet-length="' + (order.pallet_length || 0) + '" data-pallet-width="' + (order.pallet_width || 0) + '" data-pallet-height="' + (order.pallet_height || 0) + '" /></td>'
+                                + '<td><input type="checkbox" class="selected_orders_breakdown_checkbox" checked="checked" data-id="' + order.id + '" data-gross-weight="' + (order.gross_weight || 0) + '" data-pallet-count="' + (order.pallet_count || 0) + '" data-pallet-volume="' + (order.pallet_volume || 0) + '" data-pallet-length="' + (order.pallet_length || 0) + '" data-pallet-width="' + (order.pallet_width || 0) + '" data-pallet-height="' + (order.pallet_height || 0) + '" /></td>'
                                 + '<td>' + order.customer_id + '-' + order.num_for_customer + '</td>'
                                 + '<td class="text-right">' + grossWeightText + '</td>'
                                 + '<td class="text-right">' + palletCountText + '</td>'
@@ -157,4 +161,14 @@
     $(document).on('change', '.selected_orders_breakdown_checkbox', function() {
         RecalculateSelectedOrdersBreakdown();
     });
+    
+    // Переход к созданию отгрузки -- собирает два списка: полный (все отмеченные вверху,
+    // для веса нетто/объёма и привязки заказов к отгрузке) и после снятия дублей
+    // (для веса брутто/количества мест, которые привязаны к физическому паллету)
+    function CreateShipment() {
+        var ids = $('.order-select-checkbox:checked').map(function() { return $(this).val(); }).get();
+        var palletIds = $('.selected_orders_breakdown_checkbox:checked').map(function() { return $(this).data('id'); }).get();
+        
+        document.location = "<?=APPLICATION ?>/shipment/create.php?ids=" + ids.join(',') + "&pallet_ids=" + palletIds.join(',');
+    }
 </script>

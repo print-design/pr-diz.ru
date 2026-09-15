@@ -40,6 +40,12 @@ if($folder == "pack") {
             <li class="nav-item">
                 <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, ["page", "order", "waiting", "from", "to", "id"]) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIPPED] ?></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= APPLICATION ?>/shipment/">Отгрузки</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= APPLICATION ?>/shipment/?draft=1">Черновики</a>
+            </li>
         </ul>
         <?php
         if(file_exists('find.php')) {

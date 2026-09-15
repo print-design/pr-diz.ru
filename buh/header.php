@@ -54,6 +54,12 @@ if($folder == "buh") {
             <li class="nav-item">
                 <a class="nav-link<?=$paid_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("paid", 1, ["production", "status", "page", "order", "from", "to", "id"]) ?>">Оплачено</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= APPLICATION ?>/shipment/">Отгрузки</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= APPLICATION ?>/shipment/?draft=1">Черновики</a>
+            </li>
         </ul>
         <?php
         if(file_exists('find.php')) {

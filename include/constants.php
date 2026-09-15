@@ -232,4 +232,11 @@ const UNIT_NAMES = array(UNIT_M => "м", UNIT_KG => "кг", UNIT_PC => "шт");
 // Другое
 const ISINVALID = ' is-invalid';
 const CSRF_TOKEN = "ddf44tyyh_oljoih_hhy6dr";
+
+// Наименование груза (раздел "Отгрузки")
+const CARGO_TYPE_FILM = 1;
+const CARGO_TYPE_PACKAGING = 2;
+const CARGO_TYPE_LABEL = 3;
+const CARGO_TYPES = array(CARGO_TYPE_FILM, CARGO_TYPE_PACKAGING, CARGO_TYPE_LABEL);
+const CARGO_TYPE_NAMES = array(CARGO_TYPE_FILM => "Плёнка", CARGO_TYPE_PACKAGING => "Упаковка", CARGO_TYPE_LABEL => "Этикетка");
 ?>
