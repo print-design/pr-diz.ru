@@ -187,7 +187,7 @@ while($row = $fetcher->Fetch()) {
     </head>
     <body>
         <?php
-        include '../include/header_admin.php';
+        include '../admin/header.php';
         ?>
         <div id="create_film_variation" class="modal fade show">
             <div class="modal-dialog">

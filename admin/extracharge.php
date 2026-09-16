@@ -61,7 +61,7 @@ if(empty($error_message)) {
     </head>
     <body>
         <?php
-        include '../include/header_admin.php';
+        include 'header.php';
         ?>
         <div class="container-fluid">
             <?php

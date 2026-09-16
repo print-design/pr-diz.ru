@@ -21,6 +21,7 @@ else {
                 <a class="nav-link<?=$drafts_status ?>" href="<?= APPLICATION ?>/shipment/?draft=1">Черновики</a>
             </li>
         </ul>
+        <div class="ml-auto"></div>
         <?php
         include '../include/header_right.php';
         ?>

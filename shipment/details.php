@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация -- те же роли, что у pack/ и buh/
-if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
     include '../include/_unauthorized.php';
 }
 
@@ -79,8 +79,19 @@ $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at'])
     <body>
         <?php include './header.php'; ?>
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-                <h3>Отгрузка №<?=$shipment['id'] ?><?php if($shipment['is_draft']): ?> <span class="badge badge-secondary">Черновик</span><?php endif; ?></h3>
+            <?php
+            $backlink_url = "";
+            if($shipment['is_draft']) {
+                $backlink_url = BuildQueryAddRemoveArray('is_draft', 1, ['id']);
+            }
+            else {
+                $backlink_url = BuildQueryRemove("id");
+            }
+            ?>
+            <a class="btn btn-light backlink" href="<?= APPLICATION ?>/shipment/<?= $backlink_url ?>" title="К списку">К списку</a>
+            
+            <div class="d-flex justify-content-between align-items-center mt-3 mb-3">    
+                <h1>Отгрузка №<?=$shipment['id'] ?><?php if($shipment['is_draft']): ?> <span class="badge badge-secondary">Черновик</span><?php endif; ?></h1>
                 <?php if(!$shipment['is_draft']): ?>
                 <a class="btn btn-outline-dark" href="excel.php?id=<?=$shipment['id'] ?>"><i class="fas fa-file-excel mr-2"></i>Акт-отчёт (Excel)</a>
                 <?php endif; ?>

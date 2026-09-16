@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация -- те же роли, что у pack/ и buh/
-if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
     include '../include/_unauthorized.php';
 }
 
@@ -21,7 +21,7 @@ $shipments = $grabber->result;
     <body>
         <?php include './header.php'; ?>
         <div class="container-fluid">
-            <h3 class="mt-3 mb-3"><?= $is_draft ? 'Черновики отгрузок' : 'Отгрузки' ?></h3>
+            <h1 class="mt-3 mb-3"><?= $is_draft ? 'Черновики отгрузок' : 'Отгрузки' ?></h1>
             <table class="table table-hover">
                 <tr>
                     <th>№</th>
@@ -33,10 +33,11 @@ $shipments = $grabber->result;
                     <?php if($is_draft): ?>
                     <th>Причина</th>
                     <?php endif; ?>
+                    <th></th>
                 </tr>
                 <?php foreach($shipments as $shipment): ?>
                 <?php $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at']); ?>
-                <tr class="clickable-row" onclick="document.location = '<?=APPLICATION ?>/shipment/details.php?id=<?=$shipment['id'] ?>';" style="cursor: pointer;">
+                <tr>
                     <td><?=$shipment['id'] ?></td>
                     <td><?=$created_at->format('d.m.Y H:i') ?></td>
                     <td><?=htmlspecialchars($shipment['document_number']) ?></td>
@@ -46,6 +47,13 @@ $shipments = $grabber->result;
                     <?php if($is_draft): ?>
                     <td><?=htmlspecialchars($shipment['draft_reason'] ?? '') ?></td>
                     <?php endif; ?>
+                    <td>
+                        <a href='<?=APPLICATION ?>/shipment/details.php?id=<?=$shipment['id'] ?>'>
+                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
+                            </svg>
+                        </a>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if(empty($shipments)): ?>

@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Авторизация -- те же роли, что у pack/ и buh/
-if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
     include '../include/_unauthorized.php';
 }
 
@@ -148,7 +148,7 @@ $totals = GetShipmentTotals($ids, $pallet_ids);
     <body>
         <?php include './header.php'; ?>
         <div class="container-fluid">
-            <h3 class="mt-3 mb-3">Создание отгрузки</h3>
+            <h1 class="mt-3 mb-3">Создание отгрузки</h1>
             
             <?php if(!empty($error_message)): ?>
             <div class="alert alert-danger"><?=htmlspecialchars($error_message) ?></div>
