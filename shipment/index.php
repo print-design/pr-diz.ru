@@ -1,5 +1,7 @@
 <?php
 include '../include/topscripts.php';
+include '../include/pager_top.php';
+$rowcounter = 0;
 
 // Авторизация -- те же роли, что у pack/ и buh/
 if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
@@ -8,8 +10,15 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NA
 
 $is_draft = filter_input(INPUT_GET, 'draft', FILTER_VALIDATE_INT) == 1 ? 1 : 0;
 
+// Общее количество отгрузок для определения количества страниц в постраничном выводе
+$sql = "select count(id) from shipment where is_draft = ?";
+$fetcher = new Fetcher($sql, [$is_draft]);
+if($row = $fetcher->Fetch()) {
+    $pager_total_count = $row[0];
+}
+
 $sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, draft_reason "
-        . "from shipment where is_draft = ? order by id desc";
+        . "from shipment where is_draft = ? order by id desc limit $pager_skip, $pager_take";
 $grabber = new Grabber($sql, [$is_draft]);
 $shipments = $grabber->result;
 ?>
@@ -62,6 +71,9 @@ $shipments = $grabber->result;
                 </tr>
                 <?php endif; ?>
             </table>
+            <?php
+            include '../include/pager_bottom.php';
+            ?>
         </div>
         <?php include '../include/footer.php'; ?>
     </body>

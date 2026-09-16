@@ -92,7 +92,7 @@ if($row = $fetcher->Fetch()) {
     </head>
     <body>
         <?php
-        include 'header.php';
+        include './header.php';
         ?>
         <div class="container-fluid">
             <?php
