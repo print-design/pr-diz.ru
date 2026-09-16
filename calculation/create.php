@@ -418,9 +418,21 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    // ЛАМИНАЦИЯ 1
-    // Если есть плёнка 2, но нет ламинатора, то ошибка
-    if((!empty($lamination1_film_id) || !empty($lamination1_film_name)) && empty($laminator_id)) {
+    // ЛАМИНАЦИЯ 1 и ЛАМИНАЦИЯ 2
+    // Если выбрана хотя бы одна из двух ламинаций, а тип ламинатора не выбран, то ошибка.
+    // ВАЖНО: раньше здесь ошибочно проверялись $lamination1_film_id и $lamination1_film_name --
+    // обе эти переменные на этом месте кода ещё не были определены (первое их присвоение
+    // находится ниже по файлу), поэтому проверка всегда была ложной и никогда не срабатывала.
+    // Из-за этого можно было создать заказ с выбранной ламинацией, но без указания типа
+    // ламинатора -- ровно то, что произошло на практике: laminator_id сохранился как NULL,
+    // и стоимость работ по ламинации не была посчитана.
+    $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT);
+    $lamination1_individual_film_name = filter_input(INPUT_POST, 'lamination1_individual_film_name');
+    $lamination2_individual_film_name = filter_input(INPUT_POST, 'lamination2_individual_film_name');
+    
+    if((!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)
+            || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name))
+            && empty($laminator_id)) {
         $laminator_id_valid = ISINVALID;
         $form_valid = false;
     }
