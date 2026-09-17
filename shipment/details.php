@@ -36,6 +36,7 @@ if(null !== filter_input(INPUT_POST, 'draft_submit')) {
 
 // Данные самой отгрузки
 $sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, "
+        . "max_pallet_length, max_pallet_width, max_pallet_height, "
         . "is_draft, draft_reason, draft_at, draft_by "
         . "from shipment where id = ?";
 $fetcher = new Fetcher($sql, [$id]);
@@ -122,7 +123,7 @@ $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at'])
                     <td class="text-right"><?=CARGO_TYPE_NAMES[$shipment['cargo_type']] ?? '' ?></td>
                 </tr>
                 <tr>
-                    <td>Количество мест</td>
+                    <td>Количество паллетов</td>
                     <td class="text-right"><?= DisplayNumber(intval($shipment['places_count']), 0) ?></td>
                 </tr>
                 <tr>
@@ -136,6 +137,10 @@ $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at'])
                 <tr>
                     <td>Объём</td>
                     <td class="text-right"><?= DisplayNumber(floatval($shipment['volume']), 2) ?> м<sup>3</sup></td>
+                </tr>
+                <tr>
+                    <td>Максимальный</td>
+                    <td class="text-right"><?php if($shipment['max_pallet_length'] !== null): ?><?= DisplayNumber(floatval($shipment['max_pallet_length']), 2) ?>&times;<?= DisplayNumber(floatval($shipment['max_pallet_width']), 2) ?>&times;<?= DisplayNumber(floatval($shipment['max_pallet_height']), 2) ?> м<?php else: ?>&mdash;<?php endif; ?></td>
                 </tr>
             </table>
             

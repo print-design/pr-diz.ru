@@ -14,7 +14,8 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NA
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-$sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, is_draft "
+$sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, is_draft, "
+        . "max_pallet_length, max_pallet_width, max_pallet_height "
         . "from shipment where id = ?";
 $fetcher = new Fetcher($sql, [$id]);
 $shipment = $fetcher->Fetch();
@@ -64,6 +65,11 @@ $sheet->setCellValue('A1', 'Акт-отчёт №'.$shipment['id'].' о пере
 $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
 $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
+$max_pallet_dimensions = '—';
+if($shipment['max_pallet_length'] !== null) {
+    $max_pallet_dimensions = DisplayNumber(floatval($shipment['max_pallet_length']), 2).'×'.DisplayNumber(floatval($shipment['max_pallet_width']), 2).'×'.DisplayNumber(floatval($shipment['max_pallet_height']), 2).' м';
+}
+
 $rows = array(
     array('Дата создания отгрузки', $created_at->format('d.m.Y H:i')),
     array('Ответственный', implode(', ', $responsible_names)),
@@ -71,7 +77,8 @@ $rows = array(
     array('Контрагент', implode(', ', $customer_names)),
     array('Транспортное средство', $shipment['vehicle_number']),
     array('Наименование груза', CARGO_TYPE_NAMES[$shipment['cargo_type']] ?? ''),
-    array('Количество мест', DisplayNumber(intval($shipment['places_count']), 0)),
+    array('Количество паллетов', DisplayNumber(intval($shipment['places_count']), 0)),
+    array('Максимальный', $max_pallet_dimensions),
     array('Масса брутто', DisplayNumber(floatval($shipment['gross_weight']), 0).' кг'),
     array('Масса нетто', DisplayNumber(floatval($shipment['net_weight']), 0).' кг'),
     array('Объём', DisplayNumber(floatval($shipment['volume']), 2).' м3'),
@@ -84,12 +91,13 @@ foreach($rows as $row_data) {
     $sheet->getStyle('A'.$row_number)->getFont()->setBold(true);
     $sheet->setCellValue('B'.$row_number, $row_data[1]);
     $sheet->getStyle('A'.$row_number.':B'.$row_number)->getAlignment()->setWrapText(true)->setVertical(Alignment::VERTICAL_TOP);
+    $sheet->getStyle('B'.$row_number)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
     $row_number++;
 }
 
 $row_number++;
 $sheet->mergeCells('A'.$row_number.':B'.$row_number);
-$sheet->setCellValue('A'.$row_number, 'Способ определения массы: Данные складского учёта (расчётный)');
+$sheet->setCellValue('A'.$row_number, 'Способ определения массы: Данные складского учёта (взвешивание)');
 $row_number += 2;
 $sheet->mergeCells('A'.$row_number.':B'.$row_number);
 $sheet->setCellValue('A'.$row_number, 'Подпись кладовщика: ______________________');

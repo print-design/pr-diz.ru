@@ -37,7 +37,7 @@ $shipments = $grabber->result;
                     <th>Дата создания</th>
                     <th>Документ</th>
                     <th>Груз</th>
-                    <th>Мест</th>
+                    <th>Паллетов</th>
                     <th>Брутто</th>
                     <?php if($is_draft): ?>
                     <th>Причина</th>

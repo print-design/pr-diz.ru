@@ -17,7 +17,8 @@ function ParseIdList($raw) {
 // $pallet_ids -- список после снятия флажков-дублей (для веса брутто и количества мест,
 // которые привязаны к физическому паллету, а не к заказу)
 function GetShipmentTotals($ids, $pallet_ids) {
-    $totals = array('places_count' => 0, 'gross_weight' => 0, 'net_weight' => 0, 'volume' => 0);
+    $totals = array('places_count' => 0, 'gross_weight' => 0, 'net_weight' => 0, 'volume' => 0,
+            'max_pallet_length' => null, 'max_pallet_width' => null, 'max_pallet_height' => null);
     
     if(!empty($ids)) {
         $placeholders = implode(', ', array_fill(0, count($ids), '?'));
@@ -50,6 +51,18 @@ function GetShipmentTotals($ids, $pallet_ids) {
         if($row = $fetcher->Fetch()) {
             $totals['places_count'] = intval($row['places_count'] ?? 0);
             $totals['gross_weight'] = floatval($row['gross_weight'] ?? 0);
+        }
+        
+        // Габариты паллета с наибольшим объёмом (длина * ширина * высота) -- та же логика,
+        // что и в строке "Максимальный (отмеченные)" на панели selected_orders_panel
+        $sql = "select pallet_length, pallet_width, pallet_height from calculation "
+                . "where id in ($placeholders) and pallet_length is not null and pallet_width is not null and pallet_height is not null "
+                . "order by (pallet_length * pallet_width * pallet_height) desc limit 1";
+        $fetcher = new Fetcher($sql, $pallet_ids);
+        if($row = $fetcher->Fetch()) {
+            $totals['max_pallet_length'] = floatval($row['pallet_length']);
+            $totals['max_pallet_width'] = floatval($row['pallet_width']);
+            $totals['max_pallet_height'] = floatval($row['pallet_height']);
         }
     }
     
@@ -103,9 +116,11 @@ if(null !== filter_input(INPUT_POST, 'create_shipment_submit')) {
         $transaction = new Transaction();
         
         $shipment_id = $transaction->Execute(
-                "insert into shipment (document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume) "
-                . "values (?, ?, ?, ?, ?, ?, ?)",
-                [$document_number, $vehicle_number, $cargo_type, $totals['places_count'], $totals['gross_weight'], $totals['net_weight'], $totals['volume']]);
+                "insert into shipment (document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, "
+                . "max_pallet_length, max_pallet_width, max_pallet_height) "
+                . "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [$document_number, $vehicle_number, $cargo_type, $totals['places_count'], $totals['gross_weight'], $totals['net_weight'], $totals['volume'],
+                        $totals['max_pallet_length'], $totals['max_pallet_width'], $totals['max_pallet_height']]);
         
         foreach($ids as $calculation_id) {
             $transaction->Execute("insert into shipment_calculation (shipment_id, calculation_id) values (?, ?)", [$shipment_id, $calculation_id]);
@@ -193,7 +208,7 @@ $totals = GetShipmentTotals($ids, $pallet_ids);
                 
                 <table class="table">
                     <tr>
-                        <td>Количество мест</td>
+                        <td>Количество паллетов</td>
                         <td class="text-right"><?= DisplayNumber($totals['places_count'], 0) ?></td>
                     </tr>
                     <tr>
@@ -207,6 +222,10 @@ $totals = GetShipmentTotals($ids, $pallet_ids);
                     <tr>
                         <td>Объём</td>
                         <td class="text-right"><?= DisplayNumber($totals['volume'], 2) ?> м<sup>3</sup></td>
+                    </tr>
+                    <tr>
+                        <td>Максимальный</td>
+                        <td class="text-right"><?php if($totals['max_pallet_length'] !== null): ?><?= DisplayNumber($totals['max_pallet_length'], 2) ?>&times;<?= DisplayNumber($totals['max_pallet_width'], 2) ?>&times;<?= DisplayNumber($totals['max_pallet_height'], 2) ?> м<?php else: ?>&mdash;<?php endif; ?></td>
                     </tr>
                 </table>
                 
