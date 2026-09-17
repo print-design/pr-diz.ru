@@ -115,15 +115,15 @@ $individual_film_name_valid = '';
 $individual_thickness_valid = '';
 $individual_density_valid = '';
 
-$width_ski_valid = '';
+$width_selvage_valid = '';
 $width_machine_valid = '';
 
 $lamination1_price_valid = '';
-$lamination1_width_ski_valid = '';
+$lamination1_width_selvage_valid = '';
 $lamination1_width_machine_valid = '';
 
 $lamination2_price_valid = '';
-$lamination2_width_ski_valid = '';
+$lamination2_width_selvage_valid = '';
 $lamination2_width_machine_valid = '';
 
 $raport_valid = '';
@@ -219,15 +219,15 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
     
     // ШИРИНА МАТЕРИАЛА
-    switch(filter_input(INPUT_POST, 'ski')) {
-        case SKI_STANDARD:
+    switch(filter_input(INPUT_POST, 'selvage')) {
+        case SELVAGE_STANDARD:
             $material_width = $stream_widths_sum + 20;
             break;
-        case SKI_NO:
+        case SELVAGE_NO:
             $material_width = $stream_widths_sum;
             break;
-        case SKI_NONSTANDARD:
-            $material_width = filter_input(INPUT_POST, 'width_ski');
+        case SELVAGE_NONSTANDARD:
+            $material_width = filter_input(INPUT_POST, 'width_selvage');
             break;
     }
     
@@ -356,24 +356,24 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // ВАЛИДАЦИЯ ШИРИНЫ МАТЕРИАЛА
     
-    if(filter_input(INPUT_POST, 'ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_ski'))) {
-        $width_ski = filter_input(INPUT_POST, 'width_ski');
+    if(filter_input(INPUT_POST, 'selvage') == SELVAGE_NONSTANDARD && !empty(filter_input(INPUT_POST, 'width_selvage'))) {
+        $width_selvage = filter_input(INPUT_POST, 'width_selvage');
         
         // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
-        if($width_ski < $stream_widths_sum) {
-            $width_ski_valid = ISINVALID;
+        if($width_selvage < $stream_widths_sum) {
+            $width_selvage_valid = ISINVALID;
             $form_valid = false;
         }
         
         // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
-        if(!empty($machine_width) && $width_ski > $machine_width) {
+        if(!empty($machine_width) && $width_selvage > $machine_width) {
             $width_machine_valid = ISINVALID;
             $form_valid = false;
         }
     }
     
     // Если ширина материала больше, чем ширина машины, то плёнка слишком широкая
-    if(filter_input(INPUT_POST, 'ski') != SKI_NONSTANDARD) {
+    if(filter_input(INPUT_POST, 'selvage') != SELVAGE_NONSTANDARD) {
         if(!empty($machine_width) && $material_width > $machine_width) {
             $exceed_max_width_invalid = true;
             $form_valid = false;
@@ -418,21 +418,9 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $form_valid = false;
     }
     
-    // ЛАМИНАЦИЯ 1 и ЛАМИНАЦИЯ 2
-    // Если выбрана хотя бы одна из двух ламинаций, а тип ламинатора не выбран, то ошибка.
-    // ВАЖНО: раньше здесь ошибочно проверялись $lamination1_film_id и $lamination1_film_name --
-    // обе эти переменные на этом месте кода ещё не были определены (первое их присвоение
-    // находится ниже по файлу), поэтому проверка всегда была ложной и никогда не срабатывала.
-    // Из-за этого можно было создать заказ с выбранной ламинацией, но без указания типа
-    // ламинатора -- ровно то, что произошло на практике: laminator_id сохранился как NULL,
-    // и стоимость работ по ламинации не была посчитана.
-    $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT);
-    $lamination1_individual_film_name = filter_input(INPUT_POST, 'lamination1_individual_film_name');
-    $lamination2_individual_film_name = filter_input(INPUT_POST, 'lamination2_individual_film_name');
-    
-    if((!empty($lamination1_film_variation_id) || !empty($lamination1_individual_film_name)
-            || !empty($lamination2_film_variation_id) || !empty($lamination2_individual_film_name))
-            && empty($laminator_id)) {
+    // ЛАМИНАЦИЯ 1
+    // Если есть плёнка 2, но нет ламинатора, то ошибка
+    if((!empty($lamination1_film_id) || !empty($lamination1_film_name)) && empty($laminator_id)) {
         $laminator_id_valid = ISINVALID;
         $form_valid = false;
     }
@@ -451,26 +439,26 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(filter_input(INPUT_POST, 'lamination1_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination1_width_ski')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
-        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski');
+    if(filter_input(INPUT_POST, 'lamination1_selvage') == SELVAGE_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination1_width_selvage')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+        $lamination1_width_selvage = filter_input(INPUT_POST, 'lamination1_width_selvage');
         
         if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
             // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
-            if($lamination1_width_ski < array_sum($stream_widths)) {
-                $lamination1_width_ski_valid = ISINVALID;
+            if($lamination1_width_selvage < array_sum($stream_widths)) {
+                $lamination1_width_selvage_valid = ISINVALID;
                 $form_valid = false;
             }
         }
         else {
             // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
-            if($lamination1_width_ski < $stream_width * $streams_number) {
-                $lamination1_width_ski_valid = ISINVALID;
+            if($lamination1_width_selvage < $stream_width * $streams_number) {
+                $lamination1_width_selvage_valid = ISINVALID;
                 $form_valid = false;
             }
         }
         
         // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
-        if(!empty($machine_width) && $lamination1_width_ski > $machine_width) {
+        if(!empty($machine_width) && $lamination1_width_selvage > $machine_width) {
             $lamination1_width_machine_valid = ISINVALID;
             $form_valid = false;
         }
@@ -491,26 +479,26 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         }
     }
     
-    if(filter_input(INPUT_POST, 'lamination2_ski') == SKI_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination2_width_ski')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
-        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
+    if(filter_input(INPUT_POST, 'lamination2_selvage') == SELVAGE_NONSTANDARD && !empty(filter_input(INPUT_POST, 'lamination2_width_selvage')) && !empty(filter_input(INPUT_POST, 'streams_number'))) {
+        $lamination2_width_selvage = filter_input(INPUT_POST, 'lamination2_width_selvage');
         
         if($work_type_id != WORK_TYPE_SELF_ADHESIVE && empty($stream_width)) {
             // Если ширина плёнки меньше, чем суммарная ширина ручьёв, то плёнка слишком узкая
-            if($lamination2_width_ski < array_sum($stream_widths)) {
-                $lamination2_width_ski_valid = ISINVALID;
+            if($lamination2_width_selvage < array_sum($stream_widths)) {
+                $lamination2_width_selvage_valid = ISINVALID;
                 $form_valid = false;
             }
         }
         else {
             // Если ширина плёнки меньше, чем ширина ручья * кол-во ручьёв, то плёнка слишком узкая
-            if($lamination2_width_ski < $stream_width * $streams_number) {
-                $lamination2_width_ski_valid = ISINVALID;
+            if($lamination2_width_selvage < $stream_width * $streams_number) {
+                $lamination2_width_selvage_valid = ISINVALID;
                 $form_valid = false;
             }
         }
         
         // Если ширина плёнки больше, чем ширина машины, то плёнка слишком широкая
-        if(!empty($machine_width) && $lamination2_width_ski > $machine_width) {
+        if(!empty($machine_width) && $lamination2_width_selvage > $machine_width) {
             $lamination2_width_machine_valid = ISINVALID;
             $form_valid = false;
         }
@@ -639,8 +627,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = null; if($film_id != INDIVIDUAL) $individual_thickness = null;
         $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = null; if($film_id != INDIVIDUAL) $individual_density = null;
         $customers_material = 0; if(filter_input(INPUT_POST, 'customers_material') == 'on') $customers_material = 1;
-        $ski = filter_input(INPUT_POST, 'ski'); if(empty($ski)) $ski = null; if(empty($film_id)) $ski = null;
-        $width_ski = filter_input(INPUT_POST, 'width_ski'); if(empty($width_ski)) $width_ski = null; if($ski != SKI_NONSTANDARD) $width_ski = null;
+        $selvage = filter_input(INPUT_POST, 'selvage'); if(empty($selvage)) $selvage = null; if(empty($film_id)) $selvage = null;
+        $width_selvage = filter_input(INPUT_POST, 'width_selvage'); if(empty($width_selvage)) $width_selvage = null; if($selvage != SELVAGE_NONSTANDARD) $width_selvage = null;
         
         // Если currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($currency)) {
@@ -659,8 +647,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = null; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_thickness = null;
         $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = null; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_density = null;
         $lamination1_customers_material = 0; if(filter_input(INPUT_POST, 'lamination1_customers_material') == 'on') $lamination1_customers_material = 1;
-        $lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski'); if(empty($lamination1_ski)) $lamination1_ski = null; if(empty($lamination1_film_id)) $lamination1_ski = null;
-        $lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski'); if(empty($lamination1_width_ski)) $lamination1_width_ski = null; if($lamination1_ski != SKI_NONSTANDARD) $lamination1_width_ski = null;
+        $lamination1_selvage = filter_input(INPUT_POST, 'lamination1_selvage'); if(empty($lamination1_selvage)) $lamination1_selvage = null; if(empty($lamination1_film_id)) $lamination1_selvage = null;
+        $lamination1_width_selvage = filter_input(INPUT_POST, 'lamination1_width_selvage'); if(empty($lamination1_width_selvage)) $lamination1_width_selvage = null; if($lamination1_selvage != SELVAGE_NONSTANDARD) $lamination1_width_selvage = null;
         
         // Если lamination1_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination1_currency)) {
@@ -679,8 +667,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = null; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_thickness = null;
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = null; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = null;
         $lamination2_customers_material = 0; if(filter_input(INPUT_POST, 'lamination2_customers_material') == 'on') $lamination2_customers_material = 1;
-        $lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski'); if(empty($lamination2_ski)) $lamination2_ski = null; if(empty($lamination2_film_id)) $lamination2_ski = null;
-        $lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski'); if(empty($lamination2_width_ski)) $lamination2_width_ski = null; if($lamination2_ski != SKI_NONSTANDARD) $lamination2_width_ski = null;
+        $lamination2_selvage = filter_input(INPUT_POST, 'lamination2_selvage'); if(empty($lamination2_selvage)) $lamination2_selvage = null; if(empty($lamination2_film_id)) $lamination2_selvage = null;
+        $lamination2_width_selvage = filter_input(INPUT_POST, 'lamination2_width_selvage'); if(empty($lamination2_width_selvage)) $lamination2_width_selvage = null; if($lamination2_selvage != SELVAGE_NONSTANDARD) $lamination2_width_selvage = null;
         
         // Если lamination2_currency пустой, то получаем значение валюты из справочника цен на плёнку
         if(empty($lamination2_currency)) {
@@ -775,8 +763,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             'individual_thickness' => $individual_thickness,
             'individual_density' => $individual_density,
             'customers_material' => $customers_material,
-            'ski' => $ski,
-            'width_ski' => $width_ski,
+            'selvage' => $selvage,
+            'width_selvage' => $width_selvage,
             'lamination1_film_variation_id' => $lamination1_film_variation_id,
             'lamination1_price' => $lamination1_price,
             'lamination1_currency' => $lamination1_currency,
@@ -784,8 +772,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             'lamination1_individual_thickness' => $lamination1_individual_thickness,
             'lamination1_individual_density' => $lamination1_individual_density,
             'lamination1_customers_material' => $lamination1_customers_material,
-            'lamination1_ski' => $lamination1_ski,
-            'lamination1_width_ski' => $lamination1_width_ski,
+            'lamination1_selvage' => $lamination1_selvage,
+            'lamination1_width_selvage' => $lamination1_width_selvage,
             'lamination2_film_variation_id' => $lamination2_film_variation_id,
             'lamination2_price' => $lamination2_price,
             'lamination2_currency' => $lamination2_currency,
@@ -793,8 +781,8 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             'lamination2_individual_thickness' => $lamination2_individual_thickness,
             'lamination2_individual_density' => $lamination2_individual_density,
             'lamination2_customers_material' => $lamination2_customers_material,
-            'lamination2_ski' => $lamination2_ski,
-            'lamination2_width_ski' => $lamination2_width_ski,
+            'lamination2_selvage' => $lamination2_selvage,
+            'lamination2_width_selvage' => $lamination2_width_selvage,
             'laminator_id' => $laminator_id,
             'streams_number' => $streams_number,
             'machine_id' => $machine_id,
@@ -906,11 +894,11 @@ $row = array();
 
 if(!empty($id)) {
     $sql = "select c.date, c.customer_id, c.name, c.unit, c.quantity, c.work_type_id, "
-            . "c.film_variation_id, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.ski, c.width_ski, "
+            . "c.film_variation_id, c.price, c.currency, c.individual_film_name, c.individual_thickness, c.individual_density, c.customers_material, c.selvage, c.width_selvage, "
             . "(select film_id from film_variation where id = c.film_variation_id) film_id, "
-            . "c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_ski, c.lamination1_width_ski, "
+            . "c.lamination1_film_variation_id, c.lamination1_price, c.lamination1_currency, c.lamination1_individual_film_name, c.lamination1_individual_thickness, c.lamination1_individual_density, c.lamination1_customers_material, c.lamination1_selvage, c.lamination1_width_selvage, "
             . "(select film_id from film_variation where id = c.lamination1_film_variation_id) lamination1_film_id, "
-            . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_ski, c.lamination2_width_ski, "
+            . "c.lamination2_film_variation_id, c.lamination2_price, c.lamination2_currency, c.lamination2_individual_film_name, c.lamination2_individual_thickness, c.lamination2_individual_density, c.lamination2_customers_material, c.lamination2_selvage, c.lamination2_width_selvage, "
             . "(select film_id from film_variation where id = c.lamination2_film_variation_id) lamination2_film_id, "
             . "c.laminator_id, c.streams_number, c.machine_id, c.length, c.stream_width, c.raport, c.number_in_raport, c.lamination_roller_width, c.ink_number, c.ink_run2_number, c.manager_id, "
             . "c.ink_1, c.ink_2, c.ink_3, c.ink_4, c.ink_5, c.ink_6, c.ink_7, c.ink_8, "
@@ -1009,17 +997,17 @@ if($customers_material === null && isset($row['customers_material'])) {
     $customers_material = $row['customers_material'];
 }
 
-$ski = filter_input(INPUT_POST, 'ski');
-if($ski === null && isset($row['ski'])) {
-    $ski = $row['ski'];
+$selvage = filter_input(INPUT_POST, 'selvage');
+if($selvage === null && isset($row['selvage'])) {
+    $selvage = $row['selvage'];
 }
-if($ski === null) {
-    $ski = SKI_STANDARD; // По умолчанию значение должно быть "Стандартные лыиж".
+if($selvage === null) {
+    $selvage = SELVAGE_STANDARD; // По умолчанию значение должно быть "Стандартные лыиж".
 }
 
-$width_ski = filter_input(INPUT_POST, 'width_ski');
-if($width_ski === null && isset($row['width_ski'])) {
-    $width_ski = $row['width_ski'];
+$width_selvage = filter_input(INPUT_POST, 'width_selvage');
+if($width_selvage === null && isset($row['width_selvage'])) {
+    $width_selvage = $row['width_selvage'];
 }
 
 $lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id', FILTER_VALIDATE_INT);
@@ -1062,14 +1050,14 @@ if($lamination1_customers_material === null && isset($row['lamination1_customers
     $lamination1_customers_material = $row['lamination1_customers_material'];
 }
 
-$lamination1_ski = filter_input(INPUT_POST, 'lamination1_ski');
-if($lamination1_ski === null && isset($row['lamination1_ski'])) {
-    $lamination1_ski = $row['lamination1_ski'];
+$lamination1_selvage = filter_input(INPUT_POST, 'lamination1_selvage');
+if($lamination1_selvage === null && isset($row['lamination1_selvage'])) {
+    $lamination1_selvage = $row['lamination1_selvage'];
 }
 
-$lamination1_width_ski = filter_input(INPUT_POST, 'lamination1_width_ski');
-if($lamination1_width_ski === null && isset($row['lamination1_width_ski'])) {
-    $lamination1_width_ski = $row['lamination1_width_ski'];
+$lamination1_width_selvage = filter_input(INPUT_POST, 'lamination1_width_selvage');
+if($lamination1_width_selvage === null && isset($row['lamination1_width_selvage'])) {
+    $lamination1_width_selvage = $row['lamination1_width_selvage'];
 }
 
 $lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id', FILTER_VALIDATE_INT);
@@ -1112,14 +1100,14 @@ if($lamination2_customers_material === null && isset($row['lamination2_customers
     $lamination2_customers_material = $row['lamination2_customers_material'];
 }
 
-$lamination2_ski = filter_input(INPUT_POST, 'lamination2_ski');
-if($lamination2_ski === null && isset($row['lamination2_ski'])) {
-    $lamination2_ski = $row['lamination2_ski'];
+$lamination2_selvage = filter_input(INPUT_POST, 'lamination2_selvage');
+if($lamination2_selvage === null && isset($row['lamination2_selvage'])) {
+    $lamination2_selvage = $row['lamination2_selvage'];
 }
 
-$lamination2_width_ski = filter_input(INPUT_POST, 'lamination2_width_ski');
-if($lamination2_width_ski === null && isset($row['lamination2_width_ski'])) {
-    $lamination2_width_ski = $row['lamination2_width_ski'];
+$lamination2_width_selvage = filter_input(INPUT_POST, 'lamination2_width_selvage');
+if($lamination2_width_selvage === null && isset($row['lamination2_width_selvage'])) {
+    $lamination2_width_selvage = $row['lamination2_width_selvage'];
 }
 
 $laminator_id = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT);
@@ -1972,14 +1960,14 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="ski" id="for_ski">Лыжи</label>
-                                    <select name="ski" id="ski" class="form-control">
+                                    <label for="selvage" id="for_selvage">Лыжи</label>
+                                    <select name="selvage" id="selvage" class="form-control">
                                         <?php
-                                        $no_ski_class = "";
+                                        $no_selvage_class = "";
                                         ?>
-                                        <option id="no_ski_option" value="<?= SKI_NO ?>"<?=$no_ski_class ?><?=($ski == SKI_NO ? " selected='selected'" : "") ?>>Без лыж</option>
-                                        <option value="<?= SKI_STANDARD ?>"<?=($ski == SKI_STANDARD ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                        <option value="<?= SKI_NONSTANDARD ?>"<?=($ski == SKI_NONSTANDARD ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                        <option id="no_selvage_option" value="<?= SELVAGE_NO ?>"<?=$no_selvage_class ?><?=($selvage == SELVAGE_NO ? " selected='selected'" : "") ?>>Без лыж</option>
+                                        <option value="<?= SELVAGE_STANDARD ?>"<?=($selvage == SELVAGE_STANDARD ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                        <option value="<?= SELVAGE_NONSTANDARD ?>"<?=($selvage == SELVAGE_NONSTANDARD ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                     </select>
                                 </div>
                             </div>
@@ -1995,12 +1983,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="width_ski" id="for_width_ski">Ширина пленки, мм</label>
-                                    <input name="width_ski" id="width_ski" type="text" class="form-control int-only" value="<?=$width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#width_ski_message').hide(); $('#width_machine_message').hide();" />
+                                    <label for="width_selvage" id="for_width_selvage">Ширина пленки, мм</label>
+                                    <input name="width_selvage" id="width_selvage" type="text" class="form-control int-only" value="<?=$width_selvage ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#width_selvage_message').hide(); $('#width_machine_message').hide();" />
                                     <div class="invalid-feedback">Ширина пленки обязательно</div>
                                 </div>
-                                <?php if(!empty($width_ski_valid)): ?>
-                                <div class="text-danger" id="width_ski_message">Узкая плёнка</div>
+                                <?php if(!empty($width_selvage_valid)): ?>
+                                <div class="text-danger" id="width_selvage_message">Узкая плёнка</div>
                                 <?php
                                 endif;
                                 if(!empty($width_machine_valid)):
@@ -2149,10 +2137,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="lamination1_ski" id="for_lamination1_ski">Лыжи</label>
-                                        <select name="lamination1_ski" id="lamination1_ski" class="form-control">
-                                            <option value="<?= SKI_STANDARD ?>"<?=($lamination1_ski == SKI_STANDARD ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                            <option value="<?= SKI_NONSTANDARD ?>"<?=($lamination1_ski == SKI_NONSTANDARD ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                        <label for="lamination1_selvage" id="for_lamination1_selvage">Лыжи</label>
+                                        <select name="lamination1_selvage" id="lamination1_selvage" class="form-control">
+                                            <option value="<?= SELVAGE_STANDARD ?>"<?=($lamination1_selvage == SELVAGE_STANDARD ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                            <option value="<?= SELVAGE_NONSTANDARD ?>"<?=($lamination1_selvage == SELVAGE_NONSTANDARD ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                         </select>
                                     </div>
                                 </div>
@@ -2194,12 +2182,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label for="lamination1_width_ski" id="for_lamination1_width_ski">Ширина пленки, мм</label>
-                                        <input name="lamination1_width_ski" id="lamination1_width_ski" type="text" class="form-control int-only" value="<?=$lamination1_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination1_width_ski_message').hide(); $('#lamination1_width_machine_message').hide();" />
+                                        <label for="lamination1_width_selvage" id="for_lamination1_width_selvage">Ширина пленки, мм</label>
+                                        <input name="lamination1_width_selvage" id="lamination1_width_selvage" type="text" class="form-control int-only" value="<?=$lamination1_width_selvage ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination1_width_selvage_message').hide(); $('#lamination1_width_machine_message').hide();" />
                                         <div class="invalid-feedback">Ширина пленки обязательно</div>
                                     </div>
-                                    <?php if(!empty($lamination1_width_ski_valid)): ?>
-                                    <div class="text-danger" id="lamination1_width_ski_message">Узкая плёнка</div>
+                                    <?php if(!empty($lamination1_width_selvage_valid)): ?>
+                                    <div class="text-danger" id="lamination1_width_selvage_message">Узкая плёнка</div>
                                     <?php
                                     endif;
                                     if(!empty($lamination1_width_machine_valid)):
@@ -2340,10 +2328,10 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="lamination2_ski" id="for_lamination2_ski">Лыжи</label>
-                                            <select name="lamination2_ski" id="lamination2_ski" class="form-control">
-                                                <option value="<?= SKI_STANDARD ?>"<?=($lamination2_ski == SKI_STANDARD ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
-                                                <option value="<?= SKI_NONSTANDARD ?>"<?=($lamination2_ski == SKI_NONSTANDARD ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
+                                            <label for="lamination2_selvage" id="for_lamination2_selvage">Лыжи</label>
+                                            <select name="lamination2_selvage" id="lamination2_selvage" class="form-control">
+                                                <option value="<?= SELVAGE_STANDARD ?>"<?=($lamination2_selvage == SELVAGE_STANDARD ? " selected='selected'" : "") ?>>Стандартные лыжи</option>
+                                                <option value="<?= SELVAGE_NONSTANDARD ?>"<?=($lamination2_selvage == SELVAGE_NONSTANDARD ? " selected='selected'" : "") ?>>Нестандартные лыжи</option>
                                             </select>
                                         </div>
                                     </div>
@@ -2359,12 +2347,12 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="lamination2_width_ski" id="for_lamination2_width_ski">Ширина пленки, мм</label>
-                                            <input name="lamination2_width_ski" id="lamination2_width_ski" type="text" class="form-control int-only" value="<?=$lamination2_width_ski ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination2_width_ski_message').hide(); $('#lamination2_width_machine_message').hide();" />
+                                            <label for="lamination2_width_selvage" id="for_lamination2_width_selvage">Ширина пленки, мм</label>
+                                            <input name="lamination2_width_selvage" id="lamination2_width_selvage" type="text" class="form-control int-only" value="<?=$lamination2_width_selvage ?>" placeholder="Ширина пленки" onkeydown="javascript: $('#lamination2_width_selvage_message').hide(); $('#lamination2_width_machine_message').hide();" />
                                             <div class="invalid-feedback">Ширина пленки обязательно</div>
                                         </div>
-                                        <?php if(!empty($lamination2_width_ski_valid)): ?>
-                                        <div class="text-danger" id="lamination2_width_ski_message">Узкая плёнка</div>
+                                        <?php if(!empty($lamination2_width_selvage_valid)): ?>
+                                        <div class="text-danger" id="lamination2_width_selvage_message">Узкая плёнка</div>
                                         <?php
                                         endif;
                                         if(!empty($lamination2_width_machine_valid)):
@@ -4012,46 +4000,46 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             });
             
             // Показываем или скрываем поле "Ширина пленки" в зависимости от значения поля "Лыжи"
-            $('#ski').change(SetWidthSkiVisibility);
-            $('#lamination1_ski').change(SetWidthSkiVisibility);
-            $('#lamination2_ski').change(SetWidthSkiVisibility);
+            $('#selvage').change(SetWidthSelvageVisibility);
+            $('#lamination1_selvage').change(SetWidthSelvageVisibility);
+            $('#lamination2_selvage').change(SetWidthSelvageVisibility);
             
-            function SetWidthSkiVisibility() {
-                if($('#ski').val() == <?= SKI_NONSTANDARD ?>) {
-                    $('#width_ski').removeClass('d-none');
-                    $('#width_ski').attr('required', 'required');
-                    $('#for_width_ski').removeClass('d-none');
+            function SetWidthSelvageVisibility() {
+                if($('#selvage').val() == <?= SELVAGE_NONSTANDARD ?>) {
+                    $('#width_selvage').removeClass('d-none');
+                    $('#width_selvage').attr('required', 'required');
+                    $('#for_width_selvage').removeClass('d-none');
                 }
                 else {
-                    $('#width_ski').addClass('d-none');
-                    $('#width_ski').removeAttr('required');
-                    $('#for_width_ski').addClass('d-none');
+                    $('#width_selvage').addClass('d-none');
+                    $('#width_selvage').removeAttr('required');
+                    $('#for_width_selvage').addClass('d-none');
                 }
                 
-                if($('#lamination1_ski').val() == <?= SKI_NONSTANDARD ?>) {
-                    $('#lamination1_width_ski').removeClass('d-none');
-                    $('#lamination1_width_ski').attr('required', 'required');
-                    $('#for_lamination1_width_ski').removeClass('d-none');
+                if($('#lamination1_selvage').val() == <?= SELVAGE_NONSTANDARD ?>) {
+                    $('#lamination1_width_selvage').removeClass('d-none');
+                    $('#lamination1_width_selvage').attr('required', 'required');
+                    $('#for_lamination1_width_selvage').removeClass('d-none');
                 }
                 else {
-                    $('#lamination1_width_ski').addClass('d-none');
-                    $('#lamination1_width_ski').removeAttr('required');
-                    $('#for_lamination1_width_ski').addClass('d-none');
+                    $('#lamination1_width_selvage').addClass('d-none');
+                    $('#lamination1_width_selvage').removeAttr('required');
+                    $('#for_lamination1_width_selvage').addClass('d-none');
                 }
                 
-                if($('#lamination2_ski').val() == <?= SKI_NONSTANDARD ?>) {
-                    $('#lamination2_width_ski').removeClass('d-none');
-                    $('#lamination2_width_ski').attr('required', 'required');
-                    $('#for_lamination2_width_ski').removeClass('d-none');
+                if($('#lamination2_selvage').val() == <?= SELVAGE_NONSTANDARD ?>) {
+                    $('#lamination2_width_selvage').removeClass('d-none');
+                    $('#lamination2_width_selvage').attr('required', 'required');
+                    $('#for_lamination2_width_selvage').removeClass('d-none');
                 }
                 else {
-                    $('#lamination2_width_ski').addClass('d-none');
-                    $('#lamination2_width_ski').removeAttr('required');
-                    $('#for_lamination2_width_ski').addClass('d-none');
+                    $('#lamination2_width_selvage').addClass('d-none');
+                    $('#lamination2_width_selvage').removeAttr('required');
+                    $('#for_lamination2_width_selvage').addClass('d-none');
                 }
             }
             
-            SetWidthSkiVisibility();
+            SetWidthSelvageVisibility();
             
             // Показываем или скрываем поля в зависимости от работы с печатью / без печати и наличия / отсутствия ламинации
             function SetFieldsVisibility(work_type_id) {
@@ -4098,7 +4086,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('.lam-only').removeAttr('required');
                         
                         // Показываем пункт "без лыж"
-                        $('#no_ski_option').removeClass('d-none');
+                        $('#no_selvage_option').removeClass('d-none');
                     }
                     
                     // Показываем поля "только второй прогон" только для SOMA Optima
@@ -4150,7 +4138,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                         $('.lam-only').removeAttr('required');
                         
                         // Показываем пункт "без лыж"
-                        $('#no_ski_option').removeClass('d-none');
+                        $('#no_selvage_option').removeClass('d-none');
                     }
                     
                     // Скрываем поля "только второй прогон"
@@ -4191,13 +4179,13 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     $('#form_lamination_1 input').removeAttr('disabled');
                     $('#form_lamination_1 select').removeAttr('disabled');
                 
-                    $('#lamination1_ski').val(<?= SKI_STANDARD ?>);
-                    $('#lamination1_ski').change();
+                    $('#lamination1_selvage').val(<?= SELVAGE_STANDARD ?>);
+                    $('#lamination1_selvage').change();
         
                     HideLamination2();
                     
                     // Скрываем пункт "без лыж"
-                    $('#no_ski_option').addClass('d-none');
+                    $('#no_selvage_option').addClass('d-none');
                     
                     // Показываем поля "только самоклеящиеся материалы"
                     $('.self-adhesive-only').removeClass('d-none');
@@ -4284,9 +4272,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#lamination1_film_variation_id').attr('required', 'required');
                 $('#lamination1_price').attr('required', 'required');
                 
-                $('#no_ski_option').addClass('d-none');
-                if($('#ski').val() == <?= SKI_NO ?>) {
-                    $('#ski').val(<?= SKI_STANDARD ?>);
+                $('#no_selvage_option').addClass('d-none');
+                if($('#selvage').val() == <?= SELVAGE_NO ?>) {
+                    $('#selvage').val(<?= SELVAGE_STANDARD ?>);
                 }
                 
                 SetFieldsVisibility($('#work_type_id').val());
@@ -4319,9 +4307,9 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#form_lamination_1 input').removeAttr('disabled');
                 $('#form_lamination_1 select').removeAttr('disabled');
                 
-                $('#no_ski_option').removeClass('d-none');
-                $('#lamination1_ski').val(<?= SKI_STANDARD ?>);
-                $('#lamination1_ski').change();
+                $('#no_selvage_option').removeClass('d-none');
+                $('#lamination1_selvage').val(<?= SELVAGE_STANDARD ?>);
+                $('#lamination1_selvage').change();
         
                 SetFieldsVisibility($('#work_type_id').val());
                 HideLamination2();
@@ -4364,8 +4352,8 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 $('#form_lamination_2 input').removeAttr('disabled');
                 $('#form_lamination_2 select').removeAttr('disabled');
                 
-                $('#lamination2_ski').val(<?= SKI_STANDARD ?>);
-                $('#lamination2_ski').change();
+                $('#lamination2_selvage').val(<?= SELVAGE_STANDARD ?>);
+                $('#lamination2_selvage').change();
                 
                 // Показываем радиобаттон "Бессольвент"
                 $('#solvent_no').parent().parent().removeClass('d-none');

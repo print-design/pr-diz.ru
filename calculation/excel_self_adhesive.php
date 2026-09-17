@@ -46,10 +46,10 @@ if(!empty($id)) {
     $sheet->setCellValue('A'.(++$rowindex), "Марка"); $sheet->setCellValue("B$rowindex", $calculation->film_1);
     $sheet->setCellValue('A'.(++$rowindex), "Толщина"); $sheet->setCellValue("B$rowindex", $calculation->thickness_1);
     $sheet->setCellValue('A'.(++$rowindex), "Плотность"); $sheet->setCellValue("B$rowindex", $calculation->density_1);
-    $sheet->setCellValue('A'.(++$rowindex), "Лыжи"); $sheet->setCellValue("B$rowindex", $calculation->GetSkiName($calculation->ski_1));
+    $sheet->setCellValue('A'.(++$rowindex), "Лыжи"); $sheet->setCellValue("B$rowindex", $calculation->GetSelvageName($calculation->selvage_1));
     
-    if($calculation->ski_1 == SKI_NONSTANDARD) {
-        $sheet->setCellValue('A'.(++$rowindex), "Ширина материала, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_ski_1);
+    if($calculation->selvage_1 == SELVAGE_NONSTANDARD) {
+        $sheet->setCellValue('A'.(++$rowindex), "Ширина материала, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_selvage_1);
     }
     
     if($calculation->customers_material_1 == true) {
@@ -103,9 +103,9 @@ if(!empty($id)) {
     // Результаты вычислений
     $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (начальная), мм");
     $sheet->setCellValue("B$rowindex", $calculation->width_start);
-    $sheet->setCellValue("C$rowindex", $calculation->ski_1 == SKI_NONSTANDARD ? "|= ".DisplayNumber($calculation->width_ski_1, 5) : "|= (".$calculation->streams_number." * (".DisplayNumber($calculation->stream_width, 5)." + ".DisplayNumber($calculation->data_gap->gap_stream, 5).")) + (".DisplayNumber($calculation->data_gap->ski, 5)." * 2)");
-    $sheet->setCellValue("D$rowindex", $calculation->ski_1 == SKI_NONSTANDARD ? "=".$calculation->width_ski_1 : "=(".$calculation->streams_number."*(".$calculation->stream_width."+".$calculation->data_gap->gap_stream."))+(".$calculation->data_gap->ski."*2)");
-    $sheet->setCellValue("E$rowindex", $calculation->ski_1 == SKI_NONSTANDARD ? "вводится вручную" : "(количество ручьёв * (ширина этикетки + ЗазорРучей)) + (ширина одной лыжи * 2)");
+    $sheet->setCellValue("C$rowindex", $calculation->selvage_1 == SELVAGE_NONSTANDARD ? "|= ".DisplayNumber($calculation->width_selvage_1, 5) : "|= (".$calculation->streams_number." * (".DisplayNumber($calculation->stream_width, 5)." + ".DisplayNumber($calculation->data_gap->gap_stream, 5).")) + (".DisplayNumber($calculation->data_gap->selvage, 5)." * 2)");
+    $sheet->setCellValue("D$rowindex", $calculation->selvage_1 == SELVAGE_NONSTANDARD ? "=".$calculation->width_selvage_1 : "=(".$calculation->streams_number."*(".$calculation->stream_width."+".$calculation->data_gap->gap_stream."))+(".$calculation->data_gap->selvage."*2)");
+    $sheet->setCellValue("E$rowindex", $calculation->selvage_1 == SELVAGE_NONSTANDARD ? "вводится вручную" : "(количество ручьёв * (ширина этикетки + ЗазорРучей)) + (ширина одной лыжи * 2)");
     
     $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (кратная 5), мм");
     $sheet->setCellValue("B$rowindex", $calculation->width_mat);

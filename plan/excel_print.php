@@ -84,7 +84,7 @@ if(!empty($work_id) && !empty($machine_id)) {
         $sheet->setCellValue('R'.$rowindex, "Отгрузочная стоимость");
         $sheet->setCellValue('S'.$rowindex, "Итоговая прибыль");
         
-        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.individual_film_name, c.individual_thickness, c.ink_number, c.raport, c.streams_number, c.stream_width, c.streams_number * c.stream_width width, c.ski, c.width_ski, "
+        $sql = "select pe.date, pe.shift, pe.lamination, c.name, c.customer_id, c.individual_film_name, c.individual_thickness, c.ink_number, c.raport, c.streams_number, c.stream_width, c.streams_number * c.stream_width width, c.selvage, c.width_selvage, "
                 . "f.name film, fv.thickness, "
                 . "u.first_name, u.last_name, "
                 . "cr.length_pure_1, cr.weight_pure_1, cr.ink_cost, cr.cliche_cost, cr.cost, cr.shipping_cost, "
@@ -128,10 +128,10 @@ if(!empty($work_id) && !empty($machine_id)) {
             $sheet->setCellValue('K'.$rowindex, empty($row['thickness']) ? $row['individual_thickness'] : $row['thickness']);
                 
             $sheet->getCell('L'.$rowindex)->setDataType(DataType::TYPE_NUMERIC);
-            if($row['ski'] == SKI_NONSTANDARD) {
-                $sheet->setCellValue('L'.$rowindex, $row['width_ski']);
+            if($row['selvage'] == SELVAGE_NONSTANDARD) {
+                $sheet->setCellValue('L'.$rowindex, $row['width_selvage']);
             }
-            elseif ($row['ski'] == SKI_NO) {
+            elseif ($row['selvage'] == SELVAGE_NO) {
                 $sheet->setCellValue('L'.$rowindex, $row['width']);
             }
             else {

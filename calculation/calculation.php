@@ -65,13 +65,13 @@ class DataLaminator {
 class DataGap {
     public $gap_raport; // ЗазорРапорт
     public $gap_stream; // ЗазорРучей
-    public $ski; // ширина одной лыжи
+    public $selvage; // ширина одной лыжи
     
     // Конструктор
-    public function __construct($gap_raport, $gap_stream, $ski) {
+    public function __construct($gap_raport, $gap_stream, $selvage) {
         $this->gap_raport = $gap_raport;
         $this->gap_stream = $gap_stream;
-        $this->ski = $ski;
+        $this->selvage = $selvage;
     }
 }
 
@@ -234,9 +234,9 @@ class CalculationBase {
             $usd, $euro, $weight_cut, $length_cut,
             
             $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id,
-            $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1,
-            $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2,
-            $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3,
+            $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $selvage_1, $width_selvage_1,
+            $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $selvage_2, $width_selvage_2,
+            $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $selvage_3, $width_selvage_3,
             $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $ink_run2_number, $manager_id,
             
             $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
@@ -289,8 +289,8 @@ class CalculationBase {
             $eco_price_1, // Основная пленка, экосбор
             $eco_currency_1, // Основная пленка, валюта экосбора
             $customers_material_1, // Основная плёнка, другая, материал заказчика
-            $ski_1, // Основная пленка, лыжи
-            $width_ski_1, // Основная пленка, ширина пленки, мм
+            $selvage_1, // Основная пленка, лыжи
+            $width_selvage_1, // Основная пленка, ширина пленки, мм
         
             $film_2, // Ламинация 1, марка
             $thickness_2, // Ламинация 1, толщина, мкм
@@ -300,8 +300,8 @@ class CalculationBase {
             $eco_price_2, // Ламинация 2, цена
             $eco_currency_2, // Ламинация 2, валюта экосбора
             $customers_material_2, // Ламинация 1, другая, материал заказчика
-            $ski_2, // Ламинация 1, лыжи
-            $width_ski_2, // Ламинация 1, ширина пленки, мм
+            $selvage_2, // Ламинация 1, лыжи
+            $width_selvage_2, // Ламинация 1, ширина пленки, мм
         
             $film_3, // Ламинация 2, марка
             $thickness_3, // Ламинация 2, толщина, мкм
@@ -311,8 +311,8 @@ class CalculationBase {
             $eco_price_3, // Ламинация 2, цена
             $eco_currency_3, // Ламинация 2, валюта экосбора
             $customers_material_3, // Ламинация 2, другая, уд. вес
-            $ski_3, // Ламинация 2, лыжи
-            $width_ski_3,  // Ламинация 2, ширина пленки, мм
+            $selvage_3, // Ламинация 2, лыжи
+            $width_selvage_3,  // Ламинация 2, ширина пленки, мм
         
             $machine_id, // ID машина
             $laminator_id, // ID ламинатора
@@ -397,8 +397,8 @@ class CalculationBase {
         $this->eco_price_1 = $eco_price_1; // Основная пленка, экосбор
         $this->eco_currency_1 = $eco_currency_1; // Основная пленка, валюта экосбора
         $this->customers_material_1 = $customers_material_1; // Основная плёнка, другая, материал заказчика
-        $this->ski_1 = $ski_1; // Основная пленка, лыжи
-        $this->width_ski_1 = $width_ski_1; // Основная пленка, ширина пленки, мм
+        $this->selvage_1 = $selvage_1; // Основная пленка, лыжи
+        $this->width_selvage_1 = $width_selvage_1; // Основная пленка, ширина пленки, мм
         
         $this->film_2 = $film_2; // Ламинация 1, марка
         $this->thickness_2 = $thickness_2; // Ламинация 1, толщина, мкм
@@ -408,8 +408,8 @@ class CalculationBase {
         $this->eco_price_2 = $eco_price_2; // Ламинация 2, экосбор
         $this->eco_currency_2 = $eco_currency_2; // Ламинация 2, валюта экосбора
         $this->customers_material_2 = $customers_material_2; // Ламинация 1, другая, материал заказчика
-        $this->ski_2 = $ski_2; // Ламинация 1, лыжи
-        $this->width_ski_2 = $width_ski_2; // Ламинация 1, ширина пленки, мм
+        $this->selvage_2 = $selvage_2; // Ламинация 1, лыжи
+        $this->width_selvage_2 = $width_selvage_2; // Ламинация 1, ширина пленки, мм
         
         $this->film_3 = $film_3; // Ламинация 2, марка
         $this->thickness_3 = $thickness_3; // Ламинация 2, толщина, мкм
@@ -419,8 +419,8 @@ class CalculationBase {
         $this->eco_price_3 = $eco_price_3; // Ламинация 2, экосбор
         $this->eco_currency_3 = $eco_currency_3; // Ламинация 2, валюта экосбора
         $this->customers_material_3 = $customers_material_3; // Ламинация 2, другая, уд. вес
-        $this->ski_3 = $ski_3; // Ламинация 2, лыжи
-        $this->width_ski_3 = $width_ski_3;  // Ламинация 2, ширина пленки, мм
+        $this->selvage_3 = $selvage_3; // Ламинация 2, лыжи
+        $this->width_selvage_3 = $width_selvage_3;  // Ламинация 2, ширина пленки, мм
         
         $this->machine_id = $machine_id; // ID машины
         $this->laminator_id = $laminator_id; // ID ламинатора
@@ -575,13 +575,13 @@ class CalculationBase {
     }
     
     // Получение типа лыж
-    function GetSkiName($ski) {
-        switch ($ski) {
-            case SKI_NO:
+    function GetSelvageName($selvage) {
+        switch ($selvage) {
+            case SELVAGE_NO:
                 return "Без лыж";
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 return "Стандартные лыжи";
-            case SKI_NONSTANDARD:
+            case SELVAGE_NONSTANDARD:
                 return "Нестандартные лыжи";
             default :
                 return "Неизвестно";
@@ -663,8 +663,8 @@ class CalculationBase {
         $eco_price_1 = null; // Основная пленка, экосбор
         $eco_currency_1 = null; // Основная пленка, валюта экосбора
         $customers_material_1 = null; // Основная плёнка, другая, материал заказчика
-        $ski_1 = null; // Основная пленка, лыжи
-        $width_ski_1 = null; // Основная пленка, ширина пленки, мм
+        $selvage_1 = null; // Основная пленка, лыжи
+        $width_selvage_1 = null; // Основная пленка, ширина пленки, мм
         
         $film_2 = null; // Ламинация 1, марка
         $thickness_2 = null; // Ламинация 1, толщина, мкм
@@ -674,8 +674,8 @@ class CalculationBase {
         $eco_price_2 = null; // Ламинация 1, цена
         $eco_currency_2 = null; // Ламинация 1, валюта экосбора
         $customers_material_2 = null; // Ламинация 1, другая, материал заказчика
-        $ski_2 = null; // Ламинация 1, лыжи
-        $width_ski_2 = null; // Ламинация 1, ширина пленки, мм
+        $selvage_2 = null; // Ламинация 1, лыжи
+        $width_selvage_2 = null; // Ламинация 1, ширина пленки, мм
         
         $film_3 = null; // Ламинация 2, марка
         $thickness_3 = null; // Ламинация 2, толщина, мкм
@@ -685,8 +685,8 @@ class CalculationBase {
         $eco_price_3 = null; // Ламинация 2, экосбор
         $eco_currency_3 = null; // Ламинация 2, валюта экосбора
         $customers_material_3 = null; // Ламинация 2, другая, уд. вес
-        $ski_3 = null; // Ламинация 2, лыжи
-        $width_ski_3 = null;  // Ламинация 2, ширина пленки, мм
+        $selvage_3 = null; // Ламинация 2, лыжи
+        $width_selvage_3 = null;  // Ламинация 2, ширина пленки, мм
         
         $machine_id = null;
         $laminator_id = null;
@@ -722,13 +722,13 @@ class CalculationBase {
         $sql = "select rc.date, rc.customer_id, rc.name, rc.unit, rc.quantity, rc.work_type_id, "
                 . "f.name film, fv.thickness thickness, fv.weight density, "
                 . "rc.film_variation_id, rc.price, rc.currency, rc.individual_film_name, rc.individual_thickness, rc.individual_density, "
-                . "rc.customers_material, rc.ski, rc.width_ski, "
+                . "rc.customers_material, rc.selvage, rc.width_selvage, "
                 . "lamination1_f.name lamination1_film, lamination1_fv.thickness lamination1_thickness, lamination1_fv.weight lamination1_density, "
                 . "rc.lamination1_film_variation_id, rc.lamination1_price, rc.lamination1_currency, rc.lamination1_individual_film_name, rc.lamination1_individual_thickness, rc.lamination1_individual_density, "
-                . "rc.lamination1_customers_material, rc.lamination1_ski, rc.lamination1_width_ski, "
+                . "rc.lamination1_customers_material, rc.lamination1_selvage, rc.lamination1_width_selvage, "
                 . "lamination2_f.name lamination2_film, lamination2_fv.thickness lamination2_thickness, lamination2_fv.weight lamination2_density, "
                 . "rc.lamination2_film_variation_id, rc.lamination2_price, rc.lamination2_currency, rc.lamination2_individual_film_name, rc.lamination2_individual_thickness, rc.lamination2_individual_density, "
-                . "rc.lamination2_customers_material, rc.lamination2_ski, rc.lamination2_width_ski, "
+                . "rc.lamination2_customers_material, rc.lamination2_selvage, rc.lamination2_width_selvage, "
                 . "rc.machine_id, rc.laminator_id, rc.length, rc.stream_width, rc.streams_number, rc.raport, rc.number_in_raport, rc.lamination_roller_width, rc.ink_number, rc.ink_run2_number, rc.manager_id, "
                 . "rc.ink_1, rc.ink_2, rc.ink_3, rc.ink_4, rc.ink_5, rc.ink_6, rc.ink_7, rc.ink_8, "
                 . "rc.color_1, rc.color_2, rc.color_3, rc.color_4, rc.color_5, rc.color_6, rc.color_7, rc.color_8, "
@@ -786,8 +786,8 @@ class CalculationBase {
             $eco_price_1 = 0; // Основная пленка, экосбор
             $eco_currency_1 = CURRENCY_RUB; // Основная пленка, валюта экосбора
             $customers_material_1 = $row['customers_material']; // Основная плёнка, другая, материал заказчика
-            $ski_1 = $row['ski']; // Основная пленка, лыжи
-            $width_ski_1 = $row['width_ski']; // Основная пленка, ширина пленки, мм
+            $selvage_1 = $row['selvage']; // Основная пленка, лыжи
+            $width_selvage_1 = $row['width_selvage']; // Основная пленка, ширина пленки, мм
             
             // Получаем сумму и валюту экосбора 1
             if($customers_material_1 == true) {
@@ -834,8 +834,8 @@ class CalculationBase {
             $eco_price_2 = 0; // Ламинация 2, экосбор
             $eco_currency_2 = CURRENCY_RUB; // Ламинация 2, валюта экосбора
             $customers_material_2 = $row['lamination1_customers_material']; // Ламинация 1, другая, материал заказчика
-            $ski_2 = $row['lamination1_ski']; // Ламинация 1, лыжи
-            $width_ski_2 = $row['lamination1_width_ski']; // Ламинация 1, ширина пленки, мм
+            $selvage_2 = $row['lamination1_selvage']; // Ламинация 1, лыжи
+            $width_selvage_2 = $row['lamination1_width_selvage']; // Ламинация 1, ширина пленки, мм
             
             // Получаем сумму и валюту экосбора 2
             if($customers_material_2 == true) {
@@ -882,8 +882,8 @@ class CalculationBase {
             $eco_price_3 = 0; // Ламинация 2, экосбор
             $eco_currency_3 = CURRENCY_RUB; // Ламинация 3, валюта экосбора
             $customers_material_3 = $row['lamination2_customers_material']; // Ламинация 2, другая, уд. вес
-            $ski_3 = $row['lamination2_ski']; // Ламинация 2, лыжи
-            $width_ski_3 = $row['lamination2_width_ski'];  // Ламинация 2, ширина пленки, мм
+            $selvage_3 = $row['lamination2_selvage']; // Ламинация 2, лыжи
+            $width_selvage_3 = $row['lamination2_width_selvage'];  // Ламинация 2, ширина пленки, мм
             
             // Получаем сумму и валюту экосбора 3
             if($customers_material_3 == true) {
@@ -980,12 +980,12 @@ class CalculationBase {
             if(empty($film_2) && empty($film_3)) {
                 $laminator_id = null;
                 $lamination_roller_width = 0;
-                $ski_2 = 0;
+                $selvage_2 = 0;
             }
             
             // Если нет ламинации 2, то лыжи для плёнки 3 = 0
             if(empty($film_3)) {
-                $ski_3 = 0;
+                $selvage_3 = 0;
             }
         }
         
@@ -1111,10 +1111,10 @@ class CalculationBase {
                 }
             }
             
-            $sql = "select gap_raport, gap_stream, ski from norm_gap where date <= ? order by id desc limit 1";
+            $sql = "select gap_raport, gap_stream, selvage from norm_gap where date <= ? order by id desc limit 1";
             $fetcher = new Fetcher($sql, [$date]);
             if($row = $fetcher->Fetch()) {
-                $data_gap = new DataGap($row['gap_raport'], $row['gap_stream'], $row['ski']);
+                $data_gap = new DataGap($row['gap_raport'], $row['gap_stream'], $row['selvage']);
             }
             
             $sql = "select c_price, c_currency, c_expense, m_price, m_currency, m_expense, y_price, y_currency, y_expense, k_price, k_currency, k_expense, white_price, white_currency, white_expense, panton_price, panton_currency, panton_expense, lacquer_glossy_price, lacquer_glossy_currency, lacquer_glossy_expense, lacquer_matte_price, lacquer_matte_currency, lacquer_matte_expense, lacquer_selective_price, lacquer_selective_currency, lacquer_selective_expense, solvent_etoxipropanol_price, solvent_etoxipropanol_currency, solvent_flexol82_price, solvent_flexol82_currency, solvent_part, min_price_per_ink, self_adhesive_laquer_price, self_adhesive_laquer_currency, self_adhesive_laquer_expense, min_percent "
@@ -1190,8 +1190,8 @@ class CalculationBase {
                     $eco_price_1, // Основная пленка, экосбор
                     $eco_currency_1, // Основная пленка, валюта экосбора
                     $customers_material_1, // Основная плёнка, другая, материал заказчика
-                    $ski_1, // Основная пленка, лыжи
-                    $width_ski_1, // Основная пленка, ширина пленки, мм
+                    $selvage_1, // Основная пленка, лыжи
+                    $width_selvage_1, // Основная пленка, ширина пленки, мм
                     
                     $film_2, // Ламинация 1, марка
                     $thickness_2, // Ламинация 1, толщина, мкм
@@ -1201,8 +1201,8 @@ class CalculationBase {
                     $eco_price_2, // Ламинация 1, экосбор
                     $eco_currency_2, // Ламинация 1, валюта экосбора
                     $customers_material_2, // Ламинация 1, другая, материал заказчика
-                    $ski_2, // Ламинация 1, лыжи
-                    $width_ski_2, // Ламинация 1, ширина пленки, мм
+                    $selvage_2, // Ламинация 1, лыжи
+                    $width_selvage_2, // Ламинация 1, ширина пленки, мм
                     
                     $film_3, // Ламинация 2, марка
                     $thickness_3, // Ламинация 2, толщина, мкм
@@ -1212,8 +1212,8 @@ class CalculationBase {
                     $eco_price_3, // Ламинация 2, экосбор
                     $eco_currency_3, // Ламинация 2, валюта экосбора
                     $customers_material_3, // Ламинация 2, другая, уд. вес
-                    $ski_3, // Ламинация 2, лыжи
-                    $width_ski_3,  // Ламинация 2, ширина пленки, мм
+                    $selvage_3, // Ламинация 2, лыжи
+                    $width_selvage_3,  // Ламинация 2, ширина пленки, мм
                     
                     $machine_id, // ID машины
                     $laminator_id, // ID ламинатора
@@ -1299,8 +1299,8 @@ class CalculationBase {
                     $eco_price_1, // Основная пленка, экосбор
                     $eco_currency_1, // Основная пленка, валюта экосбора
                     $customers_material_1, // Основная плёнка, другая, материал заказчика
-                    $ski_1, // Основная пленка, лыжи
-                    $width_ski_1, // Основная пленка, ширина пленки, мм
+                    $selvage_1, // Основная пленка, лыжи
+                    $width_selvage_1, // Основная пленка, ширина пленки, мм
                     
                     $film_2, // Ламинация 1, марка
                     $thickness_2, // Ламинация 1, толщина, мкм
@@ -1310,8 +1310,8 @@ class CalculationBase {
                     $eco_price_2, // Ламинация 1, экосбор
                     $eco_currency_2, // Ламинация 1, валюта экосбора
                     $customers_material_2, // Ламинация 1, другая, материал заказчика
-                    $ski_2, // Ламинация 1, лыжи
-                    $width_ski_2, // Ламинация 1, ширина пленки, мм
+                    $selvage_2, // Ламинация 1, лыжи
+                    $width_selvage_2, // Ламинация 1, ширина пленки, мм
                     
                     $film_3, // Ламинация 2, марка
                     $thickness_3, // Ламинация 2, толщина, мкм
@@ -1321,8 +1321,8 @@ class CalculationBase {
                     $eco_price_3, // Ламинация 3, экосбор
                     $eco_currency_3, // Ламинация 3, валюта экосбора
                     $customers_material_3, // Ламинация 2, другая, уд. вес
-                    $ski_3, // Ламинация 2, лыжи
-                    $width_ski_3,  // Ламинация 2, ширина пленки, мм
+                    $selvage_3, // Ламинация 2, лыжи
+                    $width_selvage_3,  // Ламинация 2, ширина пленки, мм
                     
                     $machine_id, // ID машина
                     $laminator_id, // ID ламинатора
@@ -1511,8 +1511,8 @@ class Calculation extends CalculationBase {
             $eco_price_1, // Основная пленка, экосбор
             $eco_currency_1, // Основная пленка, валюта экосбора
             $customers_material_1, // Основная плёнка, другая, материал заказчика
-            $ski_1, // Основная пленка, лыжи
-            $width_ski_1, // Основная пленка, ширина пленки, мм
+            $selvage_1, // Основная пленка, лыжи
+            $width_selvage_1, // Основная пленка, ширина пленки, мм
         
             $film_2, // Ламинация 1, марка
             $thickness_2, // Ламинация 1, толщина, мкм
@@ -1522,8 +1522,8 @@ class Calculation extends CalculationBase {
             $eco_price_2, // Ламинация 1, экосбор
             $eco_currency_2, // Ламинация 1, валюта экосбора
             $customers_material_2, // Ламинация 1, другая, материал заказчика
-            $ski_2, // Ламинация 1, лыжи
-            $width_ski_2, // Ламинация 1, ширина пленки, мм
+            $selvage_2, // Ламинация 1, лыжи
+            $width_selvage_2, // Ламинация 1, ширина пленки, мм
         
             $film_3, // Ламинация 2, марка
             $thickness_3, // Ламинация 2, толщина, мкм
@@ -1533,8 +1533,8 @@ class Calculation extends CalculationBase {
             $eco_price_3, // Ламминация 2, экосбор
             $eco_currency_3, // Ламинация 2, валюта экосбора
             $customers_material_3, // Ламинация 2, другая, уд. вес
-            $ski_3, // Ламинация 2, лыжи
-            $width_ski_3,  // Ламинация 2, ширина пленки, мм
+            $selvage_3, // Ламинация 2, лыжи
+            $width_selvage_3,  // Ламинация 2, ширина пленки, мм
         
             $machine_id, // ID машины
             $laminator_id, // ID ламинатора
@@ -1592,9 +1592,9 @@ class Calculation extends CalculationBase {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
                 $usd, $euro, $weight_cut, $length_cut,
                 $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
-                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
-                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
-                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
+                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $selvage_1, $width_selvage_1, 
+                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $selvage_2, $width_selvage_2, 
+                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $selvage_3, $width_selvage_3, 
                 $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $ink_run2_number, $manager_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
@@ -1652,12 +1652,12 @@ class Calculation extends CalculationBase {
         // Если нет ламинации, то ширина ламинирующего вала = 0, лыжи для плёнки 2 = 0
         if($this->laminations_number == 0) {
             $this->lamination_roller_width = 0;
-            $this->ski_2 = 0;
+            $this->selvage_2 = 0;
         }
         
         // Если нет ламинации 2, то лыжи для плёнки 3 = 0
         if($this->laminations_number < 2) {
-            $this->ski_3 = 0;
+            $this->selvage_3 = 0;
         }
         
         // Если материал заказчика, то его цена = 0
@@ -1713,8 +1713,8 @@ class Calculation extends CalculationBase {
         // Если без лыж: количество ручьёв * ширина ручья (если ширина ручьёв неодинаковая, то сумма ширин ручьёв)
         // Если стандартные лыжи: количество ручьёв * ширина ручья + 20 (если ширина ручьёв неодинаковая, то сумма ширин ручьёв + 20)
         // Если нестандартные лыжи: ширина материала вводится вручную
-        switch($this->ski_1) {
-            case SKI_NO:
+        switch($this->selvage_1) {
+            case SELVAGE_NO:
                 if(empty($this->stream_width)) {
                     $this->width_start_1 = array_sum($this->stream_widths);
                 }
@@ -1723,7 +1723,7 @@ class Calculation extends CalculationBase {
                 }
                 break;
                 
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 if(empty($this->stream_width)) {
                     $this->width_start_1 = array_sum($this->stream_widths) + 20;
                 }
@@ -1732,8 +1732,8 @@ class Calculation extends CalculationBase {
                 }
                 break;
         
-            case SKI_NONSTANDARD:
-                $this->width_start_1 = $this->width_ski_1;
+            case SELVAGE_NONSTANDARD:
+                $this->width_start_1 = $this->width_selvage_1;
                 break;
             
             default :
@@ -1742,8 +1742,8 @@ class Calculation extends CalculationBase {
         }
         
         // Ширина материала (начальная) 2, мм
-        switch($this->ski_2) {
-            case SKI_NO:
+        switch($this->selvage_2) {
+            case SELVAGE_NO:
                 if(empty($this->stream_width)) {
                     $this->width_start_2 = array_sum($this->stream_widths);
                 }
@@ -1752,7 +1752,7 @@ class Calculation extends CalculationBase {
                 }
                 break;
         
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 if(empty($this->stream_width)) {
                     $this->width_start_2 = array_sum($this->stream_widths) + 20;
                 }
@@ -1761,8 +1761,8 @@ class Calculation extends CalculationBase {
                 }
                 break;
         
-            case SKI_NONSTANDARD:
-                $this->width_start_2 = $this->width_ski_2;
+            case SELVAGE_NONSTANDARD:
+                $this->width_start_2 = $this->width_selvage_2;
                 break;
             
             default :
@@ -1771,8 +1771,8 @@ class Calculation extends CalculationBase {
         }
         
         // Ширина материала (начальная) 3, мм
-        switch($this->ski_3) {
-            case SKI_NO:
+        switch($this->selvage_3) {
+            case SELVAGE_NO:
                 if(empty($this->stream_width)) {
                     $this->width_start_3 = array_sum($this->stream_widths);
                 }
@@ -1781,7 +1781,7 @@ class Calculation extends CalculationBase {
                 }
                 break;
         
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 if(empty($this->stream_width)) {
                     $this->width_start_3 = array_sum($this->stream_widths) + 20;
                 }
@@ -1790,8 +1790,8 @@ class Calculation extends CalculationBase {
                 }
                 break;
         
-            case SKI_NONSTANDARD:
-                $this->width_start_3 = $this->width_ski_3;
+            case SELVAGE_NONSTANDARD:
+                $this->width_start_3 = $this->width_selvage_3;
                 break;
             
             default :
@@ -2233,10 +2233,10 @@ class Calculation extends CalculationBase {
         
         // Ширина форм, м
         if(empty($this->stream_width)) {
-            $this->cliche_width = (array_sum($this->stream_widths) + 20 + ((!empty($this->ski_1) && $this->ski_1 == SKI_NO) ? 0 : 20)) / 1000;
+            $this->cliche_width = (array_sum($this->stream_widths) + 20 + ((!empty($this->selvage_1) && $this->selvage_1 == SELVAGE_NO) ? 0 : 20)) / 1000;
         }
         else {
-            $this->cliche_width = ($this->streams_number * $this->stream_width + 20 + ((!empty($this->ski_1) && $this->ski_1 == SKI_NO) ? 0 : 20)) / 1000;
+            $this->cliche_width = ($this->streams_number * $this->stream_width + 20 + ((!empty($this->selvage_1) && $this->selvage_1 == SELVAGE_NO) ? 0 : 20)) / 1000;
         }
         
         // Площадь форм, м2
@@ -2582,8 +2582,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $eco_price_1, // Основная пленка, экосбор
             $eco_currency_1, // Основная пленка, валюта экосбора
             $customers_material_1, // Основная плёнка, другая, материал заказчика
-            $ski_1, // Основная пленка, лыжи
-            $width_ski_1, // Основная пленка, ширина пленки, мм
+            $selvage_1, // Основная пленка, лыжи
+            $width_selvage_1, // Основная пленка, ширина пленки, мм
         
             $film_2, // Ламинация 1, марка
             $thickness_2, // Ламинация 1, толщина, мкм
@@ -2593,8 +2593,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $eco_price_2, // Ламинация 1, экосбор
             $eco_currency_2, // Ламинация 1, валюта экосбора
             $customers_material_2, // Ламинация 1, другая, материал заказчика
-            $ski_2, // Ламинация 1, лыжи
-            $width_ski_2, // Ламинация 1, ширина пленки, мм
+            $selvage_2, // Ламинация 1, лыжи
+            $width_selvage_2, // Ламинация 1, ширина пленки, мм
         
             $film_3, // Ламинация 2, марка
             $thickness_3, // Ламинация 2, толщина, мкм
@@ -2604,8 +2604,8 @@ class CalculationSelfAdhesive extends CalculationBase {
             $eco_price_3, // Ламинация 2, экосбор
             $eco_currency_3, // Ламинация 2, валюта экосбора
             $customers_material_3, // Ламинация 2, другая, уд. вес
-            $ski_3, // Ламинация 2, лыжи
-            $width_ski_3,  // Ламинация 2, ширина пленки, мм
+            $selvage_3, // Ламинация 2, лыжи
+            $width_selvage_3,  // Ламинация 2, ширина пленки, мм
         
             $machine_id, // ID машины
             $laminator_id, // ID ламинатора
@@ -2663,9 +2663,9 @@ class CalculationSelfAdhesive extends CalculationBase {
         parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
                 $usd, $euro, $weight_cut, $length_cut,
                 $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
-                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $ski_1, $width_ski_1, 
-                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $ski_2, $width_ski_2, 
-                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $ski_3, $width_ski_3, 
+                $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $selvage_1, $width_selvage_1, 
+                $film_2, $thickness_2, $density_2, $price_2, $currency_2, $eco_price_2, $eco_currency_2, $customers_material_2, $selvage_2, $width_selvage_2, 
+                $film_3, $thickness_3, $density_3, $price_3, $currency_3, $eco_price_3, $eco_currency_3, $customers_material_3, $selvage_3, $width_selvage_3, 
                 $machine_id, $laminator_id, $length, $stream_width, $stream_widths, $streams_number, $raport, $number_in_raport, $lamination_roller_width, $ink_number, $ink_run2_number, $manager_id, 
                 $ink_1, $ink_2, $ink_3, $ink_4, $ink_5, $ink_6, $ink_7, $ink_8, 
                 $color_1, $color_2, $color_3, $color_4, $color_5, $color_6, $color_7, $color_8, 
@@ -2710,13 +2710,13 @@ class CalculationSelfAdhesive extends CalculationBase {
         // Ширина материала (начальная), мм
         // Если стадартные лыжи: (количество ручьёв * (ширина ручья + расстояние между ручьями)) + (ширина одной лыжи * 2)
         // Если нестандартные лыжи: ширина материала вводится вручную
-        switch ($this->ski_1) {
-            case SKI_STANDARD:
-                $this->width_start = ($this->streams_number * ($this->stream_width + $this->data_gap->gap_stream)) + ($this->data_gap->ski * 2);
+        switch ($this->selvage_1) {
+            case SELVAGE_STANDARD:
+                $this->width_start = ($this->streams_number * ($this->stream_width + $this->data_gap->gap_stream)) + ($this->data_gap->selvage * 2);
                 break;
             
-            case SKI_NONSTANDARD:
-                $this->width_start = $this->width_ski_1;
+            case SELVAGE_NONSTANDARD:
+                $this->width_start = $this->width_selvage_1;
                 break;
             
             default :

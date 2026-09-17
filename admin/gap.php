@@ -20,7 +20,7 @@ $error_message = '';
 
 $gap_raport_valid = '';
 $gap_stream_valid = '';
-$ski_valid = '';
+$selvage_valid = '';
 
 // Сохранение введённых значений
 if(null !== filter_input(INPUT_POST, 'norm_gap_submit')) {
@@ -34,8 +34,8 @@ if(null !== filter_input(INPUT_POST, 'norm_gap_submit')) {
         $form_valid = false;
     }
     
-    if(empty(filter_input(INPUT_POST, 'ski'))) {
-        $ski_valid = ISINVALID;
+    if(empty(filter_input(INPUT_POST, 'selvage'))) {
+        $selvage_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -43,25 +43,25 @@ if(null !== filter_input(INPUT_POST, 'norm_gap_submit')) {
         // Старый объект
         $old_gap_raport = '';
         $old_gap_stream = '';
-        $old_ski = '';
+        $old_selvage = '';
         
-        $sql = "select gap_raport, gap_stream, ski from norm_gap where machine_id = $machine_id order by date desc limit 1";
+        $sql = "select gap_raport, gap_stream, selvage from norm_gap where machine_id = $machine_id order by date desc limit 1";
         $fetcher = new Fetcher($sql);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
             $old_gap_raport = $row['gap_raport'];
             $old_gap_stream = $row['gap_stream'];
-            $old_ski = $row['ski'];
+            $old_selvage = $row['selvage'];
         }
         
         // Новый объект
         $new_gap_raport = filter_input(INPUT_POST, 'gap_raport');
         $new_gap_stream = filter_input(INPUT_POST, 'gap_stream');
-        $new_ski = filter_input(INPUT_POST, 'ski');
+        $new_selvage = filter_input(INPUT_POST, 'selvage');
         
-        if($old_gap_raport != $new_gap_raport || $old_gap_stream != $new_gap_stream || $old_ski != $new_ski) {
-            $sql = "insert into norm_gap (machine_id, gap_raport, gap_stream, ski) values ($machine_id, $new_gap_raport, $new_gap_stream, $new_ski)";
+        if($old_gap_raport != $new_gap_raport || $old_gap_stream != $new_gap_stream || $old_selvage != $new_selvage) {
+            $sql = "insert into norm_gap (machine_id, gap_raport, gap_stream, selvage) values ($machine_id, $new_gap_raport, $new_gap_stream, $new_selvage)";
             $executer = new Executer($sql);
             $error_message = $executer->error;
         }
@@ -74,9 +74,9 @@ if(null !== filter_input(INPUT_POST, 'norm_gap_submit')) {
 // Получение объекта
 $gap_raport = '';
 $gap_stream = '';
-$ski = '';
+$selvage = '';
 
-$sql = "select gap_raport, gap_stream, ski from norm_gap where machine_id = $machine_id order by date desc limit 1";
+$sql = "select gap_raport, gap_stream, selvage from norm_gap where machine_id = $machine_id order by date desc limit 1";
 $fetcher = new Fetcher($sql);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
@@ -85,7 +85,7 @@ if(empty($error_message)) {
 if($row = $fetcher->Fetch()) {
     $gap_raport = $row['gap_raport'];
     $gap_stream = $row['gap_stream'];
-    $ski = $row['ski'];
+    $selvage = $row['selvage'];
 }
 ?>
 <!DOCTYPE html>
@@ -129,8 +129,8 @@ if($row = $fetcher->Fetch()) {
                             <div class="invalid-feedback">ЗазорРучей обязательно</div>
                         </div>
                         <div class="form-group">
-                            <label for="ski">Ширина 1 лыжи, мм</label>
-                            <input type="text" class="form-control float-only<?=$ski_valid ?>" id="ski" name="ski" value="<?= empty($ski) ? "" : floatval($ski) ?>" placeholder="Ширина 1 лыжи, мм" required="required" autocomplete="off" />
+                            <label for="selvage">Ширина 1 лыжи, мм</label>
+                            <input type="text" class="form-control float-only<?=$selvage_valid ?>" id="selvage" name="selvage" value="<?= empty($selvage) ? "" : floatval($selvage) ?>" placeholder="Ширина 1 лыжи, мм" required="required" autocomplete="off" />
                             <div class="invalid-feedback">Ширина 1 лыжи обязательно</div>
                         </div>
                         <button type="submit" id="norm_gap_submit" name="norm_gap_submit" class="btn btn-dark w-100 mt-5">Сохранить</button>

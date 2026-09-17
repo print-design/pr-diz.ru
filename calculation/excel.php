@@ -48,8 +48,8 @@ if(!empty($id)) {
     $sheet->setCellValue('A'.(++$rowindex), "Марка 1"); $sheet->setCellValue("B$rowindex", $calculation->film_1);
     $sheet->setCellValue('A'.(++$rowindex), "Толщина 1, мкм"); $sheet->setCellValue("B$rowindex", $calculation->thickness_1);
     $sheet->setCellValue('A'.(++$rowindex), "Плотность 1, г/м2"); $sheet->setCellValue("B$rowindex", $calculation->density_1);
-    $sheet->setCellValue('A'.(++$rowindex), "Лыжи 1"); $sheet->setCellValue("B$rowindex", $calculation->GetSkiName($calculation->ski_1));
-    if($calculation->ski_1 == SKI_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), "Ширина плёнки 1, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_ski_1); }
+    $sheet->setCellValue('A'.(++$rowindex), "Лыжи 1"); $sheet->setCellValue("B$rowindex", $calculation->GetSelvageName($calculation->selvage_1));
+    if($calculation->selvage_1 == SELVAGE_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), "Ширина плёнки 1, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_selvage_1); }
     if($calculation->customers_material_1 == true) { $sheet->setCellValue('A'.(++$rowindex), "Материал заказчика 1"); }
     else { $sheet->setCellValue('A'.(++$rowindex), "Цена 1"); $sheet->setCellValue("B$rowindex", $calculation->price_1); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->currency_1).($calculation->currency_1 == CURRENCY_USD ? " (".DisplayNumber($calculation->price_1 * $calculation->usd, 5)." руб)" : "").($calculation->currency_1 == CURRENCY_EURO ? " (".DisplayNumber($calculation->price_1 * $calculation->euro, 5)." руб)" : "")); }
     $sheet->setCellValue('A'.(++$rowindex), "Экосбор 1"); $sheet->setCellValue("B$rowindex", $calculation->eco_price_1); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->eco_currency_1).($calculation->eco_currency_1 == CURRENCY_USD ? " (". DisplayNumber($calculation->eco_price_1 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_1 == CURRENCY_EURO ? " (". DisplayNumber($calculation->eco_price_1 * $calculation->euro, 5)." руб)" : ""));
@@ -58,8 +58,8 @@ if(!empty($id)) {
         $sheet->setCellValue('A'.(++$rowindex), "Марка 2"); $sheet->setCellValue("B$rowindex", $calculation->film_2);
         $sheet->setCellValue('A'.(++$rowindex), "Толщина 2, мкм"); $sheet->setCellValue("B$rowindex", $calculation->thickness_2);
         $sheet->setCellValue('A'.(++$rowindex), "Плотность 2, г/м2"); $sheet->setCellValue("B$rowindex", $calculation->density_2);
-        $sheet->setCellValue('A'.(++$rowindex), "Лыжи 2"); $sheet->setCellValue("B$rowindex", $calculation->GetSkiName($calculation->ski_2));
-        if($calculation->ski_2 == SKI_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), "Ширина пленки 2, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_ski_2); }
+        $sheet->setCellValue('A'.(++$rowindex), "Лыжи 2"); $sheet->setCellValue("B$rowindex", $calculation->GetSelvageName($calculation->selvage_2));
+        if($calculation->selvage_2 == SELVAGE_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), "Ширина пленки 2, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_selvage_2); }
         if($calculation->customers_material_2 == true) { $sheet->setCellValue('A'.(++$rowindex), "Материал заказчика 2"); }
         else { $sheet->setCellValue('A'.(++$rowindex), "Цена 2"); $sheet->setCellValue("B$rowindex", $calculation->price_2); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->currency_2).($calculation->currency_2 == CURRENCY_USD ? " (".DisplayNumber($calculation->price_2 * $calculation->usd, 5)." руб)" : "").($calculation->currency_2 == CURRENCY_EURO ? " (".DisplayNumber($calculation->price_2 * $calculation->euro, 5)." руб)" : "")); }
         $sheet->setCellValue('A'.(++$rowindex), "Экосбор 2"); $sheet->setCellValue("B$rowindex", $calculation->eco_price_2); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->eco_currency_2).($calculation->eco_currency_2 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_2 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_2 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_2 * $calculation->euro, 5)." руб)" : ""));
@@ -69,8 +69,8 @@ if(!empty($id)) {
         $sheet->setCellValue('A'.(++$rowindex), "Марка 3"); $sheet->setCellValue("B$rowindex", $calculation->film_3);
         $sheet->setCellValue('A'.(++$rowindex), "Толщина 3, мкм"); $sheet->setCellValue("B$rowindex", $calculation->thickness_3);
         $sheet->setCellValue('A'.(++$rowindex), "Плотность 3, г/м2"); $sheet->setCellValue("B$rowindex", $calculation->density_3);
-        $sheet->setCellValue('A'.(++$rowindex), "Лыжи 3"); $sheet->setCellValue("B$rowindex", $calculation->GetSkiName($calculation->ski_3));
-        if($calculation->ski_3 == SKI_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), "Ширина плёнки 3, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_ski_3); }
+        $sheet->setCellValue('A'.(++$rowindex), "Лыжи 3"); $sheet->setCellValue("B$rowindex", $calculation->GetSelvageName($calculation->selvage_3));
+        if($calculation->selvage_3 == SELVAGE_NONSTANDARD) { $sheet->setCellValue('A'.(++$rowindex), "Ширина плёнки 3, мм"); $sheet->setCellValue("B$rowindex", $calculation->width_selvage_3); }
         if($calculation->customers_material_3 == true) { $sheet->setCellValue('A'.(++$rowindex), "Материал заказчика 3"); }
         else { $sheet->setCellValue('A'.(++$rowindex), "Цена 3"); $sheet->setCellValue("B$rowindex", $calculation->price_3); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->currency_3).($calculation->currency_3 == CURRENCY_USD ? " (".DisplayNumber($calculation->price_3 * $calculation->usd, 5)." руб)" : "").($calculation->currency_3 == CURRENCY_EURO ? " (".DisplayNumber($calculation->price_3 * $calculation->euro, 5)." руб)" : "")); }
         $sheet->setCellValue('A'.(++$rowindex), "Экосбор 3"); $sheet->setCellValue("B$rowindex", $calculation->eco_price_3); $sheet->setCellValue("C$rowindex", $calculation->GetCurrencyName($calculation->eco_currency_3).($calculation->eco_currency_3 == CURRENCY_USD ? " (".DisplayNumber($calculation->eco_price_3 * $calculation->usd, 5)." руб)" : "").($calculation->eco_currency_3 == CURRENCY_EURO ? " (".DisplayNumber($calculation->eco_price_3 * $calculation->euro, 5)." руб)" : ""));
@@ -190,20 +190,20 @@ if(!empty($id)) {
     $width_1_result = "";
     
     if(empty($calculation->stream_width)) {
-        switch ($calculation->ski_1) {
-            case SKI_NO:
+        switch ($calculation->selvage_1) {
+            case SELVAGE_NO:
                 $width_1_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
                 $width_1_result = "=".array_sum($calculation->stream_widths);
                 break;
             
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 $width_1_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
                 $width_1_result = "=".array_sum($calculation->stream_widths)."+20";
                 break;
             
-            case SKI_NONSTANDARD:
-                $width_1_formula = "|= ".DisplayNumber($calculation->width_ski_1, 5);
-                $width_1_result = "=".$calculation->width_ski_1;
+            case SELVAGE_NONSTANDARD:
+                $width_1_formula = "|= ".DisplayNumber($calculation->width_selvage_1, 5);
+                $width_1_result = "=".$calculation->width_selvage_1;
         }
         
         $sheet->setCellValue('A'.(++$rowindex), "Ширина материала (начальная) 1, мм");
@@ -213,20 +213,20 @@ if(!empty($id)) {
         $sheet->setCellValue("E$rowindex", "без лыж 1: суммарная ширина ручьёв, стандартные лыжи 1: суммарная ширина ручьёв + 20, нестандартные лыжи 1: вводится вручную");
     }
     else {
-        switch ($calculation->ski_1) {
-            case SKI_NO:
+        switch ($calculation->selvage_1) {
+            case SELVAGE_NO:
                 $width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
                 $width_1_result = "=".$calculation->streams_number."*".$calculation->stream_width;
                 break;
             
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 $width_1_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
                 $width_1_result = "=".$calculation->streams_number."*".$calculation->stream_width."+20";
                 break;
             
-            case SKI_NONSTANDARD:
-                $width_1_formula = "|= ".DisplayNumber($calculation->width_ski_1, 5);
-                $width_1_result = "=".$calculation->width_ski_1;
+            case SELVAGE_NONSTANDARD:
+                $width_1_formula = "|= ".DisplayNumber($calculation->width_selvage_1, 5);
+                $width_1_result = "=".$calculation->width_selvage_1;
                 break;
         }
         
@@ -241,20 +241,20 @@ if(!empty($id)) {
     $width_2_result = "";
     
     if(empty($calculation->stream_width)) {
-        switch ($calculation->ski_2) {
-            case SKI_NO:
+        switch ($calculation->selvage_2) {
+            case SELVAGE_NO:
                 $width_2_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
                 $width_2_result = "=".array_sum($calculation->stream_widths);
                 break;
             
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 $width_2_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
                 $width_2_result = "=".array_sum($calculation->stream_widths);
                 break;
             
-            case SKI_NONSTANDARD:
-                $width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
-                $width_2_result = "=".$calculation->width_ski_2;
+            case SELVAGE_NONSTANDARD:
+                $width_2_formula = "|= ".DisplayNumber($calculation->width_selvage_2, 5);
+                $width_2_result = "=".$calculation->width_selvage_2;
                 break;
         }
         
@@ -265,20 +265,20 @@ if(!empty($id)) {
         $sheet->setCellValue("E$rowindex", "без лыж 2: суммарная ширина ручьёв, стандартные лыжи 2: стандартная ширина ручьёв + 20 мм, нестандартные лыжи 2: вводится вручную");
     }
     else {
-        switch ($calculation->ski_2) {
-            case SKI_NO:
+        switch ($calculation->selvage_2) {
+            case SELVAGE_NO:
                 $width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
                 $width_2_result = "=".$calculation->streams_number."*".$calculation->stream_width;
                 break;
             
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 $width_2_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
                 $width_2_result = "=".$calculation->streams_number."*".$calculation->stream_width."+20";
                 break;
             
-            case SKI_NONSTANDARD:
-                $width_2_formula = "|= ".DisplayNumber($calculation->width_ski_2, 5);
-                $width_2_result = "=".$calculation->width_ski_2;
+            case SELVAGE_NONSTANDARD:
+                $width_2_formula = "|= ".DisplayNumber($calculation->width_selvage_2, 5);
+                $width_2_result = "=".$calculation->width_selvage_2;
                 break;
             
         }
@@ -294,20 +294,20 @@ if(!empty($id)) {
     $width_3_result = "";
     
     if(empty($calculation->stream_width)) {
-        switch ($calculation->ski_3) {
-            case SKI_NO:
+        switch ($calculation->selvage_3) {
+            case SELVAGE_NO:
                 $width_3_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5);
                 $width_3_result = "=".array_sum($calculation->stream_widths);
                 break;
             
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 $width_3_formula = "|= ".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20";
                 $width_3_result = "=".array_sum($calculation->stream_widths)."+20";
                 break;
             
-            case SKI_NONSTANDARD:
-                $width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
-                $width_3_result = "=".$calculation->width_ski_3;
+            case SELVAGE_NONSTANDARD:
+                $width_3_formula = "|= ".DisplayNumber($calculation->width_selvage_3, 5);
+                $width_3_result = "=".$calculation->width_selvage_3;
                 break;
         }
         
@@ -318,20 +318,20 @@ if(!empty($id)) {
         $sheet->setCellValue("E$rowindex", "");
     }
     else {
-        switch ($calculation->ski_3) {
-            case SKI_NO:
+        switch ($calculation->selvage_3) {
+            case SELVAGE_NO:
                 $width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5);
                 $width_3_result = "=".$calculation->streams_number."*".$calculation->stream_width;
                 break;
             
-            case SKI_STANDARD:
+            case SELVAGE_STANDARD:
                 $width_3_formula = "|= ".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20";
                 $width_3_result = "=".$calculation->streams_number."*".$calculation->stream_width."+20";
                 break;
             
-            case SKI_NONSTANDARD:
-                $width_3_formula = "|= ".DisplayNumber($calculation->width_ski_3, 5);
-                $width_3_result = "=".$calculation->width_ski_3;
+            case SELVAGE_NONSTANDARD:
+                $width_3_formula = "|= ".DisplayNumber($calculation->width_selvage_3, 5);
+                $width_3_result = "=".$calculation->width_selvage_3;
                 break;
         }
         
@@ -975,15 +975,15 @@ if(!empty($id)) {
     if(empty($calculation->stream_width)) {
         $sheet->setCellValue('A'.(++$rowindex), "Ширина форм, м");
         $sheet->setCellValue("B$rowindex", $calculation->cliche_width);
-        $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000");
-        $sheet->setCellValue("D$rowindex", "=(".array_sum($calculation->stream_widths)."+20+".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).")/1000");
+        $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber(array_sum($calculation->stream_widths), 5)." + 20 + ".((!empty($calculation->selvage_1) && $calculation->selvage_1 == SELVAGE_NO) ? 0 : 20).") / 1000");
+        $sheet->setCellValue("D$rowindex", "=(".array_sum($calculation->stream_widths)."+20+".((!empty($calculation->selvage_1) && $calculation->selvage_1 == SELVAGE_NO) ? 0 : 20).")/1000");
         $sheet->setCellValue("E$rowindex", "(суммарная ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000");
     }
     else {
         $sheet->setCellValue('A'.(++$rowindex), "Ширина форм, м");
         $sheet->setCellValue("B$rowindex", $calculation->cliche_width);
-        $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).") / 1000");
-        $sheet->setCellValue("D$rowindex", "=(".$calculation->streams_number."*".$calculation->stream_width."+20+".((!empty($calculation->ski_1) && $calculation->ski_1 == SKI_NO) ? 0 : 20).")/1000");
+        $sheet->setCellValue("C$rowindex", "|= (".DisplayNumber($calculation->streams_number, 5)." * ".DisplayNumber($calculation->stream_width, 5)." + 20 + ".((!empty($calculation->selvage_1) && $calculation->selvage_1 == SELVAGE_NO) ? 0 : 20).") / 1000");
+        $sheet->setCellValue("D$rowindex", "=(".$calculation->streams_number."*".$calculation->stream_width."+20+".((!empty($calculation->selvage_1) && $calculation->selvage_1 == SELVAGE_NO) ? 0 : 20).")/1000");
         $sheet->setCellValue("E$rowindex", "(кол-во ручьёв * ширина ручьёв + 20 мм, если есть лыжи (стандартные или нестандартные), то ещё + 20 мм) / 1000");
     }
     

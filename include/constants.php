@@ -33,9 +33,9 @@ const CURRENCIES = array(CURRENCY_RUB, CURRENCY_USD, CURRENCY_EURO);
 const CURRENCY_SIGNES = array(CURRENCY_RUB => '₽', CURRENCY_USD => '$', CURRENCY_EURO => '€');
 
 // Лыжи
-const SKI_NO = 1;
-const SKI_STANDARD = 2;
-const SKI_NONSTANDARD = 3;
+const SELVAGE_NO = 1;
+const SELVAGE_STANDARD = 2;
+const SELVAGE_NONSTANDARD = 3;
     
 // Краски
 const INK_CMYK = "cmyk";

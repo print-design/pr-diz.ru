@@ -1,9 +1,9 @@
 <?php
-function GetSkiNameExt($param, $param_width) {
+function GetSelvageNameExt($param, $param_width) {
     switch ($param) {
-        case SKI_STANDARD:
+        case SELVAGE_STANDARD:
             return "Стандартные лыжи";
-        case SKI_NONSTANDARD:
+        case SELVAGE_NONSTANDARD:
             return "Ширина $param_width мм";
         default :
             return 'Без лыж';
@@ -31,7 +31,7 @@ function GetSkiNameExt($param, $param_width) {
             <tr><td colspan="2"><?=$calculation->film_1 ?></td></tr>
             <tr>
                 <td><?= number_format($calculation->thickness_1 ?? 0, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_1 ?? 0, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                <td><?= GetSkiNameExt($calculation->ski_1, $calculation->width_ski_1) ?></td>
+                <td><?= GetSelvageNameExt($calculation->selvage_1, $calculation->width_selvage_1) ?></td>
             </tr>
             <?php if($calculation->customers_material_1 == 1): ?>
             <tr><td colspan="2">Сырьё заказчика</td></tr>
@@ -42,7 +42,7 @@ function GetSkiNameExt($param, $param_width) {
             <tr><td colspan="2"><?=$calculation->film_2 ?></td></tr>
             <tr>
                 <td><?= number_format($calculation->thickness_2 ?? 0, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_2 ?? 0, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                <td><?= GetSkiNameExt($calculation->ski_2, $calculation->width_ski_2) ?></td>
+                <td><?= GetSelvageNameExt($calculation->selvage_2, $calculation->width_selvage_2) ?></td>
             </tr>
             <?php endif; ?>
             
@@ -55,7 +55,7 @@ function GetSkiNameExt($param, $param_width) {
             <tr><td colspan="2"><?=$calculation->film_3 ?></td></tr>
             <tr>
                 <td><?= number_format($calculation->thickness_3 ?? 0, 0, ",", " ") ?> мкм &ndash; <span class="text-nowrap"><?= rtrim(rtrim(number_format($calculation->density_3 ?? 0, 2, ",", " "), "0"), ",") ?> г/м<sup>2</sup></span></td>
-                <td><?= GetSkiNameExt($calculation->ski_3, $calculation->width_ski_3) ?></td>
+                <td><?= GetSelvageNameExt($calculation->selvage_3, $calculation->width_selvage_3) ?></td>
             </tr>
             <?php endif; ?>
             

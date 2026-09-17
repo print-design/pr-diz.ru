@@ -379,7 +379,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
                                 </tr>
                                 <tr>
                                     <td>Новые ПФ</td>
-                                    <td><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($calculation->stream_width * $calculation->streams_number + 20) + ($calculation->ski_1 == SKI_NO ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($calculation->raport) + 20) ?>&nbsp;мм</td>
+                                    <td><?=$new_forms_number ?>&nbsp;шт&nbsp;<?= DisplayNumber(($calculation->stream_width * $calculation->streams_number + 20) + ($calculation->selvage_1 == SELVAGE_NO ? 0 : 20), 0) ?>&nbsp;мм&nbsp;<i class="fas fa-times" style="font-size: small;"></i>&nbsp;<?= (intval($calculation->raport) + 20) ?>&nbsp;мм</td>
                                 </tr>
                                 <?php if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE): ?>
                                 <tr>
