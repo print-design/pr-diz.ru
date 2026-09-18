@@ -14,7 +14,7 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NA
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-$sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, is_draft, "
+$sql = "select id, document_number, vehicle_number, driver_name, cargo_type, places_count, gross_weight, net_weight, volume, created_at, is_draft, "
         . "max_pallet_length, max_pallet_width, max_pallet_height "
         . "from shipment where id = ?";
 $fetcher = new Fetcher($sql, [$id]);
@@ -76,6 +76,7 @@ $rows = array(
     array('Документ', $shipment['document_number']),
     array('Контрагент', implode(', ', $customer_names)),
     array('Транспортное средство', $shipment['vehicle_number']),
+    array('ФИО водителя', $shipment['driver_name'] ?? ''),
     array('Наименование груза', CARGO_TYPE_NAMES[$shipment['cargo_type']] ?? ''),
     array('Количество паллетов', DisplayNumber(intval($shipment['places_count']), 0)),
     array('Максимальный', $max_pallet_dimensions),

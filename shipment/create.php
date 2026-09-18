@@ -74,10 +74,12 @@ $error_message = '';
 
 $document_number_valid = '';
 $vehicle_number_valid = '';
+$driver_name_valid = '';
 $cargo_type_valid = '';
 
 $document_number = '';
 $vehicle_number = '';
+$driver_name = '';
 $cargo_type = null;
 
 if(null !== filter_input(INPUT_POST, 'create_shipment_submit')) {
@@ -93,6 +95,12 @@ if(null !== filter_input(INPUT_POST, 'create_shipment_submit')) {
     $vehicle_number = filter_input(INPUT_POST, 'vehicle_number') ?? '';
     if(empty($vehicle_number)) {
         $vehicle_number_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $driver_name = filter_input(INPUT_POST, 'driver_name') ?? '';
+    if(empty($driver_name)) {
+        $driver_name_valid = ISINVALID;
         $form_valid = false;
     }
     
@@ -116,10 +124,10 @@ if(null !== filter_input(INPUT_POST, 'create_shipment_submit')) {
         $transaction = new Transaction();
         
         $shipment_id = $transaction->Execute(
-                "insert into shipment (document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, "
+                "insert into shipment (document_number, vehicle_number, driver_name, cargo_type, places_count, gross_weight, net_weight, volume, "
                 . "max_pallet_length, max_pallet_width, max_pallet_height) "
-                . "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [$document_number, $vehicle_number, $cargo_type, $totals['places_count'], $totals['gross_weight'], $totals['net_weight'], $totals['volume'],
+                . "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [$document_number, $vehicle_number, $driver_name, $cargo_type, $totals['places_count'], $totals['gross_weight'], $totals['net_weight'], $totals['volume'],
                         $totals['max_pallet_length'], $totals['max_pallet_width'], $totals['max_pallet_height']]);
         
         foreach($ids as $calculation_id) {
@@ -195,6 +203,10 @@ $totals = GetShipmentTotals($ids, $pallet_ids);
                 <div class="form-group">
                     <label for="vehicle_number">Транспортное средство</label>
                     <input type="text" class="form-control<?=$vehicle_number_valid ?>" id="vehicle_number" name="vehicle_number" value="<?=htmlspecialchars($vehicle_number) ?>" placeholder="Гос. номер" required="required" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label for="driver_name">ФИО водителя</label>
+                    <input type="text" class="form-control<?=$driver_name_valid ?>" id="driver_name" name="driver_name" value="<?=htmlspecialchars($driver_name) ?>" required="required" autocomplete="off" />
                 </div>
                 <div class="form-group">
                     <label for="cargo_type">Наименование груза</label>

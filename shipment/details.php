@@ -35,7 +35,7 @@ if(null !== filter_input(INPUT_POST, 'draft_submit')) {
 }
 
 // Данные самой отгрузки
-$sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, "
+$sql = "select id, document_number, vehicle_number, driver_name, cargo_type, places_count, gross_weight, net_weight, volume, created_at, "
         . "max_pallet_length, max_pallet_width, max_pallet_height, "
         . "is_draft, draft_reason, draft_at, draft_by "
         . "from shipment where id = ?";
@@ -117,6 +117,10 @@ $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at'])
                 <tr>
                     <td>Транспортное средство</td>
                     <td class="text-right"><?=htmlspecialchars($shipment['vehicle_number']) ?></td>
+                </tr>
+                <tr>
+                    <td>ФИО водителя</td>
+                    <td class="text-right"><?=htmlspecialchars($shipment['driver_name'] ?? '') ?></td>
                 </tr>
                 <tr>
                     <td>Наименование груза</td>
