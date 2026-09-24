@@ -115,7 +115,7 @@ $shipments = $grabber->result;
                     return;
                 }
 
-                document.location = "<?=APPLICATION ?>/shipment/print.php?ids=" + ids.join(',');
+                window.open("<?=APPLICATION ?>/shipment/print.php?ids=" + ids.join(','), '_blank');
             }
         </script>
         <?php endif; ?>
