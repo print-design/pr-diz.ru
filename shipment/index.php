@@ -30,9 +30,23 @@ $shipments = $grabber->result;
     <body>
         <?php include './header.php'; ?>
         <div class="container-fluid">
-            <h1 class="mt-3 mb-3"><?= $is_draft ? 'Черновики отгрузок' : 'Отгрузки' ?></h1>
+            <div class="d-flex justify-content-between mb-auto mt-3">
+                <div class="p-0">
+                    <h1><?= $is_draft ? 'Черновики отгрузок' : 'Отгрузки' ?></h1>
+                </div>
+                <?php if(!$is_draft): ?>
+                <div class="pt-1">
+                    <button type="button" class="btn btn-dark" onclick="javascript: PrintSelectedShipments();">
+                        <i class="fas fa-print" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Печать
+                    </button>
+                </div>
+                <?php endif; ?>
+            </div>
             <table class="table table-hover">
                 <tr>
+                    <?php if(!$is_draft): ?>
+                    <th><input type="checkbox" id="select_all_shipments_checkbox" /></th>
+                    <?php endif; ?>
                     <th>№</th>
                     <th>Дата создания</th>
                     <th>Документ</th>
@@ -47,6 +61,9 @@ $shipments = $grabber->result;
                 <?php foreach($shipments as $shipment): ?>
                 <?php $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at']); ?>
                 <tr>
+                    <?php if(!$is_draft): ?>
+                    <td><input type="checkbox" class="shipment-select-checkbox" value="<?=$shipment['id'] ?>" /></td>
+                    <?php endif; ?>
                     <td><?=$shipment['id'] ?></td>
                     <td><?=$created_at->format('d.m.Y H:i') ?></td>
                     <td><?=htmlspecialchars($shipment['document_number']) ?></td>
@@ -67,7 +84,7 @@ $shipments = $grabber->result;
                 <?php endforeach; ?>
                 <?php if(empty($shipments)): ?>
                 <tr>
-                    <td colspan="<?=$is_draft ? 7 : 6 ?>" class="text-center text-muted">Список пуст</td>
+                    <td colspan="7" class="text-center text-muted">Список пуст</td>
                 </tr>
                 <?php endif; ?>
             </table>
@@ -76,5 +93,31 @@ $shipments = $grabber->result;
             ?>
         </div>
         <?php include '../include/footer.php'; ?>
+        <?php if(!$is_draft): ?>
+        <script>
+            // Флажок в заголовке столбца -- отмечает или снимает все флажки строк разом
+            $(document).on('change', '#select_all_shipments_checkbox', function() {
+                $('.shipment-select-checkbox').prop('checked', $(this).is(':checked'));
+            });
+
+            // Верхний флажок автоматически устанавливается, если отмечена хотя бы одна строка,
+            // и снимается только тогда, когда не отмечено ни одной строки
+            $(document).on('change', '.shipment-select-checkbox', function() {
+                var checked = $('.shipment-select-checkbox:checked').length;
+                $('#select_all_shipments_checkbox').prop('checked', checked > 0);
+            });
+
+            function PrintSelectedShipments() {
+                var ids = $('.shipment-select-checkbox:checked').map(function() { return $(this).val(); }).get();
+
+                if(ids.length === 0) {
+                    alert('Отметьте хотя бы одну отгрузку для печати');
+                    return;
+                }
+
+                document.location = "<?=APPLICATION ?>/shipment/print.php?ids=" + ids.join(',');
+            }
+        </script>
+        <?php endif; ?>
     </body>
 </html>
