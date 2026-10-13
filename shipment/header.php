@@ -15,16 +15,22 @@ else {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/pack/<?= BuildQueryRemoveArray(["status", "page", "order", "waiting", "from", "to", "id"]) ?>">Производят</a>
+                <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryRemoveArray(["production", "paid", "status", "page", "order", "from", "to", "id"]) ?>">Все</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, ["page", "order", "waiting", "from", "to", "id"]) ?>">Упаковка</a>
+                <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("production", 1, ["paid", "status", "page", "order", "from", "to", "id"]) ?>">Производят</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, ["production", "paid", "page", "order", "from", "to", "id"]) ?>">Упаковка</a>
             </li>
             <li class="nav-item text-nowrap">
-                <a class="nav-link" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, ["page", "order", "waiting", "from", "to", "id"]) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIP_READY] ?></a>
+                <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, ["production", "paid", "page", "order", "from", "to", "id"]) ?>">Ждёт отгрузки</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, ["page", "order", "waiting", "from", "to", "id"]) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIPPED] ?></a>
+                <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, ["production", "paid", "page", "order", "from", "to", "id"]) ?>">Отгружено</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("paid", 1, ["production", "status", "page", "order", "from", "to", "id"]) ?>">Оплачено</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$shipments_status ?>" href="<?= APPLICATION ?>/shipment/">Отгрузки</a>
