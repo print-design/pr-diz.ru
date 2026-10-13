@@ -13,6 +13,43 @@ if(null !== filter_input(INPUT_GET, 'status')) {
     $status_id = filter_input(INPUT_GET, 'status');
 }
 
+// Массовая смена статуса отмеченных флажками заказов -- кнопки "Подтвердить" / "Отгружено"
+if(null !== filter_input(INPUT_POST, 'bulk_confirm_submit')) {
+    $bulk_status_id = filter_input(INPUT_POST, 'status_id', FILTER_VALIDATE_INT);
+    $bulk_ids_raw = filter_input(INPUT_POST, 'ids') ?? '';
+    $bulk_ids = array_values(array_unique(array_filter(array_map('intval', explode(',', $bulk_ids_raw)))));
+
+    $bulk_failed_numbers = array();
+
+    foreach($bulk_ids as $bulk_id) {
+        // Перед отгрузкой проверяем, что вес брутто, количество паллетов и габариты паллета
+        // уже сохранены отдельной формой "Сохранить" -- та же проверка, что и в pack/details.php
+        if($bulk_status_id == ORDER_STATUS_SHIPPED) {
+            $sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height, customer_id, duplicate_num_for_customer "
+                    . "from calculation where id = ?";
+            $fetcher = new Fetcher($sql, [$bulk_id]);
+            $pallet_data_row = $fetcher->Fetch();
+
+            if(!$pallet_data_row || $pallet_data_row['gross_weight'] === null || $pallet_data_row['pallet_count'] === null
+                    || $pallet_data_row['pallet_length'] === null || $pallet_data_row['pallet_width'] === null || $pallet_data_row['pallet_height'] === null) {
+                $bulk_failed_numbers[] = $pallet_data_row['customer_id'].'-'.$pallet_data_row['duplicate_num_for_customer'];
+                continue;
+            }
+        }
+
+        SetCalculationStatus($bulk_id, $bulk_status_id, '');
+    }
+
+    $redirect_url = $_SERVER['REQUEST_URI'];
+    if(!empty($bulk_failed_numbers)) {
+        $redirect_separator = (strpos($redirect_url, '?') === false) ? '?' : '&';
+        $redirect_url .= $redirect_separator.'error_message='.rawurlencode('Перед отгрузкой заполните и сохраните вес брутто, количество паллетов и габариты паллета -- заказы №'.implode(', ', $bulk_failed_numbers).' не переведены в статус "Отгружено"');
+    }
+
+    header("Location: $redirect_url");
+    exit();
+}
+
 // Фильтр по дате отгрузки
 $from = filter_input(INPUT_GET, 'from');
 $to = filter_input(INPUT_GET, 'to');
@@ -232,6 +269,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                             <?php endif; ?>
                         </select>
                     </form>
+                    <?php if($status_id == ORDER_STATUS_PACK_READY): ?>
+                    <button type="button" class="btn btn-dark ml-2" onclick="javascript: BulkChangeStatus(<?=ORDER_STATUS_SHIP_READY ?>);"><i class="fas fa-check mr-2"></i>Подтвердить</button>
+                    <?php elseif($status_id == ORDER_STATUS_SHIP_READY): ?>
+                    <button type="button" class="btn btn-dark ml-2" onclick="javascript: BulkChangeStatus(<?=ORDER_STATUS_SHIPPED ?>);"><i class="fas fa-check mr-2"></i>Отгружено</button>
+                    <?php endif; ?>
+                    <form method="post" id="bulk_status_form" class="d-none">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
+                        <input type="hidden" name="status_id" id="bulk_status_id" />
+                        <input type="hidden" name="ids" id="bulk_status_ids" />
+                        <input type="hidden" name="bulk_confirm_submit" value="1" />
+                    </form>
                 </div>
             </div>
             <table class="table table-hover typography">
@@ -402,6 +450,20 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     cache: false
                 }
             });
+
+            // Массовая смена статуса заказов, отмеченных флажками в первом столбце таблицы
+            function BulkChangeStatus(statusId) {
+                var ids = $('.order-select-checkbox:checked').map(function() { return $(this).val(); }).get();
+
+                if(ids.length === 0) {
+                    alert('Отметьте хотя бы один заказ флажком');
+                    return;
+                }
+
+                $('#bulk_status_id').val(statusId);
+                $('#bulk_status_ids').val(ids.join(','));
+                $('#bulk_status_form').submit();
+            }
         </script>
     </body>
 </html>
