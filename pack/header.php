@@ -29,16 +29,16 @@ if($folder == "pack") {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryRemoveArray(["status", "page", "order", "waiting", "from", "to", "id"]) ?>">Производят</a>
+                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryRemoveArray(["status", "page", "order", "waiting", "from", "to", "id", "error_message"]) ?>">Производят</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, ["page", "order", "waiting", "from", "to", "id"]) ?>">Упаковка</a>
+                <a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, ["page", "order", "waiting", "from", "to", "id", "error_message"]) ?>">Упаковка</a>
             </li>
             <li class="nav-item text-nowrap">
-                <a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, ["page", "order", "waiting", "from", "to", "id"]) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIP_READY] ?></a>
+                <a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, ["page", "order", "waiting", "from", "to", "id", "error_message"]) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIP_READY] ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, ["page", "order", "waiting", "from", "to", "id"]) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIPPED] ?></a>
+                <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/pack/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, ["page", "order", "waiting", "from", "to", "id", "error_message"]) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIPPED] ?></a>
             </li>
         </ul>
         <?php
