@@ -1,8 +1,8 @@
 <?php
 include '../include/topscripts.php';
 
-// Авторизация -- те же роли, что у pack/ и buh/
-if(!IsInRole(array(ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
+// Авторизация -- оформление отгрузок теперь только у бухгалтера (и технолога, как везде)
+if(!IsInRole(array(ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
     include '../include/_unauthorized.php';
 }
 

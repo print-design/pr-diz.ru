@@ -1,8 +1,8 @@
 <?php
 include 'topscripts.php';
 
-// Доступно тем же ролям, что могут видеть pack/index.php или buh/index.php
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+// Доступно тем же ролям, что могут видеть buh/index.php (оформление отгрузок -- только бухгалтер и технолог)
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
     include '_unauthorized.php';
 }
 
