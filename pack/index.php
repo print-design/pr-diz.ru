@@ -40,11 +40,18 @@ if(null !== filter_input(INPUT_POST, 'bulk_confirm_submit')) {
         SetCalculationStatus($bulk_id, $bulk_status_id, '');
     }
 
-    $redirect_url = $_SERVER['REQUEST_URI'];
+    // Адрес для возврата -- тот же, но без старого сообщения об ошибке (если оно там было):
+    // если новых ошибок нет, страница перезагрузится чистой
+    $redirect_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $redirect_params = array();
+    parse_str(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) ?? '', $redirect_params);
+    unset($redirect_params['error_message']);
+
     if(!empty($bulk_failed_numbers)) {
-        $redirect_separator = (strpos($redirect_url, '?') === false) ? '?' : '&';
-        $redirect_url .= $redirect_separator.'error_message='.rawurlencode('Перед отгрузкой заполните и сохраните вес брутто, количество паллетов и габариты паллета -- заказы №'.implode(', ', $bulk_failed_numbers).' не переведены в статус "Отгружено"');
+        $redirect_params['error_message'] = 'Перед отгрузкой заполните и сохраните вес брутто, количество паллетов и габариты паллета -- заказы №'.implode(', ', $bulk_failed_numbers).' не переведены в статус "Отгружено"';
     }
+
+    $redirect_url = $redirect_path.(empty($redirect_params) ? '' : '?'.http_build_query($redirect_params));
 
     header("Location: $redirect_url");
     exit();
@@ -449,6 +456,17 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     },
                     cache: false
                 }
+            });
+
+            // Флажок в заголовке первого столбца: устанавливается, если отмечен хотя бы один флажок строки,
+            // и снимается, когда не отмечено ни одного
+            $(document).on('change', '.order-select-checkbox', function() {
+                $('#select_all_orders_checkbox').prop('checked', $('.order-select-checkbox:checked').length > 0);
+            });
+
+            // Установка / снятие флажка в заголовке -- устанавливает / снимает все флажки строк
+            $(document).on('change', '#select_all_orders_checkbox', function() {
+                $('.order-select-checkbox').prop('checked', $(this).is(':checked'));
             });
 
             // Массовая смена статуса заказов, отмеченных флажками в первом столбце таблицы
