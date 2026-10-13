@@ -116,7 +116,7 @@ if(null !== filter_input(INPUT_GET, 'error_message')) {
     </head>
     <body>
         <?php
-        include '../include/header_cut.php';
+        include 'header.php';
         ?>
         <div class="container-fluid">
             <?php

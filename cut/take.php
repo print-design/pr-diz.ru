@@ -363,7 +363,7 @@ if(empty($error_message)) {
     <body>
         <div class="no_print">
         <?php
-        include '../include/header_cut.php';
+        include 'header.php';
         
         include './_cut_remove.php';
         ?>
