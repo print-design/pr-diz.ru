@@ -1,0 +1,36 @@
+<?php
+include '../include/left_bar.php';
+?>
+<div class="container-fluid header">
+    <nav class="navbar navbar-expand-sm justify-content-end">
+        <ul class="navbar-nav">
+            <?php if(IsInRole(CUTTER_USERS)): ?>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="<?=APPLICATION.'/cut/' ?>"><?=GetUserRoleLocal() ?></a>
+            </li>
+            <?php
+            else:
+            foreach(CUTTERS as $cutter):
+                if($cutter != CUTTER_ATLAS):
+                    $disabled = '';
+                
+                    if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) == $cutter) {
+                        $disabled = ' disabled';
+                    }
+            ?>
+            <li class="nav-item">
+                <a class="nav-link<?=$disabled ?>" href="<?=APPLICATION.'/cut/?machine_id='.$cutter ?>"><?=CUTTER_NAMES[$cutter] ?></a>
+            </li>
+            <?php
+            endif;
+            endforeach;
+            endif;
+            ?>
+        </ul>
+        <div class="ml-auto"></div>
+        <?php
+        include '../include/header_right.php';
+        ?>
+    </nav>
+</div>
+<div id="topmost"></div>
