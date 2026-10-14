@@ -479,11 +479,11 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
             function SaveComment(ev, plan_type, id) {
                 text = $(ev.target).val();
                 $(ev.target).val('');
-                $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + text })
+                $.ajax({ url: "_add_comment.php?plan_type=" + plan_type + "&id=" + id + "&text=" + encodeURIComponent(text) })
                         .done(function(data) {
                             $(ev.target).val(data);
                             $(ev.target).parents('.comment_input').addClass('d-none');
-                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').text(data);
                             $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
                             $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
                         })
