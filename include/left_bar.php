@@ -20,7 +20,7 @@ $admin_class = '';
 $improvement_class = '';
 $okto_class = '';
 
-if($folder == "calculation" || $folder == "techmap" || $folder == "schedule") {
+if($folder == "order" || $folder == "techmap" || $folder == "schedule") {
     $zakaz_class = " active";
 }
 elseif($folder == "pallet" || $folder == "roll") {
@@ -55,7 +55,7 @@ elseif($folder == "okto") {
     // Расчёты
     if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER]))):
     ?>
-    <a href="<?=APPLICATION ?>/calculation/?status=<?= ORDER_STATUS_SHIPPED ?>" class="left_bar_item ui_tooltip right<?=$zakaz_class ?>" data-placement="right" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
+    <a href="<?=APPLICATION ?>/order/?status=<?= ORDER_STATUS_SHIPPED ?>" class="left_bar_item ui_tooltip right<?=$zakaz_class ?>" data-placement="right" title="Заказы"><img src="<?=APPLICATION ?>/images/nav_clock.svg" /></a>
     <?php
     endif;
     // Склад

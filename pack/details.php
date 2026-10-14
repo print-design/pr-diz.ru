@@ -1,8 +1,8 @@
 <?php
 include '../include/topscripts.php';
-include '../calculation/calculation.php';
-include '../calculation/calculation_result.php';
-include '../calculation/calculation_rolls.php';
+include '../order/calculation.php';
+include '../order/calculation_result.php';
+include '../order/calculation_rolls.php';
 
 // Авторизация
 if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT]))) {

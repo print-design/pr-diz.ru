@@ -13,7 +13,7 @@ if(!empty($calculation)) {
     $status_id = $calculation->status_id;
 }
 
-if($folder == 'calculation') {
+if($folder == 'order') {
     if(isset($production) && $production) {
         $production_status = ' disabled';
     }
@@ -51,25 +51,25 @@ if(!empty($calculation)) {
             if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]))):
             ?>
             <li class="nav-item">
-                <a class="nav-link<?=$shipped_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIPPED] ?></a>
+                <a class="nav-link<?=$shipped_status ?> text-nowrap" href="<?=APPLICATION ?>/order/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIPPED] ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$ship_ready_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIP_READY] ?></a>
+                <a class="nav-link<?=$ship_ready_status ?> text-nowrap" href="<?=APPLICATION ?>/order/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_SHIP_READY] ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$production_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("production", 1, array("calculated", "status", "page", "order", "id")) ?>">Производят</a>
+                <a class="nav-link<?=$production_status ?> text-nowrap" href="<?=APPLICATION ?>/order/<?= BuildQueryAddRemoveArray("production", 1, array("calculated", "status", "page", "order", "id")) ?>">Производят</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$all_status ?> text-nowrap" href="<?=APPLICATION ?>/calculation/<?= BuildQueryRemoveArray(array("production", "calculated", "status", "page", "order", "id")) ?>">В работе</a>
+                <a class="nav-link<?=$all_status ?> text-nowrap" href="<?=APPLICATION ?>/order/<?= BuildQueryRemoveArray(array("production", "calculated", "status", "page", "order", "id")) ?>">В работе</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$calculated_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("calculated", 1, array("production", "status", "page", "order", "id")) ?>">Расчёты</a>
+                <a class="nav-link<?=$calculated_status ?>" href="<?=APPLICATION ?>/order/<?= BuildQueryAddRemoveArray("calculated", 1, array("production", "status", "page", "order", "id")) ?>">Расчёты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_DRAFT, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_DRAFT] ?></a>
+                <a class="nav-link<?=$draft_status ?>" href="<?=APPLICATION ?>/order/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_DRAFT, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_DRAFT] ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$trash_status ?>" href="<?=APPLICATION ?>/calculation/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_TRASH, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_TRASH] ?></a>
+                <a class="nav-link<?=$trash_status ?>" href="<?=APPLICATION ?>/order/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_TRASH, array("production", "calculated", "page", "order", "id")) ?>"><?= ORDER_STATUS_NAMES[ORDER_STATUS_TRASH] ?></a>
             </li>
             <?php endif; ?>
         </ul>

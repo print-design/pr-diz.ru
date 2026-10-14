@@ -566,7 +566,7 @@ if(file_exists('find.php')) {
     
     // Заполнение трекинга заказов
     function StatusTrack(id) {
-        $.ajax({ url: '../calculation/_status_track.php?id=' + id })
+        $.ajax({ url: '../order/_status_track.php?id=' + id })
                 .done(function(data) {
                     $('#status_track_body').html(data);
                 })
