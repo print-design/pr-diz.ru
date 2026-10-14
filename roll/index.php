@@ -303,18 +303,11 @@ else {
                     }
                     
                     // Сортировка
-                    $orderby = "";
-                    
-                    if(array_key_exists('order', $_REQUEST)) {
-                        $orderby = "if(cast(replace(rch.cell, ' ', '') as unsigned) > 0, 1, 0) desc, "
-                                . "substring(replace(rch.cell, ' ', ''), length(cast(replace(rch.cell, ' ', '') as unsigned)) + 1, 1) collate utf8_general_ci asc, "
-                                . "cast(replace(rch.cell, ' ', '') as unsigned) asc, "
-                                . "trim(rch.cell) collate utf8_general_ci asc, ";
-                    }
+                    $orderby = filter_input(INPUT_GET, 'order');
                     
                     $sql = "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
                             . "r.width width, fv.thickness thickness, fv.weight density, rch.cell, r.net_weight net_weight, r.length length, "
-                            . "s.name supplier, rsh.status_id status_id, r.comment comment "
+                            . "s.name supplier, rsh.status_id status_id, rsh.date status_date, r.comment comment "
                             . "from roll r "
                             . "left join film_variation fv on r.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
@@ -324,7 +317,7 @@ else {
                     if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
                         $sql .= " union select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
                                 . "p.width width, fv.thickness thickness, fv.weight density, pch.cell cell, pr.weight net_weight, pr.length length, "
-                                . "s.name supplier, prsh.status_id status_id, p.comment comment "
+                                . "s.name supplier, prsh.status_id status_id, prsh.date status_date, p.comment comment "
                                 . "from pallet_roll pr "
                                 . "inner join pallet p on pr.pallet_id = p.id "
                                 . "left join film_variation fv on p.film_variation_id = fv.id "
@@ -337,12 +330,20 @@ else {
                     $list_params = [];
                     
                     if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $sql .= "order by ".$orderby."timestamp desc limit ?, ?";
-                        $list_params = array_merge($paramsroll, $paramspallet, [$pager_skip, $pager_take]);
+                        $list_params = array_merge($paramsroll, $paramspallet);
                     }
                     else {
-                        $sql .= "order by r.id desc limit ?, ?";
-                        $list_params = array_merge($paramsroll, [$pager_skip, $pager_take]);
+                        $list_params = $paramsroll;
+                    }
+                    
+                    if(!empty($orderby)) {
+                        $sql .= "order by trim($orderby) limit $pager_skip, $pager_take";
+                    }
+                    elseif($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
+                        $sql .= "order by status_date desc limit $pager_skip, $pager_take";
+                    }
+                    else {
+                        $sql .= "order by id desc limit $pager_skip, $pager_take";
                     }
                     
                     $fetcher = new Fetcher($sql, $list_params);
