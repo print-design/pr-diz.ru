@@ -149,22 +149,22 @@ $total_weight = $row[0];
             <table class="table table-hover" id="content_table">
                 <thead>
                     <tr style="border-top: 1px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <th style="padding-left: 5px; padding-right: 5px; width: 8%;">Дата<br />прихода</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;">Марка пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Толщина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Плотность</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Ширина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 5%;">Вес</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Длина</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 10%;">Поставщик</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Дата<br />прихода</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Марка пленки</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Толщина</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Плотность</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Ширина</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Вес</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Длина</th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Поставщик</th>
                         <th style="padding-left: 5px; padding-right: 5px;">ID паллета</th>
                         <th style="padding-left: 5px; padding-right: 5px;">Кол-во рулонов</th>
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Кто заказал</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 6%;">Статус</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;" class="storekeeper">Комментарий</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 16%;" class="non_storekeeper">Комментарий</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 3%;"></th>
+                        <th style="padding-left: 5px; padding-right: 5px;">Статус</th>
+                        <th style="padding-left: 5px; padding-right: 5px;" class="storekeeper">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px;"></th>
                     </tr>
                 </thead>
                 <tbody>
