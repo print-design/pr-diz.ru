@@ -26,31 +26,38 @@ if(null !== filter_input(INPUT_POST, 'delete-pallet-submit')) {
     }
     
     if(empty($error_message)) {
-        $error_message = (new Executer("delete from pallet where id = $id"))->error;
+        $error_message = (new Executer("delete from pallet where id = ?", [$id]))->error;
     }
 }
 
 // Фильтр для данных
 $where = "p.id in (select pr1.pallet_id from pallet_roll pr1 left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh1 on prsh1.pallet_roll_id = pr1.id where pr1.pallet_id = p.id and (prsh1.status_id is null or prsh1.status_id = ".ROLL_STATUS_FREE."))";
 
+// Значения фильтра передаются отдельным массивом параметров (prepared statement)
+$where_params = [];
+
 $film_id = filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT);
 if(!empty($film_id)) {
-    $where .= " and f.id = '$film_id'";
+    $where .= " and f.id = ?";
+    $where_params[] = $film_id;
 }
     
-$thickness = filter_input(INPUT_GET, 'thickness');
+$thickness = filter_input(INPUT_GET, 'thickness', FILTER_VALIDATE_INT);
 if(!empty($thickness)) {
-    $where .= " and fv.thickness = ".$thickness;
+    $where .= " and fv.thickness = ?";
+    $where_params[] = $thickness;
 }
     
-$width_from = filter_input(INPUT_GET, 'width_from');
+$width_from = filter_input(INPUT_GET, 'width_from', FILTER_VALIDATE_INT);
 if(!empty($width_from)) {
-    $where .= " and p.width >= $width_from";
+    $where .= " and p.width >= ?";
+    $where_params[] = $width_from;
 }
     
-$width_to = filter_input(INPUT_GET, 'width_to');
+$width_to = filter_input(INPUT_GET, 'width_to', FILTER_VALIDATE_INT);
 if(!empty($width_to)) {
-    $where .= " and p.width <= $width_to";
+    $where .= " and p.width <= ?";
+    $where_params[] = $width_to;
 }
     
 $find = trim(filter_input(INPUT_GET, 'find') ?? '');
@@ -67,7 +74,8 @@ if(mb_strlen($find) > 1) {
 
 if(!empty($find)) {
     if(($findhead == 'п' || $findhead == 'П') && is_numeric($findtrim)) {
-        $where .= " and p.id = '$findtrim'";
+        $where .= " and p.id = ?";
+        $where_params[] = $findtrim;
     }
     else {
         $where .= " and false";
@@ -84,7 +92,7 @@ $sql = "select sum(pr.weight) total_weight "
         . " or (select count(id) from pallet_roll_status_history where pallet_roll_id = pr.id) = 0)"
         . ") and $where";
 
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher($sql, $where_params))->Fetch();
 $total_weight = $row[0];
 ?>
 <!DOCTYPE html>
@@ -191,7 +199,7 @@ $total_weight = $row[0];
                             . "left join supplier s on p.supplier_id = s.id "
                             . "left join user u on p.storekeeper_id = u.id  "
                             . $where;
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, $where_params);
                     
                     if($row = $fetcher->Fetch()) {
                         $pager_total_count = $row[0];
@@ -217,12 +225,12 @@ $total_weight = $row[0];
                             . "left join user u on p.storekeeper_id = u.id "
                             . "$where ";
                     if($has_filter) {
-                        $sql .= "order by ".$orderby."absent_rolls_number desc, p.id desc limit $pager_skip, $pager_take";
+                        $sql .= "order by ".$orderby."absent_rolls_number desc, p.id desc limit ?, ?";
                     }
                     else {
-                        $sql .= "order by ".$orderby."p.id desc limit $pager_skip, $pager_take";
+                        $sql .= "order by ".$orderby."p.id desc limit ?, ?";
                     }
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, array_merge($where_params, [$pager_skip, $pager_take]));
                     
                     while ($row = $fetcher->Fetch()):
                     $rowcounter++;
@@ -298,7 +306,7 @@ $total_weight = $row[0];
         $slider_index = 0;
         
         if(!empty($film_id)) {
-            $grabber = (new Grabber("select thickness from film_variation where film_id='$film_id' order by thickness"))->result;
+            $grabber = (new Grabber("select thickness from film_variation where film_id = ? order by thickness", [$film_id]))->result;
             
             foreach ($grabber as $row) {
                 $slider_index++;
@@ -323,7 +331,7 @@ $total_weight = $row[0];
                             <select id="film_id" name="film_id" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
                                 <?php
-                                $films = (new Grabber("select id, name from film order by name"))->result;
+                                $films = (new Grabber("select id, name from film order by name", []))->result;
                                 foreach ($films as $film) {
                                     $film_id = $film['id'];
                                     $name = $film['name'];
