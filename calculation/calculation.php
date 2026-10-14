@@ -1151,7 +1151,6 @@ class CalculationBase {
         }
         
         // Сохраняем данные в дублирующиеся поля (для ускорения загрузки списков)
-        $status_comment = addslashes($status_comment);
         $sql = "update calculation set duplicate_quantities = ?, duplicate_quantity_sum = ?, duplicate_gap_raport = ?, duplicate_length_cut = ?, "
                 . "duplicate_weight_cut = ?, duplicate_status_id = ?, duplicate_status_comment = ?, duplicate_status_date = ?, duplicate_num_for_customer = ? "
                 . "where id = ?";

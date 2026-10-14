@@ -18,9 +18,9 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
         $form_valid = false;
     }
     
-    $name = addslashes($name ?? '');
-    $sql = "select count(id) from supplier where name = '$name'";
-    $fetcher = new Fetcher($sql);
+    $name = $name ?? '';
+    $sql = "select count(id) from supplier where name = ?";
+    $fetcher = new Fetcher($sql, [$name]);
     if($row = $fetcher->Fetch()) {
         if($row[0] != 0) {
             $error_message = "Такой поставщик уже есть";
@@ -29,8 +29,8 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
     }
     
     if($form_valid) {
-        $sql = "insert into supplier(name) values('$name')";
-        $executer = new Executer($sql);
+        $sql = "insert into supplier(name) values(?)";
+        $executer = new Executer($sql, [$name]);
         $error_message = $executer->error;
         $supplier_insert_id = $executer->insert_id;
     }
@@ -114,7 +114,7 @@ if(null !== filter_input(INPUT_POST, 'create_supplier_submit')) {
                             . "(select count(id) from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id))) count, "
                             . "(select name from film where id in (select film_id from film_variation where id in (select film_variation_id from supplier_film_variation where supplier_id = s.id)) order by name limit 1) first "
                             . "from supplier s order by s.name";
-                    $fetcher = new Fetcher($sql);
+                    $fetcher = new Fetcher($sql, []);
                     
                     while($row = $fetcher->Fetch()):
                         $id = $row['id'];

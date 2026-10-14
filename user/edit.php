@@ -62,21 +62,22 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
     
     if($form_valid) {
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        $first_name = addslashes($first_name ?? '');
-        $last_name = addslashes($last_name ?? '');
-        $email = addslashes($email ?? '');
-        $phone = addslashes($phone ?? '');
-        $username = addslashes($username ?? '');
+        $first_name = $first_name ?? '';
+        $last_name = $last_name ?? '';
+        $email = $email ?? '';
+        $phone = $phone ?? '';
+        $username = $username ?? '';
         
-        $sql = "update user set username='$username', first_name='$first_name', last_name='$last_name', role_id=$role_id, email='$email', phone='$phone' where id=$id";
+        $sql = "update user set username = ?, first_name = ?, last_name = ?, role_id = ?, email = ?, phone = ? where id = ?";
+        $params = [$username, $first_name, $last_name, $role_id, $email, $phone, $id];
         
         $password = filter_input(INPUT_POST, 'password');
         if(!empty($password)) {
-            $password = addslashes($password ?? '');
-            $sql = "update user set username='$username', password=password('$password'), first_name='$first_name', last_name='$last_name', role_id=$role_id, email='$email', phone='$phone' where id=$id";
+            $sql = "update user set username = ?, password = password(?), first_name = ?, last_name = ?, role_id = ?, email = ?, phone = ? where id = ?";
+            $params = [$username, $password, $first_name, $last_name, $role_id, $email, $phone, $id];
         }
         
-        $error_message = (new Executer($sql))->error;
+        $error_message = (new Executer($sql, $params))->error;
         
         if(empty($error_message)) {
             header('Location: '.APPLICATION.'/user/');
@@ -85,7 +86,7 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
 }
 
 // Получение объекта
-$row = (new Fetcher("select username, last_name, first_name, email, phone, role_id from user where id=". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)))->Fetch();
+$row = (new Fetcher("select username, last_name, first_name, email, phone, role_id from user where id = ?", [filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)]))->Fetch();
 
 $username = filter_input(INPUT_POST, 'username');
 if(empty($username)) {

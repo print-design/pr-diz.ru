@@ -8,14 +8,16 @@ $film_id = filter_input(INPUT_GET, 'film_id', FILTER_VALIDATE_INT);
 
 if(!empty($film_id)) {
     echo "<option value='' hidden='hidden' selected='selected'>Выберите толщину</option>";
-    $sql = "select id, thickness, weight from film_variation where film_id = $film_id";
+    $sql = "select id, thickness, weight from film_variation where film_id = ?";
+    $params = [$film_id];
     
     if(!empty($supplier_id)) {
-        $sql .= " and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id)";
+        $sql .= " and id in (select film_variation_id from supplier_film_variation where supplier_id = ?)";
+        $params[] = $supplier_id;
     }
     
     $sql .= " order by thickness";
-    $grabber = (new Grabber($sql))->result;
+    $grabber = (new Grabber($sql, $params))->result;
     
     foreach ($grabber as $row) {
         $film_variation_id = intval($row['id']);
@@ -29,7 +31,7 @@ if(!empty($film_id)) {
 $film = filter_input(INPUT_GET, 'film');
 
 if(!empty($film)) {
-    $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.id='$film' order by thickness"))->result;
+    $grabber = (new Grabber("select distinct fv.thickness from film_variation fv inner join film f on fv.film_id = f.id where f.id = ? order by thickness", [$film]))->result;
     $result = array();
     
     foreach ($grabber as $row) {
@@ -40,11 +42,11 @@ if(!empty($film)) {
 }
 
 // Получение толщин плёнки для раскрывающегося списка
-$film_name = addslashes(filter_input(INPUT_GET, 'film_name') ?? '');
+$film_name = filter_input(INPUT_GET, 'film_name') ?? '';
 
 if(!empty($film_name) && !empty($supplier_id)) {
     echo "<option value='' hidden='hidden' selected='selected'>Толщина...</option>";
-    $grabber = (new Grabber("select distinct fv.id, fv.thickness, fv.weight from film_variation fv inner join film f on fv.film_id = f.id where f.name='$film_name' and id in (select film_variation_id from supplier_film_variation where supplier_id = $supplier_id) order by thickness"))->result;
+    $grabber = (new Grabber("select distinct fv.id, fv.thickness, fv.weight from film_variation fv inner join film f on fv.film_id = f.id where f.name = ? and fv.id in (select film_variation_id from supplier_film_variation where supplier_id = ?) order by thickness", [$film_name, $supplier_id]))->result;
     
     foreach ($grabber as $row) {
         $film_variation_id = intval($row['id']);

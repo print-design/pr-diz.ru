@@ -5,8 +5,8 @@ $film_variation_id = filter_input(INPUT_GET, 'film_variation_id', FILTER_VALIDAT
 $result = array("text" => "нет данных", "price" => "", "currency" => "", "currency_local" => "");
 
 if(!empty($film_variation_id)) {
-    $sql = "select price, currency from film_price where film_variation_id=$film_variation_id order by id desc limit 1";
-    $fetcher = new Fetcher($sql);
+    $sql = "select price, currency from film_price where film_variation_id = ? order by id desc limit 1";
+    $fetcher = new Fetcher($sql, [$film_variation_id]);
             
     if($row = $fetcher->Fetch()) {
         if(!empty($row['price'])) {

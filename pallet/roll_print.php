@@ -21,9 +21,9 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_na
         . "left join supplier s on p.supplier_id = s.id "
         . "left join film_variation fv on p.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
-        . "where pr.id=$id";
+        . "where pr.id = ?";
 
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher($sql, [$id]))->Fetch();
 $date = $row['date'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];

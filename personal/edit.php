@@ -49,12 +49,7 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
     }
     
     if($form_valid) {
-        $username = addslashes($username ?? '');
-        $last_name = addslashes($last_name ?? '');
-        $first_name = addslashes($first_name ?? '');
-        $email = addslashes($email ?? '');
-        $phone = addslashes($phone ?? '');
-        $error_message = (new Executer("update user set username='$username', last_name='$last_name', first_name='$first_name', email='$email', phone='$phone' where id=".GetUserId()))->error;
+        $error_message = (new Executer("update user set username = ?, last_name = ?, first_name = ?, email = ?, phone = ? where id = ?", [$username ?? '', $last_name ?? '', $first_name ?? '', $email ?? '', $phone ?? '', GetUserId()]))->error;
         
         if(empty($error_message)) {
             header('Location: '.APPLICATION.'/personal/');
@@ -63,7 +58,7 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
 }
        
 // Получение личных данных
-$row = (new Fetcher("select username, last_name, first_name, email, phone from user where id=".GetUserId()))->Fetch();
+$row = (new Fetcher("select username, last_name, first_name, email, phone from user where id = ?", [GetUserId()]))->Fetch();
 
 $username = filter_input(INPUT_POST, 'username');
 if(empty($username)) {

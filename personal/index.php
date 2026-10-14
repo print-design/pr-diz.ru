@@ -13,8 +13,8 @@ $first_name = '';
 $email = '';
 $phone = '';
 
-$sql = "select username, last_name, first_name, email, phone from user where id=".GetUserId();
-$fetcher = new Fetcher($sql);
+$sql = "select username, last_name, first_name, email, phone from user where id = ?";
+$fetcher = new Fetcher($sql, [GetUserId()]);
 if($row = $fetcher->Fetch()) {
     $username = $row['username'];
     $last_name = $row['last_name'];
@@ -39,8 +39,8 @@ if(IsInRole(CUTTER_USERS)) {
     
     $sql = "select pe.last_name, pe.first_name, pe.phone "
             . "from plan_workshift1 pw inner join plan_employee pe on pw.employee1_id = pe.id "
-            . "where date_format(pw.date, '%d-%m-%Y') = '".$working_current_time->format('d-m-Y')."' and pw.shift = '$current_shift' and pw.work_id = ".WORK_CUTTING.' and pw.machine_id = '. GetUserId();
-    $fetcher = new Fetcher($sql);
+            . "where date_format(pw.date, '%d-%m-%Y') = ? and pw.shift = ? and pw.work_id = ".WORK_CUTTING." and pw.machine_id = ?";
+    $fetcher = new Fetcher($sql, [$working_current_time->format('d-m-Y'), $current_shift, GetUserId()]);
     if($row = $fetcher->Fetch()) {
         $last_name = $row['last_name'];
         $first_name = $row['first_name'];

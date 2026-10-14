@@ -63,14 +63,14 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
     }
     
     if($form_valid) {
-        $first_name = addslashes($first_name ?? '');
-        $last_name = addslashes($last_name ?? '');
-        $email = addslashes($email ?? '');
-        $phone = addslashes($phone ?? '');
-        $username = addslashes($username ?? '');
+        $first_name = $first_name ?? '';
+        $last_name = $last_name ?? '';
+        $email = $email ?? '';
+        $phone = $phone ?? '';
+        $username = $username ?? '';
         
-        $sql = "select count(id) from user where username = '$username'";
-        $fetcher = new Fetcher($sql);
+        $sql = "select count(id) from user where username = ?";
+        $fetcher = new Fetcher($sql, [$username]);
         if($row = $fetcher->Fetch()) {
             if($row[0] != 0) {
                 $error_message = "Такой логин уже имеется в базе";
@@ -78,8 +78,8 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "insert into user (username, password, first_name, last_name, role_id, email, phone) values ('$username', password('$password'), '$first_name', '$last_name', $role_id, '$email', '$phone')";
-            $executer = new Executer($sql);
+            $sql = "insert into user (username, password, first_name, last_name, role_id, email, phone) values (?, password(?), ?, ?, ?, ?, ?)";
+            $executer = new Executer($sql, [$username, $password, $first_name, $last_name, $role_id, $email, $phone]);
             $error_message = $executer->error;
             $id = $executer->insert_id;
         }

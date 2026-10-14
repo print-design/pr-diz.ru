@@ -13,8 +13,8 @@ if(!empty($decoded)) {
 if(!empty($pallet_id)) {
     // Получение марки плёнки
     $film = '';
-    $sql = "select f.name, fv.thickness from film f inner join film_variation fv on fv.film_id = f.id inner join pallet p on p.film_variation_id = fv.id where p.id = $pallet_id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select f.name, fv.thickness from film f inner join film_variation fv on fv.film_id = f.id inner join pallet p on p.film_variation_id = fv.id where p.id = ?";
+    $fetcher = new Fetcher($sql, [$pallet_id]);
     if($row = $fetcher->Fetch()) {
         $film = $row['name'];
         $thickness = $row['thickness'];
@@ -25,15 +25,15 @@ if(!empty($pallet_id)) {
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where pr.pallet_id = $pallet_id and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.") "
+            . "where pr.pallet_id = ? and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.") "
             . "union "
             . "select 1 utilized,  p.width, p.comment, pr.id, pr.pallet_id, pr.weight, pr.length, pr.ordinal, IFNULL(prsh.status_id, ".ROLL_STATUS_FREE.") status_id "
             . "from pallet_roll pr "
             . "inner join pallet p on pr.pallet_id = p.id "
             . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-            . "where pr.pallet_id = $pallet_id and prsh.status_id is not null and prsh.status_id <> ".ROLL_STATUS_FREE." "
+            . "where pr.pallet_id = ? and prsh.status_id is not null and prsh.status_id <> ".ROLL_STATUS_FREE." "
             . "order by utilized, ordinal";
-    $fetcher = new Fetcher($sql);
+    $fetcher = new Fetcher($sql, [$pallet_id, $pallet_id]);
     
     $inutilized = true;
     $utilized = false;

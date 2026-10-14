@@ -2,17 +2,17 @@
 require_once '../include/topscripts.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$text = addslashes(filter_input(INPUT_GET, 'text') ?? '');
+$text = filter_input(INPUT_GET, 'text') ?? '';
 $error = '';
 $result = '';
 
-$sql = "update roll set comment = '$text' where id = $id";
-$executer = new Executer($sql);
+$sql = "update roll set comment = ? where id = ?";
+$executer = new Executer($sql, [$text, $id]);
 $error = $executer->error;
 
 if(empty($error)) {
-    $sql = "select comment from roll where id = $id";
-    $fetcher = new Fetcher($sql);
+    $sql = "select comment from roll where id = ?";
+    $fetcher = new Fetcher($sql, [$id]);
     if($row = $fetcher->Fetch()) {
         $result = $row[0];
     }

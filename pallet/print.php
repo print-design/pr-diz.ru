@@ -22,9 +22,9 @@ $sql = "select DATE_FORMAT(p.date, '%d.%m.%Y') date, p.storekeeper_id, u.last_na
         . "left join supplier s on p.supplier_id = s.id "
         . "left join film_variation fv on p.film_variation_id = fv.id "
         . "left join film f on fv.film_id = f.id "
-        . "where p.id=$id";
+        . "where p.id = ?";
 
-$row = (new Fetcher($sql))->Fetch();
+$row = (new Fetcher($sql, [$id]))->Fetch();
 $date = $row['date'];
 $storekeeper_id = $row['storekeeper_id'];
 $storekeeper = $row['last_name'].' '.$row['first_name'];
@@ -165,8 +165,8 @@ $current_date_time = date("dmYHis");
         <?php
         $sql = "select pr.id pallet_roll_id, pr.weight, pr.length, pr.ordinal, ifnull(prsh.status_id, ".ROLL_STATUS_FREE.") status_id "
                 . "from pallet_roll pr left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                . "where pr.pallet_id = ". filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)." and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
-        $pallet_rolls = (new Grabber($sql))->result;
+                . "where pr.pallet_id = ? and (prsh.status_id is null or prsh.status_id = ".ROLL_STATUS_FREE.")";
+        $pallet_rolls = (new Grabber($sql, [$id]))->result;
         $current_roll = 0;
         
         foreach ($pallet_rolls as $pallet_roll):

@@ -35,12 +35,12 @@ if(null !== filter_input(INPUT_POST, 'password_change_submit')) {
     }
                         
     if($form_valid) {
-        $row = (new Fetcher("select count(*) count from user where id=".GetUserId()." and password=password('$old_password')"))->Fetch();
+        $row = (new Fetcher("select count(*) count from user where id = ? and password = password(?)", [GetUserId(), $old_password]))->Fetch();
         if($row['count'] == 0){
             $error_message = "Неправильный текущий пароль";
         }
         else {
-            $error_message = (new Executer("update user set password=password('$new_password') where id=".GetUserId()))->error;
+            $error_message = (new Executer("update user set password = password(?) where id = ?", [$new_password, GetUserId()]))->error;
             
             if(empty($error_message)) {
                 header('Location: '.APPLICATION.'/personal/index.php?password=true');

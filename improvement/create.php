@@ -34,12 +34,8 @@ if(null !== filter_input(INPUT_POST, 'improvement_create_submit')) {
     }
     
     if($form_valid) {
-        $employee = addslashes($employee);
-        $title = addslashes($title);
-        $body = addslashes($body);
-        
-        $sql = "insert into improvement (employee, title, body) values ('$employee', '$title', '$body')";
-        $executer = new Executer($sql);
+        $sql = "insert into improvement (employee, title, body) values (?, ?, ?)";
+        $executer = new Executer($sql, [$employee, $title, $body]);
         $error_message = $executer->error;
     }
 }
