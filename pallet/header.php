@@ -31,16 +31,16 @@ if($file == 'roll.php') {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/roll/">Рулоны</a>
+                <a class="nav-link" href="<?= APPLICATION ?>/roll/<?= BuildQueryRemove('status') ?>">Рулоны</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$pallets_status ?>" href="<?= APPLICATION ?>/pallet/">Паллеты</a>
+                <a class="nav-link<?=$pallets_status ?>" href="<?= APPLICATION ?>/pallet/<?= BuildQueryRemove('status') ?>">Паллеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cut_sources_status ?>" href="<?= APPLICATION ?>/roll/?status=<?= ROLL_STATUS_CUT ?>">Раскроили</a>
+                <a class="nav-link<?=$cut_sources_status ?>" href="<?= APPLICATION ?>/roll/<?= BuildQuery('status', ROLL_STATUS_CUT) ?>">Раскроили</a>
             </li>
             <li class="nav-item text-nowrap">
-                <a class="nav-link<?=$utilized_status ?>" href="<?= APPLICATION ?>/roll/?status=<?= ROLL_STATUS_UTILIZED ?>">Сработанная пленка</a>
+                <a class="nav-link<?=$utilized_status ?>" href="<?= APPLICATION ?>/roll/<?= BuildQuery('status', ROLL_STATUS_UTILIZED) ?>">Сработанная пленка</a>
             </li>
             <?php
             if($_SERVER['HTTP_HOST'] == "pr-diz-test.ru") {

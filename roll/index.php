@@ -447,7 +447,9 @@ else {
                     <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 32px; top: 55px;"><img src="../images/icons/close_modal.png" /></button>
                     <h1 style="margin-top: 53px; margin-bottom: 20px; font-size: 32px; font-weight: 600;">Фильтр</h1>
                     <form method="get">
+                        <?php if(filter_input(INPUT_GET, 'status') !== null): ?>
                         <input type="hidden" name="status" value="<?= filter_input(INPUT_GET, 'status') ?>" />
+                        <?php endif; ?>
                         <div class="form-group">
                             <select id="film_id" name="film_id" class="form-control" style="margin-top: 30px; margin-bottom: 30px;">
                                 <option value="">МАРКА ПЛЕНКИ</option>
