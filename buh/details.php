@@ -205,29 +205,32 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                     line-height: 30px;
                 }
                 
-                tr th:nth-child(2) {
+                table.two_columns tr th:nth-child(2) {
                     text-align: right;
                     padding-right: 0;
                     padding-left: 10px;
                 }
                 
-                tr th:nth-child(3) {
+                table.three_columns tr th:nth-child(3) {
                     text-align: right;
                     padding-left: 10px;
                     padding-right: 10px;
                 }
             
                 td {
-                    line-height: 30px;
+                    /*line-height: 30px;*/
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    vertical-align: top;
                 }
             
-                tr td:nth-child(2) {
+                table.two_columns tr td:nth-child(2) {
                     text-align: right;
                     padding-left: 10px;
                     font-weight: bold;
                 }
                 
-                tr td:nth-child(3) {
+                table.three_columns tr td:nth-child(3) {
                     text-align: right;
                     padding-left: 10px;
                     padding-right: 10px;
@@ -302,7 +305,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                     <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
                     <?php include '../include/order_status_details.php'; ?>
                     <div class="subtitle">О заказе</div>
-                    <table>
+                    <table class="two_columns">
                         <tr>
                             <td>Объём заказа</td>
                             <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?= UNIT_NAMES[$calculation->unit] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&asymp;<?= DisplayNumber(floatval($calculation_rolls->volume), 2) ?> м<sup>3</sup> <small class="text-muted">(<?= DisplayNumber(floatval($calculation_rolls->volume_min), 2) ?>&ndash;<?= DisplayNumber(floatval($calculation_rolls->volume_max), 2) ?> м<sup>3</sup>)</small></td>
@@ -337,7 +340,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                         <?php endif; ?>
                     </table>
                     <div class="subtitle">Сумма к оплате</div>
-                    <table>
+                    <table class="two_columns">
                         <tr>
                             <td>Продукция</td>
                             <td><?= DisplayNumber($shipping_order_cost, 2) ?> ₽</td>
@@ -363,25 +366,35 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                     <table>
                         <tr>
                             <th>Наименование</th>
-                            <th>Обрезная ширина</th>
-                            <th>Кол-во</th>
+                            <th>Ширина ручья</th>
+                            <th>Катушек</th>
+                            <th>Масса</th>
+                            <th>Метраж</th>
+                            <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                            <th style="border-top-width: 0; font-weight: bold;">Этикеток</th>
+                            <?php endif; ?>
+                            <th></th>
                         </tr>
-                        <?php 
-                        $sql = "select cs.name, cs.width, "
-                                . "ifnull((select sum(length) from calculation_take_stream where calculation_stream_id = cs.id), 0) "
-                                . "+ "
-                                . "ifnull((select sum(length) from calculation_not_take_stream where calculation_stream_id = cs.id), 0) length "
-                                . "from calculation_stream cs where cs.calculation_id = ? "
-                                . "order by cs.position";
-                        $fetcher = new Fetcher($sql, [$id]);
-                        while($row = $fetcher->Fetch()):
+                        <?php
+                        $calculation_rolls->LoadDetails();
+                        foreach ($calculation_rolls->streams as $stream):
                         ?>
                         <tr>
-                            <td><?= $row['name'] ?></td>
-                            <td><?= DisplayNumber(floatval($row['width']), 0) ?> мм</td>
-                            <td><?= DisplayNumber(floatval($row['length']), 0)  ?> шт.</td>
+                            <td><?=$stream['name'] ?></td>
+                            <td><?=$stream['width'] ?> мм</td>
+                            <td><?=$stream['bobbins'] ?></td>
+                            <td><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
+                            <td><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>
+                            <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                            <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
+                            <?php endif; ?>
+                            <td style="text-align: right;">
+                                <?php if(!empty($stream['image1']) || !empty($stream['image2'])): ?>
+                                <a href="javascript: void(0);" class="ui_tooltip left" data-placement="left" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImageStream(<?=$stream['id'] ?>);"><img src="../images/icons/attach.svg" /></a>
+                                <?php endif; ?>
+                            </td>
                         </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </table>
                     <h2>Оригинал-макеты</h2>
                     <?php
@@ -448,7 +461,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                             </div>
                         </div>
                         <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
-                            <table>
+                            <table class="three_columns">
                                 <tr>
                                     <th class="pl-2">Дата и время</th>
                                     <th class="text-left">№ платежа</th>
@@ -521,7 +534,7 @@ $paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $s
                             <button type="submit" class="btn btn-dark" name="payment_submit"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
                         </form>
                         <h2>Отгрузка</h2>
-                        <table>
+                        <table class="two_columns">
                             <tr>
                                 <td>Фактически упаковано</td>
                                 <td><?= $packed_fact.' из '.DisplayNumber(floatval($calculation->quantity ?? 0), 0).' '. UNIT_NAMES[$calculation->unit] ?></td>
