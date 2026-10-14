@@ -404,11 +404,11 @@ $total_weight = $row[0];
             function SaveComment(ev, id) {
                 text = $(ev.target).val();
                 $(ev.target).val('');
-                $.ajax({ url: "_edit_comment.php?id=" + id + "&text=" + text })
+                $.ajax({ url: "_edit_comment.php?id=" + id + "&text=" + encodeURIComponent(text) })
                         .done(function(data) {
                             $(ev.target).val(data);
                             $(ev.target).parents('.comment_input').addClass('d-none');
-                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').html(data);
+                            $(ev.target).parents('td').children('.d-flex').children('.comment_text').text(data);
                             $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
                             $(ev.target).parents('td').children('.d-flex').children('.comment_text').removeClass('d-none');
                         })
