@@ -67,8 +67,8 @@ if(null !== filter_input(INPUT_POST, 'norm_cliche_submit')) {
                 $old_kodak_currency != $new_kodak_currency || 
                 $old_scotch_price != $new_scotch_price || 
                 $old_scotch_currency != $new_scotch_currency) {
-            $sql = "insert into norm_cliche (flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency) values ($new_flint_price, '$new_flint_currency', $new_kodak_price, '$new_kodak_currency', $new_scotch_price, '$new_scotch_currency')";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_cliche (flint_price, flint_currency, kodak_price, kodak_currency, scotch_price, scotch_currency) values (?, ?, ?, ?, ?, ?)";
+            $executer = new Executer($sql, [$new_flint_price, $new_flint_currency, $new_kodak_price, $new_kodak_currency, $new_scotch_price, $new_scotch_currency]);
             $error_message = $executer->error;
         }
         else {

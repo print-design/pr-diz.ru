@@ -62,8 +62,8 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
         $old_solvent_currency = '';
         $old_solvent_part = '';
         
-        $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part from norm_glue where laminator_id = $laminator_id order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part from norm_glue where laminator_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$laminator_id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -92,8 +92,8 @@ if(null !== filter_input(INPUT_POST, 'norm_glue_submit')) {
                 $old_solvent_price != $new_solvent_price || 
                 $old_solvent_currency != $new_solvent_currency || 
                 $old_solvent_part != $new_solvent_part) {
-            $sql = "insert into norm_glue (laminator_id, glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part) values ($laminator_id, $new_glue_price, '$new_glue_currency', $new_glue_expense, $new_glue_expense_pet, $new_solvent_price, '$new_solvent_currency', $new_solvent_part)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_glue (laminator_id, glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part) values (?, ?, ?, ?, ?, ?, ?, ?)";
+            $executer = new Executer($sql, [$laminator_id, $new_glue_price, $new_glue_currency, $new_glue_expense, $new_glue_expense_pet, $new_solvent_price, $new_solvent_currency, $new_solvent_part]);
             $error_message = $executer->error;
         }
         else {
@@ -111,8 +111,8 @@ $solvent_price = '';
 $solvent_currency = '';
 $solvent_part = '';
 
-$sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part from norm_glue where laminator_id = $laminator_id order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select glue_price, glue_currency, glue_expense, glue_expense_pet, solvent_price, solvent_currency, solvent_part from norm_glue where laminator_id = ? order by date desc limit 1";
+$fetcher = new Fetcher($sql, [$laminator_id]);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }

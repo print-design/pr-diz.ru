@@ -15,7 +15,7 @@ foreach(PLAN_ROLES as $role) {
 $sql = "select id, first_name, last_name, role_id, phone, active "
         . "from plan_employee "
         . "order by active desc, last_name, first_name";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, []);
 while($row = $fetcher->Fetch()) {
     array_push($employees[$row['role_id']], $row);
 }

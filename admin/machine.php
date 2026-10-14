@@ -79,8 +79,8 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
         $old_min_weight = '';
         $old_min_square = '';
         
-        $sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = $machine_id order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$machine_id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -116,8 +116,8 @@ if(null !== filter_input(INPUT_POST, 'norm_machine_submit')) {
                 ($new_speed_run2 != "NULL" && $old_speed_run2 != $new_speed_run2) || 
                 $old_min_weight != $new_min_weight || 
                 $old_min_square != $new_min_square) {
-            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_square) values ($machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense, $new_price_run2, $new_speed_run2, $new_min_weight, $new_min_square)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_machine (machine_id, price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_square) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $executer = new Executer($sql, [$machine_id, $new_price, $new_speed, $new_width, $new_vaporization_expense, $new_price_run2, $new_speed_run2, $new_min_weight, $new_min_square]);
             $error_message = $executer->error;
         }
         else {
@@ -138,8 +138,8 @@ $speed_run2 = '';
 $min_weight = '';
 $min_square = '';
 
-$sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = $machine_id order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select price, speed, width, vaporization_expense, price_run2, speed_run2, min_weight, min_square from norm_machine where machine_id = ? order by date desc limit 1";
+$fetcher = new Fetcher($sql, [$machine_id]);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }

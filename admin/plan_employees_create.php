@@ -42,12 +42,8 @@ if(null !== filter_input(INPUT_POST, 'employee_create_submit')) {
     }
     
     if($form_valid) {
-        $first_name = addslashes($first_name ?? '');
-        $last_name = addslashes($last_name ?? '');
-        $phone = addslashes($phone ?? '');
-        
-        $sql = "insert into plan_employee (first_name, last_name, role_id, phone) values ('$first_name', '$last_name', $role_id, '$phone')";
-        $executer = new Executer($sql);
+        $sql = "insert into plan_employee (first_name, last_name, role_id, phone) values (?, ?, ?, ?)";
+        $executer = new Executer($sql, [$first_name, $last_name, $role_id, $phone]);
         $error_message = $executer->error;
         
         if(empty($error_message)) {

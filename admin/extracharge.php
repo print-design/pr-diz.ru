@@ -11,12 +11,12 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
     $extracharge_type_id = filter_input(INPUT_POST, 'extracharge_type_id', FILTER_VALIDATE_INT);
     $from_weight = filter_input(INPUT_POST, 'from_weight');
     $to_weight = filter_input(INPUT_POST, 'to_weight');
-    if(empty($to_weight)) $to_weight = "NULL";
+    if(empty($to_weight)) $to_weight = null;
     $value = filter_input(INPUT_POST, 'value');
     
     if(!empty($value)) {
-        $sql = "insert into extracharge (extracharge_type_id, from_weight, to_weight, value) values ($extracharge_type_id, $from_weight, $to_weight, $value)";
-        $executer = new Executer($sql);
+        $sql = "insert into extracharge (extracharge_type_id, from_weight, to_weight, value) values (?, ?, ?, ?)";
+        $executer = new Executer($sql, [$extracharge_type_id, $from_weight, $to_weight, $value]);
         $error_message = $executer->error;
     }
 }
@@ -24,14 +24,14 @@ if(null !== filter_input(INPUT_POST, 'create_extracharge_submit')) {
 // Удаление наценки
 if(null !== filter_input(INPUT_POST, 'delete_extracharge_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $sql = "delete from extracharge where id=$id";
-    $executer = new Executer($sql);
+    $sql = "delete from extracharge where id = ?";
+    $executer = new Executer($sql, [$id]);
     $error_message = $executer->error;
 }
 
 // Получение списка объектов
 $sql = "select id, extracharge_type_id, from_weight, to_weight, value from extracharge order by from_weight, to_weight";
-$grabber = new Grabber($sql);
+$grabber = new Grabber($sql, []);
 $error_message = $grabber->error;
 $result = $grabber->result;
 $extracharges = array();

@@ -40,8 +40,8 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_submit')) {
         $old_speed = '';
         $old_max_width = '';
         
-        $sql = "select price, speed, max_width from norm_laminator where laminator_id = $laminator_id order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select price, speed, max_width from norm_laminator where laminator_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$laminator_id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -56,8 +56,8 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_submit')) {
         $new_max_width = filter_input(INPUT_POST, 'max_width');
         
         if($old_price != $new_price || $old_speed != $new_speed || $old_max_width != $new_max_width) {
-            $sql = "insert into norm_laminator (laminator_id, price, speed, max_width) values ($laminator_id, $new_price, $new_speed, $new_max_width)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_laminator (laminator_id, price, speed, max_width) values (?, ?, ?, ?)";
+            $executer = new Executer($sql, [$laminator_id, $new_price, $new_speed, $new_max_width]);
             $error_message = $executer->error;
         }
         else {
@@ -71,8 +71,8 @@ $price = '';
 $speed = '';
 $max_width = '';
 
-$sql = "select price, speed, max_width from norm_laminator where laminator_id = $laminator_id order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select price, speed, max_width from norm_laminator where laminator_id = ? order by date desc limit 1";
+$fetcher = new Fetcher($sql, [$laminator_id]);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }

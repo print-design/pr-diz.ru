@@ -45,8 +45,8 @@ if(null !== filter_input(INPUT_POST, 'norm_gap_submit')) {
         $old_gap_stream = '';
         $old_selvage = '';
         
-        $sql = "select gap_raport, gap_stream, selvage from norm_gap where machine_id = $machine_id order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select gap_raport, gap_stream, selvage from norm_gap where machine_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$machine_id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -61,8 +61,8 @@ if(null !== filter_input(INPUT_POST, 'norm_gap_submit')) {
         $new_selvage = filter_input(INPUT_POST, 'selvage');
         
         if($old_gap_raport != $new_gap_raport || $old_gap_stream != $new_gap_stream || $old_selvage != $new_selvage) {
-            $sql = "insert into norm_gap (machine_id, gap_raport, gap_stream, selvage) values ($machine_id, $new_gap_raport, $new_gap_stream, $new_selvage)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_gap (machine_id, gap_raport, gap_stream, selvage) values (?, ?, ?, ?)";
+            $executer = new Executer($sql, [$machine_id, $new_gap_raport, $new_gap_stream, $new_selvage]);
             $error_message = $executer->error;
         }
         else {
@@ -76,8 +76,8 @@ $gap_raport = '';
 $gap_stream = '';
 $selvage = '';
 
-$sql = "select gap_raport, gap_stream, selvage from norm_gap where machine_id = $machine_id order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select gap_raport, gap_stream, selvage from norm_gap where machine_id = ? order by date desc limit 1";
+$fetcher = new Fetcher($sql, [$machine_id]);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }

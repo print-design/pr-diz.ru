@@ -42,8 +42,8 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_priladka_submit')) {
         $old_length = '';
         $old_waste_percent = '';
         
-        $sql = "select time, length, waste_percent from norm_laminator_priladka where laminator_id = $laminator_id order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select time, length, waste_percent from norm_laminator_priladka where laminator_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$laminator_id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -58,8 +58,8 @@ if(null !== filter_input(INPUT_POST, 'norm_laminator_priladka_submit')) {
         $new_waste_percent = filter_input(INPUT_POST, 'waste_percent');
         
         if($old_time != $new_time || $old_length != $new_length || $old_waste_percent != $new_waste_percent) {
-            $sql = "insert into norm_laminator_priladka (laminator_id, time, length, waste_percent) values ($laminator_id, $new_time, $new_length, $new_waste_percent)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_laminator_priladka (laminator_id, time, length, waste_percent) values (?, ?, ?, ?)";
+            $executer = new Executer($sql, [$laminator_id, $new_time, $new_length, $new_waste_percent]);
             $error_message = $executer->error;
         }
         else {
@@ -73,8 +73,8 @@ $time = '';
 $length = '';
 $waste_percent = '';
 
-$sql = "select time, length, waste_percent from norm_laminator_priladka where laminator_id = $laminator_id order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select time, length, waste_percent from norm_laminator_priladka where laminator_id = ? order by date desc limit 1";
+$fetcher = new Fetcher($sql, [$laminator_id]);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }

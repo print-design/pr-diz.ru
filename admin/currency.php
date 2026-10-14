@@ -31,7 +31,7 @@ if(null !== filter_input(INPUT_POST, 'currency_submit')) {
         $old_euro = '';
         
         $sql = "select usd, euro from currency order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $fetcher = new Fetcher($sql, []);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -44,8 +44,8 @@ if(null !== filter_input(INPUT_POST, 'currency_submit')) {
         $new_euro = filter_input(INPUT_POST, 'euro');
         
         if($old_usd != $new_usd || $old_euro != $new_euro) {
-            $sql = "insert into currency (usd, euro) values ($new_usd, $new_euro)";
-            $executer = new Executer($sql);
+            $sql = "insert into currency (usd, euro) values (?, ?)";
+            $executer = new Executer($sql, [$new_usd, $new_euro]);
             $error_message = $executer->error;
         }
         else {
@@ -59,7 +59,7 @@ $usd = '';
 $euro = '';
 
 $sql = "select usd, euro from currency order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$fetcher = new Fetcher($sql, []);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }

@@ -72,8 +72,8 @@ if(null !== filter_input(INPUT_POST, 'norm_priladka_submit')) {
         $old_length_run2 = '';
         $old_waste_percent_run2 = '';
         
-        $sql = "select time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = $machine_id order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$machine_id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -99,8 +99,8 @@ if(null !== filter_input(INPUT_POST, 'norm_priladka_submit')) {
         
         if($old_time != $new_time || $old_length != $new_length || ($new_stamp != "NULL" && $old_stamp != $new_stamp) || $old_waste_percent != $new_waste_percent || 
                 ($new_time_run2 != "NULL" && $old_time_run2 != $new_time_run2) || ($new_length_run2 != "NULL" && $old_length_run2 != $new_length_run2) || ($new_waste_percent_run2 != "NULL" && $old_waste_percent_run2 != $new_waste_percent_run2)) {
-            $sql = "insert into norm_priladka (machine_id, time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2) values ($machine_id, $new_time, $new_length, $new_stamp, $new_waste_percent, $new_time_run2, $new_length_run2, $new_waste_percent_run2)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_priladka (machine_id, time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2) values (?, ?, ?, ?, ?, ?, ?, ?)";
+            $executer = new Executer($sql, [$machine_id, $new_time, $new_length, $new_stamp, $new_waste_percent, $new_time_run2, $new_length_run2, $new_waste_percent_run2]);
             $error_message = $executer->error;
         }
         else {
@@ -119,8 +119,8 @@ $time_run2 = '';
 $length_run2 = '';
 $waste_percent_run2 = '';
 
-$sql = "select time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = $machine_id order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select time, length, stamp, waste_percent, time_run2, length_run2, waste_percent_run2 from norm_priladka where machine_id = ? order by date desc limit 1";
+$fetcher = new Fetcher($sql, [$machine_id]);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }

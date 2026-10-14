@@ -35,8 +35,8 @@ if(null !== filter_input(INPUT_POST, 'norm_cutter_submit')) {
         $old_time = '';
         $old_speed = '';
         
-        $sql = "select time, speed from norm_cutter where cutter_id = $cutter_id order by date desc limit 1";
-        $fetcher = new Fetcher($sql);
+        $sql = "select time, speed from norm_cutter where cutter_id = ? order by date desc limit 1";
+        $fetcher = new Fetcher($sql, [$cutter_id]);
         $error_message = $fetcher->error;
         
         if($row = $fetcher->Fetch()) {
@@ -49,8 +49,8 @@ if(null !== filter_input(INPUT_POST, 'norm_cutter_submit')) {
         $new_speed = filter_input(INPUT_POST, 'speed');
         
         if($old_time != $new_time || $old_speed != $new_speed) {
-            $sql = "insert into norm_cutter (cutter_id, time, speed) values ($cutter_id, $new_time, $new_speed)";
-            $executer = new Executer($sql);
+            $sql = "insert into norm_cutter (cutter_id, time, speed) values (?, ?, ?)";
+            $executer = new Executer($sql, [$cutter_id, $new_time, $new_speed]);
             $error_message = $executer->error;
         }
         else {
@@ -63,8 +63,8 @@ if(null !== filter_input(INPUT_POST, 'norm_cutter_submit')) {
 $time = '';
 $speed = '';
 
-$sql = "select time, speed from norm_cutter where cutter_id = $cutter_id order by date desc limit 1";
-$fetcher = new Fetcher($sql);
+$sql = "select time, speed from norm_cutter where cutter_id = ? order by date desc limit 1";
+$fetcher = new Fetcher($sql, [$cutter_id]);
 if(empty($error_message)) {
     $error_message = $fetcher->error;
 }
