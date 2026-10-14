@@ -170,8 +170,8 @@ $total_weight = $row[0];
                         <th style="padding-left: 5px; padding-right: 5px;">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
                         <th style="padding-left: 5px; padding-right: 5px;" class="d-none">Кто заказал</th>
                         <th style="padding-left: 5px; padding-right: 5px;">Статус</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 15%" class="storekeeper">Комментарий</th>
-                        <th style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 15%;" class="storekeeper">Комментарий</th>
+                        <th style="padding-left: 5px; padding-right: 5px; width: 15%;" class="non_storekeeper">Комментарий</th>
                         <th style="padding-left: 5px; padding-right: 5px;"></th>
                     </tr>
                 </thead>
