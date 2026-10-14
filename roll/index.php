@@ -383,7 +383,7 @@ else {
                                        onfocusout="SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" />
                             </div>
                         </td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper"><?= $row['comment'] ?></td>
+                        <td style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper"><?= htmlspecialchars($row['comment'] ?? '') ?></td>
                         <td style="padding-left: 5px; padding-right: 5px; position: relative;">
                             <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                             <div class="film_menu">
@@ -530,12 +530,12 @@ else {
                     comment_input_class = '.comment_input_' + type + '_' + id;
                 }
                 
-                $.ajax({ url: ajax_path + "&text=" + text })
+                $.ajax({ url: ajax_path + "&text=" + encodeURIComponent(text) })
                         .done(function(data) {
                             $(ev.target).val(data);
                             $(ev.target).parents('.comment_input').addClass('d-none');
                             
-                            $(comment_text_class).html(data);
+                            $(comment_text_class).text(data);
                             $(comment_input_class).val(data);
                             
                             $(ev.target).parents('td').children('.d-flex').children('.comment_pen').removeClass('d-none');
