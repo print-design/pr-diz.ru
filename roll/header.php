@@ -19,16 +19,16 @@ else {
     <nav class="navbar navbar-expand-sm justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link<?=$rolls_status ?>" href="<?= APPLICATION ?>/roll/<?= BuildQueryRemove('status') ?>">Рулоны</a>
+                <a class="nav-link<?=$rolls_status ?>" href="<?= APPLICATION ?>/roll/<?= BuildQueryRemoveArray(['status', 'page', 'id']) ?>">Рулоны</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/pallet/<?= BuildQueryRemove('status') ?>">Паллеты</a>
+                <a class="nav-link" href="<?= APPLICATION ?>/pallet/<?= BuildQueryRemoveArray(['status', 'page', 'id']) ?>">Паллеты</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$cut_sources_status ?>" href="<?= APPLICATION ?>/roll/<?= BuildQuery('status', ROLL_STATUS_CUT) ?>">Раскроили</a>
+                <a class="nav-link<?=$cut_sources_status ?>" href="<?= APPLICATION ?>/roll/<?= BuildQueryAddRemoveArray('status', ROLL_STATUS_CUT, ['page', 'id']) ?>">Раскроили</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?= APPLICATION ?>/roll/<?= BuildQuery('status', ROLL_STATUS_UTILIZED) ?>">Сработанная пленка</a>
+                <a class="nav-link<?=$utilized_status ?> text-nowrap" href="<?= APPLICATION ?>/roll/<?= BuildQueryAddRemoveArray('status', ROLL_STATUS_UTILIZED, ['page', 'id']) ?>">Сработанная пленка</a>
             </li>
             <?php
             if($_SERVER['HTTP_HOST'] == "pr-diz-test.ru") {
