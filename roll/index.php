@@ -303,7 +303,10 @@ else {
                     }
                     
                     // Сортировка
-                    $orderby = filter_input(INPUT_GET, 'order');
+                    // Сортировка -- только по столбцам из белого списка: имя столбца нельзя передать
+                    // через "?", поэтому значение из адреса в запрос напрямую не подставляется
+                    $order_columns = ['cell' => 'trim(cell)'];
+                    $orderby = $order_columns[filter_input(INPUT_GET, 'order') ?? ''] ?? '';
                     
                     $sql = "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
                             . "r.width width, fv.thickness thickness, fv.weight density, rch.cell, r.net_weight net_weight, r.length length, "
@@ -337,14 +340,16 @@ else {
                     }
                     
                     if(!empty($orderby)) {
-                        $sql .= "order by trim($orderby) limit $pager_skip, $pager_take";
+                        $sql .= "order by $orderby limit ?, ?";
                     }
                     elseif($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $sql .= "order by status_date desc limit $pager_skip, $pager_take";
+                        $sql .= "order by status_date desc limit ?, ?";
                     }
                     else {
-                        $sql .= "order by id desc limit $pager_skip, $pager_take";
+                        $sql .= "order by id desc limit ?, ?";
                     }
+                    
+                    array_push($list_params, $pager_skip, $pager_take);
                     
                     $fetcher = new Fetcher($sql, $list_params);
                     
