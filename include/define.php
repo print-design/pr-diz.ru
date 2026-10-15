@@ -14,6 +14,7 @@ define('LAST_NAME', '4ij_ujjJJYH_876tgHGVCD__uih675HG_jhut_uuy');
 define('ROLE', 'MKJhytf__iuyTREfgyUH__iu76_7765GVFCffd_8u7y');
 define('ROLE_LOCAL', 'llk___98HUrrhb_ddrelkkjeeffl_445533k344');
 define('LOGIN_TIME', '5_kkijUHY_9887yHGj__98u776BHgytd__juHY');
+define('AUTH_SECRET', '01ef8515f520eb232157ed0ec4a40348ab0992ff280960741f8a86d92f921985');
 
 define('SCROLL', 'jIUGGtrJIUUgg---__ijUH67tfRDE8ujjhytRF_kji');
 define('AUTOLOGOUT_MIN', 20);
