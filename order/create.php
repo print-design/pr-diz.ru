@@ -622,7 +622,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $film_id = filter_input(INPUT_POST, 'film_id', FILTER_VALIDATE_INT);
         $film_variation_id = filter_input(INPUT_POST, 'film_variation_id', FILTER_VALIDATE_INT); if($film_id == INDIVIDUAL) $film_variation_id = null;
         $price = filter_input(INPUT_POST, 'price'); if(empty($price)) $price = null;
-        $currency = filter_input(INPUT_POST, 'currency');
+        $currency = filter_input(INPUT_POST, 'currency'); if(empty($currency)) $currency = '';
         $individual_film_name = filter_input(INPUT_POST, 'individual_film_name') ?? ''; if($film_id != INDIVIDUAL) $individual_film_name = "";
         $individual_thickness = filter_input(INPUT_POST, 'individual_thickness'); if(empty($individual_thickness)) $individual_thickness = null; if($film_id != INDIVIDUAL) $individual_thickness = null;
         $individual_density = filter_input(INPUT_POST, 'individual_density'); if(empty($individual_density)) $individual_density = null; if($film_id != INDIVIDUAL) $individual_density = null;
@@ -642,7 +642,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination1_film_id = filter_input(INPUT_POST, 'lamination1_film_id', FILTER_VALIDATE_INT);
         $lamination1_film_variation_id = filter_input(INPUT_POST, 'lamination1_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination1_film_variation_id)) $lamination1_film_variation_id = null; if($lamination1_film_id == INDIVIDUAL) $lamination1_film_variation_id = null;
         $lamination1_price = filter_input(INPUT_POST, 'lamination1_price'); if(empty($lamination1_price)) $lamination1_price = null;
-        $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency');
+        $lamination1_currency = filter_input(INPUT_POST, 'lamination1_currency'); if(empty($lamination1_currency)) $lamination1_currency = '';
         $lamination1_individual_film_name = filter_input(INPUT_POST, 'lamination1_individual_film_name') ?? ''; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_film_name = "";
         $lamination1_individual_thickness = filter_input(INPUT_POST, 'lamination1_individual_thickness'); if(empty($lamination1_individual_thickness)) $lamination1_individual_thickness = null; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_thickness = null;
         $lamination1_individual_density = filter_input(INPUT_POST, 'lamination1_individual_density'); if(empty($lamination1_individual_density)) $lamination1_individual_density = null; if($lamination1_film_id != INDIVIDUAL) $lamination1_individual_density = null;
@@ -662,7 +662,7 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
         $lamination2_film_id = filter_input(INPUT_POST, 'lamination2_film_id', FILTER_VALIDATE_INT);
         $lamination2_film_variation_id = filter_input(INPUT_POST, 'lamination2_film_variation_id', FILTER_VALIDATE_INT); if(empty($lamination2_film_variation_id)) $lamination2_film_variation_id = null; if($lamination2_film_id == INDIVIDUAL) $lamination2_film_variation_id = null;
         $lamination2_price = filter_input(INPUT_POST, 'lamination2_price'); if(empty($lamination2_price)) $lamination2_price = null;
-        $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency');
+        $lamination2_currency = filter_input(INPUT_POST, 'lamination2_currency'); if(empty($lamination2_currency)) $lamination2_currency = '';
         $lamination2_individual_film_name = filter_input(INPUT_POST, 'lamination2_individual_film_name') ?? ''; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_film_name = "";
         $lamination2_individual_thickness = filter_input(INPUT_POST, 'lamination2_individual_thickness'); if(empty($lamination2_individual_thickness)) $lamination2_individual_thickness = null; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_thickness = null;
         $lamination2_individual_density = filter_input(INPUT_POST, 'lamination2_individual_density'); if(empty($lamination2_individual_density)) $lamination2_individual_density = null; if($lamination2_film_id != INDIVIDUAL) $lamination2_individual_density = null;
