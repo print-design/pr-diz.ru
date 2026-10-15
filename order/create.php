@@ -30,7 +30,7 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         }
         
         // Если такого заказчика нет, создаём его
-        if(empty($customer_id)) {
+        if(empty($new_customer_id)) {
             $sql = "insert into customer (name, person, phone, extension, email, manager_id) values (?, ?, ?, ?, ?, ?)";
             $executer = new Executer($sql, [$customer_name, $customer_person, $customer_phone, $customer_extension, $customer_email, $customer_manager_id]);
             $error_message = $executer->error;
