@@ -17,9 +17,9 @@ if(null !== filter_input(INPUT_POST, 'create_customer_submit')) {
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         $customer_name = filter_input(INPUT_POST, 'customer_name') ?? '';
         $customer_person = filter_input(INPUT_POST, 'customer_person') ?? '';
-        $customer_phone = filter_input(INPUT_POST, 'customer_phone');
-        $customer_extension = filter_input(INPUT_POST, 'customer_extension');
-        $customer_email = filter_input(INPUT_POST, 'customer_email');
+        $customer_phone = filter_input(INPUT_POST, 'customer_phone') ?? '';
+        $customer_extension = filter_input(INPUT_POST, 'customer_extension') ?? '';
+        $customer_email = filter_input(INPUT_POST, 'customer_email') ?? '';
         $customer_manager_id = GetUserId();
         
         // Если такой заказчик уже есть, просто получаем его ID
@@ -824,6 +824,18 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
             'extra_expense' => $extra_expense,
         );
         
+        // Текстовые столбцы calculation объявлены NOT NULL без значения по умолчанию:
+        // пустое значение формы должно попасть в базу как '', а не как NULL.
+        $not_null_text_fields = array('name', 'unit', 'currency', 'individual_film_name', 'lamination1_currency', 'lamination1_individual_film_name', 'lamination2_currency', 'lamination2_individual_film_name');
+        foreach(array('ink', 'cmyk', 'lacquer', 'cliche') as $prefix) {
+            for($i = 1; $i <= 8; $i++) $not_null_text_fields[] = $prefix.'_'.$i;
+            for($i = 1; $i <= 4; $i++) $not_null_text_fields[] = $prefix.'_run2_'.$i;
+        }
+        for($i = 1; $i <= 4; $i++) $not_null_text_fields[] = 'color_run2_'.$i;
+        foreach($not_null_text_fields as $field) {
+            if(array_key_exists($field, $insert_fields) && $insert_fields[$field] === null) $insert_fields[$field] = '';
+        }
+
         $insert_columns = implode(', ', array_keys($insert_fields));
         $insert_placeholders = implode(', ', array_fill(0, count($insert_fields), '?'));
         $sql = "insert into calculation ($insert_columns) values ($insert_placeholders)";
