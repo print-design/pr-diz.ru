@@ -7,33 +7,26 @@ if(LoggedIn()) {
 
 // Логин по графическому ключу
 if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
-    $graph_key_id = filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT);
     $graph_key = filter_input(INPUT_POST, 'graph_key');
+    $row = null;
     
-    $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where graph_key = password(?)";
-    $fetcher = new Fetcher($sql, [$graph_key]);
-    if($row = $fetcher->Fetch()) {
-        $user_id = $row['id'];
-        $username = $row['username'];
-        $password = $row['password'];
-        if(strlen($password) > 5) {
-            $password5 = substr($password, 1, 5);
+    // Пустой ключ не принимается: иначе он совпал бы с "пустым" значением у пользователей,
+    // которым ключ не задан (или удалён).
+    if($graph_key !== null && $graph_key !== '') {
+        // Ключ может быть сохранён в новом формате (HMAC) или ещё в старом (password()).
+        $sql = "select id, username, password, graph_key from user where active = true and (graph_key = ? or graph_key = password(?))";
+        $row = (new Fetcher($sql, [MakeGraphKeyHash($graph_key), $graph_key]))->Fetch();
+    }
+    
+    if($row) {
+        // Ключ в старом формате заменяем на новый
+        if($row['graph_key'] !== MakeGraphKeyHash($graph_key)) {
+            (new Executer("update user set graph_key = ? where id = ?", [MakeGraphKeyHash($graph_key), $row['id']]));
         }
-        $last_name = $row['last_name'];
-        $first_name = $row['first_name'];
-        $role = ROLE_NAMES[$row['role_id']];
-        $role_local = ROLE_LOCAL_NAMES[$row['role_id']];
-        $email = $row['email'];
         
-        setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100000, "/");
-        setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100000, "/");
-        setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100000, "/");
-        setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100000, "/");
-        setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100000, "/");
-        setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, '/');
-        setcookie(ROLE_LOCAL, $role_local, time() + 60 * 60 * 24 * 100000, '/');
-        setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
+        SetAuthCookies($row['username'], MakeAuthToken($row['id'], $row['password']));
         header('Location: '.APPLICATION.'/');
+        exit();
     }
     
     $error_message = "Неверный графический ключ";

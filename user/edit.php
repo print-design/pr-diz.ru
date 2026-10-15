@@ -73,8 +73,8 @@ if(null !== filter_input(INPUT_POST, 'user_edit_submit')) {
         
         $password = filter_input(INPUT_POST, 'password');
         if(!empty($password)) {
-            $sql = "update user set username = ?, password = password(?), first_name = ?, last_name = ?, role_id = ?, email = ?, phone = ? where id = ?";
-            $params = [$username, $password, $first_name, $last_name, $role_id, $email, $phone, $id];
+            $sql = "update user set username = ?, password = ?, first_name = ?, last_name = ?, role_id = ?, email = ?, phone = ? where id = ?";
+            $params = [$username, HashPassword($password), $first_name, $last_name, $role_id, $email, $phone, $id];
         }
         
         $error_message = (new Executer($sql, $params))->error;

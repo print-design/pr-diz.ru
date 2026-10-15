@@ -5,7 +5,7 @@
 </div>
 <div class="container-fluid header">
     <div class="d-flex d-lg-none">
-        <?php if(empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
+        <?php if(!LoggedIn()): ?>
         <form class="my-2 my-lg-0" method="post">
             <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
             <div class="form-group">
@@ -35,7 +35,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?=APPLICATION ?>/cutter/">Склад</a>
             </li>
-            <?php elseif(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
+            <?php elseif(LoggedIn()): ?>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Меню</a>
                 <div class="dropdown-menu" style="position: absolute;">
@@ -56,7 +56,7 @@
             </li>
             <?php endif; ?>
         </ul>
-        <?php if(!empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
+        <?php if(LoggedIn()): ?>
         <ul class="navbar-nav">
             <li class="nav-item dropdown no-dropdown-arrow-after">
                 <a class="nav-link mr-0" href="<?=APPLICATION ?>/user_mobile.php?link=<?= urlencode($_SERVER['REQUEST_URI']) ?>"><i class="fa fa-cog" aria-hidden="true"></i></a>
@@ -67,7 +67,7 @@
 </div>
 <div id="topmost"></div>
 <div class="d-flex d-lg-none">
-    <?php if(empty(filter_input(INPUT_COOKIE, USERNAME))): ?>
+    <?php if(!LoggedIn()): ?>
     <div style="height: 10rem;"></div>
     <?php endif; ?>
 </div>

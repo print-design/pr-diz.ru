@@ -172,7 +172,7 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
             ?>
             <div class="d-flex justify-content-between">
                 <div>
-                    <h1>Список работ "<?= IsInRole(CUTTER_USERS) ? filter_input(INPUT_COOKIE, ROLE_LOCAL) : (empty($machine_id) ? "" : CUTTER_NAMES[$machine_id]) ?>"&nbsp;&nbsp;<span style="font-size: smaller; color: #999999;"><?=$count ?></span></h1>
+                    <h1>Список работ "<?= IsInRole(CUTTER_USERS) ? GetUserRoleLocal() : (empty($machine_id) ? "" : CUTTER_NAMES[$machine_id]) ?>"&nbsp;&nbsp;<span style="font-size: smaller; color: #999999;"><?=$count ?></span></h1>
                 </div>
                 <div>
                     <form class="form-inline mt-1" method="get" action="excel.php">

@@ -104,7 +104,6 @@
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <input type="hidden" id="id" name="id" value="<?=$user_id ?>"/>
-                        <input type="hidden" id="code" name="code" value="<?=$code ?>"/>
                         <div class="form-group">
                             <input type="text" class="form-control<?=$code_valid ?>" id="code" name="code" autofocus="on" required="on" />
                             <div class="invalid-feedback">Неправильный код безопасности</div>
