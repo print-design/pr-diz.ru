@@ -311,35 +311,35 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     if(array_key_exists('order', $_REQUEST)) {
                         switch ($_REQUEST['order']) {
                             case 'id':
-                                $sql .= "order by c.customer_id desc, c.id desc";
+                                $sql .= " order by c.customer_id desc, c.id desc";
                                 break;
                             
                             case 'date':
-                                $sql .= "order by c.id desc";
+                                $sql .= " order by c.id desc";
                                 break;
                             
                             case 'customer':
-                                $sql .= "order by cus.name asc";
+                                $sql .= " order by cus.name asc";
                                 break;
                             
                             case 'name':
-                                $sql .= "order by c.name asc";
+                                $sql .= " order by c.name asc";
                                 break;
                             
                             case 'quantity':
-                                $sql .= "order by c.quantity desc";
+                                $sql .= " order by c.quantity desc";
                                 break;
                             
                             case 'work_type':
-                                $sql .= "order by c.work_type_id";
+                                $sql .= " order by c.work_type_id";
                                 break;
                             
                             case 'manager':
-                                $sql .= "order by u.last_name asc, u.first_name asc";
+                                $sql .= " order by u.last_name asc, u.first_name asc";
                                 break;
                             
                             case 'status':
-                                $sql .= "order by status_id";
+                                $sql .= " order by status_id";
                                 break;
                         }
                     }
