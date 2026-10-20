@@ -120,7 +120,7 @@ $('.no-latin').keypress(function(e) {
 
 $('.no-latin').change(function() {
     var val = $(this).val();
-    val = val.replace('[a-zA-Z]', '');
+    val = val.replace(/[a-zA-Z]/g, '');
     $(this).val(val);
 });
 
