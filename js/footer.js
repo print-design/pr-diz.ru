@@ -1,0 +1,566 @@
+// Общие скрипты для всех страниц (подключается из include/footer.php)
+// Требует jQuery и jquery.maskedinput
+
+// Отправка формы по нажатию Enter
+$('input').keypress(function(e) {
+    if(e.which === 10 || e.which === 13) {
+        $(e.target).focusout();
+     
+        submit_btn = $(e.target.form).find("button[type='submit']");
+            
+        if(submit_btn === null) {
+            this.form.submit();
+        }
+        else {
+            submit_btn.click();
+        }
+    }
+});
+
+// Фильтрация ввода
+$('.int-only').keypress(function(e) {
+    if(/\D/.test(e.key)) {
+        return false;
+    }
+});
+
+$('.int-only').keyup(function() {
+    var val = $(this).val();
+    val = val.replaceAll(/\D/g, '');
+    
+    if(val === '') {
+        $(this).val('');
+    }
+    else {
+        val = parseInt(val);
+        
+        if($(this).hasClass('int-format')) {
+            val = Intl.NumberFormat('ru-RU').format(val);
+        }
+        
+        $(this).val(val);
+    }
+});
+
+$('.int-only').change(function(e) {
+    var val = $(this).val();
+    val = val.replace(/[^\d]/g, '');
+    
+    if(val === '') {
+        $(this).val('');
+    }
+    else {
+        val = parseInt(val);
+        
+        if($(this).hasClass('int-format')) {
+            val = Intl.NumberFormat('ru-RU').format(val);
+        }
+        
+        $(this).val(val);
+    }
+});
+
+$('.float-only').keypress(function(e) {
+    if(!/[\.\,\d]/.test(e.key)) {
+        return false;
+    }
+    
+    if(/[\.\,]/.test(e.key) && ($(e.target).val().includes('.') || $(e.target).val().includes(','))) {
+        return false;
+    }
+});
+
+$('.float-only').keyup(function(e) {
+    if($(this).hasClass('float-format')) {
+        var val = $(this).val();
+        val = val.replace(',', '.');
+        val = val.replace(/[^\.\d]/g, '');
+        
+        if(val === '' || val === '.') {
+            $(this).val(val);
+        }
+        else {
+            $(this).val(FloatFormat(val));
+        }
+    }
+});
+
+$('.float-only').change(function(e) {
+    var val = $(this).val();
+    val = val.replace(',', '.');
+    val = val.replace(/[^\.\d]/g, '');
+    
+    if(val === '' || isNaN(val)) {
+        $(this).val('');
+    }
+    else {
+        val = parseFloat(val);
+        
+        if($(this).hasClass('float-format')) {
+            $(this).val(FloatFormat(val.toString()));
+        }
+        else {
+            $(this).val(val);
+        }
+    }
+});
+
+$('.no-latin').keypress(function(e) {
+    if(e.which !== 10 && e.which !== 13) {
+        if(/[a-zA-Z]/.test(e.key)) {
+            $(this).next('.invalid-feedback').text('Переключите раскладку');
+            $(this).next('.invalid-feedback').show();
+            return false;
+        }
+        else {
+            $(this).next('.invalid-feedback').hide();
+        }
+    }
+});
+
+$('.no-latin').change(function() {
+    var val = $(this).val();
+    val = val.replace('[a-zA-Z]', '');
+    $(this).val(val);
+});
+
+$('.no-latin').keyup(function() {
+    var val = $(this).val();
+    val = val.replace(/[a-zA-Z]/g, '');
+    $(this).val(val);
+});
+
+
+function KeyDownFloatValue(e) {
+    if(e.which !== 8 && e.which !== 9 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
+        if(!/[\.\,\d]/.test(e.key)) {
+            return false;
+        }
+        
+        if(/[\.\,]/.test(e.key) && (e.target.value.includes('.') || e.target.value.includes(','))) {
+            return false;
+        }
+    }
+}
+
+function KeyUpFloatValue(e) {
+    val = e.target.value;
+    val = val.replace(',', '.');
+    val = val.replace(/[^\.\d]/g, '');
+    e.target.value = val;
+}
+
+function ChangeFloatValue(e) {
+    val = e.target.value;
+    val = val.replace(',', '.');
+    val = val.replace(/[^\.\d]/g, '');
+    val = parseFloat(val);
+    if(!isNaN(val)) {
+        e.target.value = val;
+    }
+}
+
+// Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
+// Обработка изменения нажатия клавиш
+function KeyDownLimitIntValue(textbox, e, max) {
+    if(e.which !== 8 && e.which !== 9 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
+        if(/\D/.test(e.key)) {
+            return false;
+        }
+        
+        var text = textbox.val();
+        var selStart = textbox.prop('selectionStart');
+        var selEnd = textbox.prop('selectionEnd');
+        var textStart = text.substring(0, selStart);
+        var textEnd = text.substring(selEnd);
+        var newvalue = textStart + e.key + textEnd;
+        newvalue = newvalue.replace(/\D/g, ''); // целое число может быть разбито на разряды
+        var iNewValue = parseInt(newvalue);
+        
+        if(iNewValue === null || iNewValue < 1 || iNewValue > max) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+// Ограничение значений для полей с целочисленными значениями (проценты и т. д.) 
+// Обработка отпускания клавиши
+function KeyUpLimitIntValue(textbox, max) {
+    val = textbox.val().replace(/[^\d]/g, '');
+    
+    if(val !== null && val !== '' && !isNaN(val) && parseInt(val) > max) {
+        textbox.addClass('is-invalid');
+    }
+    else {
+        textbox.removeClass('is-invalid');
+    }
+}
+
+// Ограничение значений для полей с целочисленными значениями (проценты и т. д.)
+// Обработка изменения текста
+function ChangeLimitIntValue(textbox, max) {
+    val = textbox.val().replace(/[^\d]/g, '');
+    textbox.val(val);
+    
+    if(isNaN(val)) {
+        alert('Только целое значение от 1 до ' + max);
+        textbox.val('');
+        textbox.focus();
+    }
+    else if(val === null || val === '') {
+        textbox.val('');
+        textbox.focus();
+    }
+    else {
+        iVal = parseInt(val);
+        
+        if(iVal < 1 || iVal > max) {
+            alert('Только целое значение от 1 до ' + max);
+            textbox.val('');
+            textbox.focus();
+        }
+        else {
+            textbox.val(iVal);
+        }
+    }
+}
+
+// Ограничение значений для полей с числовыми значениями (проценты и т. д.)
+// Обработка изменения нажатия клавиш
+function KeyDownLimitFloatValue(textbox, e, max) {
+    if(e.which !== 8 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
+        if(!/[\.\,\d]/.test(e.key)) {
+            return false;
+        }
+        
+        if(/[\.\,]/.test(e.key) && (textbox.val().includes('.') || textbox.val().includes(',') || parseFloat(textbox.val()) >= max)) {
+            return false;
+        }
+        
+        var text = textbox.val();
+        var selStart = textbox.prop('selectionStart');
+        var selEnd = textbox.prop('selectionEnd');
+        var textStart = text.substring(0, selStart);
+        var textEnd = text.substring(selEnd);
+        var newvalue = textStart + e.key + textEnd;
+        var fNewValue = parseFloat(newvalue);
+        
+        if(fNewValue === null || fNewValue < 1 || fNewValue > max) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+// Ограничение значений для полей с числовыми значениями (проценты и т. д.)
+// Обработка изменения текста
+function ChangeLimitFloatValue(textbox, max) {
+    var val = textbox.val();
+    val = val.replace(',', '.');
+    val = val.replace(/[^\.\d]/g, '');
+    textbox.val(val);
+    
+    if(val === null || val === '' || isNaN(val)) {
+        alert('Только целое значение от 0 до ' + max);
+        textbox.val('');
+        textbox.focus();
+    }
+    else {
+        fVal = parseFloat(val);
+        
+        if(fVal < 0 || fVal > max) {
+            alert('Только числовое значение от 0 до ' + max);
+            textbox.val('');
+            textbox.focus();
+        }
+        else {
+            textbox.val(fVal);
+        }
+    }
+}
+
+// Форматирование дробного поля (например, денежной суммы) для отображения разрядов целой части,
+// с сохранением дробной части как есть (без округления при вводе)
+function FloatFormat(rawVal) {
+    var parts = rawVal.split('.');
+    var intPart = Intl.NumberFormat('ru-RU').format(parts[0] === '' ? 0 : parts[0]);
+    return parts.length > 1 ? (intPart + ',' + parts[1]) : intPart;
+}
+
+// Запрет на изменение размеров всех многострочных текстовых полей вручную
+$('textarea').css('resize', 'none');
+
+// Валидация
+$('input').keypress(function(){
+    $(this).removeClass('is-invalid');
+});
+
+$('select').change(function(){
+    $(this).removeClass('is-invalid');
+});
+
+$.mask.definitions['~'] = "[+-]";
+$("#phone").mask("+7 (999) 999-99-99");
+
+// При щелчке в поле телефона, устанавливаем курсор в самое начало ввода телефонного номера.
+$("#phone").click(function(){
+    var maskposition = $(this).val().indexOf("_");
+    if(Number.isInteger(maskposition)) {
+        $(this).prop("selectionStart", maskposition);
+        $(this).prop("selectionEnd", maskposition);
+    }
+});
+
+// Подтверждение удаления
+$('button.confirmable').click(function() {
+    return confirm("Действительно удалить?");
+});
+
+// Отмена нажатия неактивной кнопки
+$('button.disabled').click(function() {
+    return false;
+});
+
+// Всплывающая подсказка (Bootstrap tooltip)
+$('[data-toggle="tooltip"], .ui_tooltip').tooltip();
+
+// Защита от двойного нажатия
+var submit_clicked = false;
+
+$('button[type=submit]').click(function () {
+    if(submit_clicked) {
+        submit_clicked = false;
+        return false;
+    }
+    else {
+        submit_clicked = true;
+    }
+});
+
+$(document).keydown(function () {
+    submit_clicked = false;
+});
+
+$('select').change(function () {
+    submit_clicked = false;
+});
+
+$('input').keydown(function() {
+    submit_clicked = false;
+});
+
+$('input').change(function() {
+    submit_clicked = false;
+});
+
+// Увеличение и уменьшение картинки
+function MouseUpImage(obj, e) {
+    if(obj.hasClass('moving')) {
+        obj.removeClass('moving');
+        
+        if(obj.hasClass('img-fluid')) {
+            obj.css('cursor', 'zoom-in');
+        }
+        else {
+            obj.css('cursor', 'zoom-out');
+        }
+    }
+    else if(obj.hasClass('img-fluid')) {
+        width1 = obj.width();
+        height1 = obj.height();
+        positionX1 = e.pageX - obj.offset().left;
+        positionY1 = e.pageY - obj.offset().top;
+        
+        obj.removeClass('img-fluid');
+        obj.css('cursor', 'zoom-out');
+        
+        width2 = obj.width();
+        height2 = obj.height();
+        positionX2 = positionX1 * width2 / width1;
+        positionY2 = positionY1 * height2 / height1;
+        obj.parent().scrollLeft(positionX2 - obj.parent().width() / 2);
+        obj.parent().scrollTop(positionY2 - obj.parent().height() / 2);
+    } else {
+        obj.addClass('img-fluid'); 
+        obj.css('cursor', 'zoom-in'); 
+    }
+}
+
+// Координаты мыши на картинке
+imageX = 0;
+imageY = 0;
+
+// Сохранение прежних координат мыши
+function MouseDownImage(obj, e) {
+    imageX = e.pageX;
+    imageY = e.pageY;
+}
+
+// Перемещение картинки
+function MouseMoveImage(obj, e) {
+    if(e.which === 1) {
+        obj.addClass('moving');
+        obj.css('cursor', 'grab');
+        
+        distanceX = e.pageX - imageX;
+        distanceY = e.pageY - imageY;
+        
+        obj.parent().scrollLeft(obj.parent().scrollLeft() - distanceX);
+        obj.parent().scrollTop(obj.parent().scrollTop() - distanceY);
+        
+        imageX = e.pageX;
+        imageY = e.pageY;
+    }
+}
+
+// Показ картинок
+function ShowImage(object, id, image, del = true) {
+    $.ajax({ url: "../include/big_image_show.php?object=" + object + "&id=" + id + "&image=" + image,
+        dataType: "json", 
+        success: function(response) {
+            if(response.error.length > 0) {
+                alert(response.error);
+            }
+            else {
+                $('#big_image_header').text(response.name);
+                $('#big_image_img').attr('src', '../content/' + object + '/' + response.filename + '?' + Date.now());
+                if(del) {
+                    $('#big_image_delete').removeClass('d-none');
+                    $('#deleted_file_name').text(response.delete_file_name);
+                    document.forms.delete_image_form.object.value = object;
+                    document.forms.delete_image_form.id.value = id;
+                    document.forms.delete_image_form.image.value = image;
+                    document.forms.download_image_form.object.value = object;
+                    document.forms.download_image_form.id.value = id;
+                    document.forms.download_image_form.image.value = image;
+                }
+                ShowImageButtons(object, id, image);
+            }
+        },
+        error: function() {
+            alert('Ошибка при открытии макета.');
+        }
+    });
+}
+
+function ShowImageButtons(object, id, image) {
+    $.ajax({ url: "../include/big_image_buttons.php?object=" + object + "&id=" + id + "&image=" + image,
+        success: function(response) {
+            $('#big_image_buttons').html(response);
+        },
+        error: function() {
+            alert('Ошибка при создании кнопок макета.');
+        }
+    });
+}
+        
+function ShowImageCalculation(calculation_id) {
+    $.ajax({ url: "../include/big_image_show.php?calculation_id=" + calculation_id,
+        dataType: "json",
+        success: function(response) {
+            if(response.error.length > 0) {
+                alert(response.error);
+            }
+            else {
+                $('#big_image_header').text(response.name);
+                $('#big_image_img').attr('src', '../content/' + response.object + '/' + response.filename + '?' + Date.now());
+                document.forms.download_image_form.object.value = response.object;
+                document.forms.download_image_form.id.value = response.id;
+                document.forms.download_image_form.image.value = response.image;
+                ShowImageCalculationButtons(calculation_id, 1);
+            }
+        },
+        error: function() {
+            alert('Ошибка при открытии макета.');
+        }
+    });
+}
+
+function ShowImageCalculationButtons(calculation_id, ordinal) {
+    $.ajax({ url: "../include/big_image_buttons.php?calculation_id=" + calculation_id + "&ordinal=" + ordinal,
+        success: function(response) {
+            $('#big_image_buttons').html(response);
+        },
+        error: function() {
+            alert('Ошибка при создании кнопок макета.')
+        }
+    });
+}
+        
+function ShowImageStream(stream_id) {
+    $.ajax({ url: "../include/big_image_show.php?stream_id=" + stream_id,
+        dataType: "json",
+        success: function(response) {
+            if(response.error.length > 0) {
+                alert(response.error);
+            }
+            else {
+                $('#big_image_header').text(response.name);
+                $('#big_image_img').attr('src', '../content/stream/' + response.filename + '?' + Date.now());
+                document.forms.download_image_form.object.value = 'stream';
+                document.forms.download_image_form.id.value = stream_id;
+                document.forms.download_image_form.image.value = response.image;
+                ShowImageStreamButtons(stream_id, response.image);
+            }
+        },
+        error: function() {
+            alert('Ошибка при открытии макета.');
+        }
+    });
+}
+
+function ShowImageStreamButtons(stream_id, image) {
+    $.ajax({ url: "../include/big_image_buttons.php?stream_id=" + stream_id + "&image=" + image,
+        success: function(response) {
+            $('#big_image_buttons').html(response);
+        },
+        error: function() {
+            alert('Ошибка при создании кнопок макета.');
+        }
+    });
+}
+
+// Заполнение трекинга заказов
+function StatusTrack(id) {
+    $.ajax({ url: '../order/_status_track.php?id=' + id })
+            .done(function(data) {
+                $('#status_track_body').html(data);
+            })
+            .fail(function() {
+                alert('Ошибка при получении трекинга заказов');
+            });
+}
+    
+// Отображение полностью блока с фиксированной позицией, не умещающегося полностью в окне
+function AdjustFixedBlock(fixed_block) {
+    windowHeight = $(window).height();
+    blockTop = fixed_block.offset().top;
+    blockHeight = fixed_block.outerHeight();
+    blockMarginTop = parseInt(fixed_block.css('margin-top').replace('px', ''));
+    
+    if(blockHeight + blockMarginTop < windowHeight) {
+        fixed_block.css('position', 'fixed');
+        fixed_block.css('top', 0);
+        fixed_block.css('bottom', 'auto');
+    }
+    else {
+        if(blockHeight + blockMarginTop < $(window).scrollTop() + windowHeight) {
+            fixed_block.css('position', 'fixed');
+            fixed_block.css('bottom', 0);
+            fixed_block.css('top', 'auto');
+        }
+        else {
+            fixed_block.css('position', 'absolute');
+            fixed_block.css('top', 0);
+            fixed_block.css('bottom', 'auto');
+        }
+    }
+};
+    
+// Прокрутка на прежнее место после отправки формы
+$(window).on("scroll", function(){
+    $('input[name="scroll"]').val($(window).scrollTop());
+});
