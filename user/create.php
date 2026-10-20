@@ -78,8 +78,8 @@ if(null !== filter_input(INPUT_POST, 'user_create_submit')) {
         }
         
         if(empty($error_message)) {
-            $sql = "insert into user (username, password, first_name, last_name, role_id, email, phone) values (?, password(?), ?, ?, ?, ?, ?)";
-            $executer = new Executer($sql, [$username, $password, $first_name, $last_name, $role_id, $email, $phone]);
+            $sql = "insert into user (username, password, first_name, last_name, role_id, email, phone) values (?, ?, ?, ?, ?, ?, ?)";
+            $executer = new Executer($sql, [$username, HashPassword($password), $first_name, $last_name, $role_id, $email, $phone]);
             $error_message = $executer->error;
             $id = $executer->insert_id;
         }

@@ -53,10 +53,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     // Проверка старого пароля
     $user_change_password_id = filter_input(INPUT_POST, "user_change_password_id");
     $user_change_password_old = filter_input(INPUT_POST, "user_change_password_old");
-    $sql = "select count(id) count from user where id=? and password=password(?)";
-    $fetcher = new Fetcher($sql, [$user_change_password_id, $user_change_password_old]);
-    $row = $fetcher->Fetch();
-    if($row['count'] == 0) {
+    if(!VerifyUserPasswordById($user_change_password_id, $user_change_password_old)) {
         $user_change_password_old_valid = ISINVALID;
         $user_change_password_old_message = "Неправильный текущий пароль";
         $form_valid = false;
@@ -69,8 +66,8 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     
     if($form_valid) {
         $user_change_password_new = filter_input(INPUT_POST, "user_change_password_new");
-        $sql = "update user set password=password(?) where id=?";
-        $executer = new Executer($sql, [$user_change_password_new, $user_change_password_id]);
+        $sql = "update user set password = ? where id = ?";
+        $executer = new Executer($sql, [HashPassword($user_change_password_new), $user_change_password_id]);
         $error_message = $executer->error;
     }
 }
@@ -81,16 +78,22 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
     $graph_key = filter_input(INPUT_POST, 'graph_key');
     
     // Проверяем, имеется ли такой графический ключ в базе
-    $sql = "select count(id) from user where graph_key = password(?)";
-    $fetcher = new Fetcher($sql, [$graph_key]);
-    $row = $fetcher->Fetch();
-    if($row[0] > 0) {
+    // (ключ не может быть пустым; ищем и по новому, и по старому формату хеша)
+    if($graph_key === null || $graph_key === '') {
         $form_valid = false;
+    }
+    else {
+        $sql = "select count(id) from user where graph_key = ? or graph_key = password(?)";
+        $fetcher = new Fetcher($sql, [MakeGraphKeyHash($graph_key), $graph_key]);
+        $row = $fetcher->Fetch();
+        if($row[0] > 0) {
+            $form_valid = false;
+        }
     }
     
     if($form_valid) {
-        $sql = "update user set graph_key = password(?) where id = ?";
-        $executer = new Executer($sql, [$graph_key, $graph_key_id]);
+        $sql = "update user set graph_key = ? where id = ?";
+        $executer = new Executer($sql, [MakeGraphKeyHash($graph_key), $graph_key_id]);
         $error_message = $executer->error;
     }
 }
@@ -297,7 +300,7 @@ if(null !== filter_input(INPUT_POST, 'graph_key_delete_submit')) {
                             </button>
                         </td>
                         <td class='text-right switch'>
-                            <?php if(filter_input(INPUT_COOKIE, USER_ID) != $row['id']): ?>
+                            <?php if(GetUserId() != $row['id']): ?>
                             <input type="checkbox" data-id="<?=$row['id'] ?>"<?=$row['active'] ? " checked='checked'" : "" ?> />
                             <?php endif; ?>
                         </td>

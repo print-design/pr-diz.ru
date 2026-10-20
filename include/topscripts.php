@@ -68,12 +68,171 @@ $months_genitive[11] = "ноября";
 $months_genitive[12] = "декабря";
 
 // Функции
+// ---------------------------------------------------------------------------
+// Авторизация
+//
+// В куки хранятся только имя пользователя (USERNAME) и токен (PASSWORD5).
+// Токен -- это HMAC от хеша пароля с секретом AUTH_SECRET (см. include/define.php),
+// поэтому подделать его без знания секрета нельзя, а при смене пароля он перестаёт
+// подходить (старые сессии завершаются). Роль, ФИО и id пользователя берутся из базы
+// на сервере, а не из куки: куки браузера могут быть изменены пользователем.
+// ---------------------------------------------------------------------------
+
+if(!defined('AUTH_SECRET') || strlen(AUTH_SECRET) < 32) {
+    http_response_code(500);
+    die('Не задан AUTH_SECRET в include/define.php (строка не короче 32 символов).');
+}
+
+// Токен обычного пользователя
+function MakeAuthToken($user_id, $password_hash) {
+    return hash_hmac('sha256', 'user|'.$user_id.'|'.$password_hash, AUTH_SECRET);
+}
+
+// Токен пользователя резки (у таких пользователей нет записи в базе)
+function MakeCutterAuthToken($cutter_username) {
+    return hash_hmac('sha256', 'cutter|'.$cutter_username, AUTH_SECRET);
+}
+
+// Хеш графического ключа. Должен быть одинаковым при каждом вычислении (по нему идёт поиск
+// пользователя), поэтому используется HMAC с секретом, а не password_hash().
+function MakeGraphKeyHash($graph_key) {
+    return hash_hmac('sha256', 'graph|'.$graph_key, AUTH_SECRET);
+}
+
+// Записывает куки авторизации
+function SetAuthCookies($username, $token) {
+    $options = array(
+        'expires' => time() + 60 * 60 * 24 * 100000,
+        'path' => '/',
+        'secure' => !empty($_SERVER['HTTPS']),
+        'httponly' => true,
+        'samesite' => 'Lax'
+    );
+    
+    setcookie(USERNAME, $username, $options);
+    setcookie(PASSWORD5, $token, $options);
+    $GLOBALS['auth_cookies_just_set'] = true;
+}
+
+// Текущий авторизованный пользователь (проверенный по базе) или null.
+// Результат запоминается на время запроса.
+function AuthUser() {
+    static $loaded = false;
+    static $user = null;
+    
+    if($loaded) {
+        return $user;
+    }
+    
+    $loaded = true;
+    $username = filter_input(INPUT_COOKIE, USERNAME);
+    $token = filter_input(INPUT_COOKIE, PASSWORD5);
+    
+    if(empty($username) || empty($token)) {
+        return null;
+    }
+    
+    // Пользователи резки
+    $lower_username = strtolower($username);
+    if(in_array($lower_username, CUTTER_USERS, true)) {
+        if(hash_equals(MakeCutterAuthToken($lower_username), $token)) {
+            $user = array(
+                'id' => CUTTER_USER_IDS[$lower_username],
+                'username' => $lower_username,
+                'last_name' => '',
+                'first_name' => '',
+                'role' => $lower_username,
+                'role_local' => CUTTER_USER_NAMES[$lower_username]
+            );
+        }
+        
+        return $user;
+    }
+    
+    // Обычные пользователи
+    $row = (new Fetcher("select id, username, password, last_name, first_name, role_id from user where username = ? and active = true", [$username]))->Fetch();
+    
+    if($row && isset(ROLE_NAMES[$row['role_id']]) && hash_equals(MakeAuthToken($row['id'], $row['password']), $token)) {
+        $user = array(
+            'id' => $row['id'],
+            'username' => $row['username'],
+            'last_name' => $row['last_name'],
+            'first_name' => $row['first_name'],
+            'role' => ROLE_NAMES[$row['role_id']],
+            'role_local' => ROLE_LOCAL_NAMES[$row['role_id']]
+        );
+    }
+    
+    return $user;
+}
+
+function AuthValue($key) {
+    $user = AuthUser();
+    return $user === null ? null : $user[$key];
+}
+
 function LoggedIn() {
-    return !empty(filter_input(INPUT_COOKIE, USERNAME));
+    return AuthUser() !== null;
 }
 
 function GetUserId() {
-    return filter_input(INPUT_COOKIE, USER_ID);
+    return AuthValue('id');
+}
+
+function GetUserRoleLocal() {
+    return AuthValue('role_local');
+}
+
+// Пароли хранятся в формате password_hash(). Старый формат (функция MySQL password(),
+// строка вида *ABC...40 hex) ещё распознаётся и при первом успешном входе пользователя
+// автоматически заменяется на новый.
+function IsLegacyPasswordHash($hash) {
+    return preg_match('/^\*[0-9A-Fa-f]{40}$/', (string)$hash) === 1;
+}
+
+function HashPassword($password) {
+    return password_hash($password, PASSWORD_DEFAULT);
+}
+
+// Проверяет пароль пользователя. Возвращает актуальный хеш из базы (после возможного
+// перехода на новый формат) или null, если пароль неверный.
+function CheckUserPassword($user_id, $stored_hash, $password) {
+    $stored_hash = (string)$stored_hash;
+    
+    if($stored_hash === '' || $password === null || $password === '') {
+        return null;
+    }
+    
+    $legacy = IsLegacyPasswordHash($stored_hash);
+    
+    if($legacy) {
+        $row = (new Fetcher("select password(?)", [$password]))->Fetch();
+        $valid = $row && hash_equals(strtoupper($stored_hash), strtoupper((string)$row[0]));
+    }
+    else {
+        $valid = password_verify($password, $stored_hash);
+    }
+    
+    if(!$valid) {
+        return null;
+    }
+    
+    if($legacy || password_needs_rehash($stored_hash, PASSWORD_DEFAULT)) {
+        $new_hash = HashPassword($password);
+        $executer = new Executer("update user set password = ? where id = ?", [$new_hash, $user_id]);
+        
+        if(empty($executer->error)) {
+            return $new_hash;
+        }
+    }
+    
+    return $stored_hash;
+}
+
+// Проверяет пароль пользователя по его id (для форм смены пароля)
+function VerifyUserPasswordById($user_id, $password) {
+    $row = (new Fetcher("select password from user where id = ?", [$user_id]))->Fetch();
+    return $row && CheckUserPassword($user_id, $row['password'], $password) !== null;
 }
 
 function IsInRole($role) {
@@ -85,7 +244,7 @@ function IsInRole($role) {
         $role = array(ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_MANAGER_SENIOR]);
     }
     
-    $cookie = filter_input(INPUT_COOKIE, ROLE);
+    $cookie = AuthValue('role');
     
     if(is_array($role)) {
         return in_array($cookie, $role);
@@ -129,8 +288,8 @@ function PluralForm($number, $one, $few, $many) {
 }
 
 function Initials() {
-    $last_name = filter_input(INPUT_COOKIE, LAST_NAME);
-    $first_name = filter_input(INPUT_COOKIE, FIRST_NAME);
+    $last_name = (string)AuthValue('last_name');
+    $first_name = (string)AuthValue('first_name');
     $result = '';
     
     if(mb_strlen($last_name) > 1) {
@@ -766,14 +925,7 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         $lower_password = strtolower($login_password);
         
         if(in_array($lower_username, CUTTER_USERS) && $lower_username == $lower_password) {
-            setcookie(USER_ID, CUTTER_USER_IDS[$lower_username], time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(USERNAME, $lower_username, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(PASSWORD5, $lower_password, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(LAST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(FIRST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(ROLE, $lower_username, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(ROLE_LOCAL, CUTTER_USER_NAMES[$lower_username], time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
+            SetAuthCookies($lower_username, MakeCutterAuthToken($lower_username));
             header('Refresh:0');
             exit();
         }
@@ -782,29 +934,27 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         // Если это не пользователь резки, то логинимся, как обычный пользователь.
         $user_id = '';
         $username = '';
-        $password = '';
-        $password5 = ''; // Первые 5 символов зашифрованного пароля
         $last_name = '';
         $first_name = '';
-        $role = '';
-        $role_local = '';
         $twofactor = 0;
+        $auth_token = '';
         
-        $sql = "select id, username, password, last_name, first_name, email, role_id from user where username = ? and password = password(?) and active = true";
-        $users_result = (new Grabber($sql, [$login_username, $login_password]))->result;
+        $sql = "select id, username, password, last_name, first_name, email, role_id from user where username = ? and active = true";
+        $users_result = (new Grabber($sql, [$login_username]))->result;
         
         foreach ($users_result as $row) {
+            // Актуальный хеш пароля (старые хеши при успешной проверке заменяются на новые)
+            $current_hash = CheckUserPassword($row['id'], $row['password'], $login_password);
+            
+            if($current_hash === null) {
+                continue;
+            }
+            
             $user_id = $row['id'];
             $username = $row['username'];
-            $password = $row['password'];
-            if(strlen($password) > 5) {
-                // Сохраняем первые 5 символов зашифрованного пароля (чтобы не хранить в куках весь пароль)
-                $password5 = substr($password, 1, 5);
-            }
+            $auth_token = MakeAuthToken($user_id, $current_hash);
             $last_name = $row['last_name'];
             $first_name = $row['first_name'];
-            $role = ROLE_NAMES[$row['role_id']];
-            $role_local = ROLE_LOCAL_NAMES[$row['role_id']];
             $email = $row['email'];
             $twofactor = ROLE_TWOFACTOR[$row['role_id']];
         }
@@ -816,19 +966,15 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
             //*******************************
             // Двухфакторная аутентификация
             if($twofactor == 1) {
+                // Запоминаем на сервере, для кого ожидается ввод кода: только этому пользователю
+                // можно будет завершить вход через форму кода безопасности.
+                $_SESSION['twofactor_user_id'] = (int)$user_id;
                 $code_valid = '';
                 include 'twofactor_email.php';
             }
             // ****************************
             
-            setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(ROLE_LOCAL, $role_local, time() + 60 * 60 * 24 * 100000, "/");
-            setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
+            SetAuthCookies($username, $auth_token);
             header("Refresh:0");
         }
     }
@@ -837,56 +983,50 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
 // Обработка формы отправки кода безопасности
 if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where id = ?";
-    $result = (new Grabber($sql, [$id]))->result;
+    $pending_id = $_SESSION['twofactor_user_id'] ?? null;
     
-    foreach ($result as $row) {
-        $user_id = $row['id'];
-        $username = $row['username'];
-        $password = $row['password'];
-        if(strlen($password) > 5) {
-            $password5 = substr($password, 1, 5);
-        }
-        $last_name = $row['last_name'];
-        $first_name = $row['first_name'];
-        $role = ROLE_NAMES[$row['role_id']];
-        $role_local = ROLE_LOCAL_NAMES[$row['role_id']];
-        $email = $row['email'];
-        $code = $row['code'];
+    // Код принимается только для пользователя, который перед этим успешно ввёл логин и пароль
+    if($pending_id !== null && $id !== null && $id !== false && (int)$pending_id === $id) {
+        $sql = "select id, username, password, last_name, first_name, email, code, role_id from user where id = ? and active = true";
+        $result = (new Grabber($sql, [$id]))->result;
         
-        if(filter_input(INPUT_POST, 'code') == $code) {
-            $error_message = (new Executer("update user set code = NULL where id = ?", [$user_id]))->error;
+        foreach ($result as $row) {
+            $user_id = $row['id'];
+            $username = $row['username'];
+            $last_name = $row['last_name'];
+            $first_name = $row['first_name'];
+            $email = $row['email'];
+            $code = $row['code'];
+            $posted_code = trim((string)filter_input(INPUT_POST, 'code'));
             
-            if($error_message == '') {
-                setcookie(USER_ID, $user_id, time() + 60 * 60 * 24 * 100000, "/");
-                setcookie(USERNAME, $username, time() + 60 * 60 * 24 * 100000, "/");
-                setcookie(PASSWORD5, $password5, time() + 60 * 60 * 24 * 100000, "/");
-                setcookie(LAST_NAME, $last_name, time() + 60 * 60 * 24 * 100000, "/");
-                setcookie(FIRST_NAME, $first_name, time() + 60 * 60 * 24 * 100000, "/");
-                setcookie(ROLE, $role, time() + 60 * 60 * 24 * 100000, '/');
-                setcookie(ROLE_LOCAL, $role_local, time() + 60 * 60 * 24 * 100000, '/');
-                setcookie(LOGIN_TIME, (new DateTime())->getTimestamp(), time() + 60 * 60 * 24 * 100000, "/");
-                header("Refresh:0");
+            if(!empty($code) && $posted_code !== '' && hash_equals((string)$code, $posted_code)) {
+                $error_message = (new Executer("update user set code = NULL where id = ?", [$user_id]))->error;
+                
+                if($error_message == '') {
+                    unset($_SESSION['twofactor_user_id']);
+                    SetAuthCookies($username, MakeAuthToken($user_id, $row['password']));
+                    header("Refresh:0");
+                }
             }
-        }
-        else {
-            $code_valid = ISINVALID;
-            include 'twofactor_email.php';
+            else {
+                $code_valid = ISINVALID;
+                include 'twofactor_email.php';
+            }
         }
     }
 }
 
 function Logout() {
-    setcookie(USER_ID, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(USERNAME, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(PASSWORD5, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(LAST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(FIRST_NAME, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(LOGIN_TIME, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(ROLE, '', time() + 60 * 60 * 24 * 100000, "/");
-    setcookie(ROLE_LOCAL, '', time() + 60 * 60 * 24 * 100000, "/");
-    header("Refresh:0");
+    // Удаляем и актуальные куки, и куки, которые использовались раньше
+    $cookie_names = array(USER_ID, USERNAME, PASSWORD5, LAST_NAME, FIRST_NAME, LOGIN_TIME, ROLE, ROLE_LOCAL);
+    
+    foreach ($cookie_names as $cookie_name) {
+        setcookie($cookie_name, '', time() - 3600, '/');
+    }
+    
+    unset($_SESSION['twofactor_user_id']);
     header('Location: '.APPLICATION.'/');
+    exit();
 }
 
 // Обработка кнопки выхода из системы
@@ -894,15 +1034,9 @@ if(null !== filter_input(INPUT_POST, 'logout_submit')) {
     Logout();
 }
 
-// Выход из системы, если удалили пользователя или сменили пароль
-if(LoggedIn() && !IsInRole(CUTTER_USERS)) {
-    $username = filter_input(INPUT_COOKIE, USERNAME);
-    $password5 = filter_input(INPUT_COOKIE, PASSWORD5);
-    $sql = "select count(id) from user where username = ? and substring(password, 2, 5) = ? and active = true";
-    $row = (new Fetcher($sql, [$username, $password5]))->Fetch();
-    
-    if($row[0] == 0) {
-        Logout();
-    }
+// Выход из системы, если удалили (или заблокировали) пользователя, сменили пароль
+// или в куки лежит неверный токен
+if(empty($GLOBALS['auth_cookies_just_set']) && !empty(filter_input(INPUT_COOKIE, USERNAME)) && !LoggedIn()) {
+    Logout();
 }
 ?>

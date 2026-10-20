@@ -6,7 +6,7 @@ include '../include/left_bar.php';
         <ul class="navbar-nav">
             <?php if(IsInRole(CUTTER_USERS)): ?>
             <li class="nav-item">
-                <a class="nav-link disabled" href="<?=APPLICATION.'/cut/' ?>"><?=filter_input(INPUT_COOKIE, ROLE_LOCAL) ?></a>
+                <a class="nav-link disabled" href="<?=APPLICATION.'/cut/' ?>"><?=GetUserRoleLocal() ?></a>
             </li>
             <?php
             else:
