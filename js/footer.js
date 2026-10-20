@@ -230,7 +230,7 @@ function ChangeLimitIntValue(textbox, max) {
 // Ограничение значений для полей с числовыми значениями (проценты и т. д.)
 // Обработка изменения нажатия клавиш
 function KeyDownLimitFloatValue(textbox, e, max) {
-    if(e.which !== 8 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
+    if(e.which !== 8 && e.which !== 9 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
         if(!/[\.\,\d]/.test(e.key)) {
             return false;
         }
