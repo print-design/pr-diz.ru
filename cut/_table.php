@@ -9,7 +9,7 @@ include '../include/big_image.php';
 <div id="edit_take_stream" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="<?=APPLICATION ?>/cut/_edit_take_stream.php" onsubmit="javascript: return CutValidate();">
+            <form method="post" action="<?=APPLICATION ?>/cut/_edit_take_stream.php" onsubmit="javascript: return CutValidate('take_stream', 'edit_take_stream_alert');">
                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <input type="hidden" name="id" id="take_stream_id" />
                 <input type="hidden" name="scroll" />
@@ -31,7 +31,7 @@ include '../include/big_image.php';
                         <div class="form-group col-4">
                             <label for="weight">Масса катушки</label>
                             <div class="input-group">
-                                <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" autocomplete="off" onkeyup="javascript: $('#edit_take_stream_alert').addClass('d-none'); CutCalculate($(this));" onchange="javascript: $('#edit_take_stream_alert').addClass('d-none'); CutCalculate($(this));" />
+                                <input type="text" name="weight" class="form-control float-only" id="take_stream_weight" required="required" autocomplete="off" onkeyup="javascript: $('#edit_take_stream_alert').addClass('d-none'); CutCalculate($(this), 'take_stream');" onchange="javascript: $('#edit_take_stream_alert').addClass('d-none'); CutCalculate($(this), 'take_stream');" />
                                 <div class="input-group-append">
                                     <span class="input-group-text">кг</span>
                                 </div>
@@ -69,7 +69,7 @@ include '../include/big_image.php';
 <div id="add_not_take_stream" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php" onsubmit="javascript: return ANTCutValidate();">
+            <form method="post" action="<?=APPLICATION ?>/cut/_add_not_take_stream.php" onsubmit="javascript: return CutValidate('add_not_take_stream', 'add_not_take_stream_alert');">
                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <input type="hidden" name="id" value="<?=$id ?>" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
@@ -137,7 +137,7 @@ include '../include/big_image.php';
 <div id="edit_not_take_stream" class="modal fade show">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="<?=APPLICATION ?>/cut/_edit_not_take_stream.php" onsubmit="javascript: return NTCutValidate();">
+            <form method="post" action="<?=APPLICATION ?>/cut/_edit_not_take_stream.php" onsubmit="javascript: return CutValidate('not_take_stream', 'edit_not_take_stream_alert');">
                 <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                 <input type="hidden" name="id" id="not_take_stream_id" />
                 <input type="hidden" name="php_self" value="<?=$_SERVER['PHP_SELF'] ?>" />
@@ -159,7 +159,7 @@ include '../include/big_image.php';
                             <div class="form-group col-4">
                                 <label for="weight">Масса катушки</label>
                                 <div class="input-group">
-                                    <input type="text" name="weight" class="form-control float-only" id="not_take_stream_weight" required="required" autocomplete="off" onkeyup="javascript: $('#edit_not_take_stream_alert').addClass('d-none'); NTCutCalculate($(this));" onchange="javascript: $('#edit_not_take_stream_alert').addClass('d-none'); NTCutCalculate($(this));" />
+                                    <input type="text" name="weight" class="form-control float-only" id="not_take_stream_weight" required="required" autocomplete="off" onkeyup="javascript: $('#edit_not_take_stream_alert').addClass('d-none'); CutCalculate($(this), 'not_take_stream');" onchange="javascript: $('#edit_not_take_stream_alert').addClass('d-none'); CutCalculate($(this), 'not_take_stream');" />
                                     <div class="input-group-append">
                                         <span class="input-group-text">кг</span>
                                     </div>

@@ -1,25 +1,12 @@
 // Расчёт и проверка рулонов при резке (подключается из include/footer_cut_validate.php)
 // Требует jQuery и объект CUT_PARAMS (шпуля и толщины), который задаётся в footer_cut_validate.php
 
-function CutCalculate(input) {
+// Пересчёт длины по введённому весу для рулона из заказа (prefix 'take_stream') или не взятого рулона ('not_take_stream').
+// Прежний вес и длина берутся из скрытых полей #<prefix>_old_weight и #<prefix>_old_length.
+function CutCalculate(input, prefix) {
     var weight = input.val().replace(',', '.');
-    var old_weight = $('#take_stream_old_weight').val();
-    var old_length = $('#take_stream_old_length').val();
-    
-    var result = 0;
-    
-    if(old_weight > 0) {
-        result = weight * (old_length / old_weight);
-    }
-    
-    input.parent().parent().next().val(result);
-    input.parent().parent().next().next().find('input[type=text]').val(result.toFixed(2));
-}
-
-function NTCutCalculate(input) {
-    var weight = input.val().replace(',', '.');
-    var old_weight = $('#not_take_stream_old_weight').val();
-    var old_length = $('#not_take_stream_old_length').val();
+    var old_weight = $('#' + prefix + '_old_weight').val();
+    var old_length = $('#' + prefix + '_old_length').val();
     
     var result = 0;
     
@@ -82,52 +69,18 @@ function IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3) {
     return result;
 }
 
-function CutValidate() {
-    var radius = $('#take_stream_radius').val().replace(',', '.');
-    var length = $('#take_stream_length').val();
-    var spool = CUT_PARAMS.spool;
-    var thickness_1 = CUT_PARAMS.thickness_1;
-    var thickness_2 = CUT_PARAMS.thickness_2;
-    var thickness_3 = CUT_PARAMS.thickness_3;
+// Проверка длины и радиуса рулона перед отправкой формы.
+// prefix - начало id полей радиуса и длины (#<prefix>_radius, #<prefix>_length):
+// 'take_stream', 'not_take_stream' или 'add_not_take_stream'.
+// alertId - id блока с сообщением об ошибке, который показывается при неверных значениях.
+function CutValidate(prefix, alertId) {
+    var radius = $('#' + prefix + '_radius').val().replace(',', '.');
+    var length = $('#' + prefix + '_length').val();
     
-    var result = IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3);
-    
-    if(!result) {
-        $('#edit_take_stream_alert').removeClass('d-none');
-    }
-    
-    return result;
-}
-
-function NTCutValidate() {
-    var radius = $('#not_take_stream_radius').val().replace(',', '.');
-    var length = $('#not_take_stream_length').val();
-    var spool = CUT_PARAMS.spool;
-    var thickness_1 = CUT_PARAMS.thickness_1;
-    var thickness_2 = CUT_PARAMS.thickness_2;
-    var thickness_3 = CUT_PARAMS.thickness_3;
-    
-    var result = IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3);
+    var result = IsValid(CUT_PARAMS.spool, radius, length, CUT_PARAMS.thickness_1, CUT_PARAMS.thickness_2, CUT_PARAMS.thickness_3);
     
     if(!result) {
-        $('#edit_not_take_stream_alert').removeClass('d-none');
-    }
-    
-    return result;
-}
-
-function ANTCutValidate() {
-    var radius = $('#add_not_take_stream_radius').val().replace(',', '.');
-    var length = $('#add_not_take_stream_length').val();
-    var spool = CUT_PARAMS.spool;
-    var thickness_1 = CUT_PARAMS.thickness_1;
-    var thickness_2 = CUT_PARAMS.thickness_2;
-    var thickness_3 = CUT_PARAMS.thickness_3;
-    
-    var result = IsValid(spool, radius, length, thickness_1, thickness_2, thickness_3);
-    
-    if(!result) {
-        $('#add_not_take_stream_alert').removeClass('d-none');
+        $('#' + alertId).removeClass('d-none');
     }
     
     return result;
