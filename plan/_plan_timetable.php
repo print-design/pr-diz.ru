@@ -23,7 +23,7 @@ class PlanTimetable {
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
                 
-        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA) 
+        if((IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD])) || IsCutterSoma()) 
                 && !(IsInRole(ROLE_NAMES[ROLE_SCHEDULER]) && ($this->work_id == WORK_LAMINATION || $this->work_id == WORK_CUTTING)) 
                 && !(IsInRole(ROLE_NAMES[ROLE_LAM_HEAD]) && $this->work_id != WORK_LAMINATION && $this->work_id != WORK_CUTTING)) {
             $this->editable = true;

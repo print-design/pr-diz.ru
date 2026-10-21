@@ -235,6 +235,14 @@ function VerifyUserPasswordById($user_id, $password) {
     return $row && CheckUserPassword($user_id, $row['password'], $password) !== null;
 }
 
+// Резчик на резке "Сома". В ночную смену, когда нет мастера цеха, ему разрешено работать с планом
+// (переназначать заказы с одной резки на другую). Мастер цеха подтвердил сохранение этого права (21.10.2026).
+// Проверяем именно пользователя резки, а не GetUserId(): идентификаторы резок совпадают с идентификаторами
+// обычных пользователей в таблице user.
+function IsCutterSoma() {
+    return AuthValue('role') === CUTTER_USER_SOMA;
+}
+
 function IsInRole($role) {
     // Роль 'manager-senior' имеет все права роли 'manager'
     if(is_array($role) && in_array(ROLE_NAMES[ROLE_MANAGER], $role)) {

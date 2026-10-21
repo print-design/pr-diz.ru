@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include './_plan_timetable.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_COLORIST])) && /*ВРЕМЕННО*/ GetUserId() != CUTTER_SOMA) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_COLORIST])) && !IsCutterSoma()) {
     include '../include/_unauthorized.php';
 }
 
@@ -92,7 +92,7 @@ if(empty($work_id) || empty($machine_id)) {
             }
             <?php endif; ?>
             
-            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_COLORIST])) || /*ВРЕМЕННО*/ GetUserId() == CUTTER_SOMA): ?>
+            <?php if(IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_COLORIST])) || IsCutterSoma()): ?>
             .planner_hidden {
                 display: none;
             }

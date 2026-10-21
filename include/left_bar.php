@@ -72,13 +72,12 @@ elseif($folder == "okto") {
     endif;
     
     /*-----------------*/
-    /*ВРЕМЕННО*/
-    if(GetUserId() == CUTTER_SOMA):
+    // Резчик Сомы в ночную смену работает с планом (см. IsCutterSoma())
+    if(IsCutterSoma()):
     ?>
     <a href="<?=APPLICATION ?>/plan/<?= BuildQueryAddRemoveArray("work_id", WORK_CUTTING, array("page", "order")) ?>" class="left_bar_item ui_tooltip right<?=$plan_class ?>" data-placement="right" title="План"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
-    /*ВРЕМЕННО*/
     
     // Резка
     if(IsInRole(CUTTER_USERS) || IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_LAM_HEAD]))):

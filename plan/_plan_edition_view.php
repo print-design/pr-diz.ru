@@ -436,7 +436,7 @@
                 <button type="button" class="btn btn-link h-25" style="font-size: 14px;" onclick="javascript: event.preventDefault(); DeleteEvent(<?=$this->edition['id'] ?>);"><div style="display: inline; padding-right: 10px;"><img src="../images/icons/trash2.svg" /></div>Удалить</button>
             </div>
         </div>
-        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && (IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_STOREKEEPER])) || GetUserId() == CUTTER_SOMA)): ?>
+        <?php elseif($this->edition['type'] != PLAN_TYPE_EVENT && !$this->edition['has_continuation'] && (IsInRole(array(ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_STOREKEEPER])) || IsCutterSoma())): ?>
         <a class="black timetable_menu_trigger" href="javascript: void(0);"<?=$drop ?>><img src="../images/icons/vertical-dots1.svg" /></a>
         <div class="timetable_menu text-left">
             <div><a class="btn btn-link h-25 w-100 text-left" style="font-size: 14px;" href="../order/print_tm.php?id=<?=$this->edition['calculation_id'] ?>"><div class="command">Распечатать тех. карту</div></a></div>
