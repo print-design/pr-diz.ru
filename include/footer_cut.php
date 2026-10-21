@@ -1,12 +1,4 @@
+<script src="<?=APPLICATION ?>/js/cut_tables.js?v=<?=filemtime(__DIR__.'/../js/cut_tables.js') ?>"></script>
 <script src="<?=APPLICATION ?>/js/cut.js?v=<?=filemtime(__DIR__.'/../js/cut.js') ?>"></script>
 
-<?php if(IsInRole(CUTTER_USERS)): ?>
-<script>
-    function ShowCutterName() {
-        $('span#top_user_name').load("<?=APPLICATION ?>/cut/_get_user.php");
-    }
-    
-    ShowCutterName();
-    setInterval(ShowCutterName, 60000);
-</script>
-<?php endif; ?>
+<?php include __DIR__.'/footer_cutter_name.php'; ?>

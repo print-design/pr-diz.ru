@@ -844,14 +844,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 $('input[name="scroll"]').val($(this).scrollTop());
             });
             
-            <?php /*ВРЕМЕННО*/ if(IsInRole(CUTTER_USERS)): ?>
-            function ShowCutterName() {
-                $('span#top_user_name').load("<?=APPLICATION ?>/cut/_get_user.php");
-            }
-    
-            ShowCutterName();
-            setInterval(ShowCutterName, 60000);
-            <?php /*ВРЕМЕННО*/ endif; ?>
             
             <?php
             $scroll = filter_input(INPUT_POST, 'scroll');
@@ -862,5 +854,6 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 
             <?php endif; ?>
         </script>
+        <?php include '../include/footer_cutter_name.php'; ?>
     </body>
 </html>
