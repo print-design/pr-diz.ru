@@ -1706,7 +1706,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
             <div id="cliche_validation" class="text-danger<?= empty($cliche_valid) ? " d-none" : " d-block" ?>">Укажите формы для каждой краски</div>
             <div id="requirement_validation" class="text-danger<?= empty($requirement_valid) ? " d-none" : " d-block" ?>">Укажите требование по материалу</div>
             <div style="position: relative;">
-                <form class="mt-3" method="post" enctype="multipart/form-data">
+                <form class="mt-3" method="post">
                     <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                     <input type="hidden" name="scroll" />
                     <input type="hidden" name="id" value="<?= $id ?>" />
