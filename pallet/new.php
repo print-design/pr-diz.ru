@@ -431,17 +431,7 @@ if(null !== filter_input(INPUT_POST, 'create-pallet-submit')) {
                         $('#rolls_info').append(form_row);
                     }
                     
-                    $('.int-only').keypress(function(e) {
-                        if(/\D/.test(String.fromCharCode(e.charCode))) {
-                            return false;
-                        }
-                    });
-                    
-                    $('.int-only').change(function(e) {
-                        var val = $(this).val();
-                        val = val.replace(/[^\d]/g, '');
-                        $(this).val(val);
-                    });
+                    BindInputFilters($('#rolls_info'));
                     
                     $('#equal_rolls').change();
                 }

@@ -15,6 +15,7 @@ if(file_exists('find.php')) {
 ?>
 
 <script src="<?=APPLICATION ?>/js/footer.js?v=<?=filemtime(__DIR__.'/../js/footer.js') ?>"></script>
+<script src="<?=APPLICATION ?>/js/input_filters.js?v=<?=filemtime(__DIR__.'/../js/input_filters.js') ?>"></script>
 
 <?php if(!empty($_REQUEST['scroll'])): ?>
 <script>

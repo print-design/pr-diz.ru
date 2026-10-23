@@ -1,3 +1,4 @@
+<script src="<?=APPLICATION ?>/js/input_filters.js?v=<?=filemtime(__DIR__.'/../js/input_filters.js') ?>"></script>
 <script>
     // Валидация
     $('input').keypress(function(){
@@ -8,48 +9,6 @@
         $(this).removeClass('is-invalid');
     });
     
-    // Фильтрация ввода
-    $('.int-only').keypress(function(e) {
-        if(/\D/.test(e.key)) {
-            return false;
-        }
-    });
-    
-    $('.int-only').keyup(function() {
-        var val = $(this).val();
-        val = val.replaceAll(/\D/g, '');
-                    
-        if(val === '') {
-            $(this).val('');
-        }
-        else {
-            val = parseInt(val);
-                        
-            if($(this).hasClass('int-format')) {
-                val = Intl.NumberFormat('ru-RU').format(val);
-            }
-                        
-            $(this).val(val);
-        }
-    });
-                
-    $('.int-only').change(function(e) {
-        var val = $(this).val();
-        val = val.replace(/[^\d]/g, '');
-        
-        if(val === '') {
-            $(this).val('');
-        }
-        else {
-            val = parseInt(val);
-                        
-            if($(this).hasClass('int-format')) {
-                val = Intl.NumberFormat('ru-RU').format(val);
-            }
-                        
-            $(this).val(val);
-        }
-    });
             
     // Загрузка списка марок пленки
     $('#supplier_id').change(function(){

@@ -17,120 +17,6 @@ $('input').keypress(function(e) {
     }
 });
 
-// Фильтрация ввода
-$('.int-only').keypress(function(e) {
-    if(/\D/.test(e.key)) {
-        return false;
-    }
-});
-
-$('.int-only').keyup(function() {
-    var val = $(this).val();
-    val = val.replaceAll(/\D/g, '');
-    
-    if(val === '') {
-        $(this).val('');
-    }
-    else {
-        val = parseInt(val);
-        
-        if($(this).hasClass('int-format')) {
-            val = Intl.NumberFormat('ru-RU').format(val);
-        }
-        
-        $(this).val(val);
-    }
-});
-
-$('.int-only').change(function(e) {
-    var val = $(this).val();
-    val = val.replace(/[^\d]/g, '');
-    
-    if(val === '') {
-        $(this).val('');
-    }
-    else {
-        val = parseInt(val);
-        
-        if($(this).hasClass('int-format')) {
-            val = Intl.NumberFormat('ru-RU').format(val);
-        }
-        
-        $(this).val(val);
-    }
-});
-
-$('.float-only').keypress(function(e) {
-    if(!/[\.\,\d]/.test(e.key)) {
-        return false;
-    }
-    
-    if(/[\.\,]/.test(e.key) && ($(e.target).val().includes('.') || $(e.target).val().includes(','))) {
-        return false;
-    }
-});
-
-$('.float-only').keyup(function(e) {
-    if($(this).hasClass('float-format')) {
-        var val = $(this).val();
-        val = val.replace(',', '.');
-        val = val.replace(/[^\.\d]/g, '');
-        
-        if(val === '' || val === '.') {
-            $(this).val(val);
-        }
-        else {
-            $(this).val(FloatFormat(val));
-        }
-    }
-});
-
-$('.float-only').change(function(e) {
-    var val = $(this).val();
-    val = val.replace(',', '.');
-    val = val.replace(/[^\.\d]/g, '');
-    
-    if(val === '' || isNaN(val)) {
-        $(this).val('');
-    }
-    else {
-        val = parseFloat(val);
-        
-        if($(this).hasClass('float-format')) {
-            $(this).val(FloatFormat(val.toString()));
-        }
-        else {
-            $(this).val(val);
-        }
-    }
-});
-
-$('.no-latin').keypress(function(e) {
-    if(e.which !== 10 && e.which !== 13) {
-        if(/[a-zA-Z]/.test(e.key)) {
-            $(this).next('.invalid-feedback').text('Переключите раскладку');
-            $(this).next('.invalid-feedback').show();
-            return false;
-        }
-        else {
-            $(this).next('.invalid-feedback').hide();
-        }
-    }
-});
-
-$('.no-latin').change(function() {
-    var val = $(this).val();
-    val = val.replace(/[a-zA-Z]/g, '');
-    $(this).val(val);
-});
-
-$('.no-latin').keyup(function() {
-    var val = $(this).val();
-    val = val.replace(/[a-zA-Z]/g, '');
-    $(this).val(val);
-});
-
-
 function KeyDownFloatValue(e) {
     if(e.which !== 8 && e.which !== 9 && e.which !== 46 && e.which !== 37 && e.which !== 39) {
         if(!/[\.\,\d]/.test(e.key)) {
@@ -280,14 +166,6 @@ function ChangeLimitFloatValue(textbox, max) {
             textbox.val(fVal);
         }
     }
-}
-
-// Форматирование дробного поля (например, денежной суммы) для отображения разрядов целой части,
-// с сохранением дробной части как есть (без округления при вводе)
-function FloatFormat(rawVal) {
-    var parts = rawVal.split('.');
-    var intPart = Intl.NumberFormat('ru-RU').format(parts[0] === '' ? 0 : parts[0]);
-    return parts.length > 1 ? (intPart + ',' + parts[1]) : intPart;
 }
 
 // Запрет на изменение размеров всех многострочных текстовых полей вручную
