@@ -4516,9 +4516,11 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     var streams_number = parseInt($('#streams_number').val());
                     
                     for(i = 1; i <= streams_number; i++) {
-                        stream_width = $("<div class='col-4'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control stream_width_of_many' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' onkeydown='return KeyDownFloatValue(event);' onkeyup='KeyUpFloatValue(event);' onchange='ChangeFloatValue(event);' /></div></div>");
+                        stream_width = $("<div class='col-4'><div class='form-group'><label for='stream_width_" + i + "'>Ширина ручья " + i + ", мм</label><input type='text' class='form-control float-only stream_width_of_many' id='stream_width_" + i + "' name='stream_width_" + i + "' value='' required='required' /></div></div>");
                         $('#stream_widths_many_row').append(stream_width);
                     }
+                    
+                    BindInputFilters($('#stream_widths_many_row'));
                     
                     $('input.stream_width_of_many').keyup(function() {
                         GetLaminationRollers();
@@ -4811,50 +4813,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             }
             
             // Ограницение значений наценки
-            $('#extracharge').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
-                    return true;
-                }
-                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
-                    return false;
-                }
-            });
-            
-            $('#extracharge_cliche').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
-                    return true;
-                }
-                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
-                    return false;
-                }
-            });
-            
-            $('#extracharge_knife').keydown(function(e) {
-                if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
-                    return true;
-                }
-                else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
-                    return false;
-                }
-            });
-            
-            $('#extracharge').change(function(){
-                if($(this).val() !== '0') {
-                    ChangeLimitIntValue($(this), 999);
-                }
-            });
-            
-            $('#extracharge_cliche').change(function(){
-                if($(this).val() !== '0') {
-                    ChangeLimitIntValue($(this), 999);
-                }
-            });
-            
-            $('#extracharge_knife').change(function(){
-                if($(this).val() !== '0') {
-                    ChangeLimitIntValue($(this), 999);
-                }
-            });
+            BindExtrachargeLimit('#extracharge, #extracharge_cliche, #extracharge_knife');
             
             // Редактируем наценку
             function SetExtracharge(param) {

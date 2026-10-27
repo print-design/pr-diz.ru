@@ -168,6 +168,25 @@ function ChangeLimitFloatValue(textbox, max) {
     }
 }
 
+// Ограничение значений полей наценки: целое число от 0 до 999.
+// selector - селектор полей (например, '#extracharge, #extracharge_cliche').
+function BindExtrachargeLimit(selector) {
+    $(selector).keydown(function(e) {
+        if(($(e.target).val() == 0 || $(e.target).val() == '' || $(e.target).prop('selectionStart') != $(e.target).prop('selectionEnd')) && e.key == 0) {
+            return true;
+        }
+        else if(!KeyDownLimitIntValue($(e.target), e, 999)) {
+            return false;
+        }
+    });
+    
+    $(selector).change(function() {
+        if($(this).val() !== '0') {
+            ChangeLimitIntValue($(this), 999);
+        }
+    });
+}
+
 // Запрет на изменение размеров всех многострочных текстовых полей вручную
 $('textarea').css('resize', 'none');
 
