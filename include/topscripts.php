@@ -906,6 +906,98 @@ function RemoveCalculationStatus($calculation_id, $status_id) {
     return $error_message;
 }
 
+// Ограничение числа неудачных попыток входа.
+// Неудачные попытки записываются в таблицу login_attempt (см. login_attempt.sql).
+// Если таблицы нет (SQL ещё не выполнен), ограничение не действует, а вход работает как раньше.
+const LOGIN_MAX_ATTEMPTS = 5;        // неудачных попыток с одним логином с одного адреса
+const LOGIN_IP_MAX_ATTEMPTS = 50;    // неудачных попыток с одного адреса при любых логинах
+const LOGIN_WINDOW_MINUTES = 15;     // окно подсчёта и время блокировки
+
+// Адрес посетителя. За обратным прокси (nginx хостинга) REMOTE_ADDR может оказаться внутренним
+// адресом самого прокси, тогда берём адрес из заголовков прокси. Если же REMOTE_ADDR внешний,
+// заголовкам не доверяем: их можно подделать.
+function ClientIp() {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    
+    if($ip === '' || !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+        foreach(array('HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR') as $header) {
+            if(!empty($_SERVER[$header])) {
+                $candidate = trim(explode(',', $_SERVER[$header])[0]);
+                
+                if(filter_var($candidate, FILTER_VALIDATE_IP)) {
+                    return $candidate;
+                }
+            }
+        }
+    }
+    
+    return $ip === '' ? '0.0.0.0' : $ip;
+}
+
+// Ключ для подсчёта попыток: логин без учёта регистра
+function LoginAttemptKey($username) {
+    return mb_substr(strtolower(trim((string)$username)), 0, 100);
+}
+
+// Сколько секунд осталось до конца блокировки (0, если вход не заблокирован)
+function LoginLockSeconds($key) {
+    try {
+        $ip = ClientIp();
+        $window = (int)LOGIN_WINDOW_MINUTES;
+        $seconds = 0;
+        
+        $queries = array(
+            array("select timestampdiff(second, now(), created_at + interval $window minute) from login_attempt "
+                . "where username = ? and ip = ? and created_at > now() - interval $window minute "
+                . "order by created_at desc limit 1 offset ".((int)LOGIN_MAX_ATTEMPTS - 1), array($key, $ip)),
+            array("select timestampdiff(second, now(), created_at + interval $window minute) from login_attempt "
+                . "where ip = ? and created_at > now() - interval $window minute "
+                . "order by created_at desc limit 1 offset ".((int)LOGIN_IP_MAX_ATTEMPTS - 1), array($ip))
+        );
+        
+        foreach($queries as $query) {
+            $row = (new Fetcher($query[0], $query[1]))->Fetch();
+            
+            if($row) {
+                $seconds = max($seconds, (int)$row[0]);
+            }
+        }
+        
+        return $seconds;
+    }
+    catch(Throwable $e) {
+        return 0;
+    }
+}
+
+function LoginLockMessage($seconds) {
+    $minutes = max(1, (int)ceil($seconds / 60));
+    return "Слишком много неудачных попыток входа. Повторите попытку через $minutes мин.";
+}
+
+// Записывает неудачную попытку входа
+function RecordLoginFailure($key) {
+    try {
+        new Executer("insert into login_attempt (username, ip) values (?, ?)", array($key, ClientIp()));
+        
+        // Старые записи удаляем время от времени
+        if(mt_rand(1, 50) == 1) {
+            new Executer("delete from login_attempt where created_at < now() - interval 1 day");
+        }
+    }
+    catch(Throwable $e) {
+    }
+}
+
+// После успешного входа неудачные попытки этого логина с этого адреса не нужны
+function ClearLoginFailures($key) {
+    try {
+        new Executer("delete from login_attempt where username = ? and ip = ?", array($key, ClientIp()));
+    }
+    catch(Throwable $e) {
+    }
+}
+
 // Валидация формы логина
 $login_form_valid = true;
 
@@ -926,13 +1018,27 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         $login_form_valid = false;
     }
     
+    // Если с этого адреса было слишком много неудачных попыток, пароль даже не проверяем
+    $login_locked = false;
+    $login_key = LoginAttemptKey($login_username);
+    
     if($login_form_valid) {
+        $lock_seconds = LoginLockSeconds($login_key);
+        
+        if($lock_seconds > 0) {
+            $login_locked = true;
+            $error_message = LoginLockMessage($lock_seconds);
+        }
+    }
+    
+    if($login_form_valid && !$login_locked) {
         //*****************************************************
         // Сначала пробуем залогниться, как пользователь резки.
         $lower_username = strtolower($login_username);
         $lower_password = strtolower($login_password);
         
         if(in_array($lower_username, CUTTER_USERS) && $lower_username == $lower_password) {
+            ClearLoginFailures($login_key);
             SetAuthCookies($lower_username, MakeCutterAuthToken($lower_username));
             header('Refresh:0');
             exit();
@@ -969,8 +1075,17 @@ if(null !== filter_input(INPUT_POST, 'login_submit')) {
         
         if(empty($user_id) || empty($username)) {
             $error_message = "Неправильный логин или пароль";
+            RecordLoginFailure($login_key);
+            
+            // Эта попытка могла исчерпать лимит: сразу сообщаем о блокировке
+            $lock_seconds = LoginLockSeconds($login_key);
+            
+            if($lock_seconds > 0) {
+                $error_message = LoginLockMessage($lock_seconds);
+            }
         }
         else {
+            ClearLoginFailures($login_key);
             //*******************************
             // Двухфакторная аутентификация
             if($twofactor == 1) {
