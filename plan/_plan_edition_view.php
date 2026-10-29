@@ -200,7 +200,11 @@
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline not_colorist_hidden"<?=$drop ?>>
-        <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : "GETFILMSSTRING" ?>
+        <?php if($this->edition['type'] != PLAN_TYPE_EVENT && IsInRole(ROLE_NAMES[ROLE_COLORIST])): ?>
+        <span class="text-nowrap"><?= GetFilmsStringColorist($this->edition['film_name'], $this->edition['thickness'], $this->edition['individual_film_name'], $this->edition['individual_thickness']) ?></span> 
+        <span class="text-nowrap"><?= GetFilmsStringColorist($this->edition['lamination1_film_name'], $this->edition['lamination1_thickness'], $this->edition['lamination1_individual_film_name'], $this->edition['lamination1_individual_thickness']) ?></span> 
+        <span class="text-nowrap"><?= GetFilmsStringColorist($this->edition['lamination2_film_name'], $this->edition['lamination2_thickness'], $this->edition['lamination2_individual_film_name'], $this->edition['lamination2_individual_thickness']) ?></span>
+        <?php endif; ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : ($this->edition["run2"] ? $this->edition['ink_run2_number'] : $this->edition['ink_number']) ?>

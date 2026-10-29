@@ -37,4 +37,10 @@ function GetFilmsString($_lamination, $_film_name, $_thickness, $_individual_fil
     
     return $films_strings;
 }
+
+function GetFilmsStringColorist($_film_name, $_thickness, $_individual_film_name, $_individual_thickness) {
+    $result = "Modern Talking";
+    
+    return $result;
+}
 ?>
