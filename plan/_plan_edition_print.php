@@ -83,7 +83,7 @@
     <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(DisplayNumber(floatval($this->edition['raport']), 3), "0"), ",") ?>
     </td>
-    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden">
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden colorist_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
     </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden storekeeper_hidden">

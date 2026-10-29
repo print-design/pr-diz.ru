@@ -196,7 +196,7 @@
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(DisplayNumber(floatval($this->edition['raport']), 3), "0"), ",") ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>

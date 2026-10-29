@@ -32,7 +32,7 @@
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"></td>
-    <td class="<?=$top.' '.$this->shift ?> cutting_hidden"></td>
+    <td class="<?=$top.' '.$this->shift ?> cutting_hidden colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> not_colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> d-none"></td>
