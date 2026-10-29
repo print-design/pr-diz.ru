@@ -86,6 +86,9 @@
     <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden colorist_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
     </td>
+    <td class="<?=$top.' '.$this->plan_shift->shift ?> not_colorist_hidden">
+        <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : "GETFILMSSTRING" ?>
+    </td>
     <td class="<?=$top.' '.$this->plan_shift->shift ?> cutting_hidden lamination_hidden storekeeper_hidden">
         <?=$this->edition['type'] == PLAN_TYPE_EVENT ? "" : ($this->edition["run2"] ? $this->edition['ink_run2_number'] : $this->edition['ink_number']) ?>
     </td>

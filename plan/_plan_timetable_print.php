@@ -13,6 +13,7 @@
         <th class="cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden">Кол-во образцов</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden">Вал</th>
         <th class="cutting_hidden colorist_hidden text-nowrap">Лам-й</th>
+        <th class="not_colorist_hidden">Марка мат-ла</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden">Кр-ть</th>
         <th class="not_colorist_hidden">Краски</th>
         <th class="d-none">Время</th>

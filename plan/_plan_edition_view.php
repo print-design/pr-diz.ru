@@ -199,6 +199,9 @@
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : $this->edition['laminations'] ?>
     </td>
+    <td class="<?=$this->plan_shift->shift ?> showdropline not_colorist_hidden"<?=$drop ?>>
+        <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : "GETFILMSSTRING" ?>
+    </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : ($this->edition["run2"] ? $this->edition['ink_run2_number'] : $this->edition['ink_number']) ?>
     </td>
