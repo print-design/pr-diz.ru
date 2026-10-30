@@ -38,8 +38,46 @@ function GetFilmsString($_lamination, $_film_name, $_thickness, $_individual_fil
     return $films_strings;
 }
 
-function GetFilmsStringColorist($_film_name, $_thickness, $_individual_film_name, $_individual_thickness) {
-    $result = "Modern Talking";
+function GetFilmsStringColorist($_film_name, $_thickness, $_individual_film_name, $_individual_thickness, 
+        $_lamination1_film_name, $_lamination1_thickness, $_lamination1_individual_film_name, $_lamination1_individual_thickness, 
+        $_lamination2_film_name, $_lamination2_thickness, $_lamination2_individual_film_name, $_lamination2_individual_thickness) {
+    $result = [];
+    
+    $film_name = $_film_name;
+    $thickness = $_thickness;
+    
+    if(empty($film_name)) {
+        $film_name = $_individual_film_name;
+        $thickness = $_individual_thickness;
+    }
+    
+    $result[] = $film_name.' '.$thickness;
+    
+    $lamination1_film_name = $_lamination1_film_name;
+    $lamination1_thickness = $_lamination1_thickness;
+    
+    if(empty($lamination1_film_name)) {
+        $lamination1_film_name = $_lamination1_individual_film_name;
+        $lamination1_thickness = $_lamination1_individual_thickness;
+    }
+    
+    if(!empty($lamination1_film_name)) {
+        $result[] = '+';
+        $result[] = $lamination1_film_name.' '.$lamination1_thickness;
+    }
+    
+    $lamination2_film_name = $_lamination2_film_name;
+    $lamination2_thickness = $_lamination2_thickness;
+    
+    if(empty($lamination2_film_name)) {
+        $lamination2_film_name = $_lamination2_individual_film_name;
+        $lamination2_thickness = $_lamination2_individual_thickness;
+    }
+    
+    if(!empty($lamination2_film_name)) {
+        $result[] = '+';
+        $result[] = $lamination2_film_name.' '.$lamination2_thickness;
+    }
     
     return $result;
 }
