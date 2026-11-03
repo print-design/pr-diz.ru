@@ -84,12 +84,12 @@ class Queue {
                 . " and work_id = ?)"
                 . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
                 . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
-                . " and ((c.raport in ($raport_placeholders) and c.ink_number <= ? and cr.width_1 <= ?) or c.machine_id = ? or (raport_irregular = 1 and ? <> ". PRINTER_ATLAS." and ? <> ". PRINTER_ZBS_1." and ? <> ". PRINTER_ZBS_2." and ? <> ". PRINTER_ZBS_3."))";
+                . " and ((c.raport in ($raport_placeholders) and c.ink_number <= ? and cr.width_1 <= ?) or c.machine_id = ? or (raport_irregular = 1 and ? <> ". PRINTER_ATLAS." and ? <> ". PRINTER_ZBS_1." and ? <> ". PRINTER_ZBS_2." and ? <> ". PRINTER_ZBS_3." and cr.width_1 <= ?))";
         
         $params = array_merge(
                 [$this->work_id, $this->machine_id, $this->work_id],
                 $raports,
-                [$colorfulness, $max_width, $this->machine_id, $this->machine_id, $this->machine_id, $this->machine_id, $this->machine_id]
+                [$colorfulness, $max_width, $this->machine_id, $this->machine_id, $this->machine_id, $this->machine_id, $this->machine_id, $max_width]
         );
         
         $run2 = true;
