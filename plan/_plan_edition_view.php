@@ -190,7 +190,7 @@
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline"<?=$drop ?>><?=$this->edition['lamination_roller_width'] ?></td>
     <?php endif; ?>
-    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden planner_hidden colorist_hidden"<?=$drop ?>>
+    <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['samples_count'] ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"<?=$drop ?>>
