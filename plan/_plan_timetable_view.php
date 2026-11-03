@@ -13,7 +13,7 @@
         <th>Марка мат-ла</th>
         <th>Лам. вал</th>
         <?php endif; ?>
-        <th class="cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden">Мин. кол-во образцов</th>
+        <th class="cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden">Мин. <span class="text-nowrap">кол-во</span> образцов</th>
         <th class="cutting_hidden lamination_hidden not_packer_hidden">Метраж одного рулона</th>
         <th class="cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden">Вал</th>
         <th class="cutting_hidden colorist_hidden text-nowrap">Лам-й</th>
