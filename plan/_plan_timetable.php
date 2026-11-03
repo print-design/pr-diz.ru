@@ -197,6 +197,7 @@ class PlanTimetable {
             $row['laminations'] = $laminations;
             $row['manager'] = $row['last_name'].' '. mb_substr($row['first_name'], 0, 1).'.';
             $row['samples_count'] = '';
+            $row['sample_length'] = '';
             
             if($this->work_id == WORK_PRINTING) {
                 // Вычисление количества образцов
@@ -220,6 +221,11 @@ class PlanTimetable {
                 }
                 elseif($row['type'] == PLAN_TYPE_CONTINUATION) {
                     $row['samples_count'] = floor(($row['length_pure_1'] / $AN) + 1);
+                }
+                
+                // Вычисление длины одного рулона
+                if($row['type'] != PLAN_TYPE_EVENT) {
+                    $row['sample_length'] = 'RESERVED';
                 }
             }
             

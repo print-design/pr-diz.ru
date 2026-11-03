@@ -243,6 +243,16 @@ if(null !== filter_input(INPUT_POST, 'unpin_submit')) {
                 display: none;
             }
             <?php endif; ?>
+            
+            <?php if(IsInRole(ROLE_NAMES[ROLE_PACKER])): ?>
+            .packer_hidden {
+                display: none;
+            }
+            <?php else: ?>
+            .not_packer_hidden {
+                display: none;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>

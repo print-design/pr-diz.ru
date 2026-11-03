@@ -107,6 +107,16 @@ if(empty($work_id) || empty($machine_id)) {
                 display: none;
             }
             <?php endif; ?>
+            
+            <?php if(IsInRole(ROLE_NAMES[ROLE_PACKER])): ?>
+            .packer_hidden {
+                display: none;
+            }
+            <?php else: ?>
+            .not_packer_hidden {
+                display: none;
+            }
+            <?php endif; ?>
         </style>
     </head>
     <body>

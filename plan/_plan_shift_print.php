@@ -31,6 +31,7 @@
     <td class="<?=$top.' '.$this->shift ?>"></td>
     <?php endif; ?>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"></td>
+    <td class="<?=$top.' '.$this->shift ?> not_packer_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> cutting_hidden colorist_hidden"></td>
     <td class="<?=$top.' '.$this->shift ?> not_colorist_hidden"></td>
