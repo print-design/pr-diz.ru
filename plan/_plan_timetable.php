@@ -225,7 +225,7 @@ class PlanTimetable {
                 
                 // Вычисление длины одного рулона
                 if($row['type'] != PLAN_TYPE_EVENT) {
-                    $row['sample_length'] = 'RESERVED';
+                    $row['sample_length'] = floatval($row['length_pure_1']) / floatval($row['samples_count']);
                 }
             }
             

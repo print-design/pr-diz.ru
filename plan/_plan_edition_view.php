@@ -193,8 +193,8 @@
     <td class="<?=$this->plan_shift->shift ?> showdropline text-nowrap cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['samples_count'] ?>
     </td>
-    <td class="<?=$this->plan_shift->shift ?> showdropline not_packer_hidden"<?=$drop ?>>
-        <?=$this->edition['sample_length'] ?>
+    <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden not_packer_hidden"<?=$drop ?>>
+        <?= DisplayNumber($this->edition['sample_length'], 2) ?>
     </td>
     <td class="<?=$this->plan_shift->shift ?> showdropline cutting_hidden lamination_hidden storekeeper_hidden colorist_hidden"<?=$drop ?>>
         <?= $this->edition['type'] == PLAN_TYPE_EVENT ? "" : rtrim(rtrim(DisplayNumber(floatval($this->edition['raport']), 3), "0"), ",") ?>
