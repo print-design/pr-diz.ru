@@ -1,7 +1,7 @@
 <?php
 include '../include/topscripts.php';
-include '../calculation/calculation.php';
-include '../calculation/calculation_result.php';
+include '../order/calculation.php';
+include '../order/calculation_result.php';
 
 $id = 0;
 $result = 0;
