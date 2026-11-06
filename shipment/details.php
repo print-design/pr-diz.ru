@@ -83,7 +83,7 @@ $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at'])
             <?php
             $backlink_url = "";
             if($shipment['is_draft']) {
-                $backlink_url = BuildQueryAddRemoveArray('is_draft', 1, ['id']);
+                $backlink_url = BuildQueryAddRemoveArray('draft', 1, ['id']);
             }
             else {
                 $backlink_url = BuildQueryRemove("id");

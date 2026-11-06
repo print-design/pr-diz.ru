@@ -16,11 +16,18 @@ function OrderLink($param) {
     }
 }
 
-// Статус
-$status_id = null;
+// Частично оплачены
+$paying = false;
 
-if(null !== filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT)) {
-    $status_id = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
+if(filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1) {
+    $paying = true;
+}
+
+// Оплачены
+$paid = false;
+
+if(filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1) {
+    $paid = true;
 }
 
 // В производстве
@@ -30,11 +37,11 @@ if(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
     $production = true;
 }
 
-// Оплачено
-$paid = false;
+// Статус
+$status_id = null;
 
-if(filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1) {
-    $paid = true;
+if(null !== filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT)) {
+    $status_id = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
 }
 
 // Фильтр по дате отгрузки
@@ -94,13 +101,16 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1 text-nowrap">
                     <?php
-                    $title = "Все";
+                    $title = "Ждёт оплату";
                     
-                    if(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
-                        $title = "Производят";
+                    if(filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1) {
+                        $title = "Частично оплачены";
                     }
                     elseif(filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1) {
-                        $title = "Оплачено";
+                        $title = "Оплачены";
+                    }
+                    elseif(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
+                        $title = "Производят";
                     }
                     elseif(!empty ($status_id)) {
                         $title = ORDER_STATUS_NAMES[$status_id];
