@@ -6,6 +6,29 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER_SENIOR
     include '../include/_unauthorized.php';
 }
 
+// Проверка текущего пароля при его смене администратором.
+// Единственное место, где ещё распознаётся старый формат хеша (функция MySQL password():
+// '*' и 40 шестнадцатеричных символов, это двойной SHA-1). Такие хеши остались у пользователей,
+// которые не входили в программу после перехода на password_hash(). Старый пароль подходит,
+// а после смены пароля через эту форму (хоть на тот же самый) хеш сохраняется уже в новом формате.
+function VerifyUserPasswordByIdOrLegacy($user_id, $password) {
+    if(VerifyUserPasswordById($user_id, $password)) {
+        return true;
+    }
+    
+    if($password === null || $password === '') {
+        return false;
+    }
+    
+    $row = (new Fetcher("select password from user where id = ?", [$user_id]))->Fetch();
+    
+    if(!$row || preg_match('/^\*[0-9A-Fa-f]{40}$/', (string)$row['password']) !== 1) {
+        return false;
+    }
+    
+    return hash_equals(strtoupper($row['password']), '*'.strtoupper(sha1(sha1($password, true))));
+}
+
 // Обработка отправки формы - удаление пользователя
 if(null !== filter_input(INPUT_POST, 'delete_user_submit')) {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
@@ -53,7 +76,7 @@ if(null !== filter_input(INPUT_POST, 'user_change_password_submit')) {
     // Проверка старого пароля
     $user_change_password_id = filter_input(INPUT_POST, "user_change_password_id");
     $user_change_password_old = filter_input(INPUT_POST, "user_change_password_old");
-    if(!VerifyUserPasswordById($user_change_password_id, $user_change_password_old)) {
+    if(!VerifyUserPasswordByIdOrLegacy($user_change_password_id, $user_change_password_old)) {
         $user_change_password_old_valid = ISINVALID;
         $user_change_password_old_message = "Неправильный текущий пароль";
         $form_valid = false;
