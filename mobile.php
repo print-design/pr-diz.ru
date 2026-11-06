@@ -13,17 +13,11 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
     // Пустой ключ не принимается: иначе он совпал бы с "пустым" значением у пользователей,
     // которым ключ не задан (или удалён).
     if($graph_key !== null && $graph_key !== '') {
-        // Ключ может быть сохранён в новом формате (HMAC) или ещё в старом (password()).
-        $sql = "select id, username, password, graph_key from user where active = true and (graph_key = ? or graph_key = password(?))";
-        $row = (new Fetcher($sql, [MakeGraphKeyHash($graph_key), $graph_key]))->Fetch();
+        $sql = "select id, username, password from user where active = true and graph_key = ?";
+        $row = (new Fetcher($sql, [MakeGraphKeyHash($graph_key)]))->Fetch();
     }
     
     if($row) {
-        // Ключ в старом формате заменяем на новый
-        if($row['graph_key'] !== MakeGraphKeyHash($graph_key)) {
-            (new Executer("update user set graph_key = ? where id = ?", [MakeGraphKeyHash($graph_key), $row['id']]));
-        }
-        
         SetAuthCookies($row['username'], MakeAuthToken($row['id'], $row['password']));
         header('Location: '.APPLICATION.'/');
         exit();

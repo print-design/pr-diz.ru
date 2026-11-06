@@ -83,8 +83,8 @@ if(null !== filter_input(INPUT_POST, 'graph_key_id', FILTER_VALIDATE_INT)) {
         $form_valid = false;
     }
     else {
-        $sql = "select count(id) from user where graph_key = ? or graph_key = password(?)";
-        $fetcher = new Fetcher($sql, [MakeGraphKeyHash($graph_key), $graph_key]);
+        $sql = "select count(id) from user where graph_key = ?";
+        $fetcher = new Fetcher($sql, [MakeGraphKeyHash($graph_key)]);
         $row = $fetcher->Fetch();
         if($row[0] > 0) {
             $form_valid = false;

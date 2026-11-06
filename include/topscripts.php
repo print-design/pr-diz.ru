@@ -183,19 +183,13 @@ function GetUserRoleLocal() {
     return AuthValue('role_local');
 }
 
-// Пароли хранятся в формате password_hash(). Старый формат (функция MySQL password(),
-// строка вида *ABC...40 hex) ещё распознаётся и при первом успешном входе пользователя
-// автоматически заменяется на новый.
-function IsLegacyPasswordHash($hash) {
-    return preg_match('/^\*[0-9A-Fa-f]{40}$/', (string)$hash) === 1;
-}
-
+// Пароли хранятся в формате password_hash().
 function HashPassword($password) {
     return password_hash($password, PASSWORD_DEFAULT);
 }
 
 // Проверяет пароль пользователя. Возвращает актуальный хеш из базы (после возможного
-// перехода на новый формат) или null, если пароль неверный.
+// обновления хеша до текущего алгоритма) или null, если пароль неверный.
 function CheckUserPassword($user_id, $stored_hash, $password) {
     $stored_hash = (string)$stored_hash;
     
@@ -203,21 +197,11 @@ function CheckUserPassword($user_id, $stored_hash, $password) {
         return null;
     }
     
-    $legacy = IsLegacyPasswordHash($stored_hash);
-    
-    if($legacy) {
-        $row = (new Fetcher("select password(?)", [$password]))->Fetch();
-        $valid = $row && hash_equals(strtoupper($stored_hash), strtoupper((string)$row[0]));
-    }
-    else {
-        $valid = password_verify($password, $stored_hash);
-    }
-    
-    if(!$valid) {
+    if(!password_verify($password, $stored_hash)) {
         return null;
     }
     
-    if($legacy || password_needs_rehash($stored_hash, PASSWORD_DEFAULT)) {
+    if(password_needs_rehash($stored_hash, PASSWORD_DEFAULT)) {
         $new_hash = HashPassword($password);
         $executer = new Executer("update user set password = ? where id = ?", [$new_hash, $user_id]);
         
@@ -1140,8 +1124,7 @@ if(null !== filter_input(INPUT_POST, 'security_code_submit')) {
 }
 
 function Logout() {
-    // Удаляем и актуальные куки, и куки, которые использовались раньше
-    $cookie_names = array(USER_ID, USERNAME, PASSWORD5, LAST_NAME, FIRST_NAME, LOGIN_TIME, ROLE, ROLE_LOCAL);
+    $cookie_names = array(USERNAME, PASSWORD5);
     
     foreach ($cookie_names as $cookie_name) {
         setcookie($cookie_name, '', time() - 3600, '/');
