@@ -174,8 +174,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     $params = array();
                     
                     if($paid) {
-                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
-                        array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
+                        array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
                                 ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
                                 ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
                     }
@@ -188,8 +188,10 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         array_push($params, $status_id);
                     }
                     else {
-                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?) and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
-                        array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT);
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total = 0";
+                        array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                                ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                                ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
                     }
                     
                     if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
@@ -327,8 +329,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "left join user u on c.manager_id = u.id ";
             $params = [];
             if($paid) {
-                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
-                array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_shipping_cost > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
+                array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
                         ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
                         ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
             }
@@ -341,8 +343,10 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 array_push($params, $status_id);
             }
             else {
-                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?) and (c.duplicate_shipping_cost = 0 or c.duplicate_payment_total < c.duplicate_shipping_cost)";
-                array_push($params, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT);
+                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total = 0";
+                array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                        ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                        ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
             }
             
             if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
@@ -412,7 +416,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         <?= DisplayNumber(floatval($row['duplicate_payment_total']), 2) ?> ₽
                         <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(floatval($row['duplicate_shipping_cost']) - floatval($row['duplicate_payment_total']), 2) ?> ₽</div>
                     </td>
-                    <td data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
+                    <td class="text-nowrap" data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td>
                         <a href="details.php<?= BuildQuery('id', $row['id']) ?>">

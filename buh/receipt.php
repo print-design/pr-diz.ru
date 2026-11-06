@@ -7,9 +7,10 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT])))
 }
 
 // Чтобы заголовок не выдавал ошибку
-$status_id = null;
-$production = false;
+$paying = false;
 $paid = false;
+$production = false;
+$status_id = null;
 ?>
 <!DOCTYPE html>
 <html lang="ru">
