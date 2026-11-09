@@ -323,7 +323,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
                     . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, c.gross_weight, "
-                    . "duplicate_shipping_cost, duplicate_payment_total "
+                    . "c.duplicate_shipping_cost, c.duplicate_payment_total "
                     . "from calculation c "
                     . "left join customer cus on c.customer_id = cus.id "
                     . "left join user u on c.manager_id = u.id ";
