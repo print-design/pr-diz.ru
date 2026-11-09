@@ -65,6 +65,11 @@ else {
     $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
 }
 
+// Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
+if($shipping_order_cost == 0) {
+    $shipping_order_cost = $calculation_result->shipping_cost;
+}
+
 // Общая стоимость
 $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
 
@@ -220,7 +225,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
             }
             ?>
             <div class="row">
-                <div class="col-5">
+                <div class="col-6">
                     <h1><?=$calculation->name ?></h1>
                     <div class="name"><?=$calculation->customer ?></div>
                     <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
@@ -347,7 +352,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                     </div>
                     <?php endwhile; ?>
                 </div>
-                <div class="col-7">
+                <div class="col-6">
                     <div id="right_part">
                         <h2>Оплата заказа</h2>
                         <div class="subtitle">Поступления</div>

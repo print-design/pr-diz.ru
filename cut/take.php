@@ -217,6 +217,11 @@ else {
     $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
 }
 
+// Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
+if($shipping_order_cost == 0) {
+    $shipping_order_cost = $calculation_result->shipping_cost;
+}
+
 // Общая стоимость
 $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
 
