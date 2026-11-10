@@ -230,7 +230,7 @@ class DataExtracharge {
 // Базовый класс для классов расчёта
 class CalculationBase {
     // Исходные величины для вычислений
-    public $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
+    public $id, $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
             $usd, $euro, $weight_cut, $length_cut,
             
             $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id,
@@ -259,7 +259,7 @@ class CalculationBase {
             $customer, $last_name, $first_name, $status_id, $status_comment, $status_date, $num_for_customer;
     
     // Конструктор
-    public function __construct(DataPriladka $data_priladka, 
+    public function __construct($id, DataPriladka $data_priladka, 
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
             DataGap $data_gap,
@@ -367,6 +367,8 @@ class CalculationBase {
             $status_date, // Дата установления статуса
             $num_for_customer // Номер заказа у данного заказчика
             ) {
+        $this->id = $id;
+                
         $this->data_priladka = $data_priladka;
         $this->data_priladka_laminator = $data_priladka_laminator;
         $this->data_machine = $data_machine;
@@ -1159,7 +1161,8 @@ class CalculationBase {
     
         // Создаём классы расчётов
         if($work_type_id == WORK_TYPE_SELF_ADHESIVE && empty($error_message)) {
-            return new CalculationSelfAdhesive($data_priladka, 
+            return new CalculationSelfAdhesive($id,
+                    $data_priladka, 
                     $data_priladka_laminator,
                     $data_machine,
                     $data_gap,
@@ -1268,7 +1271,8 @@ class CalculationBase {
                     $num_for_customer); // Номер заказа у данного заказчика
         }
         elseif(empty ($error_message)) {
-            return new Calculation($data_priladka, 
+            return new Calculation($id,
+                    $data_priladka, 
                     $data_priladka_laminator,
                     $data_machine,
                     $data_gap,
@@ -1480,7 +1484,8 @@ class Calculation extends CalculationBase {
     public $number_in_meter; // Этикеток в 1 м. пог.
 
     // Конструктор
-    public function __construct(DataPriladka $data_priladka, 
+    public function __construct($id,
+            DataPriladka $data_priladka, 
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
             DataGap $data_gap,
@@ -1588,7 +1593,7 @@ class Calculation extends CalculationBase {
             $status_date, // Дата установления статуса
             $num_for_customer // Номер заказа для данного заказчика
             ) {
-        parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
+        parent::__construct($id, $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
                 $usd, $euro, $weight_cut, $length_cut,
                 $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $selvage_1, $width_selvage_1, 
@@ -2551,7 +2556,8 @@ class CalculationSelfAdhesive extends CalculationBase {
     
     public $number_in_meter; // Этикеток в 1 м. пог.
 
-    public function __construct(DataPriladka $data_priladka, 
+    public function __construct($id,
+            DataPriladka $data_priladka, 
             DataPriladka $data_priladka_laminator,
             DataMachine $data_machine,
             DataGap $data_gap,
@@ -2659,7 +2665,7 @@ class CalculationSelfAdhesive extends CalculationBase {
             $status_date, // Дата установления статуса
             $num_for_customer // Номер заказа для данного заказчика
             ) {
-        parent::__construct($data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
+        parent::__construct($id, $data_priladka, $data_priladka_laminator, $data_machine, $data_gap, $data_laminator, $data_ink, $data_glue, $data_cliche, $data_extracharge, 
                 $usd, $euro, $weight_cut, $length_cut,
                 $date, $customer_id, $name, $unit, $quantity, $quantities, $work_type_id, 
                 $film_1, $thickness_1, $density_1, $price_1, $currency_1, $eco_price_1, $eco_currency_1, $customers_material_1, $selvage_1, $width_selvage_1, 

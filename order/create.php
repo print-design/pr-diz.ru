@@ -895,11 +895,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
 }
 
 // Получение объекта
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation_result = null;
 
-if(!empty($id)) {
-    $calculation_result = CalculationResult::Create($id);
+if(!empty($calculation)) {
+    $calculation_result = CalculationResult::Create($calculation);
 }
 
 $row = array();

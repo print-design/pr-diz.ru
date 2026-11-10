@@ -258,7 +258,7 @@ if(!empty($id) && (empty($calculation_result) || !is_a($calculation_result, Calc
     
     //***************************************************
     // ЧИТАЕМ СОХРАНЁННЫЕ РЕЗУЛЬТАТЫ ИЗ БАЗЫ
-    $calculation_result = CalculationResult::Create($id);
+    $calculation_result = CalculationResult::Create($calculation);
 }
 
 if(!empty($calculation) && is_a($calculation, Calculation::class)):

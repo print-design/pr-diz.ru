@@ -17,7 +17,7 @@ if($id === null) {
 
 // ПОЛУЧЕНИЕ ОБЪЕКТА
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 
 // Чужой менеджер смотреть объект не имеет право
 if(IsInRole(ROLE_NAMES[ROLE_MANAGER]) && !IsInRole(ROLE_NAMES[ROLE_MANAGER_SENIOR]) && $calculation->manager_id != GetUserId()) {
@@ -34,33 +34,6 @@ $fetcher = new Fetcher($sql, [$id]);
 
 if($row = $fetcher->Fetch()) {
     $comment = trim($row['comment'].' '.$row['continuation_comment'], ' ');
-}
-
-// ЗАПОЛНЯЕМ ДУБЛИРУЮЩЕЕСЯ ПОЛЕ
-
-// Стоимость заказа
-$shipping_order_cost = 0;
-
-if($calculation->unit == KG) {
-    $shipping_order_cost = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-else {
-    $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-
-// Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
-if($shipping_order_cost == 0) {
-    $shipping_order_cost = $calculation_result->shipping_cost;
-}
-
-// Общая стоимость
-$shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
-
-// Заполняем дублирующееся поле
-if(empty($error_message)) {
-    $sql = "update calculation set duplicate_shipping_cost = ? where id = ?";
-    $executer = new Executer($sql, [$shipping_cost, $id]);
-    $error_message = $executer->error;
 }
 ?>
 <!DOCTYPE html>

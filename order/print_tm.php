@@ -24,7 +24,7 @@ function GetInkWithCases($param) {
 // Получение объекта
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 
 if(!empty($calculation->ink_number)) {
     for($i=1; $i<=$calculation->ink_number; $i++) {

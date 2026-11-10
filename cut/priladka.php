@@ -57,7 +57,7 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
 
 // Получение объекта
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 
 $comment = '';
 

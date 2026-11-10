@@ -30,7 +30,7 @@ if(null !== filter_input(INPUT_POST, 'start_cut_submit')) {
 
 // Получение объекта
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 
 $comment = '';
 

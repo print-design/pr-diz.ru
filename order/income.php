@@ -16,7 +16,7 @@ if($id === null) {
 
 // ПОЛУЧЕНИЕ ОБЪЕКТА
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 
 // Количество новых форм
 $new_forms_number = 0;
@@ -53,49 +53,6 @@ if($calculation->unit == KG) {
 }
 else {
     $packed_fact = DisplayNumber(floor($calculation->length_cut * $calculation->number_in_meter), 0);
-}
-
-// Стоимость заказа
-$shipping_order_cost = 0;
-
-if($calculation->unit == KG) {
-    $shipping_order_cost = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-else {
-    $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-
-// Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
-if($shipping_order_cost == 0) {
-    $shipping_order_cost = $calculation_result->shipping_cost;
-}
-
-// Общая стоимость
-$shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
-
-// Общая оплата
-$payment_total = 0;
-
-$sql = "select ifnull(sum(case "
-        . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
-        . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
-        . "else p.amount "
-        . "end), 0) as amount_rub from payment p where p.order_id = ?";
-$fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $id]);
-if($row = $fetcher->Fetch()) {
-    $payment_total = $row[0];
-}
-
-// Ошибки при расчётах (если есть)
-if(null !== filter_input(INPUT_GET, 'error_message')) {
-    $error_message = filter_input(INPUT_GET, 'error_message');
-}
-
-// ЗАПОЛНЯЕМ ДУБЛИРУЮЩЕЕСЯ ПОЛЕ
-if(empty($error_message)) {
-    $sql = "update calculation set duplicate_shipping_cost = ?, duplicate_payment_total = ? where id = ?";
-    $executer = new Executer($sql, [$shipping_cost, $payment_total, $id]);
-    $error_message = $executer->error;
 }
 
 // Производят

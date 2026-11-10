@@ -119,7 +119,7 @@ if(null !== filter_input(INPUT_POST, 'clear_pallet_data_submit')) {
 
 // Получение объекта
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 $calculation_rolls = CalculationRolls::Create($id);
 
 // Вес брутто, количество паллетов и габариты паллета, введённые упаковщицей при отгрузке

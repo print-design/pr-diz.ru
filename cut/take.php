@@ -174,7 +174,7 @@ if(null !== filter_input(INPUT_POST, 'cut_remove_submit')) {
 
 // Получение объекта
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 
 $take_id = null;
 $take_number = null;
@@ -203,33 +203,6 @@ if(empty($take_id)) {
 // Ошибки при расчётах (если есть)
 if(null !== filter_input(INPUT_GET, 'error_message')) {
     $error_message = filter_input(INPUT_GET, 'error_message');
-}
-
-// ЗАПОЛНЯЕМ ДУБЛИРУЮЩЕЕСЯ ПОЛЕ
-
-// Стоимость заказа
-$shipping_order_cost = 0;
-
-if($calculation->unit == KG) {
-    $shipping_order_cost = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-else {
-    $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-
-// Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
-if($shipping_order_cost == 0) {
-    $shipping_order_cost = $calculation_result->shipping_cost;
-}
-
-// Общая стоимость
-$shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
-
-// Заполняем дублирующееся поле
-if(empty($error_message)) {
-    $sql = "update calculation set duplicate_shipping_cost = ? where id = ?";
-    $executer = new Executer($sql, [$shipping_cost, $id]);
-    $error_message = $executer->error;
 }
 ?>
 <!DOCTYPE html>

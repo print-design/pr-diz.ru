@@ -21,7 +21,7 @@ if($row = $fetcher->Fetch()) {
 
 if($id > 0) {
     $calculation = CalculationBase::Create($id);
-    $calculation_result = CalculationResult::Create($id);
+    $calculation_result = CalculationResult::Create($calculation);
     
     // Стоимость заказа
     $shipping_order_cost = 0;

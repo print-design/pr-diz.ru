@@ -61,7 +61,7 @@ if(null !== filter_input(INPUT_POST, 'payment_submit')) {
 
 // Получение объекта
 $calculation = CalculationBase::Create($id);
-$calculation_result = CalculationResult::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
 $calculation_rolls = CalculationRolls::Create($id);
 
 // Вес брутто, количество паллетов и габариты паллета, введённые упаковщицей при отгрузке
@@ -134,7 +134,7 @@ if($shipping_order_cost == 0) {
     $shipping_order_cost = $calculation_result->shipping_cost;
 }
 
-// Общая стоимость
+// Общая стоимость для оплаты
 $shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
 
 // Общая оплата
@@ -145,21 +145,10 @@ $sql = "select ifnull(sum(case "
         . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
         . "else p.amount "
         . "end), 0) as amount_rub from payment p where p.order_id = ?";
-$fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $id]);
+$fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $calculation->id]);
+$error_message = $fetcher->error;
 if($row = $fetcher->Fetch()) {
     $payment_total = $row[0];
-}
-
-// Ошибки при расчётах (если есть)
-if(null !== filter_input(INPUT_GET, 'error_message')) {
-    $error_message = filter_input(INPUT_GET, 'error_message');
-}
-
-// ЗАПОЛНЯЕМ ДУБЛИРУЮЩЕЕСЯ ПОЛЕ
-if(empty($error_message)) {
-    $sql = "update calculation set duplicate_shipping_cost = ?, duplicate_payment_total = ? where id = ?";
-    $executer = new Executer($sql, [$shipping_cost, $payment_total, $id]);
-    $error_message = $executer->error;
 }
 
 // Частично оплачены
@@ -351,7 +340,7 @@ $production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDE
                     <table class="two_columns">
                         <tr>
                             <td>Продукция</td>
-                            <td><?= DisplayNumber($shipping_order_cost, 2) ?> ₽</td>
+                            <td><?= DisplayNumber(floatval($shipping_order_cost), 2) ?> ₽</td>
                         </tr>
                         <tr>
                             <td>Печатные формы</td>

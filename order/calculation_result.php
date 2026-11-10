@@ -1,5 +1,7 @@
 <?php
 class CalculationResult {
+    private $calculation;
+    
     // Результаты вычислений
     public $usd, $euro;
     public $cost, $cost_per_unit, $shipping_cost, $shipping_cost_per_unit, $income, $income_per_unit;
@@ -43,7 +45,7 @@ class CalculationResult {
     public const FROM_OTHER_TECHMAP = "from_other_techmap";
     
     // Конструктор
-    public function __construct($usd, $euro,
+    public function __construct($calculation, $usd, $euro,
             $cost, $cost_per_unit, $shipping_cost, $shipping_cost_per_unit, $income, $income_per_unit,
             $cliche_cost, $shipping_cliche_cost, $income_cliche,
             $knife_cost, $shipping_knife_cost, $income_knife,
@@ -57,6 +59,8 @@ class CalculationResult {
             $gap, $priladka_printing, 
             $techmap_id, $techmap_date, $supplier_id, $side, $winding, $winding_unit, $spool, $labels, $package, $photolabel, $roll_type, $comment, 
             $supplier) {
+        $this->calculation = $calculation;
+        
         $this->usd = $usd; // Курс доллара
         $this->euro = $euro; // Курс евро
         
@@ -139,10 +143,51 @@ class CalculationResult {
         $this->comment = $comment; // Комментарий
         
         $this->supplier = $supplier;
+        
+        // ЗАПОЛНЯЕМ ДУБЛИРУЮЩИЕСЯ ПОЛЯ (для ускорения загрузки
+        
+        // Стоимость заказа
+        $shipping_order_cost = 0;
+        
+        if($calculation->unit == KG) {
+            $shipping_order_cost = round($calculation->weight_cut, 2) * round($this->shipping_cost_per_unit, 3);
+        }
+        else {
+            $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($this->shipping_cost_per_unit, 3);
+        }
+        
+        // Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
+        if($shipping_order_cost == 0) {
+            $shipping_order_cost = $this->shipping_cost;
+        }
+        
+        // Общая стоимость для оплаты
+        $shipping_cost = $shipping_order_cost + $this->shipping_cliche_cost + $this->shipping_knife_cost;
+        
+        // Общая оплата
+        $payment_total = 0;
+        
+        $sql = "select ifnull(sum(case "
+                . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
+                . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
+                . "else p.amount "
+                . "end), 0) as amount_rub from payment p where p.order_id = ?";
+        $fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $calculation->id]);
+        $error_message = $fetcher->error;
+        if($row = $fetcher->Fetch()) {
+            $payment_total = $row[0];
+        }
+        
+        // Заполняем дублирующееся поле
+        if(empty($error_message)) {
+            $sql = "update calculation set duplicate_shipping_cost = ?, duplicate_payment_total = ? where id = ?";
+            $executer = new Executer($sql, [$shipping_cost, $payment_total, $calculation->id]);
+            $error_message = $executer->error;
+        }
     }
     
     // Получение из базы
-    public static function Create($id) {
+    public static function Create($calculation) {
         $sql = "select cr.usd, cr.euro, "
                 . "cr.cost, cr.cost_per_unit, cr.shipping_cost, cr.shipping_cost_per_unit, cr.income, cr.income_per_unit, "
                 . "cr.cliche_cost, cr.shipping_cliche_cost, cr.income_cliche, "
@@ -162,9 +207,9 @@ class CalculationResult {
                 . "left join techmap tm on tm.calculation_id = c.id "
                 . "left join supplier sup on tm.supplier_id = sup.id "
                 . "where c.id = ?";
-        $fetcher = new Fetcher($sql, [$id]);
+        $fetcher = new Fetcher($sql, [$calculation->id]);
         if($row = $fetcher->Fetch()) {
-            return new CalculationResult($row['usd'], $row['euro'],
+            return new CalculationResult($calculation, $row['usd'], $row['euro'],
                     $row['cost'], $row['cost_per_unit'], $row['shipping_cost'], $row['shipping_cost_per_unit'], $row['income'], $row['income_per_unit'],
                     $row['cliche_cost'], $row['shipping_cliche_cost'], $row['income_cliche'],
                     $row['knife_cost'], $row['shipping_knife_cost'], $row['income_knife'],
