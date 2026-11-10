@@ -15,7 +15,7 @@ if(!empty($calculation)) {
 }
 
 if($folder == "buh") {
-    if($file == 'receipt.php') {
+    if($file == 'income.php') {
         $receipt_status = ' disabled';
     }
     elseif($paying) {
@@ -54,7 +54,7 @@ if($folder == "buh") {
                 <a class="nav-link<?=$paid_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("paid", 1, ["paying", "production", "status", "page", "order", "from", "to", "id"]) ?>">Оплачены</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$receipt_status ?>" href="<?= APPLICATION ?>/buh/receipt.php">Поступления</a>
+                <a class="nav-link<?=$receipt_status ?>" href="<?= APPLICATION ?>/buh/income.php">Поступления</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("production", 1, ["paying", "paid", "status", "page", "order", "from", "to", "id"]) ?>">Производят</a>

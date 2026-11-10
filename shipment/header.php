@@ -24,7 +24,7 @@ else {
                 <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("paid", 1, ["paying", "production", "status", "page", "order", "from", "to", "id"]) ?>">Оплачены</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/buh/receipt.php">Поступления</a>
+                <a class="nav-link" href="<?= APPLICATION ?>/buh/income.php">Поступления</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("production", 1, ["paying", "paid", "status", "page", "order", "from", "to", "id"]) ?>">Производят</a>
