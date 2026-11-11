@@ -4,7 +4,7 @@ include '../include/left_bar.php';
 $waiting_status = '';
 $paying_status = '';
 $paid_status = '';
-$receipt_status = '';
+$income_status = '';
 $production_status = '';
 $pack_status = '';
 $ship_status = '';
@@ -16,7 +16,7 @@ if(!empty($calculation)) {
 
 if($folder == "buh") {
     if($file == 'income.php') {
-        $receipt_status = ' disabled';
+        $income_status = ' disabled';
     }
     elseif($paying) {
         $paying_status = ' disabled';
@@ -54,7 +54,7 @@ if($folder == "buh") {
                 <a class="nav-link<?=$paid_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("paid", 1, ["paying", "production", "status", "page", "order", "from", "to", "id"]) ?>">Оплачены</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$receipt_status ?>" href="<?= APPLICATION ?>/buh/income.php">Поступления</a>
+                <a class="nav-link<?=$income_status ?>" href="<?= APPLICATION ?>/buh/income.php">Поступления</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("production", 1, ["paying", "paid", "status", "page", "order", "from", "to", "id"]) ?>">Производят</a>

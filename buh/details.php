@@ -152,10 +152,10 @@ if($row = $fetcher->Fetch()) {
 }
 
 // Частично оплачены
-$paying = !empty($payment_total) && !empty($shipping_cost) && $payment_total < $shipping_cost;
+$paying = !empty($payment_total) && $payment_total < $shipping_cost;
 
 // Оплачено
-$paid = !empty($payment_total) && !empty($shipping_cost) && $payment_total >= $shipping_cost;
+$paid = !empty($payment_total) && $payment_total >= $shipping_cost;
 
 // В производстве
 $production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED]);
