@@ -894,6 +894,11 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     }
 }
 
+// ID расчёта: из POST (после создания заказчика) или из GET
+if(!isset($id)) {
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+}
+
 // Получение объекта
 $calculation_result = null;
 
@@ -1516,7 +1521,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 <div class="modal-content">
                     <form method="post">
                         <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                        <input type="hidden" name="id" value="<?=$id ?>" />
+                        <input type="hidden" name="id" value="<?=$id ?? '' ?>" />
                         <div class="modal-header">
                             <i class="fas fa-user"></i>&nbsp;&nbsp;Новый заказчик
                             <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
@@ -4820,7 +4825,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 extracharge = parseInt(param);
                 
                 if(!isNaN(extracharge) && extracharge > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?>&extracharge=' + extracharge })
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge.php?id=<?=$id ?? '' ?>&extracharge=' + extracharge })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -4851,7 +4856,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 extracharge_cliche = parseInt(param);
                 
                 if(!isNaN(extracharge_cliche) && extracharge_cliche > -1) {
-                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?>&extracharge_cliche=" + extracharge_cliche })
+                    $.ajax({ dataType: 'JSON', url: "_set_extracharge_cliche.php?id=<?=$id ?? '' ?>&extracharge_cliche=" + extracharge_cliche })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -4880,7 +4885,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 extracharge_knife = parseInt(param);
                 
                 if(!isNaN(extracharge_knife) && extracharge_knife > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?>&extracharge_knife=' + extracharge_knife })
+                    $.ajax({ dataType: 'JSON', url: '_set_extracharge_knife.php?id=<?=$id ?? '' ?>&extracharge_knife=' + extracharge_knife })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -4909,7 +4914,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 shipping_cost_per_unit = parseFloat(param.replace(',', '.'));
                 
                 if(!isNaN(shipping_cost_per_unit) && shipping_cost_per_unit > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
+                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cost_per_unit.php?id=<?=$id ?? '' ?>&shipping_cost_per_unit=' + shipping_cost_per_unit })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -4940,7 +4945,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 shipping_cliche_cost = parseFloat(param.replace(',', '.'));
                 
                 if(!isNaN(shipping_cliche_cost) && shipping_cliche_cost > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cliche_cost.php?id=<?=$id ?>&shipping_cliche_cost=' + shipping_cliche_cost })
+                    $.ajax({ dataType: 'JSON', url: '_set_shipping_cliche_cost.php?id=<?=$id ?? '' ?>&shipping_cliche_cost=' + shipping_cliche_cost })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -4968,7 +4973,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 shipping_knife_cost = parseFloat(param.replace(',', '.'));
                 
                 if(!isNaN(shipping_knife_cost) && shipping_knife_cost > -1) {
-                    $.ajax({ dataType: 'JSON', url: '_set_shipping_knife_cost.php?id=<?=$id ?>&shipping_knife_cost=' + shipping_knife_cost })
+                    $.ajax({ dataType: 'JSON', url: '_set_shipping_knife_cost.php?id=<?=$id ?? '' ?>&shipping_knife_cost=' + shipping_knife_cost })
                             .done(function(data) {
                                 if(data.error != '') {
                                     alert(data.error);
@@ -5000,7 +5005,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 var cliche_in_price = $('#cliche_in_price').is(':checked') ? 1 : 0;
                 var customer_pays_for_cliche = $('#customer_pays_for_cliche').is(':checked') ? 1 : 0;
                 
-                $.ajax({ dataType: 'JSON', url: '_recalculate_by_cliche.php?id=<?=$id ?>&cliche_in_price=' + cliche_in_price + '&customer_pays_for_cliche=' + customer_pays_for_cliche })
+                $.ajax({ dataType: 'JSON', url: '_recalculate_by_cliche.php?id=<?=$id ?? '' ?>&cliche_in_price=' + cliche_in_price + '&customer_pays_for_cliche=' + customer_pays_for_cliche })
                         .done(function(data) {
                             if(data.error != '') {
                                 alert(data.error);
@@ -5043,7 +5048,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                 var knife_in_price = $('#knife_in_price').is(':checked') ? 1 : 0;
                 var customer_pays_for_knife = $('#customer_pays_for_knife').is(':checked') ? 1 : 0;
                 
-                $.ajax({ dataType: 'JSON', url: '_recalculate_by_knife.php?id=<?=$id ?>&knife_in_price=' + knife_in_price + '&customer_pays_for_knife=' + customer_pays_for_knife })
+                $.ajax({ dataType: 'JSON', url: '_recalculate_by_knife.php?id=<?=$id ?? '' ?>&knife_in_price=' + knife_in_price + '&customer_pays_for_knife=' + customer_pays_for_knife })
                         .done(function(data) {
                             if(data.error != '') {
                                 alert(data.error);
