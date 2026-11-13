@@ -220,7 +220,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                     <table>
                         <tr>
                             <td>Продукция</td>
-                            <td><?= DisplayNumber($shipping_order_cost, 2) ?> ₽</td>
+                            <td><?= DisplayNumber($calculation_result->shipping_order_cost, 2) ?> ₽</td>
                         </tr>
                         <tr>
                             <td>Печатные формы</td>
@@ -236,7 +236,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Итого к оплате</td>
-                            <td><?= DisplayNumber($shipping_cost, 2)  ?> ₽</td>
+                            <td><?= DisplayNumber($calculation_result->shipping_cost_total, 2)  ?> ₽</td>
                         </tr>
                     </table>
                     <div class="subtitle">Наименования</div>
@@ -316,15 +316,15 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                         <div class="row">
                             <div class="col-4">
                                 Сумма заказа
-                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($shipping_cost), 2) ?>  ₽</div>
+                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($calculation_result->shipping_cost_total), 2) ?>  ₽</div>
                             </div>
                             <div class="col-4">
                                 Поступило
-                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval($payment_total), 2) ?> ₽</div>
+                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval($calculation_result->payment_total), 2) ?> ₽</div>
                             </div>
                             <div class="col-4">
                                 Остаток долга
-                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval($shipping_cost - $payment_total), 2) ?> ₽</div>
+                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval($calculation_result->shipping_cost_total - $calculation_result->payment_total), 2) ?> ₽</div>
                             </div>
                         </div>
                         <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
@@ -363,7 +363,7 @@ $calculated = in_array($calculation->status_id, ORDER_STATUSES_CALCULATED);
                                 <tr style="border-bottom: 0;">
                                     <td class="pl-2 font-weight-bold" style="line-height: 40px;">Итого поступило</td>
                                     <td class="text-left" style="line-height: 40px;"></td>
-                                    <td style="line-height: 40px;"><?=DisplayNumber(floatval($payment_total), 2) ?> ₽</td>
+                                    <td style="line-height: 40px;"><?=DisplayNumber(floatval($calculation_result->payment_total), 2) ?> ₽</td>
                                 </tr>
                             </table>
                         </div>

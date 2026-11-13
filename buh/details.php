@@ -119,46 +119,17 @@ else {
     $packed_fact = DisplayNumber(floor($calculation->length_cut * $calculation->number_in_meter), 0);
 }
 
-// Стоимость заказа
-$shipping_order_cost = 0;
-
-if($calculation->unit == KG) {
-    $shipping_order_cost = round($calculation->weight_cut, 2) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-else {
-    $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($calculation_result->shipping_cost_per_unit, 3);
-}
-
-// Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
-if($shipping_order_cost == 0) {
-    $shipping_order_cost = $calculation_result->shipping_cost;
-}
-
-// Общая стоимость для оплаты
-$shipping_cost = $shipping_order_cost + $calculation_result->shipping_cliche_cost + $calculation_result->shipping_knife_cost;
-
-// Общая оплата
-$payment_total = 0;
-
-$sql = "select ifnull(sum(case "
-        . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
-        . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
-        . "else p.amount "
-        . "end), 0) as amount_rub from payment p where p.order_id = ?";
-$fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $calculation->id]);
-$error_message = $fetcher->error;
-if($row = $fetcher->Fetch()) {
-    $payment_total = $row[0];
-}
-
 // Частично оплачены
-$paying = !empty($payment_total) && $payment_total < $shipping_cost;
+$paying = filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1;
 
 // Оплачено
-$paid = !empty($payment_total) && $payment_total >= $shipping_cost;
+$paid = filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1;
 
 // В производстве
-$production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED]);
+$production = filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1;
+
+// Статус
+$status_id = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -340,7 +311,7 @@ $production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDE
                     <table class="two_columns">
                         <tr>
                             <td>Продукция</td>
-                            <td><?= DisplayNumber(floatval($shipping_order_cost), 2) ?> ₽</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_order_cost), 2) ?> ₽</td>
                         </tr>
                         <tr>
                             <td>Печатные формы</td>
@@ -356,7 +327,7 @@ $production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDE
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Итого к оплате</td>
-                            <td><?= DisplayNumber($shipping_cost, 2)  ?> ₽</td>
+                            <td><?= DisplayNumber($calculation_result->shipping_cost_total, 2)  ?> ₽</td>
                         </tr>
                     </table>
                     <div class="subtitle">Наименования</div>
@@ -446,15 +417,15 @@ $production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDE
                         <div class="row">
                             <div class="col-4">
                                 Сумма заказа
-                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($shipping_cost), 2) ?>  ₽</div>
+                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($calculation_result->shipping_cost_total), 2) ?>  ₽</div>
                             </div>
                             <div class="col-4">
                                 Поступило
-                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval($payment_total), 2) ?> ₽</div>
+                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval($calculation_result->payment_total), 2) ?> ₽</div>
                             </div>
                             <div class="col-4">
                                 Остаток долга
-                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval($shipping_cost - $payment_total), 2) ?> ₽</div>
+                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval($calculation_result->shipping_cost_total - $calculation_result->payment_total), 2) ?> ₽</div>
                             </div>
                         </div>
                         <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
@@ -493,7 +464,7 @@ $production = in_array($calculation->status_id, [ORDER_STATUS_CUT_PRILADKA, ORDE
                                 <tr style="border-bottom: 0;">
                                     <td class="pl-2 font-weight-bold" style="line-height: 40px;">Итого поступило</td>
                                     <td class="text-left" style="line-height: 40px;"></td>
-                                    <td style="line-height: 40px;"><?=DisplayNumber(floatval($payment_total), 2) ?> ₽</td>
+                                    <td style="line-height: 40px;"><?=DisplayNumber(floatval($calculation_result->payment_total), 2) ?> ₽</td>
                                 </tr>
                             </table>
                         </div>

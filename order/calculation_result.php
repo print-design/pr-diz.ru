@@ -20,6 +20,9 @@ class CalculationResult {
     public $techmap_id, $techmap_date, $supplier_id, $side, $winding, $winding_unit, $spool, $labels, $package, $photolabel, $roll_type, $comment;
     public $supplier;
     
+    // Данные дублирующихся полей
+    public $shipping_order_cost, $shipping_cost_total, $payment_total;
+    
     // Печать: лицевая, оборотная
     public const SIDE_FRONT = 1;
     public const SIDE_BACK = 2;
@@ -147,25 +150,25 @@ class CalculationResult {
         // ЗАПОЛНЯЕМ ДУБЛИРУЮЩИЕСЯ ПОЛЯ (для ускорения загрузки
         
         // Стоимость заказа
-        $shipping_order_cost = 0;
+        $this->shipping_order_cost = 0;
         
         if($calculation->unit == KG) {
-            $shipping_order_cost = round($calculation->weight_cut, 2) * round($this->shipping_cost_per_unit, 3);
+            $this->shipping_order_cost = round($calculation->weight_cut, 2) * round($this->shipping_cost_per_unit, 3);
         }
         else {
-            $shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($this->shipping_cost_per_unit, 3);
+            $this->shipping_order_cost = floor($calculation->length_cut * $calculation->number_in_meter) * round($this->shipping_cost_per_unit, 3);
         }
         
         // Если резчик ничего ещё не успел нарезать, берём расчётную отгрузочную стоимость
-        if($shipping_order_cost == 0) {
-            $shipping_order_cost = $this->shipping_cost;
+        if($this->shipping_order_cost == 0) {
+            $this->shipping_order_cost = $this->shipping_cost;
         }
         
         // Общая стоимость для оплаты
-        $shipping_cost = $shipping_order_cost + $this->shipping_cliche_cost + $this->shipping_knife_cost;
+        $this->shipping_cost_total = $this->shipping_order_cost + $this->shipping_cliche_cost + $this->shipping_knife_cost;
         
         // Общая оплата
-        $payment_total = 0;
+        $this->payment_total = 0;
         
         $sql = "select ifnull(sum(case "
                 . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
@@ -175,13 +178,13 @@ class CalculationResult {
         $fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $calculation->id]);
         $error_message = $fetcher->error;
         if($row = $fetcher->Fetch()) {
-            $payment_total = $row[0];
+            $this->payment_total = $row[0];
         }
         
         // Заполняем дублирующееся поле
         if(empty($error_message)) {
             $sql = "update calculation set duplicate_shipping_cost = ?, duplicate_payment_total = ? where id = ?";
-            $executer = new Executer($sql, [$shipping_cost, $payment_total, $calculation->id]);
+            $executer = new Executer($sql, [$this->shipping_cost_total, $this->payment_total, $calculation->id]);
             $error_message = $executer->error;
         }
     }
