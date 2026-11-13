@@ -420,7 +420,10 @@ if(null !== filter_input(INPUT_POST, 'create_calculation_submit')) {
     
     // ЛАМИНАЦИЯ 1
     // Если есть плёнка 2, но нет ламинатора, то ошибка
-    if((!empty($lamination1_film_id) || !empty($lamination1_film_name)) && empty($laminator_id)) {
+    // (значения берём из POST: переменные $lamination1_film_id и $laminator_id на этом этапе ещё не заданы)
+    $laminator_id_post = filter_input(INPUT_POST, 'laminator_id', FILTER_VALIDATE_INT);
+    $lamination1_film_id_post = filter_input(INPUT_POST, 'lamination1_film_id', FILTER_VALIDATE_INT);
+    if(!empty($lamination1_film_id_post) && empty($laminator_id_post)) {
         $laminator_id_valid = ISINVALID;
         $form_valid = false;
     }
@@ -4181,7 +4184,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
                     
                     // Скрываем все поля, касающиеся ламинации
                     $('#form_lamination_1 select').val('');
-                    $('#form_lamination_1 input').val('');
+                    $('#form_lamination_1 input').not(':radio, :checkbox').val('');
                     $('#lamination1_film_id').change();
                     $('#lamination1_customers_material').prop("checked", false);
                 
@@ -4309,7 +4312,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Скрытие марки плёнки и толщины для ламинации 1
             function HideLamination1() {
                 $('#form_lamination_1 select').val('');
-                $('#form_lamination_1 input').val('');
+                $('#form_lamination_1 input').not(':radio, :checkbox').val('');
                 $('#lamination1_film_id').change();
                 $('#lamination1_customers_material').prop("checked", false);
                 
@@ -4354,7 +4357,7 @@ if((!empty($lamination1_film_id) || !empty($lamination1_individual_film_name)) &
             // Скрытие марки плёнки и толщины для ламинации 2
             function HideLamination2() {
                 $('#form_lamination_2 select').val('');
-                $('#form_lamination_2 input').val('');
+                $('#form_lamination_2 input').not(':radio, :checkbox').val('');
                 $('#lamination2_film_id').change();
                 $('#lamination2_customers_material').prop("checked", false);
                 
