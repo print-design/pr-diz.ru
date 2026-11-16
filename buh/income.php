@@ -37,9 +37,20 @@ $status_id = null;
         <?php
         include 'header.php';
         include '../include/pager_top.php';
+        
+        // Общее количество поступлений для установления количества страниц в постраничном выводе
+        $sql = "select count(p.id) "
+                . "from payment p "
+                . "inner join calculation c on p.order_id = c.id "
+                . "inner join user u on p.created_by = u.id";
+        $fetcher = new Fetcher($sql, []);
+        
+        if($row = $fetcher->Fetch()) {
+            $pager_total_count = $row[0];
+        }
         ?>
         <div class="container-fluid">
-            <h1>Поступления</h1>
+            <h1 class="d-inline">Поступления</h1><div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
             <table class="table table-hover typography">
                 <tr>
                     <th class="text-nowrap">ID заказа</th>
