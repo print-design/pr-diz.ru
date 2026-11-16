@@ -306,7 +306,15 @@ else {
                     // Сортировка -- только по столбцам из белого списка: имя столбца нельзя передать
                     // через "?", поэтому значение из адреса в запрос напрямую не подставляется
                     $order_columns = ['cell' => 'trim(cell)'];
-                    $orderby = $order_columns[filter_input(INPUT_GET, 'order') ?? ''] ?? '';
+                    
+                    $orderby = "";
+                    
+                    if(!empty($order_columns[filter_input(INPUT_GET, 'order')])) {
+                        $orderby = "if(cast(replace(cell, ' ', '') as unsigned) > 0, 1, 0) desc, "
+                                . "substring(replace(cell, ' ', ''), length(cast(replace(cell, ' ', '') as unsigned)) + 1, 1) collate utf8_general_ci asc, "
+                                . "cast(replace(cell, ' ', '') as unsigned) asc, "
+                                . "trim(cell) collate utf8_general_ci asc, ";
+                    }
                     
                     $sql = "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
                             . "r.width width, fv.thickness thickness, fv.weight density, rch.cell, r.net_weight net_weight, r.length length, "
@@ -339,14 +347,11 @@ else {
                         $list_params = $paramsroll;
                     }
                     
-                    if(!empty($orderby)) {
-                        $sql .= "order by $orderby limit ?, ?";
-                    }
-                    elseif($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $sql .= "order by status_date desc limit ?, ?";
+                    if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
+                        $sql .= "order by ".$orderby."status_date desc, id desc limit ?, ?";
                     }
                     else {
-                        $sql .= "order by id desc limit ?, ?";
+                        $sql .= "order by ".$orderby."id desc limit ?, ?";
                     }
                     
                     array_push($list_params, $pager_skip, $pager_take);
