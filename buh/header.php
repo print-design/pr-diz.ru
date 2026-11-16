@@ -10,10 +10,6 @@ $pack_status = '';
 $ship_status = '';
 $shipped_status = '';
 
-if(!empty($calculation)) {
-    $status_id = $calculation->status_id;
-}
-
 if($folder == "buh") {
     if($file == 'income.php') {
         $income_status = ' disabled';
@@ -27,13 +23,13 @@ if($folder == "buh") {
     elseif($production) {
         $production_status = ' disabled';
     }
-    elseif($status_id == ORDER_STATUS_PACK_READY) {
+    elseif($status == ORDER_STATUS_PACK_READY) {
         $pack_status = ' disabled';
     }
-    elseif($status_id == ORDER_STATUS_SHIP_READY) {
+    elseif($status == ORDER_STATUS_SHIP_READY) {
         $ship_status = ' disabled';
     }
-    elseif($status_id == ORDER_STATUS_SHIPPED) {
+    elseif($status == ORDER_STATUS_SHIPPED) {
         $shipped_status = ' disabled';
     }
     else {

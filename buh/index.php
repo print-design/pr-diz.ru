@@ -17,32 +17,16 @@ function OrderLink($param) {
 }
 
 // Частично оплачены
-$paying = false;
-
-if(filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1) {
-    $paying = true;
-}
+$paying = filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1;
 
 // Оплачены
-$paid = false;
-
-if(filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1) {
-    $paid = true;
-}
+$paid = filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1;
 
 // В производстве
-$production = false;
-
-if(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
-    $production = true;
-}
+$production = filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1;
 
 // Статус
-$status_id = null;
-
-if(null !== filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT)) {
-    $status_id = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
-}
+$status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
 
 // Фильтр по дате отгрузки
 $from = filter_input(INPUT_GET, 'from');
@@ -112,8 +96,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     elseif(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
                         $title = "Производят";
                     }
-                    elseif(!empty ($status_id)) {
-                        $title = ORDER_STATUS_NAMES[$status_id];
+                    elseif(!empty ($status)) {
+                        $title = ORDER_STATUS_NAMES[$status];
                     }
                     ?>
                     <h1 class="d-inline"><?= $title ?></h1>
@@ -189,9 +173,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         $sql .= "where c.duplicate_status_id in (?, ?, ?)";
                         array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
                     }
-                    elseif(!empty($status_id)) {
+                    elseif(!empty($status)) {
                         $sql .= "where c.duplicate_status_id = ?";
-                        array_push($params, $status_id);
+                        array_push($params, $status);
                     }
                     else {
                         $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total = 0";
@@ -200,12 +184,12 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                                 ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
                     }
                     
-                    if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
+                    if($status == ORDER_STATUS_SHIPPED && !empty($from)) {
                         $sql .= " and c.duplicate_status_date >= ?";
                         array_push($params, $date_from->format('Y-m-d'));
                     }
                     
-                    if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
+                    if($status == ORDER_STATUS_SHIPPED && !empty($to)) {
                         $sql .= " and c.duplicate_status_date <= ?";
                         array_push($params, $date_to->format('Y-m-d'));
                     }
@@ -220,9 +204,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <div class="p-1 text-nowrap d-flex justify-content-end">
-                    <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
+                    <?php if($status == ORDER_STATUS_SHIPPED): ?>
                     <form class="form-inline" method="get">
-                        <input type="hidden" name="status" value="<?=$status_id ?>" />
+                        <input type="hidden" name="status" value="<?=$status ?>" />
                         <input type="hidden" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" />
                         <label for="from" style="font-size: larger;">от&nbsp;</label>
                         <input type="date" 
@@ -234,7 +218,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                                onchange="javascript: this.form.submit();" />
                     </form>
                     <form class="form-inline" method="get">
-                        <input type="hidden" name="status" value="<?=$status_id ?>" />
+                        <input type="hidden" name="status" value="<?=$status ?>" />
                         <input type="hidden" name="from" value="<?= filter_input(INPUT_GET, 'from') ?>" />
                         <label for="to" style="font-size: larger;">до&nbsp;</label>
                         <input type="date" 
@@ -256,9 +240,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         <input type="hidden" name="paid" value="<?=$paid ?>" />
                         <?php
                         endif;
-                        if(null !== $status_id):
+                        if(null !== $status):
                         ?>
-                        <input type="hidden" name="status" value="<?=$status_id ?>" />
+                        <input type="hidden" name="status" value="<?=$status ?>" />
                         <?php endif; ?>
                         <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Шт/кг...</option>
@@ -310,7 +294,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 <tr>
                     <th><input type="checkbox" id="select_all_orders_checkbox" /></th>
                     <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                    <?php if($status_id == ORDER_STATUS_SHIPPED): ?>
+                    <?php if($status == ORDER_STATUS_SHIPPED): ?>
                     <th>Дата отгрузки&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                     <?php endif; ?>
                     <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
@@ -351,9 +335,9 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 $sql .= "where c.duplicate_status_id in (?, ?, ?)";
                 array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
             }
-            elseif(!empty($status_id)) {
+            elseif(!empty($status)) {
                 $sql .= "where c.duplicate_status_id = ?";
-                array_push($params, $status_id);
+                array_push($params, $status);
             }
             else {
                 $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total = 0";
@@ -362,12 +346,12 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
             }
             
-            if($status_id == ORDER_STATUS_SHIPPED && !empty($from)) {
+            if($status == ORDER_STATUS_SHIPPED && !empty($from)) {
                 $sql .= " and c.duplicate_status_date >= ?";
                 array_push($params, $date_from->format('Y-m-d'));
             }
             
-            if($status_id == ORDER_STATUS_SHIPPED && !empty($to)) {
+            if($status == ORDER_STATUS_SHIPPED && !empty($to)) {
                 $sql .= " and c.duplicate_status_date <= ?";
                 array_push($params, $date_to->format('Y-m-d'));
             }
@@ -415,7 +399,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><input type="checkbox" class="order-select-checkbox" value="<?=$row['id'] ?>" /></td>
                     <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
                     <?php
-                    if($status_id == ORDER_STATUS_SHIPPED):
+                    if($status == ORDER_STATUS_SHIPPED):
                         $shipping_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['status_date']);
                     ?>
                     <td><?=$shipping_date->format('d.m') ?><br /><span style="font-size: smaller;"><?=$shipping_date->format("H:i") ?></span></td>
