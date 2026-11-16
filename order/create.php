@@ -905,8 +905,13 @@ if(!isset($id)) {
 // Получение объекта
 $calculation_result = null;
 
-if(!empty($calculation)) {
-    $calculation_result = CalculationResult::Create($calculation);
+// Уже сохранённые результаты расчёта (если они есть, правая панель не будет считать заново и дописывать их в базу)
+if(!empty($id)) {
+    $calculation = CalculationBase::Create($id);
+    
+    if(is_a($calculation, CalculationBase::class)) {
+        $calculation_result = CalculationResult::Create($calculation);
+    }
 }
 
 $row = array();
