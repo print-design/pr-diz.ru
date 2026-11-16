@@ -517,7 +517,7 @@ $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
                                 </div>
                                 <div class="col-3">
                                     <label for="payment">№ платежа</label>
-                                    <input type="text" name="payment_num" placeholder="№" class="form-control" required="required" />
+                                    <input type="text" name="payment_num" placeholder="№" class="form-control" required="required" autocomplete="new-password" />
                                     <div class="invalid-feedback">№ платежа обязательно</div>
                                 </div>
                                 <div class="col-3">
