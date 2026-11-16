@@ -57,6 +57,39 @@ if(null !== filter_input(INPUT_POST, 'payment_submit')) {
         $executer = new Executer($sql, [$order_id, $paid_at, $payment_num, $amount, $currency, $created_by]);
         $error_message = $executer->error;
     }
+    
+    // Перенаправляем на эту же страницу с разными get-параметрами, в зависимости от закрытия платежа
+    $url_param = "";
+    
+    if(!empty(filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT))) {
+        $url_param = "&status=".filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
+    }
+    elseif(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
+        $url_param = "&production=1";
+    }
+    else {
+        $sql = "select c.duplicate_shipping_cost, "
+                . "(select ifnull(sum(case "
+                . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
+                . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
+                . "else p.amount "
+                . "end), 0) as amount_rub from payment p where p.order_id = c.id) "
+                . "as payment_total "
+                . "from calculation c where id = ?";
+        $fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $order_id]);
+        if($row = $fetcher->Fetch()) {
+            if(floatval($row['payment_total']) > 0.0) {
+                if(floatval($row['payment_total']) < floatval($row['duplicate_shipping_cost'])) {
+                    $url_param = "&paying=1";
+                }
+                else {
+                    $url_param = "&paid=1";
+                }
+            }
+        }
+    }
+    
+    header('Location: '. APPLICATION.'/buh/details.php?id='.$order_id.$url_param);
 }
 
 // Получение объекта
