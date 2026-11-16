@@ -310,10 +310,17 @@ else {
                     $orderby = "";
                     
                     if(!empty($order_columns[filter_input(INPUT_GET, 'order')])) {
-                        $orderby = "if(cast(replace(cell, ' ', '') as unsigned) > 0, 1, 0) desc, "
-                                . "substring(replace(cell, ' ', ''), length(cast(replace(cell, ' ', '') as unsigned)) + 1, 1) collate utf8_general_ci asc, "
-                                . "cast(replace(cell, ' ', '') as unsigned) asc, "
-                                . "trim(cell) collate utf8_general_ci asc, ";
+                        $order_param = filter_input(INPUT_GET, 'order');
+                        
+                        if($order_param == 'cell') {
+                            $orderby = "if(cast(replace(cell, ' ', '') as unsigned) > 0, 1, 0) desc, "
+                                    . "substring(replace(cell, ' ', ''), length(cast(replace(cell, ' ', '') as unsigned)) + 1, 1) collate utf8_general_ci asc, "
+                                    . "cast(replace(cell, ' ', '') as unsigned) asc, "
+                                    . "trim(cell) collate utf8_general_ci asc, ";
+                        }
+                        else {
+                            $orderby = $order_columns[$order_param].", ";
+                        }
                     }
                     
                     $sql = "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
