@@ -332,10 +332,12 @@ $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
                             <td>Материал</td>
                             <td><?= $calculation->film_1.(empty($calculation->film_2) ? '' : ' + '.$calculation->film_2).(empty($calculation->film_3) ? '' : ' + '.$calculation->film_3) ?></td>
                         </tr>
+                        <?php if(!is_a($calculation, CalculationSelfAdhesive::class)): ?>
                         <tr>
                             <td>Кол-во ламинаций</td>
                             <td><?=$calculation->laminations_number ?></td>
                         </tr>
+                        <?php endif; ?>
                         <?php if($calculation->status_id == ORDER_STATUS_SHIPPED): ?>
                         <tr>
                             <td>Дата отгрузки</td>
