@@ -148,7 +148,7 @@ if($machine_id == CUTTER_SOMA || $machine_id == CUTTER_3) {
             // отображаем список, начиная с этой работы.
             $sql = "select e.date "
                     . "from plan_edition e inner join calculation c on e.calculation_id = c.id "
-                    . "where (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) in (?, ?, ?, ?) "
+                    . "where c.duplicate_status_id in (?, ?, ?, ?) "
                     . "and e.work_id = ? and e.machine_id = ? and "
                     . "e.date between ? and ? "
                     . "and (select count(id) from calculation_stream where calculation_id = c.id) > 0 "

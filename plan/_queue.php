@@ -72,8 +72,8 @@ class Queue {
                 . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                 . "0 as lamination, 0 as run2, "
                 . "u.first_name, u.last_name, "
-                . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
-                . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
+                . "c.duplicate_status_id status_id, "
+                . "c.duplicate_status_date status_date, "
                 . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
                 . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
                 . "from calculation c "
@@ -83,7 +83,7 @@ class Queue {
                 . "where c.id not in (select calculation_id from plan_edition where run2 = 0"
                 . " and work_id = ?)"
                 . " and c.work_type_id <> ".WORK_TYPE_NOPRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
+                . " and c.duplicate_status_id = ".ORDER_STATUS_CONFIRMED
                 . " and ((c.raport in ($raport_placeholders) and c.ink_number <= ? and cr.width_1 <= ?) or c.machine_id = ? or (raport_irregular = 1 and ? <> ". PRINTER_ATLAS." and ? <> ". PRINTER_ZBS_1." and ? <> ". PRINTER_ZBS_2." and ? <> ". PRINTER_ZBS_3." and cr.width_1 <= ?))";
         
         $params = array_merge(
@@ -129,8 +129,8 @@ class Queue {
                     . "c.lamination2_film_variation_id, c.lamination2_individual_film_name, "
                     . "0 as lamination, 1 as run2, "
                     . "u.first_name, u.last_name, "
-                    . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
-                    . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
+                    . "c.duplicate_status_id status_id, "
+                    . "c.duplicate_status_date status_date, "
                     . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
                     . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
                     . "from calculation c "
@@ -141,7 +141,7 @@ class Queue {
                     . " and c.id not in (select calculation_id from plan_edition where run2 = 1"
                     . " and work_id = ?)"
                     . " and c.work_type_id <> ". WORK_TYPE_NOPRINT
-                    . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ". ORDER_STATUS_CONFIRMED
+                    . " and c.duplicate_status_id = ". ORDER_STATUS_CONFIRMED
                     . " and ((c.raport in ($raport_placeholders) and c.ink_number <= ?) or machine_id = ? or (raport_irregular = 1 and ? <> ". PRINTER_ATLAS."))";
             
             $params = array_merge(
@@ -190,8 +190,8 @@ class Queue {
                 . "1 as lamination, 0 as run2, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
                 . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position, "
-                . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
-                . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
+                . "c.duplicate_status_id status_id, "
+                . "c.duplicate_status_date status_date, "
                 . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
                 . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
                 . "from calculation c "
@@ -209,13 +209,13 @@ class Queue {
                 . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                 . " and (("
                 . "c.work_type_id = ".WORK_TYPE_PRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT
+                . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_PRINT
                 . ") or ("
                 . "c.work_type_id = ".WORK_TYPE_NOPRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
+                . " and c.duplicate_status_id = ".ORDER_STATUS_CONFIRMED
                 . ") or ("
                 . "c.work_type_id = ".WORK_TYPE_NOPRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT
+                . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_PRINT
                 . "))"
                 . " union "
                 . "select ".PLAN_TYPE_EDITION." as type, 3 as position, c.id as id, c.id as calculation_id, c.name calculation, c.work_type_id, cus.name as customer, cr.length_dirty_3 as length, c.ink_number, c.raport, c.lamination_roller_width, c.queue_top, "
@@ -225,8 +225,8 @@ class Queue {
                 . "2 as lamination, 0 as run2, cr.width_1, cr.width_2, cr.width_3, "
                 . "u.first_name, u.last_name, "
                 . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position, "
-                . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
-                . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
+                . "c.duplicate_status_id status_id, "
+                . "c.duplicate_status_date status_date, "
                 . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
                 . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) as images_count "
                 . "from calculation c "
@@ -244,13 +244,13 @@ class Queue {
                 . " and (c.lamination2_film_variation_id is not null or (c.lamination2_individual_film_name is not null and c.lamination2_individual_film_name <> ''))"
                 . " and (("
                 . "c.work_type_id = ".WORK_TYPE_PRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT
+                . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_PRINT
                 . ") or ("
                 . "c.work_type_id = ".WORK_TYPE_NOPRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
+                . " and c.duplicate_status_id = ".ORDER_STATUS_CONFIRMED
                 . ") or ("
                 . "c.work_type_id = ".WORK_TYPE_NOPRINT
-                . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT
+                . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_PRINT
                 . "))"
                 . " order by position, queue_top desc, work_type_id, print_date, print_shift, print_position, status_date";
         $fetcher = new Fetcher($sql, [$this->work_id, $this->machine_id, $this->work_id, $this->work_id]);
@@ -290,8 +290,8 @@ class Queue {
                 . "u.first_name, u.last_name, "
                 . "peprint.date as print_date, peprint.shift as print_shift, peprint.position as print_position, "
                 . "pelam.date as lamination_date, pelam.shift as lamination_shift, pelam.position as lamination_position, "
-                . "(select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_id, "
-                . "(select date from calculation_status_history where calculation_id = c.id order by date desc limit 1) status_date, "
+                . "c.duplicate_status_id status_id, "
+                . "c.duplicate_status_date status_date, "
                 . "(select count(id) from calculation_stream where calculation_id = c.id and (image1 <> '' or image2 <> '')) "
                 . "+ (select count(id) from calculation_quantity where calculation_id = c.id and (image1 <> '' or image2 <> '')) images_count "
                 . "from calculation c "
@@ -303,24 +303,24 @@ class Queue {
                 . "where c.id not in (select calculation_id from plan_edition where work_id = ?)";
         if($this->machine_id == CUTTER_ATLAS) {
             $sql .= " and c.work_type_id = ".WORK_TYPE_SELF_ADHESIVE
-                    . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT;
+                    . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_PRINT;
         }
         else {
             $sql .= " and "
                     . "((c.work_type_id = ".WORK_TYPE_PRINT
-                    . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_PRINT
+                    . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_PRINT
                     . " and c.lamination1_film_variation_id is null and (c.lamination1_individual_film_name is null or c.lamination1_individual_film_name = '')"
                     . ") or ("
                     . "c.work_type_id = ".WORK_TYPE_PRINT
-                    . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_LAMINATE
+                    . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_LAMINATE
                     . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                     . ") or ("
                     . "c.work_type_id = ".WORK_TYPE_NOPRINT
-                    . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_CONFIRMED
+                    . " and c.duplicate_status_id = ".ORDER_STATUS_CONFIRMED
                     . " and c.lamination1_film_variation_id is null and (c.lamination1_individual_film_name is null or c.lamination1_individual_film_name = '')"
                     . ") or ("
                     . "c.work_type_id = ".WORK_TYPE_NOPRINT
-                    . " and (select status_id from calculation_status_history where calculation_id = c.id order by date desc limit 1) = ".ORDER_STATUS_PLAN_LAMINATE
+                    . " and c.duplicate_status_id = ".ORDER_STATUS_PLAN_LAMINATE
                     . " and (c.lamination1_film_variation_id is not null or (c.lamination1_individual_film_name is not null and c.lamination1_individual_film_name <> ''))"
                     . "))";
         }

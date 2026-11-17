@@ -152,7 +152,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     }
                     
                     // Общее количество работ для установления количества страниц в постраничном выводе
-                    $sql = "select count(distinct c.id) "
+                    $sql = "select count(c.id) "
                             . "from calculation c "
                             . "left join customer cus on c.customer_id = cus.id ";
                     $params = array();
@@ -258,7 +258,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
                             <option value="">Менеджер...</option>
                             <?php
-                            $sql = "select distinct u.id, u.last_name, u.first_name from calculation c inner join user u on c.manager_id = u.id order by u.last_name, u.first_name";
+                            $sql = "select u.id, u.last_name, u.first_name from user u where exists (select 1 from calculation c where c.manager_id = u.id) order by u.last_name, u.first_name";
                             $fetcher = new Fetcher($sql, []);
                             while ($row = $fetcher->Fetch()):
                             ?>
@@ -308,7 +308,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th></th>
                 </tr>
             <?php
-            $sql = "select distinct c.id, c.customer_id, c.work_type_id, "
+            $sql = "select c.id, c.customer_id, c.work_type_id, "
                     . "cus.name as customer, c.name as calculation, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
