@@ -21,4 +21,6 @@ define('AUTOLOGOUT_MIN', 20);
 
 define('EMAIL_TO', 'sergey_print@bk.ru');
 define('EMAIL_TO_NAME', "Пономарёв Сергей");
+define('SMTP_USERNAME', 'admin@pr-diz.ru');
+define('SMTP_PASSWORD', '...пароль...');
 ?>
