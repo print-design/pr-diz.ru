@@ -65,7 +65,7 @@ elseif($folder == "okto") {
     <?php
     endif;
     // План
-    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_COLORIST]))):
+    if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER], ROLE_NAMES[ROLE_SCHEDULER], ROLE_NAMES[ROLE_LAM_HEAD], ROLE_NAMES[ROLE_FLEXOPRINT_HEAD], ROLE_NAMES[ROLE_STOREKEEPER], ROLE_NAMES[ROLE_PACKER], ROLE_NAMES[ROLE_COLORIST]))):
     ?>
     <a href="<?=APPLICATION ?>/plan/" class="left_bar_item ui_tooltip right<?=$plan_class ?>" data-placement="right" title="План"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
@@ -99,6 +99,12 @@ elseif($folder == "okto") {
             <path d="M6.125 2V12H4V14H6.125V16H4V18H6.125V22H8.25V18H13.5625V16H8.25V14H14.625C18.1313 14 21 11.3 21 8C21 4.7 18.1313 2 14.625 2H6.125ZM8.25 4H14.625C16.9827 4 18.875 5.781 18.875 8C18.875 10.219 16.9827 12 14.625 12H8.25V4Z" fill="currentColor"></path>
         </svg>
     </a>
+    <?php
+    endif;
+    // Для бухгалтера план помещаем ниже бухгалтерии
+    if(IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
+    ?>
+    <a href="<?=APPLICATION ?>/plan/" class="left_bar_item ui_tooltip right<?=$plan_class ?>" data-placement="right" title="План"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
     <?php
     endif;
     // Админка
