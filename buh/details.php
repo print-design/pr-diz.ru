@@ -514,7 +514,7 @@ $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
                             <div class="row mb-3">
                                 <div class="col-3">
                                     <label for="time">Дата и время</label>
-                                    <input type="datetime-local" name="paid_at" class="form-control" required="required" />
+                                    <input type="datetime-local" max="<?=date('Y-m-d') ?>T23:59" name="paid_at" class="form-control" required="required" />
                                     <div class="invalid-feedback">Дата и время обязательно</div>
                                 </div>
                                 <div class="col-3">
