@@ -25,6 +25,9 @@ $paid = filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1;
 // В производстве
 $production = filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1;
 
+// Поступления
+$income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
+
 // Статус
 $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
 

@@ -60,9 +60,10 @@ $status_id = null;
                     <th class="text-nowrap">№ платежа</th>
                     <th>Дата</th>
                     <th>Бухгалтер</th>
+                    <th></th>
                 </tr>
                 <?php
-                $sql = "select p.id, c.customer_id, c.duplicate_num_for_customer, c.name, p.amount, p.currency, p.payment_num, p.paid_at, u.last_name, u.first_name "
+                $sql = "select p.id, p.order_id, c.customer_id, c.duplicate_num_for_customer, c.name, p.amount, p.currency, p.payment_num, p.paid_at, u.last_name, u.first_name "
                         . "from payment p "
                         . "inner join calculation c on p.order_id = c.id "
                         . "inner join user u on p.created_by = u.id "
@@ -78,6 +79,18 @@ $status_id = null;
                     <td><?=$row['payment_num'] ?></td>
                     <td><?= DateTime::createFromFormat("Y-m-d H:i:s", $row['paid_at'])->format('d.m.Y H:i') ?></td>
                     <td><?=$row['last_name'].' '.$row['first_name'] ?></td>
+                    <td>
+                        <?php
+                        $get_params = $_GET;
+                        $get_params['income'] = 1;
+                        $get_params['id'] = $row['order_id'];
+                        ?>
+                        <a href="details.php?<?= http_build_query($get_params) ?>">
+                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
+                            </svg>
+                        </a>
+                    </td>
                 </tr>
                 <?php endwhile; ?>
             </table>

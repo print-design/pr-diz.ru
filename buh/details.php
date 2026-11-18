@@ -158,6 +158,9 @@ $paying = filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1;
 // Оплачено
 $paid = filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1;
 
+// Поступления
+$income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
+
 // В производстве
 $production = filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1;
 
@@ -292,6 +295,13 @@ $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
                     }
                     elseif($paid) {
                         $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["paying", "production", "status", "id"]);
+                    }
+                    elseif($income) {
+                        $get_params = $_GET;
+                        unset($get_params['income']);
+                        unset($get_params['id']);
+                        $query = empty($get_params) ? "" : "?". http_build_query($get_params);
+                        $backlink_url = "income.php".$query;
                     }
                     elseif($production) {
                         $backlink_url = BuildQueryAddRemoveArray('production', 1, ["paying", "paid", "status", "id"]);
