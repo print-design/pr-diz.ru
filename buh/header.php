@@ -52,7 +52,7 @@ if($folder == "buh") {
             <li class="nav-item">
                 <a class="nav-link<?=$income_status ?>" href="<?= APPLICATION ?>/buh/income.php">Поступления</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item ml-5">
                 <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("production", 1, ["paying", "paid", "status", "page", "order", "from", "to", "id"]) ?>">Производят</a>
             </li>
             <li class="nav-item">
