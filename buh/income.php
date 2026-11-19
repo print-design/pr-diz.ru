@@ -77,9 +77,38 @@ $status_id = null;
                         . "from payment p "
                         . "inner join calculation c on p.order_id = c.id "
                         . "inner join customer cus on c.customer_id = cus.id "
-                        . "inner join user u on c.manager_id = u.id "
-                        . "order by p.id desc limit ?, ?";
-                $fetcher = new Fetcher($sql, [$pager_skip, $pager_take]);
+                        . "inner join user u on c.manager_id = u.id";
+                
+                // Сортировка
+                if(array_key_exists('order', $_REQUEST)) {
+                    switch($_REQUEST['order']) {
+                        case 'datetime':
+                            $sql .= " order by p.paid_at desc";
+                            break;
+                        
+                        case 'id':
+                            $sql .= " order by c.customer_id asc, c.duplicate_num_for_customer asc";
+                            break;
+                        
+                        case 'customer':
+                            $sql .= " order by cus.name asc";
+                            break;
+                        
+                        case 'amount':
+                            $sql .= " order by p.amount asc";
+                            break;
+                        
+                        default :
+                            $sql .= " order by p.id desc";
+                            break;
+                    }
+                }
+
+                $sql .= " limit $pager_skip, $pager_take";
+                
+                $params = [];
+                
+                $fetcher = new Fetcher($sql, $params);
                 while ($row = $fetcher->Fetch()):
                 ?>
                 <tr>
