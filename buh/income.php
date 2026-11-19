@@ -6,6 +6,16 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT])))
     include '../include/_unauthorized.php';
 }
 
+// Формирование ссылки для сортировки по столбцу
+function OrderLink($param) {
+    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
+        echo "<strong><i class='fas fa-chevron-down' style='color: black; font-size: small;'></i></strong>";
+    }
+    else {
+        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-chevron-down'></i></a>";
+    }
+}
+
 // Чтобы заголовок не выдавал ошибку
 $paying = false;
 $paid = false;
@@ -53,32 +63,33 @@ $status_id = null;
             <h1 class="d-inline">Поступления</h1><div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
             <table class="table table-hover typography">
                 <tr>
-                    <th class="text-nowrap">ID заказа</th>
-                    <th>Заказ</th>
-                    <th>Сумма</th>
-                    <th>Валюта</th>
+                    <th class="text-nowrap">Дата и время&nbsp;&nbsp;<?= OrderLink('datetime') ?></th>
+                    <th class="text-nowrap">ID заказа&nbsp;&nbsp;<?= OrderLink('id') ?></th>
                     <th class="text-nowrap">№ платежа</th>
-                    <th>Дата</th>
-                    <th>Бухгалтер</th>
+                    <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
+                    <th>Заказ</th>
+                    <th>Менеджер</th>
+                    <th class="text-right">Сумма&nbsp;&nbsp;<?= OrderLink('amount') ?></th>
                     <th></th>
                 </tr>
                 <?php
-                $sql = "select p.id, p.order_id, c.customer_id, c.duplicate_num_for_customer, c.name, p.amount, p.currency, p.payment_num, p.paid_at, u.last_name, u.first_name "
+                $sql = "select p.id, p.order_id, p.paid_at, c.customer_id, c.duplicate_num_for_customer, p.payment_num, cus.name customer, c.name, p.amount, p.currency, u.last_name, u.first_name "
                         . "from payment p "
                         . "inner join calculation c on p.order_id = c.id "
-                        . "inner join user u on p.created_by = u.id "
+                        . "inner join customer cus on c.customer_id = cus.id "
+                        . "inner join user u on c.manager_id = u.id "
                         . "order by p.id desc limit ?, ?";
                 $fetcher = new Fetcher($sql, [$pager_skip, $pager_take]);
                 while ($row = $fetcher->Fetch()):
                 ?>
                 <tr>
-                    <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['duplicate_num_for_customer'] ?></td>
-                    <td><?=$row['name'] ?></td>
-                    <td><?= DisplayNumber(floatval($row['amount']), 2) ?></td>
-                    <td><?= CURRENCY_SIGNES[$row['currency']] ?></td>
-                    <td><?=$row['payment_num'] ?></td>
                     <td><?= DateTime::createFromFormat("Y-m-d H:i:s", $row['paid_at'])->format('d.m.Y H:i') ?></td>
-                    <td><?=$row['last_name'].' '.$row['first_name'] ?></td>
+                    <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['duplicate_num_for_customer'] ?></td>
+                    <td><?=$row['payment_num'] ?></td>
+                    <td><?=$row['customer'] ?></td>
+                    <td><?=$row['name'] ?></td>
+                    <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
+                    <td class="text-nowrap text-right"><?= DisplayNumber(floatval($row['amount']), 2) ?>&nbsp;<?= CURRENCY_SIGNES[$row['currency']] ?></td>
                     <td>
                         <?php
                         $get_params = $_GET;

@@ -9,10 +9,10 @@ if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT])))
 // Формирование ссылки для сортировки по столбцу
 function OrderLink($param) {
     if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
-        echo "<strong><i class='fas fa-arrow-down' style='color: black; font-size: small;'></i></strong>";
+        echo "<strong><i class='fas fa-chevron-down' style='color: black; font-size: small;'></i></strong>";
     }
     else {
-        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-arrow-down'></i></a>";
+        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-chevron-down'></i></a>";
     }
 }
 
