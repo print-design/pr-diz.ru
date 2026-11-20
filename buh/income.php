@@ -119,6 +119,7 @@ $status_id = null;
         <?php
         include '../include/head.php';
         ?>
+        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
         <style>
             table.typography {
                 border-radius: 15px;
@@ -171,17 +172,33 @@ $status_id = null;
                                style="border: 0; width: 8.5rem;" 
                                onchange="javascript: this.form.submit();" />
                     </form>
-                    <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
-                        <option value="">Менеджер...</option>
-                        <?php
-                        $sql = "select u.id, u.last_name, u.first_name from user u where exists (select 1 from calculation c where c.manager_id = u.id) order by u.last_name, u.first_name";
-                        $fetcher = new Fetcher($sql, []);
-                        while ($row = $fetcher->Fetch()):
-                        ?>
-                        <option value="<?=$row['id'] ?>"<?=$row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "" ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                    <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новое поступление</a>
+                    <form class="form-inline d-inline" method="get">
+                        <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Менеджер...</option>
+                            <?php
+                            $sql = "select u.id, u.last_name, u.first_name from user u where exists (select 1 from calculation c where c.manager_id = u.id) order by u.last_name, u.first_name";
+                            $fetcher = new Fetcher($sql, []);
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=$row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "" ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <?php
+                            $get_customer = filter_input(INPUT_GET, "customer");
+                            if(null !== $get_customer):
+                                $sql = "select name from customer where id = ?";
+                            $fetcher = new Fetcher($sql, [$get_customer]);
+                            if($row = $fetcher->Fetch()):
+                            ?>
+                            <option selected="selected" value="<?=$get_customer ?>"><?=$row[0] ?></option>
+                            <?php
+                            endif;
+                            endif;
+                            ?>
+                        </select>
+                    </form>
+                    <a href="create.php" class="btn btn-dark ml-1"><i class="fas fa-plus"></i>&nbsp;Новое поступление</a>
                 </div>
             </div>
             
@@ -238,6 +255,23 @@ $status_id = null;
                 maximumSelectionLength: 1,
                 language: "ru",
                 width: "8rem"
+            });
+            
+            $('#customer').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "15rem",
+                minimumInputLength: 3,
+                ajax: {
+                    url: '_customer_select2.php',
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
+                }
             });
         </script>
     </body>
