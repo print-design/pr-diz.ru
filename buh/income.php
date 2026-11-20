@@ -58,7 +58,7 @@ if(null !== filter_input(INPUT_POST, 'new_income_submit')) {
     $new_created_by = GetUserId();
     
     if($form_valid) {
-        $sql = "insert into order_id, paid_at, payment_num, amount, currency, created_by values (?, ?, ?, ?, ?, ?)";
+        $sql = "insert into payment (order_id, paid_at, payment_num, amount, currency, created_by) values (?, ?, ?, ?, ?, ?)";
         $executer = new Executer($sql, [$new_order_id, $new_paid_at, $new_payment_num, $new_amount, $new_currency, $new_created_by]);
         $error_message = $executer->error;
     }
@@ -149,6 +149,9 @@ if(array_key_exists('order', $_REQUEST)) {
             $sql .= " order by p.id desc";
             break;
     }
+}
+else {
+    $sql .= " order by p.id desc";
 }
 
 $sql .= " limit $pager_skip, $pager_take";
