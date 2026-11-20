@@ -198,7 +198,7 @@ $status_id = null;
                             ?>
                         </select>
                     </form>
-                    <a href="create.php" class="btn btn-dark ml-1"><i class="fas fa-plus"></i>&nbsp;Новое поступление</a>
+                    <a href="javascript: void(0);" class="btn btn-dark ml-1" data-toggle="modal" data-target="#newIncome"><i class="fas fa-plus ml-2 mr-2"></i>&nbsp;Новое поступление</a>
                 </div>
             </div>
             
@@ -243,6 +243,29 @@ $status_id = null;
             include '../include/pager_bottom.php';
             ?>
         </div>
+        <!-- Новое поступление -->
+        <div class="modal fixed-left fade" id="newIncome" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 32px; width: 521px; overflow-y: auto;">
+                    <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 34px; top: 34px; z-index: 2000;"><img src="../images/icons/close_modal_red.svg" /></button>
+                    <h2><span class="mr-4" style="color: #EC3A7A;">₽</span>Добавить поступление</h2>
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="new_customer">Заказчик</label>
+                            <select id="new_customer" name="new_customer" class="form-control" multiple="multiple" required="required"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_order_id">Заказ</label>
+                            <select id="new_order_id" name="new_order_id" class="form-control" multiple="multiple" required="required"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_paid_at">Дата и время</label>
+                            <input type="datetime-local" max="<?=date('Y-m-d') ?>T23:59" name="new_paid_at" class="form-control" required="required" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <?php
         include '../include/footer.php';
         ?>
@@ -267,6 +290,47 @@ $status_id = null;
                     url: '_customer_select2.php',
                     dataType: 'json',
                     delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
+                }
+            });
+            
+            $('#new_customer').select2({
+                placeholder: "Выберите заказчика",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "100%",
+                minimumInputLength: 3,
+                ajax: {
+                    url: '_customer_select2.php',
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
+                }
+            });
+            
+            $('#new_order_id').select2({
+                placeholder: "Выберите заказ",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "100%",
+                minimumInputLength: 3,
+                ajax: {
+                    url: "_name_select2.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        var customerVal = $('#new_customer').val();
+                        return {
+                            q: params.term,
+                            customer: (customerVal && customerVal.length > 0) ? customerVal[0] : ''
+                        };
+                    },
                     processResults: function(data) {
                         return { results: data };
                     },
