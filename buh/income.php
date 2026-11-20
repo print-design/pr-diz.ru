@@ -47,13 +47,16 @@ if(null !== filter_input(INPUT_POST, 'new_income_submit')) {
     }
     
     $new_amount = filter_input(INPUT_POST, 'new_amount');
-    $new_amount = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $new_amount);
-    if(empty($new_amount)) {
+    $new_amount = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $new_amount ?? '');
+    if(empty($new_amount) || !is_numeric($new_amount)) {
         $new_amount_valid = ISINVALID;
         $form_valid = false;
     }
     
     $new_currency = filter_input(INPUT_POST, 'new_currency');
+    if(!in_array($new_currency, CURRENCIES)) {
+        $new_currency = CURRENCY_RUB;
+    }
     
     $new_created_by = GetUserId();
     
@@ -61,6 +64,12 @@ if(null !== filter_input(INPUT_POST, 'new_income_submit')) {
         $sql = "insert into payment (order_id, paid_at, payment_num, amount, currency, created_by) values (?, ?, ?, ?, ?, ?)";
         $executer = new Executer($sql, [$new_order_id, $new_paid_at, $new_payment_num, $new_amount, $new_currency, $new_created_by]);
         $error_message = $executer->error;
+        
+        // После успешного добавления перезагружаем страницу, чтобы обновление (F5) не добавило поступление повторно
+        if(empty($error_message)) {
+            header('Location: '.APPLICATION.'/buh/income.php'.(empty($_SERVER['QUERY_STRING']) ? '' : '?'.$_SERVER['QUERY_STRING']));
+            exit();
+        }
     }
     else {
         $error_message = "Ошибка при добавлении поступления";
@@ -108,7 +117,8 @@ function GetFilter(&$params) {
 $sql = "select count(p.id) "
         . "from payment p "
         . "inner join calculation c on p.order_id = c.id "
-        . "inner join user u on p.created_by = u.id";
+        . "inner join customer cus on c.customer_id = cus.id "
+        . "inner join user u on c.manager_id = u.id";
 $params = [];
 $sql .= GetFilter($params);
 $fetcher = new Fetcher($sql, $params);
