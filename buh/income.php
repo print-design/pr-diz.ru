@@ -400,7 +400,7 @@ $status_id = null;
                     cache: false
                 }
             });
-            
+        
             $('#new_order_id').select2({
                 placeholder: "Выберите заказ",
                 maximumSelectionLength: 1,
@@ -423,6 +423,16 @@ $status_id = null;
                     },
                     cache: false
                 }
+            });
+
+            // Поле поиска select2 в скрытом окне получает ширину 0 и placeholder не виден (см. select2 4.0.13).
+            // Когда окно показалось, растягиваем поле поиска на всю ширину.
+            $('#newIncome').on('shown.bs.modal', function() {
+                $('#new_customer, #new_order_id').each(function() {
+                    if(!$(this).val() || $(this).val().length == 0) {
+                        $(this).next('.select2').find('.select2-search__field').css('width', '100%');
+                    }
+                });
             });
         </script>
     </body>
