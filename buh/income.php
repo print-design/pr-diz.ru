@@ -17,6 +17,56 @@ function OrderLink($param) {
     }
 }
 
+// Валидация формы создания нового поступления
+$form_valid = true;
+$error_message = '';
+
+$new_order_id_valid = '';
+$new_paid_at_valid = '';
+$new_payment_num_valid = '';
+$new_amount_valid = '';
+
+// Обработка отправки формы создания нового поступления
+if(null !== filter_input(INPUT_POST, 'new_income_submit')) {
+    $new_order_id = filter_input(INPUT_POST, 'new_order_id', FILTER_VALIDATE_INT);
+    if(empty($new_order_id)) {
+        $new_order_id_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $new_paid_at = filter_input(INPUT_POST, 'new_paid_at');
+    if(empty($new_paid_at)) {
+        $new_paid_at_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $new_payment_num = filter_input(INPUT_POST, 'new_payment_num');
+    if(empty($new_payment_num)) {
+        $new_payment_num_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $new_amount = filter_input(INPUT_POST, 'new_amount');
+    $new_amount = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $new_amount);
+    if(empty($new_amount)) {
+        $new_amount_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $new_currency = filter_input(INPUT_POST, 'new_currency');
+    
+    $new_created_by = GetUserId();
+    
+    if($form_valid) {
+        $sql = "insert into order_id, paid_at, payment_num, amount, currency, created_by values (?, ?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$new_order_id, $new_paid_at, $new_payment_num, $new_amount, $new_currency, $new_created_by]);
+        $error_message = $executer->error;
+    }
+    else {
+        $error_message = "Ошибка при добавлении поступления";
+    }
+}
+
 // Фильтр
 function GetFilter(&$params) {
     $filter = '';
@@ -257,20 +307,23 @@ $status_id = null;
                         </div>
                         <div class="form-group">
                             <label for="new_order_id">Заказ</label>
-                            <select id="new_order_id" name="new_order_id" class="form-control" multiple="multiple" required="required"></select>
+                            <select id="new_order_id" name="new_order_id" class="form-control<?=$new_order_id_valid ?>" multiple="multiple" required="required"></select>
+                            <div class="invalid-feedback">Заказ обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="new_paid_at">Дата и время</label>
-                            <input type="datetime-local" max="<?=date('Y-m-d') ?>T23:59" name="new_paid_at" class="form-control" required="required" />
+                            <input type="datetime-local" max="<?=date('Y-m-d') ?>T23:59" name="new_paid_at" class="form-control<?=$new_paid_at_valid ?>" required="required" />
+                            <div class="invalid-feedback">Дата и время обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="new_payment_num">Номер платежа</label>
-                            <input type="text" name="new_payment_num" class="form-control" required="required" autocomplete="new-password" placeholder="№" />
+                            <input type="text" name="new_payment_num" class="form-control<?=$new_payment_num_valid ?>" required="required" autocomplete="new-password" placeholder="№" />
+                            <div class="invalid-feedback">Номер платежа обязательно</div>
                         </div>
                         <div class="form-group">
                             <label for="new_amount">Сумма</label>
                             <div class="input-group">
-                                <input type="text" class="form-control float-only" name="new_amount" required="required" autocomplete="new-password" placeholder="0.00" />
+                                <input type="text" class="form-control float-only float-format<?=$new_amount_valid ?>" name="new_amount" required="required" autocomplete="new-password" placeholder="0.00" />
                                 <div class="input-group-append">
                                     <select name="new_currency" required="required">
                                         <option value="<?= CURRENCY_RUB ?>"><?= CURRENCY_SIGNES[CURRENCY_RUB] ?></option>
@@ -278,6 +331,7 @@ $status_id = null;
                                         <option value="<?= CURRENCY_EURO ?>"><?= CURRENCY_SIGNES[CURRENCY_EURO] ?></option>
                                     </select>
                                 </div>
+                                <div class="invalid-feedback">Сумма обязательно</div>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-dark mt-4" id="new_income_submit" name="new_income_submit"><i class="fas fa-plus ml-2 mr-2"></i>&nbsp;Добавить</button>
@@ -341,7 +395,7 @@ $status_id = null;
                 width: "100%",
                 minimumInputLength: 3,
                 ajax: {
-                    url: "_name_select2.php",
+                    url: "_order_select2.php",
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
