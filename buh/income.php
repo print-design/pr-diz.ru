@@ -250,6 +250,7 @@ $status_id = null;
                     <button type="button" class="close" data-dismiss='modal' style="position: absolute; right: 34px; top: 34px; z-index: 2000;"><img src="../images/icons/close_modal_red.svg" /></button>
                     <h2><span class="mr-4" style="color: #EC3A7A;">₽</span>Добавить поступление</h2>
                     <form method="post">
+                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
                         <div class="form-group">
                             <label for="new_customer">Заказчик</label>
                             <select id="new_customer" name="new_customer" class="form-control" multiple="multiple" required="required"></select>
@@ -262,6 +263,25 @@ $status_id = null;
                             <label for="new_paid_at">Дата и время</label>
                             <input type="datetime-local" max="<?=date('Y-m-d') ?>T23:59" name="new_paid_at" class="form-control" required="required" />
                         </div>
+                        <div class="form-group">
+                            <label for="new_payment_num">Номер платежа</label>
+                            <input type="text" name="new_payment_num" class="form-control" required="required" autocomplete="new-password" placeholder="№" />
+                        </div>
+                        <div class="form-group">
+                            <label for="new_amount">Сумма</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control float-only" name="new_amount" required="required" autocomplete="new-password" placeholder="0.00" />
+                                <div class="input-group-append">
+                                    <select name="new_currency" required="required">
+                                        <option value="<?= CURRENCY_RUB ?>"><?= CURRENCY_SIGNES[CURRENCY_RUB] ?></option>
+                                        <option value="<?= CURRENCY_USD ?>"><?= CURRENCY_SIGNES[CURRENCY_USD] ?></option>
+                                        <option value="<?= CURRENCY_EURO ?>"><?= CURRENCY_SIGNES[CURRENCY_EURO] ?></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-dark mt-4" id="new_income_submit" name="new_income_submit"><i class="fas fa-plus ml-2 mr-2"></i>&nbsp;Добавить</button>
+                        <button type="button" class="btn btn-link mt-4" data-dismiss="modal">Отмена</button>
                     </form>
                 </div>
             </div>
