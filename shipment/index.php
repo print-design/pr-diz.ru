@@ -426,7 +426,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 width: "15rem",
                 minimumInputLength: 3,
                 ajax: {
-                    url: '_customer_select2.php',
+                    url: '../buh/_customer_select2.php',
                     dataType: 'json',
                     delay: 250,
                     processResults: function(data) {
@@ -443,7 +443,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                 width: "15rem",
                 minimumInputLength: 3,
                 ajax: {
-                    url: "_name_select2.php",
+                    url: "../buh/_name_select2.php",
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
@@ -464,7 +464,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             $('a.customer').click(function(e) {
                 var customer_id = $(e.target).attr('data-customer-id');
                 if(customer_id !== null) {
-                    $.ajax({ url: "_customer.php?id=" + customer_id })
+                    $.ajax({ url: "../buh/_customer.php?id=" + customer_id })
                             .done(function(data) {
                                 $('#customerModal .modal-dialog .modal-content').html(data);
                     });
