@@ -1,185 +1,532 @@
 <?php
 include '../include/topscripts.php';
+include '../order/calculation.php';
+include '../order/calculation_result.php';
+include '../order/calculation_rolls.php';
 
-// Авторизация -- оформление отгрузок теперь только у бухгалтера (и технолога, как везде)
-if(!IsInRole(array(ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
+// Авторизация
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
     include '../include/_unauthorized.php';
 }
 
+// Если не указан id, направляем к списку заказов
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if($id === null) {
+    header('Location: '.APPLICATION.'/shipment/');
+}
 
+// Валидация формы
 $form_valid = true;
 $error_message = '';
-$draft_reason_valid = '';
 
-// Перевод в черновики -- необратимое действие, поэтому причина обязательна,
-// а отменить пометку "черновик" впоследствии нельзя
-if(null !== filter_input(INPUT_POST, 'draft_submit')) {
-    $draft_reason = filter_input(INPUT_POST, 'draft_reason') ?? '';
+$paid_at_valid = '';
+$payment_num_valid = '';
+$amount_valid = '';
+
+// Обработка отправки формы
+if(null !== filter_input(INPUT_POST, 'payment_submit')) {
+    $order_id = filter_input(INPUT_POST, 'order_id', FILTER_VALIDATE_INT);
     
-    if(empty($draft_reason)) {
-        $draft_reason_valid = ISINVALID;
+    $paid_at = filter_input(INPUT_POST, 'paid_at');
+    if(empty($paid_at)) {
+        $paid_at_valid = ISINVALID;
         $form_valid = false;
-        $error_message = "Укажите причину";
     }
     
+    $payment_num = filter_input(INPUT_POST, 'payment_num');
+    if(empty($payment_num)) {
+        $payment_num_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $amount = filter_input(INPUT_POST, 'amount') ?? '';
+    // Убираем пробелы/неразрывные пробелы-разделители разрядов и приводим запятую к точке,
+    // так как на клиенте сумма может отображаться сгруппированной по разрядам (например, "12 500,50")
+    $amount = str_replace([' ', "\xC2\xA0", ','], ['', '', '.'], $amount);
+    if(empty($amount) || !is_numeric($amount)) {
+        $amount_valid = ISINVALID;
+        $form_valid = false;
+    }
+    
+    $currency = filter_input(INPUT_POST, 'currency');
+    
+    $created_by = filter_input(INPUT_POST, 'created_by');
+    
     if($form_valid) {
-        $sql = "update shipment set is_draft = 1, draft_reason = ?, draft_at = now(), draft_by = ? where id = ? and is_draft = 0";
-        $executer = new Executer($sql, [$draft_reason, GetUserId(), $id]);
+        $sql = "insert into payment (order_id, paid_at, payment_num, amount, currency, created_by) values (?, ?, ?, ?, ?, ?)";
+        $executer = new Executer($sql, [$order_id, $paid_at, $payment_num, $amount, $currency, $created_by]);
         $error_message = $executer->error;
+    }
+    
+    // Перенаправляем на эту же страницу с разными get-параметрами, в зависимости от закрытия платежа
+    $url_param = "";
+    
+    if(!empty(filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT))) {
+        $url_param = "&status=".filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
+    }
+    
+    header('Location: '. APPLICATION.'/shipment/details.php?id='.$order_id.$url_param);
+}
+
+// Получение объекта
+$calculation = CalculationBase::Create($id);
+$calculation_result = CalculationResult::Create($calculation);
+$calculation_rolls = CalculationRolls::Create($id);
+
+// Вес брутто, количество паллетов и габариты паллета, введённые упаковщицей при отгрузке
+// (только для отображения -- на этой странице бухгалтер их больше не редактирует)
+$gross_weight = null;
+$pallet_count = null;
+$pallet_length = null;
+$pallet_width = null;
+$pallet_height = null;
+
+$sql = "select gross_weight, pallet_count, pallet_length, pallet_width, pallet_height from calculation where id = ?";
+$fetcher = new Fetcher($sql, [$id]);
+if($row = $fetcher->Fetch()) {
+    $gross_weight = $row['gross_weight'];
+    $pallet_count = $row['pallet_count'];
+    $pallet_length = $row['pallet_length'];
+    $pallet_width = $row['pallet_width'];
+    $pallet_height = $row['pallet_height'];
+}
+
+// Количество новых форм
+$new_forms_number = 0;
+
+if($calculation->work_type_id == WORK_TYPE_PRINT) {
+    for($i = 1; $i <= $calculation->ink_number; $i++) {
+        $cliche_var = "cliche_$i";
+        $$cliche_var = $calculation->$cliche_var;
         
-        if(empty($error_message)) {
-            header("Location: details.php?id=$id");
+        if(!empty($$cliche_var) && $$cliche_var != CLICHE_OLD) {
+            $new_forms_number++;
+        }
+    }
+    
+    for($i = 1; $i <= $calculation->ink_run2_number; $i++) {
+        $cliche_run2_var = "cliche_run2_$i";
+        $$cliche_run2_var = $calculation->$cliche_run2_var;
+        
+        if(!empty($$cliche_run2_var) && $$cliche_run2_var != CLICHE_OLD) {
+            $new_forms_number++;
         }
     }
 }
 
-// Данные самой отгрузки
-$sql = "select id, document_number, vehicle_number, driver_name, cargo_type, places_count, gross_weight, net_weight, volume, created_at, "
-        . "max_pallet_length, max_pallet_width, max_pallet_height, "
-        . "is_draft, draft_reason, draft_at, draft_by "
-        . "from shipment where id = ?";
-$fetcher = new Fetcher($sql, [$id]);
-$shipment = $fetcher->Fetch();
-
-if(!$shipment) {
-    header("Location: index.php");
-    exit();
+if($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE) {
+    $new_forms_number += ($calculation->cliches_count_flint + $calculation->cliches_count_kodak);
 }
 
-// Заказы, входящие в отгрузку -- вместе с именем заказчика и тем, кто установил
-// заказу последний статус (это и есть "ответственный" за отгрузку этого заказа)
-$sql = "select c.id, c.customer_id, c.duplicate_num_for_customer, c.name, cus.name as customer_name, u.last_name, u.first_name "
-        . "from shipment_calculation sc "
-        . "inner join calculation c on sc.calculation_id = c.id "
-        . "inner join customer cus on c.customer_id = cus.id "
-        . "left join calculation_status_history csh on csh.id = (select id from calculation_status_history where calculation_id = c.id order by date desc limit 1) "
-        . "left join user u on csh.user_id = u.id "
-        . "where sc.shipment_id = ? "
-        . "order by c.id";
-$grabber = new Grabber($sql, [$id]);
-$orders = $grabber->result;
+// Всего порезано и упаковано
+$packed_fact = '';
 
-// Кто перевёл в черновики (для отображения)
-$draft_by_name = '';
-if(!empty($shipment['draft_by'])) {
-    $sql = "select last_name, first_name from user where id = ?";
-    $fetcher = new Fetcher($sql, [$shipment['draft_by']]);
-    if($row = $fetcher->Fetch()) {
-        $draft_by_name = $row['last_name'].' '.$row['first_name'];
-    }
+if($calculation->unit == KG) {
+    $packed_fact = DisplayNumber($calculation->weight_cut, 2);
+}
+else {
+    $packed_fact = DisplayNumber(floor($calculation->length_cut * $calculation->number_in_meter), 0);
 }
 
-$created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at']);
+// Статус
+$status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
     <head>
-        <?php include '../include/head.php'; ?>
+        <?php
+        include '../include/head.php';
+        ?>
+        <style>
+            h1 {
+                    font-size: 33px;
+                }
+            
+                h2, .name {
+                    font-size: 26px;
+                    font-weight: bold;
+                    line-height: 45px;
+                }
+            
+                h3 {
+                    font-size: 20px;
+                }
+                
+                .subtitle {
+                    font-weight: bold;
+                    font-size: 20px;
+                    line-height: 40px
+                }
+                
+                table {
+                    width: 100%;
+                }
+            
+                tr {
+                    border-bottom: solid 1px #e3e3e3;
+                }
+            
+                th {
+                    white-space: nowrap;
+                    padding-right: 30px;
+                    vertical-align: top;
+                    line-height: 30px;
+                }
+                
+                table.two_columns tr th:nth-child(2) {
+                    text-align: right;
+                    padding-right: 0;
+                    padding-left: 10px;
+                }
+                
+                table.three_columns tr th:nth-child(3) {
+                    text-align: right;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+            
+                td {
+                    /*line-height: 30px;*/
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    vertical-align: top;
+                }
+            
+                table.two_columns tr td:nth-child(2) {
+                    text-align: right;
+                    padding-left: 10px;
+                    font-weight: bold;
+                }
+                
+                table.three_columns tr td:nth-child(3) {
+                    text-align: right;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    font-weight: bold;
+                }
+                
+                #status {
+                    width: 100%;
+                    padding: 12px;
+                    margin-top: 40p;
+                    margin-bottom: 20px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    text-align: center; 
+                }
+                
+                .original_maket {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 15px;
+                    margin: 5px 5px 8px 5px;
+                }
+                
+                #right_part {
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                    padding: 25px;
+                    margin-top: 25px;
+                }
+        </style>
     </head>
     <body>
-        <?php include './header.php'; ?>
+        <?php
+        include 'header.php';
+        
+        include '../include/big_image.php';
+        ?>
+        <form id="delete_image_form" method="post">
+            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
+            <input type="hidden" id="object" name="object" />
+            <input type="hidden" id="id" name="id" />
+            <input type="hidden" id="image" name="image" />
+            <input type="hidden" name="delete_image_submit" value="1" />
+            <input type="hidden" name="scroll" />
+        </form>
         <div class="container-fluid">
             <?php
-            $backlink_url = "";
-            if($shipment['is_draft']) {
-                $backlink_url = BuildQueryAddRemoveArray('draft', 1, ['id']);
-            }
-            else {
-                $backlink_url = BuildQueryRemove("id");
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
             }
             ?>
-            <a class="btn btn-light backlink" href="<?= APPLICATION ?>/shipment/<?= $backlink_url ?>" title="К списку">К списку</a>
-            
-            <div class="d-flex justify-content-between align-items-center mt-3 mb-3">    
-                <h1>Отгрузка №<?=$shipment['id'] ?><?php if($shipment['is_draft']): ?> <span class="badge badge-secondary">Черновик</span><?php endif; ?></h1>
-                <?php if(!$shipment['is_draft']): ?>
-                <a class="btn btn-outline-dark" href="excel.php?id=<?=$shipment['id'] ?>"><i class="fas fa-file-excel mr-2"></i>Акт-отчёт (Excel)</a>
-                <?php endif; ?>
-            </div>
-            
-            <?php if($shipment['is_draft']): ?>
-            <div class="alert alert-secondary">
-                <strong>Причина перевода в черновики:</strong> <?=htmlspecialchars($shipment['draft_reason']) ?><br />
-                <?=htmlspecialchars($draft_by_name) ?>, <?= DateTime::createFromFormat('Y-m-d H:i:s', $shipment['draft_at'])->format('d.m.Y H:i') ?>
-            </div>
-            <?php endif; ?>
-            
-            <table class="table" style="max-width: 600px;">
-                <tr>
-                    <td>Дата создания</td>
-                    <td class="text-right"><?=$created_at->format('d.m.Y H:i') ?></td>
-                </tr>
-                <tr>
-                    <td>Документ</td>
-                    <td class="text-right"><?=htmlspecialchars($shipment['document_number']) ?></td>
-                </tr>
-                <tr>
-                    <td>Транспортное средство</td>
-                    <td class="text-right"><?=htmlspecialchars($shipment['vehicle_number']) ?></td>
-                </tr>
-                <tr>
-                    <td>ФИО водителя</td>
-                    <td class="text-right"><?=htmlspecialchars($shipment['driver_name'] ?? '') ?></td>
-                </tr>
-                <tr>
-                    <td>Наименование груза</td>
-                    <td class="text-right"><?=CARGO_TYPE_NAMES[$shipment['cargo_type']] ?? '' ?></td>
-                </tr>
-                <tr>
-                    <td>Количество паллетов</td>
-                    <td class="text-right"><?= DisplayNumber(intval($shipment['places_count']), 0) ?></td>
-                </tr>
-                <tr>
-                    <td>Масса брутто</td>
-                    <td class="text-right"><?= DisplayNumber(floatval($shipment['gross_weight']), 0) ?> кг</td>
-                </tr>
-                <tr>
-                    <td>Масса нетто</td>
-                    <td class="text-right"><?= DisplayNumber(floatval($shipment['net_weight']), 0) ?> кг</td>
-                </tr>
-                <tr>
-                    <td>Объём</td>
-                    <td class="text-right"><?= DisplayNumber(floatval($shipment['volume']), 2) ?> м<sup>3</sup></td>
-                </tr>
-                <tr>
-                    <td>Максимальный</td>
-                    <td class="text-right"><?php if($shipment['max_pallet_length'] !== null): ?><?= DisplayNumber(floatval($shipment['max_pallet_length']), 2) ?>&times;<?= DisplayNumber(floatval($shipment['max_pallet_width']), 2) ?>&times;<?= DisplayNumber(floatval($shipment['max_pallet_height']), 2) ?> м<?php else: ?>&mdash;<?php endif; ?></td>
-                </tr>
-            </table>
-            
-            <h5>Ответственный / Контрагент</h5>
-            <table class="table table-sm" style="max-width: 700px;">
-                <tr>
-                    <th>Заказ</th>
-                    <th>Контрагент</th>
-                    <th>Ответственный</th>
-                </tr>
-                <?php foreach($orders as $order): ?>
-                <tr>
-                    <td><?=$order['customer_id'].'-'.$order['duplicate_num_for_customer'].' '.htmlspecialchars($order['name']) ?></td>
-                    <td><?=htmlspecialchars($order['customer_name']) ?></td>
-                    <td><?=htmlspecialchars(trim($order['last_name'].' '.$order['first_name'])) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </table>
-            
-            <?php if(!$shipment['is_draft']): ?>
-            <h5 class="mt-4">Перевести в черновики</h5>
-            <p class="text-muted" style="font-size: 13px;">Это действие необратимо. Если в документе допущена ошибка, создайте новый документ с исправленными данными.</p>
-            <form method="post" style="max-width: 500px;" onsubmit="return confirm('Вы уверены, что хотите перевести этот документ в черновики? Это необратимо.');">
-                <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                <div class="form-group">
-                    <label for="draft_reason">Причина</label>
-                    <textarea class="form-control<?=$draft_reason_valid ?>" id="draft_reason" name="draft_reason" required="required"><?php if(!empty($error_message)): ?><?=htmlspecialchars(filter_input(INPUT_POST, 'draft_reason') ?? '') ?><?php endif; ?></textarea>
+            <div class="row">
+                <div class="col-6">
+                    <?php
+                    $backlink_url = "";
+                    if(!empty ($status)) {
+                        $backlink_url = BuildQueryAddRemoveArray('status', $status, ['id']);
+                    }
+                    else {
+                        $backlink_url = BuildQueryRemoveArray(["status", "id"]);
+                    }
+                    ?>
+                    <a class="btn btn-light backlink" href="<?= APPLICATION ?>/shipment/<?= $backlink_url ?>" title="К списку">К списку</a>
+                    <h1><?=$calculation->name ?></h1>
+                    <div class="name"><?=$calculation->customer ?></div>
+                    <div class="subtitle">№<?=$calculation->customer_id.'-'.$calculation->num_for_customer ?> от <?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->date)->format('d.m.Y') ?></div>
+                    <?php include '../include/order_status_details.php'; ?>
+                    <div class="subtitle">О заказе</div>
+                    <table class="two_columns">
+                        <tr>
+                            <td>Объём заказа</td>
+                            <td><?= DisplayNumber(intval($calculation->quantity), 0) ?> <?= UNIT_NAMES[$calculation->unit] ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= DisplayNumber(floatval($calculation->work_type_id == WORK_TYPE_SELF_ADHESIVE ? $calculation->length_pure : $calculation->length_pure_1), 0) ?> м&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&asymp;<?= DisplayNumber(floatval($calculation_rolls->volume), 2) ?> м<sup>3</sup> <small class="text-muted">(<?= DisplayNumber(floatval($calculation_rolls->volume_min), 2) ?>&ndash;<?= DisplayNumber(floatval($calculation_rolls->volume_max), 2) ?> м<sup>3</sup>)</small></td>
+                        </tr>
+                        <?php if($gross_weight !== null && $pallet_count !== null && $pallet_length !== null && $pallet_width !== null && $pallet_height !== null): ?>
+                        <tr>
+                            <td>Вес брутто</td>
+                            <td><?= DisplayNumber(floatval($gross_weight), 0) ?> кг, <?= DisplayNumber(intval($pallet_count), 0) ?> <?= PluralForm($pallet_count, 'паллет', 'паллета', 'паллетов') ?>, <?= DisplayNumber(floatval($pallet_length), 2) ?>&times;<?= DisplayNumber(floatval($pallet_width), 2) ?>&times;<?= DisplayNumber(floatval($pallet_height), 2) ?> м</td>
+                        </tr>
+                        <?php endif; ?>
+                        <tr>
+                            <td>Менеджер</td>
+                            <td><?=$calculation->last_name.' '.$calculation->first_name ?></td>
+                        </tr>
+                        <tr>
+                            <td>Тип работы</td>
+                            <td><?= WORK_TYPE_NAMES[$calculation->work_type_id] ?></td>
+                        </tr>
+                        <tr>
+                            <td>Материал</td>
+                            <td><?= $calculation->film_1.(empty($calculation->film_2) ? '' : ' + '.$calculation->film_2).(empty($calculation->film_3) ? '' : ' + '.$calculation->film_3) ?></td>
+                        </tr>
+                        <?php if(!is_a($calculation, CalculationSelfAdhesive::class)): ?>
+                        <tr>
+                            <td>Кол-во ламинаций</td>
+                            <td><?=$calculation->laminations_number ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if($calculation->status_id == ORDER_STATUS_SHIPPED): ?>
+                        <tr>
+                            <td>Дата отгрузки</td>
+                            <td><?= DateTime::createFromFormat('Y-m-d H:i:s', $calculation->status_date)->format('d.m.Y') ?></td>
+                        </tr>
+                        <?php endif; ?>
+                    </table>
+                    <div class="subtitle">Сумма к оплате</div>
+                    <table class="two_columns">
+                        <tr>
+                            <td>Продукция</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_order_cost), 2) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Печатные формы</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_cliche_cost ?? 0), 2) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Нож</td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_knife_cost ?? 0), 2) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Отгрузочная стоимость за 1 <?= UNIT_NAMES[$calculation->unit] ?></td>
+                            <td><?= DisplayNumber(floatval($calculation_result->shipping_cost_per_unit ?? 0), 2) ?> ₽</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Итого к оплате</td>
+                            <td><?= DisplayNumber($calculation_result->shipping_cost_total, 2)  ?> ₽</td>
+                        </tr>
+                    </table>
+                    <div class="subtitle">Наименования</div>
+                    <table>
+                        <tr>
+                            <th>Наименование</th>
+                            <th>Ширина ручья</th>
+                            <th>Катушек</th>
+                            <th>Масса</th>
+                            <th>Метраж</th>
+                            <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                            <th style="border-top-width: 0; font-weight: bold;">Этикеток</th>
+                            <?php endif; ?>
+                            <th></th>
+                        </tr>
+                        <?php
+                        $calculation_rolls->LoadDetails();
+                        foreach ($calculation_rolls->streams as $stream):
+                        ?>
+                        <tr>
+                            <td><?=$stream['name'] ?></td>
+                            <td><?=$stream['width'] ?> мм</td>
+                            <td><?=$stream['bobbins'] ?></td>
+                            <td><?= rtrim(rtrim(DisplayNumber(floatval($stream['weight'] ?? 0), 2), '0'), ',') ?> кг</td>
+                            <td><?= rtrim(rtrim(DisplayNumber(floatval($stream['length'] ?? 0), 2), '0'), ',') ?> м</td>
+                            <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                            <td style="text-align: left;"><?= DisplayNumber(floor($stream['length'] * $calculation->number_in_meter), 0) ?> шт.</td>
+                            <?php endif; ?>
+                            <td style="text-align: right;">
+                                <?php if(!empty($stream['image1']) || !empty($stream['image2'])): ?>
+                                <a href="javascript: void(0);" class="ui_tooltip left" data-placement="left" title="Посмотреть макеты" data-toggle="modal" data-target="#big_image" onclick="javascript: ShowImageStream(<?=$stream['id'] ?>);"><img src="../images/icons/attach.svg" /></a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </table>
+                    <h2>Оригинал-макеты</h2>
+                    <?php
+                    $sql = "select cs.id, cs.name, cs.image1, cs.image2 from calculation_stream cs where cs.calculation_id = ? order by cs.position";
+                    $fetcher = new Fetcher($sql, [$id]);
+                    $i = 0;
+                    while($row = $fetcher->Fetch()):
+                    ?>
+                    <div class="original_maket">
+                        <div class="subtitle">Ручей <?=(++$i) ?></div>
+                        <p><?=$row['name'] ?></p>
+                        <?php if($calculation->work_type_id != WORK_TYPE_NOPRINT): ?>
+                        <div class="d-flex justify-content-start">
+                            <?php
+                            $image1_wrapper_class = 'd-block';
+                            if(empty($row['image1'])) {
+                                $image1_wrapper_class = 'd-none';
+                            }
+                            $image2_wrapper_class = 'd-block';
+                            if(empty($row['image2'])) {
+                                $image2_wrapper_class = 'd-none';
+                            }
+                            ?>
+                            <div id="mini_image_wrapper_stream_<?=$row['id'] ?>" class="mr-4 <?=$image1_wrapper_class ?>">
+                                <a id="mini_image1_link_stream_<?=$row['id'] ?>" 
+                                   href="javascript: void(0);" 
+                                   data-toggle="modal" 
+                                   data-target="#big_image" 
+                                   onclick="javascript: ShowImage('stream', <?=$row['id'] ?>, 1);">
+                                    <img id="mini_image1_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image1'].'?'.time() ?>" class="img-fluid" />
+                                </a>
+                                <div class="mb-2">С подписью</div>
+                            </div>
+                            <div id="mini_image2_wrapper_stream_<?=$row['id'] ?>" class="<?=$image2_wrapper_class ?>">
+                                <a id="mini_image2_link_stream_<?=$row['id'] ?>" 
+                                   href="javascript: void(0);" 
+                                   data-toggle="modal" data-target="#big_image" 
+                                   onclick="javascript: ShowImage('stream', <?=$row['id'] ?>, 2);">
+                                    <img id="mini_image2_stream_<?=$row['id'] ?>" src="../content/stream/mini/<?=$row['image2'].'?'. time() ?>" class="img-fluid" />
+                                </a>
+                                <div class="mb-2">Без подписи</div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endwhile; ?>
                 </div>
-                <?php if(!empty($error_message)): ?>
-                <div class="alert alert-danger"><?=htmlspecialchars($error_message) ?></div>
-                <?php endif; ?>
-                <button type="submit" class="btn btn-outline-danger" name="draft_submit">В черновики</button>
-            </form>
-            <?php endif; ?>
+                <div class="col-6">
+                    <div id="right_part">
+                        <h2>Оплата заказа</h2>
+                        <div class="subtitle">Поступления</div>
+                        <div class="row">
+                            <div class="col-4">
+                                Сумма заказа
+                                <div style="font-size: large; font-weight: bold;"><?= DisplayNumber(floatval($calculation_result->shipping_cost_total), 2) ?>  ₽</div>
+                            </div>
+                            <div class="col-4">
+                                Поступило
+                                <div style="font-size: large; font-weight: bold; color: #55bc04;"><?= DisplayNumber(floatval($calculation_result->payment_total), 2) ?> ₽</div>
+                            </div>
+                            <div class="col-4">
+                                Остаток долга
+                                <div style="font-size: large; font-weight: bold; color: #ff2842;"><?= DisplayNumber(floatval($calculation_result->shipping_cost_total - $calculation_result->payment_total), 2) ?> ₽</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 mb-4" style="border: solid 1px #e3e3e3; border-radius: 10px;">
+                            <table class="three_columns">
+                                <tr>
+                                    <th class="pl-2">Дата и время</th>
+                                    <th class="text-left">№ платежа</th>
+                                    <th class="text-right">Сумма</th>
+                                </tr>
+                                <?php
+                                $sql = "select p.paid_at, p.payment_num, p.amount, p.currency, "
+                                        . "case "
+                                        . "when p.currency = ? then p.amount * ifnull((select usd from currency where date < p.paid_at order by date desc limit 1), 1) "
+                                        . "when p.currency = ? then p.amount * ifnull((select euro from currency where date < p.paid_at order by date desc limit 1), 1) "
+                                        . "else p.amount "
+                                        . "end as amount_rub "
+                                        . "from payment p where p.order_id = ? order by p.id desc";
+                                $fetcher = new Fetcher($sql, [CURRENCY_USD, CURRENCY_EURO, $id]);
+                                while($row = $fetcher->Fetch()):
+                                ?>
+                                <tr>
+                                    <td class="pl-2"><?=DateTime::createFromFormat('Y-m-d H:i:s', $row['paid_at'])->format('d.m.Y H:i') ?></td>
+                                    <td class="text-left font-weight-normal"><?=$row['payment_num'] ?></td>
+                                    <td class="pr-2 font-weight-normal">
+                                        <?=DisplayNumber(floatval($row['amount']), 2) ?> <?= CURRENCY_SIGNES[$row['currency']] ?>
+                                        <?php 
+                                        if($row['currency'] != CURRENCY_RUB) {
+                                            echo " (". DisplayNumber(floatval($row['amount_rub']), 2).' '.CURRENCY_SIGNES[CURRENCY_RUB].')';
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php
+                                endwhile;
+                                ?>
+                                <tr style="border-bottom: 0;">
+                                    <td class="pl-2 font-weight-bold" style="line-height: 40px;">Итого поступило</td>
+                                    <td class="text-left" style="line-height: 40px;"></td>
+                                    <td style="line-height: 40px;"><?=DisplayNumber(floatval($calculation_result->payment_total), 2) ?> ₽</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="subtitle">Добавить поступление</div>
+                        <form method="post" class="mb-3">
+                            <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
+                            <input type="hidden" name="order_id" value="<?=$id ?>" />
+                            <input type="hidden" name="created_by" value="<?= GetUserId() ?>" />
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label for="time">Дата и время</label>
+                                    <input type="datetime-local" max="<?=date('Y-m-d') ?>T23:59" name="paid_at" class="form-control" required="required" />
+                                    <div class="invalid-feedback">Дата и время обязательно</div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="payment">№ платежа</label>
+                                    <input type="text" name="payment_num" placeholder="№" class="form-control" required="required" autocomplete="new-password" />
+                                    <div class="invalid-feedback">№ платежа обязательно</div>
+                                </div>
+                                <div class="col-3">
+                                    <label for="sum">Сумма</label>
+                                    <div class="input-group">
+                                        <input type="text" name="amount" placeholder="0,00" class="form-control float-only float-format" required="required" autocomplete="off" />
+                                        <div class="input-group-append">
+                                            <select name="currency" required="required">
+                                                <?php foreach(CURRENCIES as $currency): ?>
+                                                <option value="<?=$currency ?>"><?= CURRENCY_SIGNES[$currency] ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback">Сумма обязательно</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-dark" name="payment_submit"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
+                        </form>
+                        <h2>Отгрузка</h2>
+                        <table class="two_columns">
+                            <tr>
+                                <td>Фактически упаковано</td>
+                                <td><?= $packed_fact.' из '.DisplayNumber(floatval($calculation->quantity ?? 0), 0).' '. UNIT_NAMES[$calculation->unit] ?></td>
+                            </tr>
+                            <tr>
+                                <td>Дата отгрузки</td>
+                                <td>
+                                    <?php
+                                    $sql = "select date from calculation_status_history where calculation_id = ? and status_id = ? order by id desc";
+                                    $fetcher = new Fetcher($sql, [$id, ORDER_STATUS_SHIPPED]);
+                                    if($row = $fetcher->Fetch()) {
+                                        echo DateTime::createFromFormat('Y-m-d H:i:s', $row[0])->format('d.m.Y H:i');
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Отгрузочные документы</td>
+                                <td>Не выписаны</td>
+                            </tr>
+                        </table>
+                        <button type="button" class="btn btn-light mt-4"><img src="../images/icons/print.svg" class="mr-2" />Печать</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <?php include '../include/footer.php'; ?>
+        <?php
+        include '../include/footer.php';
+        ?>
     </body>
 </html>
