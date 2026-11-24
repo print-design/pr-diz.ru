@@ -1,124 +1,531 @@
 <?php
 include '../include/topscripts.php';
-include '../include/pager_top.php';
-$rowcounter = 0;
 
-// Авторизация -- оформление отгрузок теперь только у бухгалтера (и технолога, как везде)
-if(!IsInRole(array(ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
+// Авторизация
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
     include '../include/_unauthorized.php';
 }
 
-$is_draft = filter_input(INPUT_GET, 'draft', FILTER_VALIDATE_INT) == 1 ? 1 : 0;
-
-// Общее количество отгрузок для определения количества страниц в постраничном выводе
-$sql = "select count(id) from shipment where is_draft = ?";
-$fetcher = new Fetcher($sql, [$is_draft]);
-if($row = $fetcher->Fetch()) {
-    $pager_total_count = $row[0];
+// Формирование ссылки для сортировки по столбцу
+function OrderLink($param) {
+    if(array_key_exists('order', $_REQUEST) && $_REQUEST['order'] == $param) {
+        echo "<strong><i class='fas fa-chevron-down' style='color: black; font-size: small;'></i></strong>";
+    }
+    else {
+        echo "<a class='gray' href='".BuildQueryAddRemove("order", $param, "page")."' style='font-size: x-small;'><i class='fas fa-chevron-down'></i></a>";
+    }
 }
 
-$sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, draft_reason "
-        . "from shipment where is_draft = ? order by id desc limit $pager_skip, $pager_take";
-$grabber = new Grabber($sql, [$is_draft]);
-$shipments = $grabber->result;
+// Частично оплачены
+$paying = filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1;
+
+// Оплачены
+$paid = filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1;
+
+// В производстве
+$production = filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1;
+
+// Поступления
+$income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
+
+// Статус
+$status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
+
+// Фильтр по дате отгрузки
+$from = filter_input(INPUT_GET, 'from');
+$to = filter_input(INPUT_GET, 'to');
+$date_from = null;
+$date_to = null;
+GetDateFromDateTo(filter_input(INPUT_GET, 'from'), filter_input(INPUT_GET, 'to'), $date_from, $date_to);
+$diff1day = new DateInterval('P1D');
+$date_to->add($diff1day);
+
+// Ошибки при расчётах (если есть)
+if(null !== filter_input(INPUT_GET, 'error_message')) {
+    $error_message = filter_input(INPUT_GET, 'error_message');
+}
+
+// Отображение статуса заказа
+function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $quantity, $unit, $raport, $length, $gap_raport, $status_comment) {
+    include '../include/order_status_index.php';
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
     <head>
-        <?php include '../include/head.php'; ?>
+        <?php
+        include '../include/head.php';
+        ?>
+        <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
+        <style>
+            table.typography {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                color: #191919;
+            }
+            
+            table.typography tr th {
+                color: #68676C;
+                border-top: 0;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
-        <?php include './header.php'; ?>
+        <?php
+        include 'header.php';
+        include '../include/status_track.php';
+        include '../include/pager_top.php';
+        $rowcounter = 0;
+        ?>
         <div class="container-fluid">
-            <div class="d-flex justify-content-between mb-auto mt-3">
-                <div class="p-0">
-                    <h1 class="d-inline"><?= $is_draft ? 'Черновики отгрузок' : 'Отгрузки' ?></h1>
+            <?php
+            if(!empty($error_message)) {
+                echo "<div class='alert alert-danger'>$error_message</div>";
+            }
+            ?>
+            <div class="d-flex justify-content-between mb-auto">
+                <div class="p-1 text-nowrap">
+                    <?php
+                    $title = "Ждёт оплату";
+                    
+                    if(filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1) {
+                        $title = "Частично оплачены";
+                    }
+                    elseif(filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1) {
+                        $title = "Оплачены";
+                    }
+                    elseif(filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1) {
+                        $title = "Производят";
+                    }
+                    elseif(!empty ($status)) {
+                        $title = ORDER_STATUS_NAMES[$status];
+                    }
+                    ?>
+                    <h1 class="d-inline"><?= $title ?></h1>
+                    <?php
+                    // Фильтр
+                    function GetFilter(&$params) {
+                        $filter = '';
+                        
+                        $unit = filter_input(INPUT_GET, 'unit');
+                        if(!empty($unit)) {
+                            $filter .= " and c.unit = ?";
+                            array_push($params, $unit);
+                        }
+                        
+                        $work_type = filter_input(INPUT_GET, 'work_type');
+                        if(!empty($work_type)) {
+                            $filter .= " and c.work_type_id = ?";
+                            array_push($params, $work_type);
+                        }
+                        
+                        $manager = filter_input(INPUT_GET, 'manager');
+                        if(!empty($manager)) {
+                            $filter .= " and c.manager_id = ?";
+                            array_push($params, $manager);
+                        }
+                        
+                        $customer = filter_input(INPUT_GET, 'customer');
+                        if(!empty($customer)) {
+                            $filter .= " and c.customer_id = ?";
+                            array_push($params, $customer);
+                        }
+                        
+                        $name = filter_input(INPUT_GET, 'name');
+                        if(!empty($name)) {
+                            $filter .= " and trim(c.name) = ?";
+                            array_push($params, $name);
+                        }
+                        
+                        $find = trim(filter_input(INPUT_GET, 'find') ?? '');
+                        if(!empty($find)) {
+                            $find_substrings = explode('-', $find);
+                            if(count($find_substrings) != 2 || intval($find_substrings[0]) == 0 || intval($find_substrings[1]) == 0) {
+                                $filter .= " and false";
+                            }
+                            else {
+                                $filter .= " and c.customer_id = ? and c.duplicate_num_for_customer = ?";
+                                array_push($params, $find_substrings[0], $find_substrings[1]);
+                            }
+                        }
+                        
+                        return $filter;
+                    }
+                    
+                    // Общее количество работ для установления количества страниц в постраничном выводе
+                    $sql = "select count(c.id) "
+                            . "from calculation c "
+                            . "left join customer cus on c.customer_id = cus.id ";
+                    $params = array();
+                    
+                    if($paying) {
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_payment_total < c.duplicate_shipping_cost";
+                        array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                                ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                                ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+                    }
+                    elseif($paid) {
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
+                        array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                                ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                                ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+                    }
+                    elseif($production) {
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?)";
+                        array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
+                    }
+                    elseif(!empty($status)) {
+                        $sql .= "where c.duplicate_status_id = ?";
+                        array_push($params, $status);
+                    }
+                    else {
+                        $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total = 0";
+                        array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                                ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                                ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+                    }
+                    
+                    if($status == ORDER_STATUS_SHIPPED && !empty($from)) {
+                        $sql .= " and c.duplicate_status_date >= ?";
+                        array_push($params, $date_from->format('Y-m-d'));
+                    }
+                    
+                    if($status == ORDER_STATUS_SHIPPED && !empty($to)) {
+                        $sql .= " and c.duplicate_status_date <= ?";
+                        array_push($params, $date_to->format('Y-m-d'));
+                    }
+                    
+                    $sql .= GetFilter($params);
+                    $fetcher = new Fetcher($sql, $params); 
+                    
+                    if($row = $fetcher->Fetch()) {
+                        $pager_total_count = $row[0];
+                    }
+                    ?>
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
-                <?php if(!$is_draft): ?>
-                <div class="pt-1">
-                    <button type="button" class="btn btn-dark" onclick="javascript: PrintSelectedShipments();">
-                        <i class="fas fa-print" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Печать
-                    </button>
+                <div class="p-1 text-nowrap d-flex justify-content-end">
+                    <?php if($status == ORDER_STATUS_SHIPPED): ?>
+                    <form class="form-inline" method="get">
+                        <input type="hidden" name="status" value="<?=$status ?>" />
+                        <input type="hidden" name="to" value="<?= filter_input(INPUT_GET, 'to') ?>" />
+                        <label for="from" style="font-size: larger;">от&nbsp;</label>
+                        <input type="date" 
+                               id="from" 
+                               name="from" 
+                               class="form-control mr-2" 
+                               value="<?= filter_input(INPUT_GET, 'from') ?>" 
+                               style="border: 0; width: 8.5rem;" 
+                               onchange="javascript: this.form.submit();" />
+                    </form>
+                    <form class="form-inline" method="get">
+                        <input type="hidden" name="status" value="<?=$status ?>" />
+                        <input type="hidden" name="from" value="<?= filter_input(INPUT_GET, 'from') ?>" />
+                        <label for="to" style="font-size: larger;">до&nbsp;</label>
+                        <input type="date" 
+                               id="to" 
+                               name="to" 
+                               class="form-control mr-2" 
+                               value="<?= filter_input(INPUT_GET, 'to') ?>" 
+                               style="border: 0; width: 8.5rem;" 
+                               onchange="javascript: this.form.submit();" />
+                    </form>
+                    <?php endif; ?>
+                    <form class="form-inline d-inline" method="get">
+                        <?php if($production == 1): ?>
+                        <input type="hidden" name="production" value="<?=$production ?>" />
+                        <?php
+                        endif;
+                        if($paid == 1):
+                        ?>
+                        <input type="hidden" name="paid" value="<?=$paid ?>" />
+                        <?php
+                        endif;
+                        if(null !== $status):
+                        ?>
+                        <input type="hidden" name="status" value="<?=$status ?>" />
+                        <?php endif; ?>
+                        <select id="unit" name="unit" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Шт/кг...</option>
+                            <option value="<?= PIECES ?>"<?= filter_input(INPUT_GET, 'unit') == PIECES ? " selected='selected'" : "" ?>>Шт</option>
+                            <option value="<?= KG ?>"<?= filter_input(INPUT_GET, 'unit') == KG ? " selected='selected'" : "" ?>>Кг</option>
+                        </select>
+                        <select id="work_type" name="work_type" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Тип работы...</option>
+                            <?php foreach(WORK_TYPES as $item): ?>
+                            <option value="<?=$item ?>"<?= ($item == filter_input(INPUT_GET, 'work_type') ? " selected='selected'" : "") ?>><?= WORK_TYPE_NAMES[$item] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <select id="manager" name="manager" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <option value="">Менеджер...</option>
+                            <?php
+                            $sql = "select u.id, u.last_name, u.first_name from user u where exists (select 1 from calculation c where c.manager_id = u.id) order by u.last_name, u.first_name";
+                            $fetcher = new Fetcher($sql, []);
+                            while ($row = $fetcher->Fetch()):
+                            ?>
+                            <option value="<?=$row['id'] ?>"<?=$row['id'] == filter_input(INPUT_GET, 'manager') ? " selected='selected'" : "" ?>><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                        <select id="customer" name="customer" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <?php
+                            $get_customer = filter_input(INPUT_GET, 'customer');
+                            if(null !== $get_customer):
+                                $sql = "select name from customer where id = ?";
+                            $fetcher = new Fetcher($sql, [$get_customer]);
+                            if($row = $fetcher->Fetch()):
+                            ?>
+                            <option selected="selected" value="<?=$get_customer ?>"><?=$row[0] ?></option>
+                            <?php
+                            endif;
+                            endif;
+                            ?>
+                        </select>
+                        <select id="name" name="name" class="form-control" multiple="multiple" onchange="javascript: this.form.submit();">
+                            <?php
+                            $get_name = filter_input(INPUT_GET, 'name');
+                            if(null !== $get_name):
+                            ?>
+                            <option selected="selected"><?=$get_name ?></option>
+                            <?php endif; ?>
+                        </select>
+                    </form>
                 </div>
-                <?php endif; ?>
             </div>
-            <table class="table table-hover">
+            <table class="table table-hover typography">
                 <tr>
-                    <?php if(!$is_draft): ?>
-                    <th><input type="checkbox" id="select_all_shipments_checkbox" /></th>
+                    <th><input type="checkbox" id="select_all_orders_checkbox" /></th>
+                    <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
+                    <?php if($status == ORDER_STATUS_SHIPPED): ?>
+                    <th>Дата отгрузки&nbsp;&nbsp;<?= OrderLink('date') ?></th>
                     <?php endif; ?>
-                    <th>№</th>
-                    <th>Дата создания</th>
-                    <th>Документ</th>
-                    <th>Груз</th>
-                    <th>Паллетов</th>
-                    <th>Брутто</th>
-                    <?php if($is_draft): ?>
-                    <th>Причина</th>
-                    <?php endif; ?>
+                    <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
+                    <th>Заказ</th>
+                    <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
+                    <th class="text-right">Вес нетто&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
+                    <th class="text-right">Вес брутто</th>
+                    <th class="text-right">Поступило / Остаток</th>
+                    <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
+                    <th>Менеджер</th>
                     <th></th>
                 </tr>
-                <?php foreach($shipments as $shipment): ?>
-                <?php $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at']); ?>
+            <?php
+            $sql = "select c.id, c.customer_id, c.work_type_id, "
+                    . "cus.name as customer, c.name as calculation, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
+                    . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
+                    . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
+                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, c.gross_weight, "
+                    . "c.duplicate_shipping_cost, c.duplicate_payment_total "
+                    . "from calculation c "
+                    . "left join customer cus on c.customer_id = cus.id "
+                    . "left join user u on c.manager_id = u.id ";
+            $params = [];
+            
+            if($paying) {
+                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_payment_total < c.duplicate_shipping_cost";
+                array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                        ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                        ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+            }
+            elseif($paid) {
+                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total > 0 and c.duplicate_payment_total >= c.duplicate_shipping_cost";
+                array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                        ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                        ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+            }
+            elseif($production) {
+                $sql .= "where c.duplicate_status_id in (?, ?, ?)";
+                array_push($params, ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED);
+            }
+            elseif(!empty($status)) {
+                $sql .= "where c.duplicate_status_id = ?";
+                array_push($params, $status);
+            }
+            else {
+                $sql .= "where c.duplicate_status_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) and c.duplicate_payment_total = 0";
+                array_push($params, ORDER_STATUS_TECHMAP, ORDER_STATUS_WAITING, ORDER_STATUS_CONFIRMED, ORDER_STATUS_PLAN_PRINT, ORDER_STATUS_PLAN_LAMINATE, ORDER_STATUS_PLAN_CUT, 
+                        ORDER_STATUS_CUT_PRILADKA, ORDER_STATUS_CUTTING, ORDER_STATUS_CUT_REMOVED, 
+                        ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED);
+            }
+            
+            if($status == ORDER_STATUS_SHIPPED && !empty($from)) {
+                $sql .= " and c.duplicate_status_date >= ?";
+                array_push($params, $date_from->format('Y-m-d'));
+            }
+            
+            if($status == ORDER_STATUS_SHIPPED && !empty($to)) {
+                $sql .= " and c.duplicate_status_date <= ?";
+                array_push($params, $date_to->format('Y-m-d'));
+            }
+            
+            $sql .= GetFilter($params);
+            
+            // Сортировка
+            if(array_key_exists('order', $_REQUEST)) {
+                switch ($_REQUEST['order']) {
+                    case 'id':
+                        $sql .= " order by c.customer_id desc, c.id desc";
+                        break;
+                    
+                    case 'date':
+                        $sql .= " order by c.duplicate_status_date desc";
+                        break;
+                    
+                    case 'customer':
+                        $sql .= " order by cus.name asc";
+                        break;
+                    
+                    case 'work_type':
+                        $sql .= " order by c.work_type_id";
+                        break;
+                    
+                    case 'weight':
+                        $sql .= " order by c.duplicate_weight_cut desc";
+                        break;
+                    
+                    case 'status':
+                        $sql .= " order by c.duplicate_status_id";
+                        break;
+                }
+            }
+            else {
+                $sql .= " order by c.duplicate_status_date desc";
+            }
+            
+            $sql .= " limit ?, ?";
+            array_push($params, $pager_skip, $pager_take);
+            $fetcher = new Fetcher($sql, $params);
+            while($row = $fetcher->Fetch()):
+            ?>
                 <tr>
-                    <?php if(!$is_draft): ?>
-                    <td><input type="checkbox" class="shipment-select-checkbox" value="<?=$shipment['id'] ?>" /></td>
+                    <td><input type="checkbox" class="order-select-checkbox" value="<?=$row['id'] ?>" /></td>
+                    <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
+                    <?php
+                    if($status == ORDER_STATUS_SHIPPED):
+                        $shipping_date = DateTime::createFromFormat('Y-m-d H:i:s', $row['status_date']);
+                    ?>
+                    <td><?=$shipping_date->format('d.m') ?><br /><span style="font-size: smaller;"><?=$shipping_date->format("H:i") ?></span></td>
                     <?php endif; ?>
-                    <td><?=$shipment['id'] ?></td>
-                    <td><?=$created_at->format('d.m.Y H:i') ?></td>
-                    <td><?=htmlspecialchars($shipment['document_number']) ?></td>
-                    <td><?=CARGO_TYPE_NAMES[$shipment['cargo_type']] ?? '' ?></td>
-                    <td><?= DisplayNumber(intval($shipment['places_count']), 0) ?></td>
-                    <td><?= DisplayNumber(floatval($shipment['gross_weight']), 0) ?> кг</td>
-                    <?php if($is_draft): ?>
-                    <td><?=htmlspecialchars($shipment['draft_reason'] ?? '') ?></td>
-                    <?php endif; ?>
+                    <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
+                    <td><?=$row['calculation'] ?></td>
+                    <td class="text-nowrap"><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
+                    <td class="text-nowrap text-right"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
+                    <td class="text-nowrap text-right"><?= $row['gross_weight'] !== null ? DisplayNumber(floatval($row['gross_weight']), 0).' кг' : '—' ?></td>
+                    <td class="text-nowrap text-right">
+                        <?= DisplayNumber(floatval($row['duplicate_payment_total']), 2) ?> ₽
+                        <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(floatval($row['duplicate_shipping_cost']) - floatval($row['duplicate_payment_total']), 2) ?> ₽</div>
+                    </td>
+                    <td class="text-nowrap" data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
+                    <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td>
-                        <a href='<?=APPLICATION ?>/shipment/details.php?id=<?=$shipment['id'] ?>'>
+                        <a href="details.php<?= BuildQuery('id', $row['id']) ?>">
                             <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
                             </svg>
                         </a>
                     </td>
                 </tr>
-                <?php endforeach; ?>
-                <?php if(empty($shipments)): ?>
-                <tr>
-                    <td colspan="7" class="text-center text-muted">Список пуст</td>
-                </tr>
-                <?php endif; ?>
+            <?php
+            endwhile;
+            ?>
             </table>
             <?php
             include '../include/pager_bottom.php';
             ?>
         </div>
-        <?php include '../include/footer.php'; ?>
-        <?php if(!$is_draft): ?>
+        <!-- Информация о заказчике -->
+        <div class="modal fixed-left fade" id="customerModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-aside" role="document">
+                <div class="modal-content" style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px; padding-top: 84px; width: 521px; overflow-y: auto;"></div>
+            </div>
+        </div>
+        <?php
+        include '../include/footer.php';
+        include '../include/selected_orders_panel.php';
+        ?>
+        <script src="<?= APPLICATION ?>/js/select2.min.js"></script>
+        <script src="<?= APPLICATION ?>/js/i18n/ru.js"></script>
         <script>
-            // Флажок в заголовке столбца -- отмечает или снимает все флажки строк разом
-            $(document).on('change', '#select_all_shipments_checkbox', function() {
-                $('.shipment-select-checkbox').prop('checked', $(this).is(':checked'));
+            // Список с поиском
+            $('#unit').select2({
+                placeholder: "Шт/кг...",
+                maximumStatusLength: 1,
+                language: "ru",
+                width: '4rem'
             });
-
-            // Верхний флажок автоматически устанавливается, если отмечена хотя бы одна строка,
-            // и снимается только тогда, когда не отмечено ни одной строки
-            $(document).on('change', '.shipment-select-checkbox', function() {
-                var checked = $('.shipment-select-checkbox:checked').length;
-                $('#select_all_shipments_checkbox').prop('checked', checked > 0);
+            
+            $('#status').select2({
+                placeholder: "Статус...",
+                maximumSelectionLength: 1,
+                language: "ru"
             });
-
-            function PrintSelectedShipments() {
-                var ids = $('.shipment-select-checkbox:checked').map(function() { return $(this).val(); }).get();
-
-                if(ids.length === 0) {
-                    alert('Отметьте хотя бы одну отгрузку для печати');
-                    return;
+            
+            $('#work_type').select2({
+                placeholder: "Тип работы...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: '8rem'
+            });
+            
+            $('#manager').select2({
+                placeholder: "Менеджер...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "8rem"
+            });
+            
+            $('#customer').select2({
+                placeholder: "Заказчик...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "15rem",
+                minimumInputLength: 3,
+                ajax: {
+                    url: '_customer_select2.php',
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
                 }
-
-                window.open("<?=APPLICATION ?>/shipment/print.php?ids=" + ids.join(','), '_blank');
-            }
+            });
+            
+            $('#name').select2({
+                placeholder: "Наименование...",
+                maximumSelectionLength: 1,
+                language: "ru",
+                width: "15rem",
+                minimumInputLength: 3,
+                ajax: {
+                    url: "_name_select2.php",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        var customerVal = $('#customer').val();
+                        return {
+                            q: params.term,
+                            customer: (customerVal && customerVal.length > 0) ? customerVal[0] : ''
+                        };
+                    },
+                    processResults: function(data) {
+                        return { results: data };
+                    },
+                    cache: false
+                }
+            });
+            
+            // Заполнение информации о заказчике
+            $('a.customer').click(function(e) {
+                var customer_id = $(e.target).attr('data-customer-id');
+                if(customer_id !== null) {
+                    $.ajax({ url: "_customer.php?id=" + customer_id })
+                            .done(function(data) {
+                                $('#customerModal .modal-dialog .modal-content').html(data);
+                    });
+                }
+            });
         </script>
-        <?php endif; ?>
     </body>
 </html>

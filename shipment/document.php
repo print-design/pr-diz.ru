@@ -1,0 +1,124 @@
+<?php
+include '../include/topscripts.php';
+include '../include/pager_top.php';
+$rowcounter = 0;
+
+// Авторизация -- оформление отгрузок теперь только у бухгалтера (и технолога, как везде)
+if(!IsInRole(array(ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_TECHNOLOGIST]))) {
+    include '../include/_unauthorized.php';
+}
+
+$draft = filter_input(INPUT_GET, 'draft', FILTER_VALIDATE_INT) == 1 ? 1 : 0;
+
+// Общее количество отгрузок для определения количества страниц в постраничном выводе
+$sql = "select count(id) from shipment where is_draft = ?";
+$fetcher = new Fetcher($sql, [$draft]);
+if($row = $fetcher->Fetch()) {
+    $pager_total_count = $row[0];
+}
+
+$sql = "select id, document_number, vehicle_number, cargo_type, places_count, gross_weight, net_weight, volume, created_at, draft_reason "
+        . "from shipment where is_draft = ? order by id desc limit $pager_skip, $pager_take";
+$grabber = new Grabber($sql, [$draft]);
+$shipments = $grabber->result;
+?>
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <?php include '../include/head.php'; ?>
+    </head>
+    <body>
+        <?php include './header.php'; ?>
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between mb-auto mt-3">
+                <div class="p-0">
+                    <h1 class="d-inline"><?= $draft ? 'Черновики отгрузок' : 'Отгрузки' ?></h1>
+                    <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
+                </div>
+                <?php if(!$draft): ?>
+                <div class="pt-1">
+                    <button type="button" class="btn btn-dark" onclick="javascript: PrintSelectedShipments();">
+                        <i class="fas fa-print" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Печать
+                    </button>
+                </div>
+                <?php endif; ?>
+            </div>
+            <table class="table table-hover">
+                <tr>
+                    <?php if(!$draft): ?>
+                    <th><input type="checkbox" id="select_all_shipments_checkbox" /></th>
+                    <?php endif; ?>
+                    <th>№</th>
+                    <th>Дата создания</th>
+                    <th>Документ</th>
+                    <th>Груз</th>
+                    <th>Паллетов</th>
+                    <th>Брутто</th>
+                    <?php if($draft): ?>
+                    <th>Причина</th>
+                    <?php endif; ?>
+                    <th></th>
+                </tr>
+                <?php foreach($shipments as $shipment): ?>
+                <?php $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $shipment['created_at']); ?>
+                <tr>
+                    <?php if(!$draft): ?>
+                    <td><input type="checkbox" class="shipment-select-checkbox" value="<?=$shipment['id'] ?>" /></td>
+                    <?php endif; ?>
+                    <td><?=$shipment['id'] ?></td>
+                    <td><?=$created_at->format('d.m.Y H:i') ?></td>
+                    <td><?=htmlspecialchars($shipment['document_number']) ?></td>
+                    <td><?=CARGO_TYPE_NAMES[$shipment['cargo_type']] ?? '' ?></td>
+                    <td><?= DisplayNumber(intval($shipment['places_count']), 0) ?></td>
+                    <td><?= DisplayNumber(floatval($shipment['gross_weight']), 0) ?> кг</td>
+                    <?php if($draft): ?>
+                    <td><?=htmlspecialchars($shipment['draft_reason'] ?? '') ?></td>
+                    <?php endif; ?>
+                    <td>
+                        <a href='<?=APPLICATION ?>/shipment/details_doc.php?id=<?=$shipment['id'] ?>'>
+                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php if(empty($shipments)): ?>
+                <tr>
+                    <td colspan="7" class="text-center text-muted">Список пуст</td>
+                </tr>
+                <?php endif; ?>
+            </table>
+            <?php
+            include '../include/pager_bottom.php';
+            ?>
+        </div>
+        <?php include '../include/footer.php'; ?>
+        <?php if(!$draft): ?>
+        <script>
+            // Флажок в заголовке столбца -- отмечает или снимает все флажки строк разом
+            $(document).on('change', '#select_all_shipments_checkbox', function() {
+                $('.shipment-select-checkbox').prop('checked', $(this).is(':checked'));
+            });
+
+            // Верхний флажок автоматически устанавливается, если отмечена хотя бы одна строка,
+            // и снимается только тогда, когда не отмечено ни одной строки
+            $(document).on('change', '.shipment-select-checkbox', function() {
+                var checked = $('.shipment-select-checkbox:checked').length;
+                $('#select_all_shipments_checkbox').prop('checked', checked > 0);
+            });
+
+            function PrintSelectedShipments() {
+                var ids = $('.shipment-select-checkbox:checked').map(function() { return $(this).val(); }).get();
+
+                if(ids.length === 0) {
+                    alert('Отметьте хотя бы одну отгрузку для печати');
+                    return;
+                }
+
+                window.open("<?=APPLICATION ?>/shipment/print.php?ids=" + ids.join(','), '_blank');
+            }
+        </script>
+        <?php endif; ?>
+    </body>
+</html>

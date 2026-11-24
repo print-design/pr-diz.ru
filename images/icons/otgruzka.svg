@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EC3A7A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <title>Отгрузка</title>
+  <rect x="2" y="5" width="11" height="10" rx="1"/>
+  <path d="M13 8h4l3.5 3.5V15H13z"/>
+  <circle cx="6.5" cy="17.5" r="2"/>
+  <circle cx="16.5" cy="17.5" r="2"/>
+  <path d="M4.5 10h5.5M8 8l2 2-2 2"/>
+</svg>

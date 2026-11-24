@@ -16,6 +16,7 @@ $plan_class = '';
 $cut_class = '';
 $pack_class = '';
 $buh_class = '';
+$shipment_class = '';
 $admin_class = '';
 $improvement_class = '';
 $okto_class = '';
@@ -37,6 +38,9 @@ elseif($folder == "pack") {
 }
 elseif($folder == "buh") {
     $buh_class = " active";
+}
+elseif($folder == "shipment") {
+    $shipment_class = " active";
 }
 elseif($folder == "user" || $folder == "supplier" || $folder == 'admin') {
     $admin_class = " active";
@@ -91,17 +95,18 @@ elseif($folder == "okto") {
     <a href="<?=APPLICATION ?>/pack/" class="left_bar_item ui_tooltip right<?=$pack_class ?>" data-placement="right" title="Упаковка"><img src="<?=APPLICATION ?>/images/icons/loader_machine.svg" /></a>
     <?php
     endif;
-    // Оплата заказа
+    // Бухгалтерия и отгрузка
     if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))):
     ?>
-    <a href="<?= APPLICATION ?>/buh/" class="left_bar_item ui_tooltip right<?=$buh_class ?>" data-placement="right" title="Готовая продукция">
+    <a href="<?= APPLICATION ?>/buh/" class="left_bar_item ui_tooltip right<?=$buh_class ?>" data-placement="right" title="Бухгалтерия">
         <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="rub" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
             <path d="M6.125 2V12H4V14H6.125V16H4V18H6.125V22H8.25V18H13.5625V16H8.25V14H14.625C18.1313 14 21 11.3 21 8C21 4.7 18.1313 2 14.625 2H6.125ZM8.25 4H14.625C16.9827 4 18.875 5.781 18.875 8C18.875 10.219 16.9827 12 14.625 12H8.25V4Z" fill="currentColor"></path>
         </svg>
     </a>
+    <a href="<?= APPLICATION ?>/shipment/" class="left_bar_item ui_tooltip right<?=$shipment_class ?>" data-placement="right" title="Отгрузка"><img src="<?=APPLICATION ?>/images/icons/otgruzka.svg" /></a>
     <?php
     endif;
-    // Для бухгалтера план помещаем ниже бухгалтерии
+    // Для бухгалтера план помещаем под бухгалтерией и отгрузкой
     if(IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])):
     ?>
     <a href="<?=APPLICATION ?>/plan/" class="left_bar_item ui_tooltip right<?=$plan_class ?>" data-placement="right" title="План"><img src="<?=APPLICATION ?>/images/nav_grafik.svg" /></a>
