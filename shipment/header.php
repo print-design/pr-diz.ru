@@ -48,7 +48,7 @@ if($folder == 'shipment') {
                 <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/shipment/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, ["page", "order", "from", "to", "id", "draft"]) ?>">Отгружено</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link<?=$document_status ?>" href="document.php">Отгрузки</a>
+                <a class="nav-link<?=$document_status ?>" href="document.php">Документы</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$draft_status ?>" href="document.php?draft=1">Черновики</a>
