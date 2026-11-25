@@ -254,11 +254,11 @@ $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
                 <div class="col-6">
                     <?php
                     $backlink_url = "";
-                    if(!empty ($status)) {
-                        $backlink_url = BuildQueryAddRemoveArray('status', $status, ['id']);
+                    if(in_array($calculation->status_id, [ORDER_STATUS_PACK_READY, ORDER_STATUS_SHIP_READY, ORDER_STATUS_SHIPPED]) ) {
+                        $backlink_url = BuildQueryAddRemoveArray('status', $calculation->status_id, ['id']);
                     }
                     else {
-                        $backlink_url = BuildQueryRemoveArray(["status", "id"]);
+                        $backlink_url = BuildQueryRemove("id");
                     }
                     ?>
                     <a class="btn btn-light backlink" href="<?= APPLICATION ?>/shipment/<?= $backlink_url ?>" title="К списку">К списку</a>

@@ -17,6 +17,24 @@ if($folder == 'shipment') {
             $document_status = ' disabled';
         }
     }
+    elseif($file == 'details.php') {
+        if(!empty($calculation) && is_a($calculation, CalculationBase::class)) {
+            switch($calculation->status_id) {
+                case ORDER_STATUS_PACK_READY:
+                    $pack_status = ' disabled';
+                    break;
+                case ORDER_STATUS_SHIP_READY:
+                    $ship_status = ' disabled';
+                    break;
+                case ORDER_STATUS_SHIPPED:
+                    $shipped_status = ' disabled';
+                    break;
+                default :
+                    $production_status = ' disabled';
+                    break;
+            }
+        }
+    }
     elseif($status == ORDER_STATUS_PACK_READY){
         $pack_status = ' disabled';
     }
