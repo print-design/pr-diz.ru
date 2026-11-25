@@ -5,10 +5,6 @@ $waiting_status = '';
 $paying_status = '';
 $paid_status = '';
 $income_status = '';
-$production_status = '';
-$pack_status = '';
-$ship_status = '';
-$shipped_status = '';
 
 if($folder == "buh") {
     if($file == 'income.php') {
@@ -22,18 +18,6 @@ if($folder == "buh") {
     }
     elseif($income) {
         $income_status = ' disabled';
-    }
-    elseif($production) {
-        $production_status = ' disabled';
-    }
-    elseif($status == ORDER_STATUS_PACK_READY) {
-        $pack_status = ' disabled';
-    }
-    elseif($status == ORDER_STATUS_SHIP_READY) {
-        $ship_status = ' disabled';
-    }
-    elseif($status == ORDER_STATUS_SHIPPED) {
-        $shipped_status = ' disabled';
     }
     else {
         $waiting_status = ' disabled';
@@ -54,24 +38,6 @@ if($folder == "buh") {
             </li>
             <li class="nav-item">
                 <a class="nav-link<?=$income_status ?>" href="<?= APPLICATION ?>/buh/income.php">Поступления</a>
-            </li>
-            <li class="nav-item pl-4" style="border-left: 1px solid #dee2e6;">
-                <a class="nav-link<?=$production_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("production", 1, ["paying", "paid", "income", "status", "page", "order", "from", "to", "id"]) ?>">Производят</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$pack_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_PACK_READY, ["production", "paid", "income", "page", "order", "from", "to", "id"]) ?>">Упаковка</a>
-            </li>
-            <li class="nav-item text-nowrap">
-                <a class="nav-link<?=$ship_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIP_READY, ["production", "paid", "income", "page", "order", "from", "to", "id"]) ?>">Ждёт отгрузки</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link<?=$shipped_status ?>" href="<?= APPLICATION ?>/buh/<?= BuildQueryAddRemoveArray("status", ORDER_STATUS_SHIPPED, ["production", "paid", "income", "page", "order", "from", "to", "id"]) ?>">Отгружено</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/shipment/">Отгрузки</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<?= APPLICATION ?>/shipment/?draft=1">Черновики</a>
             </li>
         </ul>
         <?php

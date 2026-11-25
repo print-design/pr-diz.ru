@@ -160,12 +160,6 @@ $paid = filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1;
 
 // Поступления
 $income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
-
-// В производстве
-$production = filter_input(INPUT_GET, 'production', FILTER_VALIDATE_INT) == 1;
-
-// Статус
-$status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -291,10 +285,10 @@ $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
                     <?php
                     $backlink_url = "";
                     if($paying) {
-                        $backlink_url = BuildQueryAddRemoveArray('paying', 1, ['paid', 'production', 'status', 'id']);
+                        $backlink_url = BuildQueryAddRemoveArray('paying', 1, ['paid', 'id']);
                     }
                     elseif($paid) {
-                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["paying", "production", "status", "id"]);
+                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["paying", "id"]);
                     }
                     elseif($income) {
                         $get_params = $_GET;
@@ -303,14 +297,8 @@ $status = filter_input(INPUT_GET, 'status', FILTER_VALIDATE_INT);
                         $query = empty($get_params) ? "" : "?". http_build_query($get_params);
                         $backlink_url = "income.php".$query;
                     }
-                    elseif($production) {
-                        $backlink_url = BuildQueryAddRemoveArray('production', 1, ["paying", "paid", "status", "id"]);
-                    }
-                    elseif(!empty ($status)) {
-                        $backlink_url = BuildQueryAddRemoveArray('status', $status, ['paying', 'paid', 'production', 'id']);
-                    }
                     else {
-                        $backlink_url = BuildQueryRemoveArray(["paying", "paid", "production", "status", "id"]);
+                        $backlink_url = BuildQueryRemoveArray(["paying", "paid", "id"]);
                     }
                     ?>
                     <a class="btn btn-light backlink" href="<?= APPLICATION ?>/buh/<?= $backlink_url ?>" title="К списку">К списку</a>
