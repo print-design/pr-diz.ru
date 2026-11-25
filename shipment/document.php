@@ -32,7 +32,7 @@ $shipments = $grabber->result;
         <div class="container-fluid">
             <div class="d-flex justify-content-between mb-auto mt-3">
                 <div class="p-0">
-                    <h1 class="d-inline"><?= $draft ? 'Черновики отгрузок' : 'Отгрузки' ?></h1>
+                    <h1 class="d-inline"><?= $draft ? 'Черновики документов' : 'Документы' ?></h1>
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <?php if(!$draft): ?>
