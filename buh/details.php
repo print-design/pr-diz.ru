@@ -5,7 +5,7 @@ include '../order/calculation_result.php';
 include '../order/calculation_rolls.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_MANAGER]))) {
     include '../include/_unauthorized.php';
 }
 
@@ -504,6 +504,7 @@ $income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
                                 </tr>
                             </table>
                         </div>
+                        <?php if(IsInRole([ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]])): ?>
                         <div class="subtitle">Добавить поступление</div>
                         <form method="post" class="mb-3">
                             <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
@@ -537,6 +538,7 @@ $income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
                             </div>
                             <button type="submit" class="btn btn-dark" name="payment_submit"><i class="fas fa-plus mr-2"></i>Добавить поступление</button>
                         </form>
+                        <?php endif; ?>
                         <h2>Отгрузка</h2>
                         <table class="two_columns">
                             <tr>

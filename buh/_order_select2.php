@@ -2,7 +2,7 @@
 include '../include/topscripts.php';
 
 // Список заказов доступен только тем, кто может добавлять поступления
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_MANAGER]))) {
     echo json_encode(array());
     exit();
 }

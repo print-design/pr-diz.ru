@@ -3,7 +3,7 @@ include '../include/topscripts.php';
 include '../include/pager_top.php';
 
 // Авторизация
-if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]))) {
+if(!IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT], ROLE_NAMES[ROLE_MANAGER]))) {
     include '../include/_unauthorized.php';
 }
 
@@ -261,7 +261,9 @@ $status_id = null;
                             ?>
                         </select>
                     </form>
+                    <?php if(IsInRole([ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_ACCOUNTANT]])): ?>
                     <a href="javascript: void(0);" class="btn btn-dark ml-1" data-toggle="modal" data-target="#newIncome"><i class="fas fa-plus ml-2 mr-2"></i>&nbsp;Новое поступление</a>
+                    <?php endif; ?>
                 </div>
             </div>
             
