@@ -78,6 +78,20 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
         include '../include/head.php';
         ?>
         <link href="<?=APPLICATION ?>/css/select2.min.css" rel="stylesheet"/>
+        <style>
+            table.typography {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                color: #191919;
+            }
+            
+            table.typography tr th {
+                color: #68676C;
+                border-top: 0;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <?php
@@ -107,7 +121,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                         $title = ORDER_STATUS_NAMES[$status_id];
                     }
                     ?>
-                    <h1 style="font-size: 32px; font-weight: 600;" class="d-inline"><?=$title ?></h1>
+                    <h1 class="d-inline"><?=$title ?></h1>
                     <?php
                     // Фильтр
                     function GetFilter(&$params) {
@@ -260,117 +274,113 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <a href="create.php" class="btn btn-dark"><i class="fas fa-plus"></i>&nbsp;Новый расчет</a>
                 </div>
             </div>
-            <table class="table table-hover" id="content_table">
-                <thead>
-                    <tr>
-                        <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
-                        <th>Дата расчета&nbsp;&nbsp;<?= OrderLink('date') ?></th>
-                        <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
-                        <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
-                        <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
-                        <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
-                        <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
-                        <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
-                            . "c.duplicate_quantities quantities, c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
-                            . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
-                            . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
-                            . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length "
-                            . "from calculation c "
-                            . "left join customer cus on c.customer_id = cus.id "
-                            . "left join user u on c.manager_id = u.id ";
+            <table class="table table-hover typography" id="content_table">
+                <tr>
+                    <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
+                    <th>Дата расчета&nbsp;&nbsp;<?= OrderLink('date') ?></th>
+                    <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
+                    <th>Имя заказа&nbsp;&nbsp;<?= OrderLink('name') ?></th>
+                    <th class="text-center">Объем&nbsp;&nbsp;<?= OrderLink('quantity') ?></th>
+                    <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
+                    <th>Менеджер&nbsp;&nbsp;<?= OrderLink('manager') ?></th>
+                    <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
+                    <th></th>
+                </tr>
+                <?php
+                $sql = "select c.id, c.date, c.customer_id, cus.name customer, trim(c.name) name, c.quantity, "
+                        . "c.duplicate_quantities quantities, c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
+                        . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
+                        . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
+                        . "c.unit, c.work_type_id, u.last_name, u.first_name, c.raport, c.length "
+                        . "from calculation c "
+                        . "left join customer cus on c.customer_id = cus.id "
+                        . "left join user u on c.manager_id = u.id ";
                     
-                    if($production) {
-                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_PRODUCTION), '?'));
-                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
-                        $params = ORDER_STATUSES_IN_PRODUCTION;
-                    }
-                    elseif($calculated) {
-                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_CALCULATED), '?'));
-                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
-                        $params = ORDER_STATUSES_CALCULATED;
-                    }
-                    elseif(!empty ($status_id)) {
-                        $sql .= "where c.duplicate_status_id = ?";
-                        $params = [$status_id];
-                    }
-                    else {
-                        $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_WORK), '?'));
-                        $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
-                        $params = ORDER_STATUSES_IN_WORK;
-                    }
+                if($production) {
+                    $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_PRODUCTION), '?'));
+                    $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                    $params = ORDER_STATUSES_IN_PRODUCTION;
+                }
+                elseif($calculated) {
+                    $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_CALCULATED), '?'));
+                    $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                    $params = ORDER_STATUSES_CALCULATED;
+                }
+                elseif(!empty ($status_id)) {
+                    $sql .= "where c.duplicate_status_id = ?";
+                    $params = [$status_id];
+                }
+                else {
+                    $statuses_placeholders = implode(", ", array_fill(0, count(ORDER_STATUSES_IN_WORK), '?'));
+                    $sql .= "where c.duplicate_status_id in ($statuses_placeholders)";
+                    $params = ORDER_STATUSES_IN_WORK;
+                }
                     
-                    $sql .= GetFilter($params);
+                $sql .= GetFilter($params);
                     
-                    // Сортировка
-                    if(array_key_exists('order', $_REQUEST)) {
-                        switch ($_REQUEST['order']) {
-                            case 'id':
-                                $sql .= " order by c.customer_id desc, c.id desc";
-                                break;
+                // Сортировка
+                if(array_key_exists('order', $_REQUEST)) {
+                    switch ($_REQUEST['order']) {
+                        case 'id':
+                            $sql .= " order by c.customer_id desc, c.id desc";
+                            break;
                             
-                            case 'date':
-                                $sql .= " order by c.id desc";
-                                break;
+                        case 'date':
+                            $sql .= " order by c.id desc";
+                            break;
                             
-                            case 'customer':
-                                $sql .= " order by cus.name asc";
-                                break;
+                        case 'customer':
+                            $sql .= " order by cus.name asc";
+                            break;
                             
-                            case 'name':
-                                $sql .= " order by c.name asc";
-                                break;
+                        case 'name':
+                            $sql .= " order by c.name asc";
+                            break;
                             
-                            case 'quantity':
-                                $sql .= " order by c.quantity desc";
-                                break;
+                        case 'quantity':
+                            $sql .= " order by c.quantity desc";
+                            break;
                             
-                            case 'work_type':
-                                $sql .= " order by c.work_type_id";
-                                break;
+                        case 'work_type':
+                            $sql .= " order by c.work_type_id";
+                            break;
                             
-                            case 'manager':
-                                $sql .= " order by u.last_name asc, u.first_name asc";
-                                break;
+                        case 'manager':
+                            $sql .= " order by u.last_name asc, u.first_name asc";
+                            break;
                             
-                            case 'status':
-                                $sql .= " order by status_id";
-                                break;
-                        }
+                        case 'status':
+                            $sql .= " order by status_id";
+                            break;
                     }
-                    else {
-                        $sql .= " order by status_date desc, c.id desc";
-                    }
+                }
+                else {
+                    $sql .= " order by status_date desc, c.id desc";
+                }
                     
-                    $sql .= " limit ?, ?";
-                    array_push($params, $pager_skip, $pager_take);
+                $sql .= " limit ?, ?";
+                array_push($params, $pager_skip, $pager_take);
                     
-                    $fetcher = new Fetcher($sql, $params);
-                    while ($row = $fetcher->Fetch()):
+                $fetcher = new Fetcher($sql, $params);
+                while ($row = $fetcher->Fetch()):
                         
-                    $rowcounter++;
-                    $quantity = empty($row['quantities']) ? number_format($row['quantity'] ?? 0, 0, ",", " ")." ".($row['unit'] == 'kg' ? "кг" : "шт") : $row['quantities']." ".GetPrintingsWithCases($row['quantities']);
-                    ?>
-                    <tr>
-                        <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
-                        <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
-                        <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
-                        <td><?= htmlentities($row['name'] ?? '') ?></td>
-                        <td class="text-right text-nowrap"><?=$quantity ?></td>
-                        <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
-                        <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
-                        <td class="text-nowrap" data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript: StatusTrack(<?=$row['id'] ?>);"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']) ?></td>
-                        <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
-                    </tr>
-                    <?php
-                    endwhile;
-                    ?>
-                </tbody>
+                $rowcounter++;
+                $quantity = empty($row['quantities']) ? number_format($row['quantity'] ?? 0, 0, ",", " ")." ".($row['unit'] == 'kg' ? "кг" : "шт") : $row['quantities']." ".GetPrintingsWithCases($row['quantities']);
+                ?>
+                <tr>
+                    <td class="text-nowrap"><?=$row['customer_id'].'-'.$row['num_for_customer'] ?></td>
+                    <td class="text-nowrap"><?= DateTime::createFromFormat('Y-m-d H:i:s', $row['date'])->format('d.m.Y') ?></td>
+                    <td><a href="javascript: void(0);" class="customer" data-toggle="modal" data-target="#customerModal" data-customer-id="<?=$row['customer_id'] ?>"><?=$row['customer'] ?></a></td>
+                    <td><?= htmlentities($row['name'] ?? '') ?></td>
+                    <td class="text-right text-nowrap"><?=$quantity ?></td>
+                    <td><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
+                    <td class="text-nowrap"><?=(mb_strlen($row['first_name']) == 0 ? '' : mb_substr($row['first_name'], 0, 1).'. ').$row['last_name'] ?></td>
+                    <td class="text-nowrap" data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript: StatusTrack(<?=$row['id'] ?>);"><?= ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']) ?></td>
+                    <td><a href="details.php<?= BuildQuery("id", $row['id']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a></td>
+                </tr>
+                <?php
+                endwhile;
+                ?>
             </table>
             <?php
             if($rowcounter == 0) {

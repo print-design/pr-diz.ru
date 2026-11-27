@@ -295,10 +295,7 @@ $status_id = null;
                         $get_params['income'] = 1;
                         $get_params['id'] = $income['order_id'];
                         ?>
-                        <a href="details.php?<?= http_build_query($get_params) ?>">
-                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
-                            </svg>
+                        <a href="details.php?<?= http_build_query($get_params) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></svg>
                         </a>
                     </td>
                 </tr>

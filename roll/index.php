@@ -202,6 +202,18 @@ else {
         include '../include/head.php';
         ?>
         <style>
+            table.typography {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                color: #191919;
+            }
+            
+            table.typography tr th {
+                color: #68676C;
+                border-top: 0;
+                font-weight: bold;
+            }
             <?php if(IsInRole(ROLE_NAMES[ROLE_STOREKEEPER])): ?>
             .non_storekeeper { display: none; }
             <?php else: ?>
@@ -222,15 +234,11 @@ else {
             }
             ?>
             <div class="d-flex justify-content-between mb-auto">
-                <div class="p-0">
-                    <table>
-                        <tr>
-                            <td><h1 style="font-size: 32px; font-weight: 600;"><?=$page_title ?></h1></td>
-                            <td style="padding-left: 20px; padding-right: 20px; font-weight: bold;">(<?= number_format($total_weight ?? 0, 0, ',', ' ') ?> кг)</td>
-                        </tr>
-                    </table>
+                <div class="p-1">
+                    <h1 class="d-inline"><?=$page_title ?></h1>
+                    <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?= number_format($total_weight ?? 0, 0, ',', ' ') ?> кг</div>
                 </div>
-                <div class="pt-1">
+                <div class="p-1">
                     <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_STOREKEEPER])) && $status == ROLL_STATUS_FREE): ?>
                     <a href="new.php" class="btn btn-light"><i class="fas fa-plus"></i>&nbsp;Новый ролик</a>
                     <a href="excel.php" class="btn btn-light ml-3"><i class="fas fa-file-download"></i>&nbsp;Выгрузить</a>
@@ -254,174 +262,170 @@ else {
                     </div>
                 </div>
             </div>
-            <table class="table table-hover" id="content_table">
-                <thead>
-                    <tr style="border-top: 1px solid #dee2e6; border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <th style="padding-left: 5px; padding-right: 5px;">Дата<br /><?=$page_date_label ?></th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Марка пленки</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Толщина</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Плотность</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Ширина</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Вес</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Длина</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Поставщик</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">ID рулона</th>
-                        <th style="padding-left: 5px; padding-right: 5px;">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
-                        <th style="padding-left: 5px; padding-right: 5px;">Статус</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 15%;" class="storekeeper">Комментарий</th>
-                        <th style="padding-left: 5px; padding-right: 5px; width: 15%;" class="non_storekeeper">Комментарий</th>
-                        <th style="padding-left: 5px; padding-right: 5px;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $sql = "select (select count(r.id) total_count "
-                            . "from roll r "
-                            . "left join film_variation fv on r.film_variation_id = fv.id "
+            <table class="table table-hover typography" id="content_table">
+                <tr>
+                    <th>Дата<br /><?=$page_date_label ?></th>
+                    <th>Марка пленки</th>
+                    <th>Толщина</th>
+                    <th>Плотность</th>
+                    <th>Ширина</th>
+                    <th>Вес</th>
+                    <th>Длина</th>
+                    <th>Поставщик</th>
+                    <th>ID рулона</th>
+                    <th class="text-nowrap">№ ячейки&nbsp;&nbsp;<?= OrderLink('cell') ?></th>
+                    <th>Статус</th>
+                    <th style="width: 15%;" class="storekeeper">Комментарий</th>
+                    <th style="width: 15%;" class="non_storekeeper">Комментарий</th>
+                    <th></th>
+                </tr>
+                <?php
+                $sql = "select (select count(r.id) total_count "
+                        . "from roll r "
+                        . "left join film_variation fv on r.film_variation_id = fv.id "
+                        . "left join film f on fv.film_id = f.id "
+                        . "left join supplier s on r.supplier_id = s.id "
+                        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                        . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id $wherefindroll)";
+                if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
+                    $sql .= "+(select count(pr.id) total_count "
+                            . "from pallet_roll pr "
+                            . "inner join pallet p on pr.pallet_id = p.id "
+                            . "left join film_variation fv on p.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
-                            . "left join supplier s on r.supplier_id = s.id "
-                            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                            . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id $wherefindroll)";
-                    if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $sql .= "+(select count(pr.id) total_count "
-                                . "from pallet_roll pr "
-                                . "inner join pallet p on pr.pallet_id = p.id "
-                                . "left join film_variation fv on p.film_variation_id = fv.id "
-                                . "left join film f on fv.film_id = f.id "
-                                . "left join supplier s on p.supplier_id = s.id "
-                                . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                                . "left join (select * from pallet_cell_history where id in (select max(id) from pallet_cell_history group by pallet_id)) pch on pch.pallet_id = p.id $wherefindpallet)";
-                    }
+                            . "left join supplier s on p.supplier_id = s.id "
+                            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                            . "left join (select * from pallet_cell_history where id in (select max(id) from pallet_cell_history group by pallet_id)) pch on pch.pallet_id = p.id $wherefindpallet)";
+                }
+                
+                if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
+                    $row = (new Fetcher($sql, array_merge($paramsroll, $paramspallet)))->Fetch();
+                    $pager_total_count = $row[0];
+                }
+                else {
+                    $row = (new Fetcher($sql, $paramsroll))->Fetch();
+                    $pager_total_count = $row[0];
+                }
                     
-                    if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $row = (new Fetcher($sql, array_merge($paramsroll, $paramspallet)))->Fetch();
-                        $pager_total_count = $row[0];
-                    }
-                    else {
-                        $row = (new Fetcher($sql, $paramsroll))->Fetch();
-                        $pager_total_count = $row[0];
-                    }
+                // Сортировка
+                // Сортировка -- только по столбцам из белого списка: имя столбца нельзя передать
+                // через "?", поэтому значение из адреса в запрос напрямую не подставляется
+                $order_columns = ['cell' => 'trim(cell)'];
                     
-                    // Сортировка
-                    // Сортировка -- только по столбцам из белого списка: имя столбца нельзя передать
-                    // через "?", поэтому значение из адреса в запрос напрямую не подставляется
-                    $order_columns = ['cell' => 'trim(cell)'];
+                $orderby = "";
                     
-                    $orderby = "";
-                    
-                    if(!empty($order_columns[filter_input(INPUT_GET, 'order')])) {
-                        $order_param = filter_input(INPUT_GET, 'order');
+                if(!empty($order_columns[filter_input(INPUT_GET, 'order')])) {
+                    $order_param = filter_input(INPUT_GET, 'order');
                         
-                        if($order_param == 'cell') {
-                            $orderby = "if(cast(replace(cell, ' ', '') as unsigned) > 0, 1, 0) desc, "
-                                    . "substring(replace(cell, ' ', ''), length(cast(replace(cell, ' ', '') as unsigned)) + 1, 1) collate utf8_general_ci asc, "
-                                    . "cast(replace(cell, ' ', '') as unsigned) asc, "
-                                    . "trim(cell) collate utf8_general_ci asc, ";
-                        }
-                        else {
-                            $orderby = $order_columns[$order_param].", ";
-                        }
+                    if($order_param == 'cell') {
+                        $orderby = "if(cast(replace(cell, ' ', '') as unsigned) > 0, 1, 0) desc, "
+                                . "substring(replace(cell, ' ', ''), length(cast(replace(cell, ' ', '') as unsigned)) + 1, 1) collate utf8_general_ci asc, "
+                                . "cast(replace(cell, ' ', '') as unsigned) asc, "
+                                . "trim(cell) collate utf8_general_ci asc, ";
                     }
+                    else {
+                        $orderby = $order_columns[$order_param].", ";
+                    }
+                }
                     
-                    $sql = "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
-                            . "r.width width, fv.thickness thickness, fv.weight density, rch.cell, r.net_weight net_weight, r.length length, "
-                            . "s.name supplier, rsh.status_id status_id, rsh.date status_date, r.comment comment "
-                            . "from roll r "
-                            . "left join film_variation fv on r.film_variation_id = fv.id "
+                $sql = "select 'roll' type, r.id id, 0 pallet_id, 0 ordinal, rsh.date timestamp, DATE_FORMAT(rsh.date, '%d.%m.%Y') date, f.name film, "
+                        . "r.width width, fv.thickness thickness, fv.weight density, rch.cell, r.net_weight net_weight, r.length length, "
+                        . "s.name supplier, rsh.status_id status_id, rsh.date status_date, r.comment comment "
+                        . "from roll r "
+                        . "left join film_variation fv on r.film_variation_id = fv.id "
+                        . "left join film f on fv.film_id = f.id "
+                        . "left join supplier s on r.supplier_id = s.id "
+                        . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
+                        . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id $wherefindroll ";
+                if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
+                    $sql .= " union select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
+                            . "p.width width, fv.thickness thickness, fv.weight density, pch.cell cell, pr.weight net_weight, pr.length length, "
+                            . "s.name supplier, prsh.status_id status_id, prsh.date status_date, p.comment comment "
+                            . "from pallet_roll pr "
+                            . "inner join pallet p on pr.pallet_id = p.id "
+                            . "left join film_variation fv on p.film_variation_id = fv.id "
                             . "left join film f on fv.film_id = f.id "
-                            . "left join supplier s on r.supplier_id = s.id "
-                            . "left join (select * from roll_status_history where id in (select max(id) from roll_status_history group by roll_id)) rsh on rsh.roll_id = r.id "
-                            . "left join (select * from roll_cell_history where id in (select max(id) from roll_cell_history group by roll_id)) rch on rch.roll_id = r.id $wherefindroll ";
-                    if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $sql .= " union select 'pallet_roll' type, pr.id id, pr.pallet_id pallet_id, pr.ordinal ordinal, prsh.date timestamp, DATE_FORMAT(prsh.date, '%d.%m.%Y') date, f.name film, "
-                                . "p.width width, fv.thickness thickness, fv.weight density, pch.cell cell, pr.weight net_weight, pr.length length, "
-                                . "s.name supplier, prsh.status_id status_id, prsh.date status_date, p.comment comment "
-                                . "from pallet_roll pr "
-                                . "inner join pallet p on pr.pallet_id = p.id "
-                                . "left join film_variation fv on p.film_variation_id = fv.id "
-                                . "left join film f on fv.film_id = f.id "
-                                . "left join supplier s on p.supplier_id = s.id "
-                                . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
-                                . "left join (select * from pallet_cell_history where id in (select max(id) from pallet_cell_history group by pallet_id)) pch on pch.pallet_id = p.id $wherefindpallet ";
-                    }
+                            . "left join supplier s on p.supplier_id = s.id "
+                            . "left join (select * from pallet_roll_status_history where id in (select max(id) from pallet_roll_status_history group by pallet_roll_id)) prsh on prsh.pallet_roll_id = pr.id "
+                            . "left join (select * from pallet_cell_history where id in (select max(id) from pallet_cell_history group by pallet_id)) pch on pch.pallet_id = p.id $wherefindpallet ";
+                }
                     
-                    $list_params = [];
+                $list_params = [];
                     
-                    if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $list_params = array_merge($paramsroll, $paramspallet);
-                    }
-                    else {
-                        $list_params = $paramsroll;
-                    }
+                if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
+                    $list_params = array_merge($paramsroll, $paramspallet);
+                }
+                else {
+                    $list_params = $paramsroll;
+                }
                     
-                    if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
-                        $sql .= "order by ".$orderby."status_date desc, id desc limit ?, ?";
-                    }
-                    else {
-                        $sql .= "order by ".$orderby."id desc limit ?, ?";
-                    }
+                if($status == ROLL_STATUS_CUT || $status == ROLL_STATUS_UTILIZED) {
+                    $sql .= "order by ".$orderby."status_date desc, id desc limit ?, ?";
+                }
+                else {
+                    $sql .= "order by ".$orderby."id desc limit ?, ?";
+                }
                     
-                    array_push($list_params, $pager_skip, $pager_take);
+                array_push($list_params, $pager_skip, $pager_take);
+                
+                $fetcher = new Fetcher($sql, $list_params);
                     
-                    $fetcher = new Fetcher($sql, $list_params);
-                    
-                    while ($row = $fetcher->Fetch()):
-                    $rowcounter++;
-                    ?>
-                    <tr style="border-left: 1px solid #dee2e6; border-right: 1px solid #dee2e6;">
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['date'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['film'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['thickness'] ?> мкм</td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="text-nowrap"><?= round($row['density'] ?? 0, 2) ?> г/м<sup>2</sup></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['width'] ?> мм</td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['net_weight'] ?> кг</td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['length'] ?> м</td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['supplier'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'].'Р'.$row['ordinal'] : 'Р'.$row['id']) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;"><?= $row['cell'] ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?= mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="storekeeper">
-                            <div class="d-flex justify-content-start">
-                                <div class="pr-2 comment_pen foredit">
-                                    <a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a>
-                                </div>
-                                <div class="comment_text comment_text_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>"><?= htmlentities($row['comment'] ?? '') ?></div>
+                while ($row = $fetcher->Fetch()):
+                $rowcounter++;
+                ?>
+                <tr>
+                    <td><?= $row['date'] ?></td>
+                    <td><?= $row['film'] ?></td>
+                    <td><?= $row['thickness'] ?> мкм</td>
+                    <td class="text-nowrap"><?= round($row['density'] ?? 0, 2) ?> г/м<sup>2</sup></td>
+                    <td><?= $row['width'] ?> мм</td>
+                    <td><?= $row['net_weight'] ?> кг</td>
+                    <td><?= $row['length'] ?> м</td>
+                    <td><?= $row['supplier'] ?></td>
+                    <td><?=($row['type'] == 'pallet_roll' ? 'П'.$row['pallet_id'].'Р'.$row['ordinal'] : 'Р'.$row['id']) ?></td>
+                    <td><?= $row['cell'] ?></td>
+                    <td style="font-size: 10px; line-height: 14px; font-weight: 600; color: <?=ROLL_STATUS_COLOURS[$row['status_id']] ?>;"><?= mb_strtoupper(ROLL_STATUS_NAMES[$row['status_id']]) ?></td>
+                    <td class="storekeeper">
+                        <div class="d-flex justify-content-start">
+                            <div class="pr-2 comment_pen foredit">
+                                <a href="javascript: void(0);" onclick="EditComment(event);"><image src="../images/icons/edit1.svg" title="Редактировать" /></a>
                             </div>
-                            <div class="d-none comment_input">
-                                <input type="text" 
-                                       class="form-control comment_input_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>" 
-                                       value="<?= htmlentities($row['comment'] ?? '') ?>" 
-                                       onkeydown="if(event.key === 'Enter') { SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>); }" 
-                                       onfocusout="SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" />
+                            <div class="comment_text comment_text_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>"><?= htmlentities($row['comment'] ?? '') ?></div>
+                        </div>
+                        <div class="d-none comment_input">
+                            <input type="text" 
+                                    class="form-control comment_input_<?=$row['type'].'_'.($row['type'] == 'roll' ? $row['id'] : $row['pallet_id']) ?>" 
+                                    value="<?= htmlentities($row['comment'] ?? '') ?>" 
+                                    onkeydown="if(event.key === 'Enter') { SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>); }" 
+                                    onfocusout="SaveComment(event, '<?=$row['type'] ?>', <?=$row['id'] ?>, <?=$row['pallet_id'] ?>);" />
+                        </div>
+                    </td>
+                    <td class="non_storekeeper"><?= htmlspecialchars($row['comment'] ?? '') ?></td>
+                    <td style="position: relative;">
+                        <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
+                        <div class="film_menu">
+                            <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/pallet/roll.php'.BuildQuery('id', $row['id']) : APPLICATION.'/roll/roll.php'.BuildQuery('id', $row['id'])) ?>">Просмотреть детали</a></div>
+                            <?php
+                            if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])):
+                            ?>
+                            <div class="command">
+                                <form method="post">
+                                    <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
+                                    <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
+                                    <input type="hidden" id="scroll" name="scroll" />
+                                    <input type="hidden" id="type" name="type" value="<?=$row['type'] ?>" />
+                                    <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" id="delete-film-submit" name="delete-film-submit" style="font-size: 14px;">Удалить</button>
+                                </form>
                             </div>
-                        </td>
-                        <td style="padding-left: 5px; padding-right: 5px;" class="non_storekeeper"><?= htmlspecialchars($row['comment'] ?? '') ?></td>
-                        <td style="padding-left: 5px; padding-right: 5px; position: relative;">
-                            <a class="black film_menu_trigger" href="javascript: void(0);"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
-                            <div class="film_menu">
-                                <div class="command"><a href="<?=($row['type'] == 'pallet_roll' ? APPLICATION.'/pallet/roll.php'.BuildQuery('id', $row['id']) : APPLICATION.'/roll/roll.php'.BuildQuery('id', $row['id'])) ?>">Просмотреть детали</a></div>
-                                <?php
-                                if(IsInRole(ROLE_NAMES[ROLE_TECHNOLOGIST])):
-                                ?>
-                                <div class="command">
-                                    <form method="post">
-                                        <input type="hidden" name="<?= CSRF_TOKEN ?>" value="<?= $_SESSION[CSRF_TOKEN] ?>" />
-                                        <input type="hidden" id="id" name="id" value="<?=$row['id'] ?>" />
-                                        <input type="hidden" id="scroll" name="scroll" />
-                                        <input type="hidden" id="type" name="type" value="<?=$row['type'] ?>" />
-                                        <button type="submit" class="btn btn-link p-0 m-0 h-25 confirmable" id="delete-film-submit" name="delete-film-submit" style="font-size: 14px;">Удалить</button>
-                                    </form>
-                                </div>
-                                <?php
-                                endif;
-                                ?>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php
-                    endwhile;
-                    ?>
-                </tbody>
+                            <?php
+                            endif;
+                            ?>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+                endwhile;
+                ?>
             </table>
             <?php
             if($rowcounter == 0) {

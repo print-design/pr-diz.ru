@@ -354,11 +354,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td class="text-nowrap" data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td>
-                        <a href="details.php<?= BuildQueryAddRemove('id', $row['id'], 'status') ?>">
-                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
-                            </svg>
-                        </a>
+                        <a href="details.php<?= BuildQueryAddRemove('id', $row['id'], 'status') ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                     </td>
                 </tr>
             <?php

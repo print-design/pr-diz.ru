@@ -73,7 +73,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
             <div class="d-flex justify-content-between mb-auto">
                 <div class="p-1 text-nowrap">
                     <?php
-                    $title = "Ждёт оплату";
+                    $title = "Поступлений нет";
                     
                     if(filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1) {
                         $title = "Частично оплачены";
@@ -173,7 +173,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     ?>
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
-                <div class="p-1 text-nowrap d-flex justify-content-end">
+                <div class="p-1 text-nowrap">
                     <form class="form-inline d-inline" method="get">
                         <?php if($paying == 1): ?>
                         <input type="hidden" name="paying" value="<?=$paying ?>" />
@@ -235,9 +235,8 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <th>ID&nbsp;&nbsp;<?= OrderLink('id') ?></th>
                     <th>Заказчик&nbsp;&nbsp;<?= OrderLink('customer') ?></th>
                     <th>Заказ</th>
-                    <th>Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
-                    <th class="text-right">Вес нетто&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
-                    <th class="text-right">Вес брутто</th>
+                    <th class="text-nowrap">Тип работы&nbsp;&nbsp;<?= OrderLink('work_type') ?></th>
+                    <th class="text-right text-nowrap">Вес нетто&nbsp;&nbsp;<?= OrderLink('weight') ?></th>
                     <th class="text-right">Поступило / Остаток</th>
                     <th>Статус&nbsp;&nbsp;<?= OrderLink('status') ?></th>
                     <th>Менеджер</th>
@@ -248,7 +247,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     . "cus.name as customer, c.name as calculation, concat(u.last_name, ' ', left(first_name, 1), '.') as manager, c.raport, c.length, c.unit, c.quantity, "
                     . "c.duplicate_quantity_sum quantity_sum, c.duplicate_gap_raport gap_raport, "
                     . "c.duplicate_length_cut length_cut, c.duplicate_weight_cut weight_cut, c.duplicate_status_id status_id, "
-                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, c.gross_weight, "
+                    . "c.duplicate_status_comment status_comment, c.duplicate_status_date status_date, c.duplicate_num_for_customer num_for_customer, "
                     . "c.duplicate_shipping_cost, c.duplicate_payment_total "
                     . "from calculation c "
                     . "left join customer cus on c.customer_id = cus.id "
@@ -316,7 +315,6 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td><?=$row['calculation'] ?></td>
                     <td class="text-nowrap"><?=WORK_TYPE_NAMES[$row['work_type_id']] ?></td>
                     <td class="text-nowrap text-right"><?= DisplayNumber(floatval($row['weight_cut']), 1) ?> кг</td>
-                    <td class="text-nowrap text-right"><?= $row['gross_weight'] !== null ? DisplayNumber(floatval($row['gross_weight']), 0).' кг' : '—' ?></td>
                     <td class="text-nowrap text-right">
                         <?= DisplayNumber(floatval($row['duplicate_payment_total']), 2) ?> ₽
                         <div style="font-size: smaller;" class="text-nowrap">остаток <?= DisplayNumber(floatval($row['duplicate_shipping_cost']) - floatval($row['duplicate_payment_total']), 2) ?> ₽</div>
@@ -324,11 +322,7 @@ function ShowOrderStatus($status_id, $length_cut, $weight_cut, $quantity_sum, $q
                     <td class="text-nowrap" data-toggle="modal" data-target="#status_track" style="cursor: pointer;" onclick="javascript:  StatusTrack(<?=$row['id'] ?>);"><?php ShowOrderStatus($row['status_id'], $row['length_cut'], $row['weight_cut'], $row['quantity_sum'], $row['quantity'], $row['unit'], $row['raport'], $row['length'], $row['gap_raport'], $row['status_comment']); ?></td>
                     <td class="text-nowrap"><?=$row['manager'] ?></td>
                     <td>
-                        <a href="details.php<?= BuildQuery('id', $row['id']) ?>">
-                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
-                            </svg>
-                        </a>
+                        <a href="details.php<?= BuildQueryAddRemoveArray('id', $row['id'], ['paying', 'paid']) ?>"><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                     </td>
                 </tr>
             <?php

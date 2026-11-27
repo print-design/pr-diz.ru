@@ -2,7 +2,6 @@
 $details_status = '';
 $techmap_status = '';
 $cut_status = '';
-$income_status = '';
 
 switch($file) {
     case 'details.php':
@@ -14,9 +13,6 @@ switch($file) {
     case 'cut.php':
         $cut_status = ' active';
         break;
-    case 'income.php':
-        $income_status = ' active';
-        break;
 }
 ?>
 <a href="details.php?<?= http_build_query($_GET) ?>" class="mr-4<?=$details_status ?>">Расчёт</a>
@@ -27,5 +23,5 @@ switch($file) {
 <a href="cut.php?<?= http_build_query($_GET) ?>" class="mr-4<?=$cut_status ?>">Результаты</a>
 <?php endif; ?>
 <?php if(IsInRole(array(ROLE_NAMES[ROLE_TECHNOLOGIST], ROLE_NAMES[ROLE_MANAGER])) && $has_techmap): ?>
-<a href="income.php?<?= http_build_query($_GET) ?>" class="mr-4<?=$income_status ?>">Поступления</a>
+<a href="<?= APPLICATION ?>/buh/details.php?<?= http_build_query($_GET) ?>" class="mr-4">Поступления</a>
 <?php endif; ?>

@@ -153,10 +153,10 @@ else {
 }
 
 // Частично оплачены
-$paying = filter_input(INPUT_GET, 'paying', FILTER_VALIDATE_INT) == 1;
+$paying = $calculation_result->payment_total > 0 && $calculation_result->payment_total < $calculation_result->shipping_cost_total;
 
 // Оплачено
-$paid = filter_input(INPUT_GET, 'paid', FILTER_VALIDATE_INT) == 1;
+$paid = $calculation_result->payment_total > 0 && $calculation_result->payment_total >= $calculation_result->shipping_cost_total;
 
 // Поступления
 $income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
@@ -216,9 +216,7 @@ $income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
                 }
             
                 td {
-                    /*line-height: 30px;*/
-                    padding-top: 10px;
-                    padding-bottom: 10px;
+                    line-height: 30px;
                     vertical-align: top;
                 }
             
@@ -275,7 +273,14 @@ $income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
             <input type="hidden" name="scroll" />
         </form>
         <div class="container-fluid">
+            <?php if(!IsInRole(ROLE_NAMES[ROLE_ACCOUNTANT])): ?>
+            <div class="text-nowrap nav2">
+                <?php include './subheader.php'; ?>
+            </div>
+            <hr />
             <?php
+            endif;
+            
             if(!empty($error_message)) {
                 echo "<div class='alert alert-danger'>$error_message</div>";
             }
@@ -284,18 +289,18 @@ $income = filter_input(INPUT_GET, 'income', FILTER_VALIDATE_INT) == 1;
                 <div class="col-6">
                     <?php
                     $backlink_url = "";
-                    if($paying) {
-                        $backlink_url = BuildQueryAddRemoveArray('paying', 1, ['paid', 'id']);
-                    }
-                    elseif($paid) {
-                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["paying", "id"]);
-                    }
-                    elseif($income) {
+                    if($income) {
                         $get_params = $_GET;
                         unset($get_params['income']);
                         unset($get_params['id']);
                         $query = empty($get_params) ? "" : "?". http_build_query($get_params);
                         $backlink_url = "income.php".$query;
+                    }
+                    elseif($paying) {
+                        $backlink_url = BuildQueryAddRemoveArray('paying', 1, ['id']);
+                    }
+                    elseif($paid) {
+                        $backlink_url = BuildQueryAddRemoveArray('paid', 1, ["id"]);
                     }
                     else {
                         $backlink_url = BuildQueryRemoveArray(["paying", "paid", "id"]);

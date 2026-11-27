@@ -26,24 +26,38 @@ $shipments = $grabber->result;
 <html lang="ru">
     <head>
         <?php include '../include/head.php'; ?>
+        <style>
+            table.typography {
+                border-radius: 15px;
+                box-shadow: 0px 0px 40px rgb(0 0 0 / 15%);
+                padding: 15px;
+                color: #191919;
+            }
+            
+            table.typography tr th {
+                color: #68676C;
+                border-top: 0;
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <?php include './header.php'; ?>
         <div class="container-fluid">
-            <div class="d-flex justify-content-between mb-auto mt-3">
-                <div class="p-0">
+            <div class="d-flex justify-content-between mb-auto">
+                <div class="p-1">
                     <h1 class="d-inline"><?= $draft ? 'Черновики документов' : 'Документы' ?></h1>
                     <div class="d-inline ml-3" style="color: gray; font-size: x-large;"><?=$pager_total_count ?></div>
                 </div>
                 <?php if(!$draft): ?>
-                <div class="pt-1">
+                <div class="p-1">
                     <button type="button" class="btn btn-dark" onclick="javascript: PrintSelectedShipments();">
                         <i class="fas fa-print" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Печать
                     </button>
                 </div>
                 <?php endif; ?>
             </div>
-            <table class="table table-hover">
+            <table class="table table-hover typography">
                 <tr>
                     <?php if(!$draft): ?>
                     <th><input type="checkbox" id="select_all_shipments_checkbox" /></th>
@@ -75,11 +89,7 @@ $shipments = $grabber->result;
                     <td><?=htmlspecialchars($shipment['draft_reason'] ?? '') ?></td>
                     <?php endif; ?>
                     <td>
-                        <a href='<?=APPLICATION ?>/shipment/details_doc.php?id=<?=$shipment['id'] ?>'>
-                            <svg viewBox="0 0 24 24" width="24" height="24" data-flexim-name="arrow-right" style="color: currentcolor; display: inline-flex; flex-shrink: 0;">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.5859 12L8.29297 17.2929L9.70718 18.7071L16.4143 12L9.70718 5.29291L8.29297 6.70712L13.5859 12Z" fill="currentColor"></path>
-                            </svg>
-                        </a>
+                        <a href='<?=APPLICATION ?>/shipment/details_doc.php?id=<?=$shipment['id'] ?>'><img src="<?=APPLICATION ?>/images/icons/vertical-dots.svg" /></a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
